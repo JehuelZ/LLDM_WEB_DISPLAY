@@ -108,7 +108,8 @@ export const MOCK_MEMBERS: any[] = [
         privileges: ['choir', 'leader'],
         member_group: 'Casados',
         phone: '555-0101',
-        email: 'samuel@lldm.org'
+        email: 'samuel@lldm.org',
+        stats: { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 }
     },
     {
         id: 'Bro. David',
@@ -118,7 +119,8 @@ export const MOCK_MEMBERS: any[] = [
         role: 'Responsable',
         member_group: 'Jóvenes',
         phone: '555-0202',
-        email: 'david@lldm.org'
+        email: 'david@lldm.org',
+        stats: { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 }
     },
     {
         id: 'Sis. María G.',
@@ -129,7 +131,8 @@ export const MOCK_MEMBERS: any[] = [
         member_group: 'Niños',
         privileges: ['kids_leader'],
         phone: '555-0303',
-        email: 'maria@lldm.org'
+        email: 'maria@lldm.org',
+        stats: { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 }
     },
     {
         id: 'Bro. Pedro',
@@ -138,6 +141,7 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Varon',
         role: 'Administrador',
         phone: '555-0404',
-        email: 'pedro@lldm.org'
+        email: 'pedro@lldm.org',
+        stats: { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 }
     }
 ];
