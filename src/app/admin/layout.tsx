@@ -4,6 +4,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from 'framer-motion';
 import {
     LayoutDashboard,
     Calendar,
@@ -24,7 +26,9 @@ import {
     ClipboardCheck,
     Baby,
     FileText,
-    Cloud
+    Cloud,
+    Lock,
+    ArrowRight
 } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
@@ -83,29 +87,65 @@ export default function AdminLayout({
     const pathname = usePathname();
     const [collapsed, setCollapsed] = useState(false);
 
-    // -- SECURITY GUARD --
-    const isDev = process.env.NODE_ENV === 'development';
-    const devBypass = true; // Temporary bypass for development phase
+    const isAuthorized = currentUser && currentUser.role === 'Administrador';
 
-    useEffect(() => {
-        // Non-Admin access protection
-        // Only redirect if not loading and user is definitely not an admin
-        if (!isLoading && !isDev && !devBypass) {
-            if (!currentUser || currentUser.role !== 'Administrador') {
-                console.warn('Unauthorized access to admin area. Redirecting...');
-                router.push('/');
-            }
-        }
-    }, [currentUser, isLoading, router, isDev, devBypass]);
-
-    // Show nothing while checking (minimal flash)
-    if (!isDev && !devBypass && (isLoading || !currentUser || currentUser.role !== 'Administrador')) {
+    if (!isAuthorized && !isLoading) {
         return (
-            <div className="h-screen w-screen bg-background flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                    <Shield className="w-12 h-12 text-primary animate-pulse" />
-                    <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Verificando Acceso...</p>
+            <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4 relative overflow-hidden w-full">
+                {/* Fondo Animado */}
+                <div className="absolute inset-0">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(var(--primary-rgb),0.05)_0%,transparent_70%)]" />
+                    <div className="absolute inset-0 dots-pattern opacity-10" />
                 </div>
+
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="w-full max-w-md z-10"
+                >
+                    <Card className="glass-card border-white/5 shadow-2xl overflow-hidden backdrop-blur-2xl bg-card/50">
+                        <div className="h-2 w-full bg-gradient-to-r from-red-600 via-orange-500 to-red-600 animate-pulse" />
+                        <CardHeader className="text-center pt-10 pb-6">
+                            <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-red-500/20 shadow-lg shadow-red-500/5">
+                                <Lock className="w-10 h-10 text-red-500" />
+                            </div>
+                            <CardTitle className="text-3xl font-black uppercase tracking-tighter italic text-foreground mb-2">
+                                Acceso <span className="text-red-500">Restringido</span>
+                            </CardTitle>
+                            <CardDescription className="text-slate-400 font-medium px-4">
+                                Esta área es exclusiva para administradores autorizados de LLDM RODEO.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6 pb-10 px-8">
+                            {currentUser.id === '1' ? (
+                                <div className="space-y-4">
+                                    <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 text-center">Debes iniciar sesión con tu cuenta autorizada</p>
+                                    <Link href="/login" className="block">
+                                        <Button className="w-full h-14 bg-primary text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all gap-2 group shadow-xl shadow-primary/20">
+                                            Ir al Login <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </Button>
+                                    </Link>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-center">
+                                        <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-1">Usuario Activo</p>
+                                        <p className="text-sm font-bold text-foreground">{currentUser.email}</p>
+                                        <p className="text-[9px] text-red-400 font-black uppercase mt-2 italic">Sin permisos de administrador</p>
+                                    </div>
+                                    <Link href="/" className="block">
+                                        <Button variant="outline" className="w-full h-12 border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all">
+                                            Volver al Inicio
+                                        </Button>
+                                    </Link>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                    <p className="text-center mt-8 text-[10px] font-black uppercase tracking-widest text-slate-600">
+                        ID de Intento: {currentUser.id.slice(0, 8)}...
+                    </p>
+                </motion.div>
             </div>
         );
     }

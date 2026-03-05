@@ -1772,3 +1772,6 @@ Import traces:
  GET / 200 in 110ms (compile: 29ms, render: 80ms)
  GET / 200 in 230ms (compile: 61ms, render: 170ms)
 ✓ Compiled in 315ms
+✓ Compiled in 190ms
+  Reload env: .env.local
+✓ Compiled in 957ms
