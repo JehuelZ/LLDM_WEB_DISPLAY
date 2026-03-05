@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import {
     Calendar, Users, User, FileText, Settings, ExternalLink,
     Sun, Moon, Monitor, Church, Cross, Star, Heart, Shield,
-    Upload, X, ChevronDown, Bell, FilePlus, AlertCircle, Save, Trash2,
+    Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2,
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search,
     Languages, Globe, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
@@ -2538,6 +2538,115 @@ export default function AdminDashboard() {
                                             accept="image/*"
                                             onChange={handleMinisterAvatarChange}
                                         />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        {/* TV Display Optimization */}
+                        <Card className="glass-card border-t-4 border-t-cyan-500">
+                            <CardHeader>
+                                <div className="flex items-center gap-2">
+                                    <Monitor className="h-5 w-5 text-cyan-500" />
+                                    <CardTitle className="text-xl font-black uppercase italic tracking-tighter">
+                                        Optimización de Pantalla (TV)
+                                    </CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="space-y-8">
+                                {/* Scale Controls */}
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500">
+                                            Escala del Display
+                                        </h4>
+                                        <span className="text-lg font-black text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
+                                    </div>
+                                    <div className="grid grid-cols-7 gap-2">
+                                        {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
+                                            <Button
+                                                key={sc}
+                                                variant={(settings.displayScale || 1.0) === sc ? "neon" : "outline"}
+                                                className="h-12 font-black text-sm"
+                                                onClick={() => {
+                                                    setSettings({ displayScale: sc });
+                                                    saveSettingsToCloud({ displayScale: sc });
+                                                }}
+                                            >
+                                                {Math.round(sc * 100)}%
+                                            </Button>
+                                        ))}
+                                    </div>
+                                    <p className="text-xs text-slate-500 italic">
+                                        * Si el contenido se ve cortado en los bordes de la TV, baje la escala al 80% o 70%.
+                                    </p>
+                                </div>
+
+                                {/* Position Controls */}
+                                <div className="space-y-4">
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500">
+                                        Ajuste Manual de Posición
+                                    </h4>
+                                    <div className="flex flex-col items-center gap-3 p-6 rounded-[2rem] bg-foreground/5 border border-white/10">
+                                        <Button
+                                            variant="outline"
+                                            className="w-14 h-14 rounded-2xl"
+                                            onClick={() => {
+                                                const val = (settings.displayOffsetY || 0) - 20;
+                                                setSettings({ displayOffsetY: val });
+                                                saveSettingsToCloud({ displayOffsetY: val });
+                                            }}
+                                        >
+                                            <ChevronUp className="w-6 h-6" />
+                                        </Button>
+                                        <div className="flex gap-3 items-center">
+                                            <Button
+                                                variant="outline"
+                                                className="w-14 h-14 rounded-2xl"
+                                                onClick={() => {
+                                                    const val = (settings.displayOffsetX || 0) - 20;
+                                                    setSettings({ displayOffsetX: val });
+                                                    saveSettingsToCloud({ displayOffsetX: val });
+                                                }}
+                                            >
+                                                <ChevronLeft className="w-6 h-6" />
+                                            </Button>
+                                            <Button
+                                                variant="neon"
+                                                className="w-20 h-14 rounded-2xl font-black text-[10px] tracking-widest"
+                                                onClick={() => {
+                                                    setSettings({ displayOffsetX: 0, displayOffsetY: 0 });
+                                                    saveSettingsToCloud({ displayOffsetX: 0, displayOffsetY: 0 });
+                                                }}
+                                            >
+                                                RESET
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                className="w-14 h-14 rounded-2xl"
+                                                onClick={() => {
+                                                    const val = (settings.displayOffsetX || 0) + 20;
+                                                    setSettings({ displayOffsetX: val });
+                                                    saveSettingsToCloud({ displayOffsetX: val });
+                                                }}
+                                            >
+                                                <ChevronRight className="w-6 h-6" />
+                                            </Button>
+                                        </div>
+                                        <Button
+                                            variant="outline"
+                                            className="w-14 h-14 rounded-2xl"
+                                            onClick={() => {
+                                                const val = (settings.displayOffsetY || 0) + 20;
+                                                setSettings({ displayOffsetY: val });
+                                                saveSettingsToCloud({ displayOffsetY: val });
+                                            }}
+                                        >
+                                            <ChevronDown className="w-6 h-6" />
+                                        </Button>
+                                        <p className="text-xs text-slate-500 italic mt-2">
+                                            Use las flechas para mover el contenido. Los cambios se aplican en tiempo real en la TV.
+                                        </p>
                                     </div>
                                 </div>
                             </CardContent>
