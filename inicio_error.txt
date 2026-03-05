@@ -1702,3 +1702,73 @@ the name `useRouter` is defined multiple times
  GET /admin 200 in 728ms (compile: 599ms, render: 129ms)
  GET /display 200 in 733ms (compile: 682ms, render: 51ms)
  GET /display 200 in 28ms (compile: 4ms, render: 24ms)
+✓ Compiled in 528ms
+⨯ ./src/lib/constants.ts:103:13
+Parsing ecmascript source code failed
+[0m [90m 101 |[39m {
+ [90m 102 |[39m     id[33m:[39m [32m'Bro. Samuel'[39m[33m,[39m
+[31m[1m>[22m[39m[90m 103 |[39m         name[33m:[39m [32m'Samuel Hernández'[39m[33m,[39m
+ [90m     |[39m             [31m[1m^[22m[39m
+ [90m 104 |[39m             avatar[33m:[39m [32m'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop'[39m[33m,[39m
+ [90m 105 |[39m                 category[33m:[39m [32m'Varon'[39m[33m,[39m
+ [90m 106 |[39m                     role[33m:[39m [32m'Responsable'[39m[33m,[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/lib/constants.ts [Client Component Browser]
+    ./src/lib/store.ts [Client Component Browser]
+    ./src/components/layout/AppWrapper.tsx [Client Component Browser]
+    ./src/components/layout/AppWrapper.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/lib/constants.ts [Client Component SSR]
+    ./src/lib/store.ts [Client Component SSR]
+    ./src/components/layout/AppWrapper.tsx [Client Component SSR]
+    ./src/components/layout/AppWrapper.tsx [Server Component]
+    ./src/app/layout.tsx [Server Component]
+
+
+ GET /display 500 in 738ms (compile: 549ms, render: 189ms)
+✓ Compiled in 111ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 444ms (compile: 98ms, render: 346ms)
+ GET /admin 200 in 635ms (compile: 489ms, render: 146ms)
+ GET /display 200 in 131ms (compile: 8ms, render: 123ms)
+ GET /admin 200 in 65ms (compile: 8ms, render: 57ms)
+ GET /display 200 in 67ms (compile: 22ms, render: 45ms)
+ GET /display 200 in 97ms (compile: 3ms, render: 94ms)
+ GET /display 200 in 521ms (compile: 57ms, render: 464ms)
+ GET /admin 200 in 546ms (compile: 154ms, render: 392ms)
+ GET /admin 200 in 94ms (compile: 26ms, render: 68ms)
+ GET /admin/members 200 in 687ms (compile: 655ms, render: 32ms)
+ GET / 200 in 135ms (compile: 124ms, render: 11ms)
+ GET / 200 in 163ms (compile: 18ms, render: 145ms)
+ GET /admin 200 in 57ms (compile: 18ms, render: 39ms)
+ GET /display 200 in 76ms (compile: 32ms, render: 44ms)
+ GET /display 200 in 81ms (compile: 20ms, render: 61ms)
+✓ Compiled in 2.1s
+ GET /admin 200 in 1059ms (compile: 804ms, render: 255ms)
+ GET /display 200 in 1057ms (compile: 463ms, render: 594ms)
+ GET /admin 200 in 354ms (compile: 12ms, render: 342ms)
+ GET /display 200 in 360ms (compile: 52ms, render: 308ms)
+ GET /admin 200 in 285ms (compile: 59ms, render: 226ms)
+ GET /display 200 in 308ms (compile: 17ms, render: 291ms)
+ GET /admin 200 in 232ms (compile: 81ms, render: 151ms)
+ GET /display 200 in 237ms (compile: 7ms, render: 230ms)
+ GET /display 200 in 161ms (compile: 4ms, render: 157ms)
+ GET /display 200 in 120ms (compile: 7ms, render: 114ms)
+ GET /display 200 in 91ms (compile: 5ms, render: 86ms)
+ GET /display 200 in 50ms (compile: 6ms, render: 45ms)
+✓ Compiled in 182ms
+ GET / 200 in 709ms (compile: 379ms, render: 330ms)
+ GET / 200 in 356ms (compile: 164ms, render: 192ms)
+ GET / 200 in 179ms (compile: 48ms, render: 130ms)
+ GET / 200 in 156ms (compile: 33ms, render: 123ms)
+ GET / 200 in 102ms (compile: 16ms, render: 86ms)
+ GET / 200 in 80ms (compile: 15ms, render: 65ms)
+ GET / 200 in 110ms (compile: 29ms, render: 80ms)
+ GET / 200 in 230ms (compile: 61ms, render: 170ms)
+✓ Compiled in 315ms

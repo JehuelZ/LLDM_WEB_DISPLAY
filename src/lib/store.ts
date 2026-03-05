@@ -207,6 +207,11 @@ interface AppState {
     saveRecurringScheduleToCloud: (date: string, slot: '5am' | '9am_consecration' | '9am_doctrine' | 'evening' | 'evening_0' | 'evening_1', leaderId: string, recurrence: 'month' | 'next') => Promise<void>;
     seedMonthSchedule: () => Promise<void>;
 
+    // Choir Rehearsal Cloud Actions
+    loadRehearsalsFromCloud: () => Promise<void>;
+    saveRehearsalToCloud: (reh: Partial<ChoirRehearsal>) => Promise<void>;
+    deleteRehearsalFromCloud: (id: string) => Promise<void>;
+
     // Messaging & Auth Actions
     signInWithGoogle: () => Promise<void>;
     signOut: () => Promise<void>;
@@ -1274,9 +1279,48 @@ export const useAppStore = create<AppState>()(
                     alert("Mes poblado exitosamente con datos realistas.");
                 }
             },
+
+            loadRehearsalsFromCloud: async () => {
+                const { data, error } = await supabase
+                    .from('choir_rehearsals')
+                    .select('*')
+                    .order('day_of_week', { ascending: true });
+
+                if (data) {
+                    const mapped = data.map((r: any) => ({
+                        id: r.id,
+                        dayOfWeek: r.day_of_week,
+                        time: r.time,
+                        location: r.location,
+                        notes: r.notes
+                    }));
+                    set({ rehearsals: mapped });
+                }
+            },
+
+            saveRehearsalToCloud: async (reh) => {
+                const dbReh = {
+                    day_of_week: reh.dayOfWeek,
+                    time: reh.time,
+                    location: reh.location,
+                    notes: reh.notes
+                };
+
+                if (reh.id && reh.id.length > 10) { // Simple check for real UUID vs mock ID
+                    await supabase.from('choir_rehearsals').update(dbReh).eq('id', reh.id);
+                } else {
+                    await supabase.from('choir_rehearsals').insert(dbReh);
+                }
+                await get().loadRehearsalsFromCloud();
+            },
+
+            deleteRehearsalFromCloud: async (id) => {
+                await supabase.from('choir_rehearsals').delete().eq('id', id);
+                await get().loadRehearsalsFromCloud();
+            },
         }),
         {
-            name: 'lldm-rodeo-storage-v7',
+            name: 'lldm-rodeo-storage-v8',
             storage: createJSONStorage(() => localStorage),
         }
     )
