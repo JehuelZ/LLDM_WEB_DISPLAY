@@ -1169,10 +1169,13 @@ export default function TactileAdmin() {
                                         ].map(themeOpt => (
                                             <button
                                                 key={themeOpt.id}
-                                                onClick={() => setCalendarStyles({ template: themeOpt.id as any })}
+                                                onClick={() => {
+                                                    setCalendarStyles({ template: themeOpt.id as any });
+                                                    saveSettingsToCloud({ displayTemplate: themeOpt.id as any });
+                                                }}
                                                 className={cn(
                                                     "w-full flex items-center gap-4 px-6 py-5 rounded-[2rem] transition-all border text-left",
-                                                    calendarStyles.template === themeOpt.id ? "bg-primary/20 border-primary/40 text-primary shadow-lg" : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
+                                                    (settings.displayTemplate || calendarStyles.template) === themeOpt.id ? "bg-primary/20 border-primary/40 text-primary shadow-lg" : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
                                                 )}
                                             >
                                                 <themeOpt.icon className="w-6 h-6" />

@@ -90,9 +90,14 @@ export function LoginScreen() {
                             transition={{ type: "spring", stiffness: 200, damping: 15 }}
                             className="w-20 h-20 mb-6 relative"
                         >
-                            <div className="absolute inset-0 bg-primary/20 rounded-3xl blur-2xl animate-pulse" />
+                            <div className="absolute inset-0 bg-amber-500/20 rounded-3xl blur-2xl animate-pulse" />
                             <div className="relative w-full h-full bg-slate-900 rounded-3xl border border-white/10 flex items-center justify-center p-4">
-                                <img src="/flama-oficial.svg" className="w-full h-full object-contain filter drop-shadow-lg" alt="Logo LLDM" />
+                                <img
+                                    src="/flama-oficial.svg"
+                                    style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(354deg) brightness(103%) contrast(100%)' }}
+                                    className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                                    alt="Logo LLDM"
+                                />
                             </div>
                         </motion.div>
 

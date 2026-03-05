@@ -75,7 +75,8 @@ export default function DisplayPage() {
 
     // Theme engine: choose the correct theme based on settings
     const activeTheme = useMemo(() => {
-        const theme = getTheme(calendarStyles?.template || 'nocturno');
+        const themeId = settings?.displayTemplate || calendarStyles?.template || 'nocturno';
+        const theme = getTheme(themeId);
 
         // If the user selected a specific font set index for this theme
         if (calendarStyles?.fontSetIndex !== undefined && theme.fontOptions && theme.fontOptions[calendarStyles.fontSetIndex]) {

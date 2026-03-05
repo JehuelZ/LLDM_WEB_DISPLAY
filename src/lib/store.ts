@@ -58,6 +58,7 @@ export interface AppSettings {
     customSocialLabel?: string;
     adminTheme?: 'classic' | 'tactile';
     displayPin?: string; // New: Access code for TV/Display mode
+    displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon';
     displayAuthorizedEmails?: string[]; // New: List of emails allowed to use display mode
 }
 
@@ -272,6 +273,7 @@ export const useAppStore = create<AppState>()(
                 customSocialUrl: 'https://lldm.org',
                 customSocialLabel: 'Sitio Oficial',
                 displayPin: '1922',
+                displayTemplate: 'cristal',
                 displayAuthorizedEmails: ['jairojehuel@gmail.com']
             },
             currentUser: INITIAL_USER,
@@ -962,7 +964,8 @@ export const useAppStore = create<AppState>()(
                             iglesiaVariant: data.iglesia_variant || 'light',
                             iglesiaAnimation: data.iglesia_animation || 'metro',
                             iglesiaAnimationSpeed: data.iglesia_animation_speed || 2.4,
-                            iglesiaSlideDuration: data.iglesia_slide_duration || 12
+                            iglesiaSlideDuration: data.iglesia_slide_duration || 12,
+                            displayTemplate: data.display_template || 'cristal'
                         },
 
 
@@ -1009,7 +1012,8 @@ export const useAppStore = create<AppState>()(
                     iglesia_variant: updated.iglesiaVariant,
                     iglesia_animation: updated.iglesiaAnimation,
                     iglesia_animation_speed: updated.iglesiaAnimationSpeed,
-                    iglesia_slide_duration: updated.iglesiaSlideDuration
+                    iglesia_slide_duration: updated.iglesiaSlideDuration,
+                    display_template: updated.displayTemplate
                 };
 
 
