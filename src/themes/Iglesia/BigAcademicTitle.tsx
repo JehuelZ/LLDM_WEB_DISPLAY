@@ -1,0 +1,83 @@
+'use client';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { neuShadow } from './tokens';
+
+export function BigAcademicTitle({ label, icon: Icon, T, isDark, small = false }: { label: string; icon: any; T: any; isDark: boolean; small?: boolean }) {
+    const shadow = isDark
+        ? `12px 12px 25px rgba(0, 0, 0, 0.4), -10px -10px 25px rgba(255, 255, 255, 0.03)`
+        : `10px 10px 20px rgba(0, 0, 0, 0.04), -10px -10px 25px #FFFFFF`;
+
+    return (
+        <div style={{
+            width: '100%', height: small ? 60 : 80, borderRadius: small ? 20 : 28,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: small ? 14 : 20,
+            background: T.surface,
+            boxShadow: shadow,
+            border: 'none',
+            padding: small ? '0 24px' : '0 40px',
+            position: 'relative',
+            zIndex: 10
+        }}>
+            {Icon && <Icon style={{ width: small ? 24 : 32, height: small ? 24 : 32, color: isDark ? '#FFFFFF' : T.secondary }} />}
+            <span style={{
+                fontSize: small ? 24 : 32,
+                fontWeight: 700,
+                color: isDark ? '#FFFFFF' : T.textPrimary,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                fontFamily: T.fontMontserrat,
+                fontStyle: 'italic',
+                lineHeight: 1
+            }}>
+                {label}
+            </span>
+        </div>
+    );
+}
+
+import { Shield, Church, Cross, Star, Heart } from 'lucide-react';
+
+export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string; T: any; isDark: boolean; settings: any }) {
+    const shadow = isDark
+        ? `6px 6px 15px rgba(0, 0, 0, 0.45), -6px -6px 15px rgba(255, 255, 255, 0.02)`
+        : `5px 5px 12px rgba(0, 0, 0, 0.04), -5px -5px 12px #FFFFFF`;
+
+    const isCustom = settings?.churchIcon === 'custom';
+    const logoUrl = settings?.customIconUrl || settings?.churchLogoUrl;
+
+    const icons: Record<string, any> = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
+    const SelectedIcon = icons[settings?.churchIcon || 'shield'] || Shield;
+
+    return (
+        <div style={{
+            padding: '12px 28px', borderRadius: 24,
+            background: T.surface,
+            boxShadow: shadow,
+            display: 'flex', alignItems: 'center', gap: 16,
+            border: 'none',
+            width: 'fit-content'
+        }}>
+            <div style={{
+                width: 32, height: 32, borderRadius: 10,
+                background: `linear-gradient(135deg, ${T.accent}, ${T.accent}dd)`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: `0 4px 12px ${T.accent}40`,
+                overflow: 'hidden'
+            }}>
+                {isCustom && logoUrl ? (
+                    <img src={logoUrl} alt="" style={{ width: '80%', height: '80%', objectFit: 'contain', filter: isDark ? 'brightness(1.2)' : 'none' }} />
+                ) : (
+                    <SelectedIcon size={18} color="#FFFFFF" strokeWidth={2} />
+                )}
+            </div>
+            <h2 style={{
+                fontSize: 18, fontWeight: 700, color: isDark ? '#FFFFFF' : T.textPrimary,
+                letterSpacing: '-0.02em', fontFamily: T.fontMontserrat,
+                margin: 0, display: 'flex', gap: 6, alignItems: 'center'
+            }}>
+                {name.toUpperCase() || 'LLDM'} <span style={{ color: T.accent, fontSize: 13, fontWeight: 800, letterSpacing: '0.1em', opacity: 0.9 }}>TABLERO</span>
+            </h2>
+        </div>
+    );
+}

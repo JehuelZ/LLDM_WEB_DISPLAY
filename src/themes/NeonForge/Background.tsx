@@ -1,0 +1,27 @@
+import { NeonForgeWeatherWidget } from './NeonForgeWeatherWidget';
+
+export function NeonForgeBackground() {
+    return (
+        <div className="absolute inset-0 z-0 bg-black overflow-hidden pointer-events-none">
+            {/* Cyberpunk Grid */}
+            <div
+                className="absolute inset-0 opacity-[0.07]"
+                style={{
+                    backgroundImage: `linear-gradient(to right, #3b82f6 1px, transparent 1px), linear-gradient(to bottom, #3b82f6 1px, transparent 1px)`,
+                    backgroundSize: '100px 100px',
+                    maskImage: 'radial-gradient(ellipse 60% 50% at 50% 50%, black, transparent)'
+                }}
+            />
+
+            {/* Neon Glows */}
+            <div className="absolute top-0 left-1/4 w-1/2 h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent blur-md" />
+            <div className="absolute bottom-0 right-1/4 w-1/2 h-1 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent blur-md" />
+
+            <div className="absolute top-1/4 -left-20 w-80 h-80 bg-cyan-600/10 rounded-full blur-[120px]" />
+            <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-blue-600/10 rounded-full blur-[120px]" />
+
+            <NeonForgeWeatherWidget />
+        </div>
+    );
+}
+

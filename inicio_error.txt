@@ -1,0 +1,1666 @@
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Thu Feb 26 01:39:44 PST 2026
+📂 Entrando a la subcarpeta del proyecto...
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Thu Feb 26 01:43:57 PST 2026
+📂 Entrando a la subcarpeta del proyecto...
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+⚠ Port 3000 is in use by process 68704, using available port 3001 instead.
+[?25h
+[?25h
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Thu Feb 26 01:46:42 PST 2026
+📂 Entrando a la subcarpeta del proyecto...
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/hardglobal/Library/CloudStorage/GoogleDrive-jairojehuel@gmail.com/My Drive/LLDM RODEO APP/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/hardglobal/Library/CloudStorage/GoogleDrive-jairojehuel@gmail.com/My Drive/LLDM RODEO APP/lldm-rodeo-board/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.0.76:3000
+- Environments: .env.local
+
+✓ Starting...
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+[?25h
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Thu Feb 26 01:48:35 PST 2026
+📂 Entrando a la subcarpeta del proyecto...
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/hardglobal/Library/CloudStorage/GoogleDrive-jairojehuel@gmail.com/My Drive/LLDM RODEO APP/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/hardglobal/Library/CloudStorage/GoogleDrive-jairojehuel@gmail.com/My Drive/LLDM RODEO APP/lldm-rodeo-board/package-lock.json
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.0.76:3000
+- Environments: .env.local
+
+✓ Starting...
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+[?25h
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Fri Feb 27 23:15:08 PST 2026
+📂 Entrando a la subcarpeta del proyecto...
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+sh: next: command not found
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Mon Mar  2 09:08:51 PST 2026
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by process 80116, using available port 3001 instead.
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://10.0.0.76:3001
+- Environments: .env.local
+
+✓ Starting...
+⨯ Unable to acquire lock at /Users/hardglobal/Documents/LLDM_RODEO_APP/.next/dev/lock, is another instance of next dev running?
+  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
+[?25h
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Mon Mar  2 09:20:33 PST 2026
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.0.76:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 721ms
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+ GET /admin 200 in 2.8s (compile: 2.5s, render: 234ms)
+ GET /display 200 in 2.8s (compile: 2.5s, render: 272ms)
+✓ Compiled in 259ms
+ GET /admin 200 in 238ms (compile: 73ms, render: 165ms)
+✓ Compiled in 313ms
+✓ Compiled in 193ms
+✓ Compiled in 159ms
+✓ Compiled in 104ms
+✓ Compiled in 122ms
+✓ Compiled in 131ms
+✓ Compiled in 154ms
+✓ Compiled in 145ms
+ GET /display 200 in 246ms (compile: 92ms, render: 154ms)
+✓ Compiled in 210ms
+✓ Compiled in 197ms
+✓ Compiled in 82ms
+✓ Compiled in 136ms
+✓ Compiled in 156ms
+✓ Compiled in 168ms
+✓ Compiled in 139ms
+✓ Compiled in 92ms
+✓ Compiled in 134ms
+✓ Compiled in 233ms
+✓ Compiled in 202ms
+✓ Compiled in 158ms
+✓ Compiled in 169ms
+✓ Compiled in 272ms
+✓ Compiled in 164ms
+ GET /admin 200 in 328ms (compile: 85ms, render: 243ms)
+ GET /admin 200 in 341ms (compile: 161ms, render: 181ms)
+ GET /display 200 in 336ms (compile: 238ms, render: 98ms)
+ GET /admin 200 in 73ms (compile: 5ms, render: 68ms)
+ GET /admin 200 in 77ms (compile: 29ms, render: 48ms)
+ GET /display 200 in 56ms (compile: 17ms, render: 39ms)
+✓ Compiled in 114ms
+✓ Compiled in 1272ms
+✓ Compiled in 209ms
+✓ Compiled in 344ms
+✓ Compiled in 199ms
+ GET /admin 200 in 384ms (compile: 144ms, render: 241ms)
+ GET /admin 200 in 379ms (compile: 102ms, render: 277ms)
+ GET /display 200 in 403ms (compile: 271ms, render: 132ms)
+ GET /admin 200 in 121ms (compile: 4ms, render: 117ms)
+ GET /admin 200 in 121ms (compile: 20ms, render: 101ms)
+ GET /display 200 in 115ms (compile: 19ms, render: 95ms)
+✓ Compiled in 106ms
+✓ Compiled in 272ms
+✓ Compiled in 134ms
+✓ Compiled in 269ms
+✓ Compiled in 398ms
+✓ Compiled in 163ms
+✓ Compiled in 358ms
+ GET /admin 200 in 345ms (compile: 145ms, render: 199ms)
+ GET /admin 200 in 351ms (compile: 187ms, render: 164ms)
+ GET /display 200 in 346ms (compile: 268ms, render: 78ms)
+ GET /admin 200 in 55ms (compile: 3ms, render: 52ms)
+ GET /admin 200 in 59ms (compile: 18ms, render: 41ms)
+ GET /display 200 in 63ms (compile: 32ms, render: 31ms)
+✓ Compiled in 164ms
+✓ Compiled in 128ms
+✓ Compiled in 130ms
+✓ Compiled in 114ms
+✓ Compiled in 286ms
+✓ Compiled in 134ms
+ GET /admin 200 in 324ms (compile: 93ms, render: 231ms)
+ GET /admin 200 in 323ms (compile: 123ms, render: 200ms)
+ GET /display 200 in 204ms (compile: 136ms, render: 67ms)
+ GET /admin 200 in 52ms (compile: 2ms, render: 50ms)
+ GET /admin 200 in 43ms (compile: 3ms, render: 40ms)
+ GET /display 200 in 44ms (compile: 13ms, render: 32ms)
+✓ Compiled in 214ms
+✓ Compiled in 254ms
+ GET /admin 200 in 346ms (compile: 111ms, render: 235ms)
+ GET /admin 200 in 352ms (compile: 147ms, render: 205ms)
+ GET /display 200 in 351ms (compile: 224ms, render: 127ms)
+ GET /admin 200 in 73ms (compile: 2ms, render: 70ms)
+ GET /admin 200 in 75ms (compile: 26ms, render: 49ms)
+ GET /display 200 in 80ms (compile: 43ms, render: 37ms)
+✓ Compiled in 264ms
+✓ Compiled in 84ms
+✓ Compiled in 288ms
+✓ Compiled in 292ms
+✓ Compiled in 219ms
+✓ Compiled in 180ms
+✓ Compiled in 153ms
+✓ Compiled in 194ms
+✓ Compiled in 179ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 646ms (compile: 227ms, render: 419ms)
+ GET /display 200 in 100ms (compile: 27ms, render: 73ms)
+ GET /display 200 in 64ms (compile: 3ms, render: 61ms)
+✓ Compiled in 160ms
+✓ Compiled in 132ms
+✓ Compiled in 398ms
+✓ Compiled in 173ms
+ GET /display 200 in 668ms (compile: 327ms, render: 341ms)
+✓ Compiled in 821ms
+✓ Compiled in 261ms
+✓ Compiled in 164ms
+✓ Compiled in 157ms
+✓ Compiled in 157ms
+✓ Compiled in 138ms
+✓ Compiled in 239ms
+✓ Compiled in 181ms
+✓ Compiled in 131ms
+✓ Compiled in 148ms
+✓ Compiled in 172ms
+✓ Compiled in 376ms
+✓ Compiled in 220ms
+✓ Compiled in 130ms
+ GET /display 200 in 859ms (compile: 423ms, render: 436ms)
+ GET /admin 200 in 376ms (compile: 140ms, render: 235ms)
+ GET /admin/members 200 in 2.1s (compile: 2.0s, render: 51ms)
+ GET /admin/members 200 in 37ms (compile: 5ms, render: 33ms)
+✓ Compiled in 396ms
+✓ Compiled in 339ms
+✓ Compiled in 274ms
+✓ Compiled in 681ms
+✓ Compiled in 204ms
+ GET /display 200 in 996ms (compile: 554ms, render: 442ms)
+ GET /display 200 in 91ms (compile: 32ms, render: 58ms)
+ GET /display 200 in 58ms (compile: 5ms, render: 53ms)
+ GET /display 200 in 58ms (compile: 5ms, render: 53ms)
+ GET /display 200 in 50ms (compile: 11ms, render: 39ms)
+✓ Compiled in 237ms
+✓ Compiled in 222ms
+✓ Compiled in 190ms
+✓ Compiled in 184ms
+✓ Compiled in 661ms
+✓ Compiled in 177ms
+✓ Compiled in 213ms
+ GET /display 200 in 568ms (compile: 250ms, render: 317ms)
+ GET /display 200 in 84ms (compile: 26ms, render: 58ms)
+✓ Compiled in 319ms
+✓ Compiled in 163ms
+✓ Compiled in 237ms
+✓ Compiled in 168ms
+✓ Compiled in 323ms
+✓ Compiled in 171ms
+✓ Compiled in 172ms
+✓ Compiled in 240ms
+✓ Compiled in 231ms
+✓ Compiled in 18ms
+ GET /admin 200 in 415ms (compile: 353ms, render: 63ms)
+ GET /admin 200 in 57ms (compile: 20ms, render: 38ms)
+ GET /admin 200 in 29ms (compile: 5ms, render: 24ms)
+✓ Compiled in 395ms
+✓ Compiled in 56ms
+ GET /display 200 in 717ms (compile: 279ms, render: 438ms)
+✓ Compiled in 220ms
+ GET /display 200 in 418ms (compile: 162ms, render: 256ms)
+✓ Compiled in 152ms
+✓ Compiled in 176ms
+✓ Compiled in 171ms
+ GET /display 200 in 340ms (compile: 135ms, render: 205ms)
+ GET /display 200 in 60ms (compile: 5ms, render: 55ms)
+ GET /display 200 in 259ms (compile: 12ms, render: 247ms)
+✓ Compiled in 250ms
+✓ Compiled in 148ms
+ GET /display 200 in 785ms (compile: 316ms, render: 468ms)
+ GET /display 200 in 72ms (compile: 20ms, render: 52ms)
+✓ Compiled in 259ms
+✓ Compiled in 125ms
+✓ Compiled in 151ms
+✓ Compiled in 130ms
+✓ Compiled in 121ms
+ GET /display 200 in 506ms (compile: 242ms, render: 264ms)
+ GET /display 200 in 102ms (compile: 29ms, render: 73ms)
+✓ Compiled in 212ms
+⨯ ReferenceError: loadMembersFromCloud is not defined
+    at DisplayPage (src/app/display/page.tsx:70:87)
+  68 |         };
+  69 |         initData();
+> 70 |     }, [loadAllSchedulesFromCloud, loadAnnouncementsFromCloud, loadSettingsFromCloud, loadMembersFromCloud]);
+     |                                                                                       ^
+  71 |
+  72 |     // Theme engine: choose the correct theme based on settings
+  73 |     const activeTheme = useMemo(() => { {
+  digest: '1576423942'
+}
+ GET /display 500 in 444ms (compile: 189ms, render: 255ms)
+⨯ ReferenceError: loadMembersFromCloud is not defined
+    at DisplayPage (src/app/display/page.tsx:70:87)
+  68 |         };
+  69 |         initData();
+> 70 |     }, [loadAllSchedulesFromCloud, loadAnnouncementsFromCloud, loadSettingsFromCloud, loadMembersFromCloud]);
+     |                                                                                       ^
+  71 |
+  72 |     // Theme engine: choose the correct theme based on settings
+  73 |     const activeTheme = useMemo(() => { {
+  digest: '1576423942'
+}
+ GET /display 500 in 98ms (compile: 29ms, render: 69ms)
+⨯ ReferenceError: loadMembersFromCloud is not defined
+    at DisplayPage (src/app/display/page.tsx:70:87)
+  68 |         };
+  69 |         initData();
+> 70 |     }, [loadAllSchedulesFromCloud, loadAnnouncementsFromCloud, loadSettingsFromCloud, loadMembersFromCloud]);
+     |                                                                                       ^
+  71 |
+  72 |     // Theme engine: choose the correct theme based on settings
+  73 |     const activeTheme = useMemo(() => { {
+  digest: '1576423942'
+}
+ GET /display 500 in 43ms (compile: 5ms, render: 38ms)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 158ms
+ GET /display 200 in 539ms (compile: 194ms, render: 345ms)
+ GET /display 200 in 86ms (compile: 3ms, render: 83ms)
+ GET /display 200 in 114ms (compile: 34ms, render: 79ms)
+✓ Compiled in 280ms
+ GET /display 200 in 815ms (compile: 237ms, render: 578ms)
+ GET /display 200 in 80ms (compile: 20ms, render: 60ms)
+ GET /display 200 in 94ms (compile: 24ms, render: 70ms)
+✓ Compiled in 237ms
+ GET /display 200 in 495ms (compile: 239ms, render: 256ms)
+✓ Compiled in 333ms
+⨯ ./src/themes/Iglesia/IglesiaSchedule.tsx:443:33
+Parsing ecmascript source code failed
+[0m [90m 441 |[39m                                 }
+ [90m 442 |[39m                                 [36mreturn[39m (
+[31m[1m>[22m[39m[90m 443 |[39m                                 [36mreturn[39m (
+ [90m     |[39m                                 [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 444 |[39m                                     [33m<[39m[33mdiv[39m style[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m flexDirection[33m:[39m [32m'column'[39m[33m,[39m alignItems[33m:[39m [32m'center'[39m[33m,[39m gap[33m:[39m [35m15[39m[33m,[39m width[33m:[39m [32m'100%'[39m }}[33m>[39m
+ [90m 445 |[39m                                         [33m<[39m[33mdiv[39m style[33m=[39m{{ display[33m:[39m [32m'flex'[39m[33m,[39m gap[33m:[39m [33m-[39m[35m20[39m[33m,[39m justifyContent[33m:[39m [32m'center'[39m[33m,[39m marginBottom[33m:[39m [35m5[39m }}[33m>[39m
+ [90m 446 |[39m                                             [33m<[39m[33mAvatar[39m src[33m=[39m{cons9am[33m.[39mavatar} size[33m=[39m{[35m160[39m} [33mT[39m[33m=[39m{[33mT[39m} isDark[33m=[39m{isDark} [33m/[39m[33m>[39m[0m
+
+Expected '</', got 'return'
+
+Import traces:
+  Client Component Browser:
+    ./src/themes/Iglesia/IglesiaSchedule.tsx [Client Component Browser]
+    ./src/themes/Iglesia/index.tsx [Client Component Browser]
+    ./src/themes/index.ts [Client Component Browser]
+    ./src/app/display/page.tsx [Client Component Browser]
+    ./src/app/display/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/themes/Iglesia/IglesiaSchedule.tsx [Client Component SSR]
+    ./src/themes/Iglesia/index.tsx [Client Component SSR]
+    ./src/themes/index.ts [Client Component SSR]
+    ./src/app/display/page.tsx [Client Component SSR]
+    ./src/app/display/page.tsx [Server Component]
+
+
+ GET /display 500 in 3.0s (compile: 2.6s, render: 320ms)
+✓ Compiled in 180ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /admin 200 in 1446ms (compile: 351ms, render: 1095ms)
+ GET /admin 200 in 1451ms (compile: 806ms, render: 645ms)
+ GET /display 200 in 1475ms (compile: 755ms, render: 720ms)
+ GET /admin 200 in 793ms (compile: 116ms, render: 677ms)
+ GET /admin 200 in 633ms (compile: 95ms, render: 538ms)
+ GET /display 200 in 805ms (compile: 52ms, render: 753ms)
+ GET /display 200 in 1959ms (compile: 178ms, render: 1781ms)
+ GET /admin 200 in 205ms (compile: 75ms, render: 130ms)
+ GET /admin 200 in 52ms (compile: 13ms, render: 39ms)
+ GET /display 200 in 352ms (compile: 105ms, render: 247ms)
+✓ Compiled in 207ms
+✓ Compiled in 307ms
+✓ Compiled in 228ms
+✓ Compiled in 300ms
+✓ Compiled in 170ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 2.4s (compile: 1373ms, render: 1053ms)
+ GET /display 200 in 156ms (compile: 39ms, render: 117ms)
+✓ Compiled in 398ms
+✓ Compiled in 381ms
+✓ Compiled in 205ms
+✓ Compiled in 485ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 1829ms (compile: 1253ms, render: 575ms)
+ GET /display 200 in 64ms (compile: 10ms, render: 54ms)
+✓ Compiled in 370ms
+✓ Compiled in 296ms
+✓ Compiled in 137ms
+✓ Compiled in 917ms
+ GET /admin 200 in 3.2s (compile: 1108ms, render: 2.1s)
+ GET /display 200 in 415ms (compile: 188ms, render: 228ms)
+✓ Compiled in 314ms
+✓ Compiled in 156ms
+✓ Compiled in 122ms
+✓ Compiled in 140ms
+✓ Compiled in 271ms
+✓ Compiled in 160ms
+✓ Compiled in 116ms
+✓ Compiled in 128ms
+✓ Compiled in 77ms
+ GET /display 200 in 670ms (compile: 229ms, render: 441ms)
+✓ Compiled in 146ms
+ GET /display 200 in 381ms (compile: 124ms, render: 257ms)
+ GET /display 200 in 99ms (compile: 33ms, render: 66ms)
+✓ Compiled in 221ms
+✓ Compiled in 98ms
+✓ Compiled in 258ms
+✓ Compiled in 147ms
+✓ Compiled in 109ms
+✓ Compiled in 127ms
+✓ Compiled in 67ms
+✓ Compiled in 55ms
+✓ Compiled in 95ms
+✓ Compiled in 142ms
+ GET /display 200 in 430ms (compile: 207ms, render: 223ms)
+ GET /display 200 in 65ms (compile: 14ms, render: 51ms)
+ GET /display 200 in 74ms (compile: 32ms, render: 42ms)
+✓ Compiled in 182ms
+✓ Compiled in 147ms
+✓ Compiled in 102ms
+✓ Compiled in 122ms
+✓ Compiled in 99ms
+ GET /display 200 in 637ms (compile: 158ms, render: 479ms)
+✓ Compiled in 1057ms
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 352ms (compile: 132ms, render: 220ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 91ms (compile: 17ms, render: 74ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 80ms (compile: 5ms, render: 75ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 95ms (compile: 14ms, render: 81ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 72ms (compile: 5ms, render: 67ms)
+✓ Compiled in 361ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 117ms (compile: 27ms, render: 90ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 60ms (compile: 10ms, render: 50ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 54ms (compile: 9ms, render: 46ms)
+✓ Compiled in 240ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 143ms (compile: 25ms, render: 118ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 79ms (compile: 12ms, render: 67ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 86ms (compile: 17ms, render: 69ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 70ms (compile: 6ms, render: 64ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 109ms (compile: 25ms, render: 84ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 80ms (compile: 19ms, render: 61ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 60ms (compile: 6ms, render: 54ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 79ms (compile: 12ms, render: 67ms)
+⨯ TypeError: Cannot read properties of undefined (reading 'slides')
+    at DisplayPage (src/app/display/page.tsx:88:71)
+  86 |     }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+  87 |
+> 88 |     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
+     |                                                                       ^
+  89 |     const { Background, Clock, Progress } = activeTheme.components;
+  90 |
+  91 |     const slides = useMemo(() => { {
+  digest: '3950080480'
+}
+ GET /display 500 in 88ms (compile: 7ms, render: 81ms)
+✓ Compiled in 92ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 782ms (compile: 432ms, render: 350ms)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 102ms
+ GET /display 200 in 395ms (compile: 257ms, render: 138ms)
+ GET /display 200 in 164ms (compile: 66ms, render: 98ms)
+ GET /display 200 in 68ms (compile: 4ms, render: 64ms)
+ GET /display 200 in 69ms (compile: 6ms, render: 62ms)
+ GET /display 200 in 78ms (compile: 6ms, render: 72ms)
+ GET /display 200 in 66ms (compile: 6ms, render: 60ms)
+ GET /display 200 in 87ms (compile: 5ms, render: 82ms)
+✓ Compiled in 141ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 418ms (compile: 208ms, render: 210ms)
+✓ Compiled in 108ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 453ms (compile: 172ms, render: 281ms)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 163ms
+ GET /display 200 in 392ms (compile: 192ms, render: 201ms)
+ GET /admin 200 in 718ms (compile: 223ms, render: 495ms)
+ GET /display 200 in 102ms (compile: 34ms, render: 68ms)
+✓ Compiled in 506ms
+✓ Compiled in 145ms
+ GET /display 200 in 482ms (compile: 261ms, render: 221ms)
+ GET /display 200 in 134ms (compile: 30ms, render: 104ms)
+ GET /display 200 in 113ms (compile: 37ms, render: 76ms)
+ GET /display 200 in 82ms (compile: 21ms, render: 61ms)
+✓ Compiled in 916ms
+✓ Compiled in 496ms
+✓ Compiled in 116ms
+✓ Compiled in 185ms
+✓ Compiled in 352ms
+✓ Compiled in 86ms
+✓ Compiled in 339ms
+✓ Compiled in 94ms
+✓ Compiled in 355ms
+✓ Compiled in 547ms
+✓ Compiled in 165ms
+✓ Compiled in 366ms
+ GET /display 200 in 2.6s (compile: 1449ms, render: 1119ms)
+ GET /display 200 in 93ms (compile: 22ms, render: 71ms)
+✓ Compiled in 262ms
+ GET /display 200 in 586ms (compile: 302ms, render: 284ms)
+✓ Compiled in 773ms
+✓ Compiled in 657ms
+✓ Compiled in 665ms
+✓ Compiled in 339ms
+✓ Compiled in 171ms
+✓ Compiled in 209ms
+✓ Compiled in 178ms
+✓ Compiled in 137ms
+✓ Compiled in 163ms
+✓ Compiled in 287ms
+✓ Compiled in 156ms
+✓ Compiled in 124ms
+✓ Compiled in 156ms
+✓ Compiled in 412ms
+✓ Compiled in 197ms
+✓ Compiled in 216ms
+✓ Compiled in 737ms
+✓ Compiled in 159ms
+✓ Compiled in 141ms
+✓ Compiled in 249ms
+✓ Compiled in 35ms
+ GET /display 200 in 3.4s (compile: 1418ms, render: 2.0s)
+✓ Compiled in 282ms
+✓ Compiled in 204ms
+ GET /display 200 in 575ms (compile: 274ms, render: 302ms)
+✓ Compiled in 552ms
+ GET /display 200 in 770ms (compile: 367ms, render: 404ms)
+ GET /display 200 in 174ms (compile: 62ms, render: 111ms)
+✓ Compiled in 698ms
+✓ Compiled in 12ms
+ GET /display 200 in 538ms (compile: 220ms, render: 318ms)
+ GET /display 200 in 103ms (compile: 33ms, render: 71ms)
+ GET /display 200 in 140ms (compile: 15ms, render: 124ms)
+ GET /display 200 in 114ms (compile: 28ms, render: 85ms)
+ GET /display 200 in 160ms (compile: 20ms, render: 140ms)
+✓ Compiled in 374ms
+ GET /display 200 in 556ms (compile: 265ms, render: 292ms)
+ GET /display 200 in 57ms (compile: 6ms, render: 51ms)
+ GET /display 200 in 133ms (compile: 32ms, render: 100ms)
+✓ Compiled in 218ms
+ GET /display 200 in 465ms (compile: 172ms, render: 293ms)
+ GET /display 200 in 47ms (compile: 10ms, render: 37ms)
+ GET /display 200 in 97ms (compile: 18ms, render: 79ms)
+ GET /display 200 in 55ms (compile: 5ms, render: 50ms)
+ GET /display 200 in 106ms (compile: 8ms, render: 98ms)
+ GET /display 200 in 139ms (compile: 29ms, render: 110ms)
+ GET /display 200 in 328ms (compile: 28ms, render: 299ms)
+✓ Compiled in 442ms
+ GET /display 200 in 550ms (compile: 263ms, render: 287ms)
+ GET /display 200 in 92ms (compile: 27ms, render: 65ms)
+ GET /display 200 in 103ms (compile: 27ms, render: 76ms)
+ GET /display 200 in 45ms (compile: 10ms, render: 35ms)
+ GET /display 200 in 320ms (compile: 26ms, render: 294ms)
+ GET /display 200 in 135ms (compile: 22ms, render: 113ms)
+ GET /display 200 in 124ms (compile: 27ms, render: 96ms)
+ GET /display 200 in 98ms (compile: 44ms, render: 55ms)
+✓ Compiled in 330ms
+ GET /display 200 in 852ms (compile: 276ms, render: 575ms)
+ GET /display 200 in 47ms (compile: 5ms, render: 42ms)
+✓ Compiled in 735ms
+ GET /display 200 in 904ms (compile: 477ms, render: 427ms)
+ GET /display 200 in 77ms (compile: 27ms, render: 50ms)
+ GET /display 200 in 72ms (compile: 5ms, render: 67ms)
+ GET /display 200 in 91ms (compile: 17ms, render: 73ms)
+ GET /display 200 in 84ms (compile: 4ms, render: 80ms)
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 115ms
+ GET /display 200 in 302ms (compile: 103ms, render: 199ms)
+ GET /display 200 in 99ms (compile: 15ms, render: 84ms)
+ GET /display 200 in 56ms (compile: 6ms, render: 51ms)
+ GET /display 200 in 164ms (compile: 28ms, render: 136ms)
+ GET /display 200 in 58ms (compile: 6ms, render: 53ms)
+✓ Compiled in 375ms
+✓ Compiled in 12ms
+ GET /display 200 in 670ms (compile: 208ms, render: 462ms)
+ GET /display 200 in 115ms (compile: 14ms, render: 102ms)
+ GET /display 200 in 69ms (compile: 5ms, render: 64ms)
+ GET /display 200 in 105ms (compile: 24ms, render: 81ms)
+ GET /display 200 in 76ms (compile: 21ms, render: 55ms)
+ GET /display 200 in 50ms (compile: 7ms, render: 44ms)
+✓ Compiled in 587ms
+✓ Compiled in 331ms
+ GET /admin 200 in 643ms (compile: 534ms, render: 109ms)
+ GET /admin 200 in 630ms (compile: 489ms, render: 141ms)
+ GET /display 200 in 642ms (compile: 255ms, render: 387ms)
+ GET /admin 200 in 125ms (compile: 3ms, render: 123ms)
+ GET /display 200 in 168ms (compile: 22ms, render: 146ms)
+ GET /admin 200 in 218ms (compile: 2ms, render: 216ms)
+ GET /display 200 in 1202ms (compile: 86ms, render: 1117ms)
+✓ Compiled in 11ms
+ GET /display 200 in 582ms (compile: 205ms, render: 377ms)
+ GET /display 200 in 275ms (compile: 28ms, render: 247ms)
+✓ Compiled in 194ms
+ GET /display 200 in 531ms (compile: 267ms, render: 264ms)
+ GET /display 200 in 165ms (compile: 25ms, render: 141ms)
+ GET /display 200 in 68ms (compile: 11ms, render: 57ms)
+✓ Compiled in 382ms
+ GET /display 200 in 1343ms (compile: 672ms, render: 671ms)
+ GET /display 200 in 85ms (compile: 22ms, render: 63ms)
+ GET /display 200 in 109ms (compile: 16ms, render: 92ms)
+ GET /display 200 in 56ms (compile: 10ms, render: 46ms)
+ GET /display 200 in 101ms (compile: 23ms, render: 78ms)
+ GET /display 200 in 132ms (compile: 25ms, render: 107ms)
+ GET /display 200 in 84ms (compile: 6ms, render: 79ms)
+ GET /display 200 in 123ms (compile: 19ms, render: 104ms)
+ GET /display 200 in 120ms (compile: 41ms, render: 79ms)
+✓ Compiled in 528ms
+✓ Compiled in 153ms
+ GET /display 200 in 1253ms (compile: 569ms, render: 684ms)
+ GET /display 200 in 198ms (compile: 49ms, render: 149ms)
+✓ Compiled in 195ms
+ GET /display 200 in 1066ms (compile: 708ms, render: 358ms)
+✓ Compiled in 1273ms
+✓ Compiled in 162ms
+✓ Compiled in 721ms
+✓ Compiled in 319ms
+✓ Compiled in 586ms
+✓ Compiled in 165ms
+⨯ ./src/themes/Glassmorphism/Clock.tsx:78:11
+Parsing ecmascript source code failed
+[0m [90m 76 |[39m     )[33m;[39m
+ [90m 77 |[39m }[33m;[39m
+[31m[1m>[22m[39m[90m 78 |[39m  [33mVincular[39m este cambio a[33m:[39m [33m/[39m[33mUsers[39m[33m/[39mhardglobal [33m/[39m [33mDocuments[39m [33m/[39m [33mLLDM_RODEO_APP[39m [33m/[39m src [33m/[39m themes [33m/[39m [33mGlassmorphism[39m [33m/[39m [33mClock[39m[33m.[39mtsx
+ [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 79 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component Browser]
+    ./src/themes/Glassmorphism/index.ts [Client Component Browser]
+    ./src/themes/index.ts [Client Component Browser]
+    ./src/app/display/page.tsx [Client Component Browser]
+    ./src/app/display/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component SSR]
+    ./src/themes/Glassmorphism/index.ts [Client Component SSR]
+    ./src/themes/index.ts [Client Component SSR]
+    ./src/app/display/page.tsx [Client Component SSR]
+    ./src/app/display/page.tsx [Server Component]
+
+
+ GET /display 500 in 456ms (compile: 317ms, render: 139ms)
+⨯ ./src/themes/Glassmorphism/Clock.tsx:78:11
+Parsing ecmascript source code failed
+[0m [90m 76 |[39m     )[33m;[39m
+ [90m 77 |[39m }[33m;[39m
+[31m[1m>[22m[39m[90m 78 |[39m  [33mVincular[39m este cambio a[33m:[39m [33m/[39m[33mUsers[39m[33m/[39mhardglobal [33m/[39m [33mDocuments[39m [33m/[39m [33mLLDM_RODEO_APP[39m [33m/[39m src [33m/[39m themes [33m/[39m [33mGlassmorphism[39m [33m/[39m [33mClock[39m[33m.[39mtsx
+ [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 79 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component Browser]
+    ./src/themes/Glassmorphism/index.ts [Client Component Browser]
+    ./src/themes/index.ts [Client Component Browser]
+    ./src/app/display/page.tsx [Client Component Browser]
+    ./src/app/display/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component SSR]
+    ./src/themes/Glassmorphism/index.ts [Client Component SSR]
+    ./src/themes/index.ts [Client Component SSR]
+    ./src/app/display/page.tsx [Client Component SSR]
+    ./src/app/display/page.tsx [Server Component]
+
+
+ GET /display 500 in 98ms (compile: 82ms, render: 16ms)
+⨯ ./src/themes/Glassmorphism/Clock.tsx:78:11
+Parsing ecmascript source code failed
+[0m [90m 76 |[39m     )[33m;[39m
+ [90m 77 |[39m }[33m;[39m
+[31m[1m>[22m[39m[90m 78 |[39m  [33mVincular[39m este cambio a[33m:[39m [33m/[39m[33mUsers[39m[33m/[39mhardglobal [33m/[39m [33mDocuments[39m [33m/[39m [33mLLDM_RODEO_APP[39m [33m/[39m src [33m/[39m themes [33m/[39m [33mGlassmorphism[39m [33m/[39m [33mClock[39m[33m.[39mtsx
+ [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 79 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component Browser]
+    ./src/themes/Glassmorphism/index.ts [Client Component Browser]
+    ./src/themes/index.ts [Client Component Browser]
+    ./src/app/display/page.tsx [Client Component Browser]
+    ./src/app/display/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component SSR]
+    ./src/themes/Glassmorphism/index.ts [Client Component SSR]
+    ./src/themes/index.ts [Client Component SSR]
+    ./src/app/display/page.tsx [Client Component SSR]
+    ./src/app/display/page.tsx [Server Component]
+
+
+ GET /display 500 in 37ms (compile: 18ms, render: 20ms)
+⨯ ./src/themes/Glassmorphism/Clock.tsx:78:11
+Parsing ecmascript source code failed
+[0m [90m 76 |[39m     )[33m;[39m
+ [90m 77 |[39m }[33m;[39m
+[31m[1m>[22m[39m[90m 78 |[39m  [33mVincular[39m este cambio a[33m:[39m [33m/[39m[33mUsers[39m[33m/[39mhardglobal [33m/[39m [33mDocuments[39m [33m/[39m [33mLLDM_RODEO_APP[39m [33m/[39m src [33m/[39m themes [33m/[39m [33mGlassmorphism[39m [33m/[39m [33mClock[39m[33m.[39mtsx
+ [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 79 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component Browser]
+    ./src/themes/Glassmorphism/index.ts [Client Component Browser]
+    ./src/themes/index.ts [Client Component Browser]
+    ./src/app/display/page.tsx [Client Component Browser]
+    ./src/app/display/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component SSR]
+    ./src/themes/Glassmorphism/index.ts [Client Component SSR]
+    ./src/themes/index.ts [Client Component SSR]
+    ./src/app/display/page.tsx [Client Component SSR]
+    ./src/app/display/page.tsx [Server Component]
+
+
+ GET /display 500 in 87ms (compile: 67ms, render: 20ms)
+⨯ ./src/themes/Glassmorphism/Clock.tsx:78:11
+Parsing ecmascript source code failed
+[0m [90m 76 |[39m     )[33m;[39m
+ [90m 77 |[39m }[33m;[39m
+[31m[1m>[22m[39m[90m 78 |[39m  [33mVincular[39m este cambio a[33m:[39m [33m/[39m[33mUsers[39m[33m/[39mhardglobal [33m/[39m [33mDocuments[39m [33m/[39m [33mLLDM_RODEO_APP[39m [33m/[39m src [33m/[39m themes [33m/[39m [33mGlassmorphism[39m [33m/[39m [33mClock[39m[33m.[39mtsx
+ [90m    |[39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 79 |[39m[0m
+
+Expected ';', '}' or <eof>
+
+Import traces:
+  Client Component Browser:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component Browser]
+    ./src/themes/Glassmorphism/index.ts [Client Component Browser]
+    ./src/themes/index.ts [Client Component Browser]
+    ./src/app/display/page.tsx [Client Component Browser]
+    ./src/app/display/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/themes/Glassmorphism/Clock.tsx [Client Component SSR]
+    ./src/themes/Glassmorphism/index.ts [Client Component SSR]
+    ./src/themes/index.ts [Client Component SSR]
+    ./src/app/display/page.tsx [Client Component SSR]
+    ./src/app/display/page.tsx [Server Component]
+
+
+ GET /display 500 in 33ms (compile: 19ms, render: 14ms)
+✓ Compiled in 479ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+○ Compiling /display ...
+ GET /admin 200 in 980ms (compile: 390ms, render: 591ms)
+ GET /admin 200 in 4.4s (compile: 3.4s, render: 1070ms)
+ GET /admin 200 in 1443ms (compile: 289ms, render: 1154ms)
+ GET /admin 200 in 656ms (compile: 84ms, render: 572ms)
+ GET /display 200 in 4.7s (compile: 1726ms, render: 3.0s)
+ GET /admin 200 in 1280ms (compile: 6ms, render: 1274ms)
+✓ Compiled in 1529ms
+✓ Compiled in 335ms
+✓ Compiled in 151ms
+✓ Compiled in 439ms
+✓ Compiled in 407ms
+ GET /display 200 in 2.6s (compile: 1239ms, render: 1321ms)
+✓ Compiled in 737ms
+✓ Compiled in 258ms
+✓ Compiled in 164ms
+✓ Compiled in 217ms
+✓ Compiled in 126ms
+✓ Compiled in 850ms
+✓ Compiled in 248ms
+✓ Compiled in 343ms
+ GET /display 200 in 3.5s (compile: 1534ms, render: 1975ms)
+ GET /display 200 in 112ms (compile: 22ms, render: 90ms)
+ GET /display 200 in 150ms (compile: 22ms, render: 129ms)
+ GET /display 200 in 48ms (compile: 8ms, render: 39ms)
+ GET /display 200 in 166ms (compile: 4ms, render: 161ms)
+✓ Compiled in 1628ms
+ GET /display 200 in 3.3s (compile: 2.5s, render: 753ms)
+ GET /display 200 in 283ms (compile: 41ms, render: 242ms)
+ GET /display 200 in 123ms (compile: 29ms, render: 94ms)
+ GET /display 200 in 115ms (compile: 13ms, render: 102ms)
+✓ Compiled in 853ms
+✓ Compiled in 341ms
+ GET /admin 200 in 1814ms (compile: 1331ms, render: 483ms)
+ GET /admin 200 in 400ms (compile: 297ms, render: 103ms)
+ GET /display 200 in 1778ms (compile: 1641ms, render: 137ms)
+ GET /admin 200 in 86ms (compile: 9ms, render: 77ms)
+ GET /admin 200 in 52ms (compile: 5ms, render: 46ms)
+ GET /display 200 in 87ms (compile: 20ms, render: 66ms)
+✓ Compiled in 674ms
+✓ Compiled in 24ms
+ GET /display 200 in 2.2s (compile: 332ms, render: 1874ms)
+ GET /display 200 in 65ms (compile: 14ms, render: 51ms)
+✓ Compiled in 416ms
+ GET /admin 200 in 515ms (compile: 259ms, render: 255ms)
+ GET /display 200 in 666ms (compile: 302ms, render: 364ms)
+✓ Compiled in 580ms
+✓ Compiled in 37ms
+ GET /display 200 in 1479ms (compile: 344ms, render: 1136ms)
+✓ Compiled in 752ms
+✓ Compiled in 238ms
+✓ Compiled in 288ms
+✓ Compiled in 253ms
+✓ Compiled in 135ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /admin 200 in 2.7s (compile: 1792ms, render: 897ms)
+ GET /admin 200 in 826ms (compile: 19ms, render: 807ms)
+ GET /admin 200 in 819ms (compile: 37ms, render: 782ms)
+ GET /admin 200 in 82ms (compile: 27ms, render: 54ms)
+ GET /display 200 in 833ms (compile: 322ms, render: 511ms)
+✓ Compiled in 465ms
+✓ Compiled in 235ms
+✓ Compiled in 129ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /admin 200 in 967ms (compile: 473ms, render: 494ms)
+ GET /admin 200 in 926ms (compile: 359ms, render: 567ms)
+ GET /admin 200 in 467ms (compile: 5ms, render: 462ms)
+ GET /admin 200 in 465ms (compile: 445ms, render: 20ms)
+ GET /display 200 in 478ms (compile: 116ms, render: 362ms)
+✓ Compiled in 175ms
+✓ Compiled in 551ms
+✓ Compiled in 185ms
+ GET /display 200 in 687ms (compile: 333ms, render: 354ms)
+ GET /display 200 in 524ms (compile: 90ms, render: 434ms)
+ GET /admin 200 in 1873ms (compile: 1749ms, render: 124ms)
+ GET /display 200 in 861ms (compile: 254ms, render: 606ms)
+✓ Compiled in 665ms
+ GET /display 200 in 6.9s (compile: 3.4s, render: 3.5s)
+ GET /display 200 in 164ms (compile: 52ms, render: 111ms)
+ GET /display 200 in 326ms (compile: 117ms, render: 209ms)
+ GET /display 200 in 398ms (compile: 183ms, render: 215ms)
+✓ Compiled in 1112ms
+✓ Compiled in 991ms
+✓ Compiled in 381ms
+✓ Compiled in 660ms
+✓ Compiled in 417ms
+✓ Compiled in 497ms
+✓ Compiled in 349ms
+✓ Compiled in 1079ms
+✓ Compiled in 2.6s
+✓ Compiled in 785ms
+ GET /display 200 in 15.0s (compile: 7.7s, render: 7.3s)
+ GET /display 200 in 1730ms (compile: 195ms, render: 1535ms)
+ GET /display 200 in 677ms (compile: 173ms, render: 505ms)
+ GET /display 200 in 1047ms (compile: 180ms, render: 867ms)
+ GET /display 200 in 2.2s (compile: 1469ms, render: 756ms)
+ GET /display 200 in 437ms (compile: 107ms, render: 329ms)
+ GET /admin/members 200 in 11.1s (compile: 9.9s, render: 1149ms)
+ GET /admin/members 200 in 299ms (compile: 144ms, render: 154ms)
+✓ Compiled in 7.2s
+✓ Compiled in 3.1s
+✓ Compiled in 4.9s
+ GET /admin 200 in 13.2s (compile: 10.0s, render: 3.2s)
+✓ Compiled in 4.9s
+✓ Compiled in 1176ms
+ GET /display 200 in 9.8s (compile: 6.2s, render: 3.6s)
+ GET /display 200 in 574ms (compile: 30ms, render: 544ms)
+ GET /display 200 in 1608ms (compile: 351ms, render: 1258ms)
+ GET /display 200 in 289ms (compile: 30ms, render: 258ms)
+ GET /display 200 in 799ms (compile: 201ms, render: 598ms)
+ GET /display 200 in 915ms (compile: 144ms, render: 770ms)
+ GET /display 200 in 557ms (compile: 61ms, render: 496ms)
+ GET /display 200 in 2.5s (compile: 907ms, render: 1606ms)
+ GET /display 200 in 317ms (compile: 58ms, render: 259ms)
+ GET /display 200 in 1928ms (compile: 73ms, render: 1855ms)
+ GET /display 200 in 791ms (compile: 214ms, render: 577ms)
+✓ Compiled in 2.2s
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 12.3s (compile: 6.8s, render: 5.5s)
+✓ Compiled in 4.7s
+⨯ ./src/themes/MidnightGlow/MidnightGlowCalendar.tsx:282:47
+Parsing ecmascript source code failed
+[0m [90m 280 |[39m                                             [33m<[39m[33mspan[39m className[33m=[39m{[32m`text-[6.5px] font-black tracking-tighter block pt-[1px] ${isSlotActive(key, 'evening') ? 'text-white' : (isToday ? 'text-white' : 'text-[#FF6B00]/90')}`[39m}[33m>[39m{timeEvening}[33m<[39m[33m/[39m[33mspan[39m[33m>[39m
+ [90m 281 |[39m                                         [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 282 |[39m                                         [33m<[39m[33mspan[39m className[33m=[39m{[32m`text-[15px] font-bold uppercase leading-tight truncate w-full text-center pl-3 ${isToday ? 'text-white' : 'text-white/80'}`[39m}[33m>[39m
+ [90m     |[39m                                               [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 283 |[39m                                             {leaderEvening1[33m.[39mname}
+ [90m 284 |[39m                                         [33m<[39m[33m/[39m[33mspan[39m[33m>[39m
+ [90m 285 |[39m                                         [33m<[39m[33mdiv[39m className[33m=[39m{[32m`mt-0.5 px-2 py-[2px] rounded-full border ml-2 ${isToday ? 'border-[#FF6B00]/50 bg-[#FF6B00]/20 backdrop-blur-md' : 'border-[#FF6B00]/30 bg-[#040D21]/40'} shadow-sm`[39m}[33m>[39m[0m
+
+Expected '</', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/themes/MidnightGlow/MidnightGlowCalendar.tsx [Client Component Browser]
+    ./src/themes/MidnightGlow/index.ts [Client Component Browser]
+    ./src/themes/index.ts [Client Component Browser]
+    ./src/app/display/page.tsx [Client Component Browser]
+    ./src/app/display/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/themes/MidnightGlow/MidnightGlowCalendar.tsx [Client Component SSR]
+    ./src/themes/MidnightGlow/index.ts [Client Component SSR]
+    ./src/themes/index.ts [Client Component SSR]
+    ./src/app/display/page.tsx [Client Component SSR]
+    ./src/app/display/page.tsx [Server Component]
+
+
+ GET /display 500 in 7.5s (compile: 5.8s, render: 1692ms)
+✓ Compiled in 2s
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /admin 200 in 25.1s (compile: 12.1s, render: 13.0s)
+ GET /display 200 in 24.9s (compile: 7.9s, render: 17.0s)
+ GET /admin 200 in 12.1s (compile: 104ms, render: 12.0s)
+ GET /admin 200 in 208ms (compile: 86ms, render: 121ms)
+ GET /display 200 in 12.0s (compile: 11.8s, render: 189ms)
+ GET /admin 200 in 49ms (compile: 7ms, render: 42ms)
+ GET /display 200 in 12.1s (compile: 470ms, render: 11.6s)
+✓ Compiled in 1858ms
+✓ Compiled in 1026ms
+✓ Compiled in 1288ms
+✓ Compiled in 1248ms
+ GET /admin 200 in 19.9s (compile: 11.9s, render: 7.9s)
+ GET /admin 200 in 18.9s (compile: 18.0s, render: 983ms)
+ GET /display 200 in 19.0s (compile: 15.5s, render: 3.5s)
+ GET /display 200 in 1292ms (compile: 472ms, render: 820ms)
+ GET /admin 200 in 668ms (compile: 40ms, render: 627ms)
+ GET /admin 200 in 696ms (compile: 236ms, render: 460ms)
+ GET /display 200 in 750ms (compile: 114ms, render: 636ms)
+ GET /display 200 in 729ms (compile: 278ms, render: 451ms)
+ GET /display 200 in 18.2s (compile: 682ms, render: 17.5s)
+ GET /display 200 in 907ms (compile: 338ms, render: 569ms)
+ GET /display 200 in 2.2s (compile: 713ms, render: 1523ms)
+ GET /display 200 in 1055ms (compile: 140ms, render: 915ms)
+✓ Compiled in 3.9s
+✓ Compiled in 498ms
+ GET /display 200 in 24.3s (compile: 12.3s, render: 12.0s)
+✓ Compiled in 2.6s
+✓ Compiled in 1179ms
+✓ Finished filesystem cache database compaction in 23.3s
+✓ Compiled in 2.6s
+✓ Compiled in 4.2s
+✓ Compiled in 1210ms
+✓ Compiled in 2.8s
+✓ Compiled in 879ms
+✓ Compiled in 1906ms
+✓ Compiled in 1344ms
+✓ Compiled in 6.6s
+ GET /admin 200 in 47s (compile: 27.9s, render: 19.2s)
+-----------------------------------------------
+🚀 Iniciando el Servidor de LLDM Rodeo Board...
+📅 Tue Mar  3 13:17:37 PST 2026
+✨ Iniciando 'npm run dev'...
+⏳ Esperando a que el servidor esté listo...
+
+> lldm-rodeo-board@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.0.76:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 1147ms
+🌐 Abriendo navegador...
+✅ Proceso completado. No cierres esta ventana.
+-----------------------------------------------
+ GET /admin 200 in 2.2s (compile: 1832ms, render: 348ms)
+ GET /display 200 in 2.2s (compile: 1850ms, render: 312ms)
+✓ Compiled in 343ms
+✓ Compiled in 255ms
+✓ Compiled in 204ms
+✓ Compiled in 204ms
+✓ Compiled in 568ms
+✓ Compiled in 161ms
+✓ Compiled in 200ms
+ GET /admin 200 in 240ms (compile: 198ms, render: 42ms)
+ GET /display 200 in 250ms (compile: 47ms, render: 203ms)
+✓ Compiled in 143ms
+✓ Compiled in 168ms
+✓ Compiled in 183ms
+✓ Compiled in 211ms
+ GET /admin 200 in 161ms (compile: 114ms, render: 47ms)
+ GET /display 200 in 204ms (compile: 40ms, render: 164ms)
+✓ Compiled in 360ms
+✓ Compiled in 217ms
+✓ Compiled in 100ms
+✓ Compiled in 97ms
+✓ Compiled in 212ms
+✓ Compiled in 99ms
+✓ Compiled in 102ms
+✓ Compiled in 241ms
+✓ Compiled in 165ms
+ GET /admin 200 in 144ms (compile: 98ms, render: 46ms)
+ GET /display 200 in 142ms (compile: 122ms, render: 20ms)
+✓ Compiled in 148ms
+✓ Compiled in 172ms
+ GET /admin 200 in 476ms (compile: 191ms, render: 285ms)
+✓ Compiled in 281ms
+✓ Compiled in 145ms
+✓ Compiled in 187ms
+ GET /display 200 in 243ms (compile: 45ms, render: 198ms)
+ GET /admin 200 in 220ms (compile: 185ms, render: 34ms)
+✓ Compiled in 106ms
+✓ Compiled in 154ms
+✓ Compiled in 134ms
+✓ Compiled in 233ms
+✓ Compiled in 121ms
+✓ Compiled in 128ms
+✓ Compiled in 174ms
+ GET /admin 200 in 314ms (compile: 95ms, render: 219ms)
+ GET /display 200 in 97ms (compile: 28ms, render: 69ms)
+ GET /admin 200 in 82ms (compile: 19ms, render: 64ms)
+ GET /display 200 in 60ms (compile: 15ms, render: 45ms)
+✓ Compiled in 165ms
+✓ Compiled in 211ms
+✓ Compiled in 100ms
+✓ Compiled in 99ms
+✓ Compiled in 132ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 103ms
+ GET /admin 200 in 497ms (compile: 216ms, render: 280ms)
+✓ Compiled in 108ms
+✓ Compiled in 113ms
+✓ Compiled in 113ms
+✓ Compiled in 103ms
+✓ Compiled in 107ms
+✓ Compiled in 131ms
+ GET /display 200 in 86ms (compile: 33ms, render: 53ms)
+✓ Compiled in 260ms
+✓ Compiled in 153ms
+✓ Compiled in 141ms
+✓ Compiled in 126ms
+✓ Compiled in 441ms
+✓ Compiled in 191ms
+✓ Compiled in 111ms
+✓ Compiled in 194ms
+✓ Compiled in 134ms
+✓ Compiled in 96ms
+✓ Compiled in 123ms
+✓ Compiled in 131ms
+✓ Compiled in 111ms
+✓ Compiled in 131ms
+ GET /admin 200 in 380ms (compile: 139ms, render: 242ms)
+ GET /admin 200 in 119ms (compile: 44ms, render: 75ms)
+ GET /admin 200 in 126ms (compile: 44ms, render: 82ms)
+✓ Compiled in 1052ms
+ GET / 200 in 2.6s (compile: 2.5s, render: 53ms)
+✓ Compiled in 1484ms
+⨯ ./src/app/admin/layout.tsx:2:20
+Ecmascript file had an error
+[0m [90m 1 |[39m [36mimport[39m { usePathname[33m,[39m useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { useState[33m,[39m useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m   |[39m                    [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/button"[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m {
+ [90m 5 |[39m     [33mLayoutDashboard[39m[33m,[39m[0m
+
+You're importing a component that needs `useEffect`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+
+
+./src/app/admin/layout.tsx:73:10
+Ecmascript file had an error
+[0m [90m 71 |[39m
+ [90m 72 |[39m [36mimport[39m { useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 73 |[39m [36mimport[39m { useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 74 |[39m
+ [90m 75 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mAdminLayout[39m({
+ [90m 76 |[39m     children[33m,[39m[0m
+
+You're importing a component that needs `useEffect`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+
+
+./src/app/admin/layout.tsx:1:10
+Ecmascript file had an error
+[0m[31m[1m>[22m[39m[90m 1 |[39m [36mimport[39m { usePathname[33m,[39m useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m   |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 2 |[39m [36mimport[39m { useState[33m,[39m useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/button"[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m {[0m
+
+You're importing a component that needs `usePathname`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+
+
+./src/app/admin/layout.tsx:1:23
+Ecmascript file had an error
+[0m[31m[1m>[22m[39m[90m 1 |[39m [36mimport[39m { usePathname[33m,[39m useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m   |[39m                       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 2 |[39m [36mimport[39m { useState[33m,[39m useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 3 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/button"[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m {[0m
+
+You're importing a component that needs `useRouter`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+
+
+./src/app/admin/layout.tsx:72:10
+Ecmascript file had an error
+[0m [90m 70 |[39m }[33m;[39m
+ [90m 71 |[39m
+[31m[1m>[22m[39m[90m 72 |[39m [36mimport[39m { useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 73 |[39m [36mimport[39m { useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 74 |[39m
+ [90m 75 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mAdminLayout[39m({[0m
+
+You're importing a component that needs `useRouter`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+
+
+./src/app/admin/layout.tsx:2:10
+Ecmascript file had an error
+[0m [90m 1 |[39m [36mimport[39m { usePathname[33m,[39m useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m { useState[33m,[39m useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m   |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 3 |[39m [36mimport[39m { [33mButton[39m } [36mfrom[39m [32m"@/components/ui/button"[39m[33m;[39m
+ [90m 4 |[39m [36mimport[39m {
+ [90m 5 |[39m     [33mLayoutDashboard[39m[33m,[39m[0m
+
+You're importing a component that needs `useState`. This React Hook only works in a Client Component. To fix, mark the file (or its parent) with the `"use client"` directive.
+
+ Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+
+
+
+
+
+./src/app/admin/layout.tsx:73:10
+Ecmascript file had an error
+[0m [90m 71 |[39m
+ [90m 72 |[39m [36mimport[39m { useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 73 |[39m [36mimport[39m { useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 74 |[39m
+ [90m 75 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mAdminLayout[39m({
+ [90m 76 |[39m     children[33m,[39m[0m
+
+the name `useEffect` is defined multiple times
+
+
+
+./src/app/admin/layout.tsx:72:10
+Ecmascript file had an error
+[0m [90m 70 |[39m }[33m;[39m
+ [90m 71 |[39m
+[31m[1m>[22m[39m[90m 72 |[39m [36mimport[39m { useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m    |[39m          [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 73 |[39m [36mimport[39m { useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 74 |[39m
+ [90m 75 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mAdminLayout[39m({[0m
+
+the name `useRouter` is defined multiple times
+
+
+ GET /admin 500 in 401ms (compile: 312ms, render: 89ms)
+ GET / 200 in 118ms (compile: 7ms, render: 111ms)
+ GET /display 200 in 393ms (compile: 156ms, render: 237ms)
+✓ Compiled in 173ms
+ GET / 200 in 164ms (compile: 26ms, render: 138ms)
+ GET /display 200 in 169ms (compile: 91ms, render: 78ms)
+ GET /admin 200 in 528ms (compile: 317ms, render: 211ms)
+ GET / 200 in 19ms (compile: 2ms, render: 17ms)
+✓ Compiled in 310ms
+✓ Compiled in 325ms
+ GET / 200 in 125ms (compile: 17ms, render: 108ms)
+ GET /display 200 in 130ms (compile: 84ms, render: 46ms)
+ GET / 200 in 33ms (compile: 2ms, render: 31ms)
+✓ Compiled in 123ms
+✓ Compiled in 120ms
+✓ Compiled in 145ms
+✓ Compiled in 133ms
+ GET /dashboard 200 in 1239ms (compile: 1169ms, render: 70ms)
+ GET /admin 200 in 114ms (compile: 91ms, render: 23ms)
+ GET / 200 in 86ms (compile: 56ms, render: 30ms)
+ GET / 200 in 16ms (compile: 2ms, render: 14ms)
+ GET /dashboard 200 in 65ms (compile: 11ms, render: 54ms)
+ GET /admin 200 in 30ms (compile: 11ms, render: 20ms)
+ GET / 200 in 25ms (compile: 6ms, render: 20ms)
+ GET / 200 in 12ms (compile: 2ms, render: 9ms)
+ GET /dashboard 200 in 16ms (compile: 5ms, render: 11ms)
+ GET / 200 in 406ms (compile: 67ms, render: 339ms)
+ GET / 200 in 87ms (compile: 22ms, render: 64ms)
+ GET /login 200 in 789ms (compile: 769ms, render: 20ms)
+ GET /login 200 in 98ms (compile: 28ms, render: 71ms)
+ GET / 200 in 23ms (compile: 5ms, render: 18ms)
+ GET /dashboard 200 in 40ms (compile: 5ms, render: 35ms)
+ GET /admin 200 in 31ms (compile: 7ms, render: 24ms)
+ GET / 200 in 26ms (compile: 3ms, render: 23ms)
+ GET / 200 in 18ms (compile: 3ms, render: 15ms)
+ GET /dashboard 200 in 54ms (compile: 17ms, render: 37ms)
+ GET /admin 200 in 27ms (compile: 7ms, render: 20ms)
+ GET / 200 in 24ms (compile: 5ms, render: 18ms)
+ GET / 200 in 9ms (compile: 2ms, render: 7ms)
+✓ Compiled in 304ms
+✓ Compiled in 230ms
+✓ Compiled in 127ms
+ GET /admin 200 in 748ms (compile: 237ms, render: 511ms)
+ GET /display 200 in 355ms (compile: 121ms, render: 235ms)
+ GET /display 200 in 92ms (compile: 24ms, render: 68ms)
+ GET /display 200 in 84ms (compile: 20ms, render: 63ms)
+ GET /display 200 in 53ms (compile: 4ms, render: 49ms)
+✓ Compiled in 304ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /admin 200 in 480ms (compile: 167ms, render: 313ms)
+✓ Compiled in 169ms
+ GET /admin 200 in 518ms (compile: 176ms, render: 342ms)
+ GET /admin/members 200 in 609ms (compile: 591ms, render: 18ms)
+ GET /admin 200 in 48ms (compile: 26ms, render: 22ms)
+ GET /admin/members 200 in 55ms (compile: 15ms, render: 40ms)
+ GET /display 200 in 211ms (compile: 75ms, render: 137ms)
+ GET /admin 200 in 185ms (compile: 82ms, render: 103ms)
+✓ Compiled in 285ms
+ GET /admin 200 in 928ms (compile: 359ms, render: 569ms)
+ GET /admin/members 200 in 315ms (compile: 284ms, render: 32ms)
+ GET /admin 200 in 48ms (compile: 19ms, render: 29ms)
+ GET /admin/members 200 in 63ms (compile: 19ms, render: 44ms)
+ GET /admin 200 in 43ms (compile: 16ms, render: 28ms)
+✓ Compiled in 194ms
+✓ Compiled in 146ms
+ GET /admin 200 in 394ms (compile: 142ms, render: 253ms)
+ GET /admin 200 in 108ms (compile: 48ms, render: 59ms)
+ GET /admin 200 in 77ms (compile: 20ms, render: 57ms)
+✓ Compiled in 151ms
+✓ Compiled in 69ms
+✓ Compiled in 152ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+✓ Compiled in 195ms
+ GET /admin 200 in 666ms (compile: 284ms, render: 383ms)
+ GET /admin/members 200 in 146ms (compile: 129ms, render: 17ms)
+ GET /admin 200 in 32ms (compile: 9ms, render: 23ms)
+ GET /admin 200 in 78ms (compile: 14ms, render: 64ms)
+✓ Compiled in 149ms
+ GET /admin 200 in 424ms (compile: 149ms, render: 275ms)
+✓ Compiled in 199ms
+ GET /admin/members 200 in 66ms (compile: 27ms, render: 39ms)
+ GET /admin/members 200 in 38ms (compile: 6ms, render: 33ms)
+ GET /admin 200 in 175ms (compile: 143ms, render: 32ms)
+✓ Compiled in 393ms
+✓ Compiled in 111ms
+✓ Compiled in 195ms
+✓ Compiled in 221ms
+✓ Compiled in 192ms
+ GET /admin 200 in 1462ms (compile: 478ms, render: 984ms)
+ GET /admin 200 in 71ms (compile: 17ms, render: 54ms)
+ GET /admin 200 in 46ms (compile: 19ms, render: 28ms)
+ GET /admin 200 in 900ms (compile: 725ms, render: 175ms)
+ GET /display 200 in 898ms (compile: 830ms, render: 68ms)
+ GET /admin 200 in 50ms (compile: 2ms, render: 47ms)
+ GET /display 200 in 76ms (compile: 13ms, render: 63ms)
+ GET /admin 200 in 63ms (compile: 11ms, render: 52ms)
+ GET /display 200 in 70ms (compile: 1812µs, render: 68ms)
+ GET /admin 200 in 63ms (compile: 12ms, render: 51ms)
+ GET /display 200 in 66ms (compile: 4ms, render: 62ms)
+ GET /display 200 in 39ms (compile: 2ms, render: 37ms)
+ GET /admin 200 in 29ms (compile: 3ms, render: 26ms)
+ GET /admin 200 in 17ms (compile: 9ms, render: 8ms)
+ GET /display 200 in 17ms (compile: 1552µs, render: 16ms)
+ GET /admin 200 in 57ms (compile: 11ms, render: 47ms)
+ GET /display 200 in 59ms (compile: 3ms, render: 56ms)
+ GET /admin 200 in 49ms (compile: 11ms, render: 39ms)
+ GET /display 200 in 50ms (compile: 1134µs, render: 49ms)
+ GET /admin 200 in 41ms (compile: 10ms, render: 31ms)
+ GET /display 200 in 70ms (compile: 1334µs, render: 68ms)
+ GET /display 200 in 68ms (compile: 1672µs, render: 66ms)
+ GET /admin 200 in 60ms (compile: 1561µs, render: 59ms)
+ GET /display 200 in 70ms (compile: 2ms, render: 68ms)
+ GET /admin 200 in 69ms (compile: 11ms, render: 58ms)
+ GET /display 200 in 61ms (compile: 1839µs, render: 59ms)
+ GET /admin 200 in 61ms (compile: 9ms, render: 52ms)
+ GET /admin 200 in 67ms (compile: 2ms, render: 65ms)
+ GET /display 200 in 78ms (compile: 2ms, render: 76ms)
+ GET /admin 200 in 63ms (compile: 9ms, render: 54ms)
+ GET /display 200 in 99ms (compile: 1375µs, render: 97ms)
+ GET /admin 200 in 78ms (compile: 19ms, render: 60ms)
+ GET /display 200 in 97ms (compile: 4ms, render: 93ms)
+ GET /admin 200 in 101ms (compile: 19ms, render: 82ms)
+ GET /display 200 in 103ms (compile: 4ms, render: 99ms)
+ GET /display 200 in 100ms (compile: 4ms, render: 96ms)
+ GET /admin 200 in 91ms (compile: 5ms, render: 87ms)
+ GET /admin 200 in 89ms (compile: 15ms, render: 75ms)
+ GET /display 200 in 92ms (compile: 4ms, render: 88ms)
+ GET /admin 200 in 75ms (compile: 34ms, render: 41ms)
+ GET /display 200 in 77ms (compile: 2ms, render: 74ms)
+ GET /admin 200 in 44ms (compile: 8ms, render: 36ms)
+ GET /display 200 in 53ms (compile: 1757µs, render: 52ms)
+ GET /admin 200 in 45ms (compile: 1178µs, render: 43ms)
+ GET /display 200 in 52ms (compile: 1261µs, render: 51ms)
+ GET /admin 200 in 58ms (compile: 11ms, render: 48ms)
+ GET /display 200 in 60ms (compile: 1457µs, render: 59ms)
+ GET /display 200 in 60ms (compile: 1527µs, render: 59ms)
+ GET /admin 200 in 60ms (compile: 8ms, render: 53ms)
+ GET /admin 200 in 46ms (compile: 9ms, render: 37ms)
+ GET /display 200 in 60ms (compile: 1804µs, render: 58ms)
+ GET /display 200 in 53ms (compile: 3ms, render: 51ms)
+ GET /admin 200 in 53ms (compile: 10ms, render: 43ms)
+ GET /admin 200 in 48ms (compile: 7ms, render: 41ms)
+ GET /display 200 in 50ms (compile: 1784µs, render: 48ms)
+ GET /display 200 in 50ms (compile: 1906µs, render: 48ms)
+ GET /admin 200 in 50ms (compile: 8ms, render: 43ms)
+ GET /admin 200 in 49ms (compile: 7ms, render: 42ms)
+ GET /display 200 in 50ms (compile: 1400µs, render: 48ms)
+ GET /admin 200 in 50ms (compile: 10ms, render: 40ms)
+ GET /display 200 in 51ms (compile: 1684µs, render: 50ms)
+ GET /admin 200 in 48ms (compile: 7ms, render: 41ms)
+ GET /display 200 in 49ms (compile: 1240µs, render: 48ms)
+ GET /admin 200 in 51ms (compile: 7ms, render: 44ms)
+ GET /display 200 in 52ms (compile: 1504µs, render: 51ms)
+ GET /admin 200 in 53ms (compile: 8ms, render: 45ms)
+ GET /display 200 in 54ms (compile: 1493µs, render: 52ms)
+ GET /admin 200 in 36ms (compile: 8ms, render: 28ms)
+ GET /display 200 in 37ms (compile: 1631µs, render: 35ms)
+ GET /admin 200 in 11ms (compile: 2ms, render: 9ms)
+ GET /display 200 in 29ms (compile: 1327µs, render: 27ms)
+ GET /display 200 in 35ms (compile: 3ms, render: 33ms)
+ GET /display 200 in 25ms (compile: 957µs, render: 24ms)
+ GET /admin 200 in 26ms (compile: 8ms, render: 18ms)
+ GET /admin 200 in 9ms (compile: 1208µs, render: 8ms)
+✓ Compiled in 401ms
+✓ Compiled in 277ms
+✓ Compiled in 96ms
+✓ Compiled in 433ms
+✓ Compiled in 109ms
+✓ Compiled in 101ms
+✓ Compiled in 516ms
+✓ Compiled in 106ms
+✓ Compiled in 401ms
+✓ Compiled in 199ms
+ GET /church_standby_logo_1772665825578.png 404 in 950ms (compile: 668ms, render: 282ms)
+✓ Compiled in 205ms
+ GET /display 200 in 1166ms (compile: 529ms, render: 637ms)
+ GET /display 200 in 66ms (compile: 10ms, render: 57ms)
+✓ Compiled in 527ms
+✓ Compiled in 42ms
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 158ms (compile: 63ms, render: 95ms)
+ GET /display 200 in 367ms (compile: 159ms, render: 208ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 33ms (compile: 3ms, render: 30ms)
+ GET /display 200 in 78ms (compile: 30ms, render: 47ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 42ms (compile: 15ms, render: 27ms)
+ GET /display 200 in 51ms (compile: 8ms, render: 43ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 52ms (compile: 6ms, render: 47ms)
+ GET /display 200 in 81ms (compile: 19ms, render: 62ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 44ms (compile: 5ms, render: 40ms)
+ GET /display 200 in 66ms (compile: 4ms, render: 61ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 19ms (compile: 1894µs, render: 17ms)
+ GET /display 200 in 63ms (compile: 6ms, render: 57ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 34ms (compile: 4ms, render: 30ms)
+ GET /display 200 in 64ms (compile: 5ms, render: 59ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 39ms (compile: 4ms, render: 35ms)
+ GET /display 200 in 48ms (compile: 4ms, render: 44ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 30ms (compile: 1429µs, render: 29ms)
+✓ Compiled in 708ms
+✓ Compiled in 98ms
+✓ Compiled in 90ms
+✓ Compiled in 165ms
+✓ Compiled in 195ms
+✓ Compiled in 151ms
+✓ Compiled in 153ms
+ GET /display 200 in 322ms (compile: 138ms, render: 184ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 86ms (compile: 51ms, render: 35ms)
+ GET /display 200 in 38ms (compile: 4ms, render: 35ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 28ms (compile: 3ms, render: 25ms)
+ GET /display 200 in 43ms (compile: 6ms, render: 38ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 48ms (compile: 1998µs, render: 46ms)
+ GET /admin 200 in 679ms (compile: 179ms, render: 499ms)
+ GET /admin 200 in 105ms (compile: 19ms, render: 86ms)
+ GET /admin 200 in 27ms (compile: 6ms, render: 21ms)
+ GET /display 200 in 64ms (compile: 6ms, render: 58ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 38ms (compile: 9ms, render: 29ms)
+ GET /display 200 in 45ms (compile: 6ms, render: 39ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 31ms (compile: 3ms, render: 28ms)
+✓ Compiled in 308ms
+ GET /display 200 in 73ms (compile: 18ms, render: 56ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 50ms (compile: 30ms, render: 20ms)
+ GET /admin 200 in 429ms (compile: 125ms, render: 304ms)
+ GET /display 200 in 41ms (compile: 5ms, render: 36ms)
+ GET /church_standby_flame_emblem_1772666312317.png 404 in 21ms (compile: 1953µs, render: 19ms)
+✓ Compiled in 168ms
+✓ Compiled in 120ms
+✓ Compiled in 176ms
+✓ Compiled in 122ms
+✓ Compiled in 130ms
+✓ Compiled in 354ms
+✓ Compiled in 161ms
+✓ Compiled in 118ms
+ GET /display 200 in 324ms (compile: 150ms, render: 173ms)
+✓ Compiled in 399ms
+✓ Compiled in 332ms
+✓ Compiled in 393ms
+✓ Compiled in 161ms
+✓ Compiled in 257ms
+ GET /admin 200 in 1475ms (compile: 769ms, render: 706ms)
+ GET /display 200 in 227ms (compile: 105ms, render: 123ms)
+✓ Compiled in 240ms
+✓ Compiled in 244ms
+✓ Compiled in 130ms
+ GET /display 200 in 290ms (compile: 119ms, render: 171ms)
+ GET /display 200 in 89ms (compile: 4ms, render: 85ms)
+✓ Compiled in 456ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /admin 200 in 703ms (compile: 330ms, render: 373ms)
+ GET /display 200 in 92ms (compile: 19ms, render: 73ms)
+ GET /display 200 in 72ms (compile: 19ms, render: 53ms)
+✓ Compiled in 333ms
+✓ Compiled in 200ms
+✓ Compiled in 135ms
+ GET /admin 200 in 416ms (compile: 160ms, render: 256ms)
+ GET /display 200 in 296ms (compile: 92ms, render: 204ms)
+✓ Compiled in 341ms
+✓ Compiled in 207ms
+✓ Compiled in 123ms
+✓ Compiled in 90ms
+✓ Compiled in 82ms
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET /display 200 in 498ms (compile: 195ms, render: 303ms)
+ GET /display 200 in 69ms (compile: 3ms, render: 66ms)
+✓ Compiled in 97ms
+✓ Compiled in 213ms
+✓ Compiled in 148ms
+✓ Compiled in 85ms
+✓ Compiled in 181ms
+✓ Compiled in 112ms
+ GET /admin 200 in 315ms (compile: 109ms, render: 206ms)
+ GET /display 200 in 316ms (compile: 216ms, render: 100ms)
+ GET /display 200 in 92ms (compile: 3ms, render: 89ms)
+ GET /display 200 in 79ms (compile: 30ms, render: 49ms)
+✓ Compiled in 86ms
+✓ Compiled in 102ms
+✓ Compiled in 109ms
+ GET /admin 200 in 1011ms (compile: 366ms, render: 645ms)
+✓ Compiled in 219ms
+✓ Compiled in 139ms
+ GET /admin 200 in 385ms (compile: 293ms, render: 92ms)
+ GET /display 200 in 389ms (compile: 149ms, render: 240ms)
+ GET /display 200 in 44ms (compile: 3ms, render: 41ms)
+ GET /display 200 in 18ms (compile: 3ms, render: 15ms)
+✓ Compiled in 138ms
+✓ Compiled in 77ms
+ GET /admin 200 in 293ms (compile: 17ms, render: 277ms)
+ GET /display 200 in 329ms (compile: 127ms, render: 202ms)

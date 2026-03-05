@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+@source "../../src";
+
+@theme {
+  --font-sans: var(--font-outfit);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-card: rgb(var(--card));
+  --color-popover: var(--popover);
+}
+
+:root,
+[data-theme='dark'],
+.dark-theme {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --card: 15, 23, 42;
+  --card-opacity: 0.6;
+  --card-foreground: #f8fafc;
+  --popover: #0f172a;
+  --popover-foreground: #f8fafc;
+  --primary: #fbbf24;
+  --primary-foreground: #020617;
+  --secondary: #3b82f6;
+  --secondary-foreground: #ffffff;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #d946ef;
+  --accent-foreground: #ffffff;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #fbbf24;
+  --radius: 0.5rem;
+}
+
+[data-theme='light'],
+.light-theme {
+  --background: #f8fafc;
+  --foreground: #020617;
+  --card: 255, 255, 255;
+  --card-opacity: 0.8;
+  --card-foreground: #020617;
+  --popover: #ffffff;
+  --popover-foreground: #020617;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card {
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(128, 128, 128, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dark-theme .glass-card {
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.01) 100%);
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+  /* Gold glow */
+}
+
+.border-glow {
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  /* Blue glow */
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  border-color: rgba(168, 85, 247, 0.5);
+}
+
+.premium-select-trigger {
+  @apply flex items-center justify-between w-full bg-card backdrop-blur-xl border border-border text-foreground rounded-xl px-4 py-2.5 text-sm transition-all duration-300;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.premium-select-trigger:hover {
+  @apply border-primary/50 bg-accent/20;
+}
+
+.premium-dropdown {
+  @apply absolute z-[100] mt-2 w-full bg-popover/95 backdrop-blur-3xl border border-primary/30 rounded-2xl p-2 overflow-hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  animation: dropdownFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.premium-option {
+  @apply flex items-center w-full px-4 py-2.5 text-sm rounded-xl cursor-pointer transition-all duration-200 text-muted-foreground mb-0.5 last:mb-0 relative overflow-hidden;
+}
+
+.premium-option:hover {
+  @apply bg-primary/20 text-foreground border-l-2 border-primary pl-5;
+}
+
+.premium-option[data-selected="true"] {
+  @apply bg-primary/40 text-foreground font-bold border-l-4 border-primary pl-6;
+}
+
+.dots-pattern {
+  background-image: radial-gradient(rgba(59, 130, 246, 0.08) 1.2px, transparent 1.2px);
+  background-size: 32px 32px;
+}
+
+.dots-dynamic {
+  background-image: radial-gradient(rgba(34, 211, 238, 0.15) 1.5px, transparent 1.5px);
+  background-size: 40px 40px;
+  animation: dotsMove 60s linear infinite;
+}
+
+@keyframes dotsMove {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 400px 400px;
+  }
+}
+
+.flame-glow {
+  filter: drop-shadow(0 0 40px rgba(251, 191, 36, 0.3));
+}
