@@ -44,6 +44,7 @@ const blackOps = Black_Ops_One({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://lldmrodeo.org"),
   title: "LLDM RODEO - Tablero Digital",
   description: "Sistema de proyección y control para la iglesia LLDM RODEO",
 };
