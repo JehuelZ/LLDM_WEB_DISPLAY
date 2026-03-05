@@ -11,7 +11,7 @@ import {
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info,
     Camera, Phone, Mail, User, Globe, Languages, Music2,
-    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise
+    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -98,7 +98,8 @@ export default function TactileAdmin() {
         theme, saveThemeToCloud, loadThemeFromCloud,
         uniforms, uniformSchedule, loadUniformsFromCloud,
         saveUniformToCloud, deleteUniformFromCloud,
-        saveUniformForDateToCloud, rehearsals
+        saveUniformForDateToCloud, rehearsals,
+        loadRehearsalsFromCloud, saveRehearsalToCloud, deleteRehearsalFromCloud
     } = useAppStore()
 
     const currentDaySchedule = monthlySchedule[currentDate] || {
@@ -127,22 +128,35 @@ export default function TactileAdmin() {
     const [newAnn, setNewAnn] = useState({ title: '', content: '', priority: 0 })
     const [memberFilter, setMemberFilter] = useState('all')
     const [showAddMember, setShowAddMember] = useState(false)
+    const [editingMember, setEditingMember] = useState<UserProfile | null>(null)
     const [newMemberData, setNewMemberData] = useState<Partial<UserProfile>>({
         name: '',
         email: '',
         phone: '',
-        gender: 'Varon',
-        member_group: 'Casados',
         role: 'Miembro',
+        gender: 'Varon',
         category: 'Varon',
+        member_group: 'Casados',
         status: 'Activo'
     })
+
+    const [showRehearsalModal, setShowRehearsalModal] = useState(false)
+    const [editingRehearsal, setEditingRehearsal] = useState<any>(null)
+
     const [newRehearsal, setNewRehearsal] = useState({ dayOfWeek: 1, time: '06:00 PM', location: 'Templo' })
+
+    useEffect(() => {
+        loadMembersFromCloud();
+        loadSettingsFromCloud();
+        useAppStore.getState().loadAllSchedulesFromCloud();
+        useAppStore.getState().loadAnnouncementsFromCloud();
+        useAppStore.getState().loadThemeFromCloud();
+        loadRehearsalsFromCloud();
+    }, [loadMembersFromCloud, loadSettingsFromCloud, loadRehearsalsFromCloud]);
 
     useEffect(() => {
         loadDayScheduleFromCloud(currentDate)
     }, [currentDate, loadDayScheduleFromCloud])
-
     const navigateDay = (days: number) => {
         const date = new Date(currentDate + 'T12:00:00')
         date.setDate(date.getDate() + days)
@@ -816,7 +830,16 @@ export default function TactileAdmin() {
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button className="tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center"><Edit2 className="w-3.5 h-3.5" /></button>
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingMember(member);
+                                                                setNewMemberData({ ...member });
+                                                                setShowAddMember(true);
+                                                            }}
+                                                            className="tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center"
+                                                        >
+                                                            <Edit2 className="w-3.5 h-3.5" />
+                                                        </button>
                                                         <button
                                                             onClick={() => deleteMemberFromCloud(member.id)}
                                                             className="tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center hover:text-red-500"
@@ -1077,10 +1100,22 @@ export default function TactileAdmin() {
                                                             <h4 className="font-black text-sm uppercase italic">{reh.location}</h4>
                                                             <p className="text-[10px] font-bold text-tactile-text-sub">{reh.time}</p>
                                                         </div>
-                                                        <button className="tactile-btn tactile-btn-glass !rounded-full w-8 h-8 p-0 items-center justify-center opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all"><Trash2 className="w-3.5 h-3.5" /></button>
+                                                        <button
+                                                            onClick={async () => {
+                                                                if (confirm('¿Eliminar este ensayo?')) {
+                                                                    await deleteRehearsalFromCloud(reh.id);
+                                                                }
+                                                            }}
+                                                            className="tactile-btn tactile-btn-glass !rounded-full w-8 h-8 p-0 items-center justify-center opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                        </button>
                                                     </div>
                                                 ))}
-                                                <button className="tactile-btn tactile-btn-glass w-full justify-start gap-4 h-12 px-6">
+                                                <button
+                                                    onClick={() => setShowRehearsalModal(true)}
+                                                    className="tactile-btn tactile-btn-glass w-full justify-start gap-4 h-12 px-6"
+                                                >
                                                     <Plus className="w-4 h-4" />
                                                     <span className="text-[10px] font-black uppercase tracking-widest">Agregar Ensayos</span>
                                                 </button>
@@ -1395,7 +1430,10 @@ export default function TactileAdmin() {
 
                                         <div className="p-8 border-t border-white/5 flex gap-4">
                                             <button
-                                                onClick={() => setShowAddMember(false)}
+                                                onClick={() => {
+                                                    setShowAddMember(false);
+                                                    setEditingMember(null);
+                                                }}
                                                 className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black uppercase tracking-widest"
                                             >
                                                 Cancelar
@@ -1407,9 +1445,27 @@ export default function TactileAdmin() {
                                                         return;
                                                     }
                                                     setIsSaving(true);
-                                                    const success = await (useAppStore.getState() as any).createMemberInCloud(newMemberData);
+                                                    let success = false;
+                                                    if (editingMember) {
+                                                        success = await updateProfileInCloud(editingMember.id, newMemberData);
+                                                    } else {
+                                                        // Convert data to match addMemberToCloud signature
+                                                        success = await addMemberToCloud({
+                                                            name: newMemberData.name || '',
+                                                            email: newMemberData.email || '',
+                                                            phone: newMemberData.phone,
+                                                            role: newMemberData.role || 'Miembro',
+                                                            gender: newMemberData.gender || 'Varon',
+                                                            category: newMemberData.category || 'Varon',
+                                                            member_group: newMemberData.member_group,
+                                                            privileges: newMemberData.privileges
+                                                        });
+                                                    }
+
                                                     if (success) {
+                                                        await loadMembersFromCloud();
                                                         setShowAddMember(false);
+                                                        setEditingMember(null);
                                                         setNewMemberData({
                                                             name: '',
                                                             email: '',
@@ -1428,13 +1484,83 @@ export default function TactileAdmin() {
                                                 {isSaving ? 'Guardando...' : 'Guardar Miembro'}
                                             </button>
                                         </div>
-                                    </motion.div>
+                                        {showRehearsalModal && (
+                                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+                                                <motion.div
+                                                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                    className="bg-tactile-bg border border-white/10 rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden flex flex-col"
+                                                >
+                                                    <div className="p-8 border-b border-white/5 flex items-center justify-between">
+                                                        <div>
+                                                            <h3 className="text-2xl font-black italic uppercase tracking-tighter">Gestionar <span className="text-primary truncate">Ensayos</span></h3>
+                                                            <p className="text-[10px] font-bold text-tactile-text-sub uppercase tracking-widest mt-1">Configuración del Coro</p>
+                                                        </div>
+                                                        <button onClick={() => setShowRehearsalModal(false)} className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center"><Trash2 className="w-4 h-4" /></button>
+                                                    </div>
+
+                                                    <div className="p-8 space-y-6">
+                                                        <TactileSelect
+                                                            label="DÍA DE LA SEMANA"
+                                                            value={newRehearsal.dayOfWeek}
+                                                            onChange={(val: any) => setNewRehearsal({ ...newRehearsal, dayOfWeek: parseInt(val) })}
+                                                            options={[
+                                                                { value: 0, label: 'Domingo' },
+                                                                { value: 1, label: 'Lunes' },
+                                                                { value: 2, label: 'Martes' },
+                                                                { value: 3, label: 'Miércoles' },
+                                                                { value: 4, label: 'Jueves' },
+                                                                { value: 5, label: 'Viernes' },
+                                                                { value: 6, label: 'Sábado' },
+                                                            ]}
+                                                            icon={CalendarDays}
+                                                        />
+                                                        <TactileInput
+                                                            label="HORA DEL ENSAYO"
+                                                            placeholder="07:00 PM"
+                                                            value={newRehearsal.time}
+                                                            onChange={(e: any) => setNewRehearsal({ ...newRehearsal, time: e.target.value })}
+                                                            icon={Clock}
+                                                        />
+                                                        <TactileInput
+                                                            label="LUGAR"
+                                                            placeholder="Salón de Actos"
+                                                            value={newRehearsal.location}
+                                                            onChange={(e: any) => setNewRehearsal({ ...newRehearsal, location: e.target.value })}
+                                                            icon={MapPin}
+                                                        />
+                                                    </div>
+
+                                                    <div className="p-8 border-t border-white/5 flex gap-4">
+                                                        <button
+                                                            onClick={() => setShowRehearsalModal(false)}
+                                                            className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black"
+                                                        >
+                                                            CANCELAR
+                                                        </button>
+                                                        <button
+                                                            onClick={async () => {
+                                                                setIsSaving(true);
+                                                                await saveRehearsalToCloud(newRehearsal);
+                                                                setShowRehearsalModal(false);
+                                                                setIsSaving(false);
+                                                            }}
+                                                            className="tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
+                                                        >
+                                                            {isSaving ? 'GUARDANDO...' : 'GUARDAR ENSAYO'}
+                                                        </button>
+                                                    </div>
+                                                </motion.div>
+                                            </div>
+                                        )}
+                                    </AnimatePresence>
                                 </div>
-                            )}
-                        </AnimatePresence>
-                    </div>
+                            </div>
                 </div>
             </div>
         </div>
+            </div >
+        </div >
     )
 }
+```
