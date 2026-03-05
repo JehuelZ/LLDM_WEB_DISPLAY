@@ -134,7 +134,7 @@ interface Member {
     phone: string;
     status: 'Activo' | 'Inactivo';
     lastActive: string;
-    stats: MemberStats;
+    stats?: MemberStats;
     avatarUrl?: string;
     privileges: ('monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper')[];
     parentName?: string;
@@ -188,9 +188,14 @@ export default function MembersPage() {
     const [memberModal, setMemberModal] = useState<{ mode: 'new' | 'edit', data: Member } | null>(null);
     const [isSaving, setIsSaving] = useState(false);
 
+    const [mounted, setMounted] = useState(false);
+
     useEffect(() => {
+        setMounted(true);
         loadMembersFromCloud();
     }, [loadMembersFromCloud]);
+
+    if (!mounted) return null;
 
     const dataURLtoFile = (dataurl: string, filename: string) => {
         let arr = dataurl.split(','),

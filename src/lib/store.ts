@@ -73,7 +73,7 @@ export interface UserProfile {
     gender: 'Varon' | 'Hermana';
     status: 'Activo' | 'Inactivo';
     lastActive: string;
-    stats: {
+    stats?: {
         attendance: { attended: number; total: number };
         participation: { led: number; total: number };
         punctuality: number;
