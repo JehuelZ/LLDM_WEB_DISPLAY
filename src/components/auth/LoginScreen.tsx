@@ -5,16 +5,73 @@ import { motion } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
 import { Shield, Lock, ArrowRight, User, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export function LoginScreen() {
     const { signInWithGoogle } = useAppStore();
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-slate-950 font-sora">
-            {/* Animated Particles/Glowing blobs */}
-            <div className="absolute top-1/4 -left-20 w-[60%] h-[60%] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-            <div className="absolute bottom-1/4 -right-20 w-[60%] h-[60%] bg-blue-500/10 rounded-full blur-[120px] animate-pulse delay-700" />
-            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-[2px]" />
+        <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#020617] font-sora">
+            {/* Cinematic Particle Background */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {/* Darker base gradient */}
+                <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-[#020617] to-slate-900" />
+
+                {/* Large Ambient Glows */}
+                <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[80%] bg-primary/5 rounded-full blur-[150px] animate-pulse" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] bg-blue-600/5 rounded-full blur-[150px] animate-pulse delay-1000" />
+
+                {/* Animated Digital Motas (Dust/Particles) */}
+                {[...Array(30)].map((_, i) => {
+                    const size = Math.random() * 8 + 2;
+                    const isBlue = Math.random() > 0.6;
+                    const isBlurred = Math.random() > 0.5;
+                    const duration = Math.random() * 20 + 10;
+                    const delay = Math.random() * 10;
+
+                    return (
+                        <motion.div
+                            key={i}
+                            initial={{
+                                x: Math.random() * 100 + "%",
+                                y: Math.random() * 100 + "%",
+                                opacity: 0
+                            }}
+                            animate={{
+                                x: [
+                                    Math.random() * 100 + "%",
+                                    Math.random() * 100 + "%",
+                                    Math.random() * 100 + "%"
+                                ],
+                                y: [
+                                    Math.random() * 100 + "%",
+                                    Math.random() * 100 + "%",
+                                    Math.random() * 100 + "%"
+                                ],
+                                opacity: [0, Math.random() * 0.5 + 0.2, 0]
+                            }}
+                            transition={{
+                                duration: duration,
+                                repeat: Infinity,
+                                delay: delay,
+                                ease: "easeInOut"
+                            }}
+                            className={cn(
+                                "absolute rounded-full",
+                                isBlue ? "bg-blue-400" : "bg-primary",
+                                isBlurred ? "blur-[6px]" : "blur-[1px]",
+                                "shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+                            )}
+                            style={{
+                                width: size,
+                                height: size,
+                            }}
+                        />
+                    );
+                })}
+
+                <div className="absolute inset-0 dots-pattern opacity-10" />
+            </div>
 
             {/* Login Card */}
             <motion.div
