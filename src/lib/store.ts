@@ -187,7 +187,7 @@ interface AppState {
     loadMembersFromCloud: () => Promise<void>;
     updateProfileInCloud: (userId: string, updates: Partial<UserProfile>) => Promise<boolean>;
     deleteMemberFromCloud: (userId: string) => Promise<boolean>;
-    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatarUrl?: string; privileges?: string[] }) => Promise<boolean>;
+    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[] }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
 
@@ -743,6 +743,7 @@ export const useAppStore = create<AppState>()(
                 if (member.gender) insertData.gender = member.gender;
                 if (member.category) insertData.category = member.category;
                 if (member.member_group) insertData.member_group = member.member_group;
+                if (member.avatar) insertData.avatar_url = member.avatar;
                 if (member.avatarUrl) insertData.avatar_url = member.avatarUrl;
                 if (member.privileges) insertData.roles = member.privileges;
 

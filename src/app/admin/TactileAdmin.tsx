@@ -95,6 +95,7 @@ export default function TactileAdmin() {
         seedMonthSchedule, announcements, saveAnnouncementToCloud,
         deleteAnnouncementFromCloud, currentUser, deleteMemberFromCloud,
         addMemberToCloud, updateProfileInCloud,
+        uploadAvatar,
         theme, saveThemeToCloud, loadThemeFromCloud,
         uniforms, uniformSchedule, loadUniformsFromCloud,
         saveUniformToCloud, deleteUniformFromCloud,
@@ -1368,7 +1369,46 @@ export default function TactileAdmin() {
                                             </button>
                                         </div>
 
-                                        <div className="p-8 grid grid-cols-2 gap-8 max-h-[70vh] overflow-y-auto no-scrollbar">
+                                        <div className="p-8 flex flex-col items-center border-b border-white/5 bg-white/5">
+                                            <div className="relative group/avatar">
+                                                <div className="w-40 h-40 rounded-full border-4 border-primary/20 p-2 relative">
+                                                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-primary/50 shadow-2xl bg-black/40">
+                                                        <img
+                                                            src={newMemberData.avatar || 'https://via.placeholder.com/150'}
+                                                            className="w-full h-full object-cover"
+                                                            alt="Avatar"
+                                                        />
+                                                    </div>
+                                                    <button
+                                                        onClick={() => document.getElementById('member-avatar-upload')?.click()}
+                                                        className="absolute bottom-2 right-2 w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg border border-white/20 hover:scale-110 transition-transform"
+                                                    >
+                                                        <Camera className="w-5 h-5" />
+                                                    </button>
+                                                </div>
+                                                <input
+                                                    type="file"
+                                                    id="member-avatar-upload"
+                                                    className="hidden"
+                                                    accept="image/*"
+                                                    onChange={async (e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) {
+                                                            setIsSaving(true);
+                                                            const idForUpload = editingMember?.id || `new_${Date.now()}`;
+                                                            const url = await uploadAvatar(idForUpload, file);
+                                                            if (url) {
+                                                                setNewMemberData({ ...newMemberData, avatar: url });
+                                                            }
+                                                            setIsSaving(false);
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary mt-4">Foto de Perfil</p>
+                                        </div>
+
+                                        <div className="p-8 grid grid-cols-2 gap-8 max-h-[50vh] overflow-y-auto no-scrollbar">
                                             <TactileInput
                                                 label="NOMBRE COMPLETO"
                                                 placeholder="Ej. Juan Pérez"
@@ -1458,7 +1498,8 @@ export default function TactileAdmin() {
                                                             gender: newMemberData.gender || 'Varon',
                                                             category: newMemberData.category || 'Varon',
                                                             member_group: newMemberData.member_group,
-                                                            privileges: newMemberData.privileges
+                                                            privileges: newMemberData.privileges,
+                                                            avatar: newMemberData.avatar
                                                         });
                                                     }
 
@@ -1474,7 +1515,8 @@ export default function TactileAdmin() {
                                                             member_group: 'Casados',
                                                             role: 'Miembro',
                                                             category: 'Varon',
-                                                            status: 'Activo'
+                                                            status: 'Activo',
+                                                            avatar: undefined
                                                         });
                                                     }
                                                     setIsSaving(false);
