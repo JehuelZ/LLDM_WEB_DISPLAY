@@ -1666,3 +1666,34 @@ the name `useRouter` is defined multiple times
  GET /display 200 in 329ms (compile: 127ms, render: 202ms)
 ✓ Compiled in 359ms
 ✓ Compiled in 127ms
+✓ Compiled in 1929ms
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+⚠ `eslint` configuration in next.config.ts is no longer supported. See more info here: https://nextjs.org/docs/app/api-reference/cli/next#next-lint-options
+⚠ Invalid next.config.ts options detected: 
+⚠     Unrecognized key(s) in object: 'eslint'
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.0.76:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 1040ms
+ GET /admin 200 in 1023ms (compile: 896ms, render: 127ms)
+ GET /display 200 in 1072ms (compile: 791ms, render: 281ms)
+ GET /display 200 in 27ms (compile: 1857µs, render: 25ms)
+⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+⚠ `eslint` configuration in next.config.ts is no longer supported. See more info here: https://nextjs.org/docs/app/api-reference/cli/next#next-lint-options
+⚠ Invalid next.config.ts options detected: 
+⚠     Unrecognized key(s) in object: 'eslint'
+⚠ See more info here: https://nextjs.org/docs/messages/invalid-next-config
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.0.76:3000
+- Environments: .env.local
+
+✓ Starting...
+✓ Ready in 680ms
+ GET /admin 200 in 866ms (compile: 624ms, render: 242ms)
+ GET /display 200 in 861ms (compile: 809ms, render: 52ms)
+ GET /display 200 in 84ms (compile: 4ms, render: 80ms)
