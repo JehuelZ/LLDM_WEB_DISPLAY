@@ -6,12 +6,12 @@ import { useAppStore, UserProfile } from '@/lib/store'
 import {
     LayoutDashboard, CalendarDays, Sparkles, Megaphone,
     Shirt, Settings, Users, UserPlus, CalendarClock,
-    ExternalLink, ChevronLeft, ChevronRight, Save,
+    ExternalLink, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Save,
     Trash2, Upload, Monitor, Sun, X, Shield, Church,
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info,
     Camera, Phone, Mail, User, Globe, Languages, Music2,
-    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin
+    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -121,7 +121,7 @@ export default function TactileAdmin() {
         { id: 'horarios', label: 'Programación', icon: CalendarDays },
         { id: 'contenido', label: 'Contenido', icon: Sparkles },
         { id: 'anuncios', label: 'Comunicados', icon: Bell },
-        { id: 'estilos', label: 'Estilos', icon: Sparkles },
+        { id: 'estilos', label: 'Temas TV', icon: Palette },
         { id: 'coros', label: 'Coros', icon: Music2 },
         { id: 'miembros', label: 'Miembros', icon: Users },
         { id: 'ajustes', label: 'Ajustes', icon: Settings },
@@ -153,6 +153,9 @@ export default function TactileAdmin() {
         useAppStore.getState().loadAnnouncementsFromCloud();
         useAppStore.getState().loadThemeFromCloud();
         loadRehearsalsFromCloud();
+
+        const unsubSettings = useAppStore.getState().subscribeToSettings();
+        return () => unsubSettings();
     }, [loadMembersFromCloud, loadSettingsFromCloud, loadRehearsalsFromCloud]);
 
     useEffect(() => {
@@ -774,7 +777,7 @@ export default function TactileAdmin() {
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-tactile-text-sub mb-4 ml-2">Filtrar por Grupo</h4>
                                         {[
                                             { id: 'all', label: 'Todos', count: members.length },
-                                            { id: 'Administración', label: 'Administración', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
+                                            { id: 'Administración', label: 'Siervos de Dios', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
                                             { id: 'Casados', label: 'Matrimonios', count: members.filter(m => m.member_group === 'Casados' || m.member_group === 'Casadas').length },
                                             { id: 'Solos y Solas', label: 'Solos y Solas', count: members.filter(m => m.member_group === 'Solos y Solas').length },
                                             { id: 'Jovenes', label: 'Jóvenes', count: members.filter(m => m.member_group === 'Jovenes').length },
@@ -823,7 +826,7 @@ export default function TactileAdmin() {
                                                         <h4 className="font-black text-base truncate italic">{member.name}</h4>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-tactile-text-sub">
-                                                                {member.role}
+                                                                {member.role === 'Administrador' ? 'Siervo de Dios' : member.role === 'Ministro' ? 'Ministro Responsable' : member.role}
                                                             </span>
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                                                                 {member.member_group}
@@ -907,6 +910,92 @@ export default function TactileAdmin() {
                                                     ]}
                                                     icon={Shield}
                                                 />
+
+                                                <div className="py-4 border-t border-white/5 space-y-4">
+                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2 flex justify-between">
+                                                        <span>OPTIMIZACIÓN DE TV (OVERSCAN / ESCALA)</span>
+                                                        <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
+                                                    </label>
+                                                    <div className="grid grid-cols-4 gap-2">
+                                                        {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
+                                                            <button
+                                                                key={sc}
+                                                                onClick={() => {
+                                                                    setSettings({ displayScale: sc });
+                                                                    saveSettingsToCloud({ displayScale: sc });
+                                                                }}
+                                                                className={cn(
+                                                                    "tactile-btn flex-1 text-[10px] py-2",
+                                                                    (settings.displayScale || 1.0) === sc ? "tactile-btn-orange" : "tactile-btn-glass"
+                                                                )}
+                                                            >
+                                                                {Math.round(sc * 100)}%
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                    <p className="text-[8px] text-tactile-text-sub ml-2 italic leading-relaxed">
+                                                        * Si el contenido se ve cortado en los bordes de la TV, baje la escala al 90%, 80% o 70%.
+                                                    </p>
+                                                </div>
+
+                                                <div className="py-4 border-t border-white/5 space-y-4">
+                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">
+                                                        AJUSTE MANUAL DE POSICIÓN (CENTRAR)
+                                                    </label>
+                                                    <div className="flex flex-col items-center gap-2">
+                                                        <button
+                                                            onClick={() => {
+                                                                const val = (settings.displayOffsetY || 0) - 20;
+                                                                setSettings({ displayOffsetY: val });
+                                                                saveSettingsToCloud({ displayOffsetY: val });
+                                                            }}
+                                                            className="tactile-btn p-3 bg-white/5 hover:bg-white/10"
+                                                        >
+                                                            <ChevronUp className="w-5 h-5" />
+                                                        </button>
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={() => {
+                                                                    const val = (settings.displayOffsetX || 0) - 20;
+                                                                    setSettings({ displayOffsetX: val });
+                                                                    saveSettingsToCloud({ displayOffsetX: val });
+                                                                }}
+                                                                className="tactile-btn p-3 bg-white/5 hover:bg-white/10"
+                                                            >
+                                                                <ChevronLeft className="w-5 h-5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSettings({ displayOffsetX: 0, displayOffsetY: 0 });
+                                                                    saveSettingsToCloud({ displayOffsetX: 0, displayOffsetY: 0 });
+                                                                }}
+                                                                className="tactile-btn px-4 bg-orange-500/20 text-orange-500 hover:bg-orange-500/30 font-bold text-[10px]"
+                                                            >
+                                                                RESET
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    const val = (settings.displayOffsetX || 0) + 20;
+                                                                    setSettings({ displayOffsetX: val });
+                                                                    saveSettingsToCloud({ displayOffsetX: val });
+                                                                }}
+                                                                className="tactile-btn p-3 bg-white/5 hover:bg-white/10"
+                                                            >
+                                                                <ChevronRight className="w-5 h-5" />
+                                                            </button>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => {
+                                                                const val = (settings.displayOffsetY || 0) + 20;
+                                                                setSettings({ displayOffsetY: val });
+                                                                saveSettingsToCloud({ displayOffsetY: val });
+                                                            }}
+                                                            className="tactile-btn p-3 bg-white/5 hover:bg-white/10"
+                                                        >
+                                                            <ChevronDown className="w-5 h-5" />
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </TactileGlassCard>
 
@@ -1165,7 +1254,8 @@ export default function TactileAdmin() {
                                             { id: 'cristal', label: 'Cristal Forge', icon: Sparkles, desc: 'Neo-Glassmorphism Premium' },
                                             { id: 'neon', label: 'Neon Forge', icon: Radio, desc: 'Retro-Futurista Vibrante' },
                                             { id: 'minimal', label: 'Dark Minimal', icon: Monitor, desc: 'Elegancia y Simplicidad' },
-                                            { id: 'iglesia', label: 'Iglesia', icon: Church, desc: 'Académico y Tradicional' }
+                                            { id: 'iglesia', label: 'Iglesia', icon: Church, desc: 'Académico y Tradicional' },
+                                            { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Atmosférico y Profundo' }
                                         ].map(themeOpt => (
                                             <button
                                                 key={themeOpt.id}
@@ -1331,6 +1421,30 @@ export default function TactileAdmin() {
                                                         <h4 className="font-black text-sm uppercase italic">Vista Previa</h4>
                                                         <p className="text-[10px] text-tactile-text-sub mt-2 leading-relaxed">El tema se aplicará instantáneamente a todas las pantallas conectadas.</p>
                                                     </div>
+
+                                                    <div className="mt-8 space-y-4">
+                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2 flex justify-between">
+                                                            <span>ESCALA DE DISPLAY (TV OPTIMIZACIÓN)</span>
+                                                            <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
+                                                        </label>
+                                                        <div className="flex gap-2">
+                                                            {[0.7, 0.8, 0.9, 1.0].map((sc) => (
+                                                                <button
+                                                                    key={sc}
+                                                                    onClick={() => setSettings({ displayScale: sc })}
+                                                                    className={cn(
+                                                                        "tactile-btn flex-1 text-[10px] py-2",
+                                                                        (settings.displayScale || 1.0) === sc ? "tactile-btn-orange" : "tactile-btn-glass"
+                                                                    )}
+                                                                >
+                                                                    {sc * 100}%
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                        <p className="text-[8px] text-tactile-text-sub ml-2 italic leading-relaxed">
+                                                            * Si el contenido se ve cortado en su TV (Overscan), baje la escala al 90% o 80%.
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -1362,7 +1476,7 @@ export default function TactileAdmin() {
                                     >
                                         <div className="p-8 border-b border-white/5 flex items-center justify-between">
                                             <h2 className="text-2xl font-black italic uppercase tracking-tighter">
-                                                Nuevo <span className="text-primary">Miembro</span>
+                                                {editingMember ? 'Editar' : 'Nuevo'} <span className="text-primary">Miembro</span>
                                             </h2>
                                             <button
                                                 onClick={() => setShowAddMember(false)}
@@ -1378,9 +1492,14 @@ export default function TactileAdmin() {
                                                     <div className="w-full h-full rounded-full overflow-hidden border-2 border-primary/50 shadow-2xl bg-black/40">
                                                         <img
                                                             src={newMemberData.avatar || 'https://via.placeholder.com/150'}
-                                                            className="w-full h-full object-cover"
+                                                            className={cn("w-full h-full object-cover", isSaving && "opacity-40 grayscale")}
                                                             alt="Avatar"
                                                         />
+                                                        {isSaving && (
+                                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                                                            </div>
+                                                        )}
                                                     </div>
                                                     <button
                                                         onClick={() => document.getElementById('member-avatar-upload')?.click()}
@@ -1464,8 +1583,8 @@ export default function TactileAdmin() {
                                                 onChange={(val: any) => setNewMemberData({ ...newMemberData, role: val })}
                                                 options={[
                                                     { value: 'Miembro', label: 'Miembro' },
-                                                    { value: 'Ministro', label: 'Ministro' },
-                                                    { value: 'Administrador', label: 'Administrador' },
+                                                    { value: 'Ministro', label: 'Ministro Responsable' },
+                                                    { value: 'Administrador', label: 'Siervo de Dios' },
                                                 ]}
                                                 icon={Shield}
                                             />
@@ -1524,7 +1643,11 @@ export default function TactileAdmin() {
                                                     }
                                                     setIsSaving(false);
                                                 }}
-                                                className="tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black uppercase tracking-widest shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
+                                                disabled={isSaving}
+                                                className={cn(
+                                                    "tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black uppercase tracking-widest shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]",
+                                                    isSaving && "opacity-50 cursor-not-allowed"
+                                                )}
                                             >
                                                 {isSaving ? 'Guardando...' : 'Guardar Miembro'}
                                             </button>

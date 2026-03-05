@@ -39,6 +39,7 @@ export default function DisplayPage() {
     const [isMounted, setIsMounted] = useState(false);
     const [now, setNow] = useState(() => new Date());
     const [unlocked, setUnlocked] = useState(false);
+    const [autoScale, setAutoScale] = useState(1);
 
     const loadAllSchedulesFromCloud = useAppStore((state) => state.loadAllSchedulesFromCloud);
     const loadAnnouncementsFromCloud = useAppStore((state) => state.loadAnnouncementsFromCloud);
@@ -55,8 +56,25 @@ export default function DisplayPage() {
         setIsMounted(true);
         const timer = setInterval(() => setNow(new Date()), 1000);
 
+        // Auto-scaling for TVs (assume target 1080p)
+        const checkScale = () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            // Always scale to fit 1920x1080 stage
+            const sX = w / 1920;
+            const sY = h / 1080;
+            setAutoScale(Math.min(sX, sY));
+        };
+
+        checkScale();
+        window.addEventListener('resize', checkScale);
+
+        const unsubSettings = useAppStore.getState().subscribeToSettings();
+
         return () => {
             clearInterval(timer);
+            window.removeEventListener('resize', checkScale);
+            unsubSettings();
         };
     }, []);
 
@@ -87,7 +105,7 @@ export default function DisplayPage() {
         }
 
         return theme;
-    }, [calendarStyles?.template, calendarStyles?.fontSetIndex]);
+    }, [calendarStyles?.template, calendarStyles?.fontSetIndex, settings.displayTemplate]);
 
     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
     const { Background, Clock, Progress } = activeTheme.components;
@@ -166,11 +184,20 @@ export default function DisplayPage() {
         >
             <Background />
 
-            {/* MAIN CONTENT STAGE */}
-            <div className="absolute inset-0 z-10 flex items-center justify-center p-0">
+            {/* MAIN CONTENT STAGE WITH AUTO-SCALING FOR TVS */}
+            <div
+                className="absolute z-10 flex items-center justify-center p-0 overflow-hidden w-[1920px] h-[1080px]"
+                style={{
+                    transform: `translate(calc(-50% + ${settings.displayOffsetX || 0}px), calc(-50% + ${settings.displayOffsetY || 0}px)) scale(${autoScale * (settings.displayScale || 1.0)})`,
+                    left: '50%',
+                    top: '50%',
+                    transformOrigin: 'center center'
+                }}
+            >
                 <AnimatePresence mode="popLayout" initial={false}>
                     {(() => {
                         const isIglesia = calendarStyles?.template === 'iglesia';
+                        // ... (keep all the animation logic as is)
                         const animationType = settings.iglesiaAnimation || 'metro';
 
                         // Custom Animation Logic
@@ -260,14 +287,13 @@ export default function DisplayPage() {
                         );
                     })()}
                 </AnimatePresence>
+
+                {/* SHARED OVERLAYS (Now inside the scaled stage to avoid TV clipping) */}
+                <Clock now={now} isMounted={isMounted} settings={settings} />
+                <Progress slides={slides} currentSlide={currentSlide} />
             </div>
 
-
-            {/* SHARED OVERLAYS (Can be overrideen or replaced by active theme) */}
-            <Clock now={now} isMounted={isMounted} settings={settings} />
-            <Progress slides={slides} currentSlide={currentSlide} />
-
-            <div className="fixed bottom-10 right-10 z-[500] flex gap-4">
+            <div className="fixed bottom-10 right-10 z-[500] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
                 <FullscreenButton />
             </div>
         </main>

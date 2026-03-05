@@ -59,6 +59,9 @@ export interface AppSettings {
     adminTheme?: 'classic' | 'tactile';
     displayPin?: string; // New: Access code for TV/Display mode
     displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon';
+    displayScale?: number; // New: Scale factor for TV displays (0.5 to 1.5)
+    displayOffsetX?: number; // New: Manual horizontal adjustment
+    displayOffsetY?: number; // New: Manual vertical adjustment
     displayAuthorizedEmails?: string[]; // New: List of emails allowed to use display mode
 }
 
@@ -220,18 +223,19 @@ interface AppState {
     loadCloudMessages: () => Promise<void>;
     markMessageAsRead: (id: string) => Promise<void>;
     subscribeToMessages: () => () => void;
+    subscribeToSettings: () => () => void;
     setAuthSession: (session: any) => void;
 }
 
 const INITIAL_USER: UserProfile = {
-    id: '1',
-    name: 'Abraham Samuel',
-    email: 'abraham@example.com',
-    phone: '+1 (555) 123-4567',
+    id: 'jairo-admin',
+    name: 'Jairo Jehuel',
+    email: 'jairojehuel@gmail.com',
+    phone: '',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
     category: 'Varon',
-    member_group: 'Casados',
-    role: 'Miembro',
+    member_group: 'Administración',
+    role: 'Administrador',
     gender: 'Varon',
     status: 'Activo',
     lastActive: 'Hoy',
@@ -274,13 +278,14 @@ export const useAppStore = create<AppState>()(
                 customSocialLabel: 'Sitio Oficial',
                 displayPin: '1922',
                 displayTemplate: 'cristal',
+                displayScale: 1.0,
                 displayAuthorizedEmails: ['jairojehuel@gmail.com']
             },
             currentUser: INITIAL_USER,
             minister: {
-                id: 'minister-1',
-                name: 'P.E. Benjamin Rojas',
-                email: 'contacto@lldmrodeo.org',
+                id: 'minister-eliab',
+                name: 'Eliab',
+                email: 'eliab@lldmrodeo.org',
                 phone: '+1 (555) 000-0000',
                 avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop',
                 category: 'Varon',
@@ -635,20 +640,24 @@ export const useAppStore = create<AppState>()(
                 const fileName = `${userId}-${Date.now()}.${fileExt}`;
                 const filePath = `avatars/${fileName}`;
 
-                console.log('Uploading avatar to:', filePath);
+                console.log('Attempting upload to bucket "avatars" at path:', filePath);
 
                 const { error: uploadError } = await supabase.storage
-                    .from('app_assets')
-                    .upload(filePath, file, { upsert: true });
+                    .from('avatars')
+                    .upload(filePath, file, {
+                        upsert: true,
+                        contentType: file.type,
+                        cacheControl: '3600'
+                    });
 
                 if (uploadError) {
-                    console.error('Error uploading avatar:', uploadError.message, (uploadError as any).statusCode);
-                    alert(`Error al subir imagen: ${uploadError.message}`);
+                    console.error('CRITICAL: Avatar Upload Failed:', uploadError);
+                    alert(`Error al subir imagen: ${uploadError.message}. Verifique si el bucket "avatars" existe en Supabase y tiene permisos públicos.`);
                     return null;
                 }
 
                 const { data } = supabase.storage
-                    .from('app_assets')
+                    .from('avatars')
                     .getPublicUrl(filePath);
 
                 console.log('Avatar uploaded successfully:', data.publicUrl);
@@ -965,7 +974,10 @@ export const useAppStore = create<AppState>()(
                             iglesiaAnimation: data.iglesia_animation || 'metro',
                             iglesiaAnimationSpeed: data.iglesia_animation_speed || 2.4,
                             iglesiaSlideDuration: data.iglesia_slide_duration || 12,
-                            displayTemplate: data.display_template || 'cristal'
+                            displayTemplate: data.display_template || 'cristal',
+                            displayScale: data.display_scale || 1.0,
+                            displayOffsetX: data.display_offset_x || 0,
+                            displayOffsetY: data.display_offset_y || 0
                         },
 
 
@@ -1013,7 +1025,10 @@ export const useAppStore = create<AppState>()(
                     iglesia_animation: updated.iglesiaAnimation,
                     iglesia_animation_speed: updated.iglesiaAnimationSpeed,
                     iglesia_slide_duration: updated.iglesiaSlideDuration,
-                    display_template: updated.displayTemplate
+                    display_template: updated.displayTemplate,
+                    display_scale: updated.displayScale,
+                    display_offset_x: updated.displayOffsetX,
+                    display_offset_y: updated.displayOffsetY
                 };
 
 
@@ -1104,6 +1119,19 @@ export const useAppStore = create<AppState>()(
                     })
                     .subscribe();
 
+                return () => {
+                    supabase.removeChannel(channel);
+                };
+            },
+
+            subscribeToSettings: () => {
+                const channel = supabase
+                    .channel('settings_realtime')
+                    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'app_settings' }, () => {
+                        console.log("Settings updated in cloud, reloading...");
+                        get().loadSettingsFromCloud();
+                    })
+                    .subscribe();
                 return () => {
                     supabase.removeChannel(channel);
                 };

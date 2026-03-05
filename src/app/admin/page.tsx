@@ -397,10 +397,13 @@ export default function AdminDashboard() {
         handleHashChange(); // Initial check
         window.addEventListener('hashchange', handleHashChange);
 
-        // Suscribirse a mensajes nuevos en tiempo real
-        const unsubscribe = subscribeToMessages();
+        // Suscribirse a mensajes y ajustes nuevos en tiempo real
+        const unsubMessages = subscribeToMessages();
+        const unsubSettings = useAppStore.getState().subscribeToSettings();
+
         return () => {
-            unsubscribe();
+            unsubMessages();
+            unsubSettings();
             window.removeEventListener('hashchange', handleHashChange);
         };
     }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadKidsAssignmentsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
@@ -729,7 +732,7 @@ export default function AdminDashboard() {
                         <div className="w-px h-6 bg-border/20 mx-2" />
                         <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveTab('configuracion')}>
                             <div className="text-right">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Administrador</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Siervo de Dios</p>
                                 <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">LLDM Rodeo</p>
                             </div>
                             <div className="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5 overflow-hidden group-hover:border-primary transition-all">

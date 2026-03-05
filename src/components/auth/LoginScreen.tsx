@@ -102,7 +102,7 @@ export function LoginScreen() {
                         </motion.div>
 
                         <h1 className="text-4xl font-black italic uppercase tracking-tighter text-white mb-2">
-                            LLDM <span className="text-primary">RODEO</span>
+                            LLDM <span className="text-amber-400">RODEO</span>
                         </h1>
                         <div className="flex items-center gap-2 text-slate-400">
                             <span className="w-10 h-px bg-white/10" />
