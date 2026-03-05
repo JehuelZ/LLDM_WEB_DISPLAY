@@ -69,26 +69,26 @@ export const GlassmorphismCalendar = () => {
     };
 
     return (
-        <div className="h-full flex flex-col p-16 pt-24 font-sora relative overflow-hidden bg-transparent">
+        <div className="h-full flex flex-col p-8 pt-10 font-sora relative overflow-hidden bg-transparent">
             {/* Minimalist Header */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="flex items-end justify-between mb-12 border-b border-white/5 pb-8"
+                className="flex items-end justify-between mb-6 border-b border-white/5 pb-4"
             >
                 <div className="flex items-center gap-6">
-                    <div className="w-24 h-24 bg-blue-500/10 rounded-[2.5rem] flex items-center justify-center border border-blue-500/20 shadow-2xl overflow-hidden relative group">
+                    <div className="w-16 h-16 bg-blue-500/10 rounded-[1.5rem] flex items-center justify-center border border-blue-500/20 shadow-2xl overflow-hidden relative group">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-500" />
-                        <CalendarDays className="w-12 h-12 text-blue-500 relative z-10" />
+                        <CalendarDays className="w-8 h-8 text-blue-500 relative z-10" />
                     </div>
                     <div>
-                        <h2 className="text-5xl font-black uppercase text-white leading-none tracking-tighter italic shadow-2xl">
+                        <h2 className="text-4xl font-black uppercase text-white leading-none tracking-tighter italic shadow-2xl">
                             {format(currentTime, 'MMMM', { locale: es }).toUpperCase()} <span className="font-thin text-white/30">{format(currentTime, 'yyyy')}</span>
                         </h2>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-10 bg-white/5 backdrop-blur-3xl px-12 py-5 rounded-[2.5rem] border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
+                <div className="flex items-center gap-8 bg-white/5 backdrop-blur-3xl px-8 py-3 rounded-[2rem] border border-white/10 shadow-[0_30px_60px_rgba(0,0,0,0.4)]">
                     <div className="flex gap-6">
                         <div className="flex items-center gap-2">
                             <div className="w-2 h-2 rounded-full bg-blue-500" />
@@ -111,7 +111,7 @@ export const GlassmorphismCalendar = () => {
             </motion.div>
 
             {/* Pillar Grid Layout - Matching Weekly Style */}
-            <div className="flex-1 grid grid-cols-7 gap-3 overflow-hidden h-full rounded-[4rem] border border-white/5 bg-black/20 p-2 shadow-inner">
+            <div className="flex-1 grid grid-cols-7 gap-2 overflow-hidden h-full rounded-[2rem] border border-white/5 bg-black/20 p-2 shadow-inner">
                 {['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'].map((dowName, dowIndex) => {
                     const daysInColumn = days.filter(d => getDay(d) === dowIndex);
                     const isSunday = dowIndex === 0;
@@ -125,7 +125,7 @@ export const GlassmorphismCalendar = () => {
                             )}
                         >
                             {/* Column Header */}
-                            <div className="text-center pt-8 pb-8 relative">
+                            <div className="text-center pt-4 pb-4 relative">
                                 <span className={cn(
                                     "text-2xl font-black uppercase tracking-tighter italic z-10 relative",
                                     isSunday ? "text-red-500" : "text-white/60"
