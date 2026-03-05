@@ -58,12 +58,12 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
     };
 
     return (
-        <div className="h-full flex flex-col p-16 pt-24 font-sora relative overflow-hidden bg-transparent">
+        <div className="h-full flex flex-col p-8 pt-10 font-sora relative overflow-hidden bg-transparent">
             {/* Header branding */}
             <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="flex items-end justify-between mb-24 border-b border-white/10 pb-12"
+                className="flex items-end justify-between mb-8 border-b border-white/10 pb-4"
             >
                 <div>
                     <div className="flex items-center gap-4 mb-3">
@@ -72,25 +72,25 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                             {isTomorrow ? 'PRÓXIMO PROGRAMA' : 'CALENDARIO DE MINISTERIO'}
                         </span>
                     </div>
-                    <h2 className="text-5xl font-bold uppercase tracking-tighter text-white leading-none">
+                    <h2 className="text-4xl font-bold uppercase tracking-tighter text-white leading-none">
                         Programa <span className="font-thin italic text-white/40">{isTomorrow ? 'Para Mañana' : 'Del Día'}</span>
                     </h2>
                 </div>
 
-                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] py-6 px-14 flex items-center gap-8 shadow-2xl">
+                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2rem] py-4 px-10 flex items-center gap-6 shadow-2xl">
                     <div className="flex flex-col items-center border-r border-white/10 pr-8">
-                        <span className="text-6xl font-black text-white">{format(displayDate, 'd')}</span>
+                        <span className="text-5xl font-black text-white">{format(displayDate, 'd')}</span>
                         <span className="text-xs font-bold text-white/30 uppercase tracking-[0.2em]">{format(displayDate, 'MMM', { locale: es })}</span>
                     </div>
                     <div className="flex flex-col">
-                        <span className="text-3xl font-black text-white/80 uppercase italic tracking-tight">{format(displayDate, 'EEEE', { locale: es })}</span>
+                        <span className="text-2xl font-black text-white/80 uppercase italic tracking-tight">{format(displayDate, 'EEEE', { locale: es })}</span>
                         <span className="text-xs font-bold text-white/20 uppercase tracking-[0.4em] mt-1">{format(displayDate, 'yyyy')}</span>
                     </div>
                 </div>
             </motion.div>
 
             {/* Main schedule layout */}
-            <div className="flex-1 grid grid-cols-3 gap-10 items-stretch">
+            <div className="flex-1 grid grid-cols-3 gap-6 items-stretch">
                 <ScheduleBlock
                     time="5:00 AM"
                     title="CONSAGRACIÓN"

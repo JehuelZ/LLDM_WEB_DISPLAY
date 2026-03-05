@@ -13,27 +13,27 @@ export const GlassmorphismAnnouncements = () => {
     const minister = useAppStore((state) => state.minister);
 
     return (
-        <div className="h-full flex flex-col md:flex-row p-16 pt-24 gap-12 overflow-hidden bg-transparent font-sora relative">
+        <div className="h-full flex flex-col md:flex-row p-8 pt-10 gap-8 overflow-hidden bg-transparent font-sora relative">
             {/* Left Pillar: Announcements */}
             <div className="flex-1 flex flex-col min-w-0">
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-8 mb-12 border-b border-white/5 pb-8"
+                    className="flex items-center gap-6 mb-6 border-b border-white/5 pb-4"
                 >
-                    <div className="w-24 h-24 bg-amber-500/10 rounded-[2.5rem] flex items-center justify-center border border-amber-500/20 shadow-2xl relative overflow-hidden group">
+                    <div className="w-16 h-16 bg-amber-500/10 rounded-[1.5rem] flex items-center justify-center border border-amber-500/20 shadow-2xl relative overflow-hidden group">
                         <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-500" />
-                        <Bell className="w-12 h-12 text-amber-500 relative z-10 animate-bounce" />
+                        <Bell className="w-8 h-8 text-amber-500 relative z-10 animate-bounce" />
                     </div>
                     <div>
-                        <h2 className="text-5xl font-black uppercase text-white leading-none tracking-tighter italic">
+                        <h2 className="text-4xl font-black uppercase text-white leading-none tracking-tighter italic">
                             ANUNCIOS <span className="font-thin text-white/30 uppercase">IMPORTANTES</span>
                         </h2>
                     </div>
                 </motion.div>
 
                 {/* Pillar Container for Notices */}
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden bg-black/20 rounded-[4rem] border border-white/5 p-4 shadow-inner">
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-hidden bg-black/20 rounded-[2rem] border border-white/5 p-3 shadow-inner">
                     <AnimatePresence mode="popLayout">
                         {announcements.map((ann, idx) => (
                             <motion.div
@@ -43,7 +43,7 @@ export const GlassmorphismAnnouncements = () => {
                                 exit={{ scale: 0.9, opacity: 0 }}
                                 transition={{ delay: idx * 0.1 }}
                                 className={cn(
-                                    "flex flex-col p-8 rounded-[3.5rem] border transition-all hover:bg-white/[0.04] relative overflow-hidden group/ann",
+                                    "flex flex-col p-6 rounded-[2rem] border transition-all hover:bg-white/[0.04] relative overflow-hidden group/ann",
                                     ann.priority > 0
                                         ? "border-amber-500/40 bg-amber-500/[0.03] shadow-[0_20px_40px_rgba(245,158,11,0.05)]"
                                         : "border-white/10 bg-white/[0.02]"
@@ -62,7 +62,7 @@ export const GlassmorphismAnnouncements = () => {
                                     )}>
                                         <Bell className="w-6 h-6" />
                                     </div>
-                                    <h3 className="text-3xl font-black text-white uppercase italic leading-[1.1] truncate flex-1 tracking-tighter">
+                                    <h3 className="text-2xl font-black text-white uppercase italic leading-[1.1] truncate flex-1 tracking-tighter">
                                         {ann.title}
                                     </h3>
                                 </div>

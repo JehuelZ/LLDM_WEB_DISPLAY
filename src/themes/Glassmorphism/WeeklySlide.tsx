@@ -89,37 +89,37 @@ export const GlassmorphismWeekly = () => {
     if (!mounted) return null;
 
     return (
-        <div className="h-full flex flex-col p-16 pt-24 bg-transparent relative overflow-hidden font-sora">
+        <div className="h-full flex flex-col p-8 pt-10 bg-transparent relative overflow-hidden font-sora">
 
 
-            <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex justify-between items-end mb-16 border-b border-white/10 pb-10">
-                <div className="flex items-center gap-10">
-                    <div className="w-28 h-28 bg-blue-500/10 rounded-[2.5rem] flex items-center justify-center border border-blue-500/20 shadow-2xl relative overflow-hidden group">
+            <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex justify-between items-end mb-6 border-b border-white/10 pb-4">
+                <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 bg-blue-500/10 rounded-[1.5rem] flex items-center justify-center border border-blue-500/20 shadow-2xl relative overflow-hidden group">
                         <div className="absolute inset-0 bg-blue-500/10 group-hover:opacity-100 opacity-0 transition-opacity" />
-                        <CalendarDays className="w-14 h-14 text-blue-500 relative z-10" />
+                        <CalendarDays className="w-8 h-8 text-blue-500 relative z-10" />
                     </div>
                     <div>
-                        <h2 className="text-5xl font-black uppercase text-white leading-none tracking-tighter italic shadow-2xl">PROGRAMA <span className="font-thin text-white/30">SEMANAL</span></h2>
+                        <h2 className="text-4xl font-black uppercase text-white leading-none tracking-tighter italic shadow-2xl">PROGRAMA <span className="font-thin text-white/30">SEMANAL</span></h2>
                     </div>
                 </div>
 
-                <div className="flex-1 max-w-2xl mx-12 bg-white/5 border border-white/10 rounded-[2.5rem] p-6 backdrop-blur-3xl overflow-hidden relative shadow-2xl">
+                <div className="flex-1 max-w-2xl mx-8 bg-white/5 border border-white/10 rounded-[2rem] p-4 backdrop-blur-3xl overflow-hidden relative shadow-2xl">
                     <div className="absolute top-0 left-0 w-2 h-full bg-blue-500" />
-                    <h3 className="text-3xl font-black text-white uppercase italic truncate">{theme.title || 'ORACIÓN CONTINUA'}</h3>
-                    <p className="text-[10px] text-white/40 uppercase tracking-[0.4em] mt-1 font-black">{theme.type || 'ESTUDIO BÍBLICO'}</p>
+                    <h3 className="text-2xl font-black text-white uppercase italic truncate">{theme.title || 'ORACIÓN CONTINUA'}</h3>
+                    <p className="text-[9px] text-white/40 uppercase tracking-[0.4em] mt-1 font-black">{theme.type || 'ESTUDIO BÍBLICO'}</p>
                 </div>
             </motion.div>
 
-            <div className="flex-1 grid grid-cols-7 gap-3 overflow-hidden rounded-[4rem] border border-white/5 bg-black/20 p-2 shadow-inner">
+            <div className="flex-1 grid grid-cols-7 gap-2 overflow-hidden rounded-[2rem] border border-white/5 bg-black/20 p-2 shadow-inner">
                 {daysProgram.map((day, idx) => {
                     const type = day.sched?.slots?.['evening']?.type || 'regular';
                     const impact = getImpactLevel(type);
                     const isSunday = day.dayName === 'DOM' || day.dayName === 'DOMINGO';
 
                     return (
-                        <div key={day.dateKey} className={cn("relative flex flex-col items-center pt-6 pb-12 px-4 rounded-[3.5rem] overflow-hidden transition-all hover:bg-white/[0.04]", isSunday ? "bg-red-500/5" : "bg-white/[0.02]")}>
-                            <span className="absolute top-6 left-1/2 -translate-x-1/2 text-[140px] font-black text-white/5 select-none">{day.dayNum}</span>
-                            <span className={cn("text-2xl font-black mb-8 z-10 italic uppercase tracking-tighter", isSunday ? "text-red-500/60" : "text-white/60")}>{day.dayName}</span>
+                        <div key={day.dateKey} className={cn("relative flex flex-col items-center pt-4 pb-8 px-3 rounded-[2rem] overflow-hidden transition-all hover:bg-white/[0.04]", isSunday ? "bg-red-500/5" : "bg-white/[0.02]")}>
+                            <span className="absolute top-4 left-1/2 -translate-x-1/2 text-[100px] font-black text-white/5 select-none">{day.dayNum}</span>
+                            <span className={cn("text-xl font-black mb-4 z-10 italic uppercase tracking-tighter", isSunday ? "text-red-500/60" : "text-white/60")}>{day.dayName}</span>
 
                             <div className="flex-1 flex flex-col items-center justify-start z-10 w-full gap-3">
                                 {(['5am', '9am', 'evening'] as const).map((slotKey) => {
