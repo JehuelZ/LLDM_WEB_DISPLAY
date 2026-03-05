@@ -187,7 +187,8 @@ export default function DisplayPage() {
 
 
                         if (isIglesia) {
-                            const speed = settings.iglesiaAnimationSpeed || 2.4;
+                            const speed = (settings.iglesiaAnimationSpeed || 2.4) as number;
+                            const animationType = settings.iglesiaAnimation || 'metro';
 
                             if (animationType === 'metro') {
                                 // Right to Left flow like a train line
@@ -210,10 +211,10 @@ export default function DisplayPage() {
                                         filter: 'blur(20px)',
                                         scale: 0.95
                                     }
-                                };
+                                } as any;
                                 transition = {
                                     duration: speed,
-                                    ease: [0.16, 1, 0.3, 1] as any,
+                                    ease: [0.16, 1, 0.3, 1],
                                     opacity: { duration: speed * 0.5 }
                                 } as any;
                             } else if (animationType === 'breathing') {
@@ -222,10 +223,10 @@ export default function DisplayPage() {
                                     initial: { opacity: 0, scale: 1.1, filter: 'blur(10px)' },
                                     animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
                                     exit: { opacity: 0, scale: 0.9, filter: 'blur(10px)' }
-                                };
+                                } as any;
                                 transition = {
                                     duration: speed,
-                                    ease: 'easeInOut' as any,
+                                    ease: 'easeInOut',
                                     opacity: { duration: speed * 0.75 }
                                 } as any;
                             } else if (animationType === 'fade') {
@@ -234,10 +235,10 @@ export default function DisplayPage() {
                                     initial: { opacity: 0 },
                                     animate: { opacity: 1 },
                                     exit: { opacity: 0 }
-                                };
+                                } as any;
                                 transition = {
                                     duration: speed,
-                                    ease: 'linear' as any,
+                                    ease: 'linear',
                                     opacity: { duration: speed }
                                 } as any;
                             }

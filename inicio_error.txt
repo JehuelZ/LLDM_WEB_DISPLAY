@@ -1664,3 +1664,5 @@ the name `useRouter` is defined multiple times
 ✓ Compiled in 77ms
  GET /admin 200 in 293ms (compile: 17ms, render: 277ms)
  GET /display 200 in 329ms (compile: 127ms, render: 202ms)
+✓ Compiled in 359ms
+✓ Compiled in 127ms

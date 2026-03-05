@@ -1,4 +1,10 @@
 ---
+# LLDM Rodeo Display Theme Creator Skill
+
+> [!IMPORTANT]
+> **REFERENCIA MAESTRA OBLIGATORIA:** Antes de iniciar cualquier tarea de diseño o modificación de temas, **DEBES** leer y seguir las directrices establecidas en el [LLDM_RODEO_MANIFESTO.md](file:///Users/hardglobal/Documents/LLDM_RODEO_APP/LLDM_RODEO_MANIFESTO.md). Este archivo contiene el vocabulario sagrado, la identidad de los temas y las reglas de oro del proyecto.
+
+Este sistema experto está diseñado para crear, rediseñar y mantener los temas visuales del sistema de pizarras LLDM Rodeo.
 name: Display Theme Creator
 description: Expert system to design and implement new visual themes for the LLDM Rodeo Board display system. Use this skill whenever the user requests creating, redesigning, or updating a display theme. This skill deeply studies a reference design before writing any code.
 ---

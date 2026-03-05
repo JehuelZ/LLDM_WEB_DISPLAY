@@ -37,8 +37,7 @@ const TactileGlassCard = ({ children, title, className, subtitle }: { children: 
     </div>
 )
 
-// New Tactile Input Components
-// New Tactile Input Components
+// Tactile Input Components
 const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = "text", disabled }: any) => (
     <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
         {label && <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
