@@ -609,7 +609,7 @@ export default function AdminDashboard() {
     if (!mounted) return null;
 
     // 🔒 PROTECCIÓN: Solo administradores autenticados
-    const isAuthorized = authSession?.user && currentUser.role === 'Siervo de Dios';
+    const isAuthorized = authSession?.user && currentUser.role === 'Administrador';
 
     if (!isAuthorized) {
         return (
@@ -2858,7 +2858,7 @@ export default function AdminDashboard() {
                                                                 <div className={cn(
                                                                     "absolute top-0 right-0 w-32 h-32 blur-[60px] opacity-10 pointer-events-none -translate-y-1/2 translate-x-1/2",
                                                                     m.role === 'Administrador' ? "bg-red-500" :
-                                                                        m.role === 'Responsable' ? "bg-primary" : "bg-emerald-500"
+                                                                        m.role === 'Ministro' ? "bg-primary" : "bg-emerald-500"
                                                                 )} />
 
                                                                 <div className="flex items-start gap-5 relative z-10">
@@ -2867,7 +2867,7 @@ export default function AdminDashboard() {
                                                                         <div className={cn(
                                                                             "w-16 h-16 rounded-2xl overflow-hidden border-2 p-1 relative z-10",
                                                                             m.role === 'Administrador' ? "border-red-500/30 bg-red-500/5 shadow-[0_0_20px_rgba(239,68,68,0.2)]" :
-                                                                                m.role === 'Responsable' ? "border-primary/30 bg-primary/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" :
+                                                                                m.role === 'Ministro' ? "border-primary/30 bg-primary/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" :
                                                                                     "border-emerald-500/30 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                                                                         )}>
                                                                             {m.avatar ? (
@@ -2877,7 +2877,7 @@ export default function AdminDashboard() {
                                                                                     <User className={cn(
                                                                                         "w-8 h-8",
                                                                                         m.role === 'Administrador' ? "text-red-400" :
-                                                                                            m.role === 'Responsable' ? "text-primary" : "text-emerald-400"
+                                                                                            m.role === 'Ministro' ? "text-primary" : "text-emerald-400"
                                                                                     )} />
                                                                                 </div>
                                                                             )}
@@ -2898,7 +2898,7 @@ export default function AdminDashboard() {
                                                                                     <span className={cn(
                                                                                         "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border",
                                                                                         m.role === 'Administrador' ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                                                                                            m.role === 'Responsable' ? "bg-primary/10 text-primary border-primary/20" :
+                                                                                            m.role === 'Ministro' ? "bg-primary/10 text-primary border-primary/20" :
                                                                                                 "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                                                                                     )}>
                                                                                         {m.role}

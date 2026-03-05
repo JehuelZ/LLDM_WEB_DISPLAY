@@ -87,7 +87,7 @@ export default function AdminLayout({
     const pathname = usePathname();
     const [collapsed, setCollapsed] = useState(false);
 
-    const isAuthorized = currentUser && currentUser.role === 'Siervo de Dios';
+    const isAuthorized = currentUser && currentUser.role === 'Administrador';
 
     if (!isAuthorized && !isLoading) {
         return (
