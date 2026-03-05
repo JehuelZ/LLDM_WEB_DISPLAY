@@ -1484,83 +1484,84 @@ export default function TactileAdmin() {
                                                 {isSaving ? 'Guardando...' : 'Guardar Miembro'}
                                             </button>
                                         </div>
-                                        {showRehearsalModal && (
-                                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
-                                                <motion.div
-                                                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                                    className="bg-tactile-bg border border-white/10 rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden flex flex-col"
-                                                >
-                                                    <div className="p-8 border-b border-white/5 flex items-center justify-between">
-                                                        <div>
-                                                            <h3 className="text-2xl font-black italic uppercase tracking-tighter">Gestionar <span className="text-primary truncate">Ensayos</span></h3>
-                                                            <p className="text-[10px] font-bold text-tactile-text-sub uppercase tracking-widest mt-1">Configuración del Coro</p>
-                                                        </div>
-                                                        <button onClick={() => setShowRehearsalModal(false)} className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center"><Trash2 className="w-4 h-4" /></button>
-                                                    </div>
-
-                                                    <div className="p-8 space-y-6">
-                                                        <TactileSelect
-                                                            label="DÍA DE LA SEMANA"
-                                                            value={newRehearsal.dayOfWeek}
-                                                            onChange={(val: any) => setNewRehearsal({ ...newRehearsal, dayOfWeek: parseInt(val) })}
-                                                            options={[
-                                                                { value: 0, label: 'Domingo' },
-                                                                { value: 1, label: 'Lunes' },
-                                                                { value: 2, label: 'Martes' },
-                                                                { value: 3, label: 'Miércoles' },
-                                                                { value: 4, label: 'Jueves' },
-                                                                { value: 5, label: 'Viernes' },
-                                                                { value: 6, label: 'Sábado' },
-                                                            ]}
-                                                            icon={CalendarDays}
-                                                        />
-                                                        <TactileInput
-                                                            label="HORA DEL ENSAYO"
-                                                            placeholder="07:00 PM"
-                                                            value={newRehearsal.time}
-                                                            onChange={(e: any) => setNewRehearsal({ ...newRehearsal, time: e.target.value })}
-                                                            icon={Clock}
-                                                        />
-                                                        <TactileInput
-                                                            label="LUGAR"
-                                                            placeholder="Salón de Actos"
-                                                            value={newRehearsal.location}
-                                                            onChange={(e: any) => setNewRehearsal({ ...newRehearsal, location: e.target.value })}
-                                                            icon={MapPin}
-                                                        />
-                                                    </div>
-
-                                                    <div className="p-8 border-t border-white/5 flex gap-4">
-                                                        <button
-                                                            onClick={() => setShowRehearsalModal(false)}
-                                                            className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black"
-                                                        >
-                                                            CANCELAR
-                                                        </button>
-                                                        <button
-                                                            onClick={async () => {
-                                                                setIsSaving(true);
-                                                                await saveRehearsalToCloud(newRehearsal);
-                                                                setShowRehearsalModal(false);
-                                                                setIsSaving(false);
-                                                            }}
-                                                            className="tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
-                                                        >
-                                                            {isSaving ? 'GUARDANDO...' : 'GUARDAR ENSAYO'}
-                                                        </button>
-                                                    </div>
-                                                </motion.div>
-                                            </div>
-                                        )}
-                                    </AnimatePresence>
+                                    </motion.div>
                                 </div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Rehearsal Modal */}
+                        {showRehearsalModal && (
+                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm">
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    className="bg-tactile-bg border border-white/10 rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden flex flex-col"
+                                >
+                                    <div className="p-8 border-b border-white/5 flex items-center justify-between">
+                                        <div>
+                                            <h3 className="text-2xl font-black italic uppercase tracking-tighter">Gestionar <span className="text-primary truncate">Ensayos</span></h3>
+                                            <p className="text-[10px] font-bold text-tactile-text-sub uppercase tracking-widest mt-1">Configuración del Coro</p>
+                                        </div>
+                                        <button onClick={() => setShowRehearsalModal(false)} className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center"><Trash2 className="w-4 h-4" /></button>
+                                    </div>
+
+                                    <div className="p-8 space-y-6">
+                                        <TactileSelect
+                                            label="DÍA DE LA SEMANA"
+                                            value={newRehearsal.dayOfWeek}
+                                            onChange={(val: any) => setNewRehearsal({ ...newRehearsal, dayOfWeek: parseInt(val) })}
+                                            options={[
+                                                { value: 0, label: 'Domingo' },
+                                                { value: 1, label: 'Lunes' },
+                                                { value: 2, label: 'Martes' },
+                                                { value: 3, label: 'Miércoles' },
+                                                { value: 4, label: 'Jueves' },
+                                                { value: 5, label: 'Viernes' },
+                                                { value: 6, label: 'Sábado' },
+                                            ]}
+                                            icon={CalendarDays}
+                                        />
+                                        <TactileInput
+                                            label="HORA DEL ENSAYO"
+                                            placeholder="07:00 PM"
+                                            value={newRehearsal.time}
+                                            onChange={(e: any) => setNewRehearsal({ ...newRehearsal, time: e.target.value })}
+                                            icon={Clock}
+                                        />
+                                        <TactileInput
+                                            label="LUGAR"
+                                            placeholder="Salón de Actos"
+                                            value={newRehearsal.location}
+                                            onChange={(e: any) => setNewRehearsal({ ...newRehearsal, location: e.target.value })}
+                                            icon={MapPin}
+                                        />
+                                    </div>
+
+                                    <div className="p-8 border-t border-white/5 flex gap-4">
+                                        <button
+                                            onClick={() => setShowRehearsalModal(false)}
+                                            className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black"
+                                        >
+                                            CANCELAR
+                                        </button>
+                                        <button
+                                            onClick={async () => {
+                                                setIsSaving(true);
+                                                await saveRehearsalToCloud(newRehearsal);
+                                                setShowRehearsalModal(false);
+                                                setIsSaving(false);
+                                            }}
+                                            className="tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
+                                        >
+                                            {isSaving ? 'GUARDANDO...' : 'GUARDAR ENSAYO'}
+                                        </button>
+                                    </div>
+                                </motion.div>
                             </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
-            </div >
-        </div >
     )
 }
-```
