@@ -527,31 +527,45 @@ export const useAppStore = create<AppState>()(
             },
 
             loadMembersFromCloud: async () => {
+                console.log('🔄 Iniciando carga de miembros desde Supabase...');
                 set({ isLoading: true });
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('*');
+                try {
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .select('*');
 
-                if (data) {
-                    const mapped = data.map((p: any) => ({
-                        id: p.id,
-                        name: p.name,
-                        email: p.email,
-                        phone: p.phone,
-                        avatar: p.avatar_url,
-                        avatarUrl: p.avatar_url,
-                        category: p.category,
-                        member_group: p.member_group,
-                        role: p.role || 'Miembro',
-                        gender: p.gender || 'Varon',
-                        status: p.status || 'Activo',
-                        lastActive: p.last_active || 'Hoy',
-                        stats: p.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
-                        privileges: p.roles || [],
-                        is_pre_registered: p.is_pre_registered || false
-                    }));
-                    set({ members: mapped, isLoading: false });
-                } else {
+                    if (error) {
+                        console.error('❌ Error de Supabase al cargar miembros:', error.message);
+                        set({ isLoading: false });
+                        return;
+                    }
+
+                    if (data) {
+                        console.log(`✅ ${data.length} miembros recibidos de Supabase`);
+                        const mapped = data.map((p: any) => ({
+                            id: p.id,
+                            name: p.name,
+                            email: p.email,
+                            phone: p.phone,
+                            avatar: p.avatar_url,
+                            avatarUrl: p.avatar_url,
+                            category: p.category,
+                            member_group: p.member_group,
+                            role: p.role || 'Miembro',
+                            gender: p.gender || 'Varon',
+                            status: p.status || 'Activo',
+                            lastActive: p.last_active || 'Hoy',
+                            stats: p.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
+                            privileges: p.roles || [],
+                            is_pre_registered: p.is_pre_registered || false
+                        }));
+                        set({ members: mapped, isLoading: false });
+                    } else {
+                        console.warn('⚠️ Supabase no devolvió datos de miembros.');
+                        set({ members: [], isLoading: false });
+                    }
+                } catch (err) {
+                    console.error('💥 Error inesperado en loadMembersFromCloud:', err);
                     set({ isLoading: false });
                 }
             },
