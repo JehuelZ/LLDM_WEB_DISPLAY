@@ -56,7 +56,7 @@ const TRANSLATIONS = {
         demo_mode: 'Modo Demo',
         configuracion: 'Configuración',
         admin_user: 'Admin Usuario',
-        admin_role: 'Administrador'
+        admin_role: 'Siervo de Dios'
     },
     en: {
         principal: 'Primary',
@@ -72,7 +72,7 @@ const TRANSLATIONS = {
         demo_mode: 'Demo Mode',
         configuracion: 'Settings',
         admin_user: 'Admin User',
-        admin_role: 'Administrator'
+        admin_role: 'Servant of God'
     }
 };
 
@@ -87,7 +87,7 @@ export default function AdminLayout({
     const pathname = usePathname();
     const [collapsed, setCollapsed] = useState(false);
 
-    const isAuthorized = currentUser && currentUser.role === 'Administrador';
+    const isAuthorized = currentUser && currentUser.role === 'Siervo de Dios';
 
     if (!isAuthorized && !isLoading) {
         return (

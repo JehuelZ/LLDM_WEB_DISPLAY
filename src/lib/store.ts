@@ -69,7 +69,7 @@ export interface UserProfile {
     avatar: string;
     category: 'Varon' | 'Hermana' | 'Niño';
     member_group?: 'Casados' | 'Casadas' | 'Solos y Solas' | 'Jovenes' | 'Niños' | 'Niñas' | 'Administración';
-    role: 'Miembro' | 'Responsable' | 'Administrador';
+    role: 'Miembro' | 'Ministro Responsable' | 'Siervo de Dios';
     gender: 'Varon' | 'Hermana';
     status: 'Activo' | 'Inactivo';
     lastActive: string;
@@ -282,7 +282,7 @@ export const useAppStore = create<AppState>()(
                 phone: '+1 (555) 000-0000',
                 avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop',
                 category: 'Varon',
-                role: 'Responsable',
+                role: 'Ministro Responsable',
                 gender: 'Varon',
                 status: 'Activo',
                 lastActive: 'Hoy',
@@ -678,17 +678,16 @@ export const useAppStore = create<AppState>()(
 
                 if (existingProfile) {
                     // Si es el correo del Administrador Maestro, nos aseguramos de que tenga el rol correcto
-                    if (userEmail === MASTER_ADMIN_EMAIL && existingProfile.role !== 'Administrador') {
-                        await supabase
+                    if (userEmail === MASTER_ADMIN_EMAIL && existingProfile.role !== 'Siervo de Dios') {
+                        const { error: updateError } = await supabase
                             .from('profiles')
-                            .update({ role: 'Administrador', roles: ['admin', 'leader'] })
+                            .update({ role: 'Siervo de Dios', roles: ['admin', 'leader'] })
                             .eq('id', existingProfile.id);
 
-                        existingProfile.role = 'Administrador';
-                        existingProfile.roles = ['admin', 'leader'];
-                    }
-
-                    // Cargamos al estado
+                        if (!updateError) {
+                            existingProfile.role = 'Siervo de Dios';
+                        }
+                    }// Cargamos al estado
                     set({
                         currentUser: {
                             id: existingProfile.id,
@@ -715,7 +714,7 @@ export const useAppStore = create<AppState>()(
                         email: userEmail,
                         name: userName,
                         avatar_url: userAvatar,
-                        role: isMasterAdmin ? 'Administrador' : 'Miembro',
+                        role: isMasterAdmin ? 'Siervo de Dios' : 'Miembro',
                         status: 'Activo',
                         category: 'Varon',
                         stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },

@@ -773,7 +773,7 @@ export default function TactileAdmin() {
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-tactile-text-sub mb-4 ml-2">Filtrar por Grupo</h4>
                                         {[
                                             { id: 'all', label: 'Todos', count: members.length },
-                                            { id: 'Administración', label: 'Administración', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
+                                            { id: 'Administración', label: 'Administración', count: members.filter(m => m.role === 'Siervo de Dios' || m.member_group === 'Administración').length },
                                             { id: 'Casados', label: 'Matrimonios', count: members.filter(m => m.member_group === 'Casados' || m.member_group === 'Casadas').length },
                                             { id: 'Solos y Solas', label: 'Solos y Solas', count: members.filter(m => m.member_group === 'Solos y Solas').length },
                                             { id: 'Jovenes', label: 'Jóvenes', count: members.filter(m => m.member_group === 'Jovenes').length },
@@ -805,7 +805,7 @@ export default function TactileAdmin() {
                                                 if (!matchesSearch) return false;
 
                                                 if (memberFilter === 'all') return true;
-                                                if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';
+                                                if (memberFilter === 'Administración') return m.role === 'Siervo de Dios' || m.member_group === 'Administración';
                                                 if (memberFilter === 'Casados') return m.member_group === 'Casados' || m.member_group === 'Casadas';
                                                 if (memberFilter === 'Niños') return m.member_group === 'Niños' || m.member_group === 'Niñas';
                                                 return m.member_group === memberFilter;
@@ -814,7 +814,7 @@ export default function TactileAdmin() {
                                                 <div key={member.id} className="tactile-glass-panel p-4 flex items-center gap-4 group cursor-pointer hover:bg-white/[0.03] transition-colors relative">
                                                     <div className="w-14 h-14 rounded-full border-2 border-white/10 overflow-hidden relative">
                                                         <img src={member.avatar || 'https://via.placeholder.com/150'} className="w-full h-full object-cover" alt={member.name} />
-                                                        {member.role === 'Administrador' && (
+                                                        {member.role === 'Siervo de Dios' && (
                                                             <div className="absolute inset-0 border-2 border-primary rounded-full pointer-events-none" />
                                                         )}
                                                     </div>
@@ -1421,8 +1421,8 @@ export default function TactileAdmin() {
                                                 onChange={(val: any) => setNewMemberData({ ...newMemberData, role: val })}
                                                 options={[
                                                     { value: 'Miembro', label: 'Miembro' },
-                                                    { value: 'Responsable', label: 'Responsable' },
-                                                    { value: 'Administrador', label: 'Administrador' },
+                                                    { value: 'Ministro Responsable', label: 'Ministro Responsable' },
+                                                    { value: 'Siervo de Dios', label: 'Siervo de Dios' },
                                                 ]}
                                                 icon={Shield}
                                             />

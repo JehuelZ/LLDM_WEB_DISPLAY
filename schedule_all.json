@@ -1,0 +1,1493 @@
+{
+  "2026-02-23": {
+    "date": "2026-02-23",
+    "slots": {
+      "5am": {
+        "leaderId": "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "doctrineLeaderId": "3220ac06-4b9b-417f-adc7-a726fac26657",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "d434fd0f-b0bb-4414-88f2-e3d79d77c953"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-24": {
+    "date": "2026-02-24",
+    "slots": {
+      "5am": {
+        "leaderId": "a09ba6cd-a8ea-4b6e-868c-db540b7d577a",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "255351e3-4196-44ee-a292-e11880caff25",
+        "doctrineLeaderId": "a22727b1-1db1-4736-8324-e54d53afa28f",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "54a438dd-afbd-4f06-90a7-6936c9aaedb3"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-25": {
+    "date": "2026-02-25",
+    "slots": {
+      "5am": {
+        "leaderId": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "doctrineLeaderId": "22e7cd9e-53ea-4fa6-99d5-6e822eabd00b",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "55d5ccdf-073b-491e-b34c-fd091eb06bb1"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-26": {
+    "date": "2026-02-26",
+    "slots": {
+      "5am": {
+        "leaderId": "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "00cd3461-bb0c-47ac-8dc8-d84b97d858a1",
+        "doctrineLeaderId": "37c430cb-6fd1-4e1f-b918-a271e4de37ed",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "e8c1ca07-a2bd-4688-8330-855b23272177",
+          "c28b666c-5626-43e6-8610-9709f25cfb99"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-27": {
+    "date": "2026-02-27",
+    "slots": {
+      "5am": {
+        "leaderId": "3968c3be-b475-46db-91e2-3d180007a552",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "0d58b30b-8a15-4fbc-bc74-5fed98e2127f",
+        "doctrineLeaderId": "9a851a58-586e-4570-8aef-8d76c2a50aa6",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "657efb04-836d-42d7-8b11-8d749221df98"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-03": {
+    "date": "2026-03-03",
+    "slots": {
+      "5am": {
+        "leaderId": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "doctrineLeaderId": "255351e3-4196-44ee-a292-e11880caff25",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "00cd3461-bb0c-47ac-8dc8-d84b97d858a1"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-01": {
+    "date": "2026-02-01",
+    "slots": {
+      "5am": {
+        "leaderId": "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "0668528d-37a9-4864-964f-ab2a6166cda4",
+        "doctrineLeaderId": "be4d631c-34f7-4405-bc4c-c800c8381cb4",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "married",
+        "language": "es",
+        "leaderIds": [
+          "00cd3461-bb0c-47ac-8dc8-d84b97d858a1",
+          "be4d631c-34f7-4405-bc4c-c800c8381cb4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-02": {
+    "date": "2026-02-02",
+    "slots": {
+      "5am": {
+        "leaderId": "a09ba6cd-a8ea-4b6e-868c-db540b7d577a",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "fb4482da-c09b-4ff1-a82f-cc0074b53fdc",
+        "doctrineLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "54a438dd-afbd-4f06-90a7-6936c9aaedb3"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-03": {
+    "date": "2026-02-03",
+    "slots": {
+      "5am": {
+        "leaderId": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+        "doctrineLeaderId": "255351e3-4196-44ee-a292-e11880caff25",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "55d5ccdf-073b-491e-b34c-fd091eb06bb1"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-04": {
+    "date": "2026-02-04",
+    "slots": {
+      "5am": {
+        "leaderId": "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+        "doctrineLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "00db7500-7397-4580-b81d-e0055f1249a7"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-05": {
+    "date": "2026-02-05",
+    "slots": {
+      "5am": {
+        "leaderId": "3968c3be-b475-46db-91e2-3d180007a552",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "d0851fdf-bcdc-4e1a-bbfa-38678cbf98f6",
+        "doctrineLeaderId": "724a7c80-d012-47f5-948c-ac02a92e6352",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "3220ac06-4b9b-417f-adc7-a726fac26657",
+          "724a7c80-d012-47f5-948c-ac02a92e6352"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-06": {
+    "date": "2026-02-06",
+    "slots": {
+      "5am": {
+        "leaderId": "0668528d-37a9-4864-964f-ab2a6166cda4",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c28b666c-5626-43e6-8610-9709f25cfb99",
+        "doctrineLeaderId": "0d58b30b-8a15-4fbc-bc74-5fed98e2127f",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "830e93d6-ca57-4e13-811b-6cb73b4469b6"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-07": {
+    "date": "2026-02-07",
+    "slots": {
+      "5am": {
+        "leaderId": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "doctrineLeaderId": "3220ac06-4b9b-417f-adc7-a726fac26657",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "children",
+        "language": "es",
+        "leaderIds": [
+          "2d0ceeb0-9421-4797-9aba-33a2d751916d"
+        ],
+        "topic": "Servicio de Ni\u00f1os",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-08": {
+    "date": "2026-02-08",
+    "slots": {
+      "5am": {
+        "leaderId": "e8c1ca07-a2bd-4688-8330-855b23272177",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "ee39d7b4-b063-47f8-a834-99121cea6a04",
+        "doctrineLeaderId": "55d5ccdf-073b-491e-b34c-fd091eb06bb1",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30"
+        ],
+        "topic": "Dominical",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-09": {
+    "date": "2026-02-09",
+    "slots": {
+      "5am": {
+        "leaderId": "00cd3461-bb0c-47ac-8dc8-d84b97d858a1",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "doctrineLeaderId": "22e7cd9e-53ea-4fa6-99d5-6e822eabd00b",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "a09ba6cd-a8ea-4b6e-868c-db540b7d577a"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-10": {
+    "date": "2026-02-10",
+    "slots": {
+      "5am": {
+        "leaderId": "d0851fdf-bcdc-4e1a-bbfa-38678cbf98f6",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+        "doctrineLeaderId": "56add9e2-2579-47ff-b67b-aed3026ccd43",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "9c8af082-f9ba-4bef-840e-b53d22b21b49"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-11": {
+    "date": "2026-02-11",
+    "slots": {
+      "5am": {
+        "leaderId": "be4d631c-34f7-4405-bc4c-c800c8381cb4",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "0d58b30b-8a15-4fbc-bc74-5fed98e2127f",
+        "doctrineLeaderId": "9a851a58-586e-4570-8aef-8d76c2a50aa6",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-12": {
+    "date": "2026-02-12",
+    "slots": {
+      "5am": {
+        "leaderId": "0416e32d-e763-495d-82f7-795017e07be2",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "54a438dd-afbd-4f06-90a7-6936c9aaedb3",
+        "doctrineLeaderId": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+          "c9fdd217-388a-4af2-b9a8-67b6d6ad06f4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "0": {
+    "slots": {}
+  },
+  "2026-02-13": {
+    "date": "2026-02-13",
+    "slots": {
+      "5am": {
+        "leaderId": "ee39d7b4-b063-47f8-a834-99121cea6a04",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "a22727b1-1db1-4736-8324-e54d53afa28f",
+        "doctrineLeaderId": "fb4482da-c09b-4ff1-a82f-cc0074b53fdc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "0668528d-37a9-4864-964f-ab2a6166cda4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-14": {
+    "date": "2026-02-14",
+    "slots": {
+      "5am": {
+        "leaderId": "37c430cb-6fd1-4e1f-b918-a271e4de37ed",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "22e7cd9e-53ea-4fa6-99d5-6e822eabd00b",
+        "doctrineLeaderId": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "293e5cbf-fe74-4b79-8b16-a90b16dad8f0"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-15": {
+    "date": "2026-02-15",
+    "slots": {
+      "5am": {
+        "leaderId": "724a7c80-d012-47f5-948c-ac02a92e6352",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "657efb04-836d-42d7-8b11-8d749221df98",
+        "doctrineLeaderId": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "married",
+        "language": "es",
+        "leaderIds": [
+          "830e93d6-ca57-4e13-811b-6cb73b4469b6",
+          "2d0ceeb0-9421-4797-9aba-33a2d751916d"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-16": {
+    "date": "2026-02-16",
+    "slots": {
+      "5am": {
+        "leaderId": "d434fd0f-b0bb-4414-88f2-e3d79d77c953",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "9a851a58-586e-4570-8aef-8d76c2a50aa6",
+        "doctrineLeaderId": "c9fdd217-388a-4af2-b9a8-67b6d6ad06f4",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "00cd3461-bb0c-47ac-8dc8-d84b97d858a1"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-17": {
+    "date": "2026-02-17",
+    "slots": {
+      "5am": {
+        "leaderId": "54a438dd-afbd-4f06-90a7-6936c9aaedb3",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "105ffc65-7124-46da-913d-809d8e4c14dd",
+        "doctrineLeaderId": "c28b666c-5626-43e6-8610-9709f25cfb99",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "d0851fdf-bcdc-4e1a-bbfa-38678cbf98f6"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-18": {
+    "date": "2026-02-18",
+    "slots": {
+      "5am": {
+        "leaderId": "55d5ccdf-073b-491e-b34c-fd091eb06bb1",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "fb4482da-c09b-4ff1-a82f-cc0074b53fdc",
+        "doctrineLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "be4d631c-34f7-4405-bc4c-c800c8381cb4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-19": {
+    "date": "2026-02-19",
+    "slots": {
+      "5am": {
+        "leaderId": "00db7500-7397-4580-b81d-e0055f1249a7",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "a09ba6cd-a8ea-4b6e-868c-db540b7d577a",
+        "doctrineLeaderId": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "55d5ccdf-073b-491e-b34c-fd091eb06bb1",
+          "00db7500-7397-4580-b81d-e0055f1249a7"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-20": {
+    "date": "2026-02-20",
+    "slots": {
+      "5am": {
+        "leaderId": "657efb04-836d-42d7-8b11-8d749221df98",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+        "doctrineLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "ee39d7b4-b063-47f8-a834-99121cea6a04"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-21": {
+    "date": "2026-02-21",
+    "slots": {
+      "5am": {
+        "leaderId": "830e93d6-ca57-4e13-811b-6cb73b4469b6",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c9fdd217-388a-4af2-b9a8-67b6d6ad06f4",
+        "doctrineLeaderId": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "37c430cb-6fd1-4e1f-b918-a271e4de37ed"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-22": {
+    "date": "2026-02-22",
+    "slots": {
+      "5am": {
+        "leaderId": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "3968c3be-b475-46db-91e2-3d180007a552",
+        "doctrineLeaderId": "d0851fdf-bcdc-4e1a-bbfa-38678cbf98f6",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30"
+        ],
+        "topic": "Dominical",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-02-28": {
+    "date": "2026-02-28",
+    "slots": {
+      "5am": {
+        "leaderId": "0668528d-37a9-4864-964f-ab2a6166cda4",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "3220ac06-4b9b-417f-adc7-a726fac26657",
+        "doctrineLeaderId": "105ffc65-7124-46da-913d-809d8e4c14dd",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "830e93d6-ca57-4e13-811b-6cb73b4469b6"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-05": {
+    "date": "2026-03-05",
+    "slots": {
+      "5am": {
+        "leaderId": "0668528d-37a9-4864-964f-ab2a6166cda4",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "0d58b30b-8a15-4fbc-bc74-5fed98e2127f",
+        "doctrineLeaderId": "22e7cd9e-53ea-4fa6-99d5-6e822eabd00b",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:30 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+          "d0851fdf-bcdc-4e1a-bbfa-38678cbf98f6"
+        ],
+        "topic": "Servicio de J\u00f3venes (Espa\u00f1ol)",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-04": {
+    "date": "2026-03-04",
+    "slots": {
+      "5am": {
+        "leaderId": "00cd3461-bb0c-47ac-8dc8-d84b97d858a1",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "doctrineLeaderId": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "0668528d-37a9-4864-964f-ab2a6166cda4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-01": {
+    "date": "2026-03-01",
+    "slots": {
+      "5am": {
+        "leaderId": "3968c3be-b475-46db-91e2-3d180007a552",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "105ffc65-7124-46da-913d-809d8e4c14dd",
+        "doctrineLeaderId": "fb4482da-c09b-4ff1-a82f-cc0074b53fdc",
+        "customLabel": null,
+        "sundayType": "visitors"
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "married",
+        "language": "es",
+        "leaderIds": [
+          "ee39d7b4-b063-47f8-a834-99121cea6a04",
+          "0416e32d-e763-495d-82f7-795017e07be2"
+        ],
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-02": {
+    "date": "2026-03-02",
+    "slots": {
+      "5am": {
+        "leaderId": "a09ba6cd-a8ea-4b6e-868c-db540b7d577a",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+        "doctrineLeaderId": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "293e5cbf-fe74-4b79-8b16-a90b16dad8f0"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-06": {
+    "date": "2026-03-06",
+    "slots": {
+      "5am": {
+        "leaderId": "be4d631c-34f7-4405-bc4c-c800c8381cb4",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "56add9e2-2579-47ff-b67b-aed3026ccd43",
+        "doctrineLeaderId": "c9fdd217-388a-4af2-b9a8-67b6d6ad06f4",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "293e5cbf-fe74-4b79-8b16-a90b16dad8f0"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-07": {
+    "date": "2026-03-07",
+    "slots": {
+      "5am": {
+        "leaderId": "0416e32d-e763-495d-82f7-795017e07be2",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c28b666c-5626-43e6-8610-9709f25cfb99",
+        "doctrineLeaderId": "a22727b1-1db1-4736-8324-e54d53afa28f",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "children",
+        "language": "es",
+        "leaderIds": [
+          "983fd2bd-4997-433b-b6ee-c71fe16f36ba",
+          "98325dd2-dace-40da-92b8-264292a73dcf"
+        ],
+        "topic": "Servicio de Ni\u00f1os",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-09": {
+    "date": "2026-03-09",
+    "slots": {
+      "5am": {
+        "leaderId": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "105ffc65-7124-46da-913d-809d8e4c14dd",
+        "doctrineLeaderId": "fb4482da-c09b-4ff1-a82f-cc0074b53fdc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "ee39d7b4-b063-47f8-a834-99121cea6a04"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-10": {
+    "date": "2026-03-10",
+    "slots": {
+      "5am": {
+        "leaderId": "830e93d6-ca57-4e13-811b-6cb73b4469b6",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+        "doctrineLeaderId": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "d434fd0f-b0bb-4414-88f2-e3d79d77c953"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-11": {
+    "date": "2026-03-11",
+    "slots": {
+      "5am": {
+        "leaderId": "37c430cb-6fd1-4e1f-b918-a271e4de37ed",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "doctrineLeaderId": "255351e3-4196-44ee-a292-e11880caff25",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "00f913c8-2a24-4f7f-af74-ce5d0c23e54d"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-12": {
+    "date": "2026-03-12",
+    "slots": {
+      "5am": {
+        "leaderId": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "doctrineLeaderId": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:30 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "e8c1ca07-a2bd-4688-8330-855b23272177",
+          "724a7c80-d012-47f5-948c-ac02a92e6352"
+        ],
+        "topic": "Servicio de J\u00f3venes (Ingl\u00e9s)",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-13": {
+    "date": "2026-03-13",
+    "slots": {
+      "5am": {
+        "leaderId": "ee39d7b4-b063-47f8-a834-99121cea6a04",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "0d58b30b-8a15-4fbc-bc74-5fed98e2127f",
+        "doctrineLeaderId": "22e7cd9e-53ea-4fa6-99d5-6e822eabd00b",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-14": {
+    "date": "2026-03-14",
+    "slots": {
+      "5am": {
+        "leaderId": "d434fd0f-b0bb-4414-88f2-e3d79d77c953",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "56add9e2-2579-47ff-b67b-aed3026ccd43",
+        "doctrineLeaderId": "c9fdd217-388a-4af2-b9a8-67b6d6ad06f4",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "be4d631c-34f7-4405-bc4c-c800c8381cb4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-16": {
+    "date": "2026-03-16",
+    "slots": {
+      "5am": {
+        "leaderId": "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "9a851a58-586e-4570-8aef-8d76c2a50aa6",
+        "doctrineLeaderId": "3220ac06-4b9b-417f-adc7-a726fac26657",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "0416e32d-e763-495d-82f7-795017e07be2"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-17": {
+    "date": "2026-03-17",
+    "slots": {
+      "5am": {
+        "leaderId": "3968c3be-b475-46db-91e2-3d180007a552",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "105ffc65-7124-46da-913d-809d8e4c14dd",
+        "doctrineLeaderId": "fb4482da-c09b-4ff1-a82f-cc0074b53fdc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "54a438dd-afbd-4f06-90a7-6936c9aaedb3"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-18": {
+    "date": "2026-03-18",
+    "slots": {
+      "5am": {
+        "leaderId": "a09ba6cd-a8ea-4b6e-868c-db540b7d577a",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+        "doctrineLeaderId": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "9c8af082-f9ba-4bef-840e-b53d22b21b49"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-19": {
+    "date": "2026-03-19",
+    "slots": {
+      "5am": {
+        "leaderId": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "doctrineLeaderId": "255351e3-4196-44ee-a292-e11880caff25",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:30 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "55d5ccdf-073b-491e-b34c-fd091eb06bb1",
+          "00db7500-7397-4580-b81d-e0055f1249a7"
+        ],
+        "topic": "Servicio de J\u00f3venes (Espa\u00f1ol)",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-20": {
+    "date": "2026-03-20",
+    "slots": {
+      "5am": {
+        "leaderId": "00cd3461-bb0c-47ac-8dc8-d84b97d858a1",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "doctrineLeaderId": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "00cd3461-bb0c-47ac-8dc8-d84b97d858a1"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-21": {
+    "date": "2026-03-21",
+    "slots": {
+      "5am": {
+        "leaderId": "0668528d-37a9-4864-964f-ab2a6166cda4",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "0d58b30b-8a15-4fbc-bc74-5fed98e2127f",
+        "doctrineLeaderId": "22e7cd9e-53ea-4fa6-99d5-6e822eabd00b",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "children",
+        "language": "es",
+        "leaderIds": [
+          "42e55c48-4cef-4a8b-9705-ab6b5d15c515",
+          "e6c98339-f601-4460-b593-b8c349a8b145"
+        ],
+        "topic": "Servicio de Ni\u00f1os",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-23": {
+    "date": "2026-03-23",
+    "slots": {
+      "5am": {
+        "leaderId": "0416e32d-e763-495d-82f7-795017e07be2",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c28b666c-5626-43e6-8610-9709f25cfb99",
+        "doctrineLeaderId": "a22727b1-1db1-4736-8324-e54d53afa28f",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "0668528d-37a9-4864-964f-ab2a6166cda4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-24": {
+    "date": "2026-03-24",
+    "slots": {
+      "5am": {
+        "leaderId": "54a438dd-afbd-4f06-90a7-6936c9aaedb3",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "9a851a58-586e-4570-8aef-8d76c2a50aa6",
+        "doctrineLeaderId": "3220ac06-4b9b-417f-adc7-a726fac26657",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "293e5cbf-fe74-4b79-8b16-a90b16dad8f0"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-25": {
+    "date": "2026-03-25",
+    "slots": {
+      "5am": {
+        "leaderId": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "105ffc65-7124-46da-913d-809d8e4c14dd",
+        "doctrineLeaderId": "fb4482da-c09b-4ff1-a82f-cc0074b53fdc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "ee39d7b4-b063-47f8-a834-99121cea6a04"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-26": {
+    "date": "2026-03-26",
+    "slots": {
+      "5am": {
+        "leaderId": "830e93d6-ca57-4e13-811b-6cb73b4469b6",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+        "doctrineLeaderId": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:30 PM",
+        "endTime": null,
+        "type": "youth",
+        "language": "es",
+        "leaderIds": [
+          "657efb04-836d-42d7-8b11-8d749221df98",
+          "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30"
+        ],
+        "topic": "Servicio de J\u00f3venes (Ingl\u00e9s)",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-27": {
+    "date": "2026-03-27",
+    "slots": {
+      "5am": {
+        "leaderId": "37c430cb-6fd1-4e1f-b918-a271e4de37ed",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "93764c38-3160-4b85-b0af-328969d708cd",
+        "doctrineLeaderId": "255351e3-4196-44ee-a292-e11880caff25",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "d434fd0f-b0bb-4414-88f2-e3d79d77c953"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-28": {
+    "date": "2026-03-28",
+    "slots": {
+      "5am": {
+        "leaderId": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+        "doctrineLeaderId": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "00f913c8-2a24-4f7f-af74-ce5d0c23e54d"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-29": {
+    "date": "2026-03-29",
+    "slots": {
+      "5am": {
+        "leaderId": "ee39d7b4-b063-47f8-a834-99121cea6a04",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "0d58b30b-8a15-4fbc-bc74-5fed98e2127f",
+        "doctrineLeaderId": "22e7cd9e-53ea-4fa6-99d5-6e822eabd00b",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "married",
+        "language": "es",
+        "leaderIds": [
+          "a09ba6cd-a8ea-4b6e-868c-db540b7d577a"
+        ],
+        "topic": "Dominical",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-30": {
+    "date": "2026-03-30",
+    "slots": {
+      "5am": {
+        "leaderId": "d434fd0f-b0bb-4414-88f2-e3d79d77c953",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "56add9e2-2579-47ff-b67b-aed3026ccd43",
+        "doctrineLeaderId": "c9fdd217-388a-4af2-b9a8-67b6d6ad06f4",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-31": {
+    "date": "2026-03-31",
+    "slots": {
+      "5am": {
+        "leaderId": "00f913c8-2a24-4f7f-af74-ce5d0c23e54d",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c28b666c-5626-43e6-8610-9709f25cfb99",
+        "doctrineLeaderId": "a22727b1-1db1-4736-8324-e54d53afa28f",
+        "customLabel": null
+      },
+      "evening": {
+        "time": "7:00 PM",
+        "endTime": null,
+        "type": "regular",
+        "language": "es",
+        "leaderIds": [
+          "be4d631c-34f7-4405-bc4c-c800c8381cb4"
+        ],
+        "topic": "",
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-08": {
+    "date": "2026-03-08",
+    "slots": {
+      "5am": {
+        "leaderId": "54a438dd-afbd-4f06-90a7-6936c9aaedb3",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "9a851a58-586e-4570-8aef-8d76c2a50aa6",
+        "doctrineLeaderId": "3220ac06-4b9b-417f-adc7-a726fac26657",
+        "customLabel": null,
+        "sundayType": "local"
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "married",
+        "language": "es",
+        "leaderIds": [
+          "be4d631c-34f7-4405-bc4c-c800c8381cb4"
+        ],
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-15": {
+    "date": "2026-03-15",
+    "slots": {
+      "5am": {
+        "leaderId": "00f913c8-2a24-4f7f-af74-ce5d0c23e54d",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "c28b666c-5626-43e6-8610-9709f25cfb99",
+        "doctrineLeaderId": "a22727b1-1db1-4736-8324-e54d53afa28f",
+        "customLabel": null,
+        "sundayType": "exchange"
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "married",
+        "language": "es",
+        "leaderIds": [
+          "830e93d6-ca57-4e13-811b-6cb73b4469b6"
+        ],
+        "customLabel": null
+      }
+    }
+  },
+  "2026-03-22": {
+    "date": "2026-03-22",
+    "slots": {
+      "5am": {
+        "leaderId": "be4d631c-34f7-4405-bc4c-c800c8381cb4",
+        "customLabel": null
+      },
+      "9am": {
+        "consecrationLeaderId": "56add9e2-2579-47ff-b67b-aed3026ccd43",
+        "doctrineLeaderId": "c9fdd217-388a-4af2-b9a8-67b6d6ad06f4",
+        "customLabel": null,
+        "sundayType": "local"
+      },
+      "evening": {
+        "time": "6:00 PM",
+        "endTime": null,
+        "type": "married",
+        "language": "es",
+        "leaderIds": [
+          "37c430cb-6fd1-4e1f-b918-a271e4de37ed"
+        ],
+        "customLabel": null
+      }
+    }
+  }
+}

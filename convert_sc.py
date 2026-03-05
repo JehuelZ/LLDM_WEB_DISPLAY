@@ -3,7 +3,7 @@ import sys
 
 def convert():
     try:
-        with open('schedule_raw.json', 'r') as f:
+        with open('schedule_all.json', 'r') as f:
             data = json.load(f)
     except FileNotFoundError:
         print("schedule_raw.json not found")

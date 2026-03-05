@@ -609,7 +609,7 @@ export default function AdminDashboard() {
     if (!mounted) return null;
 
     // 🔒 PROTECCIÓN: Solo administradores autenticados
-    const isAuthorized = authSession?.user && currentUser.role === 'Administrador';
+    const isAuthorized = authSession?.user && currentUser.role === 'Siervo de Dios';
 
     if (!isAuthorized) {
         return (
