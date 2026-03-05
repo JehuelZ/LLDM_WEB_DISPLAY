@@ -1697,3 +1697,8 @@ the name `useRouter` is defined multiple times
  GET /admin 200 in 866ms (compile: 624ms, render: 242ms)
  GET /display 200 in 861ms (compile: 809ms, render: 52ms)
  GET /display 200 in 84ms (compile: 4ms, render: 80ms)
+  Reload env: .env.local
+✓ Compiled in 787ms
+ GET /admin 200 in 728ms (compile: 599ms, render: 129ms)
+ GET /display 200 in 733ms (compile: 682ms, render: 51ms)
+ GET /display 200 in 28ms (compile: 4ms, render: 24ms)
