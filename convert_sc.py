@@ -6,16 +6,27 @@ def convert():
         with open('schedule_all.json', 'r') as f:
             data = json.load(f)
     except FileNotFoundError:
-        print("schedule_raw.json not found")
+        print("schedule_all.json not found")
         return
+
+    # List of all keys to ensure consistency
+    all_keys = [
+        "date",
+        "five_am_leader_id", "five_am_custom_label",
+        "nine_am_consec_leader_id", "nine_am_doct_leader_id",
+        "nine_am_custom_label", "nine_am_sunday_type",
+        "evening_type", "evening_time", "evening_end_time",
+        "evening_language", "evening_topic", "evening_custom_label",
+        "evening_leader_id_1", "evening_leader_id_2"
+    ]
 
     output = []
     for date, entry in data.items():
+        if date == "0": continue # skip dummy
         slots = entry.get('slots', {})
         
-        row = {
-            "date": date
-        }
+        row = {k: None for k in all_keys}
+        row["date"] = date
         
         # 5am
         five_am = slots.get('5am', {})

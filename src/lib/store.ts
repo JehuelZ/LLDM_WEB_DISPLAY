@@ -527,7 +527,6 @@ export const useAppStore = create<AppState>()(
             },
 
             loadMembersFromCloud: async () => {
-                console.log('🔄 Iniciando carga de miembros desde Supabase...');
                 set({ isLoading: true });
                 try {
                     const { data, error } = await supabase
@@ -535,13 +534,11 @@ export const useAppStore = create<AppState>()(
                         .select('*');
 
                     if (error) {
-                        console.error('❌ Error de Supabase al cargar miembros:', error.message);
                         set({ isLoading: false });
                         return;
                     }
 
                     if (data) {
-                        console.log(`✅ ${data.length} miembros recibidos de Supabase`);
                         const mapped = data.map((p: any) => ({
                             id: p.id,
                             name: p.name,
@@ -560,12 +557,8 @@ export const useAppStore = create<AppState>()(
                             is_pre_registered: p.is_pre_registered || false
                         }));
                         set({ members: mapped, isLoading: false });
-                    } else {
-                        console.warn('⚠️ Supabase no devolvió datos de miembros.');
-                        set({ members: [], isLoading: false });
                     }
                 } catch (err) {
-                    console.error('💥 Error inesperado en loadMembersFromCloud:', err);
                     set({ isLoading: false });
                 }
             },
