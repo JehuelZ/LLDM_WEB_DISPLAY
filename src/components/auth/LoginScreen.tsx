@@ -58,7 +58,7 @@ export function LoginScreen() {
                             }}
                             className={cn(
                                 "absolute rounded-full",
-                                isBlue ? "bg-blue-400" : "bg-primary",
+                                isBlue ? "bg-blue-400" : "bg-amber-400",
                                 isBlurred ? "blur-[6px]" : "blur-[1px]",
                                 "shadow-[0_0_10px_rgba(255,255,255,0.3)]"
                             )}
