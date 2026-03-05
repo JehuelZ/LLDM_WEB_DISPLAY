@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { useAppStore } from '@/lib/store';
 import { useEffect } from 'react';
 import { CountdownCard } from '@/components/CountdownCard';
+import { LoginScreen } from '@/components/auth/LoginScreen';
 
 const StatDoughnut = ({
   percent,
@@ -71,6 +72,7 @@ const StatDoughnut = ({
 export default function Home() {
   const {
     currentUser, setCurrentUser,
+    authSession, isLoading,
     announcements, theme,
     monthlySchedule, currentDate,
     loadAnnouncementsFromCloud,
@@ -150,6 +152,20 @@ export default function Home() {
     }
     setIsSaving(false);
   };
+
+  // 🔒 Login Guard: Only show dashboard if authenticated
+  if (!authSession && !isLoading) {
+    return <LoginScreen />;
+  }
+
+  // Loading state (optional, or just return null while checking session)
+  if (isLoading && !authSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
