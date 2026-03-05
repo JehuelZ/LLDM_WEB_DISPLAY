@@ -422,10 +422,10 @@ export default function MembersPage() {
                                                     <div className="w-12 h-1 bg-foreground/10 rounded-full overflow-hidden">
                                                         <div
                                                             className="h-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
-                                                            style={{ width: `${(member.stats.attendance.attended / member.stats.attendance.total) * 100}%` }}
+                                                            style={{ width: `${((member.stats?.attendance?.attended || 0) / (member.stats?.attendance?.total || 1)) * 100}%` }}
                                                         />
                                                     </div>
-                                                    <span className="text-xs font-black text-foreground">{(member.stats.attendance.attended / member.stats.attendance.total * 100).toFixed(0)}%</span>
+                                                    <span className="text-xs font-black text-foreground">{((member.stats?.attendance?.attended || 0) / (member.stats?.attendance?.total || 1) * 100).toFixed(0)}%</span>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-xs text-muted-foreground">
@@ -491,23 +491,23 @@ export default function MembersPage() {
                                                         <div className="col-span-3 space-y-8">
                                                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                                                 <StatDoughnut
-                                                                    percent={Math.round((member.stats.attendance.attended / member.stats.attendance.total) * 100)}
+                                                                    percent={Math.round(((member.stats?.attendance?.attended || 0) / (member.stats?.attendance?.total || 1)) * 100)}
                                                                     label="Asistencia Mes"
-                                                                    value={member.stats.attendance.attended}
-                                                                    total={member.stats.attendance.total}
+                                                                    value={member.stats?.attendance?.attended || 0}
+                                                                    total={member.stats?.attendance?.total || 0}
                                                                     color="cyan"
                                                                 />
                                                                 <StatDoughnut
-                                                                    percent={Math.round((member.stats.participation.led / member.stats.participation.total) * 100)}
+                                                                    percent={Math.round(((member.stats?.participation?.led || 0) / (member.stats?.participation?.total || 1)) * 100)}
                                                                     label="Responsable Oración"
-                                                                    value={member.stats.participation.led}
-                                                                    total={member.stats.participation.total}
+                                                                    value={member.stats?.participation?.led || 0}
+                                                                    total={member.stats?.participation?.total || 0}
                                                                     color="secondary"
                                                                 />
                                                                 <StatDoughnut
-                                                                    percent={member.stats.punctuality}
+                                                                    percent={member.stats?.punctuality || 0}
                                                                     label="Puntualidad"
-                                                                    value={member.stats.punctuality}
+                                                                    value={member.stats?.punctuality || 0}
                                                                     total={100}
                                                                     color="amber"
                                                                 />
