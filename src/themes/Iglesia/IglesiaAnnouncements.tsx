@@ -9,6 +9,7 @@ import { IglesiaClockInline } from './Clock';
 import { getSlideSystemTitle } from '@/lib/display_labels';
 import { format, parseISO, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { getActiveAnnouncements } from '@/lib/utils';
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Iglesia — Announcements Slide (Stacked Cards)
@@ -97,8 +98,9 @@ export function IglesiaAnnouncements() {
         }
     }
 
-    let allActive = [...(announcements || []), ...autoAnnouncements]
-        .filter((a: any) => a.active !== false)
+    const activeManual = React.useMemo(() => getActiveAnnouncements(announcements || []), [announcements]);
+
+    let allActive = [...activeManual, ...autoAnnouncements]
         .filter((a, index, self) => self.findIndex(t => t.id === a.id) === index);
 
     // 3. Absolute Fallback: If nothing exists, show the next immediate service from schedule

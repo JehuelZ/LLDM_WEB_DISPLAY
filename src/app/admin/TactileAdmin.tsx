@@ -16,6 +16,7 @@ import {
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { cn } from '@/lib/utils'
+import { ImageEditor } from '@/components/ImageEditor'
 import './tactile-admin.css'
 
 // Internal components to replicate functionality with tactile style
@@ -126,7 +127,8 @@ export default function TactileAdmin() {
         { id: 'miembros', label: 'Miembros', icon: Users },
         { id: 'ajustes', label: 'Ajustes', icon: Settings },
     ]
-    const [newAnn, setNewAnn] = useState({ title: '', content: '', priority: 0 })
+    const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', priority: 0, expiresAt: '' })
+    const [editingAnnId, setEditingAnnId] = useState<string | null>(null)
     const [memberFilter, setMemberFilter] = useState('all')
     const [showAddMember, setShowAddMember] = useState(false)
     const [editingMember, setEditingMember] = useState<UserProfile | null>(null)
@@ -145,6 +147,20 @@ export default function TactileAdmin() {
     const [editingRehearsal, setEditingRehearsal] = useState<any>(null)
 
     const [newRehearsal, setNewRehearsal] = useState({ dayOfWeek: 1, time: '06:00 PM', location: 'Templo' })
+    const [imageToEdit, setImageToEdit] = useState<{ source: string, target: 'member' | 'minister' } | null>(null)
+
+    const dataURLtoFile = (dataurl: string, filename: string) => {
+        let arr = dataurl.split(','),
+            match = arr[0].match(/:(.*?);/),
+            mime = match ? match[1] : 'image/jpeg',
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+    }
 
     useEffect(() => {
         loadMembersFromCloud();
@@ -656,7 +672,7 @@ export default function TactileAdmin() {
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-4 space-y-6">
-                                        <TactileGlassCard title="NUEVO COMUNICADO">
+                                        <TactileGlassCard title={editingAnnId ? "EDITAR COMUNICADO" : "NUEVO COMUNICADO"}>
                                             <div className="space-y-4">
                                                 <TactileInput
                                                     label="TÍTULO"
@@ -673,30 +689,72 @@ export default function TactileAdmin() {
                                                         onChange={(e: any) => setNewAnn({ ...newAnn, content: e.target.value })}
                                                     />
                                                 </div>
-                                                <TactileSelect
-                                                    label="PRIORIDAD"
-                                                    value={newAnn.priority}
-                                                    onChange={(val: string) => setNewAnn({ ...newAnn, priority: parseInt(val) })}
-                                                    options={[
-                                                        { value: 0, label: 'Normal' },
-                                                        { value: 1, label: 'Importante' },
-                                                        { value: 2, label: 'Urgente' },
-                                                    ]}
-                                                />
-                                                <button
-                                                    onClick={async () => {
-                                                        if (!newAnn.title || !newAnn.content) return;
-                                                        await saveAnnouncementToCloud({
-                                                            ...newAnn,
-                                                            id: Math.random().toString(36).substring(7),
-                                                            timestamp: new Date().toISOString()
-                                                        });
-                                                        setNewAnn({ title: '', content: '', priority: 0 });
-                                                    }}
-                                                    className="tactile-btn tactile-btn-orange w-full justify-center h-12"
-                                                >
-                                                    PUBLICAR AHORA
-                                                </button>
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <TactileSelect
+                                                        label="PRIORIDAD"
+                                                        value={newAnn.priority}
+                                                        onChange={(val: string) => setNewAnn({ ...newAnn, priority: parseInt(val) })}
+                                                        options={[
+                                                            { value: 0, label: 'Normal' },
+                                                            { value: 1, label: 'Importante' },
+                                                            { value: 2, label: 'Urgente' },
+                                                        ]}
+                                                        icon={Bell}
+                                                    />
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <TactileInput
+                                                            label="EXPIRA EL"
+                                                            type="date"
+                                                            value={newAnn.expiresAt?.split('T')[0] || ''}
+                                                            onChange={(e: any) => {
+                                                                const time = newAnn.expiresAt?.includes('T') ? newAnn.expiresAt?.split('T')[1]?.slice(0, 5) : '23:59';
+                                                                setNewAnn({ ...newAnn, expiresAt: `${e.target.value}T${time}` });
+                                                            }}
+                                                            icon={CalendarClock}
+                                                        />
+                                                        <TactileInput
+                                                            label="HORA"
+                                                            type="time"
+                                                            value={newAnn.expiresAt?.includes('T') ? newAnn.expiresAt?.split('T')[1]?.slice(0, 5) : '23:59'}
+                                                            onChange={(e: any) => {
+                                                                const date = newAnn.expiresAt?.split('T')[0] || format(new Date(), 'yyyy-MM-dd');
+                                                                setNewAnn({ ...newAnn, expiresAt: `${date}T${e.target.value}` });
+                                                            }}
+                                                            icon={Clock}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                    {editingAnnId && (
+                                                        <button
+                                                            onClick={() => {
+                                                                setEditingAnnId(null);
+                                                                setNewAnn({ title: '', content: '', priority: 0, expiresAt: '' });
+                                                            }}
+                                                            className="tactile-btn tactile-btn-glass flex-1 justify-center h-12"
+                                                        >
+                                                            CANCELAR
+                                                        </button>
+                                                    )}
+                                                    <button
+                                                        onClick={async () => {
+                                                            if (!newAnn.title || !newAnn.content) return;
+                                                            setIsSaving(true);
+                                                            await saveAnnouncementToCloud({
+                                                                ...newAnn,
+                                                                id: editingAnnId || undefined,
+                                                                timestamp: newAnn.timestamp || new Date().toISOString()
+                                                            });
+                                                            setNewAnn({ title: '', content: '', priority: 0, expiresAt: '' });
+                                                            setEditingAnnId(null);
+                                                            setIsSaving(false);
+                                                        }}
+                                                        disabled={isSaving}
+                                                        className="tactile-btn tactile-btn-orange flex-[2] justify-center h-12"
+                                                    >
+                                                        {isSaving ? 'GUARDANDO...' : (editingAnnId ? 'ACTUALIZAR' : 'PUBLICAR AHORA')}
+                                                    </button>
+                                                </div>
                                             </div>
                                         </TactileGlassCard>
                                     </div>
@@ -728,12 +786,28 @@ export default function TactileAdmin() {
                                                             </div>
                                                             <p className="text-tactile-text-sub text-sm line-clamp-1">{ann.content}</p>
                                                         </div>
-                                                        <button
-                                                            onClick={() => deleteAnnouncementFromCloud(ann.id)}
-                                                            className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center opacity-0 group-hover:opacity-100 hover:text-red-500 transition-all"
-                                                        >
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </button>
+                                                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setEditingAnnId(ann.id);
+                                                                    setNewAnn({ ...ann });
+                                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                                }}
+                                                                className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-primary transition-all"
+                                                            >
+                                                                <Edit2 className="w-4 h-4" />
+                                                            </button>
+                                                            <button
+                                                                onClick={async () => {
+                                                                    if (confirm('¿Eliminar este comunicado?')) {
+                                                                        await deleteAnnouncementFromCloud(ann.id);
+                                                                    }
+                                                                }}
+                                                                className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-red-500 transition-all"
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 ))}
                                             </div>
@@ -826,7 +900,7 @@ export default function TactileAdmin() {
                                                         <h4 className="font-black text-base truncate italic">{member.name}</h4>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-tactile-text-sub">
-                                                                {member.role === 'Administrador' ? 'Siervo de Dios' : member.role === 'Ministro' ? 'Ministro Responsable' : member.role}
+                                                                {member.role === 'Administrador' ? 'Ministro a Cargo' : member.role === 'Ministro' ? 'Ministro Responsable' : member.role}
                                                             </span>
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                                                                 {member.member_group}
@@ -1015,13 +1089,37 @@ export default function TactileAdmin() {
                                         <TactileGlassCard title="MINISTRO RESPONSABLE">
                                             <div className="space-y-6">
                                                 <div className="flex flex-col items-center py-4">
-                                                    <div className="w-32 h-32 rounded-full border-4 border-primary/30 p-1 relative group cursor-pointer">
+                                                    <div
+                                                        className="w-32 h-32 rounded-full border-4 border-primary/30 p-1 relative group cursor-pointer"
+                                                        onClick={() => document.getElementById('minister-avatar-upload')?.click()}
+                                                    >
                                                         <img src={settings.ministerAvatar || 'https://via.placeholder.com/150'} className="w-full h-full object-cover rounded-full" alt="Ministro" />
                                                         <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                                             <Camera className="w-8 h-8 text-white" />
                                                         </div>
                                                     </div>
-                                                    <button className="text-[10px] font-black uppercase text-primary mt-4 tracking-widest hover:underline">Cambiar Fotografía</button>
+                                                    <button
+                                                        onClick={() => document.getElementById('minister-avatar-upload')?.click()}
+                                                        className="text-[10px] font-black uppercase text-primary mt-4 tracking-widest hover:underline"
+                                                    >
+                                                        Cambiar Fotografía
+                                                    </button>
+                                                    <input
+                                                        type="file"
+                                                        id="minister-avatar-upload"
+                                                        className="hidden"
+                                                        accept="image/*"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files?.[0];
+                                                            if (file) {
+                                                                const reader = new FileReader();
+                                                                reader.onloadend = () => {
+                                                                    setImageToEdit({ source: reader.result as string, target: 'minister' });
+                                                                };
+                                                                reader.readAsDataURL(file);
+                                                            }
+                                                        }}
+                                                    />
                                                 </div>
 
                                                 <TactileInput
@@ -1513,16 +1611,14 @@ export default function TactileAdmin() {
                                                     id="member-avatar-upload"
                                                     className="hidden"
                                                     accept="image/*"
-                                                    onChange={async (e) => {
+                                                    onChange={(e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
-                                                            setIsSaving(true);
-                                                            const idForUpload = editingMember?.id || `new_${Date.now()}`;
-                                                            const url = await uploadAvatar(idForUpload, file);
-                                                            if (url) {
-                                                                setNewMemberData({ ...newMemberData, avatar: url });
-                                                            }
-                                                            setIsSaving(false);
+                                                            const reader = new FileReader();
+                                                            reader.onloadend = () => {
+                                                                setImageToEdit({ source: reader.result as string, target: 'member' });
+                                                            };
+                                                            reader.readAsDataURL(file);
                                                         }
                                                     }}
                                                 />
@@ -1584,7 +1680,7 @@ export default function TactileAdmin() {
                                                 options={[
                                                     { value: 'Miembro', label: 'Miembro' },
                                                     { value: 'Ministro', label: 'Ministro Responsable' },
-                                                    { value: 'Administrador', label: 'Siervo de Dios' },
+                                                    { value: 'Administrador', label: 'Ministro a Cargo' },
                                                 ]}
                                                 icon={Shield}
                                             />
@@ -1726,6 +1822,33 @@ export default function TactileAdmin() {
                                     </div>
                                 </motion.div>
                             </div>
+                        )}
+
+                        {imageToEdit && (
+                            <ImageEditor
+                                image={imageToEdit.source}
+                                onSave={async (cropped) => {
+                                    setIsSaving(true);
+                                    if (imageToEdit.target === 'member') {
+                                        const idForUpload = editingMember?.id || `new_${Date.now()}`;
+                                        const file = dataURLtoFile(cropped, `member-${idForUpload}.jpg`);
+                                        const url = await uploadAvatar(idForUpload, file);
+                                        if (url) {
+                                            setNewMemberData({ ...newMemberData, avatar: url });
+                                        }
+                                    } else {
+                                        const file = dataURLtoFile(cropped, `minister-responsible.jpg`);
+                                        const url = await uploadAvatar('minister-avatar', file);
+                                        if (url) {
+                                            setSettings({ ...settings, ministerAvatar: url });
+                                            await saveSettingsToCloud({ ...settings, ministerAvatar: url });
+                                        }
+                                    }
+                                    setIsSaving(false);
+                                    setImageToEdit(null);
+                                }}
+                                onCancel={() => setImageToEdit(null)}
+                            />
                         )}
                     </div>
                 </div>

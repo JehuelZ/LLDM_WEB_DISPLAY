@@ -56,7 +56,7 @@ const TRANSLATIONS = {
         demo_mode: 'Modo Demo',
         configuracion: 'Configuración',
         admin_user: 'Admin Usuario',
-        admin_role: 'Siervo de Dios'
+        admin_role: 'Ministro a Cargo'
     },
     en: {
         principal: 'Primary',
@@ -72,7 +72,7 @@ const TRANSLATIONS = {
         demo_mode: 'Demo Mode',
         configuracion: 'Settings',
         admin_user: 'Admin User',
-        admin_role: 'Servant of God'
+        admin_role: 'Minister in Charge'
     }
 };
 

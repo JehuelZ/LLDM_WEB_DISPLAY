@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, parseISO, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { User } from 'lucide-react';
+import { User, Star } from 'lucide-react';
 
 // THEME: Tech Corporate — Calendar View
 // Paleta: navy #040D21 · card #0D1B3E · neon-green #A3FF57 · blue-bright #4F7FFF
@@ -137,6 +137,7 @@ export function MidnightGlowCalendar() {
                 {/* Day cells */}
                 {days.map((day, idx) => {
                     const isToday = isSameDay(day, today);
+                    const is14th = day.getDate() === 14;
                     const key = format(day, 'yyyy-MM-dd');
                     const sched = monthlySchedule[key];
                     const isSunday = getDay(day) === 0;
@@ -174,12 +175,16 @@ export function MidnightGlowCalendar() {
                                 relative flex flex-col rounded-2xl overflow-hidden border transition-all duration-300
                                 ${isToday
                                     ? 'border-2 border-[#A3FF57]/70 bg-[#0D1B3E] shadow-[0_0_40px_rgba(163,255,87,0.3),inset_0_0_20px_rgba(163,255,87,0.05)]'
-                                    : isWeekend
-                                        ? 'border-2 border-[#1E3A6E]/40 bg-[#071020]/80 shadow-[0_30px_90px_rgba(0,0,0,0.5)]'
-                                        : 'border-2 border-[#1E3A6E] bg-[#0D1B3E] shadow-[0_30px_90px_rgba(0,0,0,0.8)]'
+                                    : is14th
+                                        ? 'border-2 border-orange-500/50 bg-orange-500/5 shadow-[0_0_20px_rgba(249,115,22,0.1)]'
+                                        : isWeekend
+                                            ? 'border-2 border-[#1E3A6E]/40 bg-[#071020]/80 shadow-[0_30px_90px_rgba(0,0,0,0.5)]'
+                                            : 'border-2 border-[#1E3A6E] bg-[#0D1B3E] shadow-[0_30px_90px_rgba(0,0,0,0.8)]'
                                 }
                             `}
                         >
+                            {/* 14th Marker */}
+                            {is14th && !isToday && <div className="absolute top-1 right-3"><Star size={10} className="text-orange-500/40" fill="currentColor" /></div>}
                             {/* Top accent line for today */}
                             {isToday && (
                                 <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#A3FF57] to-transparent" />

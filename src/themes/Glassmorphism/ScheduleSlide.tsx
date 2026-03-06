@@ -22,6 +22,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
 
     // Logic for Today or Tomorrow
     const targetDate = isTomorrow ? addDays(currentTime, 1) : currentTime;
+    const is14th = targetDate.getDate() === 14;
     const dateStr = format(targetDate, 'yyyy-MM-dd');
     const schedule = monthlySchedule[dateStr];
     const displayDate = schedule ? parseISO(schedule.date) : targetDate;
@@ -123,7 +124,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                         const slot = schedule?.slots?.['evening'];
                         if (slot?.customLabel) return slot.customLabel.toUpperCase();
                         if (slot?.topic) return slot.topic.toUpperCase();
-                        return getServiceTypeLabel(slot?.type || 'regular', settings.language).toUpperCase();
+                        return getServiceTypeLabel(slot?.type || 'regular', settings.language, is14th).toUpperCase();
                     })()}
                     leaderId={schedule?.slots?.['evening']?.leaderIds?.[0]}
                     secondaryLeaderId={schedule?.slots?.['evening']?.doctrineLeaderId || schedule?.slots?.['evening']?.leaderIds?.[1]}

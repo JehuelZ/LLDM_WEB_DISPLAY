@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Star } from 'lucide-react';
 
 const DAYS_OF_WEEK = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
@@ -138,6 +139,7 @@ export function DarkMinimalCalendar() {
                 {/* Day cells */}
                 {days.map((day, idx) => {
                     const isToday = isSameDay(day, today);
+                    const is14th = day.getDate() === 14;
                     const key = format(day, 'yyyy-MM-dd');
                     const sched = monthlySchedule[key];
                     const isSunday = getDay(day) === 0;
@@ -173,12 +175,16 @@ export function DarkMinimalCalendar() {
                                 relative flex flex-col rounded-xl overflow-hidden border
                                 ${isToday
                                     ? 'border-[#3B82F6] bg-[#1C1E2C]'
-                                    : isWeekend
-                                        ? 'border-[#1C1D25] bg-[#13141B]/70'
-                                        : 'border-[#1E1F28] bg-[#16171F]'
+                                    : is14th
+                                        ? 'border-[#B45309]/50 bg-[#78350F]/10'
+                                        : isWeekend
+                                            ? 'border-[#1C1D25] bg-[#13141B]/70'
+                                            : 'border-[#1E1F28] bg-[#16171F]'
                                 }
                             `}
                         >
+                            {/* 14th Marker */}
+                            {is14th && !isToday && <div className="absolute top-0 right-0 p-1"><Star size={8} className="text-orange-500/40" fill="currentColor" /></div>}
                             {/* Today top accent */}
                             {isToday && <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#3B82F6]" />}
 

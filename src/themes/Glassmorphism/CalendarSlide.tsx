@@ -142,6 +142,7 @@ export const GlassmorphismCalendar = () => {
                                     const todayKey = format(currentTime, 'yyyy-MM-dd');
                                     const isToday = dateKey === todayKey;
                                     const dayIsSunday = getDay(day) === 0;
+                                    const is14th = day.getDate() === 14;
 
                                     const detail5am = getMemberDetail(sched?.slots?.['5am']?.leaderId);
                                     const detail9am = getMemberDetail(sched?.slots?.['9am']?.consecrationLeaderId || sched?.slots?.['9am']?.doctrineLeaderId);
@@ -161,9 +162,15 @@ export const GlassmorphismCalendar = () => {
                                             className={cn(
                                                 "w-full bg-white/5 rounded-2xl p-4 border border-white/10 flex items-center gap-4 shadow-xl group/slot transition-all hover:bg-white/10 relative",
                                                 isToday && "bg-blue-500/10 border-blue-500/40 shadow-[0_10px_30px_rgba(59,130,246,0.1)]",
+                                                is14th && !isToday && "bg-orange-500/5 border-orange-500/30",
                                                 anyActive && "border-emerald-500/50 bg-emerald-500/10 ring-1 ring-emerald-500/20"
                                             )}
                                         >
+                                            {is14th && !isToday && (
+                                                <div className="absolute -top-1 -right-1">
+                                                    <Star size={16} className="text-orange-500/40 fill-orange-500/20" />
+                                                </div>
+                                            )}
                                             <div className="flex flex-col items-center justify-center min-w-[32px]">
                                                 <span className={cn(
                                                     "text-xl font-black italic leading-none",

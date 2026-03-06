@@ -152,6 +152,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
     if (isTomorrow) baseDate.setDate(baseDate.getDate() + 1);
     const schedule = scheduleMap[format(baseDate, 'yyyy-MM-dd')];
     const isSunday = baseDate.getDay() === 0;
+    const is14th = baseDate.getDate() === 14;
 
     const getMember = (id?: string | null) => {
         if (!id) return { name: '', avatar: null };
@@ -334,8 +335,8 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                             <>
                                 {slot9?.consecrationLeaderId === slot9?.doctrineLeaderId && slot9?.consecrationLeaderId ? (
                                     cons9.name
-                                        ? <PersonRow label="Consagración y Doctrina" name={cons9.name} avatar={cons9.avatar} icon={<Sun />} accent={A9} stacked={true} />
-                                        : <EmptyRow label="Consagración y Doctrina" icon={<Sun />} T={T} />
+                                        ? <PersonRow label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} name={cons9.name} avatar={cons9.avatar} icon={<Sun />} accent={A9} stacked={true} />
+                                        : <EmptyRow label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={<Sun />} T={T} />
                                 ) : (
                                     <>
                                         {cons9.name
@@ -343,8 +344,8 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                                             : <EmptyRow label="Consagración" icon={<Sun />} T={T} />
                                         }
                                         {doc9.name
-                                            ? <PersonRow label="Doctrina" name={doc9.name} avatar={doc9.avatar} icon={<Zap />} accent={T.secondary} />
-                                            : <EmptyRow label="Doctrina" icon={<Zap />} T={T} />
+                                            ? <PersonRow label={is14th ? "HISTORIA" : "Doctrina"} name={doc9.name} avatar={doc9.avatar} icon={<Zap />} accent={T.secondary} />
+                                            : <EmptyRow label={is14th ? "HISTORIA" : "Doctrina"} icon={<Zap />} T={T} />
                                         }
                                     </>
                                 )}
@@ -383,7 +384,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                         </div>
                         <span className="inline-flex px-3 py-1 mt-1 rounded-full text-[9px] font-bold uppercase tracking-widest"
                             style={{ background: `${AEve}12`, border: `1px solid ${AEve}30`, color: AEve }}>
-                            {slotEve?.customLabel || slotEve?.topic || getServiceTypeLabel(slotEve?.type || 'regular', settings.language)}
+                            {slotEve?.customLabel || slotEve?.topic || getServiceTypeLabel(slotEve?.type || 'regular', settings.language, is14th)}
                         </span>
                     </div>
 
@@ -394,8 +395,8 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                             leaderIds.slice(0, 2).map((id: string, i: number) => {
                                 const m = getMember(id);
                                 return m.name
-                                    ? <PersonRow key={i} label={i === 0 ? 'Servicio' : 'Doctrina'} name={m.name} avatar={m.avatar} icon={<Church />} accent={AEve} />
-                                    : <EmptyRow key={i} label={i === 0 ? 'Servicio' : 'Doctrina'} icon={<Church />} T={T} />;
+                                    ? <PersonRow key={i} label={i === 0 ? 'Servicio' : (is14th ? 'Historia' : 'Doctrina')} name={m.name} avatar={m.avatar} icon={<Church />} accent={AEve} />
+                                    : <EmptyRow key={i} label={i === 0 ? 'Servicio' : (is14th ? 'Historia' : 'Doctrina')} icon={<Church />} T={T} />;
                             })
                         }
 
@@ -404,18 +405,18 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                                 const m = getMember(id);
                                 const types = eveningType === 'children' ? ['Consagración', 'Doctrina'] : ['Director', 'Asistente'];
                                 return m.name
-                                    ? <PersonRow key={i} label={types[i]} name={m.name} avatar={m.avatar}
+                                    ? <PersonRow key={i} label={is14th && types[i].includes('Doctrina') ? 'Historia' : types[i]} name={m.name} avatar={m.avatar}
                                         icon={i === 0 ? <Church /> : <ShieldCheck />}
                                         accent={i === 0 ? AEve : T.secondary} />
-                                    : <EmptyRow key={i} label={types[i]} icon={<Church />} T={T} />;
+                                    : <EmptyRow key={i} label={is14th && types[i].includes('Doctrina') ? 'Historia' : types[i]} icon={<Church />} T={T} />;
                             })
                         }
 
                         {leaderIds.filter(Boolean).length === 1 && (() => {
                             const m = getMember(leaderIds.filter(Boolean)[0]);
                             return m.name
-                                ? <PersonRow label="Consagración y Doctrina" name={m.name} avatar={m.avatar} icon={<Church />} accent={AEve} stacked={true} />
-                                : <EmptyRow label="Consagración y Doctrina" icon={<Church />} T={T} />;
+                                ? <PersonRow label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} name={m.name} avatar={m.avatar} icon={<Church />} accent={AEve} stacked={true} />
+                                : <EmptyRow label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={<Church />} T={T} />;
                         })()}
                     </div>
 

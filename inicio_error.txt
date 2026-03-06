@@ -1778,3 +1778,21 @@ Import traces:
 ✓ Compiled in 395ms
 ✓ Compiled in 290ms
 ✓ Compiled in 208ms
+✓ Compiled in 134ms
+✓ Compiled in 156ms
+ GET / 200 in 2.3s (compile: 1967ms, render: 331ms)
+✓ Compiled in 133ms
+✓ Compiled in 793ms
+✓ Compiled in 389ms
+ GET / 200 in 2.6s (compile: 1037ms, render: 1599ms)
+ GET /dashboard 200 in 1602ms (compile: 1419ms, render: 183ms)
+ GET /admin 200 in 1943ms (compile: 1853ms, render: 89ms)
+ GET /admin 200 in 84ms (compile: 7ms, render: 77ms)
+ GET /login 200 in 1241ms (compile: 914ms, render: 326ms)
+ GET /login 200 in 125ms (compile: 9ms, render: 116ms)
+ GET /login 200 in 1008ms (compile: 49ms, render: 959ms)
+ GET / 200 in 134ms (compile: 32ms, render: 102ms)
+ GET / 200 in 142ms (compile: 66ms, render: 76ms)
+ GET / 200 in 3.7s (compile: 1713ms, render: 2.0s)
+✓ Compiled in 510ms
+✓ Finished filesystem cache database compaction in 12.4s

@@ -54,7 +54,15 @@ Cada tema tiene reglas de oro que no se pueden romper:
 
 ---
 
-## ⚙️ 4. ESTRUCTURA DE CONTROL (ADMIN)
+## 📅 4. LÓGICA DE FECHAS ESPECIALES
+
+*   **Día 14 de cada mes**: Por regla general, los días 14 se recuerda la **Historia de la Iglesia**. 
+    *   **Lógica de Servicio**: La **Consagración (5 AM)** y el **Servicio Vespertino** se llevan a cabo de forma normal. Es específicamente en la **Doctrina** donde se recuerda la historia.
+*   **Excepciones y Prioridad**: Solamente en días especiales (Aniversarios, Santa Cena, etc.) se cambia el tema para reflejar la celebración específica. El motivo del cambio siempre debe ser la celebración superior que ocurra en esa fecha.
+
+---
+
+## ⚙️ 5. ESTRUCTURA DE CONTROL (ADMIN)
 
 *   **Tactile Admin**: El panel de administración sigue un diseño táctil industrial (botones grandes, feedback visual inmediato).
 *   **Settings Independientes**: Cada tema tiene su propia sección en el Admin. Lo que se cambia para "Iglesia" no debe afectar a "Glassmorphism".

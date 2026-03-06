@@ -3,13 +3,13 @@ import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, User, Phone, Mail, Church } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
-import { cn } from '@/lib/utils';
+import { cn, getActiveAnnouncements } from '@/lib/utils';
 import { CountdownCard } from '@/components/CountdownCard';
 
 export const MidnightGlowAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
     const settings = useAppStore((state) => state.settings);
-    const announcements = useMemo(() => allAnnouncements.filter(a => a.active), [allAnnouncements]);
+    const announcements = useMemo(() => getActiveAnnouncements(allAnnouncements), [allAnnouncements]);
     const minister = useAppStore((state) => state.minister);
 
     return (

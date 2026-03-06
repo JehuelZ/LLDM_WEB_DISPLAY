@@ -95,4 +95,5 @@ export interface Announcement {
     imageUrl?: string;
     active: boolean;
     priority: number;
+    expiresAt?: string; // ISO Date string
 }

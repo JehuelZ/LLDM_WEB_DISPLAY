@@ -230,6 +230,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
     const themeLabel = themeTypeLabels[theme?.type] || 'Estudio Semanal';
 
     const displayDate = isTomorrow ? addDays(currentTime, 1) : currentTime;
+    const is14th = displayDate.getDate() === 14;
     const dateKey = format(displayDate, 'yyyy-MM-dd');
     const schedule = monthlySchedule?.[dateKey];
     const isSun = displayDate.getDay() === 0;
@@ -363,7 +364,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
 
     const title5am = slot5am?.customLabel || getSlotLabel('5am', settings.language);
     const title9am = slot9am?.customLabel || (isSun ? getSlotLabel('9am_sunday', settings.language) : getSlotLabel('9am_regular', settings.language));
-    const eveningTitle = slotEvening?.customLabel || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language);
+    const eveningTitle = slotEvening?.customLabel || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th);
 
     return (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '30px 40px 180px 40px', gap: 20, fontFamily: T.fontFamily }}>
@@ -449,7 +450,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                             <Avatar src={cons9am.avatar} size={240} T={T} isDark={isDark} />
                                             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                                 <AcademicButton label={cons9am.name || 'Por Asignar'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
-                                                <RoleBadge label="Consagración y Doctrina" icon={Sunrise} T={T} isDark={isDark} />
+                                                <RoleBadge label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={Sunrise} T={T} isDark={isDark} />
                                             </div>
                                         </div>
                                     );
@@ -471,7 +472,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                             />
                                             <div style={{ display: 'flex', gap: 12 }}>
                                                 <RoleBadge label="Consagración" icon={Sunrise} T={T} isDark={isDark} />
-                                                <RoleBadge label="Doctrina" icon={BookOpen} T={T} isDark={isDark} />
+                                                <RoleBadge label={is14th ? "HISTORIA" : "Doctrina"} icon={BookOpen} T={T} isDark={isDark} />
                                             </div>
                                         </div>
                                     </div>
@@ -513,7 +514,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                         />
                                         <div style={{ display: 'flex', gap: 12 }}>
                                             <RoleBadge label="Servicio" icon={Sunrise} T={T} isDark={isDark} />
-                                            <RoleBadge label="Doctrina" icon={BookOpen} T={T} isDark={isDark} />
+                                            <RoleBadge label={is14th ? "HISTORIA" : "Doctrina"} icon={BookOpen} T={T} isDark={isDark} />
                                         </div>
                                     </div>
                                 </div>
@@ -525,7 +526,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                     <Avatar src={evLeaders[0]?.avatar} size={240} T={T} isDark={isDark} />
                                     <AcademicButton label={evLeaders[0]?.name || 'Por Asignar'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow} />
                                     <div style={{ display: 'flex', gap: 12 }}>
-                                        <RoleBadge label="Consagración y Doctrina" icon={Sunrise} T={T} isDark={isDark} />
+                                        <RoleBadge label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={Sunrise} T={T} isDark={isDark} />
                                     </div>
                                 </div>
                             ), [], false);

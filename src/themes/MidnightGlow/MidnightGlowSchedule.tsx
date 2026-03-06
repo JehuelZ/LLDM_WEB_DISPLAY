@@ -51,6 +51,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
     const targetDateStr = format(baseDate, 'yyyy-MM-dd');
     const schedule = monthlySchedule[targetDateStr];
     const displayDate = baseDate;
+    const is14th = displayDate.getDate() === 14;
 
     const getMemberDetail = (id: string | null) => {
         if (!id) return { name: '', avatar: null };
@@ -552,10 +553,10 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                             icon={<Sun className="w-8 h-8 text-[#A3FF57]" />}
                             avatarUrl={getMemberDetail(slot9am?.consecrationLeaderId || null).avatar}
                             memberName={getMemberDetail(slot9am?.consecrationLeaderId || null).name}
-                            roleName={slot9am?.consecrationLeaderId === slot9am?.doctrineLeaderId ? "Consagración y Doctrina" : "Consagración"}
+                            roleName={slot9am?.consecrationLeaderId === slot9am?.doctrineLeaderId ? (is14th ? "Historia de la Iglesia" : "Consagración y Doctrina") : "Consagración"}
                             avatarUrl2={slot9am?.consecrationLeaderId !== slot9am?.doctrineLeaderId ? getMemberDetail(slot9am?.doctrineLeaderId || null).avatar : undefined}
                             memberName2={slot9am?.consecrationLeaderId !== slot9am?.doctrineLeaderId ? getMemberDetail(slot9am?.doctrineLeaderId || null).name : undefined}
-                            roleName2={slot9am?.consecrationLeaderId !== slot9am?.doctrineLeaderId ? "Doctrina" : undefined}
+                            roleName2={slot9am?.consecrationLeaderId !== slot9am?.doctrineLeaderId ? (is14th ? "Historia" : "Doctrina") : undefined}
                             label={slot9am?.customLabel || getSlotLabel('9am_regular', settings.language)}
                             language={slot9am?.language}
                             hour={slot9am?.time ? slot9am.time.split(' ')[0] : "09:00"}
@@ -648,11 +649,11 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
 
                                         {/* Leader 2 Details */}
                                         <div className="flex flex-col items-center">
-                                            <span className="text-[9px] font-black text-[#A3FF57] uppercase tracking-[0.4em] mb-1.5 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">Doctrina</span>
+                                            <span className="text-[9px] font-black text-[#A3FF57] uppercase tracking-[0.4em] mb-1.5 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">{is14th ? 'Historia' : 'Doctrina'}</span>
                                             <span className="text-[22px] font-black text-white uppercase tracking-[0.05em] drop-shadow-md leading-none bg-black/40 px-4 py-1.5 rounded-xl border border-white/10 backdrop-blur-xl">
                                                 {slotEvening.leaderIds[1]
                                                     ? getMemberDetail(slotEvening.leaderIds[1]).name.split(' ')[0]
-                                                    : 'Esposa'
+                                                    : (is14th ? 'Historia' : 'Esposa')
                                                 }
                                             </span>
                                         </div>
@@ -676,7 +677,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                         </motion.div>
                                         <motion.div className="mt-4 px-6 py-2 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#4F7FFF]/50 shadow-xl backdrop-blur-xl flex flex-col items-center min-w-[140px]">
                                             <span className="text-[9px] font-black text-[#4F7FFF] uppercase tracking-[0.2em] mb-0.5 opacity-80">
-                                                {slotEvening?.type === 'children' ? 'Consagración' : 'Director'}
+                                                {slotEvening?.type === 'children' ? (is14th ? 'Historia' : 'Consagración') : 'Director'}
                                             </span>
                                             <span className="text-[18px] font-black text-white uppercase tracking-[0.05em]">{getMemberDetail(slotEvening.leaderIds[0]).name}</span>
                                         </motion.div>
@@ -697,7 +698,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                         </motion.div>
                                         <motion.div className="mt-4 px-6 py-2 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-xl backdrop-blur-xl flex flex-col items-center min-w-[140px]">
                                             <span className="text-[9px] font-black text-[#A3FF57] uppercase tracking-[0.2em] mb-0.5 opacity-80">
-                                                {slotEvening?.type === 'children' ? 'Doctrina' : 'Asistente'}
+                                                {slotEvening?.type === 'children' ? (is14th ? 'Historia' : 'Doctrina') : (is14th ? 'Historia' : 'Asistente')}
                                             </span>
                                             <span className="text-[18px] font-black text-white uppercase tracking-[0.05em]">{getMemberDetail(slotEvening.leaderIds[1]).name}</span>
                                         </motion.div>
@@ -718,7 +719,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                         )}
                                     </motion.div>
                                     <motion.div className="mt-4 px-8 py-3 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center min-w-[180px]">
-                                        <span className="text-[10px] font-black text-[#A3FF57] uppercase tracking-[0.2em] mb-0.5 opacity-80">Consagración y Doctrina</span>
+                                        <span className="text-[10px] font-black text-[#A3FF57] uppercase tracking-[0.2em] mb-0.5 opacity-80">{is14th ? 'Historia de la Iglesia' : 'Consagración y Doctrina'}</span>
                                         <span className="text-[24px] font-black text-white uppercase tracking-[0.05em]">{getMemberDetail(slotEvening.leaderIds[0]).name}</span>
                                     </motion.div>
                                 </div>
@@ -738,7 +739,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     {/* Badge */}
                     <div className="flex justify-center">
                         <span className="text-[14px] font-black tracking-[0.4em] uppercase border-2 border-[#A3FF57]/50 text-[#A3FF57] px-8 py-2 rounded-full bg-[#0D1B3E]/90">
-                            {slotEvening?.customLabel || (slotEvening?.time?.includes('07:00') || slotEvening?.time?.includes('19:00') ? 'Oración de la Tarde' : (slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language)))}
+                            {slotEvening?.customLabel || (slotEvening?.time?.includes('07:00') || slotEvening?.time?.includes('19:00') ? 'Oración de la Tarde' : (slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th)))}
                         </span>
                     </div>
 

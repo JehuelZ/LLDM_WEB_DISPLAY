@@ -61,7 +61,14 @@ export function getSlideSystemTitle(slideId: string, lang: 'es' | 'en' = 'es'): 
     return DISPLAY_SLIDE_LABELS[slideId]?.[lang] || 'Tema de la Semana';
 }
 
-export function getServiceTypeLabel(type: string, lang: 'es' | 'en' = 'es'): string {
+export function getServiceTypeLabel(type: string, lang: 'es' | 'en' = 'es', is14th: boolean = false): string {
+    if (is14th && (type === 'doctrine' || type === 'consecration' || type === 'regular')) {
+        // Special rule for the 14th: History is prioritized if it's a doctrine-focused slot
+        if (type === 'doctrine') {
+            return lang === 'es' ? 'Historia de la Iglesia' : 'Church History';
+        }
+    }
+
     const labels: Record<string, { es: string, en: string }> = {
         regular: { es: 'Culto de Adoración', en: 'Worship Service' },
         youth: { es: 'Servicio de Jóvenes', en: 'Youth Service' },

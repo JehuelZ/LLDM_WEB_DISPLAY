@@ -143,6 +143,11 @@ export function IglesiaCalendar() {
                         <div style={{ width: 8, height: 8, borderRadius: '50%', background: T.accent }} />
                         <span style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat }}>Tarde</span>
                     </div>
+                    <div style={{ width: 1, height: 12, background: T.textMuted, opacity: 0.2, margin: '0 4px' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Star size={10} style={{ color: '#F59E0B' }} fill="#F59E0B" />
+                        <span style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat }}>Día 14 Historia</span>
+                    </div>
                 </div>
 
                 {/* Grid Header */}
@@ -174,6 +179,7 @@ export function IglesiaCalendar() {
                         const sched = monthlySchedule?.[key];
                         const isToday = key === format(currentTime, 'yyyy-MM-dd');
                         const isSun = day.getDay() === 0;
+                        const is14th = day.getDate() === 14;
 
                         const active5 = isSlotActive(key, '5am');
                         const active9 = isSlotActive(key, '9am');
@@ -203,15 +209,15 @@ export function IglesiaCalendar() {
                                 style={{
                                     padding: '14px 16px',
                                     borderRadius: 24,
-                                    background: isToday ? T.accent : T.surface,
+                                    background: isToday ? T.accent : (is14th ? (isDark ? 'rgba(245, 158, 11, 0.08)' : 'rgba(245, 158, 11, 0.04)') : T.surface),
                                     boxShadow: isToday
                                         ? `0 10px 30px ${T.accent}40, ${neuShadow(T, false, 'md', isDark)}`
-                                        : (hasActive ? `0 0 40px ${T.accent}20, ${neuShadow(T, false, 'sm', isDark)}` : neuShadow(T, false, 'sm', isDark)),
+                                        : (is14th ? `0 0 25px rgba(245, 158, 11, 0.15), ${neuShadow(T, false, 'sm', isDark)}` : (hasActive ? `0 0 40px ${T.accent}20, ${neuShadow(T, false, 'sm', isDark)}` : neuShadow(T, false, 'sm', isDark))),
                                     display: 'flex', flexDirection: 'column', gap: 6,
                                     overflow: 'hidden',
                                     border: isToday
                                         ? `2px solid ${T.accent}`
-                                        : (hasActive ? `2px solid ${T.accent}` : (isDark ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${T.border}`)),
+                                        : (is14th ? `1.5px dashed #F59E0B` : (hasActive ? `2px solid ${T.accent}` : (isDark ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${T.border}`))),
                                     position: 'relative'
                                 }}
                             >

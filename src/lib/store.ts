@@ -279,7 +279,8 @@ export const useAppStore = create<AppState>()(
                 displayPin: '1922',
                 displayTemplate: 'cristal',
                 displayScale: 1.0,
-                displayAuthorizedEmails: ['jairojehuel@gmail.com']
+                displayAuthorizedEmails: ['jairojehuel@gmail.com'],
+                adminTheme: 'classic'
             },
             currentUser: INITIAL_USER,
             minister: {
@@ -384,7 +385,8 @@ export const useAppStore = create<AppState>()(
                         category: ann.category,
                         active: ann.is_active,
                         priority: ann.priority,
-                        imageUrl: ann.image_url
+                        imageUrl: ann.image_url,
+                        expiresAt: ann.expires_at
                     }));
                     set({ announcements: mapped });
                 }
@@ -780,7 +782,8 @@ export const useAppStore = create<AppState>()(
                     category: ann.category,
                     priority: ann.priority,
                     image_url: ann.imageUrl,
-                    is_active: ann.active ?? true
+                    is_active: ann.active ?? true,
+                    expires_at: ann.expiresAt
                 };
 
                 if (ann.id) {
@@ -944,8 +947,10 @@ export const useAppStore = create<AppState>()(
             loadSettingsFromCloud: async () => {
                 const { data } = await supabase.from('app_settings').select('*').eq('id', 1).single();
                 if (data) {
+                    const current = get().settings;
                     set({
                         settings: {
+                            ...current,
                             themeMode: data.theme_mode,
                             language: data.language,
                             churchIcon: data.church_icon,
@@ -977,7 +982,8 @@ export const useAppStore = create<AppState>()(
                             displayTemplate: data.display_template || 'cristal',
                             displayScale: data.display_scale || 1.0,
                             displayOffsetX: data.display_offset_x || 0,
-                            displayOffsetY: data.display_offset_y || 0
+                            displayOffsetY: data.display_offset_y || 0,
+                            adminTheme: data.admin_theme || 'classic'
                         },
 
 
@@ -1034,7 +1040,8 @@ export const useAppStore = create<AppState>()(
                     display_template: updated.displayTemplate,
                     display_scale: updated.displayScale,
                     display_offset_x: updated.displayOffsetX,
-                    display_offset_y: updated.displayOffsetY
+                    display_offset_y: updated.displayOffsetY,
+                    admin_theme: updated.adminTheme
                 };
 
 

@@ -54,6 +54,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
     const todayStr = format(now, 'yyyy-MM-dd');
     const schedule = scheduleMap[targetDateStr] || scheduleMap[todayStr];
     const displayDate = baseDate;
+    const is14th = displayDate.getDate() === 14;
 
     const getMemberDetail = (id: string | null) => {
         if (!id) return { name: '', avatar: null };
@@ -235,7 +236,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
         const type = slotEvening?.type || 'standard';
         const timeDisplay = slotEvening?.time ? slotEvening.time.split(' ')[0] : '18:00';
         const periodDisplay = slotEvening?.time ? slotEvening.time.split(' ')[1] : 'PM';
-        const label = slotEvening?.customLabel || slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language);
+        const label = slotEvening?.customLabel || slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th);
 
         return (
             <motion.div

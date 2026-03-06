@@ -404,7 +404,7 @@ export default function MembersPage() {
                                                         member.role === 'Ministro' ? "bg-primary/10 text-primary border-primary/20" :
                                                             "bg-slate-500/10 text-slate-400 border-slate-500/20"
                                                 )}>
-                                                    {member.role === 'Administrador' ? 'Siervo de Dios' : member.role === 'Ministro' ? 'Ministro Responsable' : member.role}
+                                                    {member.role === 'Administrador' ? 'Ministro a Cargo' : member.role === 'Ministro' ? 'Ministro Responsable' : member.role}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
@@ -693,7 +693,7 @@ export default function MembersPage() {
                                             >
                                                 <option value="Miembro">Miembro</option>
                                                 <option value="Ministro">Ministro Responsable (Asistencia/Líder/Coro)</option>
-                                                <option value="Administrador">Siervo de Dios (Sistema)</option>
+                                                <option value="Administrador">Ministro a Cargo (Sistema)</option>
                                             </select>
                                         </div>
                                         <div className="space-y-2">

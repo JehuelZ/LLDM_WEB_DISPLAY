@@ -9,7 +9,7 @@ import {
     Calendar, Users, User, FileText, Settings, ExternalLink,
     Sun, Moon, Monitor, Church, Cross, Star, Heart, Shield,
     Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2,
-    ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search,
+    ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, Globe, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
     Lock, ArrowRight
@@ -137,6 +137,11 @@ const MessagesPanel = ({
     );
 };
 
+// Utility to remove accents/diacritics for easier searching
+const normalizeText = (text: string) => {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
+
 const CustomSelect = ({
     value,
     onChange,
@@ -153,7 +158,7 @@ const CustomSelect = ({
     const selectedOption = options.find(opt => opt.value === value);
 
     const filteredOptions = searchable
-        ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
+        ? options.filter(opt => normalizeText(opt.label).includes(normalizeText(searchQuery)))
         : options;
 
     return (
@@ -349,6 +354,8 @@ export default function AdminDashboard() {
 
     const [mounted, setMounted] = useState(false);
     const [imageToEdit, setImageToEdit] = useState<string | null>(null);
+    const [editingImageTarget, setEditingImageTarget] = useState<{ type: 'minister' | 'member', id?: string } | null>(null);
+
     const [newUniform, setNewUniform] = useState({ name: '', category: 'Adulto' as 'Adulto' | 'Niño' });
     const [newAnn, setNewAnn] = useState({ title: '', content: '', priority: 0 });
     const [isSaving, setIsSaving] = useState(false);
@@ -532,30 +539,45 @@ export default function AdminDashboard() {
 
     const memberOptions = useMemo(() => {
         const base = [{ value: '', label: 'Sin asignar' }];
-        const groups = [
-            { id: 'Casados', label: 'CASADOS' },
-            { id: 'Solos y Solas', label: 'SOLOS Y SOLAS' },
-            { id: 'Jóvenes', label: 'JÓVENES' },
-            { id: 'Niños', label: 'NIÑOS' },
-            { id: 'other', label: 'OTROS / SIN GRUPO' }
+
+        // Define display groups and their internal IDs (normalized)
+        const categories = [
+            { id: 'casados', label: 'CASADOS / CASADAS', variants: ['casados', 'casadas'] },
+            { id: 'jovenes', label: 'JÓVENES', variants: ['jovenes', 'jóvenes'] },
+            { id: 'solos', label: 'SOLOS Y SOLAS', variants: ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'] },
+            { id: 'ninos', label: 'NIÑOS / NIÑAS', variants: ['niños', 'niñas', 'niño', 'niña'] },
         ];
 
         let groupedItems: any[] = [];
+        let assignedMemberIds = new Set<string>();
 
-        groups.forEach(group => {
-            const groupMembers = members.filter(m =>
-                group.id === 'other'
-                    ? (!m.member_group || !groups.map(g => g.id).includes(m.member_group))
-                    : m.member_group === group.id
-            ).sort((a, b) => a.name.localeCompare(b.name));
+        // Process fixed categories
+        categories.forEach(cat => {
+            const groupMembers = members.filter(m => {
+                const group = m.member_group?.toLowerCase().trim() || '';
+                return cat.variants.some(v => group.includes(v)) || cat.variants.includes(group);
+            }).sort((a, b) => a.name.localeCompare(b.name));
 
             if (groupMembers.length > 0) {
-                groupedItems.push({ value: `header-${group.id}`, label: group.label, isHeader: true });
+                groupedItems.push({ value: `header-${cat.id}`, label: cat.label, isHeader: true });
                 groupMembers.forEach(m => {
                     groupedItems.push({ value: m.id, label: m.name });
+                    assignedMemberIds.add(m.id);
                 });
             }
         });
+
+        // Add remaining members to "OTROS"
+        const remainingMembers = members
+            .filter(m => !assignedMemberIds.has(m.id))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+        if (remainingMembers.length > 0) {
+            groupedItems.push({ value: 'header-other', label: 'OTROS / SIN GRUPO', isHeader: true });
+            remainingMembers.forEach(m => {
+                groupedItems.push({ value: m.id, label: m.name });
+            });
+        }
 
         return [...base, ...groupedItems];
     }, [members]);
@@ -737,7 +759,7 @@ export default function AdminDashboard() {
                         <div className="w-px h-6 bg-border/20 mx-2" />
                         <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveTab('configuracion')}>
                             <div className="text-right">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Siervo de Dios</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ministro a Cargo</p>
                                 <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">LLDM Rodeo</p>
                             </div>
                             <div className="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5 overflow-hidden group-hover:border-primary transition-all">
@@ -2423,17 +2445,35 @@ export default function AdminDashboard() {
                                                             alt="Ministro"
                                                         />
                                                     </div>
-                                                    <motion.button
-                                                        whileHover={{ scale: 1.1 }}
-                                                        whileTap={{ scale: 0.9 }}
-                                                        onClick={() => document.getElementById('minister-photo-upload')?.click()}
-                                                        className="absolute bottom-4 right-4 w-14 h-14 bg-primary text-white rounded-2xl flex items-center justify-center shadow-2xl border-2 border-white/20 hover:bg-primary/90 transition-all z-20"
-                                                    >
-                                                        <Camera className="w-7 h-7" />
-                                                    </motion.button>
+                                                    <div className="absolute bottom-4 right-4 flex gap-2">
+                                                        <motion.button
+                                                            whileHover={{ scale: 1.1 }}
+                                                            whileTap={{ scale: 0.9 }}
+                                                            onClick={() => {
+                                                                if (minister.avatar) {
+                                                                    setEditingImageTarget({ type: 'minister' });
+                                                                    setImageToEdit(minister.avatar);
+                                                                }
+                                                            }}
+                                                            className="w-12 h-12 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center border border-white/20 hover:bg-white/30 transition-all z-20"
+                                                            title="Ajustar posición / Zoom"
+                                                        >
+                                                            <Move className="w-5 h-5" />
+                                                        </motion.button>
+                                                        <motion.button
+                                                            whileHover={{ scale: 1.1 }}
+                                                            whileTap={{ scale: 0.9 }}
+                                                            onClick={() => document.getElementById('minister-photo-upload')?.click()}
+                                                            className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center shadow-2xl border border-white/20 hover:bg-primary/90 transition-all z-20"
+                                                            title="Cambiar Foto"
+                                                        >
+                                                            <Camera className="w-6 h-6" />
+                                                        </motion.button>
+                                                    </div>
+
                                                 </div>
                                                 <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary px-8 py-2.5 rounded-full shadow-[0_10px_30px_rgba(var(--primary-rgb),0.5)] border border-white/20 whitespace-nowrap">
-                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white italic">Siervo de Dios</span>
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white italic">Ministro a Cargo</span>
                                                 </div>
                                             </div>
 
@@ -2991,7 +3031,19 @@ export default function AdminDashboard() {
                                                                                     "border-emerald-500/30 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                                                                         )}>
                                                                             {m.avatar ? (
-                                                                                <img src={m.avatar} alt={m.name} className="w-full h-full object-cover rounded-xl" />
+                                                                                <div className="relative w-full h-full group/avatar">
+                                                                                    <img src={m.avatar} alt={m.name} className="w-full h-full object-cover rounded-xl" />
+                                                                                    <button
+                                                                                        onClick={() => {
+                                                                                            setEditingImageTarget({ type: 'member', id: m.id });
+                                                                                            setImageToEdit(m.avatar!);
+                                                                                        }}
+                                                                                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity rounded-xl"
+                                                                                        title="Ajustar foto"
+                                                                                    >
+                                                                                        <Move className="w-5 h-5 text-white" />
+                                                                                    </button>
+                                                                                </div>
                                                                             ) : (
                                                                                 <div className="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center">
                                                                                     <User className={cn(
@@ -3118,24 +3170,40 @@ export default function AdminDashboard() {
                                 // Convert dataUrl to File
                                 const res = await fetch(croppedDataUrl);
                                 const blob = await res.blob();
-                                const file = new File([blob], "minister-avatar.jpg", { type: "image/jpeg" });
+                                const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
 
-                                const publicUrl = await uploadAvatar('minister', file);
+                                const targetPath = editingImageTarget?.type === 'minister' ? 'minister' : 'profile';
+                                const publicUrl = await uploadAvatar(targetPath, file);
+
                                 if (publicUrl) {
-                                    const updatedMinister = { ...minister, avatar: publicUrl };
-                                    setMinister(updatedMinister);
+                                    if (editingImageTarget?.type === 'minister') {
+                                        const updatedMinister = { ...minister, avatar: publicUrl };
+                                        setMinister(updatedMinister);
+                                        await saveSettingsToCloud({ ministerAvatar: publicUrl });
+                                        if (minister.id && !minister.id.includes('mock')) {
+                                            await updateProfileInCloud(minister.id, { avatar: publicUrl });
+                                        }
+                                    } else if (editingImageTarget?.type === 'member' && editingImageTarget.id) {
+                                        await updateProfileInCloud(editingImageTarget.id, { avatar: publicUrl });
+                                        await loadMembersFromCloud(); // Refresh list
+                                    }
                                 }
                             } catch (err) {
                                 console.error("Error saving cropped avatar:", err);
                             } finally {
                                 setIsSaving(false);
                                 setImageToEdit(null);
+                                setEditingImageTarget(null);
                             }
                         }}
-                        onCancel={() => setImageToEdit(null)}
+                        onCancel={() => {
+                            setImageToEdit(null);
+                            setEditingImageTarget(null);
+                        }}
                     />
                 )
             }
+
         </div>
     );
 }

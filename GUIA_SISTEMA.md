@@ -42,3 +42,4 @@ Al configurar el servicio vespertino en el panel táctil, se pueden seleccionar 
     *   1°: `Etiqueta Personalizada` (si se define en Admin).
     *   2°: `Tema del Servicio` (Topic).
     *   3°: `Título por Tipo` (según la tabla anterior).
+4.  **Días 14**: Recordación de la **Historia de la Iglesia**. La Consagración y el servicio vespertino son normales; la historia se recuerda durante la **Doctrina**. Esta regla es el predeterminado a menos que un evento especial (Aniversario, etc.) lo sobrescriba.
