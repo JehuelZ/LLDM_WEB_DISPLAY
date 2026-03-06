@@ -127,7 +127,7 @@ interface MemberStats {
 interface Member {
     id: string;
     name: string;
-    role: 'Miembro' | 'Ministro' | 'Administrador';
+    role: 'Miembro' | 'Administrador' | 'Ministro a Cargo' | 'Dirigente Coro Adultos' | 'Dirigente Coro Niños' | 'Responsable de Asistencia';
     gender: 'Varon' | 'Hermana';
     member_group?: 'Casados' | 'Casadas' | 'Solos y Solas' | 'Jovenes' | 'Niños' | 'Niñas' | 'Administración';
     email: string;
@@ -143,7 +143,7 @@ interface Member {
 
 const INITIAL_MEMBERS: Member[] = [
     {
-        id: '1', name: 'Abraham Diaz', role: 'Ministro', gender: 'Varon', member_group: 'Casados', email: 'abraham.d@lldm.org', phone: '123-456-7890', status: 'Activo', lastActive: 'Hoy',
+        id: '1', name: 'Abraham Diaz', role: 'Ministro a Cargo', gender: 'Varon', member_group: 'Casados', email: 'abraham.d@lldm.org', phone: '123-456-7890', status: 'Activo', lastActive: 'Hoy',
         stats: { attendance: { attended: 85, total: 90 }, participation: { led: 12, total: 15 }, punctuality: 98 },
         avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
         privileges: ['leader']
@@ -401,10 +401,10 @@ export default function MembersPage() {
                                                 <span className={cn(
                                                     "px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border",
                                                     member.role === 'Administrador' ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                                                        member.role === 'Ministro' ? "bg-primary/10 text-primary border-primary/20" :
+                                                        member.role === 'Ministro a Cargo' ? "bg-primary/10 text-primary border-primary/20" :
                                                             "bg-slate-500/10 text-slate-400 border-slate-500/20"
                                                 )}>
-                                                    {member.role === 'Administrador' ? 'Ministro a Cargo' : member.role === 'Ministro' ? 'Ministro Responsable' : member.role}
+                                                    {member.role}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
@@ -692,8 +692,11 @@ export default function MembersPage() {
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, role: e.target.value as any } })}
                                             >
                                                 <option value="Miembro">Miembro</option>
-                                                <option value="Ministro">Ministro Responsable (Asistencia/Líder/Coro)</option>
-                                                <option value="Administrador">Ministro a Cargo (Sistema)</option>
+                                                <option value="Administrador">Administrador</option>
+                                                <option value="Ministro a Cargo">Ministro a Cargo</option>
+                                                <option value="Dirigente Coro Adultos">Dirigente Coro Adultos</option>
+                                                <option value="Dirigente Coro Niños">Dirigente Coro Niños</option>
+                                                <option value="Responsable de Asistencia">Responsable de Asistencia</option>
                                             </select>
                                         </div>
                                         <div className="space-y-2">

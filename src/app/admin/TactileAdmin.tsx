@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { cn } from '@/lib/utils'
+import { cn, compressImage } from '@/lib/utils'
 import { ImageEditor } from '@/components/ImageEditor'
 import './tactile-admin.css'
 
@@ -101,7 +101,8 @@ export default function TactileAdmin() {
         uniforms, uniformSchedule, loadUniformsFromCloud,
         saveUniformToCloud, deleteUniformFromCloud,
         saveUniformForDateToCloud, rehearsals,
-        loadRehearsalsFromCloud, saveRehearsalToCloud, deleteRehearsalFromCloud
+        loadRehearsalsFromCloud, saveRehearsalToCloud, deleteRehearsalFromCloud,
+        minister, setMinister, signOut
     } = useAppStore()
 
     const currentDaySchedule = monthlySchedule[currentDate] || {
@@ -242,35 +243,66 @@ export default function TactileAdmin() {
                 <div className="flex-1 flex flex-col">
                     {/* Header / Tabs */}
                     <div className="tactile-tabs">
-                        <div className="flex-1 flex gap-8 items-center overflow-x-auto no-scrollbar">
-                            <h1 className="text-2xl font-black italic tracking-tighter mr-8 whitespace-nowrap">RODEO <span className="text-tactile-text-sub">ADMIN</span></h1>
-                            {tabs.map(tab => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={cn("tactile-btn tactile-btn-glass whitespace-nowrap", activeTab === tab.id && "active")}
-                                >
-                                    <tab.icon className="w-4 h-4" />
-                                    {tab.label}
-                                </button>
-                            ))}
+                        <div className="flex-1 flex gap-4 md:gap-8 items-center overflow-x-auto no-scrollbar py-2">
+                            {/* User Profile Avatar Section */}
+                            <div className="flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-white/5 border border-white/5 mr-2">
+                                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]">
+                                    <img
+                                        src={currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop'}
+                                        alt={currentUser.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                <div className="hidden lg:block">
+                                    <p className="text-[10px] font-black uppercase tracking-tighter text-white leading-none mb-0.5">{currentUser.name}</p>
+                                    <p className="text-[8px] font-bold uppercase tracking-widest text-primary leading-none opacity-70">{currentUser.role}</p>
+                                </div>
+                            </div>
+
+                            <h1 className="text-xl md:text-2xl font-black italic tracking-tighter mr-4 md:mr-8 whitespace-nowrap">
+                                RODEO <span className="text-tactile-text-sub">ADMIN</span>
+                            </h1>
+                            <div className="flex gap-3 md:gap-6">
+                                {tabs.map(tab => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={cn(
+                                            "tactile-btn tactile-btn-glass whitespace-nowrap flex-shrink-0",
+                                            activeTab === tab.id && "active"
+                                        )}
+                                    >
+                                        <tab.icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                        <span className="hidden xs:inline">{tab.label}</span>
+                                        <span className="xs:hidden">{tab.label.slice(0, 3)}</span>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4 ml-4">
+                        <div className="flex items-center gap-2 md:gap-4 ml-0 md:ml-4 mt-4 md:mt-0 w-full md:w-auto justify-between md:justify-end">
                             <button
                                 onClick={() => window.open('/display', '_blank')}
-                                className="tactile-btn tactile-btn-glass text-[10px] text-primary border-primary/20 hover:border-primary/50 group"
+                                className="tactile-btn tactile-btn-glass text-[9px] md:text-[10px] text-primary border-primary/20 hover:border-primary/50 group flex-1 md:flex-none justify-center"
                             >
-                                <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-                                PROYECTAR
+                                <ExternalLink className="w-3 h-3 md:w-3.5 md:h-3.5 group-hover:scale-110 transition-transform" />
+                                <span className="hidden sm:inline">PROYECTAR</span>
+                                <span className="sm:hidden text-[8px]">LIVE</span>
                             </button>
                             <button
                                 onClick={() => saveSettingsToCloud({ adminTheme: 'classic' })}
-                                className="tactile-btn tactile-btn-glass text-[10px]"
+                                className="tactile-btn tactile-btn-glass text-[9px] md:text-[10px] flex-1 md:flex-none justify-center"
                             >
-                                <Monitor className="w-3.5 h-3.5" /> Classic UI
+                                <Monitor className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                                <span className="hidden sm:inline">Classic UI</span>
+                                <span className="sm:hidden">Classic</span>
                             </button>
-                            <button className="tactile-btn tactile-btn-orange text-[10px]">
-                                <LogOut className="w-4 h-4" /> Salir
+                            <button
+                                onClick={() => signOut()}
+                                className="tactile-btn tactile-btn-orange text-[9px] md:text-[10px] flex-1 md:flex-none justify-center"
+                            >
+                                <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                <span className="hidden sm:inline">Cerrar Sesión</span>
+                                <span className="sm:hidden text-[8px]">SALIR</span>
                             </button>
                         </div>
                     </div>
@@ -900,7 +932,7 @@ export default function TactileAdmin() {
                                                         <h4 className="font-black text-base truncate italic">{member.name}</h4>
                                                         <div className="flex items-center gap-2 mt-1">
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-tactile-text-sub">
-                                                                {member.role === 'Administrador' ? 'Ministro a Cargo' : member.role === 'Ministro' ? 'Ministro Responsable' : member.role}
+                                                                {member.role}
                                                             </span>
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                                                                 {member.member_group}
@@ -1134,6 +1166,41 @@ export default function TactileAdmin() {
                                                     onChange={(e: any) => setSettings({ ministerEmail: e.target.value })}
                                                     icon={Mail}
                                                 />
+                                                <TactileInput
+                                                    label="TELÉFONO"
+                                                    value={settings.ministerPhone || ''}
+                                                    onChange={(e: any) => setSettings({ ministerPhone: e.target.value })}
+                                                    icon={Phone}
+                                                />
+
+                                                <button
+                                                    onClick={async () => {
+                                                        setIsSaving(true);
+                                                        await saveSettingsToCloud({
+                                                            ministerName: settings.ministerName,
+                                                            ministerEmail: settings.ministerEmail,
+                                                            ministerPhone: settings.ministerPhone
+                                                        });
+                                                        // Sync current minister global state
+                                                        setMinister({
+                                                            name: settings.ministerName,
+                                                            email: settings.ministerEmail,
+                                                            phone: settings.ministerPhone
+                                                        });
+                                                        // Sync profile if exists
+                                                        if (minister.id && !minister.id.includes('minister-eliab')) {
+                                                            await updateProfileInCloud(minister.id, {
+                                                                name: settings.ministerName,
+                                                                email: settings.ministerEmail,
+                                                                phone: settings.ministerPhone
+                                                            });
+                                                        }
+                                                        setIsSaving(false);
+                                                    }}
+                                                    className="tactile-btn tactile-btn-orange w-full h-12 justify-center mt-4 font-black uppercase tracking-widest"
+                                                >
+                                                    <Save className="w-4 h-4" /> {isSaving ? 'Guardando...' : 'Guardar Datos'}
+                                                </button>
                                             </div>
                                         </TactileGlassCard>
 
@@ -1507,6 +1574,15 @@ export default function TactileAdmin() {
                                                             >
                                                                 EFECTO CRISTAL
                                                             </button>
+                                                            <button
+                                                                onClick={() => setSettings({ lowPerformanceMode: !settings.lowPerformanceMode })}
+                                                                className={cn(
+                                                                    "tactile-btn flex-1 justify-center",
+                                                                    settings.lowPerformanceMode ? "tactile-btn-orange" : "tactile-btn-glass"
+                                                                )}
+                                                            >
+                                                                MODO SMART TV
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1679,8 +1755,11 @@ export default function TactileAdmin() {
                                                 onChange={(val: any) => setNewMemberData({ ...newMemberData, role: val })}
                                                 options={[
                                                     { value: 'Miembro', label: 'Miembro' },
-                                                    { value: 'Ministro', label: 'Ministro Responsable' },
-                                                    { value: 'Administrador', label: 'Ministro a Cargo' },
+                                                    { value: 'Administrador', label: 'Administrador' },
+                                                    { value: 'Ministro a Cargo', label: 'Ministro a Cargo' },
+                                                    { value: 'Dirigente Coro Adultos', label: 'Dirigente Coro Adultos' },
+                                                    { value: 'Dirigente Coro Niños', label: 'Dirigente Coro Niños' },
+                                                    { value: 'Responsable de Asistencia', label: 'Responsable de Asistencia' },
                                                 ]}
                                                 icon={Shield}
                                             />
@@ -1827,25 +1906,40 @@ export default function TactileAdmin() {
                         {imageToEdit && (
                             <ImageEditor
                                 image={imageToEdit.source}
+                                loading={isSaving}
                                 onSave={async (cropped) => {
                                     setIsSaving(true);
-                                    if (imageToEdit.target === 'member') {
-                                        const idForUpload = editingMember?.id || `new_${Date.now()}`;
-                                        const file = dataURLtoFile(cropped, `member-${idForUpload}.jpg`);
-                                        const url = await uploadAvatar(idForUpload, file);
-                                        if (url) {
-                                            setNewMemberData({ ...newMemberData, avatar: url });
+                                    try {
+                                        if (imageToEdit.target === 'member') {
+                                            const idForUpload = editingMember?.id || `new_${Date.now()}`;
+                                            const file = dataURLtoFile(cropped, `member-${idForUpload}.jpg`);
+                                            const url = await uploadAvatar(idForUpload, file);
+                                            if (url) {
+                                                setNewMemberData({ ...newMemberData, avatar: url });
+                                            }
+                                        } else {
+                                            const file = dataURLtoFile(cropped, `minister-responsible.jpg`);
+                                            // Usar un ID único para evitar cache agresivo de navegadores
+                                            const url = await uploadAvatar(`minister-${Date.now()}`, file);
+                                            if (url) {
+                                                // 1. Sincronizar Settings
+                                                await saveSettingsToCloud({ ministerAvatar: url });
+
+                                                // 2. Sincronizar estado global del Ministro
+                                                setMinister({ avatar: url });
+
+                                                // 3. Sincronizar Perfil en DB si no es un mock
+                                                if (minister.id && !minister.id.includes('minister-eliab')) {
+                                                    await updateProfileInCloud(minister.id, { avatar: url });
+                                                }
+                                            }
                                         }
-                                    } else {
-                                        const file = dataURLtoFile(cropped, `minister-responsible.jpg`);
-                                        const url = await uploadAvatar('minister-avatar', file);
-                                        if (url) {
-                                            setSettings({ ...settings, ministerAvatar: url });
-                                            await saveSettingsToCloud({ ...settings, ministerAvatar: url });
-                                        }
+                                    } catch (err) {
+                                        console.error("Error saving photo:", err);
+                                    } finally {
+                                        setIsSaving(false);
+                                        setImageToEdit(null);
                                     }
-                                    setIsSaving(false);
-                                    setImageToEdit(null);
                                 }}
                                 onCancel={() => setImageToEdit(null)}
                             />

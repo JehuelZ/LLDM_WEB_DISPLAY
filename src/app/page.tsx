@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Shield, CheckCircle2, TrendingUp } from 'lucide-react';
+import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Shield, CheckCircle2, TrendingUp, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -83,7 +83,7 @@ export default function Home() {
   } = useAppStore();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [msgRecipient, setMsgRecipient] = useState<'Administrador' | 'Responsable' | 'Dirigente'>('Administrador');
+  const [msgRecipient, setMsgRecipient] = useState<'Administrador' | 'Responsable de Asistencia' | 'Ministro a Cargo'>('Administrador');
   const [msgContent, setMsgContent] = useState('');
   const [isSendingMsg, setIsSendingMsg] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -170,18 +170,18 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <Header />
-      <main className="container mx-auto p-4 md:p-8 space-y-8">
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <main className="container mx-auto p-4 md:p-8 space-y-6 md:space-y-8 animate-in fade-in duration-700">
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start">
           {/* Welcome and Basic Info */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex-1 space-y-2"
+            className="flex-1 space-y-2 w-full text-center md:text-left"
           >
-            <h1 className="text-5xl font-black tracking-tighter text-foreground uppercase italic">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-foreground uppercase italic px-2">
               Bienvenido, <span className="text-primary">{currentUser.name.split(' ')[0]}</span>
             </h1>
-            <p className="text-muted-foreground font-medium tracking-widest uppercase text-xs">
+            <p className="text-muted-foreground font-medium tracking-widest uppercase text-[10px] md:text-xs">
               Panel de Control Digital - LLDM RODEO
             </p>
           </motion.div>
@@ -190,18 +190,18 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="w-full lg:w-auto"
+            className="w-full lg:w-auto flex justify-center md:justify-end"
           >
-            <div className="flex items-center gap-4 bg-foreground/5 p-4 rounded-3xl border border-border/40 backdrop-blur-xl">
+            <div className="flex items-center gap-3 md:gap-4 bg-foreground/5 p-3 md:p-4 rounded-3xl border border-border/40 backdrop-blur-xl w-full max-w-sm md:max-w-none">
               <div
                 className="relative group cursor-pointer"
                 onClick={handlePhotoClick}
               >
-                <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                   <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                 </div>
                 <div className="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
-                  <Camera className="w-5 h-5 text-foreground" />
+                  <Camera className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
                 </div>
                 <input
                   type="file"
@@ -211,8 +211,8 @@ export default function Home() {
                   onChange={handlePhotoChange}
                 />
               </div>
-              <div>
-                <p className="text-sm font-black text-foreground">{currentUser.name}</p>
+              <div className="flex-1">
+                <p className="text-sm font-black text-foreground truncate max-w-[120px] md:max-w-none">{currentUser.name}</p>
                 <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">
                   {currentUser.category === 'Niño' ? 'Pequeño Gigante' : 'Miembro Activo'}
                 </p>
@@ -221,7 +221,7 @@ export default function Home() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "ml-4 rounded-xl hover:bg-foreground/10",
+                  "rounded-xl hover:bg-foreground/10 h-10 w-10 md:h-12 md:w-12",
                   isEditing && "bg-primary/20 text-primary hover:bg-primary/30"
                 )}
                 onClick={isEditing ? handleSave : () => setIsEditing(true)}
@@ -533,8 +533,8 @@ export default function Home() {
                   <div className="grid grid-cols-1 gap-2">
                     {[
                       { id: 'Administrador', icon: Shield, label: 'Administrador' },
-                      { id: 'Responsable', icon: User, label: 'Responsable' },
-                      { id: 'Dirigente', icon: TrendingUp, label: 'Dirigente (Coro)' }
+                      { id: 'Responsable de Asistencia', icon: ClipboardCheck, label: 'Responsable de Asistencia' },
+                      { id: 'Ministro a Cargo', icon: Star, label: 'Ministro a Cargo' }
                     ].map((role) => (
                       <button
                         key={role.id}

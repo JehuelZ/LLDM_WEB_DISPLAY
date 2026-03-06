@@ -63,6 +63,7 @@ export interface AppSettings {
     displayOffsetX?: number; // New: Manual horizontal adjustment
     displayOffsetY?: number; // New: Manual vertical adjustment
     displayAuthorizedEmails?: string[]; // New: List of emails allowed to use display mode
+    lowPerformanceMode?: boolean; // New: Disable expensive visual effects for TVs
 }
 
 export interface UserProfile {
@@ -73,7 +74,7 @@ export interface UserProfile {
     avatar: string;
     category: 'Varon' | 'Hermana' | 'Niño';
     member_group?: 'Casados' | 'Casadas' | 'Solos y Solas' | 'Jovenes' | 'Niños' | 'Niñas' | 'Administración';
-    role: 'Miembro' | 'Ministro' | 'Administrador';
+    role: 'Miembro' | 'Administrador' | 'Ministro a Cargo' | 'Dirigente Coro Adultos' | 'Dirigente Coro Niños' | 'Responsable de Asistencia';
     gender: 'Varon' | 'Hermana';
     status: 'Activo' | 'Inactivo';
     lastActive: string;
@@ -229,7 +230,7 @@ interface AppState {
 
 const INITIAL_USER: UserProfile = {
     id: 'jairo-admin',
-    name: 'Jairo Jehuel',
+    name: 'Jairo Zelaya',
     email: 'jairojehuel@gmail.com',
     phone: '',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
@@ -290,7 +291,7 @@ export const useAppStore = create<AppState>()(
                 phone: '+1 (555) 000-0000',
                 avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop',
                 category: 'Varon',
-                role: 'Ministro',
+                role: 'Ministro a Cargo',
                 gender: 'Varon',
                 status: 'Activo',
                 lastActive: 'Hoy',
@@ -983,7 +984,8 @@ export const useAppStore = create<AppState>()(
                             displayScale: data.display_scale || 1.0,
                             displayOffsetX: data.display_offset_x || 0,
                             displayOffsetY: data.display_offset_y || 0,
-                            adminTheme: data.admin_theme || 'classic'
+                            adminTheme: data.admin_theme || 'classic',
+                            lowPerformanceMode: data.low_performance_mode || false
                         },
 
 
@@ -1041,7 +1043,8 @@ export const useAppStore = create<AppState>()(
                     display_scale: updated.displayScale,
                     display_offset_x: updated.displayOffsetX,
                     display_offset_y: updated.displayOffsetY,
-                    admin_theme: updated.adminTheme
+                    admin_theme: updated.adminTheme,
+                    low_performance_mode: updated.lowPerformanceMode
                 };
 
 

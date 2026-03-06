@@ -12,13 +12,13 @@ import {
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, Globe, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
-    Lock, ArrowRight
+    Lock, ArrowRight, LogOut
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useAppStore } from '@/lib/store';
-import { cn } from '@/lib/utils';
+import { cn, compressImage } from '@/lib/utils';
 import { CitySearch } from '@/components/CitySearch';
 import { ImageEditor } from '@/components/ImageEditor';
 import { CountdownCard } from '@/components/CountdownCard';
@@ -349,7 +349,8 @@ export default function AdminDashboard() {
         saveRecurringScheduleToCloud,
         seedMonthSchedule,
         subscribeToMessages,
-        authSession
+        authSession,
+        signOut
     } = useAppStore();
 
     const [mounted, setMounted] = useState(false);
@@ -442,7 +443,8 @@ export default function AdminDashboard() {
         if (file) {
             setIsSaving(true);
             try {
-                const publicUrl = await uploadAvatar('minister', file);
+                const compressedFile = await compressImage(file);
+                const publicUrl = await uploadAvatar('minister', compressedFile);
                 if (publicUrl) {
                     setMinister({ ...minister, avatar: publicUrl });
                     // Guardar inmediatamente en la nube
@@ -463,18 +465,26 @@ export default function AdminDashboard() {
             }
         }
     };
-    const handleIconUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleIconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSettings({
-                    churchIcon: 'custom',
-                    customIconUrl: reader.result as string,
-                    churchLogoUrl: undefined
-                });
-            };
-            reader.readAsDataURL(file);
+            setIsSaving(true);
+            try {
+                const compressed = await compressImage(file, 400, 400);
+                const publicUrl = await uploadAvatar('church-icon', compressed);
+                if (publicUrl) {
+                    await saveSettingsToCloud({
+                        churchIcon: 'custom',
+                        customIconUrl: publicUrl,
+                        churchLogoUrl: undefined
+                    });
+                    alert('✅ Escudo de la iglesia actualizado.');
+                }
+            } catch (error) {
+                console.error("Error uploading icon:", error);
+            } finally {
+                setIsSaving(false);
+            }
         }
     };
 
@@ -733,7 +743,7 @@ export default function AdminDashboard() {
                                 {settings.themeMode === 'light' ? <Sun className="w-3.5 h-3.5 text-amber-500" /> : <Moon className="w-3.5 h-3.5 text-primary" />}
                                 <select
                                     value={settings.themeMode}
-                                    onChange={(e) => setSettings({ themeMode: e.target.value as any })}
+                                    onChange={(e) => saveSettingsToCloud({ themeMode: e.target.value as any })}
                                     className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-slate-400 appearance-none cursor-pointer outline-none hover:text-primary transition-colors"
                                 >
                                     <option value="light" className="bg-[#020617]">Modo Claro</option>
@@ -757,15 +767,29 @@ export default function AdminDashboard() {
                             <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full animate-ping" />
                         </div>
                         <div className="w-px h-6 bg-border/20 mx-2" />
-                        <div className="flex items-center gap-3 group cursor-pointer" onClick={() => setActiveTab('configuracion')}>
+
+                        {/* Current Logged In Admin Profile */}
+                        <div className="flex items-center gap-3 group">
                             <div className="text-right">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ministro a Cargo</p>
-                                <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors">LLDM Rodeo</p>
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{currentUser.role}</p>
+                                <p className="text-xs font-bold text-foreground">{currentUser.name}</p>
                             </div>
-                            <div className="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5 overflow-hidden group-hover:border-primary transition-all">
-                                <img src={minister.avatar} className="w-full h-full object-cover rounded-full" alt="Admin" />
+                            <div className="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5 overflow-hidden">
+                                <img src={currentUser.avatar} className="w-full h-full object-cover rounded-full" alt="Admin" />
                             </div>
                         </div>
+
+                        <div className="w-px h-6 bg-border/20 mx-2" />
+
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => signOut()}
+                            className="h-10 w-10 text-rose-500 hover:text-white hover:bg-rose-500 rounded-xl transition-all"
+                            title="Cerrar Sesión"
+                        >
+                            <LogOut className="w-5 h-5" />
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -1452,7 +1476,8 @@ export default function AdminDashboard() {
                                                         onChange={async (e) => {
                                                             const file = e.target.files?.[0];
                                                             if (file) {
-                                                                const url = await uploadAvatar('countdown-logo', file);
+                                                                const compressed = await compressImage(file, 800, 800); // Logo smaller
+                                                                const url = await uploadAvatar('countdown-logo', compressed);
                                                                 if (url) setSettings({ countdownLogoUrl: url });
                                                             }
                                                         }}
@@ -1523,7 +1548,8 @@ export default function AdminDashboard() {
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
-                                                            const url = await uploadAvatar('countdown-bg', file);
+                                                            const compressed = await compressImage(file, 1920, 1080, 0.7); // High-res background but compressed
+                                                            const url = await uploadAvatar('countdown-bg', compressed);
                                                             if (url) setSettings({ countdownBgImageUrl: url });
                                                         }
                                                     }}
@@ -1725,7 +1751,8 @@ export default function AdminDashboard() {
                                         onChange={async (e) => {
                                             const file = e.target.files?.[0];
                                             if (file) {
-                                                const publicUrl = await uploadAvatar('display-bg', file);
+                                                const compressed = await compressImage(file, 1920, 1080, 0.8);
+                                                const publicUrl = await uploadAvatar('display-bg', compressed);
                                                 if (publicUrl) {
                                                     setSettings({
                                                         displayCustomBgUrl: publicUrl,
@@ -2473,7 +2500,7 @@ export default function AdminDashboard() {
 
                                                 </div>
                                                 <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary px-8 py-2.5 rounded-full shadow-[0_10px_30px_rgba(var(--primary-rgb),0.5)] border border-white/20 whitespace-nowrap">
-                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white italic">Ministro a Cargo</span>
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white italic">Ministro Responsable</span>
                                                 </div>
                                             </div>
 
@@ -2854,8 +2881,11 @@ export default function AdminDashboard() {
                                                         className="w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all"
                                                     >
                                                         <option value="Miembro" className="bg-background">MIEMBRO</option>
-                                                        <option value="Responsable" className="bg-background">RESPONSABLE</option>
+                                                        <option value="Ministro a Cargo" className="bg-background">MINISTRO A CARGO</option>
                                                         <option value="Administrador" className="bg-background">ADMINISTRADOR</option>
+                                                        <option value="Dirigente Coro Adultos" className="bg-background">DIRIGENTE CORO ADULTOS</option>
+                                                        <option value="Dirigente Coro Niños" className="bg-background">DIRIGENTE CORO NIÑOS</option>
+                                                        <option value="Responsable de Asistencia" className="bg-background">RESPONSABLE ASIST.</option>
                                                     </select>
                                                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                                                 </div>
@@ -3018,7 +3048,7 @@ export default function AdminDashboard() {
                                                                 <div className={cn(
                                                                     "absolute top-0 right-0 w-32 h-32 blur-[60px] opacity-10 pointer-events-none -translate-y-1/2 translate-x-1/2",
                                                                     m.role === 'Administrador' ? "bg-red-500" :
-                                                                        m.role === 'Ministro' ? "bg-primary" : "bg-emerald-500"
+                                                                        m.role === 'Ministro a Cargo' ? "bg-primary" : "bg-emerald-500"
                                                                 )} />
 
                                                                 <div className="flex items-start gap-5 relative z-10">
@@ -3027,7 +3057,7 @@ export default function AdminDashboard() {
                                                                         <div className={cn(
                                                                             "w-16 h-16 rounded-2xl overflow-hidden border-2 p-1 relative z-10",
                                                                             m.role === 'Administrador' ? "border-red-500/30 bg-red-500/5 shadow-[0_0_20px_rgba(239,68,68,0.2)]" :
-                                                                                m.role === 'Ministro' ? "border-primary/30 bg-primary/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" :
+                                                                                m.role === 'Ministro a Cargo' ? "border-primary/30 bg-primary/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" :
                                                                                     "border-emerald-500/30 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
                                                                         )}>
                                                                             {m.avatar ? (
@@ -3049,7 +3079,7 @@ export default function AdminDashboard() {
                                                                                     <User className={cn(
                                                                                         "w-8 h-8",
                                                                                         m.role === 'Administrador' ? "text-red-400" :
-                                                                                            m.role === 'Ministro' ? "text-primary" : "text-emerald-400"
+                                                                                            m.role === 'Ministro a Cargo' ? "text-primary" : "text-emerald-400"
                                                                                     )} />
                                                                                 </div>
                                                                             )}
@@ -3070,7 +3100,7 @@ export default function AdminDashboard() {
                                                                                     <span className={cn(
                                                                                         "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border",
                                                                                         m.role === 'Administrador' ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                                                                                            m.role === 'Ministro' ? "bg-primary/10 text-primary border-primary/20" :
+                                                                                            m.role === 'Ministro a Cargo' ? "bg-primary/10 text-primary border-primary/20" :
                                                                                                 "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
                                                                                     )}>
                                                                                         {m.role}
@@ -3091,8 +3121,11 @@ export default function AdminDashboard() {
                                                                                         className="bg-transparent text-[9px] font-black text-foreground outline-none px-2 cursor-pointer"
                                                                                     >
                                                                                         <option value="Miembro" className="bg-[#0f172a]">MIEMBRO</option>
-                                                                                        <option value="Responsable" className="bg-[#0f172a]">RESPON</option>
-                                                                                        <option value="Administrador" className="bg-[#0f172a]">ADMIN</option>
+                                                                                        <option value="Ministro a Cargo" className="bg-[#0f172a]">MINISTRO A CARGO</option>
+                                                                                        <option value="Administrador" className="bg-[#0f172a]">ADMINISTRADOR</option>
+                                                                                        <option value="Dirigente Coro Adultos" className="bg-[#0f172a]">DIRIGENTE CORO ADULTOS</option>
+                                                                                        <option value="Dirigente Coro Niños" className="bg-[#0f172a]">DIRIGENTE CORO NIÑOS</option>
+                                                                                        <option value="Responsable de Asistencia" className="bg-[#0f172a]">RESPONSABLE ASIST.</option>
                                                                                     </select>
                                                                                     <motion.button
                                                                                         whileHover={{ scale: 1.1 }}
@@ -3164,6 +3197,7 @@ export default function AdminDashboard() {
                 imageToEdit && (
                     <ImageEditor
                         image={imageToEdit}
+                        loading={isSaving}
                         onSave={async (croppedDataUrl) => {
                             setIsSaving(true);
                             try {
@@ -3172,15 +3206,14 @@ export default function AdminDashboard() {
                                 const blob = await res.blob();
                                 const file = new File([blob], "avatar.jpg", { type: "image/jpeg" });
 
-                                const targetPath = editingImageTarget?.type === 'minister' ? 'minister' : 'profile';
+                                const targetPath = editingImageTarget?.type === 'minister' ? `minister-${Date.now()}` : `profile-${Date.now()}`;
                                 const publicUrl = await uploadAvatar(targetPath, file);
 
                                 if (publicUrl) {
                                     if (editingImageTarget?.type === 'minister') {
-                                        const updatedMinister = { ...minister, avatar: publicUrl };
-                                        setMinister(updatedMinister);
+                                        setMinister({ avatar: publicUrl });
                                         await saveSettingsToCloud({ ministerAvatar: publicUrl });
-                                        if (minister.id && !minister.id.includes('mock')) {
+                                        if (minister.id && !minister.id.includes('minister-eliab')) {
                                             await updateProfileInCloud(minister.id, { avatar: publicUrl });
                                         }
                                     } else if (editingImageTarget?.type === 'member' && editingImageTarget.id) {

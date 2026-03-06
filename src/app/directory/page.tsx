@@ -29,7 +29,7 @@ export default function DirectoryPage() {
 
         // Map roles to tags for filtering
         const role = m.role as string;
-        const memberTag = (role === 'Administrador' || role === 'Responsable') ? 'leadership' :
+        const memberTag = (role === 'Administrador' || role === 'Ministro a Cargo' || role === 'Responsable de Asistencia') ? 'leadership' :
             m.privileges.includes('choir') ? 'choir' : 'all';
 
         const matchesFilter = activeFilter === 'all' || memberTag === activeFilter;
