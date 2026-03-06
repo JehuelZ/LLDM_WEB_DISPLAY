@@ -438,14 +438,19 @@ export default function AdminDashboard() {
                 const publicUrl = await uploadAvatar('minister', file);
                 if (publicUrl) {
                     setMinister({ ...minister, avatar: publicUrl });
+                    // Guardar inmediatamente en la nube
+                    await saveSettingsToCloud({ ministerAvatar: publicUrl });
                     // Si el ministro tiene un ID real en el sistema, actualizamos su perfil
                     if (minister.id && !minister.id.includes('mock')) {
                         await updateProfileInCloud(minister.id, { avatar: publicUrl });
                     }
-                    alert('✅ Foto del ministro actualizada.');
+                    alert('✅ Foto del ministro actualizada y guardada.');
+                } else {
+                    alert('❌ No se pudo subir la imagen. Verifique que el bucket "avatars" existe en Supabase con permisos públicos.');
                 }
             } catch (error) {
                 console.error("Error uploading avatar:", error);
+                alert(`❌ Error al subir imagen: ${error instanceof Error ? error.message : 'Error desconocido'}`);
             } finally {
                 setIsSaving(false);
             }
@@ -1807,7 +1812,10 @@ export default function AdminDashboard() {
                                                 ].map((tmpl) => (
                                                     <button
                                                         key={tmpl.id}
-                                                        onClick={() => setCalendarStyles({ template: tmpl.id as any })}
+                                                        onClick={() => {
+                                                            setCalendarStyles({ template: tmpl.id as any });
+                                                            saveSettingsToCloud({ displayTemplate: tmpl.id as any });
+                                                        }}
                                                         className={cn(
                                                             "h-12 rounded-xl border-2 font-black uppercase text-[10px] transition-all",
                                                             calendarStyles.template === tmpl.id ? "bg-primary/20 border-primary text-primary" : "bg-foreground/5 border-white/5 text-slate-500"
