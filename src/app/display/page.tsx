@@ -132,7 +132,7 @@ export default function DisplayPage() {
     useEffect(() => {
         if (slides.length === 0) return;
 
-        const isIglesia = calendarStyles?.template === 'iglesia';
+        const isIglesia = (settings?.displayTemplate || calendarStyles?.template) === 'iglesia';
         const slideDuration = (isIglesia ? settings.iglesiaSlideDuration : 12) || 12;
 
         // Slide rotation timer
@@ -165,7 +165,7 @@ export default function DisplayPage() {
             clearInterval(refreshTimer);
             clearInterval(dateCheckTimer);
         };
-    }, [slides.length, settings.iglesiaSlideDuration, calendarStyles?.template]);
+    }, [slides.length, settings.iglesiaSlideDuration, settings.displayTemplate, calendarStyles?.template]);
 
 
     if (!isMounted) return null;
@@ -196,7 +196,7 @@ export default function DisplayPage() {
             >
                 <AnimatePresence mode="popLayout" initial={false}>
                     {(() => {
-                        const isIglesia = calendarStyles?.template === 'iglesia';
+                        const isIglesia = (settings?.displayTemplate || calendarStyles?.template) === 'iglesia';
                         // ... (keep all the animation logic as is)
                         const animationType = settings.iglesiaAnimation || 'metro';
 

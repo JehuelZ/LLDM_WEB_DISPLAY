@@ -988,6 +988,12 @@ export const useAppStore = create<AppState>()(
                             phone: data.minister_phone || get().minister.phone,
                             email: data.minister_email || get().minister.email,
                             avatar: data.minister_avatar || get().minister.avatar
+                        },
+
+                        // Sync calendarStyles.template from cloud displayTemplate
+                        calendarStyles: {
+                            ...get().calendarStyles,
+                            template: (data.display_template || get().calendarStyles.template) as any
                         }
                     });
                 }
