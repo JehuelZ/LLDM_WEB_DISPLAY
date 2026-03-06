@@ -78,7 +78,10 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     </h2>
                 </div>
 
-                <div className="bg-white/5 backdrop-blur-3xl border border-white/10 rounded-[2rem] py-4 px-10 flex items-center gap-6 shadow-2xl">
+                <div className={cn(
+                    "border border-white/10 rounded-[2rem] py-4 px-10 flex items-center gap-6 shadow-2xl",
+                    settings.lowPerformanceMode ? "bg-[#1a1a1a]" : "bg-white/5 backdrop-blur-3xl"
+                )}>
                     <div className="flex flex-col items-center border-r border-white/10 pr-8">
                         <span className="text-5xl font-black text-white">{format(displayDate, 'd')}</span>
                         <span className="text-xs font-bold text-white/30 uppercase tracking-[0.2em]">{format(displayDate, 'MMM', { locale: es })}</span>
@@ -102,6 +105,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     minimal={true}
                     language={schedule?.slots?.['5am']?.language}
                     isActive={isSlotActive('5am')}
+                    lowPerf={settings.lowPerformanceMode}
                 />
 
                 <ScheduleBlock
@@ -116,6 +120,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     minimal={true}
                     language={schedule?.slots?.['9am']?.language}
                     isActive={isSlotActive('9am')}
+                    lowPerf={settings.lowPerformanceMode}
                 />
 
                 <ScheduleBlock
@@ -133,6 +138,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     icon={<ClockIcon className="w-10 h-10" />}
                     language={schedule?.slots?.['evening']?.language}
                     isActive={isSlotActive('evening')}
+                    lowPerf={settings.lowPerformanceMode}
                 />
             </div>
 
@@ -140,21 +146,22 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
     );
 };
 
-const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colorClass, icon, language, isTiny, minimal, isActive }: any) => {
+const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colorClass, icon, language, isTiny, minimal, isActive, lowPerf }: any) => {
     return (
         <motion.div
             initial={{ y: 50, opacity: 0 }}
             animate={isActive ? {
                 y: 0, opacity: 1,
-                scale: [1, 1.015, 1],
+                scale: lowPerf ? 1 : [1, 1.015, 1],
                 transition: {
                     y: { duration: 0.5 },
                     opacity: { duration: 0.5 },
-                    scale: { repeat: Infinity, duration: 3, ease: "easeInOut" }
+                    ...(lowPerf ? {} : { scale: { repeat: Infinity, duration: 3, ease: "easeInOut" } })
                 }
             } : { y: 0, opacity: 1, scale: 1 }}
             className={cn(
-                "group relative flex flex-col bg-white/[0.02] backdrop-blur-3xl rounded-[4rem] border transition-all hover:bg-white/5 shadow-2xl overflow-hidden p-12",
+                "group relative flex flex-col rounded-[4rem] border transition-all hover:bg-white/5 shadow-2xl overflow-hidden p-12",
+                lowPerf ? "bg-[#121212]" : "bg-white/[0.02] backdrop-blur-3xl",
                 isActive ? "border-emerald-500/60 bg-emerald-500/[0.04] shadow-[0_0_80px_rgba(16,185,129,0.25)] ring-2 ring-emerald-500/30" : "border-white/10"
             )}
         >

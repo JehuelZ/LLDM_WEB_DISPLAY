@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Header } from '@/components/layout/Header';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { useAppStore } from '@/lib/store';
 
 // --- Components ---
 
@@ -65,6 +66,7 @@ const StatDoughnut = ({
 };
 
 export default function ResponsableDashboard() {
+    const { currentUser } = useAppStore();
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
             <Header />
@@ -75,7 +77,7 @@ export default function ResponsableDashboard() {
                     <div>
                         <h1 className="text-4xl font-black tracking-tight text-foreground uppercase italic flex items-center gap-3">
                             <Shield className="h-10 w-10 text-primary" />
-                            Panel de <span className="text-primary">Responsable</span>
+                            Panel de <span className="text-primary">{currentUser.role === 'Administrador' ? 'Gestión de Grupos' : 'Responsable'}</span>
                         </h1>
                         <p className="text-muted-foreground font-light">Gestión de Grupo y Oración - LLDM RODEO</p>
                     </div>

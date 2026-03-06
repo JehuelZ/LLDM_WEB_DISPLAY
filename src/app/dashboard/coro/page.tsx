@@ -20,7 +20,7 @@ export default function CoroDashboard() {
     } = useAppStore();
 
     const [showLeaderPanel, setShowLeaderPanel] = useState(false);
-    const isLeader = currentUser.privileges.includes('leader');
+    const isLeader = currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges.includes('leader');
 
     // Get next 14 days to show upcoming uniform assignments
     const upcomingDays = Array.from({ length: 14 }).map((_, i) => {
@@ -51,6 +51,10 @@ export default function CoroDashboard() {
         }
     };
 
+    const att = currentUser.stats?.attendance;
+    const attRate = att ? Math.round((att.attended / att.total) * 100) : 0;
+    const ledCount = currentUser.stats?.participation?.led || 0;
+
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
             <Header />
@@ -61,7 +65,7 @@ export default function CoroDashboard() {
                     <div>
                         <h1 className="text-4xl font-black tracking-tight text-foreground uppercase italic flex items-center gap-3">
                             <Music className="h-10 w-10 text-secondary" />
-                            Panel de <span className="text-secondary">Coro Adulto</span>
+                            {currentUser.role === 'Dirigente Coro Adultos' || currentUser.role === 'Administrador' ? 'Panel de Dirigente' : 'Panel de'} <span className="text-secondary">Coro Adulto</span>
                         </h1>
                         <p className="text-muted-foreground font-light">Coro de Adultos - LLDM RODEO</p>
                     </div>
@@ -76,7 +80,11 @@ export default function CoroDashboard() {
                                 {showLeaderPanel ? 'Ocultar Controles' : 'Gestión Dirigente'}
                             </Button>
                         )}
-                        <Button variant="outline" className="border-secondary/20 hover:bg-secondary/10 gap-2">
+                        <Button
+                            variant="outline"
+                            className="border-secondary/20 hover:bg-secondary/10 gap-2"
+                            onClick={() => alert('Descargando Himnario LLDM (PDF)...')}
+                        >
                             <Download className="h-4 w-4" /> Descargar Himnario
                         </Button>
                     </div>
@@ -295,20 +303,20 @@ export default function CoroDashboard() {
                                 <div className="relative w-32 h-32 flex items-center justify-center">
                                     <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                                         <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-foreground/5" />
-                                        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset="25.12" strokeLinecap="round" className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 * (1 - attRate / 100)} strokeLinecap="round" className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-2xl font-black text-foreground">90%</span>
+                                        <span className="text-2xl font-black text-foreground">{attRate}%</span>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 w-full mt-6 gap-4 text-center">
                                     <div className="p-2 bg-foreground/5 rounded-lg">
-                                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ensayos</p>
-                                        <p className="text-xl font-black text-foreground">18/20</p>
+                                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Servicios</p>
+                                        <p className="text-xl font-black text-foreground">{att?.attended || 0}/{att?.total || 0}</p>
                                     </div>
                                     <div className="p-2 bg-foreground/5 rounded-lg">
-                                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Servicios</p>
-                                        <p className="text-xl font-black text-foreground">24/25</p>
+                                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Privilegios</p>
+                                        <p className="text-xl font-black text-foreground">{ledCount}</p>
                                     </div>
                                 </div>
                             </div>

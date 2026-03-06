@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { cn } from '@/lib/utils';
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useRouter } from 'next/navigation';
 
 const StatCard = ({ icon: Icon, label, value, trend, color }: any) => (
     <Card className="glass-card border-none bg-foreground/5 relative overflow-hidden group">
@@ -41,6 +42,7 @@ export default function MinistroDashboard() {
         loadMembersFromCloud, loadAllSchedulesFromCloud, theme,
         messages, loadCloudMessages, settings
     } = useAppStore();
+    const router = useRouter();
 
     useEffect(() => {
         loadMembersFromCloud();
@@ -107,7 +109,7 @@ export default function MinistroDashboard() {
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Consola de Supervisión Ministerial</span>
                         </div>
                         <h1 className="text-4xl font-black tracking-tighter uppercase italic text-foreground">
-                            Paz de Cristo, <span className="text-primary not-italic">Hno. {currentUser.name.split(' ')[0] || 'Ministro'}</span>
+                            Paz de Cristo, <span className="text-primary not-italic">{currentUser.role === 'Administrador' ? 'Administrador' : 'Hno.'} {currentUser.name.split(' ')[0] || 'Ministro'}</span>
                         </h1>
                         <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest mt-1">
                             Liderazgo Espiritual - Rodeo, CA
@@ -306,14 +308,23 @@ export default function MinistroDashboard() {
                             </CardHeader>
                             <CardContent>
                                 <div className="space-y-4">
-                                    <div className="p-4 rounded-2xl bg-foreground/5 border border-white/5 flex flex-col gap-2">
-                                        <p className="text-xs text-slate-300 italic">"Petición de oración para el pequeño hermano Samuelito por salud..."</p>
-                                        <div className="flex justify-between items-center mt-2">
-                                            <span className="text-[10px] font-black uppercase text-primary">Hna. Martha G.</span>
-                                            <span className="text-[9px] text-slate-600 font-bold uppercase">Hace 2 horas</span>
+                                    {messages.length > 0 ? (
+                                        <div className="p-4 rounded-2xl bg-foreground/5 border border-white/5 flex flex-col gap-2">
+                                            <p className="text-xs text-slate-300 italic">"{messages[0].content.substring(0, 100)}..."</p>
+                                            <div className="flex justify-between items-center mt-2">
+                                                <span className="text-[10px] font-black uppercase text-primary">{messages[0].senderName || 'Anónimo'}</span>
+                                                <span className="text-[9px] text-slate-600 font-bold uppercase">Recent</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button className="w-full py-3 rounded-2xl bg-primary text-black text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">
+                                    ) : (
+                                        <div className="p-4 rounded-2xl bg-foreground/5 border border-white/5 flex flex-col gap-2">
+                                            <p className="text-xs text-slate-500 italic">No hay mensajes recientes.</p>
+                                        </div>
+                                    )}
+                                    <button
+                                        onClick={() => router.push('/admin#mensajes')}
+                                        className="w-full py-3 rounded-2xl bg-primary text-black text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all"
+                                    >
                                         Ver Todos los Mensajes
                                     </button>
                                 </div>

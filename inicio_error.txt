@@ -1796,3 +1796,4 @@ Import traces:
  GET / 200 in 3.7s (compile: 1713ms, render: 2.0s)
 ✓ Compiled in 510ms
 ✓ Finished filesystem cache database compaction in 12.4s
+✓ Finished filesystem cache database compaction in 12.7s

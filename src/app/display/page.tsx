@@ -217,43 +217,44 @@ export default function DisplayPage() {
                         if (isIglesia) {
                             const speed = (settings.iglesiaAnimationSpeed || 2.4) as number;
                             const animationType = settings.iglesiaAnimation || 'metro';
+                            const isLowPerf = settings.lowPerformanceMode;
 
                             if (animationType === 'metro') {
                                 // Right to Left flow like a train line
                                 variants = {
                                     initial: {
                                         opacity: 0,
-                                        x: '100%',
-                                        filter: 'blur(20px)',
-                                        scale: 1.05
+                                        x: (isLowPerf ? '20%' : '100%'),
+                                        filter: isLowPerf ? 'none' : 'blur(20px)',
+                                        scale: isLowPerf ? 1 : 1.05
                                     },
                                     animate: {
                                         opacity: 1,
                                         x: 0,
-                                        filter: 'blur(0px)',
+                                        filter: isLowPerf ? 'none' : 'blur(0px)',
                                         scale: 1
                                     },
                                     exit: {
                                         opacity: 0,
-                                        x: '-100%',
-                                        filter: 'blur(20px)',
-                                        scale: 0.95
+                                        x: (isLowPerf ? '-20%' : '-100%'),
+                                        filter: isLowPerf ? 'none' : 'blur(20px)',
+                                        scale: isLowPerf ? 1 : 0.95
                                     }
                                 } as any;
                                 transition = {
-                                    duration: speed,
-                                    ease: [0.16, 1, 0.3, 1],
+                                    duration: isLowPerf ? speed * 0.5 : speed,
+                                    ease: isLowPerf ? 'easeInOut' : [0.16, 1, 0.3, 1],
                                     opacity: { duration: speed * 0.5 }
                                 } as any;
                             } else if (animationType === 'breathing') {
                                 // Subtle scale pulse with fade
                                 variants = {
-                                    initial: { opacity: 0, scale: 1.1, filter: 'blur(10px)' },
-                                    animate: { opacity: 1, scale: 1, filter: 'blur(0px)' },
-                                    exit: { opacity: 0, scale: 0.9, filter: 'blur(10px)' }
+                                    initial: { opacity: 0, scale: isLowPerf ? 1 : 1.1, filter: isLowPerf ? 'none' : 'blur(10px)' },
+                                    animate: { opacity: 1, scale: 1, filter: isLowPerf ? 'none' : 'blur(0px)' },
+                                    exit: { opacity: 0, scale: isLowPerf ? 1 : 0.9, filter: isLowPerf ? 'none' : 'blur(10px)' }
                                 } as any;
                                 transition = {
-                                    duration: speed,
+                                    duration: isLowPerf ? speed * 0.5 : speed,
                                     ease: 'easeInOut',
                                     opacity: { duration: speed * 0.75 }
                                 } as any;
@@ -265,7 +266,7 @@ export default function DisplayPage() {
                                     exit: { opacity: 0 }
                                 } as any;
                                 transition = {
-                                    duration: speed,
+                                    duration: isLowPerf ? speed * 0.5 : speed,
                                     ease: 'linear',
                                     opacity: { duration: speed }
                                 } as any;

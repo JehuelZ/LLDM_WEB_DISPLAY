@@ -128,31 +128,31 @@ export default function CalendarPage() {
 
                 {/* Navigation & Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
-                    <div className="space-y-2">
-                        <Link href="/" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-xs font-black uppercase tracking-widest transition-colors mb-2">
+                    <div className="space-y-1 md:space-y-2 w-full md:w-auto text-center md:text-left">
+                        <Link href="/" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors mb-2">
                             <ArrowLeft className="w-3 h-3" /> Volver al Inicio
                         </Link>
-                        <h1 className="text-5xl font-black tracking-tighter text-foreground uppercase italic flex items-center gap-4">
-                            <CalendarIcon className="w-12 h-12 text-primary" />
-                            Calendario <span className="text-primary">Especial</span>
+                        <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4">
+                            <CalendarIcon className="w-10 h-10 md:w-12 md:h-12 text-primary" />
+                            Calendario <span className="text-primary lg:not-italic">Especial</span>
                         </h1>
-                        <p className="text-slate-500 font-medium tracking-tight">Programación de servicios, oraciones y temas semanales</p>
+                        <p className="text-slate-500 font-medium tracking-tight text-xs md:text-base">Servicios, oraciones y temas semanales</p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                         <Button
                             onClick={handlePrint}
-                            className="bg-foreground/5 border border-border/40 bg-foreground/10 text-foreground font-black uppercase tracking-widest text-[10px] h-12 px-6 rounded-2xl gap-2"
+                            className="w-full sm:w-auto bg-foreground/5 border border-border/40 bg-foreground/10 text-foreground font-black uppercase tracking-widest text-[10px] h-12 px-6 rounded-2xl gap-2 order-2 sm:order-1"
                         >
-                            <Printer className="w-4 h-4 text-primary" /> Imprimir / PDF Horizontal
+                            <Printer className="w-4 h-4 text-primary" /> Imprimir / PDF
                         </Button>
 
-                        <div className="flex items-center gap-4 bg-foreground/5 p-2 rounded-2xl border border-border/20 backdrop-blur-xl">
-                            <Button variant="ghost" size="icon" className="rounded-xl bg-foreground/10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() - 1))}>
+                        <div className="flex items-center justify-between sm:justify-center gap-4 bg-foreground/5 p-2 rounded-2xl border border-border/20 backdrop-blur-xl w-full sm:w-auto order-1 sm:order-2">
+                            <Button variant="ghost" size="icon" className="rounded-xl bg-foreground/10 h-10 w-10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() - 1))}>
                                 <ChevronLeft className="w-5 h-5 text-slate-400" />
                             </Button>
-                            <h2 className="text-lg font-black uppercase italic text-foreground min-w-[140px] text-center">{monthName} {year}</h2>
-                            <Button variant="ghost" size="icon" className="rounded-xl bg-foreground/10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() + 1))}>
+                            <h2 className="text-base md:text-lg font-black uppercase italic text-foreground min-w-[120px] text-center">{monthName} {year}</h2>
+                            <Button variant="ghost" size="icon" className="rounded-xl bg-foreground/10 h-10 w-10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() + 1))}>
                                 <ChevronRight className="w-5 h-5 text-slate-400" />
                             </Button>
                         </div>
@@ -164,60 +164,64 @@ export default function CalendarPage() {
                     {/* Calendar Grid */}
                     <div className="lg:col-span-3">
                         <Card className="glass-card border-none bg-foreground/5 overflow-hidden">
-                            <div className="grid grid-cols-7 border-b border-border/20 bg-white/[0.02] calendar-grid-header">
-                                {['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'].map((day, i) => (
-                                    <div key={day} className={cn(
-                                        "py-4 text-center text-[10px] font-black uppercase tracking-[0.2em]",
-                                        i === 0 ? "text-rose-500" : "text-slate-500"
-                                    )}>
-                                        {day}
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="grid grid-cols-7 calendar-grid-days">
-                                {blanks.map(i => (
-                                    <div key={`blank-${i}`} className="h-28 border-b border-r border-border/20 bg-black/10" />
-                                ))}
-                                {days.map(day => {
-                                    const dateStr = `${year}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                                    const event = monthlySchedule[dateStr];
-                                    const isToday = day === new Date().getDate() && currentDate.getMonth() === new Date().getMonth();
-
-                                    return (
-                                        <div key={day} className={cn(
-                                            "h-28 border-b border-r border-border/20 p-2 transition-all duration-300 group hover:bg-white/[0.02] relative",
-                                            isToday && "bg-primary/[0.03]"
-                                        )}>
-                                            <div className="flex justify-between items-start">
-                                                <span className={cn(
-                                                    "text-sm font-black italic",
-                                                    isToday ? "text-primary scale-125" : "text-slate-600 group-hover:text-slate-400"
-                                                )}>{day}</span>
-                                                {isToday && <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse no-print" />}
+                            <div className="overflow-x-auto no-scrollbar scroll-smooth">
+                                <div className="min-w-[700px] md:min-w-0">
+                                    <div className="grid grid-cols-7 border-b border-border/20 bg-white/[0.02] calendar-grid-header">
+                                        {['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'].map((day, i) => (
+                                            <div key={day} className={cn(
+                                                "py-4 text-center text-[10px] font-black uppercase tracking-[0.2em]",
+                                                i === 0 ? "text-rose-500" : "text-slate-500"
+                                            )}>
+                                                {day}
                                             </div>
+                                        ))}
+                                    </div>
+                                    <div className="grid grid-cols-7 calendar-grid-days">
+                                        {blanks.map(i => (
+                                            <div key={`blank-${i}`} className="h-28 border-b border-r border-border/20 bg-black/10" />
+                                        ))}
+                                        {days.map(day => {
+                                            const dateStr = `${year}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                                            const event = monthlySchedule[dateStr];
+                                            const isToday = day === new Date().getDate() && currentDate.getMonth() === new Date().getMonth();
 
-                                            {event && (
-                                                <div className="mt-2 space-y-1">
-                                                    {event.slots['5am'].leaderId && (
-                                                        <div className="p-1 rounded bg-blue-500/10 text-blue-400 text-[7px] font-black uppercase truncate">
-                                                            5AM: {event.slots['5am'].leaderId.split(' ')[0]}
-                                                        </div>
-                                                    )}
-                                                    {event.slots['9am'].doctrineLeaderId && (
-                                                        <div className="p-1 rounded bg-amber-500/10 text-amber-400 text-[7px] font-black uppercase truncate">
-                                                            9AM: {event.slots['9am'].doctrineLeaderId.split(' ')[0]}
-                                                        </div>
-                                                    )}
-                                                    {event.slots.evening.leaderIds.length > 0 && (
-                                                        <div className="p-1 rounded bg-purple-500/10 text-purple-400 text-[7px] font-black uppercase truncate">
-                                                            {event.slots.evening.time}: {event.slots.evening.leaderIds[0].split(' ')[0]}
+                                            return (
+                                                <div key={day} className={cn(
+                                                    "h-28 border-b border-r border-border/20 p-2 transition-all duration-300 group hover:bg-white/[0.02] relative",
+                                                    isToday && "bg-primary/[0.03]"
+                                                )}>
+                                                    <div className="flex justify-between items-start">
+                                                        <span className={cn(
+                                                            "text-sm font-black italic",
+                                                            isToday ? "text-primary scale-125" : "text-slate-600 group-hover:text-slate-400"
+                                                        )}>{day}</span>
+                                                        {isToday && <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse no-print" />}
+                                                    </div>
+
+                                                    {event && (
+                                                        <div className="mt-2 space-y-1">
+                                                            {event.slots['5am'].leaderId && (
+                                                                <div className="p-1 rounded bg-blue-500/10 text-blue-400 text-[7px] font-black uppercase truncate">
+                                                                    5AM: {event.slots['5am'].leaderId.split(' ')[0]}
+                                                                </div>
+                                                            )}
+                                                            {event.slots['9am'].doctrineLeaderId && (
+                                                                <div className="p-1 rounded bg-amber-500/10 text-amber-400 text-[7px] font-black uppercase truncate">
+                                                                    9AM: {event.slots['9am'].doctrineLeaderId.split(' ')[0]}
+                                                                </div>
+                                                            )}
+                                                            {event.slots.evening.leaderIds.length > 0 && (
+                                                                <div className="p-1 rounded bg-purple-500/10 text-purple-400 text-[7px] font-black uppercase truncate">
+                                                                    {event.slots.evening.time}: {event.slots.evening.leaderIds[0].split(' ')[0]}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     )}
                                                 </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                                            );
+                                        })}
+                                    </div>
+                                </div>
                             </div>
                         </Card>
                     </div>
