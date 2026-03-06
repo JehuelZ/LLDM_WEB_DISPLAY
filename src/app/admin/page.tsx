@@ -721,7 +721,7 @@ export default function AdminDashboard() {
                                 <Languages className="w-3.5 h-3.5 text-primary/70" />
                                 <select
                                     value={settings.language}
-                                    onChange={(e) => setSettings({ language: e.target.value as any })}
+                                    onChange={(e) => saveSettingsToCloud({ language: e.target.value as any })}
                                     className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-muted-foreground appearance-none cursor-pointer outline-none hover:text-primary transition-colors"
                                 >
                                     <option value="es" className="bg-background">ES</option>
@@ -743,7 +743,7 @@ export default function AdminDashboard() {
                             </div>
                             <div className="w-px h-4 bg-border/20" />
                             <button
-                                onClick={() => setSettings({ adminTheme: 'tactile' })}
+                                onClick={() => saveSettingsToCloud({ adminTheme: 'tactile' })}
                                 className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors pr-2"
                             >
                                 <Sparkles className="w-3.5 h-3.5" />

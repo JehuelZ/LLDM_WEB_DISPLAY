@@ -264,7 +264,7 @@ export default function TactileAdmin() {
                                 PROYECTAR
                             </button>
                             <button
-                                onClick={() => setSettings({ adminTheme: 'classic' })}
+                                onClick={() => saveSettingsToCloud({ adminTheme: 'classic' })}
                                 className="tactile-btn tactile-btn-glass text-[10px]"
                             >
                                 <Monitor className="w-3.5 h-3.5" /> Classic UI
@@ -947,7 +947,7 @@ export default function TactileAdmin() {
                                                 <TactileSelect
                                                     label="MODO DE INTERFAZ"
                                                     value={settings.themeMode}
-                                                    onChange={(val: any) => setSettings({ themeMode: val })}
+                                                    onChange={(val: any) => saveSettingsToCloud({ themeMode: val })}
                                                     options={[
                                                         { value: 'light', label: 'Modo Claro' },
                                                         { value: 'dark', label: 'Modo Oscuro' },
@@ -962,7 +962,7 @@ export default function TactileAdmin() {
                                                         {['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'].map(color => (
                                                             <button
                                                                 key={color}
-                                                                onClick={() => setSettings({ primaryColor: color })}
+                                                                onClick={() => saveSettingsToCloud({ primaryColor: color })}
                                                                 className={cn(
                                                                     "aspect-square rounded-2xl border-4 transition-all scale-90 hover:scale-100 shadow-lg",
                                                                     settings.primaryColor === color ? "border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-100" : "border-transparent"
@@ -976,7 +976,7 @@ export default function TactileAdmin() {
                                                 <TactileSelect
                                                     label="ICONO DE IDENTIDAD"
                                                     value={settings.churchIcon}
-                                                    onChange={(val: any) => setSettings({ churchIcon: val })}
+                                                    onChange={(val: any) => saveSettingsToCloud({ churchIcon: val })}
                                                     options={[
                                                         { value: 'shield', label: 'Escudo' },
                                                         { value: 'church', label: 'Iglesia' },
