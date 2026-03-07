@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export function LoginScreen() {
-    const { signInWithGoogle } = useAppStore();
+    const { signInWithGoogle, signInWithEmail } = useAppStore();
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#020617] font-sora">
@@ -135,6 +135,51 @@ export function LoginScreen() {
                             <ArrowRight className="w-4 h-4 text-slate-900 group-hover:text-white transition-colors" />
                         </div>
                     </motion.button>
+
+                    <div className="my-8 flex items-center gap-4">
+                        <div className="h-px flex-1 bg-white/10" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">O con credenciales</span>
+                        <div className="h-px flex-1 bg-white/10" />
+                    </div>
+
+                    {/* Email/Password Form */}
+                    <div className="space-y-4">
+                        <div className="relative">
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                            <input
+                                type="email"
+                                id="login-email"
+                                placeholder="Correo institucional"
+                                className="w-full h-14 pl-12 pr-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all font-medium text-sm"
+                            />
+                        </div>
+                        <div className="relative">
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                            <input
+                                type="password"
+                                id="login-password"
+                                placeholder="Contraseña provicional"
+                                className="w-full h-14 pl-12 pr-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all font-medium text-sm"
+                            />
+                        </div>
+                        <Button
+                            onClick={async () => {
+                                const email = (document.getElementById('login-email') as HTMLInputElement).value;
+                                const password = (document.getElementById('login-password') as HTMLInputElement).value;
+                                if (!email || !password) {
+                                    alert('Por favor ingresa correo y contraseña');
+                                    return;
+                                }
+                                const { success, error } = await signInWithEmail(email, password);
+                                if (!success) {
+                                    alert('Error: ' + error);
+                                }
+                            }}
+                            className="w-full h-14 rounded-xl bg-amber-400 text-slate-950 font-black uppercase tracking-[0.2em] text-[10px] hover:bg-amber-300 transition-all shadow-lg shadow-amber-400/10"
+                        >
+                            Ingresar al Sistema
+                        </Button>
+                    </div>
 
                     {/* Footer Info */}
                     <div className="mt-12 pt-8 border-t border-white/5 grid grid-cols-2 gap-4 text-[9px] font-black uppercase tracking-widest text-slate-500">

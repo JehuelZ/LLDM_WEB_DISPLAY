@@ -219,6 +219,7 @@ interface AppState {
 
     // Messaging & Auth Actions
     signInWithGoogle: () => Promise<void>;
+    signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
     signOut: () => Promise<void>;
     sendCloudMessage: (msg: Partial<Message>) => Promise<void>;
     loadCloudMessages: () => Promise<void>;
@@ -1126,6 +1127,21 @@ export const useAppStore = create<AppState>()(
                     }
                 });
                 if (error) console.error("Error signing in with Google:", error);
+            },
+
+            signInWithEmail: async (email, password) => {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) {
+                    console.error("Error signing in with email:", error);
+                    return { success: false, error: error.message };
+                }
+
+                // State will be updated by handleAuthStateChange in app layout
+                return { success: true, error: null };
             },
 
             signOut: async () => {
