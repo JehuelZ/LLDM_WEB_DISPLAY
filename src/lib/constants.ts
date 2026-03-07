@@ -162,7 +162,7 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Varon',
         gender: 'Varon',
         privileges: ['youth_leader'],
-        avatar: 'https://ui-avatars.com/api/?name=Abraham+Diaz&background=0D8ABC&color=fff'
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop'
     },
     {
         id: 'rebeca-test',
@@ -172,7 +172,7 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Hermana',
         gender: 'Hermana',
         privileges: ['youth_leader'],
-        avatar: 'https://ui-avatars.com/api/?name=Rebeca&background=D80DAB&color=fff'
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'
     },
     {
         id: 'keren-test',
@@ -182,7 +182,7 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Hermana',
         gender: 'Hermana',
         privileges: ['monitor'],
-        avatar: 'https://ui-avatars.com/api/?name=Keren&background=0DAB8A&color=fff'
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop'
     },
     {
         id: 'lucia-test',
@@ -192,7 +192,7 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Hermana',
         gender: 'Hermana',
         privileges: ['admin'],
-        avatar: 'https://ui-avatars.com/api/?name=Lucia+Zelaya&background=AB0D0D&color=fff'
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop'
     },
     {
         id: 'judith-test',
@@ -202,7 +202,7 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Hermana',
         gender: 'Hermana',
         privileges: ['choir'],
-        avatar: 'https://ui-avatars.com/api/?name=Judith&background=8A0DAB&color=fff'
+        avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop'
     },
     {
         id: 'amisadai-test',
@@ -212,7 +212,7 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Hermana',
         gender: 'Hermana',
         privileges: ['kids_leader'],
-        avatar: 'https://ui-avatars.com/api/?name=Amisadai+Alvarado&background=ABD80D&color=fff'
+        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop'
     },
     {
         id: 'silvia-test',
@@ -222,7 +222,17 @@ export const MOCK_MEMBERS: any[] = [
         category: 'Hermana',
         gender: 'Hermana',
         privileges: ['choir'],
-        avatar: 'https://ui-avatars.com/api/?name=Silvia+Marrufo&background=0DABD8&color=fff'
+        avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop'
+    },
+    {
+        id: 'minister-test',
+        name: 'Ministro Eliab',
+        email: 'minister_test@lldmrodeo.org',
+        role: 'Ministro a Cargo',
+        category: 'Varon',
+        gender: 'Varon',
+        privileges: ['admin'],
+        avatar: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=400&h=400&fit=crop'
     },
     {
         id: 'test-miembro',
@@ -233,5 +243,15 @@ export const MOCK_MEMBERS: any[] = [
         gender: 'Varon',
         privileges: [],
         avatar: 'https://ui-avatars.com/api/?name=Miembro+Prueba&background=random'
+    },
+    {
+        id: 'coro-member-test',
+        name: 'Cantor Regular',
+        email: 'coro_test@lldmrodeo.org',
+        role: 'Coro',
+        category: 'Varon',
+        gender: 'Varon',
+        privileges: ['choir'],
+        avatar: 'https://ui-avatars.com/api/?name=Cantor+Regular&background=10b981&color=fff'
     }
 ];
