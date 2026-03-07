@@ -200,12 +200,14 @@ export default function AttendanceDashboard() {
 
     const availableSessions = useMemo(() => {
         const d = new Date(selectedDate + 'T12:00:00');
-        const isSunday = d.getDay() === 0;
+        const dayOfWeek = d.getDay(); // 0 = Domingo, 4 = Jueves
+        const isSunday = dayOfWeek === 0;
+        const isThursday = dayOfWeek === 4;
 
         return [
             { id: '5am', label: '5:00 AM' },
             { id: '9am', label: isSunday ? 'Dominical' : '9:00 AM' },
-            { id: 'evening', label: isSunday ? '6:00 PM' : '7:00 PM' }
+            { id: 'evening', label: isSunday ? '6:00 PM' : (isThursday ? '6:30 PM' : '7:00 PM') }
         ];
     }, [selectedDate]);
 
