@@ -11,7 +11,8 @@ import {
     Bell,
     ChevronDown,
     Activity,
-    Edit2
+    Edit2,
+    Users
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
@@ -54,6 +55,41 @@ export function UserMenu() {
             href: '/dashboard',
             description: 'Estadísticas y reportes'
         }
+    ];
+
+    const privilegeItems = [
+        ...(currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia' || currentUser.privileges?.includes('monitor') || currentUser.privileges?.includes('admin') ? [{
+            label: 'Pasar Asistencia',
+            icon: LayoutDashboard,
+            href: '/dashboard/monitor',
+            description: 'Control de ingreso oficial',
+            color: 'text-emerald-500',
+            bgColor: 'bg-emerald-500/10'
+        }] : []),
+        ...(currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges?.includes('choir') || currentUser.privileges?.includes('admin') ? [{
+            label: 'Gestión de Coro',
+            icon: Settings,
+            href: '/dashboard/coro',
+            description: 'Ensayos y uniformes',
+            color: 'text-secondary',
+            bgColor: 'bg-secondary/10'
+        }] : []),
+        ...(currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.privileges?.includes('admin') ? [{
+            label: 'Panel de Ministro',
+            icon: Shield,
+            href: '/dashboard/ministro',
+            description: 'Visión general de la iglesia',
+            color: 'text-primary',
+            bgColor: 'bg-primary/10'
+        }] : []),
+        ...(currentUser.role === 'Administrador' || currentUser.role === 'Encargado de Jóvenes' || currentUser.privileges?.includes('youth_leader') || currentUser.privileges?.includes('admin') ? [{
+            label: 'Gestión de Jóvenes',
+            icon: Users,
+            href: '/dashboard/youth',
+            description: 'Supervisión juvenil',
+            color: 'text-indigo-400',
+            bgColor: 'bg-indigo-400/10'
+        }] : [])
     ];
 
     const adminItems = [
@@ -118,7 +154,7 @@ export function UserMenu() {
                         </div>
 
                         {/* Menu Items */}
-                        <div className="p-2">
+                        <div className="p-2 space-y-1">
                             {menuItems.map((item, idx) => (
                                 <Link
                                     key={idx}
@@ -136,6 +172,31 @@ export function UserMenu() {
                                 </Link>
                             ))}
                         </div>
+
+                        {/* Privilege Items */}
+                        {privilegeItems.length > 0 && (
+                            <div className="p-2 border-t border-border/10">
+                                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-3 mb-2 mt-1">Acciones por Privilegio</p>
+                                <div className="space-y-1">
+                                    {privilegeItems.map((item, idx) => (
+                                        <Link
+                                            key={idx}
+                                            href={item.href}
+                                            onClick={() => setIsOpen(false)}
+                                            className="flex items-center gap-3 p-3 rounded-2xl hover:bg-foreground/5 transition-all group"
+                                        >
+                                            <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center border border-border/10 group-hover:scale-110 transition-all", item.bgColor)}>
+                                                <item.icon className={cn("w-4 h-4 transition-colors", item.color)} />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs font-black text-foreground uppercase italic tracking-tight">{item.label}</p>
+                                                <p className="text-[9px] text-muted-foreground font-medium tracking-tight">{item.description}</p>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Admin Section */}
                         {currentUser.role === 'Administrador' && (

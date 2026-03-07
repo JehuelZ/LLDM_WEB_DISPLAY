@@ -102,7 +102,8 @@ export default function TactileAdmin() {
         saveUniformToCloud, deleteUniformFromCloud,
         saveUniformForDateToCloud, rehearsals,
         loadRehearsalsFromCloud, saveRehearsalToCloud, deleteRehearsalFromCloud,
-        minister, setMinister, signOut
+        minister, setMinister, signOut,
+        createTestAccounts, simulateUser
     } = useAppStore()
 
     const currentDaySchedule = monthlySchedule[currentDate] || {
@@ -930,13 +931,18 @@ export default function TactileAdmin() {
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <h4 className="font-black text-base truncate italic">{member.name}</h4>
-                                                        <div className="flex items-center gap-2 mt-1">
+                                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-tactile-text-sub">
                                                                 {member.role}
                                                             </span>
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                                                                 {member.member_group}
                                                             </span>
+                                                            {(member.privileges || []).map((p: string) => (
+                                                                <span key={p} className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border border-orange-500/30 text-orange-500/70">
+                                                                    {p}
+                                                                </span>
+                                                            ))}
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1261,6 +1267,75 @@ export default function TactileAdmin() {
                                                         </div>
                                                     </div>
                                                     <p className="text-[8px] font-bold text-tactile-text-sub/50 uppercase tracking-widest mt-4">Los administradores siempre tienen acceso.</p>
+                                                </div>
+                                            </div>
+                                        </TactileGlassCard>
+
+                                        <TactileGlassCard title="ENTORNO DE PRUEBAS">
+                                            <div className="space-y-4">
+                                                <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl">
+                                                    <p className="text-[10px] font-bold text-orange-200 uppercase leading-relaxed">
+                                                        PARA VERIFICAR LOS ROLES, PUEDE CREAR CUENTAS DE PRUEBA CON EMAILS PREDEFINIDOS.
+                                                    </p>
+                                                </div>
+                                                <button
+                                                    onClick={async () => {
+                                                        if (confirm('¿Crear cuentas de prueba para cada rol ministerial?')) {
+                                                            await createTestAccounts();
+                                                        }
+                                                    }}
+                                                    className="tactile-btn tactile-btn-glass w-full h-12 justify-center gap-3 font-black uppercase tracking-widest"
+                                                >
+                                                    <UserPlus className="w-4 h-4 text-primary" /> GENERAR CUENTAS DE TEST
+                                                </button>
+
+                                                <div className="mt-8 space-y-4">
+                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-tactile-text-sub ml-2">SIMULADOR DE ROLES</h4>
+                                                    <div className="overflow-hidden rounded-2xl border border-white/5">
+                                                        <table className="w-full text-left text-[10px] border-collapse">
+                                                            <thead className="bg-white/5 uppercase tracking-widest font-black text-tactile-text-sub">
+                                                                <tr>
+                                                                    <th className="px-4 py-3">ROL</th>
+                                                                    <th className="px-4 py-3">EMAIL</th>
+                                                                    <th className="px-4 py-3 text-right">ACCESOS</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody className="divide-y divide-white/5 bg-black/20">
+                                                                {[
+                                                                    { role: 'Ministro', email: 'ministro_test@lldmrodeo.org', icon: Shield },
+                                                                    { role: 'Asistencia', email: 'asistencia_test@lldmrodeo.org', icon: CheckCircle2 },
+                                                                    { role: 'Coro', email: 'coro_test@lldmrodeo.org', icon: Music2 },
+                                                                    { role: 'Jóvenes', email: 'jovenes_test@lldmrodeo.org', icon: Star },
+                                                                    { role: 'Miembro', email: 'miembro_test@lldmrodeo.org', icon: User },
+                                                                ].map((testUser) => (
+                                                                    <tr key={testUser.email} className="group hover:bg-white/5 transition-colors">
+                                                                        <td className="px-4 py-3 font-black italic uppercase flex items-center gap-2">
+                                                                            <testUser.icon className="w-3 h-3 text-primary" />
+                                                                            {testUser.role}
+                                                                        </td>
+                                                                        <td className="px-4 py-3 font-medium opacity-60 lowercase">{testUser.email}</td>
+                                                                        <td className="px-4 py-3 text-right">
+                                                                            <button
+                                                                                onClick={async () => {
+                                                                                    const success = await simulateUser(testUser.email);
+                                                                                    if (success) {
+                                                                                        alert(`Simulando sesión como: ${testUser.role}`);
+                                                                                        window.location.href = '/dashboard';
+                                                                                    } else {
+                                                                                        alert('La cuenta aún no existe. Pulsa "GENERAR CUENTAS" primero.');
+                                                                                    }
+                                                                                }}
+                                                                                className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1 rounded-full font-black uppercase tracking-tighter transition-all"
+                                                                            >
+                                                                                ENTRAR
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <p className="text-[8px] font-bold text-tactile-text-sub/40 uppercase tracking-widest text-center">Esto solo simula la sesión localmente para pruebas rápidas.</p>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -1752,7 +1827,23 @@ export default function TactileAdmin() {
                                             <TactileSelect
                                                 label="ROL EN EL SISTEMA"
                                                 value={newMemberData.role || 'Miembro'}
-                                                onChange={(val: any) => setNewMemberData({ ...newMemberData, role: val })}
+                                                onChange={(val: any) => {
+                                                    // Auto-assign logical privileges when role changes
+                                                    const newPrivileges = [...(newMemberData.privileges || [])];
+                                                    if (val === 'Responsable de Asistencia' && !newPrivileges.includes('monitor')) {
+                                                        newPrivileges.push('monitor');
+                                                    }
+                                                    if (val === 'Dirigente Coro Adultos' && !newPrivileges.includes('choir')) {
+                                                        newPrivileges.push('choir');
+                                                    }
+                                                    if (val === 'Administrador' && !newPrivileges.includes('admin')) {
+                                                        newPrivileges.push('admin');
+                                                    }
+                                                    if (val === 'Encargado de Jóvenes' && !newPrivileges.includes('youth_leader')) {
+                                                        newPrivileges.push('youth_leader');
+                                                    }
+                                                    setNewMemberData({ ...newMemberData, role: val, privileges: [...new Set(newPrivileges)] as any });
+                                                }}
                                                 options={[
                                                     { value: 'Miembro', label: 'Miembro' },
                                                     { value: 'Administrador', label: 'Administrador' },
@@ -1760,9 +1851,42 @@ export default function TactileAdmin() {
                                                     { value: 'Dirigente Coro Adultos', label: 'Dirigente Coro Adultos' },
                                                     { value: 'Dirigente Coro Niños', label: 'Dirigente Coro Niños' },
                                                     { value: 'Responsable de Asistencia', label: 'Responsable de Asistencia' },
+                                                    { value: 'Encargado de Jóvenes', label: 'Encargado de Jóvenes' },
                                                 ]}
                                                 icon={Shield}
                                             />
+                                            <div className="col-span-2 space-y-4">
+                                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">PRIVILEGIOS / ACCESOS</label>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {[
+                                                        { id: 'admin', label: 'Administrador' },
+                                                        { id: 'monitor', label: 'Pase de Lista' },
+                                                        { id: 'leader', label: 'Director' },
+                                                        { id: 'choir', label: 'Gestión Coro' },
+                                                        { id: 'kids_leader', label: 'Esc. Dominical' },
+                                                        { id: 'youth_leader', label: 'Líder Juvenil' }
+                                                    ].map(priv => (
+                                                        <button
+                                                            key={priv.id}
+                                                            onClick={() => {
+                                                                const current = newMemberData.privileges || [];
+                                                                const next = current.includes(priv.id as any)
+                                                                    ? current.filter((p: string) => p !== priv.id)
+                                                                    : [...current, priv.id];
+                                                                setNewMemberData({ ...newMemberData, privileges: next as any });
+                                                            }}
+                                                            className={cn(
+                                                                "px-4 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                                                                (newMemberData.privileges || []).includes(priv.id as any)
+                                                                    ? "bg-primary/20 border-primary/40 text-primary"
+                                                                    : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
+                                                            )}
+                                                        >
+                                                            {priv.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div className="p-8 border-t border-white/5 flex gap-4">
@@ -1795,7 +1919,7 @@ export default function TactileAdmin() {
                                                             gender: newMemberData.gender || 'Varon',
                                                             category: newMemberData.category || 'Varon',
                                                             member_group: newMemberData.member_group,
-                                                            privileges: newMemberData.privileges,
+                                                            privileges: newMemberData.privileges as any,
                                                             avatar: newMemberData.avatar
                                                         });
                                                     }

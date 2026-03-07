@@ -74,7 +74,7 @@ export interface UserProfile {
     avatar: string;
     category: 'Varon' | 'Hermana' | 'Niño';
     member_group?: 'Casados' | 'Casadas' | 'Solos y Solas' | 'Jovenes' | 'Niños' | 'Niñas' | 'Administración';
-    role: 'Miembro' | 'Administrador' | 'Ministro a Cargo' | 'Dirigente Coro Adultos' | 'Dirigente Coro Niños' | 'Responsable de Asistencia';
+    role: 'Miembro' | 'Administrador' | 'Ministro a Cargo' | 'Dirigente Coro Adultos' | 'Dirigente Coro Niños' | 'Responsable de Asistencia' | 'Encargado de Jóvenes';
     gender: 'Varon' | 'Hermana';
     status: 'Activo' | 'Inactivo';
     lastActive: string;
@@ -86,7 +86,7 @@ export interface UserProfile {
     medals?: number;
     nextPrivilege?: string;
     parentName?: string;
-    privileges: ('monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper')[];
+    privileges: ('admin' | 'monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper' | 'youth_leader')[];
     is_pre_registered?: boolean;
 }
 
@@ -226,6 +226,8 @@ interface AppState {
     subscribeToMessages: () => () => void;
     subscribeToSettings: () => () => void;
     setAuthSession: (session: any) => void;
+    createTestAccounts: () => Promise<void>;
+    simulateUser: (email: string) => Promise<boolean>;
 }
 
 const INITIAL_USER: UserProfile = {
@@ -321,7 +323,23 @@ export const useAppStore = create<AppState>()(
                 { id: 'r1', dayOfWeek: 2, time: '07:00 PM', location: 'Salón de Actos', notes: 'Repaso general' },
                 { id: 'r2', dayOfWeek: 5, time: '06:00 PM', location: 'Templo', notes: 'Consagración y repaso' }
             ],
-            members: MOCK_MEMBERS,
+            members: [
+                ...MOCK_MEMBERS,
+                {
+                    id: 'keren-hernandez',
+                    name: 'Keren Hernandez',
+                    email: 'keren@lldmrodeo.org',
+                    phone: '555-0011',
+                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
+                    category: 'Hermana',
+                    role: 'Responsable de Asistencia',
+                    gender: 'Hermana',
+                    status: 'Activo',
+                    lastActive: 'Hoy',
+                    stats: { attendance: { attended: 50, total: 50 }, participation: { led: 20, total: 20 }, punctuality: 100 },
+                    privileges: ['monitor']
+                }
+            ],
             messages: [],
             isLoading: false,
             authSession: null,
@@ -684,17 +702,64 @@ export const useAppStore = create<AppState>()(
                     .single();
 
                 if (existingProfile) {
-                    // Si es el correo del Administrador Maestro, nos aseguramos de que tenga el rol correcto
-                    if (userEmail === MASTER_ADMIN_EMAIL && existingProfile.role !== 'Administrador') {
+                    // Si es el correo del Administrador Maestro, nos aseguramos de que tenga el nombre y rol correcto
+                    if (userEmail === MASTER_ADMIN_EMAIL) {
+                        const JAIRO_NAME = 'Jairo Zelaya';
+                        const JAIRO_AVATAR = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop';
+                        const needsUpdate = existingProfile.role !== 'Administrador' || existingProfile.name !== JAIRO_NAME;
+
+                        if (needsUpdate) {
+                            const { error: updateError } = await supabase
+                                .from('profiles')
+                                .update({
+                                    role: 'Administrador',
+                                    name: JAIRO_NAME,
+                                    avatar_url: existingProfile.avatar_url || JAIRO_AVATAR,
+                                    roles: ['admin', 'leader']
+                                })
+                                .eq('id', existingProfile.id);
+
+                            if (!updateError) {
+                                existingProfile.role = 'Administrador';
+                                existingProfile.name = JAIRO_NAME;
+                                existingProfile.avatar_url = existingProfile.avatar_url || JAIRO_AVATAR;
+                            }
+                        }
+                    }
+
+                    // Asegurar que Keren Hernandez tenga su rol de Responsable de Asistencia
+                    if (userEmail === 'keren@lldmrodeo.org' && (existingProfile.role !== 'Responsable de Asistencia' || !existingProfile.roles?.includes('monitor'))) {
                         const { error: updateError } = await supabase
                             .from('profiles')
-                            .update({ role: 'Administrador', roles: ['admin', 'leader'] })
+                            .update({
+                                role: 'Responsable de Asistencia',
+                                roles: Array.from(new Set([...(existingProfile.roles || []), 'monitor']))
+                            })
                             .eq('id', existingProfile.id);
 
                         if (!updateError) {
-                            existingProfile.role = 'Administrador';
+                            existingProfile.role = 'Responsable de Asistencia';
+                            existingProfile.roles = Array.from(new Set([...(existingProfile.roles || []), 'monitor']));
                         }
-                    }// Cargamos al estado
+                    }
+
+                    // Asegurar roles de Encargados de Jóvenes
+                    const YOUTH_LEADERS = ['abraham@example.com', 'rebeca@example.com'];
+                    if (YOUTH_LEADERS.includes(userEmail || '') && (existingProfile.role !== 'Encargado de Jóvenes' || !existingProfile.roles?.includes('youth_leader'))) {
+                        const { error: updateError } = await supabase
+                            .from('profiles')
+                            .update({
+                                role: 'Encargado de Jóvenes',
+                                roles: Array.from(new Set([...(existingProfile.roles || []), 'youth_leader']))
+                            })
+                            .eq('id', existingProfile.id);
+
+                        if (!updateError) {
+                            existingProfile.role = 'Encargado de Jóvenes';
+                            existingProfile.roles = Array.from(new Set([...(existingProfile.roles || []), 'youth_leader']));
+                        }
+                    }
+
                     set({
                         currentUser: {
                             id: existingProfile.id,
@@ -1372,6 +1437,92 @@ export const useAppStore = create<AppState>()(
             deleteRehearsalFromCloud: async (id) => {
                 await supabase.from('choir_rehearsals').delete().eq('id', id);
                 await get().loadRehearsalsFromCloud();
+            },
+
+            createTestAccounts: async () => {
+                const testAccounts = [
+                    {
+                        name: 'Test Ministro',
+                        email: 'ministro_test@lldmrodeo.org',
+                        role: 'Ministro a Cargo',
+                        category: 'Varon',
+                        gender: 'Varon',
+                        privileges: ['leader'],
+                        stats: { attendance: { attended: 45, total: 50 }, participation: { led: 30, total: 30 }, punctuality: 98 }
+                    },
+                    {
+                        name: 'Test Asistencia',
+                        email: 'asistencia_test@lldmrodeo.org',
+                        role: 'Responsable de Asistencia',
+                        category: 'Hermana',
+                        gender: 'Hermana',
+                        privileges: ['monitor'],
+                        stats: { attendance: { attended: 48, total: 50 }, participation: { led: 20, total: 20 }, punctuality: 100 }
+                    },
+                    {
+                        name: 'Test Coro',
+                        email: 'coro_test@lldmrodeo.org',
+                        role: 'Dirigente Coro Adultos',
+                        category: 'Varon',
+                        gender: 'Varon',
+                        privileges: ['choir'],
+                        stats: { attendance: { attended: 40, total: 50 }, participation: { led: 15, total: 15 }, punctuality: 95 }
+                    },
+                    {
+                        name: 'Test Jóvenes',
+                        email: 'jovenes_test@lldmrodeo.org',
+                        role: 'Encargado de Jóvenes',
+                        category: 'Varon',
+                        gender: 'Varon',
+                        privileges: ['youth_leader'],
+                        stats: { attendance: { attended: 42, total: 50 }, participation: { led: 25, total: 25 }, punctuality: 99 }
+                    },
+                    {
+                        name: 'Test Miembro',
+                        email: 'miembro_test@lldmrodeo.org',
+                        role: 'Miembro',
+                        category: 'Varon',
+                        gender: 'Varon',
+                        privileges: [],
+                        stats: { attendance: { attended: 35, total: 50 }, participation: { led: 5, total: 5 }, punctuality: 90 }
+                    }
+                ];
+
+                let createdCount = 0;
+                for (const account of testAccounts) {
+                    const { data, error: fetchError } = await supabase
+                        .from('profiles')
+                        .select('id')
+                        .eq('email', account.email)
+                        .maybeSingle();
+
+                    if (!data) {
+                        const { error: insertError } = await supabase
+                            .from('profiles')
+                            .insert({
+                                ...account,
+                                id: crypto.randomUUID(),
+                                status: 'Activo',
+                                last_active: new Date().toISOString(),
+                                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(account.name)}&background=random`
+                            });
+
+                        if (!insertError) createdCount++;
+                        else console.error(`Error creating ${account.name}:`, insertError);
+                    }
+                }
+
+                alert(`Se crearon ${createdCount} cuentas de prueba. Las que ya existían no se duplicaron.`);
+                await get().loadMembersFromCloud();
+            },
+
+            simulateUser: async (email: string) => {
+                const member = get().members.find(m => m.email === email);
+                if (member) {
+                    set({ currentUser: member });
+                    return true;
+                }
+                return false;
             },
         }),
         {

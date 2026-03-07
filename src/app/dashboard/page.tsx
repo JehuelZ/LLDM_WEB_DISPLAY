@@ -2,15 +2,28 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, ShieldCheck, ArrowRight } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, ShieldCheck, ArrowRight, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
+import { useAppStore } from '@/lib/store';
 import Link from 'next/link';
 import { CountdownCard } from '@/components/CountdownCard';
 
 export default function DashboardIndex() {
+    const { currentUser } = useAppStore();
+
     const dashboards = [
+        {
+            title: 'Mi Perfil',
+            description: 'Gestiona tu información personal, correo y teléfono.',
+            href: '/dashboard/profile',
+            icon: User,
+            color: 'text-violet-400',
+            bgColor: 'bg-violet-400/10',
+            borderColor: 'border-violet-400/20',
+            show: true
+        },
         {
             title: 'Responsable de Asistencia',
             description: 'Control de ingresos y reportes en tiempo real.',
@@ -18,16 +31,8 @@ export default function DashboardIndex() {
             icon: ClipboardCheck,
             color: 'text-emerald-500',
             bgColor: 'bg-emerald-500/10',
-            borderColor: 'border-emerald-500/20'
-        },
-        {
-            title: 'Corito de Niños',
-            description: 'Vista personalizada para los más pequeños.',
-            href: '/dashboard/ninos',
-            icon: Baby,
-            color: 'text-cyan-400',
-            bgColor: 'bg-cyan-400/10',
-            borderColor: 'border-cyan-400/20'
+            borderColor: 'border-emerald-500/20',
+            show: currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia' || currentUser.privileges?.includes('monitor')
         },
         {
             title: 'Coro Adulto',
@@ -36,18 +41,20 @@ export default function DashboardIndex() {
             icon: Music,
             color: 'text-secondary',
             bgColor: 'bg-secondary/10',
-            borderColor: 'border-secondary/20'
+            borderColor: 'border-secondary/20',
+            show: currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges?.includes('choir')
         },
         {
-            title: 'Panel de Responsables',
-            description: 'Herramientas para encargados de grupo.',
-            href: '/dashboard/responsable',
-            icon: ShieldCheck,
-            color: 'text-primary',
-            bgColor: 'bg-primary/10',
-            borderColor: 'border-primary/20'
+            title: 'Gestión de Jóvenes',
+            description: 'Supervisión de actividades y participación juvenil.',
+            href: '/dashboard/youth',
+            icon: Users,
+            color: 'text-indigo-400',
+            bgColor: 'bg-indigo-400/10',
+            borderColor: 'border-indigo-400/20',
+            show: currentUser.role === 'Administrador' || currentUser.role === 'Encargado de Jóvenes' || currentUser.privileges?.includes('youth_leader')
         }
-    ];
+    ].filter(d => d.show);
 
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">

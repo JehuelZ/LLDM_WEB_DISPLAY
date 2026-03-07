@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     User,
     Mail,
@@ -14,7 +14,13 @@ import {
     Shield,
     Activity,
     Calendar,
-    Star
+    Star,
+    LayoutDashboard,
+    ClipboardCheck,
+    Music,
+    Settings,
+    Edit2,
+    Users
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
@@ -32,14 +38,67 @@ export default function ProfilePage() {
     const [name, setName] = useState(currentUser.name);
     const [phone, setPhone] = useState(currentUser.phone);
     const [category, setCategory] = useState(currentUser.category);
+    const [gender, setGender] = useState(currentUser.gender);
+    const [memberGroup, setMemberGroup] = useState(currentUser.member_group);
     const [isSaving, setIsSaving] = useState(false);
     const [imageToEdit, setImageToEdit] = useState<string | null>(null);
     const [showSuccess, setShowSuccess] = useState(false);
+
+    const roleActions = useMemo(() => {
+        const actions = [];
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia' || currentUser.privileges?.includes('monitor') || currentUser.privileges?.includes('admin')) {
+            actions.push({
+                title: 'Pasar Asistencia',
+                description: 'Control de ingreso oficial y conteo de miembros.',
+                icon: ClipboardCheck,
+                href: '/dashboard/monitor',
+                color: 'text-emerald-500',
+                bgColor: 'bg-emerald-500/10',
+                borderColor: 'border-emerald-500/20'
+            });
+        }
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges?.includes('choir') || currentUser.privileges?.includes('admin')) {
+            actions.push({
+                title: 'Gestionar Coro',
+                description: 'Programación de ensayos, uniformes y anuncios de coro.',
+                icon: Music,
+                href: '/dashboard/coro',
+                color: 'text-secondary',
+                bgColor: 'bg-secondary/10',
+                borderColor: 'border-secondary/20'
+            });
+        }
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.privileges?.includes('admin')) {
+            actions.push({
+                title: 'Panel de Ministro',
+                description: 'Visión general de estadísticas y programación semanal.',
+                icon: Shield,
+                href: '/dashboard/ministro',
+                color: 'text-primary',
+                bgColor: 'bg-primary/10',
+                borderColor: 'border-primary/20'
+            });
+        }
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Encargado de Jóvenes' || currentUser.privileges?.includes('youth_leader') || currentUser.privileges?.includes('admin')) {
+            actions.push({
+                title: 'Gestión de Jóvenes',
+                description: 'Supervisión de actividades y participación juvenil.',
+                icon: Users,
+                href: '/dashboard/youth',
+                color: 'text-indigo-400',
+                bgColor: 'bg-indigo-400/10',
+                borderColor: 'border-indigo-400/20'
+            });
+        }
+        return actions;
+    }, [currentUser.role, currentUser.privileges]);
 
     useEffect(() => {
         setName(currentUser.name);
         setPhone(currentUser.phone);
         setCategory(currentUser.category);
+        setGender(currentUser.gender);
+        setMemberGroup(currentUser.member_group);
     }, [currentUser]);
 
     const handleAvatarClick = () => {
@@ -99,14 +158,18 @@ export default function ProfilePage() {
             const success = await updateProfileInCloud(currentUser.id, {
                 name,
                 phone,
-                category: category as any
+                category: category as any,
+                gender: gender as any,
+                member_group: memberGroup as any
             });
             if (success) {
                 setCurrentUser({
                     ...currentUser,
                     name,
                     phone,
-                    category: category as any
+                    category: category as any,
+                    gender: gender as any,
+                    member_group: memberGroup as any
                 });
                 setShowSuccess(true);
                 setTimeout(() => setShowSuccess(false), 3000);
@@ -160,27 +223,66 @@ export default function ProfilePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Sidebar / Profile Info */}
                     <div className="space-y-6">
+                        {/* Digital ID Card */}
+                        <motion.div
+                            initial={{ rotateY: 15, opacity: 0 }}
+                            animate={{ rotateY: 0, opacity: 1 }}
+                            className="relative aspect-[1.6/1] w-full bg-gradient-to-br from-[#1a1c1e] to-[#0a0a0a] rounded-[2rem] p-6 shadow-2xl border border-white/5 overflow-hidden group perspective-[1000px]"
+                        >
+                            {/* Decorative background flare */}
+                            <div className="absolute -top-20 -right-20 w-60 h-60 bg-primary/20 rounded-full blur-[80px] group-hover:bg-primary/30 transition-colors" />
+                            <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-secondary/10 rounded-full blur-[80px]" />
+
+                            {/* ID Content */}
+                            <div className="relative h-full flex flex-col justify-between">
+                                <div className="flex justify-between items-start">
+                                    <div className="space-y-1">
+                                        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">Credential Digital</p>
+                                        <h3 className="text-xl font-black uppercase italic tracking-tighter text-white">LLDM <span className="text-primary italic">RODEO</span></h3>
+                                    </div>
+                                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md">
+                                        <Shield className="w-5 h-5 text-primary" />
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-4">
+                                    <div
+                                        className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-lg shadow-black/50 cursor-pointer group/avatar"
+                                        onClick={handleAvatarClick}
+                                    >
+                                        <img src={currentUser.avatar} className="w-full h-full object-cover transition-transform group-hover/avatar:scale-110" alt="" />
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
+                                            <Camera className="w-4 h-4 text-white" />
+                                        </div>
+                                    </div>
+                                    <div className="flex-1">
+                                        <p className="text-lg font-black text-white leading-tight uppercase truncate">{currentUser.name}</p>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{currentUser.role}</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-between items-end">
+                                    <div className="space-y-1">
+                                        <p className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Estado de Membresía</p>
+                                        <div className="flex items-center gap-1.5">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                            <span className="text-[9px] font-black text-emerald-500 uppercase italic">Activo 2026</span>
+                                        </div>
+                                    </div>
+                                    <div className="p-1.5 bg-white rounded-lg opacity-80 group-hover:opacity-100 transition-opacity">
+                                        {/* Simple Mock QR */}
+                                        <div className="grid grid-cols-4 gap-0.5">
+                                            {[...Array(16)].map((_, i) => (
+                                                <div key={i} className={`w-1 h-1 ${Math.random() > 0.5 ? 'bg-black' : 'bg-transparent'}`} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
                         <Card className="glass-card overflow-hidden border-none bg-foreground/5 backdrop-blur-xl">
-                            <CardHeader className="p-8 text-center bg-gradient-to-br from-primary/10 via-transparent to-secondary/10">
-                                <div className="relative mx-auto w-32 h-32 md:w-40 md:h-40 group cursor-pointer" onClick={handleAvatarClick}>
-                                    <div className="w-full h-full rounded-[2.5rem] overflow-hidden border-2 border-primary/30 shadow-[0_20px_50px_rgba(59,130,246,0.3)] transition-transform group-hover:scale-[1.02] active:scale-[0.98]">
-                                        <img src={currentUser.avatar} alt={currentUser.name} className="w-full h-full object-cover" />
-                                    </div>
-                                    <div className="absolute inset-0 bg-black/60 rounded-[2.5rem] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Camera className="w-10 h-10 text-white" />
-                                    </div>
-                                    <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-primary rounded-2xl flex items-center justify-center border-4 border-background shadow-lg shadow-primary/20">
-                                        <Edit2 className="w-4 h-4 text-black" />
-                                    </div>
-                                </div>
-                                <div className="mt-8 space-y-2">
-                                    <h3 className="text-2xl font-black uppercase italic tracking-tight">{currentUser.name}</h3>
-                                    <div className="flex items-center justify-center gap-2">
-                                        <span className="px-3 py-1 bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase rounded-full">
-                                            {currentUser.role}
-                                        </span>
-                                    </div>
-                                </div>
+                            <CardHeader className="p-6 border-b border-white/5">
+                                <CardTitle className="text-xs font-black uppercase tracking-widest text-slate-400 italic">Detalles de la Cuenta</CardTitle>
                             </CardHeader>
                             <CardContent className="p-8 space-y-6">
                                 <div className="space-y-4">
@@ -256,21 +358,40 @@ export default function ProfilePage() {
                                 <div className="space-y-3">
                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Categoría</label>
                                     <select
-                                        className="w-full h-14 px-6 rounded-2xl bg-foreground/5 border border-border/20 text-sm font-bold focus:ring-primary/40 text-foreground"
+                                        className="w-full h-14 px-6 rounded-2xl bg-foreground/5 border border-border/20 text-sm font-bold focus:ring-primary/40 text-foreground outline-none"
                                         value={category}
                                         onChange={(e) => setCategory(e.target.value as any)}
                                     >
-                                        <option value="Varon">Varon</option>
-                                        <option value="Hermana">Hermana</option>
-                                        <option value="Niño">Niño</option>
+                                        <option value="Varon">Adulto / Joven</option>
+                                        <option value="Niño">Niño / Infantil</option>
                                     </select>
                                 </div>
                                 <div className="space-y-3">
                                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Género</label>
-                                    <div className="h-14 px-6 flex items-center bg-foreground/[0.02] border border-border/10 rounded-2xl select-none opacity-60">
-                                        <span className="text-sm font-bold italic uppercase tracking-widest">{currentUser.gender}</span>
-                                    </div>
-                                    <p className="text-[9px] text-slate-600 ml-1 italic">* Bloqueado administrativamente</p>
+                                    <select
+                                        className="w-full h-14 px-6 rounded-2xl bg-foreground/5 border border-border/20 text-sm font-bold focus:ring-primary/40 text-foreground outline-none"
+                                        value={gender}
+                                        onChange={(e) => setGender(e.target.value as any)}
+                                    >
+                                        <option value="Varon">Varon</option>
+                                        <option value="Hermana">Hermana</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Grupo al que Pertenece</label>
+                                    <select
+                                        className="w-full h-14 px-6 rounded-2xl bg-foreground/5 border border-border/20 text-sm font-bold focus:ring-primary/40 text-foreground outline-none"
+                                        value={memberGroup || ''}
+                                        onChange={(e) => setMemberGroup(e.target.value as any)}
+                                    >
+                                        <option value="">Ninguno / General</option>
+                                        <option value="Casados">Casados</option>
+                                        <option value="Casadas">Casadas</option>
+                                        <option value="Solos y Solas">Solos y Solas</option>
+                                        <option value="Jovenes">Jóvenes</option>
+                                        <option value="Niños">Niños</option>
+                                        <option value="Niñas">Niñas</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -285,6 +406,47 @@ export default function ProfilePage() {
                                 </Button>
                             </div>
                         </Card>
+
+                        {/* Privilege Quick Actions Section */}
+                        {roleActions.length > 0 && (
+                            <div className="space-y-6">
+                                <h2 className="text-2xl font-black tracking-tighter text-foreground uppercase italic flex items-center gap-4">
+                                    <LayoutDashboard className="w-8 h-8 text-orange-400" />
+                                    <span>Panel de <span className="text-orange-400 italic">Privilegios</span></span>
+                                </h2>
+                                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                    {roleActions.map((action, idx) => (
+                                        <Card
+                                            key={idx}
+                                            onClick={() => router.push(action.href)}
+                                            className={cn(
+                                                "glass-card border-none cursor-pointer group transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] relative overflow-hidden",
+                                                action.bgColor
+                                            )}
+                                        >
+                                            <div className={cn("absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity", action.color)}>
+                                                <action.icon className="w-24 h-24" />
+                                            </div>
+                                            <CardContent className="p-6">
+                                                <div className="flex flex-col gap-4">
+                                                    <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center border transition-all group-hover:bg-white/10", action.borderColor)}>
+                                                        <action.icon className={cn("w-6 h-6", action.color)} />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-lg font-black uppercase italic tracking-tight text-foreground">{action.title}</h3>
+                                                        <p className="text-[10px] text-muted-foreground font-bold mt-1 leading-tight uppercase tracking-wider">{action.description}</p>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 mt-2">
+                                                        <span className={cn("text-[8px] font-black uppercase tracking-widest", action.color)}>Acceder Ahora</span>
+                                                        <ArrowLeft className={cn("w-3 h-3 rotate-180 transition-transform group-hover:translate-x-1", action.color)} />
+                                                    </div>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Stats Detail Section */}
                         <div className="grid gap-6 md:grid-cols-3">
