@@ -1,91 +1,244 @@
-
 'use client';
 
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt } from 'lucide-react';
+import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Baby, Shield } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import Link from 'next/link';
 
 interface AttendanceMember {
-    id: number;
+    id: string;
     name: string;
     gender: 'Varon' | 'Hermana';
     category: 'Adulto' | 'Niño';
     email: string;
     avatar: string;
+    attendance: {
+        '5am': { present: boolean; time: string | null };
+        '9am': { present: boolean; time: string | null };
+        'evening': { present: boolean; time: string | null };
+    };
     present: boolean;
     time: string | null;
     parentName?: string;
     deliveredBy?: string;
     collectedBy?: string;
+    targetSession?: string;
 }
 
 export default function AttendanceDashboard() {
-    const { uniforms, uniformSchedule, kidsAssignments } = useAppStore();
+    const {
+        currentUser,
+        uniforms,
+        uniformSchedule,
+        kidsAssignments,
+        members: storeMembers,
+        loadMembersFromCloud,
+        attendanceRecords,
+        loadAttendanceFromCloud,
+        saveAttendanceToCloud
+    } = useAppStore();
+
     const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos'>('varones');
     const [searchTerm, setSearchTerm] = useState('');
+    const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
+    const [isSaving, setIsSaving] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
+    const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({});
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    // Track which member+session is currently being saved to avoid race conditions
+    const [processingToggles, setProcessingToggles] = useState<Record<string, boolean>>({});
 
-    const todayStr = new Date().toISOString().split('T')[0];
-    const adultUniform = uniforms.find(u => u.id === uniformSchedule[todayStr]);
-    const kidsAssignment = kidsAssignments[todayStr];
+    useEffect(() => {
+        loadMembersFromCloud();
+    }, []);
+
+    useEffect(() => {
+        // Al cambiar de fecha o sesión, limpiamos el estado optimista
+        // y cargamos los datos reales desde la nube de inmediato.
+        const refresh = async () => {
+            setIsRefreshing(true);
+            setOptimisticAttendance({});
+            await loadAttendanceFromCloud(selectedDate);
+            setIsRefreshing(false);
+        };
+        refresh();
+    }, [selectedDate, currentSession]);
+
+    // Escuchamos cambios en los registros globales para sincronizar el estado local
+    useEffect(() => {
+        if (attendanceRecords[selectedDate]) {
+            setOptimisticAttendance({});
+        }
+    }, [attendanceRecords, selectedDate]);
+
+    const adultUniform = uniforms.find(u => u.id === uniformSchedule[selectedDate]);
+    const kidsAssignment = kidsAssignments[selectedDate];
     const kidsUniform = uniforms.find(u => u.id === kidsAssignment?.uniformId);
 
-    // Mock data for members to check attendance
-    const [members, setMembers] = useState<AttendanceMember[]>([
-        { id: 1, name: 'Abraham Samuel', gender: 'Varon', category: 'Adulto', email: 'abraham@example.com', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop', present: false, time: null },
-        { id: 2, name: 'Maria Garcia', gender: 'Hermana', category: 'Adulto', email: 'maria@example.com', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop', present: true, time: '08:55 AM' },
-        { id: 3, name: 'Juan P. Hernandez', gender: 'Varon', category: 'Adulto', email: 'juan@example.com', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop', present: false, time: null },
-        { id: 4, name: 'Ricardo Mendez', gender: 'Varon', category: 'Adulto', email: 'ricardo@example.com', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop', present: false, time: null },
-        { id: 5, name: 'Samuelito Rojas Jr.', gender: 'Varon', category: 'Niño', email: 'samuelito@example.com', avatar: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=200&h=200&fit=crop', present: true, time: '09:05 AM', parentName: 'Samuel Rojas', deliveredBy: 'Samuel Rojas', collectedBy: '' },
-        { id: 6, name: 'Esther Lopez', gender: 'Hermana', category: 'Adulto', email: 'esther@example.com', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop', present: false, time: null },
-        { id: 7, name: 'Mateo Rojas', gender: 'Varon', category: 'Niño', email: 'mateo@example.com', avatar: 'https://images.unsplash.com/photo-1503919919749-645b3419ee53?w=200&h=200&fit=crop', present: true, time: '09:12 AM', parentName: 'Samuel Rojas', deliveredBy: 'Samuel Rojas', collectedBy: '' },
-        { id: 8, name: 'Rebeca Garcia', gender: 'Hermana', category: 'Niño', email: 'rebeca@example.com', avatar: 'https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?w=100&h=100&fit=crop', present: false, time: null, parentName: 'Hermia Garcia', deliveredBy: '', collectedBy: '' },
-    ]);
+    // Filtered attendance for current session
+    const currentSessionAttendance = useMemo(() => {
+        return (attendanceRecords[selectedDate] || []).filter(r => r.session_type === currentSession);
+    }, [attendanceRecords, selectedDate, currentSession]);
 
-    const [securityChild, setSecurityChild] = useState<AttendanceMember | null>(null);
+    // Transform store members into attendance-ready members
+    const members = useMemo(() => {
+        const recordsForDay = attendanceRecords[selectedDate] || [];
 
-    const toggleAttendance = (id: number) => {
-        const member = members.find(m => m.id === id);
-        if (member?.category === 'Niño') {
-            setSecurityChild(member);
+        return storeMembers.map(m => {
+            const getSessionData = (session: '5am' | '9am' | 'evening') => {
+                const record = recordsForDay.find(r => r.member_id === m.id && r.session_type === session);
+                const isPresent = (optimisticAttendance[m.id] && optimisticAttendance[m.id][session] !== undefined)
+                    ? optimisticAttendance[m.id][session]
+                    : (record?.present || false);
+
+                return {
+                    present: isPresent,
+                    time: record?.time || (isPresent ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null)
+                };
+            };
+
+            const currentSessData = getSessionData(currentSession);
+
+            return {
+                id: m.id,
+                name: m.name,
+                gender: m.gender as 'Varon' | 'Hermana',
+                category: (m.category === 'Niño' ? 'Niño' : 'Adulto') as 'Adulto' | 'Niño',
+                email: m.email,
+                avatar: m.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
+                attendance: {
+                    '5am': getSessionData('5am'),
+                    '9am': getSessionData('9am'),
+                    'evening': getSessionData('evening')
+                },
+                present: currentSessData.present,
+                time: currentSessData.time,
+                deliveredBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.delivered_by || '',
+                collectedBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.collected_by || '',
+                parentName: (m as any).parentName || ''
+            };
+        });
+    }, [storeMembers, attendanceRecords, selectedDate, optimisticAttendance, currentSession]);
+
+    const [securityChild, setSecurityChild] = useState<any | null>(null);
+
+    const handlePrevDay = () => {
+        const [year, month, day] = selectedDate.split('-').map(Number);
+        const d = new Date(year, month - 1, day - 1);
+        setSelectedDate(format(d, 'yyyy-MM-dd'));
+    };
+
+    const handleNextDay = () => {
+        const [year, month, day] = selectedDate.split('-').map(Number);
+        const d = new Date(year, month - 1, day + 1);
+        setSelectedDate(format(d, 'yyyy-MM-dd'));
+    };
+
+    const toggleAttendance = async (memberId: string, sessionType: '5am' | '9am' | 'evening') => {
+        const member = members.find(m => m.id === memberId);
+        if (!member) return;
+
+        const sessionData = member.attendance[sessionType];
+
+        if (member.category === 'Niño' && !sessionData.present) {
+            // For children, we still use the security modal, but need to know which session
+            setSecurityChild({ ...member, targetSession: sessionType });
             return;
         }
 
-        setMembers(members.map(m => {
-            if (m.id === id) {
-                return {
-                    ...m,
-                    present: !m.present,
-                    time: !m.present ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
-                };
+        const toggleKey = `${memberId}-${sessionType}`;
+        if (processingToggles[toggleKey]) return;
+
+        setProcessingToggles(prev => ({ ...prev, [toggleKey]: true }));
+
+        // Optimistic Update
+        const nextState = !sessionData.present;
+        setOptimisticAttendance(prev => ({
+            ...prev,
+            [memberId]: {
+                ...(prev[memberId] || {}),
+                [sessionType]: nextState
             }
-            return m;
         }));
+
+        const newRecord = {
+            member_id: memberId,
+            date: selectedDate,
+            session_type: sessionType,
+            present: nextState,
+            time: nextState ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
+        };
+
+        try {
+            await saveAttendanceToCloud([newRecord]);
+        } catch (error) {
+            // Revert on error
+            setOptimisticAttendance(prev => {
+                if (!prev[memberId]) return prev;
+                const updatedSession = { ...prev[memberId] };
+                delete updatedSession[sessionType];
+                return { ...prev, [memberId]: updatedSession };
+            });
+            alert("Error al sincronizar con la nube. Verifica tu conexión.");
+        } finally {
+            setProcessingToggles(prev => {
+                const newState = { ...prev };
+                delete newState[toggleKey];
+                return newState;
+            });
+        }
     };
 
-    const handleSecurityUpdate = (id: number, type: 'delivered' | 'collected', value: string) => {
-        setMembers(members.map(m => {
-            if (m.id === id) {
-                const isCheckIn = type === 'delivered';
-                return {
-                    ...m,
-                    present: isCheckIn ? true : (value ? false : m.present),
-                    time: isCheckIn ? (m.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : m.time,
-                    deliveredBy: type === 'delivered' ? value : m.deliveredBy,
-                    collectedBy: type === 'collected' ? value : m.collectedBy
-                };
-            }
-            return m;
-        }));
+    const handleSecurityUpdate = async (id: string, type: 'delivered' | 'collected', value: string) => {
+        const member = members.find(m => m.id === id);
+        if (!member || !securityChild) return;
+
+        const sessionToUpdate = securityChild.targetSession || currentSession;
+        const sessionData = member.attendance[sessionToUpdate as keyof typeof member.attendance];
+
+        const isCheckIn = type === 'delivered';
+        const newRecord = {
+            member_id: id,
+            date: selectedDate,
+            session_type: sessionToUpdate,
+            present: isCheckIn ? true : (value ? false : sessionData.present),
+            time: isCheckIn ? (sessionData.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : sessionData.time,
+            delivered_by: type === 'delivered' ? value : member.deliveredBy,
+            collected_by: type === 'collected' ? value : member.collectedBy
+        };
+
+        await saveAttendanceToCloud([newRecord]);
         setSecurityChild(null);
+    };
+
+    const handleFinalize = async () => {
+        setIsSaving(true);
+        try {
+            // Forzamos una recarga fresca desde la nube
+            await loadAttendanceFromCloud(selectedDate);
+
+            setTimeout(() => {
+                setIsSaving(false);
+                const attendedOverall = members.filter(m =>
+                    m.attendance['5am'].present ||
+                    m.attendance['9am'].present ||
+                    m.attendance['evening'].present
+                ).length;
+                alert(`Sincronización completa. ${attendedOverall} miembros marcados en total para el día.`);
+            }, 800);
+        } catch (error) {
+            setIsSaving(false);
+            alert("Hubo un problema al finalizar. Por favor, verifica tu conexión.");
+        }
     };
 
     const presentCount = members.filter(m => m.present).length;
@@ -102,13 +255,66 @@ export default function AttendanceDashboard() {
         });
     }, [members, searchTerm, activeTab]);
 
-    const stats = {
-        varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && m.present).length,
-        hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && m.present).length,
-        ninos: members.filter(m => m.category === 'Niño' && m.present).length,
-        total: members.length,
-        totalPresent: members.filter(m => m.present).length
-    };
+    const stats = useMemo(() => {
+        const d = new Date(selectedDate + 'T12:00:00');
+        const isSunday = d.getDay() === 0;
+
+        const getSessCount = (s: '5am' | '9am' | 'evening') => members.filter(m => m.attendance[s].present).length;
+
+        return {
+            varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            ninos: members.filter(m => m.category === 'Niño' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            total: members.length,
+            session5am: getSessCount('5am'),
+            session9am: getSessCount('9am'),
+            sessionEvening: getSessCount('evening'),
+            perfect: members.filter(m => m.attendance['5am'].present && m.attendance['9am'].present && m.attendance['evening'].present).length,
+            isSunday
+        };
+    }, [members, selectedDate]);
+
+
+
+    if (!currentUser.id) return null;
+
+    // Security check: Only Admins or Attendance Managers can see this
+    const canAccess = currentUser.role === 'Administrador' ||
+        currentUser.role === 'Responsable de Asistencia' ||
+        currentUser.privileges?.includes('monitor');
+
+    if (!canAccess) {
+        return (
+            <div className="min-h-screen bg-background flex items-center justify-center p-4">
+                <Card className="glass-card max-w-md w-full p-8 text-center border-rose-500/20 bg-rose-500/5">
+                    <Shield className="h-16 w-16 text-rose-500 mx-auto mb-6" />
+                    <h2 className="text-2xl font-black uppercase italic text-rose-500 mb-2">Acceso Restringido</h2>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-8">
+                        Lo sentimos, no tienes los permisos necesarios para acceder al Panel de Asistencia Global.
+                        Este módulo es exclusivo para el <span className="text-emerald-500 font-bold">Responsable de Asistencia</span>.
+                    </p>
+                    <Link href="/">
+                        <Button className="w-full bg-foreground text-background font-black uppercase tracking-widest h-12 rounded-xl">
+                            Volver a mi Dashboard
+                        </Button>
+                    </Link>
+                </Card>
+            </div>
+        );
+    }
+
+    const availableSessions = useMemo(() => {
+        const d = new Date(selectedDate + 'T12:00:00');
+        const dayOfWeek = d.getDay(); // 0 = Domingo, 4 = Jueves
+        const isSunday = dayOfWeek === 0;
+        const isThursday = dayOfWeek === 4;
+
+        return [
+            { id: '5am', label: '5:00 AM' },
+            { id: '9am', label: isSunday ? 'Dominical' : '9:00 AM' },
+            { id: 'evening', label: isSunday ? '6:00 PM' : (isThursday ? '6:30 PM' : '7:00 PM') }
+        ];
+    }, [selectedDate]);
 
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
@@ -116,122 +322,241 @@ export default function AttendanceDashboard() {
             <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
 
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <h1 className="text-4xl font-black tracking-tight text-foreground uppercase italic flex items-center gap-3">
-                            <ClipboardCheck className="h-10 w-10 text-emerald-500" />
-                            Responsable de <span className="text-emerald-500">Asistencia</span>
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2">
+                    <div className="w-full lg:w-auto">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-foreground uppercase italic flex flex-wrap items-center gap-2 md:gap-3">
+                            <span className="flex items-center gap-1.5">
+                                <ClipboardCheck className="h-7 w-7 md:h-10 md:w-10 text-emerald-500" />
+                                {currentUser.role === 'Administrador' ? 'Gestión de' : 'Responsable de'}
+                            </span>
+                            <span className="text-emerald-500">{currentUser.role === 'Administrador' ? ' Iglesia' : ' Asistencia'}</span>
                         </h1>
-                        <p className="text-muted-foreground font-light">Control Oficial de Ingreso - LLDM RODEO</p>
-                    </div>
-                    <div className="flex gap-2">
-                        <Button className="bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-bold gap-2">
-                            <Save className="h-4 w-4" /> Finalizar Registro
-                        </Button>
+                        <p className="text-muted-foreground font-light text-xs md:text-base mt-1">Control Oficial de Ingreso - LLDM RODEO</p>
                     </div>
                 </div>
 
-                <div className="grid gap-6 md:grid-cols-3">
-                    {/* Session Info */}
-                    <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-6 flex flex-col justify-center relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-                            <ClipboardCheck className="h-16 w-16 text-emerald-500" />
-                        </div>
-                        <div className="flex items-center gap-3 mb-2">
-                            <Clock className="h-5 w-5 text-emerald-500" />
-                            <span className="text-xs font-black uppercase tracking-widest text-emerald-400">Sesión Actual</span>
-                        </div>
-                        <h3 className="text-2xl font-black text-foreground italic uppercase relative z-10">Servicio General</h3>
-                        <p className="text-xs text-slate-500 mt-1 uppercase font-bold relative z-10">{new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
 
-                        {(adultUniform || kidsUniform) && (
-                            <div className="mt-4 flex flex-col gap-2 relative z-10 animate-in slide-in-from-left duration-500">
-                                {adultUniform && (
-                                    <div className="flex items-center gap-2 px-2 py-1 bg-secondary/10 border border-secondary/20 rounded-lg w-fit">
-                                        <Shirt className="w-3 h-3 text-secondary" />
-                                        <span className="text-[9px] font-black text-secondary uppercase italic">Coro: {adultUniform.name}</span>
-                                    </div>
-                                )}
-                                {kidsUniform && (
-                                    <div className="flex items-center gap-2 px-2 py-1 bg-cyan-400/10 border border-cyan-400/20 rounded-lg w-fit">
-                                        <Shirt className="w-3 h-3 text-cyan-400" />
-                                        <span className="text-[9px] font-black text-cyan-400 uppercase tracking-tighter">Corito: {kidsUniform.name}</span>
-                                    </div>
-                                )}
+                <div className="flex items-center justify-between px-1">
+                    <div className="flex items-center gap-2">
+                        <Calendar className="h-3.5 w-3.5 text-emerald-500" />
+                        <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Panel de Estadísticas Reales</span>
+                    </div>
+                </div>
+
+                <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+                    {/* Session Summary Stats (Replaces Selector) */}
+                    <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-4 md:p-6 relative overflow-hidden group">
+                        <div className="flex items-center gap-3 mb-6">
+                            <Clock className="h-4 w-4 md:h-5 md:w-5 text-emerald-500" />
+                            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Resumen de Oraciones</span>
+                        </div>
+                        <div className="space-y-4 relative z-10">
+                            {[
+                                { label: '5:00 AM', count: stats.session5am, color: 'text-sky-400' },
+                                { label: stats.isSunday ? 'Dominical' : '9:00 AM', count: stats.session9am, color: 'text-emerald-400' },
+                                { label: 'Tarde', count: stats.sessionEvening, color: 'text-amber-400' }
+                            ].map((s) => (
+                                <div key={s.label} className="flex justify-between items-center border-b border-white/5 pb-2 last:border-none">
+                                    <span className="text-[10px] font-black uppercase tracking-tight text-slate-400">{s.label}</span>
+                                    <span className={cn("text-lg font-black italic", s.color)}>{s.count}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-emerald-500/20 flex justify-between items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={async () => {
+                                    setIsRefreshing(true);
+                                    await loadAttendanceFromCloud(selectedDate);
+                                    setIsRefreshing(false);
+                                }}
+                                className={cn("text-[9px] font-black uppercase tracking-widest text-emerald-500/50 hover:text-emerald-500 h-7 px-2", isRefreshing && "animate-pulse")}
+                            >
+                                <Users className={cn("h-3 w-3 mr-1", isRefreshing && "animate-spin")} /> {isRefreshing ? 'Actualizando...' : 'Refrescar Datos'}
+                            </Button>
+                            <div className="flex items-center gap-1.5 bg-emerald-500/20 px-2 py-0.5 rounded-full shrink-0">
+                                <Star className="h-2.5 w-2.5 text-emerald-500 fill-emerald-500" />
+                                <span className="text-xs font-black text-emerald-500">{stats.perfect}</span>
                             </div>
-                        )}
-                    </Card>
-
-                    {/* Attendance Counter */}
-                    <Card className="glass-card bg-primary/5 border-primary/20 p-6 flex justify-between items-center">
-                        <div>
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1">Presentes ahora</p>
-                            <h3 className="text-4xl font-black text-foreground italic">{presentCount} <span className="text-lg text-slate-500 not-italic">/ {members.length}</span></h3>
-                        </div>
-                        <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                            <Users className="h-8 w-8 text-primary" />
                         </div>
                     </Card>
 
-                    {/* Access Status */}
-                    <Card className="glass-card bg-amber-500/5 border-amber-500/20 p-6">
-                        <div className="flex items-center gap-2 mb-2">
-                            <AlertCircle className="h-4 w-4 text-amber-500" />
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-500">Seguridad del Sistema</span>
+                    {/* NEW: Session Pulse (Vertical Bars) */}
+                    <Card className="glass-card bg-indigo-500/5 border-indigo-500/20 p-5 md:p-6 flex flex-col">
+                        <div className="flex items-center gap-2 mb-6">
+                            <BarChart3 className="h-4 w-4 text-indigo-400" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">Actividad por Sesión</span>
                         </div>
-                        <p className="text-xs text-slate-300 leading-relaxed">
-                            Tu registro es la <span className="text-amber-500 font-bold">única fuente oficial</span>. Los miembros no pueden modificar su asistencia personalmente.
-                        </p>
+
+                        <div className="flex-1 flex items-end justify-around gap-2 mb-2">
+                            {[
+                                { label: '5A', count: stats.session5am, color: 'bg-sky-400' },
+                                { label: stats.isSunday ? 'DOM' : '9A', count: stats.session9am, color: 'bg-emerald-400' },
+                                { label: 'TAR', count: stats.sessionEvening, color: 'bg-amber-400' }
+                            ].map((bar) => {
+                                const height = stats.total > 0 ? (bar.count / stats.total) * 100 : 0;
+                                return (
+                                    <div key={bar.label} className="flex flex-col items-center gap-2 w-full max-w-[40px]">
+                                        <div className="w-full bg-white/5 rounded-t-lg relative flex items-end overflow-hidden" style={{ height: '80px' }}>
+                                            <motion.div
+                                                initial={{ height: 0 }}
+                                                animate={{ height: `${Math.max(height, 5)}%` }}
+                                                className={cn("w-full transition-all duration-1000", bar.color)}
+                                            />
+                                            <span className="absolute top-1 left-0 w-full text-center text-[8px] font-black text-white mix-blend-difference">{bar.count}</span>
+                                        </div>
+                                        <span className="text-[8px] font-black text-slate-500 uppercase tracking-tighter truncate w-full text-center">{bar.label}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <p className="text-[8px] text-center text-slate-600 font-bold uppercase tracking-widest mt-auto italic">Comparativa de Reuniones</p>
                     </Card>
+
+                    {/* Attendance Stats Chart (Based on session with most attendance) */}
+                    <Card className="glass-card bg-primary/5 border-primary/20 p-5 md:p-6 flex flex-col justify-center items-center gap-4 relative">
+                        <div className="flex w-full justify-between items-start absolute top-4 px-4">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-primary/80">Impacto Diario</p>
+                            <Users className="h-4 w-4 text-primary opacity-50" />
+                        </div>
+
+                        {/* Calculations based on the highest attended session to show "max reach" */}
+                        {(() => {
+                            const maxAttendance = Math.max(stats.session5am, stats.session9am, stats.sessionEvening);
+                            const percentage = Math.round((maxAttendance / (stats.total || 1)) * 100);
+                            return (
+                                <>
+                                    <div className="relative w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
+                                        <svg className="w-full h-full -rotate-90">
+                                            <circle cx="50%" cy="50%" r="40%" className="stroke-foreground/10 fill-none stroke-[8px]" />
+                                            <circle
+                                                cx="50%" cy="50%" r="40%"
+                                                style={{
+                                                    strokeDasharray: '251.2',
+                                                    strokeDashoffset: (251.2 - (251.2 * (maxAttendance / (stats.total || 1)))).toString()
+                                                }}
+                                                className="stroke-emerald-500 fill-none stroke-[8px] transition-all duration-1000 ease-out"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                            <span className="text-xl md:text-2xl font-black text-foreground">{percentage}%</span>
+                                            <span className="text-[8px] uppercase font-bold text-slate-500">Max Alcance</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex gap-4 text-[10px] font-bold uppercase tracking-tighter">
+                                        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> {maxAttendance} Max</div>
+                                        <div className="flex items-center gap-1.5 text-slate-500"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total} Total</div>
+                                    </div>
+                                </>
+                            );
+                        })()}
+                    </Card>
+
+                    {/* Group Distribution (Mini Bars) */}
+                    <Card className="glass-card bg-amber-500/5 border-amber-500/20 p-5 md:p-6 flex flex-col gap-4">
+                        <div className="flex items-center gap-2 mb-1">
+                            <Shield className="h-4 w-4 text-amber-500" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500">Porcentaje por Grupo</span>
+                        </div>
+
+                        <div className="space-y-4">
+                            {[
+                                { label: 'Varones', color: 'bg-primary', count: stats.varones, total: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto').length },
+                                { label: 'Hermanas', color: 'bg-rose-500', count: stats.hermanas, total: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto').length },
+                                { label: 'Niños', color: 'bg-cyan-400', count: stats.ninos, total: members.filter(m => m.category === 'Niño').length }
+                            ].map((group) => (
+                                <div key={group.label} className="space-y-1.5">
+                                    <div className="flex justify-between text-[9px] font-black uppercase tracking-widest saturate-[0.8]">
+                                        <span>{group.label}</span>
+                                        <span>{group.count} / {group.total}</span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-foreground/5 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${(group.count / (group.total || 1)) * 100}%` }}
+                                            className={cn("h-full transition-all duration-1000", group.color)}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                </div>
+
+                {/* Primary Controls (Moved below stats for reachability) */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 bg-background/50 backdrop-blur-md p-4 rounded-3xl border border-white/5 shadow-2xl">
+                    <div className="flex items-center justify-between gap-4 bg-foreground/5 p-2 rounded-2xl border border-border/20 w-full sm:flex-1 max-w-md">
+                        <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
+                            <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                        <div className="flex flex-col items-center flex-1">
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-1 leading-none">Fecha Seleccionada</span>
+                            <span className="text-xs md:text-sm font-black text-foreground uppercase tracking-tight text-center">
+                                {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
+                            </span>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
+                            <ChevronRight className="h-5 w-5" />
+                        </Button>
+                    </div>
+
+                    <Button
+                        onClick={handleFinalize}
+                        className="w-full sm:w-auto bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-black uppercase tracking-widest px-10 h-14 sm:h-14 rounded-2xl text-xs md:text-sm shrink-0"
+                    >
+                        <Save className="h-5 w-5 mr-3" /> Finalizar Lista
+                    </Button>
                 </div>
 
                 {/* View Tabs */}
-                <div className="flex p-1.5 bg-foreground/5 rounded-3xl border border-border/40 w-fit mx-auto md:mx-0 backdrop-blur-xl">
+                <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2x md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
                     <button
                         onClick={() => setActiveTab('varones')}
                         className={cn(
-                            "px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 flex items-center gap-3",
-                            activeTab === 'varones' ? "bg-primary text-black shadow-[0_0_20px_rgba(59,130,246,0.5)]" : "text-slate-500 hover:text-foreground"
+                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                            activeTab === 'varones' ? "bg-primary text-black shadow-lg shadow-primary/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                         )}
                     >
-                        <Shield className="w-4 h-4" /> Varones <span className="opacity-50 font-bold">({stats.varones})</span>
+                        <Shield className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones})</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('hermanas')}
                         className={cn(
-                            "px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 flex items-center gap-3",
-                            activeTab === 'hermanas' ? "bg-rose-500 text-black shadow-[0_0_20px_rgba(244,63,94,0.5)]" : "text-slate-500 hover:text-foreground"
+                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                            activeTab === 'hermanas' ? "bg-rose-500 text-black shadow-lg shadow-rose-500/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                         )}
                     >
-                        <Star className="w-4 h-4" /> Hermanas <span className="opacity-50 font-bold">({stats.hermanas})</span>
+                        <Star className="w-4 h-4" /> Hermanas <span className="opacity-50 font-bold ml-1">({stats.hermanas})</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('ninos')}
                         className={cn(
-                            "px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-500 flex items-center gap-3",
-                            activeTab === 'ninos' ? "bg-cyan-400 text-black shadow-[0_0_20px_rgba(34,211,238,0.5)]" : "text-slate-500 hover:text-foreground"
+                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                            activeTab === 'ninos' ? "bg-cyan-400 text-black shadow-lg shadow-cyan-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                         )}
                     >
-                        <Baby className="w-4 h-4" /> Niños <span className="opacity-50 font-bold">({stats.ninos})</span>
+                        <Baby className="w-4 h-4" /> Niños <span className="opacity-50 font-bold ml-1">({stats.ninos})</span>
                     </button>
                 </div>
 
                 {/* Member Check-in List */}
                 <Card className="glass-card border-none bg-foreground/5 overflow-hidden">
-                    <CardHeader className="border-b border-border/20 flex flex-col md:flex-row items-center justify-between gap-6 py-8">
-                        <div>
-                            <CardTitle className="text-3xl font-black uppercase italic tracking-tighter flex items-center gap-3">
-                                {activeTab === 'varones' && <span className="text-primary truncate">Lista de Varones</span>}
-                                {activeTab === 'hermanas' && <span className="text-rose-500 truncate">Lista de Hermanas</span>}
-                                {activeTab === 'ninos' && <span className="text-cyan-400 truncate">Lista de Niños</span>}
+                    <CardHeader className="border-b border-border/20 flex flex-col sm:flex-row items-center justify-between gap-4 py-6 md:py-8">
+                        <div className="text-center sm:text-left">
+                            <CardTitle className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter flex items-center justify-center sm:justify-start gap-3">
+                                {activeTab === 'varones' && <span className="text-primary">Lista de Varones</span>}
+                                {activeTab === 'hermanas' && <span className="text-rose-500">Lista de Hermanas</span>}
+                                {activeTab === 'ninos' && <span className="text-cyan-400">Lista de Niños</span>}
                             </CardTitle>
-                            <CardDescription className="uppercase text-[10px] font-bold tracking-widest text-slate-500 mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
+                            <CardDescription className="uppercase text-[9px] md:text-[10px] font-bold tracking-widest text-slate-500 mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
                         </div>
-                        <div className="relative w-full md:w-80">
+                        <div className="relative w-full sm:w-80">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                             <Input
                                 placeholder="Buscar por nombre..."
-                                className="pl-12 bg-foreground/5 border-border/40 text-sm h-12 rounded-2xl focus:ring-primary/50 transition-all"
+                                className="pl-12 bg-foreground/5 border-border/40 text-sm h-11 md:h-12 rounded-2xl focus:ring-primary/50 transition-all"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -240,50 +565,73 @@ export default function AttendanceDashboard() {
                     <CardContent className="p-0">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-white/5">
                             {filteredMembers.map((member) => (
-                                <div
+                                <motion.div
                                     key={member.id}
-                                    onClick={() => toggleAttendance(member.id)}
+                                    whileTap={{ scale: 0.99 }}
                                     className={cn(
-                                        "p-6 flex items-center justify-between cursor-pointer transition-all duration-300 group hover:z-10",
-                                        member.present ? "bg-emerald-500/10 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]" : "hover:bg-foreground/[0.03]"
+                                        "p-4 md:p-6 flex items-center justify-between transition-all duration-300 group hover:z-10",
+                                        "hover:bg-foreground/[0.03] border-b border-white/5"
                                     )}
                                 >
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
                                         <div className={cn(
-                                            "w-14 h-14 rounded-2xl overflow-hidden border-2 transition-all duration-300",
-                                            member.present ? "border-emerald-500/50 scale-105 shadow-[0_0_15px_rgba(16,185,129,0.2)]" : "border-border/40"
+                                            "w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all duration-300 shrink-0",
+                                            "border-border/40"
                                         )}>
                                             <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
                                         </div>
-                                        <div>
+                                        <div className="min-w-0 pr-2">
                                             <p className={cn(
-                                                "font-black uppercase tracking-tight transition-colors text-lg",
-                                                member.present ? "text-foreground" : "text-slate-400 group-hover:text-foreground"
+                                                "font-black uppercase tracking-tight transition-colors text-sm md:text-lg truncate text-foreground/90"
                                             )}>{member.name}</p>
-                                            <div className="flex flex-col gap-1 mt-0.5">
-                                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">{member.category}</span>
-                                                {member.category === 'Niño' && (
-                                                    <span className="text-[9px] text-cyan-400 font-bold italic leading-none">Hijo de {member.parentName}</span>
-                                                )}
-                                                {member.present && (
-                                                    <span className="text-[10px] text-emerald-500 font-black flex items-center gap-1 mt-1">
-                                                        <Clock className="h-3 w-3" /> {member.time}
-                                                        {member.deliveredBy && <span className="text-slate-500 scale-90 ml-1">• En: {member.deliveredBy}</span>}
-                                                    </span>
-                                                )}
-                                            </div>
+                                            <span className="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none block mt-0.5">{member.category}</span>
                                         </div>
                                     </div>
 
-                                    <div className={cn(
-                                        "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500",
-                                        member.present
-                                            ? "bg-emerald-500 text-black rotate-0 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-                                            : "bg-foreground/5 text-slate-600 -rotate-90 group-hover:rotate-0 group-hover:bg-foreground/10 group-hover:text-slate-400"
-                                    )}>
-                                        {member.present ? <CheckCircle2 className="h-6 w-6" /> : <XCircle className="h-6 w-6" />}
+                                    {/* Triple Selection Circles */}
+                                    <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                                        {[
+                                            { id: '5am', label: '5' },
+                                            { id: '9am', label: stats.isSunday ? 'D' : '9' },
+                                            { id: 'evening', label: 'T' }
+                                        ].map((sess) => {
+                                            const isPresent = member.attendance[sess.id as keyof typeof member.attendance].present;
+                                            const sessLabel = sess.id === 'evening' ? 'Tarde' : (sess.id === '9am' && stats.isSunday ? 'Dom' : sess.id);
+                                            const isProcessing = processingToggles[`${member.id}-${sess.id}`];
+
+                                            return (
+                                                <div key={sess.id} className="flex flex-col items-center gap-1">
+                                                    <button
+                                                        disabled={isProcessing}
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            toggleAttendance(member.id, sess.id as any);
+                                                        }}
+                                                        className={cn(
+                                                            "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 font-black text-[10px] sm:text-xs",
+                                                            isProcessing && "animate-pulse opacity-50 cursor-wait",
+                                                            isPresent
+                                                                ? "bg-emerald-500 border-emerald-400 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] scale-110"
+                                                                : "bg-foreground/5 border-border/20 text-slate-500 hover:border-emerald-500/50"
+                                                        )}
+                                                    >
+                                                        {isProcessing ? (
+                                                            <Clock className="h-4 w-4 animate-spin" />
+                                                        ) : (
+                                                            isPresent ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : sess.label
+                                                        )}
+                                                    </button>
+                                                    <span className={cn(
+                                                        "text-[7px] uppercase font-black tracking-tighter",
+                                                        isPresent ? "text-emerald-500" : "text-slate-600"
+                                                    )}>
+                                                        {sessLabel}
+                                                    </span>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </CardContent>
