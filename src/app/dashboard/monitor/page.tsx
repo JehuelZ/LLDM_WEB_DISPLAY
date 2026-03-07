@@ -217,36 +217,37 @@ export default function AttendanceDashboard() {
             <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
 
                 {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    <div>
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground uppercase italic flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-3">
-                            <span className="flex items-center gap-1">
-                                <ClipboardCheck className="h-8 w-8 md:h-10 md:w-10 text-emerald-500" />
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    <div className="w-full lg:w-auto">
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-foreground uppercase italic flex flex-wrap items-center gap-2 md:gap-3">
+                            <span className="flex items-center gap-1.5">
+                                <ClipboardCheck className="h-7 w-7 md:h-10 md:w-10 text-emerald-500" />
                                 {currentUser.role === 'Administrador' ? 'Gestión de' : 'Responsable de'}
                             </span>
                             <span className="text-emerald-500">{currentUser.role === 'Administrador' ? ' Iglesia' : ' Asistencia'}</span>
                         </h1>
-                        <p className="text-muted-foreground font-light text-sm md:text-base">Control Oficial de Ingreso - LLDM RODEO</p>
+                        <p className="text-muted-foreground font-light text-xs md:text-base mt-1">Control Oficial de Ingreso - LLDM RODEO</p>
                     </div>
-                    <div className="flex items-center gap-2 w-full md:w-auto bg-foreground/5 p-2 rounded-2xl border border-border/20">
-                        <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-10 w-10">
-                            <ChevronLeft className="h-5 w-5" />
-                        </Button>
-                        <div className="flex flex-col items-center px-4 min-w-[140px]">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Fecha de Lista</span>
-                            <span className="text-sm font-black text-foreground uppercase tracking-tighter">
-                                {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
-                            </span>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
+                        <div className="flex items-center justify-between gap-2 bg-foreground/5 p-1.5 rounded-2xl border border-border/20 flex-1 lg:flex-none">
+                            <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-9 w-9 shrink-0">
+                                <ChevronLeft className="h-4 w-4" />
+                            </Button>
+                            <div className="flex flex-col items-center px-2 min-w-[120px]">
+                                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary italic leading-none mb-1">Fecha de Lista</span>
+                                <span className="text-[10px] md:text-xs font-black text-foreground uppercase tracking-tighter text-center">
+                                    {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
+                                </span>
+                            </div>
+                            <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-9 w-9 shrink-0">
+                                <ChevronRight className="h-4 w-4" />
+                            </Button>
                         </div>
-                        <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-10 w-10">
-                            <ChevronRight className="h-5 w-5" />
-                        </Button>
-                        <div className="w-px h-8 bg-border/40 mx-2" />
                         <Button
                             onClick={handleFinalize}
-                            className="bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-bold gap-2 px-6 h-10 rounded-xl"
+                            className="bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-black uppercase tracking-widest px-6 h-12 lg:h-11 rounded-2xl md:rounded-xl text-[10px]"
                         >
-                            <Save className="h-4 w-4" /> Finalizar
+                            <Save className="h-4 w-4 mr-2" /> Finalizar
                         </Button>
                     </div>
                 </div>
@@ -381,20 +382,20 @@ export default function AttendanceDashboard() {
 
                 {/* Member Check-in List */}
                 <Card className="glass-card border-none bg-foreground/5 overflow-hidden">
-                    <CardHeader className="border-b border-border/20 flex flex-col md:flex-row items-center justify-between gap-6 py-8">
-                        <div>
-                            <CardTitle className="text-3xl font-black uppercase italic tracking-tighter flex items-center gap-3">
-                                {activeTab === 'varones' && <span className="text-primary truncate">Lista de Varones</span>}
-                                {activeTab === 'hermanas' && <span className="text-rose-500 truncate">Lista de Hermanas</span>}
-                                {activeTab === 'ninos' && <span className="text-cyan-400 truncate">Lista de Niños</span>}
+                    <CardHeader className="border-b border-border/20 flex flex-col sm:flex-row items-center justify-between gap-4 py-6 md:py-8">
+                        <div className="text-center sm:text-left">
+                            <CardTitle className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter flex items-center justify-center sm:justify-start gap-3">
+                                {activeTab === 'varones' && <span className="text-primary">Lista de Varones</span>}
+                                {activeTab === 'hermanas' && <span className="text-rose-500">Lista de Hermanas</span>}
+                                {activeTab === 'ninos' && <span className="text-cyan-400">Lista de Niños</span>}
                             </CardTitle>
-                            <CardDescription className="uppercase text-[10px] font-bold tracking-widest text-slate-500 mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
+                            <CardDescription className="uppercase text-[9px] md:text-[10px] font-bold tracking-widest text-slate-500 mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
                         </div>
-                        <div className="relative w-full md:w-80">
+                        <div className="relative w-full sm:w-80">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                             <Input
                                 placeholder="Buscar por nombre..."
-                                className="pl-12 bg-foreground/5 border-border/40 text-sm h-12 rounded-2xl focus:ring-primary/50 transition-all"
+                                className="pl-12 bg-foreground/5 border-border/40 text-sm h-11 md:h-12 rounded-2xl focus:ring-primary/50 transition-all"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
