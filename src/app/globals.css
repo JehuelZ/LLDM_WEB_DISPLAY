@@ -102,6 +102,11 @@ body {
   border-color: rgba(168, 85, 247, 0.5);
 }
 
+.glow-emerald {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
 .premium-select-trigger {
   @apply flex items-center justify-between w-full bg-card backdrop-blur-xl border border-border text-foreground rounded-xl px-4 py-2.5 text-sm transition-all duration-300;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);

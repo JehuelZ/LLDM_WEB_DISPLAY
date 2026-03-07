@@ -304,7 +304,7 @@ export default function AttendanceDashboard() {
             <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
 
                 {/* Header Section */}
-                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2">
                     <div className="w-full lg:w-auto">
                         <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-foreground uppercase italic flex flex-wrap items-center gap-2 md:gap-3">
                             <span className="flex items-center gap-1.5">
@@ -315,39 +315,13 @@ export default function AttendanceDashboard() {
                         </h1>
                         <p className="text-muted-foreground font-light text-xs md:text-base mt-1">Control Oficial de Ingreso - LLDM RODEO</p>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full lg:w-auto">
-                        <div className="flex items-center justify-between gap-2 bg-foreground/5 p-1.5 rounded-2xl border border-border/20 flex-1 lg:flex-none">
-                            <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-9 w-9 shrink-0">
-                                <ChevronLeft className="h-4 w-4" />
-                            </Button>
-                            <div className="flex flex-col items-center px-2 min-w-[120px]">
-                                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary italic leading-none mb-1">Fecha de Lista</span>
-                                <span className="text-[10px] md:text-xs font-black text-foreground uppercase tracking-tighter text-center">
-                                    {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
-                                </span>
-                            </div>
-                            <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-9 w-9 shrink-0">
-                                <ChevronRight className="h-4 w-4" />
-                            </Button>
-                        </div>
-                        <Button
-                            onClick={handleFinalize}
-                            className="bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-black uppercase tracking-widest px-6 h-12 lg:h-11 rounded-2xl md:rounded-xl text-[10px]"
-                        >
-                            <Save className="h-4 w-4 mr-2" /> Finalizar
-                        </Button>
-                    </div>
                 </div>
 
 
-                {/* Daily Overview Stats */}
-                <div className="flex items-center justify-between mb-2 px-1">
-                    <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-slate-500 italic">
-                        {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
-                    </p>
+                <div className="flex items-center justify-between px-1">
                     <div className="flex items-center gap-2">
-                        <Calendar className="h-3 w-3 text-emerald-500" />
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resumen del Día</span>
+                        <Calendar className="h-3.5 w-3.5 text-emerald-500" />
+                        <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Panel de Estadísticas Reales</span>
                     </div>
                 </div>
 
@@ -448,6 +422,31 @@ export default function AttendanceDashboard() {
                             ))}
                         </div>
                     </Card>
+                </div>
+
+                {/* Primary Controls (Moved below stats for reachability) */}
+                <div className="flex flex-col sm:flex-row items-center gap-4 bg-background/50 backdrop-blur-md p-4 rounded-3xl border border-white/5 shadow-2xl">
+                    <div className="flex items-center justify-between gap-4 bg-foreground/5 p-2 rounded-2xl border border-border/20 w-full sm:flex-1 max-w-md">
+                        <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
+                            <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                        <div className="flex flex-col items-center flex-1">
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-1 leading-none">Fecha Seleccionada</span>
+                            <span className="text-xs md:text-sm font-black text-foreground uppercase tracking-tight text-center">
+                                {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
+                            </span>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
+                            <ChevronRight className="h-5 w-5" />
+                        </Button>
+                    </div>
+
+                    <Button
+                        onClick={handleFinalize}
+                        className="w-full sm:w-auto bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-black uppercase tracking-widest px-10 h-14 sm:h-14 rounded-2xl text-xs md:text-sm shrink-0"
+                    >
+                        <Save className="h-5 w-5 mr-3" /> Finalizar Lista
+                    </Button>
                 </div>
 
                 {/* View Tabs */}
