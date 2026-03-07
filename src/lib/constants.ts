@@ -145,43 +145,83 @@ export const MOCK_MEMBERS: any[] = [
         stats: { attendance: { attended: 10, total: 10 }, participation: { led: 5, total: 5 }, punctuality: 100 }
     },
     {
+        id: 'abraham-test',
+        name: 'Abraham',
+        email: 'abraham_test@lldmrodeo.org',
+        role: 'Encargado de Jóvenes',
+        category: 'Varon',
+        gender: 'Varon',
+        privileges: ['youth_leader'],
+        avatar: 'https://ui-avatars.com/api/?name=Abraham&background=0D8ABC&color=fff'
+    },
+    {
+        id: 'rebeca-test',
+        name: 'Rebeca',
+        email: 'rebeca_test@lldmrodeo.org',
+        role: 'Encargada de Jóvenes',
+        category: 'Hermana',
+        gender: 'Hermana',
+        privileges: ['youth_leader'],
+        avatar: 'https://ui-avatars.com/api/?name=Rebeca&background=D80DAB&color=fff'
+    },
+    {
+        id: 'keren-test',
+        name: 'Keren',
+        email: 'keren_test@lldmrodeo.org',
+        role: 'Responsable de Asistencia',
+        category: 'Hermana',
+        gender: 'Hermana',
+        privileges: ['monitor'],
+        avatar: 'https://ui-avatars.com/api/?name=Keren&background=0DAB8A&color=fff'
+    },
+    {
+        id: 'lucia-test',
+        name: 'Lucia Zelaya',
+        email: 'lucia_test@lldmrodeo.org',
+        role: 'Administrador',
+        category: 'Hermana',
+        gender: 'Hermana',
+        privileges: ['admin'],
+        avatar: 'https://ui-avatars.com/api/?name=Lucia+Zelaya&background=AB0D0D&color=fff'
+    },
+    {
+        id: 'judith-test',
+        name: 'Judith',
+        email: 'judith_test@lldmrodeo.org',
+        role: 'Dirigente Coro Adultos',
+        category: 'Hermana',
+        gender: 'Hermana',
+        privileges: ['choir'],
+        avatar: 'https://ui-avatars.com/api/?name=Judith&background=8A0DAB&color=fff'
+    },
+    {
+        id: 'amisadai-test',
+        name: 'Amisadai Alvarado',
+        email: 'amisadai_test@lldmrodeo.org',
+        role: 'Responsable de Niños',
+        category: 'Hermana',
+        gender: 'Hermana',
+        privileges: ['kids_leader'],
+        avatar: 'https://ui-avatars.com/api/?name=Amisadai+Alvarado&background=ABD80D&color=fff'
+    },
+    {
+        id: 'silvia-test',
+        name: 'Silvia Marrufo',
+        email: 'silvia_test@lldmrodeo.org',
+        role: 'Dirigente del Coro',
+        category: 'Hermana',
+        gender: 'Hermana',
+        privileges: ['choir'],
+        avatar: 'https://ui-avatars.com/api/?name=Silvia+Marrufo&background=0DABD8&color=fff'
+    },
+    {
         id: 'test-miembro',
-        name: 'Test Miembro',
+        name: 'Miembro de Prueba',
         email: 'miembro_test@lldmrodeo.org',
         role: 'Miembro',
         category: 'Varon',
         gender: 'Varon',
         privileges: [],
-        avatar: 'https://ui-avatars.com/api/?name=Test+Miembro&background=random'
-    },
-    {
-        id: 'test-asistencia',
-        name: 'Test Asistencia',
-        email: 'asistencia_test@lldmrodeo.org',
-        role: 'Responsable de Asistencia',
-        category: 'Hermana',
-        gender: 'Hermana',
-        privileges: ['monitor'],
-        avatar: 'https://ui-avatars.com/api/?name=Test+Asistencia&background=random'
-    },
-    {
-        id: 'test-coro',
-        name: 'Test Coro',
-        email: 'coro_test@lldmrodeo.org',
-        role: 'Dirigente Coro Adultos',
-        category: 'Varon',
-        gender: 'Varon',
-        privileges: ['choir'],
-        avatar: 'https://ui-avatars.com/api/?name=Test+Coro&background=random'
-    },
-    {
-        id: 'test-jovenes',
-        name: 'Test Jóvenes',
-        email: 'jovenes_test@lldmrodeo.org',
-        role: 'Encargado de Jóvenes',
-        category: 'Varon',
-        gender: 'Varon',
-        privileges: ['youth_leader'],
-        avatar: 'https://ui-avatars.com/api/?name=Test+Jovenes&background=random'
+        avatar: 'https://ui-avatars.com/api/?name=Miembro+Prueba&background=random'
     }
 ];
