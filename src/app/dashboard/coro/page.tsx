@@ -253,7 +253,9 @@ export default function CoroDashboard() {
                                             <Button size="sm" variant="ghost" className="h-6 flex-1 text-[9px] uppercase font-black" onClick={() => setShowUniformForm(false)}>Cancelar</Button>
                                             <Button size="sm" className="h-6 flex-1 text-[9px] uppercase font-black bg-pink-500 hover:bg-pink-400 text-white" onClick={() => {
                                                 if (newUniform.name) {
-                                                    addUniform({ id: Math.random().toString(36).substr(2, 9), category: 'Adulto', ...newUniform });
+                                                    const newId = Math.random().toString(36).substr(2, 9);
+                                                    addUniform({ id: newId, category: 'Adulto', ...newUniform });
+                                                    saveUniformToCloud(newUniform.name, 'Adulto', newUniform.varones, newUniform.hermanas, undefined);
                                                     setShowUniformForm(false);
                                                     setNewUniform({ name: '', varones: { traje: '', pantalon: '', camisa: '', corbata: '' }, hermanas: { toga: '', chalina: '', falda: '', blusa: '' } });
                                                 }
@@ -267,8 +269,8 @@ export default function CoroDashboard() {
                                                 <div>
                                                     <p className="text-[10px] font-bold text-foreground">{u.name}</p>
                                                     <p className="text-[8px] text-slate-500 leading-tight mt-0.5">
-                                                        V: {u.varones?.traje ? `Tr: ${u.varones.traje}` : `P: ${u.varones?.pantalon}, C: ${u.varones?.camisa}`}, Corb: {u.varones?.corbata}<br />
-                                                        H: {u.hermanas?.toga ? `T: ${u.hermanas.toga}` : `F: ${u.hermanas?.falda}, B: ${u.hermanas?.blusa}`}, Ch: {u.hermanas?.chalina}
+                                                        V: {u.varones?.traje ? `Tr: ${u.varones.traje}` : (u.varones?.pantalon || u.varones?.camisa) ? `P: ${u.varones?.pantalon}, C: ${u.varones?.camisa}` : 'No Asignado'}, Corb: {u.varones?.corbata}<br />
+                                                        H: {u.hermanas?.toga ? `T: ${u.hermanas.toga}` : (u.hermanas?.falda || u.hermanas?.blusa) ? `F: ${u.hermanas?.falda}, B: ${u.hermanas?.blusa}` : 'No Asignado'}, Ch: {u.hermanas?.chalina}
                                                     </p>
                                                 </div>
                                                 <button onClick={() => removeUniform(u.id)} className="text-red-500/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -403,10 +405,10 @@ export default function CoroDashboard() {
                                             {uniform && (
                                                 <div className="flex gap-3 mt-1 opacity-70">
                                                     <span className="text-[8px] font-medium leading-tight">
-                                                        <strong className="text-slate-400">Varones:</strong> {uniform.varones?.traje ? `Tr: ${uniform.varones.traje}` : `P: ${uniform.varones?.pantalon}, C: ${uniform.varones?.camisa}`}, Corb: {uniform.varones?.corbata}
+                                                        <strong className="text-slate-400">Varones:</strong> {uniform.varones?.traje ? `Tr: ${uniform.varones.traje}` : (uniform.varones?.pantalon || uniform.varones?.camisa) ? `P: ${uniform.varones?.pantalon}, C: ${uniform.varones?.camisa}` : 'No Asignado'}, Corb: {uniform.varones?.corbata}
                                                     </span>
                                                     <span className="text-[8px] font-medium leading-tight border-l border-white/10 pl-3">
-                                                        <strong className="text-slate-400">Hermanas:</strong> {uniform.hermanas?.toga ? `T: ${uniform.hermanas.toga}` : `F: ${uniform.hermanas?.falda}, B: ${uniform.hermanas?.blusa}`}, Ch: {uniform.hermanas?.chalina}
+                                                        <strong className="text-slate-400">Hermanas:</strong> {uniform.hermanas?.toga ? `T: ${uniform.hermanas.toga}` : (uniform.hermanas?.falda || uniform.hermanas?.blusa) ? `F: ${uniform.hermanas?.falda}, B: ${uniform.hermanas?.blusa}` : 'No Asignado'}, Ch: {uniform.hermanas?.chalina}
                                                     </span>
                                                 </div>
                                             )}
