@@ -21,11 +21,17 @@ interface AttendanceMember {
     category: 'Adulto' | 'Niño';
     email: string;
     avatar: string;
+    attendance: {
+        '5am': { present: boolean; time: string | null };
+        '9am': { present: boolean; time: string | null };
+        'evening': { present: boolean; time: string | null };
+    };
     present: boolean;
     time: string | null;
     parentName?: string;
     deliveredBy?: string;
     collectedBy?: string;
+    targetSession?: string;
 }
 
 export default function AttendanceDashboard() {
@@ -46,7 +52,8 @@ export default function AttendanceDashboard() {
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
     const [isSaving, setIsSaving] = useState(false);
     const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
-    const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, boolean>>({});
+    // MemberID -> Record<SessionType, present>
+    const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({});
 
     useEffect(() => {
         loadMembersFromCloud();
@@ -77,11 +84,22 @@ export default function AttendanceDashboard() {
 
     // Transform store members into attendance-ready members
     const members = useMemo(() => {
+        const recordsForDay = attendanceRecords[selectedDate] || [];
+
         return storeMembers.map(m => {
-            const record = currentSessionAttendance.find(r => r.member_id === m.id);
-            const isPresent = optimisticAttendance[m.id] !== undefined
-                ? optimisticAttendance[m.id]
-                : (record?.present || false);
+            const getSessionData = (session: '5am' | '9am' | 'evening') => {
+                const record = recordsForDay.find(r => r.member_id === m.id && r.session_type === session);
+                const isPresent = (optimisticAttendance[m.id] && optimisticAttendance[m.id][session] !== undefined)
+                    ? optimisticAttendance[m.id][session]
+                    : (record?.present || false);
+
+                return {
+                    present: isPresent,
+                    time: record?.time || (isPresent ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null)
+                };
+            };
+
+            const currentSessData = getSessionData(currentSession);
 
             return {
                 id: m.id,
@@ -90,14 +108,19 @@ export default function AttendanceDashboard() {
                 category: (m.category === 'Niño' ? 'Niño' : 'Adulto') as 'Adulto' | 'Niño',
                 email: m.email,
                 avatar: m.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-                present: isPresent,
-                time: record?.time || (isPresent ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null),
-                deliveredBy: record?.delivered_by || '',
-                collectedBy: record?.collected_by || '',
+                attendance: {
+                    '5am': getSessionData('5am'),
+                    '9am': getSessionData('9am'),
+                    'evening': getSessionData('evening')
+                },
+                present: currentSessData.present,
+                time: currentSessData.time,
+                deliveredBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.delivered_by || '',
+                collectedBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.collected_by || '',
                 parentName: (m as any).parentName || ''
             };
         });
-    }, [storeMembers, currentSessionAttendance, optimisticAttendance]);
+    }, [storeMembers, attendanceRecords, selectedDate, optimisticAttendance, currentSession]);
 
     const [securityChild, setSecurityChild] = useState<any | null>(null);
 
@@ -113,23 +136,32 @@ export default function AttendanceDashboard() {
         setSelectedDate(format(d, 'yyyy-MM-dd'));
     };
 
-    const toggleAttendance = async (memberId: string) => {
+    const toggleAttendance = async (memberId: string, sessionType: '5am' | '9am' | 'evening') => {
         const member = members.find(m => m.id === memberId);
         if (!member) return;
 
-        if (member.category === 'Niño' && !member.present) {
-            setSecurityChild(member);
+        const sessionData = member.attendance[sessionType];
+
+        if (member.category === 'Niño' && !sessionData.present) {
+            // For children, we still use the security modal, but need to know which session
+            setSecurityChild({ ...member, targetSession: sessionType });
             return;
         }
 
         // Optimistic Update
-        const nextState = !member.present;
-        setOptimisticAttendance(prev => ({ ...prev, [memberId]: nextState }));
+        const nextState = !sessionData.present;
+        setOptimisticAttendance(prev => ({
+            ...prev,
+            [memberId]: {
+                ...(prev[memberId] || {}),
+                [sessionType]: nextState
+            }
+        }));
 
         const newRecord = {
             member_id: memberId,
             date: selectedDate,
-            session_type: currentSession,
+            session_type: sessionType,
             present: nextState,
             time: nextState ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
         };
@@ -139,9 +171,10 @@ export default function AttendanceDashboard() {
         } catch (error) {
             // Revert on error
             setOptimisticAttendance(prev => {
-                const updated = { ...prev };
-                delete updated[memberId];
-                return updated;
+                if (!prev[memberId]) return prev;
+                const updatedSession = { ...prev[memberId] };
+                delete updatedSession[sessionType];
+                return { ...prev, [memberId]: updatedSession };
             });
             alert("Error al guardar la asistencia. Intenta de nuevo.");
         }
@@ -149,15 +182,18 @@ export default function AttendanceDashboard() {
 
     const handleSecurityUpdate = async (id: string, type: 'delivered' | 'collected', value: string) => {
         const member = members.find(m => m.id === id);
-        if (!member) return;
+        if (!member || !securityChild) return;
+
+        const sessionToUpdate = securityChild.targetSession || currentSession;
+        const sessionData = member.attendance[sessionToUpdate as keyof typeof member.attendance];
 
         const isCheckIn = type === 'delivered';
         const newRecord = {
             member_id: id,
             date: selectedDate,
-            session_type: currentSession,
-            present: isCheckIn ? true : (value ? false : member.present),
-            time: isCheckIn ? (member.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : member.time,
+            session_type: sessionToUpdate,
+            present: isCheckIn ? true : (value ? false : sessionData.present),
+            time: isCheckIn ? (sessionData.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : sessionData.time,
             delivered_by: type === 'delivered' ? value : member.deliveredBy,
             collected_by: type === 'collected' ? value : member.collectedBy
         };
@@ -174,8 +210,12 @@ export default function AttendanceDashboard() {
 
             setTimeout(() => {
                 setIsSaving(false);
-                const attended = members.filter(m => m.present).length;
-                alert(`Sincronización completa. ${attended} miembros registrados correctamente.`);
+                const attendedOverall = members.filter(m =>
+                    m.attendance['5am'].present ||
+                    m.attendance['9am'].present ||
+                    m.attendance['evening'].present
+                ).length;
+                alert(`Sincronización completa. ${attendedOverall} miembros marcados en total para el día.`);
             }, 800);
         } catch (error) {
             setIsSaving(false);
@@ -198,11 +238,11 @@ export default function AttendanceDashboard() {
     }, [members, searchTerm, activeTab]);
 
     const stats = {
-        varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && m.present).length,
-        hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && m.present).length,
-        ninos: members.filter(m => m.category === 'Niño' && m.present).length,
+        varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && m.attendance[currentSession].present).length,
+        hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && m.attendance[currentSession].present).length,
+        ninos: members.filter(m => m.category === 'Niño' && m.attendance[currentSession].present).length,
         total: members.length,
-        totalPresent: members.filter(m => m.present).length
+        totalPresent: members.filter(m => m.attendance[currentSession].present).length
     };
 
 
@@ -442,43 +482,60 @@ export default function AttendanceDashboard() {
                             {filteredMembers.map((member) => (
                                 <motion.div
                                     key={member.id}
-                                    whileTap={{ scale: 0.97 }}
-                                    onClick={() => toggleAttendance(member.id)}
+                                    whileTap={{ scale: 0.99 }}
                                     className={cn(
-                                        "p-4 md:p-6 flex items-center justify-between cursor-pointer transition-all duration-300 group hover:z-10",
-                                        member.present ? "bg-emerald-500/10 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]" : "hover:bg-foreground/[0.03]"
+                                        "p-4 md:p-6 flex items-center justify-between transition-all duration-300 group hover:z-10",
+                                        "hover:bg-foreground/[0.03] border-b border-white/5"
                                     )}
                                 >
-                                    <div className="flex items-center gap-3 md:gap-4 flex-1">
+                                    <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
                                         <div className={cn(
                                             "w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all duration-300 shrink-0",
-                                            member.present ? "border-emerald-500/50 scale-105 shadow-[0_0_15px_rgba(16,185,129,0.2)]" : "border-border/40"
+                                            "border-border/40"
                                         )}>
                                             <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
                                         </div>
-                                        <div className="min-w-0">
+                                        <div className="min-w-0 pr-2">
                                             <p className={cn(
-                                                "font-black uppercase tracking-tight transition-colors text-sm md:text-lg truncate",
-                                                member.present ? "text-foreground" : "text-slate-400 group-hover:text-foreground"
+                                                "font-black uppercase tracking-tight transition-colors text-sm md:text-lg truncate text-foreground/90"
                                             )}>{member.name}</p>
-                                            <div className="flex flex-col gap-0.5 mt-0.5">
-                                                <span className="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">{member.category}</span>
-                                                {member.present && (
-                                                    <span className="text-[9px] md:text-[10px] text-emerald-500 font-black flex items-center gap-1 mt-1">
-                                                        <Clock className="h-2.5 w-2.5 md:h-3 md:w-3" /> {member.time}
-                                                    </span>
-                                                )}
-                                            </div>
+                                            <span className="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none block mt-0.5">{member.category}</span>
                                         </div>
                                     </div>
 
-                                    <div className={cn(
-                                        "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-500 shrink-0 ml-2",
-                                        member.present
-                                            ? "bg-emerald-500 text-black rotate-0 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-                                            : "bg-foreground/5 text-slate-600 -rotate-90 group-hover:rotate-0 group-hover:bg-foreground/10 group-hover:text-slate-400"
-                                    )}>
-                                        {member.present ? <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6" /> : <XCircle className="h-5 w-5 md:h-6 md:w-6" />}
+                                    {/* Triple Selection Circles */}
+                                    <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                                        {[
+                                            { id: '5am', label: '5' },
+                                            { id: '9am', label: '9' },
+                                            { id: 'evening', label: 'T' }
+                                        ].map((sess) => {
+                                            const isPresent = member.attendance[sess.id as keyof typeof member.attendance].present;
+                                            return (
+                                                <div key={sess.id} className="flex flex-col items-center gap-1">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            toggleAttendance(member.id, sess.id as any);
+                                                        }}
+                                                        className={cn(
+                                                            "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 font-black text-[10px] sm:text-xs",
+                                                            isPresent
+                                                                ? "bg-emerald-500 border-emerald-400 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] scale-110"
+                                                                : "bg-foreground/5 border-border/20 text-slate-500 hover:border-emerald-500/50"
+                                                        )}
+                                                    >
+                                                        {isPresent ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : sess.label}
+                                                    </button>
+                                                    <span className={cn(
+                                                        "text-[7px] uppercase font-black tracking-tighter",
+                                                        isPresent ? "text-emerald-500" : "text-slate-600"
+                                                    )}>
+                                                        {sess.id === 'evening' ? 'Tarde' : sess.id}
+                                                    </span>
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                 </motion.div>
                             ))}
