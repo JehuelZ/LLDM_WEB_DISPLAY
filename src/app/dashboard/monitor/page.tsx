@@ -280,28 +280,28 @@ export default function AttendanceDashboard() {
 
                 <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
                     {/* Session Selector */}
-                    <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-5 md:p-6 relative overflow-hidden group">
+                    <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-4 md:p-6 relative overflow-hidden group">
                         <div className="flex items-center gap-3 mb-4">
                             <Clock className="h-4 w-4 md:h-5 md:w-5 text-emerald-500" />
                             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Seleccionar Sesión</span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2 relative z-10">
+                        <div className="grid grid-cols-3 gap-3 relative z-10">
                             {availableSessions.map((session) => (
                                 <button
                                     key={session.id}
                                     onClick={() => setCurrentSession(session.id as any)}
                                     className={cn(
-                                        "flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-300 gap-1",
+                                        "flex flex-col items-center justify-center py-3 md:py-2 px-1 rounded-2xl border transition-all duration-300 gap-1.5",
                                         currentSession === session.id
                                             ? "bg-emerald-500 border-emerald-400 text-black shadow-lg scale-105"
                                             : "bg-foreground/5 border-border/40 text-slate-400 hover:border-emerald-500/50"
                                     )}
                                 >
-                                    <span className="text-[10px] font-black uppercase tracking-tight">{session.label}</span>
+                                    <span className="text-[10px] md:text-xs font-black uppercase tracking-tight leading-none">{session.label}</span>
                                 </button>
                             ))}
                         </div>
-                        <p className="text-[10px] text-slate-500 mt-4 uppercase font-bold text-center italic">{format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}</p>
+                        <p className="text-[9px] md:text-[10px] text-slate-500 mt-4 uppercase font-bold text-center italic">{format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}</p>
                     </Card>
 
                     {/* Attendance Stats Chart (Donut-like) */}
@@ -375,33 +375,33 @@ export default function AttendanceDashboard() {
                 </div>
 
                 {/* View Tabs */}
-                <div className="flex p-1 bg-foreground/5 rounded-2xl md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
+                <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2x md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
                     <button
                         onClick={() => setActiveTab('varones')}
                         className={cn(
-                            "flex-1 md:flex-none px-4 md:px-8 py-2 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                            activeTab === 'varones' ? "bg-primary text-black shadow-lg" : "text-slate-500 hover:text-foreground"
+                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                            activeTab === 'varones' ? "bg-primary text-black shadow-lg shadow-primary/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                         )}
                     >
-                        <Shield className="w-3.5 h-3.5 md:w-4 md:h-4" /> Varones <span className="opacity-50 font-bold hidden xs:inline">({stats.varones})</span>
+                        <Shield className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones})</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('hermanas')}
                         className={cn(
-                            "flex-1 md:flex-none px-4 md:px-8 py-2 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                            activeTab === 'hermanas' ? "bg-rose-500 text-black shadow-lg" : "text-slate-500 hover:text-foreground"
+                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                            activeTab === 'hermanas' ? "bg-rose-500 text-black shadow-lg shadow-rose-500/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                         )}
                     >
-                        <Star className="w-3.5 h-3.5 md:w-4 md:h-4" /> Hermanas <span className="opacity-50 font-bold hidden xs:inline">({stats.hermanas})</span>
+                        <Star className="w-4 h-4" /> Hermanas <span className="opacity-50 font-bold ml-1">({stats.hermanas})</span>
                     </button>
                     <button
                         onClick={() => setActiveTab('ninos')}
                         className={cn(
-                            "flex-1 md:flex-none px-4 md:px-8 py-2 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                            activeTab === 'ninos' ? "bg-cyan-400 text-black shadow-lg" : "text-slate-500 hover:text-foreground"
+                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                            activeTab === 'ninos' ? "bg-cyan-400 text-black shadow-lg shadow-cyan-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                         )}
                     >
-                        <Baby className="w-3.5 h-3.5 md:w-4 md:h-4" /> Niños <span className="opacity-50 font-bold hidden xs:inline">({stats.ninos})</span>
+                        <Baby className="w-4 h-4" /> Niños <span className="opacity-50 font-bold ml-1">({stats.ninos})</span>
                     </button>
                 </div>
 
