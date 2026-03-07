@@ -1,216 +1,265 @@
 
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
-import { Shield, Lock, ArrowRight, User, Globe } from 'lucide-react';
+import { Shield, Lock, ArrowRight, User, Globe, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
+
+// --- Particle Components ---
+
+const BokehLayer = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+        {[...Array(6)].map((_, i) => (
+            <motion.div
+                key={`bokeh-${i}`}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{
+                    opacity: [0.1, 0.3, 0.1],
+                    scale: [1, 1.2, 1],
+                    x: [Math.random() * 100 + '%', Math.random() * 100 + '%'],
+                    y: [Math.random() * 100 + '%', Math.random() * 10 + '%'],
+                }}
+                transition={{
+                    duration: 30 + i * 5,
+                    repeat: Infinity,
+                    ease: "linear"
+                }}
+                className="absolute rounded-full bg-amber-500/20 blur-[100px]"
+                style={{
+                    width: `${300 + Math.random() * 200}px`,
+                    height: `${300 + Math.random() * 200}px`,
+                }}
+            />
+        ))}
+    </div>
+);
+
+const GoldenDustLayer = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(60)].map((_, i) => {
+            const size = Math.random() * 3 + 1;
+            const duration = 15 + Math.random() * 25;
+            const delay = Math.random() * 10;
+            return (
+                <motion.div
+                    key={`dust-${i}`}
+                    initial={{
+                        opacity: 0,
+                        x: Math.random() * 100 + "%",
+                        y: "110%"
+                    }}
+                    animate={{
+                        opacity: [0, 0.8, 0],
+                        y: "-10%",
+                        x: [
+                            (Math.random() * 100) + "%",
+                            (Math.random() * 100) + "%"
+                        ]
+                    }}
+                    transition={{
+                        duration: duration,
+                        repeat: Infinity,
+                        delay: delay,
+                        ease: "linear"
+                    }}
+                    className="absolute bg-amber-400 rounded-full blur-[0.5px] shadow-[0_0_5px_rgba(251,191,36,0.6)]"
+                    style={{
+                        width: size,
+                        height: size,
+                    }}
+                />
+            );
+        })}
+    </div>
+);
+
+const LightSweep = () => (
+    <motion.div
+        animate={{
+            x: ['-100%', '200%'],
+            opacity: [0, 0.5, 0]
+        }}
+        transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatDelay: 4,
+            ease: "easeInOut"
+        }}
+        className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-amber-400/5 to-transparent skew-x-12"
+    />
+);
 
 export function LoginScreen() {
     const { signInWithGoogle, signInWithEmail } = useAppStore();
+    const [isHovered, setIsHovered] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#020617] font-sora">
-            {/* Cinematic Particle Background */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {/* Darker base gradient */}
-                <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-[#020617] to-slate-900" />
-
-                {/* Large Ambient Glows */}
-                <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[80%] bg-primary/5 rounded-full blur-[150px] animate-pulse" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[80%] h-[80%] bg-blue-600/5 rounded-full blur-[150px] animate-pulse delay-1000" />
-
-                {/* Animated Digital Motas (Dust/Particles) */}
-                {[...Array(30)].map((_, i) => {
-                    const size = Math.random() * 8 + 2;
-                    const isBlue = Math.random() > 0.6;
-                    const isBlurred = Math.random() > 0.5;
-                    const duration = Math.random() * 20 + 10;
-                    const delay = Math.random() * 10;
-
-                    return (
-                        <motion.div
-                            key={i}
-                            initial={{
-                                x: Math.random() * 100 + "%",
-                                y: Math.random() * 100 + "%",
-                                opacity: 0
-                            }}
-                            animate={{
-                                x: [
-                                    Math.random() * 100 + "%",
-                                    Math.random() * 100 + "%",
-                                    Math.random() * 100 + "%"
-                                ],
-                                y: [
-                                    Math.random() * 100 + "%",
-                                    Math.random() * 100 + "%",
-                                    Math.random() * 100 + "%"
-                                ],
-                                opacity: [0, Math.random() * 0.5 + 0.2, 0]
-                            }}
-                            transition={{
-                                duration: duration,
-                                repeat: Infinity,
-                                delay: delay,
-                                ease: "easeInOut"
-                            }}
-                            className={cn(
-                                "absolute rounded-full",
-                                isBlue ? "bg-blue-400" : "bg-amber-400",
-                                isBlurred ? "blur-[6px]" : "blur-[1px]",
-                                "shadow-[0_0_10px_rgba(255,255,255,0.3)]"
-                            )}
-                            style={{
-                                width: size,
-                                height: size,
-                            }}
-                        />
-                    );
-                })}
-
-                <div className="absolute inset-0 dots-pattern opacity-10" />
+        <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#02040a] font-sora">
+            {/* Cinematic Background Layering */}
+            <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-[#02040a]" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.03)_0%,transparent_70%)]" />
+                <BokehLayer />
+                <GoldenDustLayer />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#02040a]/50 to-[#02040a]" />
+                <div className="absolute inset-0 dots-pattern opacity-10 mix-blend-overlay" />
             </div>
 
-            {/* Login Card */}
+            {/* Main Content Area */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-10 w-full max-w-[440px] px-6"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                className="relative z-10 w-full max-w-[480px] px-6 py-12"
             >
-                <div className="glass-panel p-10 md:p-12 rounded-[2.5rem] border border-white/10 bg-white/[0.03] backdrop-blur-2xl shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
+                <div
+                    className="relative group transition-all duration-700"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                >
+                    {/* Dynamic Outer Glow */}
+                    <div className={cn(
+                        "absolute -inset-1 bg-amber-500/20 rounded-[3rem] blur-2xl transition-opacity duration-1000",
+                        isHovered ? "opacity-40" : "opacity-0"
+                    )} />
 
-                    {/* Brand / Logo Section */}
-                    <div className="flex flex-col items-center text-center mb-10">
-                        <motion.div
-                            initial={{ rotate: -10, scale: 0.8 }}
-                            animate={{ rotate: 0, scale: 1 }}
-                            transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                            className="w-20 h-20 mb-6 relative"
-                        >
-                            <div className="absolute inset-0 bg-amber-500/20 rounded-3xl blur-2xl animate-pulse" />
-                            <div className="relative w-full h-full bg-slate-900 rounded-3xl border border-white/10 flex items-center justify-center p-4">
-                                <img
-                                    src="/flama-oficial.svg"
-                                    style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(354deg) brightness(103%) contrast(100%)' }}
-                                    className="w-full h-full object-contain drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
-                                    alt="Logo LLDM"
-                                />
+                    {/* Premium Glass Card */}
+                    <div className="relative glass-panel-premium overflow-hidden rounded-[2.5rem] border border-white/10 p-10 md:p-14 shadow-[0_40px_100px_rgba(0,0,0,0.8)]">
+                        <LightSweep />
+
+                        {/* Logo & Identity */}
+                        <div className="flex flex-col items-center text-center mb-12">
+                            <motion.div
+                                animate={isHovered ? { scale: 1.05, rotate: 2 } : { scale: 1, rotate: 0 }}
+                                className="w-24 h-24 mb-6 relative"
+                            >
+                                <div className="absolute inset-0 bg-amber-500/30 rounded-3xl blur-2xl animate-pulse" />
+                                <div className="relative w-full h-full bg-slate-950/80 rounded-3xl border border-amber-500/20 flex items-center justify-center p-5 shadow-inner">
+                                    <img
+                                        src="/flama-oficial.svg"
+                                        style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%)' }}
+                                        className="w-full h-full object-contain drop-shadow-[0_0_12px_rgba(212,175,55,0.6)]"
+                                        alt="LLDM"
+                                    />
+                                </div>
+                            </motion.div>
+
+                            <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-2 leading-none">
+                                LLDM <span className="text-amber-500">RODEO</span>
+                            </h1>
+                            <div className="flex items-center gap-3">
+                                <span className="w-6 md:w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
+                                <span className="text-[9px] uppercase font-black tracking-[0.4em] text-amber-500/60 flex items-center gap-2">
+                                    <Sparkles className="w-2 h-2" /> Digital Experience
+                                </span>
+                                <span className="w-6 md:w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
                             </div>
-                        </motion.div>
-
-                        <h1 className="text-4xl font-black italic uppercase tracking-tighter text-white mb-2">
-                            LLDM <span className="text-amber-400">RODEO</span>
-                        </h1>
-                        <div className="flex items-center gap-2 text-slate-400">
-                            <span className="w-10 h-px bg-white/10" />
-                            <span className="text-[10px] uppercase font-black tracking-[0.3em]">Tablero Digital</span>
-                            <span className="w-10 h-px bg-white/10" />
                         </div>
-                    </div>
 
-                    {/* Welcome Text */}
-                    <div className="space-y-4 mb-10 text-center">
-                        <h2 className="text-xl font-bold text-white tracking-tight">Bienvenido de nuevo</h2>
-                        <p className="text-sm text-slate-400 leading-relaxed">
-                            Ingresa con tu cuenta institucional para acceder al sistema de gestión y visualización.
-                        </p>
-                    </div>
+                        {/* Login Options Container */}
+                        <div className="space-y-8">
+                            {/* Google Sign In Area */}
+                            <motion.button
+                                whileHover={{ scale: 1.02, y: -2 }}
+                                whileTap={{ scale: 0.98 }}
+                                onClick={signInWithGoogle}
+                                className="w-full group relative h-16 rounded-2xl bg-white border border-transparent flex items-center justify-between px-6 transition-all shadow-xl hover:shadow-amber-500/10"
+                            >
+                                <div className="flex items-center gap-4">
+                                    <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G" />
+                                    <span className="text-slate-900 font-extrabold uppercase tracking-widest text-xs">Acceso con Google</span>
+                                </div>
+                                <div className="w-8 h-8 rounded-full bg-slate-900/5 group-hover:bg-amber-500 flex items-center justify-center transition-all group-hover:rotate-[-45deg]">
+                                    <ArrowRight className="w-4 h-4 text-slate-800 group-hover:text-white" />
+                                </div>
+                            </motion.button>
 
-                    {/* Google Login Button (Premium Style) */}
-                    <motion.button
-                        whileHover={{ y: -5, scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={signInWithGoogle}
-                        className="w-full h-16 group relative overflow-hidden rounded-2xl bg-white flex items-center justify-center gap-4 transition-all duration-300 hover:shadow-[0_20px_40px_rgba(255,255,255,0.15)] active:y-0 shadow-xl"
-                    >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                            <div className="relative flex items-center py-2">
+                                <div className="flex-grow border-t border-white/5"></div>
+                                <span className="flex-shrink mx-4 text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">O credenciales</span>
+                                <div className="flex-grow border-t border-white/5"></div>
+                            </div>
 
-                        <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="Google" />
-                        <span className="text-slate-900 font-black uppercase tracking-widest text-xs">Entrar con Google</span>
+                            {/* Email / Pass Inputs */}
+                            <div className="space-y-4">
+                                <div className="group/input relative">
+                                    <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-amber-500 transition-colors" />
+                                    <input
+                                        type="email"
+                                        placeholder="CORREO"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full h-14 pl-14 pr-4 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all font-bold text-[11px] tracking-widest"
+                                    />
+                                </div>
+                                <div className="group/input relative">
+                                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-amber-500 transition-colors" />
+                                    <input
+                                        type="password"
+                                        placeholder="CONTRASEÑA"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full h-14 pl-14 pr-4 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all font-bold text-[11px] tracking-widest"
+                                    />
+                                </div>
 
-                        <div className="ml-2 w-8 h-8 rounded-full bg-slate-900/5 group-hover:bg-slate-950 flex items-center justify-center transition-colors">
-                            <ArrowRight className="w-4 h-4 text-slate-900 group-hover:text-white transition-colors" />
+                                <motion.button
+                                    whileHover={{ scale: 1.01 }}
+                                    whileTap={{ scale: 0.99 }}
+                                    onClick={async () => {
+                                        if (!email || !password) {
+                                            alert('Ingrese sus credenciales');
+                                            return;
+                                        }
+                                        await signInWithEmail(email, password);
+                                    }}
+                                    className="w-full h-14 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-amber-500/10 transition-colors"
+                                >
+                                    INGRESAR AL SISTEMA
+                                </motion.button>
+                            </div>
                         </div>
-                    </motion.button>
 
-                    <div className="my-8 flex items-center gap-4">
-                        <div className="h-px flex-1 bg-white/10" />
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">O con credenciales</span>
-                        <div className="h-px flex-1 bg-white/10" />
-                    </div>
-
-                    {/* Email/Password Form */}
-                    <div className="space-y-4">
-                        <div className="relative">
-                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                            <input
-                                type="email"
-                                id="login-email"
-                                placeholder="Correo institucional"
-                                className="w-full h-14 pl-12 pr-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all font-medium text-sm"
-                            />
-                        </div>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                            <input
-                                type="password"
-                                id="login-password"
-                                placeholder="Contraseña provicional"
-                                className="w-full h-14 pl-12 pr-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-400/50 focus:ring-1 focus:ring-amber-400/20 transition-all font-medium text-sm"
-                            />
-                        </div>
-                        <Button
-                            onClick={async () => {
-                                const email = (document.getElementById('login-email') as HTMLInputElement).value;
-                                const password = (document.getElementById('login-password') as HTMLInputElement).value;
-                                if (!email || !password) {
-                                    alert('Por favor ingresa correo y contraseña');
-                                    return;
-                                }
-                                const { success, error } = await signInWithEmail(email, password);
-                                if (!success) {
-                                    alert('Error: ' + error);
-                                }
-                            }}
-                            className="w-full h-14 rounded-xl bg-amber-400 text-slate-950 font-black uppercase tracking-[0.2em] text-[10px] hover:bg-amber-300 transition-all shadow-lg shadow-amber-400/10"
-                        >
-                            Ingresar al Sistema
-                        </Button>
-                    </div>
-
-                    {/* Footer Info */}
-                    <div className="mt-12 pt-8 border-t border-white/5 grid grid-cols-2 gap-4 text-[9px] font-black uppercase tracking-widest text-slate-500">
-                        <div className="flex items-center gap-2">
-                            <Shield className="w-3 h-3 text-primary" />
-                            Acceso Seguro
-                        </div>
-                        <div className="flex items-center gap-2 justify-end">
-                            <Globe className="w-3 h-3 text-blue-400" />
-                            Global Systems
+                        {/* High Fidelity Footer */}
+                        <div className="mt-14 pt-8 border-t border-white/5 flex items-center justify-between text-[8px] font-bold uppercase tracking-widest text-slate-600">
+                            <div className="flex items-center gap-2">
+                                <Shield className="w-3 h-3 text-amber-500/50" />
+                                AES-256 SECURED
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Globe className="w-3 h-3 text-blue-500/50" />
+                                LLDM NETWORK
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* External Links / Help */}
-                <div className="mt-8 flex justify-center gap-6">
-                    <button className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Ayuda</button>
-                    <span className="w-1 h-1 rounded-full bg-slate-800 self-center" />
-                    <button className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Contacto</button>
-                    <span className="w-1 h-1 rounded-full bg-slate-800 self-center" />
-                    <button className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors">Privacidad</button>
+                {/* Sub-Card Actions */}
+                <div className="mt-10 flex justify-center gap-8 px-4">
+                    {['Ayuda', 'Contacto', 'Privacidad'].map((item) => (
+                        <button key={item} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 hover:text-amber-500 transition-colors">
+                            {item}
+                        </button>
+                    ))}
                 </div>
             </motion.div>
 
             <style jsx>{`
-                .glass-panel {
-                    background: rgba(255, 255, 255, 0.02);
-                    backdrop-filter: blur(25px);
+                .glass-panel-premium {
+                    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+                    backdrop-filter: blur(40px) saturate(180%);
                     box-shadow: 
-                        0 4px 24px -1px rgba(0, 0, 0, 0.2), 
-                        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+                        0 20px 50px -10px rgba(0, 0, 0, 0.5),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+                }
+                .dots-pattern {
+                    background-image: radial-gradient(rgba(212, 175, 55, 0.15) 1px, transparent 1px);
+                    background-size: 24px 24px;
                 }
             `}</style>
         </div>
