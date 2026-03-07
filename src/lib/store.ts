@@ -687,6 +687,12 @@ export const useAppStore = create<AppState>()(
             },
 
             syncUserWithCloud: async (authUserId) => {
+                // BYPASS for Test Accounts - Keep the currentUser as assigned during login
+                if (get().currentUser?.email?.includes('_test@lldmrodeo.org')) {
+                    console.log("Sync bypass for test account:", get().currentUser.email);
+                    return;
+                }
+
                 const { data: { user: authUser } } = await supabase.auth.getUser();
                 if (!authUser) return;
 
