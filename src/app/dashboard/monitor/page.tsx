@@ -237,13 +237,24 @@ export default function AttendanceDashboard() {
         });
     }, [members, searchTerm, activeTab]);
 
-    const stats = {
-        varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && m.attendance[currentSession].present).length,
-        hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && m.attendance[currentSession].present).length,
-        ninos: members.filter(m => m.category === 'Niño' && m.attendance[currentSession].present).length,
-        total: members.length,
-        totalPresent: members.filter(m => m.attendance[currentSession].present).length
-    };
+    const stats = useMemo(() => {
+        const d = new Date(selectedDate + 'T12:00:00');
+        const isSunday = d.getDay() === 0;
+
+        const getSessCount = (s: '5am' | '9am' | 'evening') => members.filter(m => m.attendance[s].present).length;
+
+        return {
+            varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            ninos: members.filter(m => m.category === 'Niño' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            total: members.length,
+            session5am: getSessCount('5am'),
+            session9am: getSessCount('9am'),
+            sessionEvening: getSessCount('evening'),
+            perfect: members.filter(m => m.attendance['5am'].present && m.attendance['9am'].present && m.attendance['evening'].present).length,
+            isSunday
+        };
+    }, [members, selectedDate]);
 
 
 
@@ -329,69 +340,83 @@ export default function AttendanceDashboard() {
                 </div>
 
 
+                {/* Daily Overview Stats */}
+                <div className="flex items-center justify-between mb-2 px-1">
+                    <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-slate-500 italic">
+                        {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <Calendar className="h-3 w-3 text-emerald-500" />
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resumen del Día</span>
+                    </div>
+                </div>
+
                 <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
-                    {/* Session Selector */}
+                    {/* Session Summary Stats (Replaces Selector) */}
                     <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-4 md:p-6 relative overflow-hidden group">
-                        <div className="flex items-center gap-3 mb-4">
+                        <div className="flex items-center gap-3 mb-6">
                             <Clock className="h-4 w-4 md:h-5 md:w-5 text-emerald-500" />
-                            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Seleccionar Sesión</span>
+                            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Resumen de Oraciones</span>
                         </div>
-                        <div className="grid grid-cols-3 gap-3 relative z-10">
-                            {availableSessions.map((session) => (
-                                <button
-                                    key={session.id}
-                                    onClick={() => setCurrentSession(session.id as any)}
-                                    className={cn(
-                                        "flex flex-col items-center justify-center py-3 md:py-2 px-1 rounded-2xl border transition-all duration-300 gap-1.5",
-                                        currentSession === session.id
-                                            ? "bg-emerald-500 border-emerald-400 text-black shadow-lg scale-105"
-                                            : "bg-foreground/5 border-border/40 text-slate-400 hover:border-emerald-500/50"
-                                    )}
-                                >
-                                    <span className="text-[10px] md:text-xs font-black uppercase tracking-tight leading-none">{session.label}</span>
-                                </button>
+                        <div className="space-y-4 relative z-10">
+                            {[
+                                { label: '5:00 AM', count: stats.session5am, color: 'text-sky-400' },
+                                { label: stats.isSunday ? 'Dominical' : '9:00 AM', count: stats.session9am, color: 'text-emerald-400' },
+                                { label: 'Tarde', count: stats.sessionEvening, color: 'text-amber-400' }
+                            ].map((s) => (
+                                <div key={s.label} className="flex justify-between items-center border-b border-white/5 pb-2 last:border-none">
+                                    <span className="text-[10px] font-black uppercase tracking-tight text-slate-400">{s.label}</span>
+                                    <span className={cn("text-lg font-black italic", s.color)}>{s.count}</span>
+                                </div>
                             ))}
                         </div>
-                        <p className="text-[9px] md:text-[10px] text-slate-500 mt-4 uppercase font-bold text-center italic">{format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}</p>
+                        <div className="mt-4 pt-4 border-t border-emerald-500/20 flex justify-between items-center">
+                            <span className="text-[8px] font-black uppercase text-emerald-500/60 tracking-[0.2em]">Asistencia Perfecta</span>
+                            <div className="flex items-center gap-1.5 bg-emerald-500/20 px-2 py-0.5 rounded-full">
+                                <Star className="h-2.5 w-2.5 text-emerald-500 fill-emerald-500" />
+                                <span className="text-xs font-black text-emerald-500">{stats.perfect}</span>
+                            </div>
+                        </div>
                     </Card>
 
-                    {/* Attendance Stats Chart (Donut-like) */}
+                    {/* Attendance Stats Chart (Based on session with most attendance) */}
                     <Card className="glass-card bg-primary/5 border-primary/20 p-5 md:p-6 flex flex-col justify-center items-center gap-4 relative">
                         <div className="flex w-full justify-between items-start absolute top-4 px-4">
-                            <p className="text-[9px] font-black uppercase tracking-widest text-primary/80">Estadística Global</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-primary/80">Impacto Diario</p>
                             <Users className="h-4 w-4 text-primary opacity-50" />
                         </div>
 
-                        <div className="relative w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
-                            {/* Simple CSS Circular Chart */}
-                            <svg className="w-full h-full -rotate-90">
-                                <circle
-                                    cx="50%"
-                                    cy="50%"
-                                    r="40%"
-                                    className="stroke-foreground/10 fill-none stroke-[8px]"
-                                />
-                                <circle
-                                    cx="50%"
-                                    cy="50%"
-                                    r="40%"
-                                    style={{
-                                        strokeDasharray: '251.2',
-                                        strokeDashoffset: (251.2 - (251.2 * (stats.totalPresent / (stats.total || 1)))).toString()
-                                    }}
-                                    className="stroke-emerald-500 fill-none stroke-[8px] transition-all duration-1000 ease-out"
-                                />
-                            </svg>
-                            <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                <span className="text-xl md:text-2xl font-black text-foreground">{Math.round((stats.totalPresent / (stats.total || 1)) * 100)}%</span>
-                                <span className="text-[8px] uppercase font-bold text-slate-500">Presentes</span>
-                            </div>
-                        </div>
+                        {/* Calculations based on the highest attended session to show "max reach" */}
+                        {(() => {
+                            const maxAttendance = Math.max(stats.session5am, stats.session9am, stats.sessionEvening);
+                            const percentage = Math.round((maxAttendance / (stats.total || 1)) * 100);
+                            return (
+                                <>
+                                    <div className="relative w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
+                                        <svg className="w-full h-full -rotate-90">
+                                            <circle cx="50%" cy="50%" r="40%" className="stroke-foreground/10 fill-none stroke-[8px]" />
+                                            <circle
+                                                cx="50%" cy="50%" r="40%"
+                                                style={{
+                                                    strokeDasharray: '251.2',
+                                                    strokeDashoffset: (251.2 - (251.2 * (maxAttendance / (stats.total || 1)))).toString()
+                                                }}
+                                                className="stroke-emerald-500 fill-none stroke-[8px] transition-all duration-1000 ease-out"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                            <span className="text-xl md:text-2xl font-black text-foreground">{percentage}%</span>
+                                            <span className="text-[8px] uppercase font-bold text-slate-500">Max Alcance</span>
+                                        </div>
+                                    </div>
 
-                        <div className="flex gap-4 text-[10px] font-bold uppercase tracking-tighter">
-                            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> {stats.totalPresent}</div>
-                            <div className="flex items-center gap-1.5 text-slate-500"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total - stats.totalPresent} Faltan</div>
-                        </div>
+                                    <div className="flex gap-4 text-[10px] font-bold uppercase tracking-tighter">
+                                        <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> {maxAttendance} Max</div>
+                                        <div className="flex items-center gap-1.5 text-slate-500"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total} Total</div>
+                                    </div>
+                                </>
+                            );
+                        })()}
                     </Card>
 
                     {/* Group Distribution (Mini Bars) */}
@@ -507,10 +532,12 @@ export default function AttendanceDashboard() {
                                     <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
                                         {[
                                             { id: '5am', label: '5' },
-                                            { id: '9am', label: '9' },
+                                            { id: '9am', label: stats.isSunday ? 'D' : '9' },
                                             { id: 'evening', label: 'T' }
                                         ].map((sess) => {
                                             const isPresent = member.attendance[sess.id as keyof typeof member.attendance].present;
+                                            const sessLabel = sess.id === 'evening' ? 'Tarde' : (sess.id === '9am' && stats.isSunday ? 'Dom' : sess.id);
+
                                             return (
                                                 <div key={sess.id} className="flex flex-col items-center gap-1">
                                                     <button
@@ -531,7 +558,7 @@ export default function AttendanceDashboard() {
                                                         "text-[7px] uppercase font-black tracking-tighter",
                                                         isPresent ? "text-emerald-500" : "text-slate-600"
                                                     )}>
-                                                        {sess.id === 'evening' ? 'Tarde' : sess.id}
+                                                        {sessLabel}
                                                     </span>
                                                 </div>
                                             );
