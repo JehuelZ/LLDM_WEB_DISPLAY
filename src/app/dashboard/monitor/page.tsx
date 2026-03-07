@@ -52,8 +52,8 @@ export default function AttendanceDashboard() {
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
     const [isSaving, setIsSaving] = useState(false);
     const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
-    // MemberID -> Record<SessionType, present>
     const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({});
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
         loadMembersFromCloud();
@@ -62,8 +62,13 @@ export default function AttendanceDashboard() {
     useEffect(() => {
         // Al cambiar de fecha o sesión, limpiamos el estado optimista
         // y cargamos los datos reales desde la nube de inmediato.
-        setOptimisticAttendance({});
-        loadAttendanceFromCloud(selectedDate);
+        const refresh = async () => {
+            setIsRefreshing(true);
+            setOptimisticAttendance({});
+            await loadAttendanceFromCloud(selectedDate);
+            setIsRefreshing(false);
+        };
+        refresh();
     }, [selectedDate, currentSession]);
 
     // Escuchamos cambios en los registros globales para sincronizar el estado local
@@ -344,9 +349,20 @@ export default function AttendanceDashboard() {
                                 </div>
                             ))}
                         </div>
-                        <div className="mt-4 pt-4 border-t border-emerald-500/20 flex justify-between items-center">
-                            <span className="text-[8px] font-black uppercase text-emerald-500/60 tracking-[0.2em]">Asistencia Perfecta</span>
-                            <div className="flex items-center gap-1.5 bg-emerald-500/20 px-2 py-0.5 rounded-full">
+                        <div className="mt-4 pt-4 border-t border-emerald-500/20 flex justify-between items-center gap-2">
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={async () => {
+                                    setIsRefreshing(true);
+                                    await loadAttendanceFromCloud(selectedDate);
+                                    setIsRefreshing(false);
+                                }}
+                                className={cn("text-[9px] font-black uppercase tracking-widest text-emerald-500/50 hover:text-emerald-500 h-7 px-2", isRefreshing && "animate-pulse")}
+                            >
+                                <Users className={cn("h-3 w-3 mr-1", isRefreshing && "animate-spin")} /> {isRefreshing ? 'Actualizando...' : 'Refrescar Datos'}
+                            </Button>
+                            <div className="flex items-center gap-1.5 bg-emerald-500/20 px-2 py-0.5 rounded-full shrink-0">
                                 <Star className="h-2.5 w-2.5 text-emerald-500 fill-emerald-500" />
                                 <span className="text-xs font-black text-emerald-500">{stats.perfect}</span>
                             </div>

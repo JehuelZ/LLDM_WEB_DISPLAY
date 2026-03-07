@@ -1429,7 +1429,15 @@ export const useAppStore = create<AppState>()(
                 const { data, error } = await supabase
                     .from('attendance')
                     .select('*')
-                    .eq('date', date);
+                    .eq('date', date)
+                    .order('id', { ascending: false });
+
+                if (error) {
+                    console.error("Error loading attendance:", error);
+                    // Si falla la red, avisamos
+                    alert("No se pudo sincronizar con la nube. Verifica tu internet.");
+                    return;
+                }
 
                 if (data) {
                     set(state => ({
@@ -1466,9 +1474,10 @@ export const useAppStore = create<AppState>()(
 
                 if (error) {
                     console.error("Error saving attendance:", error);
+                    throw error; // Transmitimos el error para que la UI pueda revertir
                 } else {
                     const date = records[0].date;
-                    get().loadAttendanceFromCloud(date);
+                    await get().loadAttendanceFromCloud(date);
                 }
             },
 
