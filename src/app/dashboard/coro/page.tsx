@@ -17,7 +17,7 @@ export default function CoroDashboard() {
     const {
         uniforms, uniformSchedule, rehearsals, announcements, currentUser,
         addUniform, removeUniform, setUniformForDate, setRehearsals,
-        saveAnnouncementToCloud, sendCloudMessage
+        saveAnnouncementToCloud, sendCloudMessage, saveUniformForDateToCloud
     } = useAppStore();
 
     const [showLeaderPanel, setShowLeaderPanel] = useState(false);
@@ -197,7 +197,10 @@ export default function CoroDashboard() {
                                         <div className="text-[9px] font-black text-slate-500 uppercase w-20">{day.dayName} {format(parseISO(day.date), 'd')}</div>
                                         <select
                                             value={day.uniformId || ''}
-                                            onChange={(e) => setUniformForDate(day.date, e.target.value)}
+                                            onChange={async (e) => {
+                                                setUniformForDate(day.date, e.target.value);
+                                                await saveUniformForDateToCloud(day.date, e.target.value);
+                                            }}
                                             className="bg-foreground/5 border border-border/40 rounded-lg text-[10px] font-bold text-foreground px-2 py-1 flex-1 outline-none"
                                         >
                                             <option value="" className="bg-card">Por asignar</option>
