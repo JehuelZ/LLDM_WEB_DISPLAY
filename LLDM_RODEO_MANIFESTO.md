@@ -50,7 +50,7 @@ Cada tema tiene reglas de oro que no se pueden romper:
 *   **SlotBoxes Stacked**: Cuando un servicio (como el de las 9 AM o el de la tarde) tiene un **solo líder**, el sistema debe usar el estilo "Stacked" (Foto arriba, Nombre en medio, Responsabilidad abajo) para máxima elegancia.
 *   **Badges [EN]**: Cualquier servicio con idioma "English" debe mostrar un badge de alto contraste.
 *   **Avatares**: Priorizamos fotos circulares con bordes de color según el grupo (Coro = Azul/Oro, Jóvenes = Rayo/Púrpura, etc.).
-*   **Dualidad de Diseño (Desktop & Mobile Versions)**: **REGLA DE ORO.** No basta con que el sitio sea "ajustable". Cada página y cada cambio **DEBE** tener dos tratamientos de diseño impecables: una versión optimizada para Desktop y una versión optimizada para Móviles/Tablets. Si un elemento no se ve perfecto en móvil, debe rediseñarse o sustituirse específicamente para esa versión para garantizar legibilidad y usabilidad total.
+*   **Interfaces Adaptativas Radicamente Distintas (Mobile Evolution)**: **REGLA DE ORO.** El sistema no debe limitarse a "ajustar" elementos de escritorio a móvil. Si la experiencia en móvil lo requiere, la interfaz de usuario **DEBE** ser completamente distinta a la de escritorio. Esto incluye botones más grandes, navegación por gestos, menús táctiles y una reestructuración total de los componentes para que el manejo con una sola mano sea impecable y fluido. Móvil y escritorio se tratan como dos productos hermanos pero con necesidades visuales y táctiles únicas.
 
 ---
 
