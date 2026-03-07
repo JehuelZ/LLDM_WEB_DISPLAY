@@ -146,13 +146,13 @@ export const MOCK_MEMBERS: any[] = [
     },
     {
         id: 'abraham-test',
-        name: 'Abraham',
+        name: 'Abraham Diaz',
         email: 'abraham_test@lldmrodeo.org',
         role: 'Encargado de Jóvenes',
         category: 'Varon',
         gender: 'Varon',
         privileges: ['youth_leader'],
-        avatar: 'https://ui-avatars.com/api/?name=Abraham&background=0D8ABC&color=fff'
+        avatar: 'https://ui-avatars.com/api/?name=Abraham+Diaz&background=0D8ABC&color=fff'
     },
     {
         id: 'rebeca-test',
