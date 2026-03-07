@@ -74,9 +74,9 @@ export interface UserProfile {
     avatar: string;
     category: 'Varon' | 'Hermana' | 'Niño';
     member_group?: 'Casados' | 'Casadas' | 'Solos y Solas' | 'Jovenes' | 'Niños' | 'Niñas' | 'Administración';
-    role: 'Miembro' | 'Administrador' | 'Ministro a Cargo' | 'Dirigente Coro Adultos' | 'Dirigente Coro Niños' | 'Responsable de Asistencia' | 'Encargado de Jóvenes';
+    role: 'Miembro' | 'Administrador' | 'Ministro a Cargo' | 'Dirigente Coro Adultos' | 'Dirigente Coro Niños' | 'Responsable de Asistencia' | 'Encargado de Jóvenes' | 'Encargada de Jóvenes' | 'Responsable de Niños' | 'Dirigente del Coro';
     gender: 'Varon' | 'Hermana';
-    status: 'Activo' | 'Inactivo';
+    status: 'Activo' | 'Inactivo' | 'Pendiente';
     lastActive: string;
     stats?: {
         attendance: { attended: number; total: number };
@@ -108,6 +108,22 @@ export interface Uniform {
     name: string;
     description?: string;
     category: 'Adulto' | 'Niño';
+    // Detalles específicos por género
+    varones?: {
+        pantalon?: string;
+        camisa?: string;
+        saco?: string;
+        corbata?: string;
+    };
+    hermanas?: {
+        toga?: string;
+        chalina?: string;
+    };
+    ninas?: {
+        blusa?: string;
+        falda?: string;
+        chalina?: string;
+    };
 }
 
 export interface KidsAssignment {
@@ -303,11 +319,11 @@ export const useAppStore = create<AppState>()(
             },
 
             uniforms: [
-                { id: 'u1', name: 'Gala Blanco', description: 'Traje completo blanco impecable.', category: 'Adulto' },
-                { id: 'u2', name: 'Gala Negro', description: 'Traje negro con corbata roja.', category: 'Adulto' },
-                { id: 'u3', name: 'Casual Azul', description: 'Camisa azul cielo y pantalón beige.', category: 'Adulto' },
-                { id: 'k1', name: 'Túnicas Blancas', description: 'Túnicas reglamentarias para cantos.', category: 'Niño' },
-                { id: 'k2', name: 'Gala Infantil', description: 'Varoncitos traje azul, Niñas vestido blanco.', category: 'Niño' },
+                { id: 'u1', name: 'Gala Blanco', description: 'Traje completo blanco impecable.', category: 'Adulto', varones: { pantalon: 'Blanco', camisa: 'Blanca', saco: 'Blanco', corbata: 'Negra' }, hermanas: { toga: 'Blanca', chalina: 'Blanca' } },
+                { id: 'u2', name: 'Gala Negro', description: 'Traje negro con corbata roja.', category: 'Adulto', varones: { pantalon: 'Negro', camisa: 'Blanca', saco: 'Negro', corbata: 'Roja' }, hermanas: { toga: 'Negra', chalina: 'Roja' } },
+                { id: 'u3', name: 'Casual Azul', description: 'Camisa azul cielo y pantalón beige.', category: 'Adulto', varones: { pantalon: 'Beige', camisa: 'Azul Cielo', corbata: 'Sin Corbata' }, hermanas: { toga: 'Azul', chalina: 'Gris' } },
+                { id: 'k1', name: 'Túnicas Blancas', description: 'Túnicas reglamentarias para cantos.', category: 'Niño', varones: { pantalon: 'Blanco', camisa: 'Blanca', corbata: 'Roja' }, ninas: { blusa: 'Blanca', falda: 'Blanca', chalina: 'Blanca' } },
+                { id: 'k2', name: 'Gala Infantil', description: 'Varoncitos traje azul, Niñas vestido blanco.', category: 'Niño', varones: { pantalon: 'Azul Marino', camisa: 'Blanca', saco: 'Azul Marino', corbata: 'Azul Marino' }, ninas: { blusa: 'Blanca', falda: 'Azul Marino', chalina: 'Azul Marino' } },
             ],
             uniformSchedule: {
                 '2026-02-22': 'u1', // Domingo
@@ -616,6 +632,16 @@ export const useAppStore = create<AppState>()(
                     console.error('Error updating profile:', error.message, error.details, error.hint);
                     return false;
                 }
+
+                // NOTIFICAR AL USUARIO SI HA SIDO ACTIVADO
+                if (updates.status === 'Activo') {
+                    await supabase.from('messages').insert({
+                        receiver_id: userId,
+                        subject: '¡Tu cuenta ha sido activada!',
+                        content: 'Ya puedes acceder a todas las funciones del Tablero Digital LLDM Rodeo.'
+                    });
+                }
+
                 return true;
             },
 
@@ -794,7 +820,7 @@ export const useAppStore = create<AppState>()(
                         name: userName,
                         avatar_url: userAvatar,
                         role: isMasterAdmin ? 'Administrador' : 'Miembro',
-                        status: 'Activo',
+                        status: isMasterAdmin ? 'Activo' : 'Pendiente', // Nuevos usuarios quedan pendientes
                         category: 'Varon',
                         stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
                         roles: isMasterAdmin ? ['admin', 'leader'] : []
@@ -814,6 +840,16 @@ export const useAppStore = create<AppState>()(
                                 privileges: newProfile.roles
                             } as UserProfile
                         });
+
+                        // NOTIFICAR A ADMINISTRADORES
+                        if (!isMasterAdmin) {
+                            await supabase.from('messages').insert({
+                                sender_id: authUserId,
+                                target_role: 'Administrador',
+                                subject: 'Nuevo Registro de Miembro',
+                                content: `El hermano(a) ${userName} (${userEmail}) se ha registrado y está esperando aprobación.`
+                            });
+                        }
                     }
                 }
             },

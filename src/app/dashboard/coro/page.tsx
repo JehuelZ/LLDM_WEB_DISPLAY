@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Music, Calendar, BookOpen, Users, Clock, Download, ExternalLink, Shirt, Settings, Plus, Send, Bell, Trash2 } from 'lucide-react';
+import { Music, Calendar, BookOpen, Users, Clock, Download, ExternalLink, Shirt, Settings, Plus, Send, Bell, Trash2, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -21,6 +21,12 @@ export default function CoroDashboard() {
 
     const [showLeaderPanel, setShowLeaderPanel] = useState(false);
     const isLeader = currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges.includes('leader');
+    const [showUniformForm, setShowUniformForm] = useState(false);
+    const [newUniform, setNewUniform] = useState({
+        name: '',
+        varones: { pantalon: '', camisa: '', saco: '', corbata: '' },
+        hermanas: { toga: '', chalina: '' }
+    });
 
     // Get next 14 days to show upcoming uniform assignments
     const upcomingDays = Array.from({ length: 14 }).map((_, i) => {
@@ -60,42 +66,61 @@ export default function CoroDashboard() {
             <Header />
             <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
 
-                {/* Header Section */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <h1 className="text-4xl font-black tracking-tight text-foreground uppercase italic flex items-center gap-3">
-                            <Music className="h-10 w-10 text-secondary" />
-                            {currentUser.role === 'Dirigente Coro Adultos' || currentUser.role === 'Administrador' ? 'Panel de Dirigente' : 'Panel de'} <span className="text-secondary">Coro Adulto</span>
-                        </h1>
-                        <p className="text-muted-foreground font-light">Coro de Adultos - LLDM RODEO</p>
+                {/* Enhanced Hero Section for Choir Leader */}
+                <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
+                    <div className="glass-card p-8 md:p-10 rounded-[3rem] border-secondary/10 bg-secondary/[0.02] backdrop-blur-3xl overflow-hidden relative border">
+                        <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                            <Music className="w-64 h-64 text-secondary" />
+                        </div>
+
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
+                            <div className="flex flex-col md:flex-row items-center gap-6">
+                                <div className="relative group">
+                                    <div className="absolute -inset-1 bg-gradient-to-tr from-secondary to-purple-400 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-[1.8rem] overflow-hidden border-2 border-secondary/20 relative bg-black shadow-2xl">
+                                        <img src={currentUser.avatar} alt={currentUser.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="absolute -bottom-1 -right-1 bg-secondary p-1.5 rounded-lg border-2 border-[#050505]">
+                                        <Star className="w-3 h-3 text-white fill-white" />
+                                    </div>
+                                </div>
+
+                                <div className="text-center md:text-left">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[9px] font-black uppercase tracking-widest mb-2">
+                                        Dirigencia Vocal
+                                    </div>
+                                    <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase italic leading-none">
+                                        {currentUser.name} <span className="text-secondary italic">Choir Hub</span>
+                                    </h1>
+                                    <p className="text-slate-500 font-medium tracking-tight text-sm md:text-base mt-1">Gestión de ensayos, uniformes y cantos sagrados.</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                {isLeader && (
+                                    <Button
+                                        onClick={() => setShowLeaderPanel(!showLeaderPanel)}
+                                        className={cn(
+                                            "font-black uppercase tracking-[0.2em] px-8 h-14 rounded-2xl transition-all shadow-xl",
+                                            showLeaderPanel
+                                                ? "bg-white text-black hover:bg-slate-200 shadow-white/10"
+                                                : "bg-secondary hover:bg-secondary/90 text-white shadow-secondary/20"
+                                        )}
+                                    >
+                                        <Settings className="h-4 w-4 mr-2" /> {showLeaderPanel ? 'Cerrar Panel' : 'Panel Dirigente'}
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                    <div className="flex gap-2">
-                        {isLeader && (
-                            <Button
-                                onClick={() => setShowLeaderPanel(!showLeaderPanel)}
-                                variant={showLeaderPanel ? "neon" : "outline"}
-                                className="border-secondary/20 gap-2"
-                            >
-                                <Settings className="h-4 w-4" />
-                                {showLeaderPanel ? 'Ocultar Controles' : 'Gestión Dirigente'}
-                            </Button>
-                        )}
-                        <Button
-                            variant="outline"
-                            className="border-secondary/20 hover:bg-secondary/10 gap-2"
-                            onClick={() => alert('Descargando Himnario LLDM (PDF)...')}
-                        >
-                            <Download className="h-4 w-4" /> Descargar Himnario
-                        </Button>
-                    </div>
-                </div>
+                </section>
 
                 {/* LEADER MANAGEMENT PANEL (Hidden by default) */}
                 {isLeader && showLeaderPanel && (
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 bg-secondary/5 p-6 rounded-3xl border border-secondary/20 shadow-[0_0_30px_rgba(168,85,247,0.1)]"
+                        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 bg-secondary/5 p-6 rounded-3xl border border-secondary/20 shadow-[0_0_30px_rgba(168,85,247,0.1)]"
                     >
                         {/* Manage Rehearsals */}
                         <Card className="glass-card bg-transparent border-dashed border-border/40">
@@ -181,6 +206,71 @@ export default function CoroDashboard() {
                                         </select>
                                     </div>
                                 ))}
+                            </CardContent>
+                        </Card>
+
+                        {/* Catálogo de Uniformes */}
+                        <Card className="glass-card bg-transparent border-dashed border-border/40">
+                            <CardHeader>
+                                <CardTitle className="text-sm font-black uppercase text-pink-500 flex items-center justify-between">
+                                    <span className="flex items-center gap-2"><Shirt className="w-4 h-4" /> Catálogo</span>
+                                    <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => setShowUniformForm(!showUniformForm)}>
+                                        <Plus className="w-4 h-4 text-pink-500" />
+                                    </Button>
+                                </CardTitle>
+                                <CardDescription>Administrar uniformes del coro</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-3 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
+                                {showUniformForm ? (
+                                    <div className="space-y-2 p-2 bg-foreground/5 rounded-xl border border-border/20">
+                                        <Input
+                                            placeholder="Nombre (ej. Gala Blanco)"
+                                            className="text-[10px] h-7 bg-background"
+                                            value={newUniform.name}
+                                            onChange={e => setNewUniform({ ...newUniform, name: e.target.value })}
+                                        />
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <p className="text-[9px] font-black uppercase text-slate-500 mb-1">Varones</p>
+                                                <Input placeholder="Pantalón" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.pantalon} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, pantalon: e.target.value } })} />
+                                                <Input placeholder="Camisa" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.camisa} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, camisa: e.target.value } })} />
+                                                <Input placeholder="Saco" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.saco} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, saco: e.target.value } })} />
+                                                <Input placeholder="Corbata" className="text-[9px] h-6 bg-background" value={newUniform.varones.corbata} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, corbata: e.target.value } })} />
+                                            </div>
+                                            <div>
+                                                <p className="text-[9px] font-black uppercase text-slate-500 mb-1">Hermanas</p>
+                                                <Input placeholder="Toga" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.hermanas.toga} onChange={e => setNewUniform({ ...newUniform, hermanas: { ...newUniform.hermanas, toga: e.target.value } })} />
+                                                <Input placeholder="Chalina" className="text-[9px] h-6 bg-background" value={newUniform.hermanas.chalina} onChange={e => setNewUniform({ ...newUniform, hermanas: { ...newUniform.hermanas, chalina: e.target.value } })} />
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2 mt-2">
+                                            <Button size="sm" variant="ghost" className="h-6 flex-1 text-[9px] uppercase font-black" onClick={() => setShowUniformForm(false)}>Cancelar</Button>
+                                            <Button size="sm" className="h-6 flex-1 text-[9px] uppercase font-black bg-pink-500 hover:bg-pink-400 text-white" onClick={() => {
+                                                if (newUniform.name) {
+                                                    addUniform({ id: Math.random().toString(36).substr(2, 9), category: 'Adulto', ...newUniform });
+                                                    setShowUniformForm(false);
+                                                    setNewUniform({ name: '', varones: { pantalon: '', camisa: '', saco: '', corbata: '' }, hermanas: { toga: '', chalina: '' } });
+                                                }
+                                            }}>Guardar</Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="space-y-2">
+                                        {uniforms.filter(u => u.category === 'Adulto').map(u => (
+                                            <div key={u.id} className="flex items-center justify-between p-2 bg-foreground/5 rounded-lg border border-border/20 group">
+                                                <div>
+                                                    <p className="text-[10px] font-bold text-foreground">{u.name}</p>
+                                                    <p className="text-[8px] text-slate-500 leading-tight mt-0.5">
+                                                        V: {u.varones?.camisa},{u.varones?.saco},{u.varones?.corbata}<br />H: {u.hermanas?.toga},{u.hermanas?.chalina}
+                                                    </p>
+                                                </div>
+                                                <button onClick={() => removeUniform(u.id)} className="text-red-500/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Trash2 className="w-3 h-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
 
@@ -283,6 +373,16 @@ export default function CoroDashboard() {
                                         <div>
                                             <span className="text-[9px] font-black text-slate-500 uppercase italic">{day.dayName}, {format(parseISO(day.date), 'd MMM')}</span>
                                             <p className="text-sm font-black text-foreground tracking-tight uppercase italic">{uniform ? uniform.name : 'Por asignar'}</p>
+                                            {uniform && (
+                                                <div className="flex gap-3 mt-1 opacity-70">
+                                                    <span className="text-[8px] font-medium leading-tight">
+                                                        <strong className="text-slate-400">Varones:</strong> P: {uniform.varones?.pantalon}, C: {uniform.varones?.camisa}, S: {uniform.varones?.saco}, Corb: {uniform.varones?.corbata}
+                                                    </span>
+                                                    <span className="text-[8px] font-medium leading-tight border-l border-white/10 pl-3">
+                                                        <strong className="text-slate-400">Hermanas:</strong> T: {uniform.hermanas?.toga}, Ch: {uniform.hermanas?.chalina}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                         {uniform && <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center border border-amber-500/20"><Shirt className="w-4 h-4 text-amber-500" /></div>}
                                     </div>
