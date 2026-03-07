@@ -1138,27 +1138,19 @@ export const useAppStore = create<AppState>()(
             signInWithEmail: async (email, password) => {
                 // TEST ACCOUNTS BYPASS - For rapid testing of dashboards
                 if (password === 'Lldm2026!' && email.includes('_test@lldmrodeo.org')) {
-                    // Try to finding in current members first
-                    let testMember = get().members.find(m => m.email === email);
-
-                    // If not found, try loading from cloud again or use mock
-                    if (!testMember) {
-                        await get().loadMembersFromCloud();
-                        testMember = get().members.find(m => m.email === email);
-                    }
-
-                    // Fallback to MOCK_MEMBERS if still not found (last resort)
-                    if (!testMember) {
-                        const mock = MOCK_MEMBERS.find(m => m.email === email);
-                        if (mock) {
-                            testMember = { ...mock, id: mock.id || 'mock-id' };
-                        }
-                    }
-
-                    if (testMember) {
+                    const cleanEmail = email.toLowerCase().trim();
+                    const mock = MOCK_MEMBERS.find(m => m.email?.toLowerCase().trim() === cleanEmail);
+                    if (mock) {
+                        const testUser = { ...mock, id: mock.id || `test-${Date.now()}` };
                         set({
-                            currentUser: testMember,
-                            authSession: { user: { email: testMember.email, id: testMember.id } }
+                            currentUser: testUser,
+                            authSession: {
+                                user: {
+                                    email: testUser.email,
+                                    id: testUser.id,
+                                    user_metadata: { name: testUser.name }
+                                }
+                            },
                         });
                         return { success: true, error: null };
                     }
