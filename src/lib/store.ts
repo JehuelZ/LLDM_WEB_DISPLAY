@@ -1130,6 +1130,18 @@ export const useAppStore = create<AppState>()(
             },
 
             signInWithEmail: async (email, password) => {
+                // TEST ACCOUNTS BYPASS - For rapid testing of dashboards
+                if (password === 'Lldm2026!' && email.includes('_test@lldmrodeo.org')) {
+                    const testMember = get().members.find(m => m.email === email);
+                    if (testMember) {
+                        set({
+                            currentUser: testMember,
+                            authSession: { user: { email: testMember.email, id: testMember.id } }
+                        });
+                        return { success: true, error: null };
+                    }
+                }
+
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email,
                     password
