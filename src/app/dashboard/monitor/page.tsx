@@ -15,7 +15,7 @@ import { es } from 'date-fns/locale';
 import Link from 'next/link';
 
 interface AttendanceMember {
-    id: number;
+    id: string;
     name: string;
     gender: 'Varon' | 'Hermana';
     category: 'Adulto' | 'Niño';
@@ -46,6 +46,7 @@ export default function AttendanceDashboard() {
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
     const [isSaving, setIsSaving] = useState(false);
     const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
+    const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
         loadMembersFromCloud();
@@ -53,7 +54,13 @@ export default function AttendanceDashboard() {
 
     useEffect(() => {
         loadAttendanceFromCloud(selectedDate);
+        setOptimisticAttendance({}); // Reset optimistic on date change
     }, [selectedDate]);
+
+    // Cleanup optimistic when real data arrives
+    useEffect(() => {
+        setOptimisticAttendance({});
+    }, [attendanceRecords]);
 
     const adultUniform = uniforms.find(u => u.id === uniformSchedule[selectedDate]);
     const kidsAssignment = kidsAssignments[selectedDate];
@@ -68,6 +75,10 @@ export default function AttendanceDashboard() {
     const members = useMemo(() => {
         return storeMembers.map(m => {
             const record = currentSessionAttendance.find(r => r.member_id === m.id);
+            const isPresent = optimisticAttendance[m.id] !== undefined
+                ? optimisticAttendance[m.id]
+                : (record?.present || false);
+
             return {
                 id: m.id,
                 name: m.name,
@@ -75,14 +86,14 @@ export default function AttendanceDashboard() {
                 category: (m.category === 'Niño' ? 'Niño' : 'Adulto') as 'Adulto' | 'Niño',
                 email: m.email,
                 avatar: m.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-                present: record?.present || false,
-                time: record?.time || null,
+                present: isPresent,
+                time: record?.time || (isPresent ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null),
                 deliveredBy: record?.delivered_by || '',
                 collectedBy: record?.collected_by || '',
                 parentName: (m as any).parentName || ''
             };
         });
-    }, [storeMembers, currentSessionAttendance]);
+    }, [storeMembers, currentSessionAttendance, optimisticAttendance]);
 
     const [securityChild, setSecurityChild] = useState<any | null>(null);
 
@@ -107,15 +118,29 @@ export default function AttendanceDashboard() {
             return;
         }
 
+        // Optimistic Update
+        const nextState = !member.present;
+        setOptimisticAttendance(prev => ({ ...prev, [memberId]: nextState }));
+
         const newRecord = {
             member_id: memberId,
             date: selectedDate,
             session_type: currentSession,
-            present: !member.present,
-            time: !member.present ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
+            present: nextState,
+            time: nextState ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
         };
 
-        await saveAttendanceToCloud([newRecord]);
+        try {
+            await saveAttendanceToCloud([newRecord]);
+        } catch (error) {
+            // Revert on error
+            setOptimisticAttendance(prev => {
+                const updated = { ...prev };
+                delete updated[memberId];
+                return updated;
+            });
+            alert("Error al guardar la asistencia. Intenta de nuevo.");
+        }
     };
 
     const handleSecurityUpdate = async (id: string, type: 'delivered' | 'collected', value: string) => {
@@ -404,24 +429,25 @@ export default function AttendanceDashboard() {
                     <CardContent className="p-0">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-white/5">
                             {filteredMembers.map((member) => (
-                                <div
+                                <motion.div
                                     key={member.id}
+                                    whileTap={{ scale: 0.97 }}
                                     onClick={() => toggleAttendance(member.id)}
                                     className={cn(
                                         "p-4 md:p-6 flex items-center justify-between cursor-pointer transition-all duration-300 group hover:z-10",
                                         member.present ? "bg-emerald-500/10 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]" : "hover:bg-foreground/[0.03]"
                                     )}
                                 >
-                                    <div className="flex items-center gap-3 md:gap-4">
+                                    <div className="flex items-center gap-3 md:gap-4 flex-1">
                                         <div className={cn(
-                                            "w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all duration-300",
+                                            "w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all duration-300 shrink-0",
                                             member.present ? "border-emerald-500/50 scale-105 shadow-[0_0_15px_rgba(16,185,129,0.2)]" : "border-border/40"
                                         )}>
                                             <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
                                         </div>
-                                        <div>
+                                        <div className="min-w-0">
                                             <p className={cn(
-                                                "font-black uppercase tracking-tight transition-colors text-base md:text-lg saturate-[0.8]",
+                                                "font-black uppercase tracking-tight transition-colors text-sm md:text-lg truncate",
                                                 member.present ? "text-foreground" : "text-slate-400 group-hover:text-foreground"
                                             )}>{member.name}</p>
                                             <div className="flex flex-col gap-0.5 mt-0.5">
@@ -436,14 +462,14 @@ export default function AttendanceDashboard() {
                                     </div>
 
                                     <div className={cn(
-                                        "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-500",
+                                        "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all duration-500 shrink-0 ml-2",
                                         member.present
                                             ? "bg-emerald-500 text-black rotate-0 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
                                             : "bg-foreground/5 text-slate-600 -rotate-90 group-hover:rotate-0 group-hover:bg-foreground/10 group-hover:text-slate-400"
                                     )}>
                                         {member.present ? <CheckCircle2 className="h-5 w-5 md:h-6 md:w-6" /> : <XCircle className="h-5 w-5 md:h-6 md:w-6" />}
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </CardContent>
