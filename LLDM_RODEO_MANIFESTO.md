@@ -50,7 +50,7 @@ Cada tema tiene reglas de oro que no se pueden romper:
 *   **SlotBoxes Stacked**: Cuando un servicio (como el de las 9 AM o el de la tarde) tiene un **solo líder**, el sistema debe usar el estilo "Stacked" (Foto arriba, Nombre en medio, Responsabilidad abajo) para máxima elegancia.
 *   **Badges [EN]**: Cualquier servicio con idioma "English" debe mostrar un badge de alto contraste.
 *   **Avatares**: Priorizamos fotos circulares con bordes de color según el grupo (Coro = Azul/Oro, Jóvenes = Rayo/Púrpura, etc.).
-*   **Tipografía**: Usamos fuentes con peso variable para jerarquía clara (Títulos en Black/Extra Bold, detalles en Medium).
+*   **Optimización Multidispositivo (Mobile First)**: **REGLA DE ORO.** Todo cambio realizado y toda página nueva instalada en el sistema **DEBE** estar optimizada al 100% para teléfonos móviles y tablets. La experiencia de usuario debe ser impecable sin importar el tamaño de la pantalla.
 
 ---
 
