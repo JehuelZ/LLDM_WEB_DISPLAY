@@ -94,22 +94,24 @@ export default function DashboardIndex() {
                 </div>
 
                 {/* Quick Info Box */}
-                <div className="p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-foreground/[0.02] border border-border/20 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 mt-8 md:mt-12">
-                    <div className="flex flex-col md:flex-row items-center text-center md:text-left gap-4 md:gap-6">
-                        <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
-                            <Users className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                {currentUser.role === 'Administrador' && (
+                    <div className="p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-foreground/[0.02] border border-border/20 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 mt-8 md:mt-12">
+                        <div className="flex flex-col md:flex-row items-center text-center md:text-left gap-4 md:gap-6">
+                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                                <Users className="w-8 h-8 md:w-10 md:h-10 text-primary" />
+                            </div>
+                            <div>
+                                <h4 className="text-xl md:text-2xl font-black text-foreground uppercase italic">Developer / Admin Access</h4>
+                                <p className="text-sm md:text-base text-slate-500">Accede al panel maestro para gestionar toda la iglesia.</p>
+                            </div>
                         </div>
-                        <div>
-                            <h4 className="text-xl md:text-2xl font-black text-foreground uppercase italic">Developer / Admin Access</h4>
-                            <p className="text-sm md:text-base text-slate-500">Accede al panel maestro para gestionar toda la iglesia.</p>
-                        </div>
+                        <Link href="/admin" className="w-full md:w-auto">
+                            <Button className="w-full md:w-auto bg-primary hover:bg-primary/90 text-foreground font-black uppercase tracking-widest px-8 md:px-12 h-12 md:h-14 rounded-xl md:rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
+                                Administración
+                            </Button>
+                        </Link>
                     </div>
-                    <Link href="/admin" className="w-full md:w-auto">
-                        <Button className="w-full md:w-auto bg-primary hover:bg-primary/90 text-foreground font-black uppercase tracking-widest px-8 md:px-12 h-12 md:h-14 rounded-xl md:rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
-                            Administración
-                        </Button>
-                    </Link>
-                </div>
+                )}
             </main>
         </div>
     );

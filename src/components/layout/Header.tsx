@@ -100,7 +100,7 @@ export function Header() {
                                 <Music className="w-3 h-3 text-secondary" /> Coro
                             </Link>
                         )}
-                        {(currentUser.role === 'Administrador' || process.env.NODE_ENV === 'development') && (
+                        {currentUser.role === 'Administrador' && (
                             <Link
                                 href="/admin"
                                 className="transition-colors text-primary uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
