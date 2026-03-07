@@ -24,13 +24,17 @@ export default function DirectoryPage() {
     }, [loadMembersFromCloud]);
 
     const filtered = members.filter(m => {
-        const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            m.role.toLowerCase().includes(searchTerm.toLowerCase());
+        const mName = m.name || '';
+        const mRole = m.role || '';
+        const mPrivs = m.privileges || [];
+
+        const matchesSearch = mName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            mRole.toLowerCase().includes(searchTerm.toLowerCase());
 
         // Map roles to tags for filtering
-        const role = m.role as string;
-        const memberTag = (role === 'Administrador' || role === 'Ministro a Cargo' || role === 'Responsable de Asistencia') ? 'leadership' :
-            m.privileges.includes('choir') ? 'choir' : 'all';
+        const roleStr = String(mRole);
+        const memberTag = (roleStr === 'Administrador' || roleStr === 'Ministro a Cargo' || roleStr === 'Responsable de Asistencia') ? 'leadership' :
+            mPrivs.includes('choir') ? 'choir' : 'all';
 
         const matchesFilter = activeFilter === 'all' || memberTag === activeFilter;
         return matchesSearch && matchesFilter;
