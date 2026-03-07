@@ -111,11 +111,15 @@ export interface Uniform {
     // Detalles específicos por género
     varones?: {
         traje?: string;
+        pantalon?: string;
+        camisa?: string;
         corbata?: string;
     };
     hermanas?: {
         toga?: string;
         chalina?: string;
+        falda?: string;
+        blusa?: string;
     };
     ninas?: {
         blusa?: string;
@@ -319,7 +323,7 @@ export const useAppStore = create<AppState>()(
             uniforms: [
                 { id: 'u1', name: 'Gala Blanco', description: 'Traje completo blanco impecable.', category: 'Adulto', varones: { traje: 'Blanco', corbata: 'Negra' }, hermanas: { toga: 'Blanca', chalina: 'Blanca' } },
                 { id: 'u2', name: 'Gala Negro', description: 'Traje negro con corbata roja.', category: 'Adulto', varones: { traje: 'Negro', corbata: 'Roja' }, hermanas: { toga: 'Negra', chalina: 'Roja' } },
-                { id: 'u3', name: 'Casual Azul', description: 'Traje azul marino.', category: 'Adulto', varones: { traje: 'Azul Marino', corbata: 'Sin Corbata' }, hermanas: { toga: 'Azul', chalina: 'Gris' } },
+                { id: 'u3', name: 'Jueves Azul', description: 'Uniforme de Jueves Azul Marino.', category: 'Adulto', varones: { pantalon: 'Azul Marino', camisa: 'Blanca', corbata: 'Azul' }, hermanas: { falda: 'Azul Marino', blusa: 'Blanca', chalina: 'Azul' } },
                 { id: 'k1', name: 'Túnicas Blancas', description: 'Túnicas reglamentarias para cantos.', category: 'Niño', varones: { traje: 'Blanco', corbata: 'Roja' }, ninas: { blusa: 'Blanca', falda: 'Blanca', chalina: 'Blanca' } },
                 { id: 'k2', name: 'Gala Infantil', description: 'Varoncitos traje azul, Niñas vestido blanco.', category: 'Niño', varones: { traje: 'Azul Marino', corbata: 'Azul Marino' }, ninas: { blusa: 'Blanca', falda: 'Azul Marino', chalina: 'Azul Marino' } },
             ],
