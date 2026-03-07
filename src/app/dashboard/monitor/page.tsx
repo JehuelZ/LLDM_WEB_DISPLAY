@@ -54,6 +54,8 @@ export default function AttendanceDashboard() {
     const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
     const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({});
     const [isRefreshing, setIsRefreshing] = useState(false);
+    // Track which member+session is currently being saved to avoid race conditions
+    const [processingToggles, setProcessingToggles] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
         loadMembersFromCloud();
@@ -153,6 +155,11 @@ export default function AttendanceDashboard() {
             return;
         }
 
+        const toggleKey = `${memberId}-${sessionType}`;
+        if (processingToggles[toggleKey]) return;
+
+        setProcessingToggles(prev => ({ ...prev, [toggleKey]: true }));
+
         // Optimistic Update
         const nextState = !sessionData.present;
         setOptimisticAttendance(prev => ({
@@ -181,7 +188,13 @@ export default function AttendanceDashboard() {
                 delete updatedSession[sessionType];
                 return { ...prev, [memberId]: updatedSession };
             });
-            alert("Error al guardar la asistencia. Intenta de nuevo.");
+            alert("Error al sincronizar con la nube. Verifica tu conexión.");
+        } finally {
+            setProcessingToggles(prev => {
+                const newState = { ...prev };
+                delete newState[toggleKey];
+                return newState;
+            });
         }
     };
 
@@ -584,22 +597,29 @@ export default function AttendanceDashboard() {
                                         ].map((sess) => {
                                             const isPresent = member.attendance[sess.id as keyof typeof member.attendance].present;
                                             const sessLabel = sess.id === 'evening' ? 'Tarde' : (sess.id === '9am' && stats.isSunday ? 'Dom' : sess.id);
+                                            const isProcessing = processingToggles[`${member.id}-${sess.id}`];
 
                                             return (
                                                 <div key={sess.id} className="flex flex-col items-center gap-1">
                                                     <button
+                                                        disabled={isProcessing}
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             toggleAttendance(member.id, sess.id as any);
                                                         }}
                                                         className={cn(
                                                             "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 font-black text-[10px] sm:text-xs",
+                                                            isProcessing && "animate-pulse opacity-50 cursor-wait",
                                                             isPresent
                                                                 ? "bg-emerald-500 border-emerald-400 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] scale-110"
                                                                 : "bg-foreground/5 border-border/20 text-slate-500 hover:border-emerald-500/50"
                                                         )}
                                                     >
-                                                        {isPresent ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : sess.label}
+                                                        {isProcessing ? (
+                                                            <Clock className="h-4 w-4 animate-spin" />
+                                                        ) : (
+                                                            isPresent ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : sess.label
+                                                        )}
                                                     </button>
                                                     <span className={cn(
                                                         "text-[7px] uppercase font-black tracking-tighter",

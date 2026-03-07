@@ -1434,8 +1434,8 @@ export const useAppStore = create<AppState>()(
 
                 if (error) {
                     console.error("Error loading attendance:", error);
-                    // Si falla la red, avisamos
-                    alert("No se pudo sincronizar con la nube. Verifica tu internet.");
+                    // Proporcionamos un mensaje más detallado para diagnóstico
+                    alert(`Error de sincronización: ${error.message}. Por favor, verifica que la tabla 'attendance' existe en Supabase y que has ejecutado el script de reparación.`);
                     return;
                 }
 
@@ -1460,25 +1460,43 @@ export const useAppStore = create<AppState>()(
 
             saveAttendanceToCloud: async (records) => {
                 if (records.length === 0) return;
-                const { error } = await supabase
-                    .from('attendance')
-                    .upsert(records.map(r => ({
-                        member_id: r.member_id,
-                        date: r.date,
-                        session_type: r.session_type,
-                        present: r.present,
-                        time: r.time,
-                        delivered_by: r.delivered_by,
-                        collected_by: r.collected_by
-                    })), { onConflict: 'member_id,date,session_type' });
 
-                if (error) {
-                    console.error("Error saving attendance:", error);
-                    throw error; // Transmitimos el error para que la UI pueda revertir
-                } else {
-                    const date = records[0].date;
-                    await get().loadAttendanceFromCloud(date);
+                // Dividimos los registros en los que se marcan (UPSERT) y los que se quitan (DELETE)
+                // Para mantener la base de datos limpia, si quitamos una marca simple (sin datos de entrega/entrega), borramos.
+                for (const r of records) {
+                    if (!r.present && !r.delivered_by && !r.collected_by) {
+                        const { error } = await supabase
+                            .from('attendance')
+                            .delete()
+                            .match({
+                                member_id: r.member_id,
+                                date: r.date,
+                                session_type: r.session_type
+                            });
+                        if (error) throw error;
+                    } else {
+                        // Construimos el objeto de guardado solo con campos que tengan valor
+                        const payload: any = {
+                            member_id: r.member_id,
+                            date: r.date,
+                            session_type: r.session_type,
+                            present: r.present,
+                            time: r.time
+                        };
+
+                        if (r.delivered_by) payload.delivered_by = r.delivered_by;
+                        if (r.collected_by) payload.collected_by = r.collected_by;
+
+                        const { error } = await supabase
+                            .from('attendance')
+                            .upsert(payload, { onConflict: 'member_id,date,session_type' });
+
+                        if (error) throw error;
+                    }
                 }
+
+                const date = records[0].date;
+                await get().loadAttendanceFromCloud(date);
             },
 
             loadMonthlyAttendanceStats: async (memberId) => {
