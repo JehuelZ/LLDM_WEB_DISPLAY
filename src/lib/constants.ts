@@ -143,5 +143,45 @@ export const MOCK_MEMBERS: any[] = [
         phone: '555-0404',
         email: 'pedro@lldm.org',
         stats: { attendance: { attended: 10, total: 10 }, participation: { led: 5, total: 5 }, punctuality: 100 }
+    },
+    {
+        id: 'test-miembro',
+        name: 'Test Miembro',
+        email: 'miembro_test@lldmrodeo.org',
+        role: 'Miembro',
+        category: 'Varon',
+        gender: 'Varon',
+        privileges: [],
+        avatar: 'https://ui-avatars.com/api/?name=Test+Miembro&background=random'
+    },
+    {
+        id: 'test-asistencia',
+        name: 'Test Asistencia',
+        email: 'asistencia_test@lldmrodeo.org',
+        role: 'Responsable de Asistencia',
+        category: 'Hermana',
+        gender: 'Hermana',
+        privileges: ['monitor'],
+        avatar: 'https://ui-avatars.com/api/?name=Test+Asistencia&background=random'
+    },
+    {
+        id: 'test-coro',
+        name: 'Test Coro',
+        email: 'coro_test@lldmrodeo.org',
+        role: 'Dirigente Coro Adultos',
+        category: 'Varon',
+        gender: 'Varon',
+        privileges: ['choir'],
+        avatar: 'https://ui-avatars.com/api/?name=Test+Coro&background=random'
+    },
+    {
+        id: 'test-jovenes',
+        name: 'Test Jóvenes',
+        email: 'jovenes_test@lldmrodeo.org',
+        role: 'Encargado de Jóvenes',
+        category: 'Varon',
+        gender: 'Varon',
+        privileges: ['youth_leader'],
+        avatar: 'https://ui-avatars.com/api/?name=Test+Jovenes&background=random'
     }
 ];
