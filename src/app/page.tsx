@@ -128,6 +128,22 @@ export default function Home() {
     return id; // Fallback to original ID
   };
 
+  const getMemberAvatar = (id: any) => {
+    if (!id) return null;
+    const cleanId = String(id).trim();
+    if (!cleanId) return null;
+
+    // First try real members from cloud
+    const member = members && members.find(m => String(m.id).trim() === cleanId);
+    if (member && member.avatar) return member.avatar;
+
+    // Then try mock members as fallback
+    const mockMember = MOCK_MEMBERS.find(m => String(m.id).trim() === cleanId);
+    if (mockMember && mockMember.avatar) return mockMember.avatar;
+
+    return null;
+  };
+
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
   };
@@ -423,33 +439,72 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center border-b border-border/20 pb-2">
                     <span className="text-muted-foreground">5:00 AM</span>
-                    <span className="font-medium flex items-center">
-                      <User className="mr-2 h-3 w-3 text-secondary" />
-                      {getMemberName(monthlySchedule[currentDate]?.slots['5am'].leaderId) || 'Sin asignar'}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-sm text-foreground uppercase tracking-tight">
+                        {getMemberName(monthlySchedule[currentDate]?.slots['5am'].leaderId) || 'Sin asignar'}
+                      </span>
+                      {getMemberAvatar(monthlySchedule[currentDate]?.slots['5am'].leaderId) ? (
+                        <img src={getMemberAvatar(monthlySchedule[currentDate]?.slots['5am'].leaderId)} className="w-8 h-8 rounded-full border border-primary/20 object-cover shadow-lg" alt="" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-foreground/5 border border-border/20 flex items-center justify-center">
+                          <User className="w-4 h-4 text-slate-500" />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex justify-between items-center border-b border-border/20 pb-2">
                     <span className="text-muted-foreground">9:00 AM</span>
-                    <div className="text-right">
-                      <div className="text-sm font-medium">
-                        {getMemberName(monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId) || 'Por asignar'}
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="text-sm font-black text-foreground uppercase tracking-tighter">
+                          {getMemberName(monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId) || 'Por asignar'}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground font-bold uppercase italic">
+                          {getMemberName(monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId) || 'Doctrina'}
+                        </div>
                       </div>
-                      <div className="text-xs text-muted-foreground">
-                        {getMemberName(monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId) || 'Doctrina'}
+                      <div className="flex -space-x-2">
+                        {[
+                          monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId,
+                          monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId
+                        ].map((id, idx) => {
+                          const avatar = getMemberAvatar(id);
+                          return avatar ? (
+                            <img key={idx} src={avatar} className="w-8 h-8 rounded-full border-2 border-background object-cover shadow-lg" alt="" />
+                          ) : (
+                            <div key={idx} className="w-8 h-8 rounded-full bg-foreground/5 border-2 border-background flex items-center justify-center shadow-lg">
+                              <User className="w-4 h-4 text-slate-500" />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-between items-center pt-2">
-                    <span className="text-accent font-bold text-glow">
+                    <span className="text-accent font-black text-glow text-lg uppercase italic">
                       {monthlySchedule[currentDate]?.slots['evening'].time || '7:00 PM'}
                     </span>
-                    <div className="text-right">
-                      <span className="block font-bold text-foreground lowercase">
-                        {monthlySchedule[currentDate]?.slots['evening'].type.toUpperCase()}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {monthlySchedule[currentDate]?.slots['evening'].leaderIds.map(id => getMemberName(id)).join(', ') || 'Varios hermanos'}
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <span className="block font-black text-foreground uppercase tracking-tighter text-sm italic">
+                          {monthlySchedule[currentDate]?.slots['evening'].type.toUpperCase()}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground font-bold">
+                          {monthlySchedule[currentDate]?.slots['evening'].leaderIds.map(id => getMemberName(id)).join(', ') || 'Varios hermanos'}
+                        </span>
+                      </div>
+                      <div className="flex -space-x-3">
+                        {monthlySchedule[currentDate]?.slots['evening'].leaderIds.slice(0, 3).map((id, idx) => {
+                          const avatar = getMemberAvatar(id);
+                          return avatar ? (
+                            <img key={idx} src={avatar} className="w-8 h-8 rounded-full border-2 border-background object-cover shadow-lg" alt="" />
+                          ) : (
+                            <div key={idx} className="w-8 h-8 rounded-full bg-foreground/5 border-2 border-background flex items-center justify-center shadow-lg">
+                              <User className="w-4 h-4 text-slate-500" />
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
