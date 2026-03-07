@@ -10,15 +10,19 @@ import { Input } from '@/components/ui/input';
 import { useAppStore } from '@/lib/store';
 import { format, addDays, startOfWeek, isThursday, isSunday, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 export default function CoroDashboard() {
     const {
         uniforms, uniformSchedule, rehearsals, announcements, currentUser,
         addUniform, removeUniform, setUniformForDate, setRehearsals,
-        saveAnnouncementToCloud, sendCloudMessage, saveUniformForDateToCloud
+        saveAnnouncementToCloud, sendCloudMessage, saveUniformForDateToCloud, saveUniformToCloud, loadUniformsFromCloud
     } = useAppStore();
+
+    useEffect(() => {
+        loadUniformsFromCloud();
+    }, [loadUniformsFromCloud]);
 
     const [showLeaderPanel, setShowLeaderPanel] = useState(false);
     const isLeader = currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges.includes('leader');
