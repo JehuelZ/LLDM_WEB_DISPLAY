@@ -170,6 +170,7 @@ export default function AttendanceDashboard() {
     };
 
 
+
     if (!currentUser.id) return null;
 
     // Security check: Only Admins or Attendance Managers can see this
@@ -197,6 +198,17 @@ export default function AttendanceDashboard() {
         );
     }
 
+    const availableSessions = useMemo(() => {
+        const d = new Date(selectedDate + 'T12:00:00');
+        const isSunday = d.getDay() === 0;
+
+        return [
+            { id: '5am', label: '5:00 AM' },
+            { id: '9am', label: isSunday ? 'Dominical' : '9:00 AM' },
+            { id: 'evening', label: isSunday ? '6:00 PM' : '7:00 PM' }
+        ];
+    }, [selectedDate]);
+
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
             <Header />
@@ -206,7 +218,7 @@ export default function AttendanceDashboard() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                     <div>
                         <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground uppercase italic flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-3">
-                            <span className="flex items-center gap-2">
+                            <span className="flex items-center gap-1">
                                 <ClipboardCheck className="h-8 w-8 md:h-10 md:w-10 text-emerald-500" />
                                 {currentUser.role === 'Administrador' ? 'Gestión de' : 'Responsable de'}
                             </span>
@@ -246,11 +258,7 @@ export default function AttendanceDashboard() {
                             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Seleccionar Sesión</span>
                         </div>
                         <div className="grid grid-cols-3 gap-2 relative z-10">
-                            {[
-                                { id: '5am', label: '5:00 AM', icon: <Clock className="w-3 h-3" /> },
-                                { id: '9am', label: '9:00 AM', icon: <Clock className="w-3 h-3" /> },
-                                { id: 'evening', label: '7:00 PM', icon: <Clock className="w-3 h-3" /> }
-                            ].map((session) => (
+                            {availableSessions.map((session) => (
                                 <button
                                     key={session.id}
                                     onClick={() => setCurrentSession(session.id as any)}
@@ -265,7 +273,7 @@ export default function AttendanceDashboard() {
                                 </button>
                             ))}
                         </div>
-                        <p className="text-[10px] text-slate-500 mt-4 uppercase font-bold text-center italic">{format(new Date(), "EEEE d 'de' MMMM", { locale: es })}</p>
+                        <p className="text-[10px] text-slate-500 mt-4 uppercase font-bold text-center italic">{format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}</p>
                     </Card>
 
                     {/* Attendance Stats Chart (Donut-like) */}
