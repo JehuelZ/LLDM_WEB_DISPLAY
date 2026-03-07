@@ -12,7 +12,8 @@ import {
     format,
     parseISO,
     addWeeks,
-    isSameDay
+    isSameDay,
+    subDays
 } from 'date-fns';
 
 export interface AppSettings {
@@ -255,6 +256,7 @@ interface AppState {
     loadAttendanceFromCloud: (date: string) => Promise<void>;
     saveAttendanceToCloud: (records: AttendanceRecord[]) => Promise<void>;
     loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
+    loadWeeklyAttendanceStats: () => Promise<any[]>;
 
     signInWithGoogle: () => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
@@ -1522,6 +1524,32 @@ export const useAppStore = create<AppState>()(
                     }
                 };
                 return stats;
+            },
+
+            loadWeeklyAttendanceStats: async () => {
+                const now = new Date();
+                const days = Array.from({ length: 7 }, (_, i) => format(subDays(now, 6 - i), 'yyyy-MM-dd'));
+
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('date, member_id')
+                    .gte('date', days[0])
+                    .lte('date', days[6]);
+
+                if (error) return [];
+
+                const totalMembers = get().members.length;
+
+                return days.map(d => {
+                    const dailyRecords = data?.filter(r => r.date === d) || [];
+                    const uniqueAttended = new Set(dailyRecords.map(r => r.member_id)).size;
+                    return {
+                        date: d,
+                        attended: uniqueAttended,
+                        total: totalMembers,
+                        percentage: totalMembers > 0 ? (uniqueAttended / totalMembers) * 100 : 0
+                    };
+                });
             },
             seedMonthSchedule: async () => {
                 const now = new Date();

@@ -5,12 +5,13 @@ import { useAppStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabaseClient';
-
+import { useIsPhone } from '@/hooks/useIsPhone';
 import { MobileNav } from './MobileNav';
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
     const { calendarStyles, settings, setAuthSession, syncUserWithCloud } = useAppStore();
     const [mounted, setMounted] = useState(false);
+    const isPhone = useIsPhone();
 
     useEffect(() => {
         setMounted(true);
@@ -37,18 +38,15 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         return () => subscription.unsubscribe();
     }, [setAuthSession, syncUserWithCloud]);
 
-    const themeMode = settings.themeMode;
-
     useEffect(() => {
         if (mounted) {
             const root = window.document.documentElement;
-            root.classList.remove('light-theme', 'dark-theme');
-            root.classList.add(themeMode === 'light' ? 'light-theme' : 'dark-theme');
-
-            // For older browsers or specific CSS selectors, also set data-theme
-            root.setAttribute('data-theme', themeMode);
+            root.classList.remove('light-theme', 'dark-theme', 'is-phone');
+            root.classList.add(settings.themeMode === 'light' ? 'light-theme' : 'dark-theme');
+            if (isPhone) root.classList.add('is-phone');
+            root.setAttribute('data-theme', settings.themeMode);
         }
-    }, [themeMode, mounted]);
+    }, [settings.themeMode, mounted, isPhone]);
 
     if (!mounted) {
         return <>{children}</>;

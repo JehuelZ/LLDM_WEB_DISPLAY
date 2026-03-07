@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { useState, useMemo, useEffect } from 'react';
 import { Baby, Shield } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Link from 'next/link';
 
@@ -44,7 +44,8 @@ export default function AttendanceDashboard() {
         loadMembersFromCloud,
         attendanceRecords,
         loadAttendanceFromCloud,
-        saveAttendanceToCloud
+        saveAttendanceToCloud,
+        loadWeeklyAttendanceStats
     } = useAppStore();
 
     const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos'>('varones');
@@ -56,9 +57,15 @@ export default function AttendanceDashboard() {
     const [isRefreshing, setIsRefreshing] = useState(false);
     // Track which member+session is currently being saved to avoid race conditions
     const [processingToggles, setProcessingToggles] = useState<Record<string, boolean>>({});
+    const [weeklyStats, setWeeklyStats] = useState<any[]>([]);
 
     useEffect(() => {
         loadMembersFromCloud();
+        const fetchWeekly = async () => {
+            const data = await loadWeeklyAttendanceStats();
+            setWeeklyStats(data);
+        };
+        fetchWeekly();
     }, []);
 
     useEffect(() => {
@@ -562,6 +569,67 @@ export default function AttendanceDashboard() {
                         <Save className="h-5 w-5 mr-3" /> Finalizar Lista
                     </Button>
                 </div>
+
+                {/* Historial Semanal (Gráfico de Barras con Límite de miembros) */}
+                <Card className="glass-card bg-white/5 border-white/10 p-5 md:p-8">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <BarChart3 className="h-4 w-4 text-emerald-500" />
+                                <h3 className="text-lg md:text-xl font-black uppercase italic tracking-tighter text-foreground">Tendencia de Asistencia Real</h3>
+                            </div>
+                            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Últimos 7 días • Basado en el total de la membresía ({storeMembers.length})</p>
+                        </div>
+                        <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest">
+                            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-emerald-500/80"></div> Asistencia</div>
+                            <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm border border-white/20 bg-white/5"></div> Capacidad Total</div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-7 gap-1 md:gap-4 items-end h-48 md:h-64 mb-4">
+                        {weeklyStats.map((day, idx) => {
+                            const isToday = day.date === selectedDate;
+                            return (
+                                <div key={day.date} className="group relative flex flex-col items-center h-full w-full">
+                                    {/* Tooltip on hover */}
+                                    <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+                                        <div className="bg-black/90 text-white text-[9px] px-2 py-1 rounded-md border border-white/10 whitespace-nowrap font-black">
+                                            {day.attended} Hermanos ({Math.round(day.percentage)}%)
+                                        </div>
+                                    </div>
+
+                                    {/* Background Bar (Total Capacity) */}
+                                    <div className="w-full h-full bg-white/5 border border-white/5 rounded-t-xl overflow-hidden relative flex items-end">
+                                        {/* Filled Bar (Attendance) */}
+                                        <motion.div
+                                            initial={{ height: 0 }}
+                                            animate={{ height: `${Math.max(day.percentage, 2)}%` }}
+                                            transition={{ duration: 1.5, delay: idx * 0.1, ease: 'easeOut' }}
+                                            className={cn(
+                                                "w-full transition-all duration-500 relative",
+                                                isToday
+                                                    ? "bg-gradient-to-t from-emerald-600 to-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                                                    : "bg-gradient-to-t from-slate-700 to-slate-500 opacity-60 group-hover:opacity-100"
+                                            )}
+                                        >
+                                            <div className="absolute top-2 left-0 w-full text-center text-[8px] md:text-[10px] font-black text-white mix-blend-overlay">
+                                                {day.attended}
+                                            </div>
+                                        </motion.div>
+                                    </div>
+
+                                    {/* Date Label */}
+                                    <span className={cn(
+                                        "text-[8px] md:text-[10px] font-bold mt-3 uppercase tracking-tighter truncate w-full text-center",
+                                        isToday ? "text-emerald-500" : "text-slate-500"
+                                    )}>
+                                        {format(parseISO(day.date), 'eee dd', { locale: es })}
+                                    </span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Card>
 
                 {/* View Tabs */}
                 <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2x md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">

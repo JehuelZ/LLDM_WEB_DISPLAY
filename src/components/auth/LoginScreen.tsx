@@ -7,6 +7,7 @@ import { Shield, Lock, ArrowRight, User, Globe, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
+import { useIsPhone } from '@/hooks/useIsPhone';
 
 // --- Particle Components ---
 
@@ -97,6 +98,7 @@ export function LoginScreen() {
     const [isHovered, setIsHovered] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const isPhone = useIsPhone();
 
     return (
         <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#02040a] font-sora">
@@ -115,7 +117,10 @@ export function LoginScreen() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                className="relative z-10 w-full max-w-[480px] px-6 py-12"
+                className={cn(
+                    "relative z-10 w-full transition-all duration-500",
+                    isPhone ? "max-w-none px-6 pt-20 pb-12 flex flex-col justify-start min-h-screen" : "max-w-[480px] px-6 py-12"
+                )}
             >
                 <div
                     className="relative group transition-all duration-700"
@@ -125,11 +130,14 @@ export function LoginScreen() {
                     {/* Dynamic Outer Glow */}
                     <div className={cn(
                         "absolute -inset-1 bg-amber-500/20 rounded-[3rem] blur-2xl transition-opacity duration-1000",
-                        isHovered ? "opacity-40" : "opacity-0"
+                        (isHovered && !isPhone) ? "opacity-40" : "opacity-0"
                     )} />
 
                     {/* Premium Glass Card */}
-                    <div className="relative glass-panel-premium overflow-hidden rounded-[2.5rem] border border-white/10 p-10 md:p-14 shadow-[0_40px_100px_rgba(0,0,0,0.8)]">
+                    <div className={cn(
+                        "relative glass-panel-premium overflow-hidden transition-all duration-500",
+                        isPhone ? "rounded-none bg-transparent border-none shadow-none p-0" : "rounded-[2.5rem] border border-white/10 p-10 md:p-14 shadow-[0_40px_100px_rgba(0,0,0,0.8)]"
+                    )}>
                         <LightSweep />
 
                         {/* Logo & Identity */}
