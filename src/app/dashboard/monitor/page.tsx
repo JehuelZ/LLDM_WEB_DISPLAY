@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt } from 'lucide-react';
+import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -45,22 +45,24 @@ export default function AttendanceDashboard() {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
     const [isSaving, setIsSaving] = useState(false);
-
-    const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
+    const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
 
     useEffect(() => {
         loadMembersFromCloud();
-        loadAttendanceFromCloud(todayStr);
-    }, [todayStr]);
+    }, []);
 
-    const adultUniform = uniforms.find(u => u.id === uniformSchedule[todayStr]);
-    const kidsAssignment = kidsAssignments[todayStr];
+    useEffect(() => {
+        loadAttendanceFromCloud(selectedDate);
+    }, [selectedDate]);
+
+    const adultUniform = uniforms.find(u => u.id === uniformSchedule[selectedDate]);
+    const kidsAssignment = kidsAssignments[selectedDate];
     const kidsUniform = uniforms.find(u => u.id === kidsAssignment?.uniformId);
 
     // Filtered attendance for current session
     const currentSessionAttendance = useMemo(() => {
-        return (attendanceRecords[todayStr] || []).filter(r => r.session_type === currentSession);
-    }, [attendanceRecords, todayStr, currentSession]);
+        return (attendanceRecords[selectedDate] || []).filter(r => r.session_type === currentSession);
+    }, [attendanceRecords, selectedDate, currentSession]);
 
     // Transform store members into attendance-ready members
     const members = useMemo(() => {
@@ -84,6 +86,18 @@ export default function AttendanceDashboard() {
 
     const [securityChild, setSecurityChild] = useState<any | null>(null);
 
+    const handlePrevDay = () => {
+        const [year, month, day] = selectedDate.split('-').map(Number);
+        const d = new Date(year, month - 1, day - 1);
+        setSelectedDate(format(d, 'yyyy-MM-dd'));
+    };
+
+    const handleNextDay = () => {
+        const [year, month, day] = selectedDate.split('-').map(Number);
+        const d = new Date(year, month - 1, day + 1);
+        setSelectedDate(format(d, 'yyyy-MM-dd'));
+    };
+
     const toggleAttendance = async (memberId: string) => {
         const member = members.find(m => m.id === memberId);
         if (!member) return;
@@ -95,7 +109,7 @@ export default function AttendanceDashboard() {
 
         const newRecord = {
             member_id: memberId,
-            date: todayStr,
+            date: selectedDate,
             session_type: currentSession,
             present: !member.present,
             time: !member.present ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
@@ -111,7 +125,7 @@ export default function AttendanceDashboard() {
         const isCheckIn = type === 'delivered';
         const newRecord = {
             member_id: id,
-            date: todayStr,
+            date: selectedDate,
             session_type: currentSession,
             present: isCheckIn ? true : (value ? false : member.present),
             time: isCheckIn ? (member.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : member.time,
@@ -200,10 +214,23 @@ export default function AttendanceDashboard() {
                         </h1>
                         <p className="text-muted-foreground font-light text-sm md:text-base">Control Oficial de Ingreso - LLDM RODEO</p>
                     </div>
-                    <div className="flex gap-2 w-full md:w-auto">
+                    <div className="flex items-center gap-2 w-full md:w-auto bg-foreground/5 p-2 rounded-2xl border border-border/20">
+                        <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-10 w-10">
+                            <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                        <div className="flex flex-col items-center px-4 min-w-[140px]">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Fecha de Lista</span>
+                            <span className="text-sm font-black text-foreground uppercase tracking-tighter">
+                                {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
+                            </span>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-10 w-10">
+                            <ChevronRight className="h-5 w-5" />
+                        </Button>
+                        <div className="w-px h-8 bg-border/40 mx-2" />
                         <Button
                             onClick={handleFinalize}
-                            className="flex-1 md:flex-none bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-bold gap-2 h-12 md:h-auto"
+                            className="bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-bold gap-2 px-6 h-10 rounded-xl"
                         >
                             <Save className="h-4 w-4" /> Finalizar
                         </Button>
