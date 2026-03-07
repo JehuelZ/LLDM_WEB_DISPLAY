@@ -74,10 +74,11 @@ export default function Home() {
     currentUser, setCurrentUser,
     authSession, isLoading,
     announcements, theme,
-    monthlySchedule, currentDate,
+    monthlySchedule, currentDate, members,
     loadAnnouncementsFromCloud,
     loadDayScheduleFromCloud,
     loadThemeFromCloud,
+    loadMembersFromCloud,
     updateProfileInCloud,
     uploadAvatar
   } = useAppStore();
@@ -108,7 +109,14 @@ export default function Home() {
     loadAnnouncementsFromCloud();
     loadDayScheduleFromCloud(currentDate);
     loadThemeFromCloud();
-  }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadThemeFromCloud]);
+    loadMembersFromCloud();
+  }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadThemeFromCloud, loadMembersFromCloud]);
+
+  const getMemberName = (id: string) => {
+    if (!id) return '';
+    const member = members.find(m => m.id === id);
+    return member ? member.name : id; // Fallback to ID if name not found
+  };
 
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
@@ -407,17 +415,17 @@ export default function Home() {
                     <span className="text-muted-foreground">5:00 AM</span>
                     <span className="font-medium flex items-center">
                       <User className="mr-2 h-3 w-3 text-secondary" />
-                      {monthlySchedule[currentDate]?.slots['5am'].leaderId || 'Sin asignar'}
+                      {getMemberName(monthlySchedule[currentDate]?.slots['5am'].leaderId) || 'Sin asignar'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center border-b border-border/20 pb-2">
                     <span className="text-muted-foreground">9:00 AM</span>
                     <div className="text-right">
                       <div className="text-sm font-medium">
-                        {monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId || 'Por asignar'}
+                        {getMemberName(monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId) || 'Por asignar'}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId || 'Doctrina'}
+                        {getMemberName(monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId) || 'Doctrina'}
                       </div>
                     </div>
                   </div>
@@ -430,7 +438,7 @@ export default function Home() {
                         {monthlySchedule[currentDate]?.slots['evening'].type.toUpperCase()}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {monthlySchedule[currentDate]?.slots['evening'].leaderIds.join(', ') || 'Varios hermanos'}
+                        {monthlySchedule[currentDate]?.slots['evening'].leaderIds.map(id => getMemberName(id)).join(', ') || 'Varios hermanos'}
                       </span>
                     </div>
                   </div>
