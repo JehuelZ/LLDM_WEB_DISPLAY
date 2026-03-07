@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -330,7 +330,7 @@ export default function AttendanceDashboard() {
                     </div>
                 </div>
 
-                <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
+                <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
                     {/* Session Summary Stats (Replaces Selector) */}
                     <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-4 md:p-6 relative overflow-hidden group">
                         <div className="flex items-center gap-3 mb-6">
@@ -367,6 +367,38 @@ export default function AttendanceDashboard() {
                                 <span className="text-xs font-black text-emerald-500">{stats.perfect}</span>
                             </div>
                         </div>
+                    </Card>
+
+                    {/* NEW: Session Pulse (Vertical Bars) */}
+                    <Card className="glass-card bg-indigo-500/5 border-indigo-500/20 p-5 md:p-6 flex flex-col">
+                        <div className="flex items-center gap-2 mb-6">
+                            <BarChart3 className="h-4 w-4 text-indigo-400" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">Actividad por Sesión</span>
+                        </div>
+
+                        <div className="flex-1 flex items-end justify-around gap-2 mb-2">
+                            {[
+                                { label: '5A', count: stats.session5am, color: 'bg-sky-400' },
+                                { label: stats.isSunday ? 'DOM' : '9A', count: stats.session9am, color: 'bg-emerald-400' },
+                                { label: 'TAR', count: stats.sessionEvening, color: 'bg-amber-400' }
+                            ].map((bar) => {
+                                const height = stats.total > 0 ? (bar.count / stats.total) * 100 : 0;
+                                return (
+                                    <div key={bar.label} className="flex flex-col items-center gap-2 w-full max-w-[40px]">
+                                        <div className="w-full bg-white/5 rounded-t-lg relative flex items-end overflow-hidden" style={{ height: '80px' }}>
+                                            <motion.div
+                                                initial={{ height: 0 }}
+                                                animate={{ height: `${Math.max(height, 5)}%` }}
+                                                className={cn("w-full transition-all duration-1000", bar.color)}
+                                            />
+                                            <span className="absolute top-1 left-0 w-full text-center text-[8px] font-black text-white mix-blend-difference">{bar.count}</span>
+                                        </div>
+                                        <span className="text-[8px] font-black text-slate-500 uppercase tracking-tighter truncate w-full text-center">{bar.label}</span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        <p className="text-[8px] text-center text-slate-600 font-bold uppercase tracking-widest mt-auto italic">Comparativa de Reuniones</p>
                     </Card>
 
                     {/* Attendance Stats Chart (Based on session with most attendance) */}
