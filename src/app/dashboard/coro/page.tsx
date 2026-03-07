@@ -24,7 +24,7 @@ export default function CoroDashboard() {
     const [showUniformForm, setShowUniformForm] = useState(false);
     const [newUniform, setNewUniform] = useState({
         name: '',
-        varones: { pantalon: '', camisa: '', saco: '', corbata: '' },
+        varones: { traje: '', corbata: '' },
         hermanas: { toga: '', chalina: '' }
     });
 
@@ -232,9 +232,7 @@ export default function CoroDashboard() {
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
                                                 <p className="text-[9px] font-black uppercase text-slate-500 mb-1">Varones</p>
-                                                <Input placeholder="Pantalón" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.pantalon} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, pantalon: e.target.value } })} />
-                                                <Input placeholder="Camisa" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.camisa} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, camisa: e.target.value } })} />
-                                                <Input placeholder="Saco" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.saco} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, saco: e.target.value } })} />
+                                                <Input placeholder="Traje" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.traje} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, traje: e.target.value } })} />
                                                 <Input placeholder="Corbata" className="text-[9px] h-6 bg-background" value={newUniform.varones.corbata} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, corbata: e.target.value } })} />
                                             </div>
                                             <div>
@@ -249,7 +247,7 @@ export default function CoroDashboard() {
                                                 if (newUniform.name) {
                                                     addUniform({ id: Math.random().toString(36).substr(2, 9), category: 'Adulto', ...newUniform });
                                                     setShowUniformForm(false);
-                                                    setNewUniform({ name: '', varones: { pantalon: '', camisa: '', saco: '', corbata: '' }, hermanas: { toga: '', chalina: '' } });
+                                                    setNewUniform({ name: '', varones: { traje: '', corbata: '' }, hermanas: { toga: '', chalina: '' } });
                                                 }
                                             }}>Guardar</Button>
                                         </div>
@@ -261,7 +259,7 @@ export default function CoroDashboard() {
                                                 <div>
                                                     <p className="text-[10px] font-bold text-foreground">{u.name}</p>
                                                     <p className="text-[8px] text-slate-500 leading-tight mt-0.5">
-                                                        V: {u.varones?.camisa},{u.varones?.saco},{u.varones?.corbata}<br />H: {u.hermanas?.toga},{u.hermanas?.chalina}
+                                                        V: {u.varones?.traje}, Corb: {u.varones?.corbata}<br />H: {u.hermanas?.toga}, Ch: {u.hermanas?.chalina}
                                                     </p>
                                                 </div>
                                                 <button onClick={() => removeUniform(u.id)} className="text-red-500/50 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -376,7 +374,7 @@ export default function CoroDashboard() {
                                             {uniform && (
                                                 <div className="flex gap-3 mt-1 opacity-70">
                                                     <span className="text-[8px] font-medium leading-tight">
-                                                        <strong className="text-slate-400">Varones:</strong> P: {uniform.varones?.pantalon}, C: {uniform.varones?.camisa}, S: {uniform.varones?.saco}, Corb: {uniform.varones?.corbata}
+                                                        <strong className="text-slate-400">Varones:</strong> Tr: {uniform.varones?.traje}, Corb: {uniform.varones?.corbata}
                                                     </span>
                                                     <span className="text-[8px] font-medium leading-tight border-l border-white/10 pl-3">
                                                         <strong className="text-slate-400">Hermanas:</strong> T: {uniform.hermanas?.toga}, Ch: {uniform.hermanas?.chalina}

@@ -110,9 +110,7 @@ export interface Uniform {
     category: 'Adulto' | 'Niño';
     // Detalles específicos por género
     varones?: {
-        pantalon?: string;
-        camisa?: string;
-        saco?: string;
+        traje?: string;
         corbata?: string;
     };
     hermanas?: {
@@ -319,11 +317,11 @@ export const useAppStore = create<AppState>()(
             },
 
             uniforms: [
-                { id: 'u1', name: 'Gala Blanco', description: 'Traje completo blanco impecable.', category: 'Adulto', varones: { pantalon: 'Blanco', camisa: 'Blanca', saco: 'Blanco', corbata: 'Negra' }, hermanas: { toga: 'Blanca', chalina: 'Blanca' } },
-                { id: 'u2', name: 'Gala Negro', description: 'Traje negro con corbata roja.', category: 'Adulto', varones: { pantalon: 'Negro', camisa: 'Blanca', saco: 'Negro', corbata: 'Roja' }, hermanas: { toga: 'Negra', chalina: 'Roja' } },
-                { id: 'u3', name: 'Casual Azul', description: 'Camisa azul cielo y pantalón beige.', category: 'Adulto', varones: { pantalon: 'Beige', camisa: 'Azul Cielo', corbata: 'Sin Corbata' }, hermanas: { toga: 'Azul', chalina: 'Gris' } },
-                { id: 'k1', name: 'Túnicas Blancas', description: 'Túnicas reglamentarias para cantos.', category: 'Niño', varones: { pantalon: 'Blanco', camisa: 'Blanca', corbata: 'Roja' }, ninas: { blusa: 'Blanca', falda: 'Blanca', chalina: 'Blanca' } },
-                { id: 'k2', name: 'Gala Infantil', description: 'Varoncitos traje azul, Niñas vestido blanco.', category: 'Niño', varones: { pantalon: 'Azul Marino', camisa: 'Blanca', saco: 'Azul Marino', corbata: 'Azul Marino' }, ninas: { blusa: 'Blanca', falda: 'Azul Marino', chalina: 'Azul Marino' } },
+                { id: 'u1', name: 'Gala Blanco', description: 'Traje completo blanco impecable.', category: 'Adulto', varones: { traje: 'Blanco', corbata: 'Negra' }, hermanas: { toga: 'Blanca', chalina: 'Blanca' } },
+                { id: 'u2', name: 'Gala Negro', description: 'Traje negro con corbata roja.', category: 'Adulto', varones: { traje: 'Negro', corbata: 'Roja' }, hermanas: { toga: 'Negra', chalina: 'Roja' } },
+                { id: 'u3', name: 'Casual Azul', description: 'Traje azul marino.', category: 'Adulto', varones: { traje: 'Azul Marino', corbata: 'Sin Corbata' }, hermanas: { toga: 'Azul', chalina: 'Gris' } },
+                { id: 'k1', name: 'Túnicas Blancas', description: 'Túnicas reglamentarias para cantos.', category: 'Niño', varones: { traje: 'Blanco', corbata: 'Roja' }, ninas: { blusa: 'Blanca', falda: 'Blanca', chalina: 'Blanca' } },
+                { id: 'k2', name: 'Gala Infantil', description: 'Varoncitos traje azul, Niñas vestido blanco.', category: 'Niño', varones: { traje: 'Azul Marino', corbata: 'Azul Marino' }, ninas: { blusa: 'Blanca', falda: 'Azul Marino', chalina: 'Azul Marino' } },
             ],
             uniformSchedule: {
                 '2026-02-22': 'u1', // Domingo

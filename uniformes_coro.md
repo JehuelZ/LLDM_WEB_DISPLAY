@@ -2,17 +2,15 @@
 
 ## 1. Creación de Uniformes (Catálogo)
 
-En esta sección los administradores o dirigentes podrán crear y configurar los diferentes uniformes base. A cada uniforme se le asignará un nombre identificativo (ej. "Blanco y Azul", "Gala") y se especificarán los detalles de las prendas correspondientes para cada grupo:
+En esta sección los administradores o dirigentes podrán crear y configurar **combinaciones específicas** de uniformes (ej. "Gala para Jueves", "Unidad 2023"). A cada conjunto se le asignará un nombre identificativo y se especificarán los detalles separados de cada prenda por género, permitiendo mezclar diferentes prendas para cada ocasión:
 
 ### Coro de Adultos
 *   **Hermanas:** 
-    *   Toga
-    *   Chalina (velo o tapado)
+    *   Toga (ej. Toga 2023)
+    *   Chalina (ej. Chalina marrón)
 *   **Varones:** 
-    *   Pantalón
-    *   Camisa
-    *   Saco (agregado para eventos formales)
-    *   Corbata
+    *   Traje (agrupa camisa, pantalón y saco, ej. Traje negro)
+    *   Corbata (ej. Corbata roja)
 
 ### Coro de Niños
 *   **Niñas:** 
@@ -20,27 +18,25 @@ En esta sección los administradores o dirigentes podrán crear y configurar los
     *   Falda
     *   Chalina
 *   **Varones:** 
-    *   Pantalón
-    *   Camisa
+    *   Traje
     *   Corbata
-    *   Saco (opcional/según uniforme)
 
-*Nota: Durante esta etapa de creación se definen las características específicas (como el color) para cada una de las prendas obligatorias, dejándolos guardados en un catálogo para su futuro uso.*
+*Nota: Durante esta etapa de creación es donde se definen las variantes de colores/tipos de prendas por separado. Esto permite que, si piden para un jueves una toca 2023 con chalina marrón y traje negro con corbata roja, todo este conjunto se guarde bajo un nombre en el catálogo para ser asignado.*
 
 ---
 
 ## 2. Asignación de Uniformes ("Panel de Dirigente Coro")
 
-Tal cual se observa en el panel de administración/dirigente, la asignación se realiza en dos secciones principales:
+La asignación se realiza en dos secciones principales donde se reutilizan las combinaciones creadas:
 
 ### A. Asignar Uniformes (Para Jueves y Domingos próximos)
-*   Se muestra una lista de las próximas fechas de presentación (específicamente Jueves y Domingos).
-*   Junto a cada fecha, hay un menú desplegable (dropdown) que permite seleccionar uno de los uniformes preconfigurados en el catálogo (por defecto aparece "Por asignar").
+*   Se muestra una lista de las próximas fechas de presentación (Jueves y Domingos).
+*   Junto a cada fecha, se utiliza el menú desplegable para seleccionar la combinación exacta de prendas (creada en el catálogo) que se asignará para ese día.
 
 ### B. Calendario de Uniformes (Presentaciones Jueves y Domingo)
 *   Esta sección actúa como un resumen visual de las asignaciones realizadas en el paso anterior.
-*   Muestra tarjetas o bloques por cada fecha próxima (ej. "DOMINGO, 8 MAR", "JUEVES, 12 MAR", etc.) indicando claramente qué uniforme ha sido asignado para ese día.
-*   Para mayor claridad, en esta vista se previsualizan los colores/especificaciones de cada prenda por género, por ejemplo:
-    *   *Varones: P: Blanco, C: Azul, S: Blanco, Corb: Azul*
-    *   *Hermanas: T: Azul, Ch: Blanca*
+*   Muestra tarjetas o bloques por cada fecha indicando qué conjunto ha sido asignado.
+*   Crucial: En esta vista se desglosan y previsualizan las prendas separadamente para una clara comunicación a los miembros:
+    *   *Varones: Tr: Traje Negro, Corb: Roja*
+    *   *Hermanas: T: Toga 2023, Ch: Marrón*
 *   Si no se ha asignado ninguno, mostrará "POR ASIGNAR".
