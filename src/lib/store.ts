@@ -1228,10 +1228,13 @@ export const useAppStore = create<AppState>()(
                 const session = get().authSession;
                 if (!session?.user) return;
 
+                const isChoirMember = get().currentUser.privileges?.includes('choir') || get().currentUser.role.includes('Coro');
+                const choirQuery = isChoirMember ? `,target_role.eq.'Coro'` : '';
+
                 const { data, error } = await supabase
                     .from('messages')
                     .select('*, sender:profiles!sender_id(name)')
-                    .or(`receiver_id.eq.${session.user.id},target_role.eq.'${get().currentUser.role}'`)
+                    .or(`receiver_id.eq.${session.user.id},target_role.eq.'${get().currentUser.role}'${choirQuery}`)
                     .order('created_at', { ascending: false });
 
                 if (error) {

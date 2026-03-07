@@ -16,7 +16,8 @@ import { cn } from '@/lib/utils';
 export default function CoroDashboard() {
     const {
         uniforms, uniformSchedule, rehearsals, announcements, currentUser,
-        addUniform, removeUniform, setUniformForDate, setRehearsals, addAnnouncement
+        addUniform, removeUniform, setUniformForDate, setRehearsals,
+        saveAnnouncementToCloud, sendCloudMessage
     } = useAppStore();
 
     const [showLeaderPanel, setShowLeaderPanel] = useState(false);
@@ -292,28 +293,48 @@ export default function CoroDashboard() {
                                     placeholder="Instrucciones para los hermanos..."
                                     className="w-full bg-foreground/5 border border-border/40 rounded-xl text-[10px] p-3 text-foreground h-20 outline-none focus:border-cyan-400/50 transition-colors resize-none"
                                 />
-                                <Button
-                                    onClick={() => {
-                                        const title = document.getElementById('choir-msg-title') as HTMLInputElement;
-                                        const body = document.getElementById('choir-msg-body') as HTMLTextAreaElement;
-                                        if (title.value && body.value) {
-                                            addAnnouncement({
-                                                id: Math.random().toString(),
-                                                title: title.value,
-                                                content: body.value,
-                                                timestamp: new Date().toISOString(),
-                                                category: 'choir',
-                                                active: true,
-                                                priority: 1
-                                            });
-                                            title.value = '';
-                                            body.value = '';
-                                        }
-                                    }}
-                                    className="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-[10px] font-black uppercase tracking-widest h-8"
-                                >
-                                    Enviar Aviso <Bell className="ml-2 w-3 h-3" />
-                                </Button>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Button
+                                        onClick={() => {
+                                            const title = document.getElementById('choir-msg-title') as HTMLInputElement;
+                                            const body = document.getElementById('choir-msg-body') as HTMLTextAreaElement;
+                                            if (title.value && body.value) {
+                                                saveAnnouncementToCloud({
+                                                    title: title.value,
+                                                    content: body.value,
+                                                    category: 'choir',
+                                                    priority: 1
+                                                });
+                                                title.value = '';
+                                                body.value = '';
+                                                alert("Aviso público publicado en el panel.")
+                                            }
+                                        }}
+                                        className="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-[9px] font-black uppercase tracking-widest h-8"
+                                    >
+                                        Aviso <Bell className="ml-1 w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                        onClick={() => {
+                                            const title = document.getElementById('choir-msg-title') as HTMLInputElement;
+                                            const body = document.getElementById('choir-msg-body') as HTMLTextAreaElement;
+                                            if (title.value && body.value) {
+                                                sendCloudMessage({
+                                                    senderId: currentUser.id,
+                                                    targetRole: 'Coro',
+                                                    subject: title.value,
+                                                    content: body.value
+                                                });
+                                                title.value = '';
+                                                body.value = '';
+                                                alert("Mensaje interno enviado al coro exitosamente.");
+                                            }
+                                        }}
+                                        className="w-full bg-secondary hover:bg-secondary/80 text-white text-[9px] font-black uppercase tracking-widest h-8"
+                                    >
+                                        Interno <Send className="ml-1 w-3 h-3" />
+                                    </Button>
+                                </div>
                             </CardContent>
                         </Card>
                     </motion.div>
