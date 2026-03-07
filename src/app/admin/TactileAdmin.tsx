@@ -11,7 +11,7 @@ import {
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info,
     Camera, Phone, Mail, User, Globe, Languages, Music2,
-    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw
+    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -938,6 +938,12 @@ export default function TactileAdmin() {
                                                             <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary/20 text-primary">
                                                                 {member.member_group}
                                                             </span>
+                                                            <span className={cn(
+                                                                "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full",
+                                                                member.status === 'Activo' ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-500"
+                                                            )}>
+                                                                {member.status || 'Activo'}
+                                                            </span>
                                                             {(member.privileges || []).map((p: string) => (
                                                                 <span key={p} className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border border-orange-500/30 text-orange-500/70">
                                                                     {p}
@@ -946,6 +952,22 @@ export default function TactileAdmin() {
                                                         </div>
                                                     </div>
                                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <button
+                                                            onClick={async () => {
+                                                                const newStatus = member.status === 'Activo' ? 'Inactivo' : 'Activo';
+                                                                const success = await updateProfileInCloud(member.id, { ...member, status: newStatus as any });
+                                                                if (success) {
+                                                                    await loadMembersFromCloud();
+                                                                }
+                                                            }}
+                                                            title={member.status === 'Activo' ? 'Desactivar Cuenta' : 'Activar Cuenta'}
+                                                            className={cn(
+                                                                "tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center transition-all",
+                                                                member.status === 'Activo' ? "hover:text-red-500" : "hover:text-emerald-500"
+                                                            )}
+                                                        >
+                                                            <Power className="w-3.5 h-3.5" />
+                                                        </button>
                                                         <button
                                                             onClick={() => {
                                                                 setEditingMember(member);
@@ -957,10 +979,15 @@ export default function TactileAdmin() {
                                                             <Edit2 className="w-3.5 h-3.5" />
                                                         </button>
                                                         <button
-                                                            onClick={() => deleteMemberFromCloud(member.id)}
+                                                            onClick={() => {
+                                                                if (confirm(`¿Estás seguro de eliminar a ${member.name}?`)) {
+                                                                    deleteMemberFromCloud(member.id);
+                                                                }
+                                                            }}
                                                             className="tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center hover:text-red-500"
                                                         ><Trash2 className="w-3.5 h-3.5" /></button>
                                                     </div>
+
                                                 </div>
                                             ))}
                                     </div>
