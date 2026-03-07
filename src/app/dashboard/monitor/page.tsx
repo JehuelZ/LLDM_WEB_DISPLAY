@@ -53,14 +53,18 @@ export default function AttendanceDashboard() {
     }, []);
 
     useEffect(() => {
-        loadAttendanceFromCloud(selectedDate);
-        setOptimisticAttendance({}); // Reset optimistic on date change
-    }, [selectedDate]);
-
-    // Cleanup optimistic when real data arrives OR session changes
-    useEffect(() => {
+        // Al cambiar de fecha o sesión, limpiamos el estado optimista
+        // y cargamos los datos reales desde la nube de inmediato.
         setOptimisticAttendance({});
-    }, [attendanceRecords, currentSession]);
+        loadAttendanceFromCloud(selectedDate);
+    }, [selectedDate, currentSession]);
+
+    // Escuchamos cambios en los registros globales para sincronizar el estado local
+    useEffect(() => {
+        if (attendanceRecords[selectedDate]) {
+            setOptimisticAttendance({});
+        }
+    }, [attendanceRecords, selectedDate]);
 
     const adultUniform = uniforms.find(u => u.id === uniformSchedule[selectedDate]);
     const kidsAssignment = kidsAssignments[selectedDate];
@@ -164,12 +168,19 @@ export default function AttendanceDashboard() {
 
     const handleFinalize = async () => {
         setIsSaving(true);
-        // Records are already saved on toggle, but we can do a final sync or report generation here
-        setTimeout(() => {
+        try {
+            // Forzamos una recarga fresca desde la nube
+            await loadAttendanceFromCloud(selectedDate);
+
+            setTimeout(() => {
+                setIsSaving(false);
+                const attended = members.filter(m => m.present).length;
+                alert(`Sincronización completa. ${attended} miembros registrados correctamente.`);
+            }, 800);
+        } catch (error) {
             setIsSaving(false);
-            const attended = members.filter(m => m.present).length;
-            alert(`Sincronización completa. ${attended} miembros registrados para la sesión de ${currentSession === '5am' ? 'las 5:00 AM' : currentSession === '9am' ? 'las 9:00 AM' : 'la tarde'}.`);
-        }, 1000);
+            alert("Hubo un problema al finalizar. Por favor, verifica tu conexión.");
+        }
     };
 
     const presentCount = members.filter(m => m.present).length;
