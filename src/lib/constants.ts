@@ -135,6 +135,16 @@ export const MOCK_MEMBERS: any[] = [
         stats: { attendance: { attended: 10, total: 10 }, participation: { led: 5, total: 5 }, punctuality: 100 }
     },
     {
+        id: 'minister-eliab-test',
+        name: 'Eliab',
+        email: 'eliab_test@lldmrodeo.org',
+        role: 'Ministro a Cargo',
+        category: 'Varon',
+        gender: 'Varon',
+        privileges: ['leader'],
+        avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop'
+    },
+    {
         id: 'Bro. Pedro',
         name: 'Pedro Morales',
         avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop',
