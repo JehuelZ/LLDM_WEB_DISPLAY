@@ -94,15 +94,26 @@ export default function Home() {
     messages,
     markMessageAsRead,
     subscribeToMessages,
-    loadCloudMessages
+    loadCloudMessages,
+    loadMonthlyAttendanceStats
   } = useAppStore();
+
+  const [personalStats, setPersonalStats] = useState<any>(null);
 
   useEffect(() => {
     // Suscribirse a mensajes en tiempo real
     const unsubscribe = subscribeToMessages();
     loadCloudMessages();
+
+    // Cargar estadísticas personales
+    if (currentUser?.id) {
+      loadMonthlyAttendanceStats(currentUser.id).then(stats => {
+        setPersonalStats(stats);
+      });
+    }
+
     return () => unsubscribe();
-  }, [subscribeToMessages, loadCloudMessages]);
+  }, [subscribeToMessages, loadCloudMessages, currentUser?.id, loadMonthlyAttendanceStats]);
 
   useEffect(() => {
     // Cargar datos reales de la nube al iniciar
@@ -231,8 +242,14 @@ export default function Home() {
                 className="relative group cursor-pointer"
                 onClick={handlePhotoClick}
               >
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                  <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)] bg-foreground/5 flex items-center justify-center">
+                  {currentUser.avatar && !currentUser.avatar.includes('unsplash.com/photo-1507003211169-0a1dd7228f2d') ? (
+                    <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  ) : (
+                    <span className="text-xl md:text-2xl font-black text-primary uppercase italic">
+                      {currentUser.name.charAt(0)}
+                    </span>
+                  )}
                 </div>
                 <div className="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
                   <Camera className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
@@ -351,25 +368,25 @@ export default function Home() {
               <CardDescription>Resumen de fidelidad y puntualidad este mes</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-4 text-center">
                 <StatDoughnut
-                  percent={85}
+                  percent={personalStats ? Math.round((personalStats.attended / (personalStats.total || 1)) * 100) : 0}
                   label="Asistencia General"
-                  value={17}
-                  total={20}
+                  value={personalStats?.attended || 0}
+                  total={personalStats?.total || 30}
+                  color="emerald"
+                />
+                <StatDoughnut
+                  percent={personalStats ? Math.round((personalStats.bySession?.['5am'] / (personalStats.total / 3 || 10)) * 100) : 0}
+                  label="Oración 5:00 AM"
+                  value={personalStats?.bySession?.['5am'] || 0}
+                  total={10}
                   color="cyan"
                 />
                 <StatDoughnut
-                  percent={100}
-                  label="Responsabilidades"
-                  value={4}
-                  total={4}
-                  color="secondary"
-                />
-                <StatDoughnut
-                  percent={92}
+                  percent={currentUser.stats?.punctuality || 95}
                   label="Puntualidad"
-                  value={92}
+                  value={currentUser.stats?.punctuality || 95}
                   total={100}
                   color="amber"
                 />

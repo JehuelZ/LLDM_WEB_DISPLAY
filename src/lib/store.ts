@@ -157,6 +157,20 @@ export interface Message {
     senderName?: string;
 }
 
+export type AttendanceSession = '5am' | '9am' | 'evening';
+
+export interface AttendanceRecord {
+    id?: string;
+    member_id: string;
+    date: string;
+    session_type: AttendanceSession;
+    present: boolean;
+    time?: string | null;
+    created_at?: string;
+    delivered_by?: string;
+    collected_by?: string;
+}
+
 interface AppState {
     currentDate: string;
     monthlySchedule: Record<string, DailySchedule>;
@@ -175,6 +189,7 @@ interface AppState {
     rehearsals: ChoirRehearsal[];
     members: UserProfile[];
     messages: Message[];
+    attendanceRecords: Record<string, AttendanceRecord[]>; // date -> records
     isLoading: boolean;
     authSession: any;
 
@@ -236,6 +251,11 @@ interface AppState {
     deleteRehearsalFromCloud: (id: string) => Promise<void>;
 
     // Messaging & Auth Actions
+    // Attendance Actions
+    loadAttendanceFromCloud: (date: string) => Promise<void>;
+    saveAttendanceToCloud: (records: AttendanceRecord[]) => Promise<void>;
+    loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
+
     signInWithGoogle: () => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
     signOut: () => Promise<void>;
@@ -360,6 +380,7 @@ export const useAppStore = create<AppState>()(
                 }
             ],
             messages: [],
+            attendanceRecords: {},
             isLoading: false,
             authSession: null,
 
@@ -740,7 +761,7 @@ export const useAppStore = create<AppState>()(
                     // Si es el correo del Administrador Maestro, nos aseguramos de que tenga el nombre y rol correcto
                     if (userEmail === MASTER_ADMIN_EMAIL) {
                         const JAIRO_NAME = 'Jairo Zelaya';
-                        const JAIRO_AVATAR = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop';
+                        // Eliminamos la imagen de Unsplash que no pertenece al usuario
                         const needsUpdate = existingProfile.role !== 'Administrador' || existingProfile.name !== JAIRO_NAME;
 
                         if (needsUpdate) {
@@ -749,7 +770,6 @@ export const useAppStore = create<AppState>()(
                                 .update({
                                     role: 'Administrador',
                                     name: JAIRO_NAME,
-                                    avatar_url: existingProfile.avatar_url || JAIRO_AVATAR,
                                     roles: ['admin', 'leader']
                                 })
                                 .eq('id', existingProfile.id);
@@ -757,7 +777,6 @@ export const useAppStore = create<AppState>()(
                             if (!updateError) {
                                 existingProfile.role = 'Administrador';
                                 existingProfile.name = JAIRO_NAME;
-                                existingProfile.avatar_url = existingProfile.avatar_url || JAIRO_AVATAR;
                             }
                         }
                     }
@@ -1404,6 +1423,78 @@ export const useAppStore = create<AppState>()(
                     // Refresh all to see changes across calendar
                     await get().loadAllSchedulesFromCloud();
                 }
+            },
+
+            loadAttendanceFromCloud: async (date) => {
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('*')
+                    .eq('date', date);
+
+                if (data) {
+                    set(state => ({
+                        attendanceRecords: {
+                            ...state.attendanceRecords,
+                            [date]: data.map(r => ({
+                                id: r.id,
+                                member_id: r.member_id,
+                                date: r.date,
+                                session_type: r.session_type,
+                                present: r.present,
+                                time: r.time,
+                                delivered_by: r.delivered_by,
+                                collected_by: r.collected_by
+                            }))
+                        }
+                    }));
+                }
+            },
+
+            saveAttendanceToCloud: async (records) => {
+                if (records.length === 0) return;
+                const { error } = await supabase
+                    .from('attendance')
+                    .upsert(records.map(r => ({
+                        member_id: r.member_id,
+                        date: r.date,
+                        session_type: r.session_type,
+                        present: r.present,
+                        time: r.time,
+                        delivered_by: r.delivered_by,
+                        collected_by: r.collected_by
+                    })), { onConflict: 'member_id,date,session_type' });
+
+                if (error) {
+                    console.error("Error saving attendance:", error);
+                } else {
+                    const date = records[0].date;
+                    get().loadAttendanceFromCloud(date);
+                }
+            },
+
+            loadMonthlyAttendanceStats: async (memberId) => {
+                const start = startOfMonth(new Date());
+                const end = endOfMonth(new Date());
+
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('*')
+                    .eq('member_id', memberId)
+                    .gte('date', format(start, 'yyyy-MM-dd'))
+                    .lte('date', format(end, 'yyyy-MM-dd'));
+
+                if (error) return null;
+
+                const stats = {
+                    attended: data.filter(r => r.present).length,
+                    total: data.length,
+                    bySession: {
+                        '5am': data.filter(r => r.session_type === '5am' && r.present).length,
+                        '9am': data.filter(r => r.session_type === '9am' && r.present).length,
+                        'evening': data.filter(r => r.session_type === 'evening' && r.present).length,
+                    }
+                };
+                return stats;
             },
             seedMonthSchedule: async () => {
                 const now = new Date();

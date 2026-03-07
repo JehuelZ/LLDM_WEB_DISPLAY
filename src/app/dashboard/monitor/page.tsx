@@ -1,4 +1,3 @@
-
 'use client';
 
 import { motion } from 'framer-motion';
@@ -13,6 +12,7 @@ import { Baby, Shield } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import Link from 'next/link';
 
 interface AttendanceMember {
     id: number;
@@ -29,77 +29,108 @@ interface AttendanceMember {
 }
 
 export default function AttendanceDashboard() {
-    const { currentUser, uniforms, uniformSchedule, kidsAssignments, members: storeMembers, loadMembersFromCloud } = useAppStore();
+    const {
+        currentUser,
+        uniforms,
+        uniformSchedule,
+        kidsAssignments,
+        members: storeMembers,
+        loadMembersFromCloud,
+        attendanceRecords,
+        loadAttendanceFromCloud,
+        saveAttendanceToCloud
+    } = useAppStore();
+
     const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos'>('varones');
     const [searchTerm, setSearchTerm] = useState('');
-    const [localAttendance, setLocalAttendance] = useState<Record<number, { present: boolean, time: string | null, deliveredBy?: string, collectedBy?: string }>>({});
+    const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
+    const [isSaving, setIsSaving] = useState(false);
+
+    const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
 
     useEffect(() => {
         loadMembersFromCloud();
-    }, []);
+        loadAttendanceFromCloud(todayStr);
+    }, [todayStr]);
 
-    const todayStr = new Date().toISOString().split('T')[0];
     const adultUniform = uniforms.find(u => u.id === uniformSchedule[todayStr]);
     const kidsAssignment = kidsAssignments[todayStr];
     const kidsUniform = uniforms.find(u => u.id === kidsAssignment?.uniformId);
 
+    // Filtered attendance for current session
+    const currentSessionAttendance = useMemo(() => {
+        return (attendanceRecords[todayStr] || []).filter(r => r.session_type === currentSession);
+    }, [attendanceRecords, todayStr, currentSession]);
+
     // Transform store members into attendance-ready members
     const members = useMemo(() => {
-        return storeMembers.map(m => ({
-            id: m.id as unknown as number,
-            name: m.name,
-            gender: m.gender as 'Varon' | 'Hermana',
-            category: (m.category === 'Niño' ? 'Niño' : 'Adulto') as 'Adulto' | 'Niño',
-            email: m.email,
-            avatar: m.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
-            present: localAttendance[m.id as unknown as number]?.present || false,
-            time: localAttendance[m.id as unknown as number]?.time || null,
-            deliveredBy: localAttendance[m.id as unknown as number]?.deliveredBy || '',
-            collectedBy: localAttendance[m.id as unknown as number]?.collectedBy || '',
-            parentName: m.parentName || ''
-        }));
-    }, [storeMembers, localAttendance]);
+        return storeMembers.map(m => {
+            const record = currentSessionAttendance.find(r => r.member_id === m.id);
+            return {
+                id: m.id,
+                name: m.name,
+                gender: m.gender as 'Varon' | 'Hermana',
+                category: (m.category === 'Niño' ? 'Niño' : 'Adulto') as 'Adulto' | 'Niño',
+                email: m.email,
+                avatar: m.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
+                present: record?.present || false,
+                time: record?.time || null,
+                deliveredBy: record?.delivered_by || '',
+                collectedBy: record?.collected_by || '',
+                parentName: (m as any).parentName || ''
+            };
+        });
+    }, [storeMembers, currentSessionAttendance]);
 
     const [securityChild, setSecurityChild] = useState<any | null>(null);
 
-    const toggleAttendance = (id: number) => {
-        const member = members.find(m => m.id === id);
-        if (member?.category === 'Niño' && !member.present) {
+    const toggleAttendance = async (memberId: string) => {
+        const member = members.find(m => m.id === memberId);
+        if (!member) return;
+
+        if (member.category === 'Niño' && !member.present) {
             setSecurityChild(member);
             return;
         }
 
-        setLocalAttendance(prev => ({
-            ...prev,
-            [id]: {
-                ...prev[id],
-                present: !prev[id]?.present,
-                time: !prev[id]?.present ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
-            }
-        }));
+        const newRecord = {
+            member_id: memberId,
+            date: todayStr,
+            session_type: currentSession,
+            present: !member.present,
+            time: !member.present ? new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
+        };
+
+        await saveAttendanceToCloud([newRecord]);
     };
 
-    const handleSecurityUpdate = (id: number, type: 'delivered' | 'collected', value: string) => {
-        setLocalAttendance(prev => {
-            const isCheckIn = type === 'delivered';
-            return {
-                ...prev,
-                [id]: {
-                    ...prev[id],
-                    present: isCheckIn ? true : (value ? false : prev[id]?.present),
-                    time: isCheckIn ? (prev[id]?.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : prev[id]?.time,
-                    deliveredBy: type === 'delivered' ? value : prev[id]?.deliveredBy,
-                    collectedBy: type === 'collected' ? value : prev[id]?.collectedBy
-                }
-            };
-        });
+    const handleSecurityUpdate = async (id: string, type: 'delivered' | 'collected', value: string) => {
+        const member = members.find(m => m.id === id);
+        if (!member) return;
+
+        const isCheckIn = type === 'delivered';
+        const newRecord = {
+            member_id: id,
+            date: todayStr,
+            session_type: currentSession,
+            present: isCheckIn ? true : (value ? false : member.present),
+            time: isCheckIn ? (member.time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) : member.time,
+            delivered_by: type === 'delivered' ? value : member.deliveredBy,
+            collected_by: type === 'collected' ? value : member.collectedBy
+        };
+
+        await saveAttendanceToCloud([newRecord]);
         setSecurityChild(null);
     };
 
-    const handleFinalize = () => {
-        const attended = Object.entries(localAttendance).filter(([_, v]) => v.present).length;
-        alert(`Asistencia guardada: ${attended} presentes. Los datos se han sincronizado con la nube.`);
-        // Here we would typically call a batch update to Supabase
+    const handleFinalize = async () => {
+        setIsSaving(true);
+        // Records are already saved on toggle, but we can do a final sync or report generation here
+        setTimeout(() => {
+            setIsSaving(false);
+            const attended = members.filter(m => m.present).length;
+            alert(`Sincronización completa. ${attended} miembros registrados para la sesión de ${currentSession === '5am' ? 'las 5:00 AM' : currentSession === '9am' ? 'las 9:00 AM' : 'la tarde'}.`);
+        }, 1000);
     };
 
     const presentCount = members.filter(m => m.present).length;
@@ -124,6 +155,33 @@ export default function AttendanceDashboard() {
         totalPresent: members.filter(m => m.present).length
     };
 
+
+    if (!currentUser.id) return null;
+
+    // Security check: Only Admins or Attendance Managers can see this
+    const canAccess = currentUser.role === 'Administrador' ||
+        currentUser.role === 'Responsable de Asistencia' ||
+        currentUser.privileges?.includes('monitor');
+
+    if (!canAccess) {
+        return (
+            <div className="min-h-screen bg-background flex items-center justify-center p-4">
+                <Card className="glass-card max-w-md w-full p-8 text-center border-rose-500/20 bg-rose-500/5">
+                    <Shield className="h-16 w-16 text-rose-500 mx-auto mb-6" />
+                    <h2 className="text-2xl font-black uppercase italic text-rose-500 mb-2">Acceso Restringido</h2>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-8">
+                        Lo sentimos, no tienes los permisos necesarios para acceder al Panel de Asistencia Global.
+                        Este módulo es exclusivo para el <span className="text-emerald-500 font-bold">Responsable de Asistencia</span>.
+                    </p>
+                    <Link href="/">
+                        <Button className="w-full bg-foreground text-background font-black uppercase tracking-widest h-12 rounded-xl">
+                            Volver a mi Dashboard
+                        </Button>
+                    </Link>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
@@ -154,39 +212,102 @@ export default function AttendanceDashboard() {
 
 
                 <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
-                    {/* Session Info */}
-                    <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-5 md:p-6 flex flex-col justify-center relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform hidden sm:block">
-                            <ClipboardCheck className="h-16 w-16 text-emerald-500" />
-                        </div>
-                        <div className="flex items-center gap-3 mb-2">
+                    {/* Session Selector */}
+                    <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-5 md:p-6 relative overflow-hidden group">
+                        <div className="flex items-center gap-3 mb-4">
                             <Clock className="h-4 w-4 md:h-5 md:w-5 text-emerald-500" />
-                            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Sesión Actual</span>
+                            <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Seleccionar Sesión</span>
                         </div>
-                        <h3 className="text-xl md:text-2xl font-black text-foreground italic uppercase relative z-10">Servicio General</h3>
-                        <p className="text-[10px] md:text-xs text-slate-500 mt-1 uppercase font-bold relative z-10">{new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                        <div className="grid grid-cols-3 gap-2 relative z-10">
+                            {[
+                                { id: '5am', label: '5:00 AM', icon: <Clock className="w-3 h-3" /> },
+                                { id: '9am', label: '9:00 AM', icon: <Clock className="w-3 h-3" /> },
+                                { id: 'evening', label: '7:00 PM', icon: <Clock className="w-3 h-3" /> }
+                            ].map((session) => (
+                                <button
+                                    key={session.id}
+                                    onClick={() => setCurrentSession(session.id as any)}
+                                    className={cn(
+                                        "flex flex-col items-center justify-center p-2 rounded-xl border transition-all duration-300 gap-1",
+                                        currentSession === session.id
+                                            ? "bg-emerald-500 border-emerald-400 text-black shadow-lg scale-105"
+                                            : "bg-foreground/5 border-border/40 text-slate-400 hover:border-emerald-500/50"
+                                    )}
+                                >
+                                    <span className="text-[10px] font-black uppercase tracking-tight">{session.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                        <p className="text-[10px] text-slate-500 mt-4 uppercase font-bold text-center italic">{format(new Date(), "EEEE d 'de' MMMM", { locale: es })}</p>
                     </Card>
 
-                    {/* Attendance Counter */}
-                    <Card className="glass-card bg-primary/5 border-primary/20 p-5 md:p-6 flex justify-between items-center">
-                        <div>
-                            <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1">Presentes ahora</p>
-                            <h3 className="text-3xl md:text-4xl font-black text-foreground italic">{presentCount} <span className="text-sm md:text-lg text-slate-500 not-italic">/ {members.length}</span></h3>
+                    {/* Attendance Stats Chart (Donut-like) */}
+                    <Card className="glass-card bg-primary/5 border-primary/20 p-5 md:p-6 flex flex-col justify-center items-center gap-4 relative">
+                        <div className="flex w-full justify-between items-start absolute top-4 px-4">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-primary/80">Estadística Global</p>
+                            <Users className="h-4 w-4 text-primary opacity-50" />
                         </div>
-                        <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                            <Users className="h-6 w-6 md:h-8 md:w-8 text-primary" />
+
+                        <div className="relative w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
+                            {/* Simple CSS Circular Chart */}
+                            <svg className="w-full h-full -rotate-90">
+                                <circle
+                                    cx="50%"
+                                    cy="50%"
+                                    r="40%"
+                                    className="stroke-foreground/10 fill-none stroke-[8px]"
+                                />
+                                <circle
+                                    cx="50%"
+                                    cy="50%"
+                                    r="40%"
+                                    style={{
+                                        strokeDasharray: '251.2',
+                                        strokeDashoffset: (251.2 - (251.2 * (stats.totalPresent / (stats.total || 1)))).toString()
+                                    }}
+                                    className="stroke-emerald-500 fill-none stroke-[8px] transition-all duration-1000 ease-out"
+                                />
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                <span className="text-xl md:text-2xl font-black text-foreground">{Math.round((stats.totalPresent / (stats.total || 1)) * 100)}%</span>
+                                <span className="text-[8px] uppercase font-bold text-slate-500">Presentes</span>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-4 text-[10px] font-bold uppercase tracking-tighter">
+                            <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> {stats.totalPresent}</div>
+                            <div className="flex items-center gap-1.5 text-slate-500"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total - stats.totalPresent} Faltan</div>
                         </div>
                     </Card>
 
-                    {/* Access Status */}
-                    <Card className="glass-card bg-amber-500/5 border-amber-500/20 p-5 md:p-6">
-                        <div className="flex items-center gap-2 mb-2">
-                            <AlertCircle className="h-3 w-3 md:h-4 md:w-4 text-amber-500" />
-                            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-amber-500">Seguridad</span>
+                    {/* Group Distribution (Mini Bars) */}
+                    <Card className="glass-card bg-amber-500/5 border-amber-500/20 p-5 md:p-6 flex flex-col gap-4">
+                        <div className="flex items-center gap-2 mb-1">
+                            <Shield className="h-4 w-4 text-amber-500" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-amber-500">Porcentaje por Grupo</span>
                         </div>
-                        <p className="text-[11px] md:text-xs text-slate-300 leading-relaxed italic opacity-80">
-                            Registro oficial de asistencia.
-                        </p>
+
+                        <div className="space-y-4">
+                            {[
+                                { label: 'Varones', color: 'bg-primary', count: stats.varones, total: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto').length },
+                                { label: 'Hermanas', color: 'bg-rose-500', count: stats.hermanas, total: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto').length },
+                                { label: 'Niños', color: 'bg-cyan-400', count: stats.ninos, total: members.filter(m => m.category === 'Niño').length }
+                            ].map((group) => (
+                                <div key={group.label} className="space-y-1.5">
+                                    <div className="flex justify-between text-[9px] font-black uppercase tracking-widest saturate-[0.8]">
+                                        <span>{group.label}</span>
+                                        <span>{group.count} / {group.total}</span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-foreground/5 rounded-full overflow-hidden">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${(group.count / (group.total || 1)) * 100}%` }}
+                                            className={cn("h-full transition-all duration-1000", group.color)}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </Card>
                 </div>
 

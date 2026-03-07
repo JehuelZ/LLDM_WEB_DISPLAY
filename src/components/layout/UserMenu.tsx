@@ -110,12 +110,18 @@ export function UserMenu() {
                     isOpen ? "bg-primary/20 ring-2 ring-primary/30 shadow-lg shadow-primary/10" : "hover:bg-foreground/5"
                 )}
             >
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-sm relative group">
-                    <img
-                        src={currentUser.avatar}
-                        alt={currentUser.name}
-                        className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                    />
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-sm relative group bg-foreground/5 flex items-center justify-center">
+                    {currentUser.avatar && !currentUser.avatar.includes('unsplash.com/photo-1507003211169-0a1dd7228f2d') ? (
+                        <img
+                            src={currentUser.avatar}
+                            alt={currentUser.name}
+                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                        />
+                    ) : (
+                        <span className="text-[10px] font-black text-primary uppercase italic">
+                            {currentUser.name.charAt(0)}
+                        </span>
+                    )}
                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <ChevronDown className="w-3 h-3 text-white" />
                     </div>
@@ -139,8 +145,14 @@ export function UserMenu() {
                         {/* Header Profile Info */}
                         <div className="p-5 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 border-b border-border/10">
                             <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-2xl overflow-hidden border border-primary/30 shadow-inner">
-                                    <img src={currentUser.avatar} className="w-full h-full object-cover" alt="" />
+                                <div className="w-14 h-14 rounded-2xl overflow-hidden border border-primary/30 shadow-inner bg-foreground/5 flex items-center justify-center">
+                                    {currentUser.avatar && !currentUser.avatar.includes('unsplash.com/photo-1507003211169-0a1dd7228f2d') ? (
+                                        <img src={currentUser.avatar} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        <span className="text-xl font-black text-primary uppercase italic">
+                                            {currentUser.name.charAt(0)}
+                                        </span>
+                                    )}
                                 </div>
                                 <div>
                                     <h4 className="text-sm font-black text-foreground uppercase italic leading-tight">{currentUser.name}</h4>
