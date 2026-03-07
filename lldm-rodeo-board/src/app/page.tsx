@@ -2,17 +2,19 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Shield, CheckCircle2, TrendingUp } from 'lucide-react';
+import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Shield, CheckCircle2, TrendingUp, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Input } from '@/components/ui/input';
-import { MOCK_SCHEDULE, MOCK_THEME, MOCK_ANNOUNCEMENTS } from '@/lib/constants';
+import { MOCK_SCHEDULE, MOCK_THEME, MOCK_ANNOUNCEMENTS, MOCK_MEMBERS } from '@/lib/constants';
 import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useAppStore } from '@/lib/store';
 import { useEffect } from 'react';
+import { CountdownCard } from '@/components/CountdownCard';
+import { LoginScreen } from '@/components/auth/LoginScreen';
 
 const StatDoughnut = ({
   percent,
@@ -62,7 +64,7 @@ const StatDoughnut = ({
           <span className="text-lg font-black text-foreground">{percent}%</span>
         </div>
       </div>
-      {label && <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{label}</span>}
+      {label && <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</span>}
     </div>
   );
 };
@@ -70,17 +72,19 @@ const StatDoughnut = ({
 export default function Home() {
   const {
     currentUser, setCurrentUser,
+    authSession, isLoading,
     announcements, theme,
-    monthlySchedule, currentDate,
+    monthlySchedule, currentDate, members,
     loadAnnouncementsFromCloud,
     loadDayScheduleFromCloud,
     loadThemeFromCloud,
+    loadMembersFromCloud,
     updateProfileInCloud,
     uploadAvatar
   } = useAppStore();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [msgRecipient, setMsgRecipient] = useState<'Administrador' | 'Responsable' | 'Dirigente'>('Administrador');
+  const [msgRecipient, setMsgRecipient] = useState<'Administrador' | 'Responsable de Asistencia' | 'Ministro a Cargo'>('Administrador');
   const [msgContent, setMsgContent] = useState('');
   const [isSendingMsg, setIsSendingMsg] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -90,22 +94,66 @@ export default function Home() {
     messages,
     markMessageAsRead,
     subscribeToMessages,
-    loadCloudMessages
+    loadCloudMessages,
+    loadMonthlyAttendanceStats
   } = useAppStore();
+
+  const [personalStats, setPersonalStats] = useState<any>(null);
 
   useEffect(() => {
     // Suscribirse a mensajes en tiempo real
     const unsubscribe = subscribeToMessages();
     loadCloudMessages();
+
+    // Cargar estadísticas personales
+    if (currentUser?.id) {
+      loadMonthlyAttendanceStats(currentUser.id).then(stats => {
+        setPersonalStats(stats);
+      });
+    }
+
     return () => unsubscribe();
-  }, [subscribeToMessages, loadCloudMessages]);
+  }, [subscribeToMessages, loadCloudMessages, currentUser?.id, loadMonthlyAttendanceStats]);
 
   useEffect(() => {
     // Cargar datos reales de la nube al iniciar
     loadAnnouncementsFromCloud();
     loadDayScheduleFromCloud(currentDate);
     loadThemeFromCloud();
-  }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadThemeFromCloud]);
+    loadMembersFromCloud();
+  }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadThemeFromCloud, loadMembersFromCloud]);
+
+  const getMemberName = (id: any) => {
+    if (!id) return '';
+    const cleanId = String(id).trim();
+    if (!cleanId) return '';
+
+    // First try real members from cloud
+    const member = members && members.find(m => String(m.id).trim() === cleanId);
+    if (member) return member.name;
+
+    // Then try mock members as fallback
+    const mockMember = MOCK_MEMBERS.find(m => String(m.id).trim() === cleanId);
+    if (mockMember) return mockMember.name;
+
+    return id; // Fallback to original ID
+  };
+
+  const getMemberAvatar = (id: any) => {
+    if (!id) return null;
+    const cleanId = String(id).trim();
+    if (!cleanId) return null;
+
+    // First try real members from cloud
+    const member = members && members.find(m => String(m.id).trim() === cleanId);
+    if (member && member.avatar) return member.avatar;
+
+    // Then try mock members as fallback
+    const mockMember = MOCK_MEMBERS.find(m => String(m.id).trim() === cleanId);
+    if (mockMember && mockMember.avatar) return mockMember.avatar;
+
+    return null;
+  };
 
   const handlePhotoClick = () => {
     fileInputRef.current?.click();
@@ -150,21 +198,35 @@ export default function Home() {
     setIsSaving(false);
   };
 
+  // 🔒 Login Guard: Only show dashboard if authenticated
+  if (!authSession && !isLoading) {
+    return <LoginScreen />;
+  }
+
+  // Loading state (optional, or just return null while checking session)
+  if (isLoading && !authSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <Header />
-      <main className="container mx-auto p-4 md:p-8 space-y-8">
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+      <main className="container mx-auto p-4 md:p-8 space-y-6 md:space-y-8 pb-32 md:pb-8 animate-in fade-in duration-700">
+        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start">
           {/* Welcome and Basic Info */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex-1 space-y-2"
+            className="flex-1 space-y-2 w-full text-center md:text-left"
           >
-            <h1 className="text-5xl font-black tracking-tighter text-foreground uppercase italic">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-foreground uppercase italic px-2">
               Bienvenido, <span className="text-primary">{currentUser.name.split(' ')[0]}</span>
             </h1>
-            <p className="text-slate-500 font-medium tracking-widest uppercase text-xs">
+            <p className="text-muted-foreground font-medium tracking-widest uppercase text-[10px] md:text-xs">
               Panel de Control Digital - LLDM RODEO
             </p>
           </motion.div>
@@ -173,18 +235,24 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="w-full lg:w-auto"
+            className="w-full lg:w-auto flex justify-center md:justify-end"
           >
-            <div className="flex items-center gap-4 bg-foreground/5 p-4 rounded-3xl border border-border/40 backdrop-blur-xl">
+            <div className="flex items-center gap-3 md:gap-4 bg-foreground/5 p-3 md:p-4 rounded-3xl border border-border/40 backdrop-blur-xl w-full max-w-sm md:max-w-none">
               <div
                 className="relative group cursor-pointer"
                 onClick={handlePhotoClick}
               >
-                <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                  <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)] bg-foreground/5 flex items-center justify-center">
+                  {currentUser.avatar && !currentUser.avatar.includes('unsplash.com/photo-1507003211169-0a1dd7228f2d') ? (
+                    <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  ) : (
+                    <span className="text-xl md:text-2xl font-black text-primary uppercase italic">
+                      {currentUser.name.charAt(0)}
+                    </span>
+                  )}
                 </div>
                 <div className="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
-                  <Camera className="w-5 h-5 text-foreground" />
+                  <Camera className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
                 </div>
                 <input
                   type="file"
@@ -194,9 +262,9 @@ export default function Home() {
                   onChange={handlePhotoChange}
                 />
               </div>
-              <div>
-                <p className="text-sm font-black text-foreground">{currentUser.name}</p>
-                <p className="text-[10px] text-slate-500 uppercase font-bold tracking-tight">
+              <div className="flex-1">
+                <p className="text-sm font-black text-foreground truncate max-w-[120px] md:max-w-none">{currentUser.name}</p>
+                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">
                   {currentUser.category === 'Niño' ? 'Pequeño Gigante' : 'Miembro Activo'}
                 </p>
               </div>
@@ -204,7 +272,7 @@ export default function Home() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "ml-4 rounded-xl hover:bg-foreground/10",
+                  "rounded-xl hover:bg-foreground/10 h-10 w-10 md:h-12 md:w-12",
                   isEditing && "bg-primary/20 text-primary hover:bg-primary/30"
                 )}
                 onClick={isEditing ? handleSave : () => setIsEditing(true)}
@@ -221,6 +289,8 @@ export default function Home() {
             </div>
           </motion.div>
         </div>
+
+        <CountdownCard />
 
         {isEditing && (
           <motion.div
@@ -298,25 +368,25 @@ export default function Home() {
               <CardDescription>Resumen de fidelidad y puntualidad este mes</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-4 text-center">
                 <StatDoughnut
-                  percent={85}
+                  percent={personalStats ? Math.round((personalStats.attended / (personalStats.total || 1)) * 100) : 0}
                   label="Asistencia General"
-                  value={17}
-                  total={20}
+                  value={personalStats?.attended || 0}
+                  total={personalStats?.total || 30}
+                  color="emerald"
+                />
+                <StatDoughnut
+                  percent={personalStats ? Math.round((personalStats.bySession?.['5am'] / (personalStats.total / 3 || 10)) * 100) : 0}
+                  label="Oración 5:00 AM"
+                  value={personalStats?.bySession?.['5am'] || 0}
+                  total={10}
                   color="cyan"
                 />
                 <StatDoughnut
-                  percent={100}
-                  label="Responsabilidades"
-                  value={4}
-                  total={4}
-                  color="secondary"
-                />
-                <StatDoughnut
-                  percent={92}
+                  percent={currentUser.stats?.punctuality || 95}
                   label="Puntualidad"
-                  value={92}
+                  value={currentUser.stats?.punctuality || 95}
                   total={100}
                   color="amber"
                 />
@@ -338,7 +408,7 @@ export default function Home() {
                   <Shield className="mr-2 h-5 w-5" />
                   Mis Responsabilidades
                 </CardTitle>
-                <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Privilegios Asignados</CardDescription>
+                <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Privilegios Asignados</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -386,33 +456,72 @@ export default function Home() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center border-b border-border/20 pb-2">
                     <span className="text-muted-foreground">5:00 AM</span>
-                    <span className="font-medium flex items-center">
-                      <User className="mr-2 h-3 w-3 text-secondary" />
-                      {monthlySchedule[currentDate]?.slots['5am'].leaderId || 'Sin asignar'}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      <span className="font-bold text-sm text-foreground uppercase tracking-tight">
+                        {getMemberName(monthlySchedule[currentDate]?.slots['5am'].leaderId) || 'Sin asignar'}
+                      </span>
+                      {getMemberAvatar(monthlySchedule[currentDate]?.slots['5am'].leaderId) ? (
+                        <img src={getMemberAvatar(monthlySchedule[currentDate]?.slots['5am'].leaderId)} className="w-8 h-8 rounded-full border border-primary/20 object-cover shadow-lg" alt="" />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-foreground/5 border border-border/20 flex items-center justify-center">
+                          <User className="w-4 h-4 text-slate-500" />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex justify-between items-center border-b border-border/20 pb-2">
                     <span className="text-muted-foreground">9:00 AM</span>
-                    <div className="text-right">
-                      <div className="text-sm font-medium">
-                        {monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId || 'Por asignar'}
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <div className="text-sm font-black text-foreground uppercase tracking-tighter">
+                          {getMemberName(monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId) || 'Por asignar'}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground font-bold uppercase italic">
+                          {getMemberName(monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId) || 'Doctrina'}
+                        </div>
                       </div>
-                      <div className="text-xs text-muted-foreground">
-                        {monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId || 'Doctrina'}
+                      <div className="flex -space-x-2">
+                        {[
+                          monthlySchedule[currentDate]?.slots['9am'].consecrationLeaderId,
+                          monthlySchedule[currentDate]?.slots['9am'].doctrineLeaderId
+                        ].map((id, idx) => {
+                          const avatar = getMemberAvatar(id);
+                          return avatar ? (
+                            <img key={idx} src={avatar} className="w-8 h-8 rounded-full border-2 border-background object-cover shadow-lg" alt="" />
+                          ) : (
+                            <div key={idx} className="w-8 h-8 rounded-full bg-foreground/5 border-2 border-background flex items-center justify-center shadow-lg">
+                              <User className="w-4 h-4 text-slate-500" />
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
                   <div className="flex justify-between items-center pt-2">
-                    <span className="text-accent font-bold text-glow">
+                    <span className="text-accent font-black text-glow text-lg uppercase italic">
                       {monthlySchedule[currentDate]?.slots['evening'].time || '7:00 PM'}
                     </span>
-                    <div className="text-right">
-                      <span className="block font-bold text-foreground lowercase">
-                        {monthlySchedule[currentDate]?.slots['evening'].type.toUpperCase()}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {monthlySchedule[currentDate]?.slots['evening'].leaderIds.join(', ') || 'Varios hermanos'}
-                      </span>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <span className="block font-black text-foreground uppercase tracking-tighter text-sm italic">
+                          {monthlySchedule[currentDate]?.slots['evening'].type.toUpperCase()}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground font-bold">
+                          {monthlySchedule[currentDate]?.slots['evening'].leaderIds.map(id => getMemberName(id)).join(', ') || 'Varios hermanos'}
+                        </span>
+                      </div>
+                      <div className="flex -space-x-3">
+                        {monthlySchedule[currentDate]?.slots['evening'].leaderIds.slice(0, 3).map((id, idx) => {
+                          const avatar = getMemberAvatar(id);
+                          return avatar ? (
+                            <img key={idx} src={avatar} className="w-8 h-8 rounded-full border-2 border-background object-cover shadow-lg" alt="" />
+                          ) : (
+                            <div key={idx} className="w-8 h-8 rounded-full bg-foreground/5 border-2 border-background flex items-center justify-center shadow-lg">
+                              <User className="w-4 h-4 text-slate-500" />
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -503,7 +612,7 @@ export default function Home() {
                 <Mail className="mr-3 h-6 w-6 text-primary" />
                 Centro de Comunicaciones
               </CardTitle>
-              <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Envía un mensaje directo a los responsables de la congregación
               </CardDescription>
             </CardHeader>
@@ -514,8 +623,8 @@ export default function Home() {
                   <div className="grid grid-cols-1 gap-2">
                     {[
                       { id: 'Administrador', icon: Shield, label: 'Administrador' },
-                      { id: 'Responsable', icon: User, label: 'Responsable' },
-                      { id: 'Dirigente', icon: TrendingUp, label: 'Dirigente (Coro)' }
+                      { id: 'Responsable de Asistencia', icon: ClipboardCheck, label: 'Responsable de Asistencia' },
+                      { id: 'Ministro a Cargo', icon: Star, label: 'Ministro a Cargo' }
                     ].map((role) => (
                       <button
                         key={role.id}
@@ -651,7 +760,7 @@ export default function Home() {
           <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
             <ClipboardCheck className="h-5 w-5 text-emerald-500" />
           </div>
-          <p className="text-xs text-slate-400 uppercase font-black tracking-[0.2em] max-w-md text-center">
+          <p className="text-xs text-muted-foreground uppercase font-black tracking-[0.2em] max-w-md text-center">
             La asistencia es gestionada exclusivamente por los <span className="text-emerald-500 font-bold">Responsables de Asistencia</span> para garantizar la integridad de los datos
           </p>
         </motion.div>

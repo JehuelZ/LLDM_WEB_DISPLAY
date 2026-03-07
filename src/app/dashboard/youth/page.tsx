@@ -22,7 +22,7 @@ export default function YouthDashboard() {
         <div className="min-h-screen bg-background text-foreground transition-all duration-500">
             <Header />
 
-            <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <main className="container mx-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                     <div className="flex items-center gap-4">
                         <div className="w-16 h-16 rounded-[2rem] bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">

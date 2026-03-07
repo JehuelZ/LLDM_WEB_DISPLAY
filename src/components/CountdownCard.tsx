@@ -60,7 +60,7 @@ export function CountdownCard() {
         >
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent rounded-[2.5rem] blur-xl opacity-50 group-hover:opacity-80 transition-opacity" />
 
-            <div className="relative glass-card p-6 rounded-[2.5rem] border border-primary/30 bg-gradient-to-br from-primary/10 via-background/40 to-primary/5 flex flex-col md:flex-row items-center justify-between gap-8 py-8 px-10 shadow-2xl overflow-hidden">
+            <div className="relative glass-card p-4 md:p-6 rounded-3xl md:rounded-[2.5rem] border border-primary/30 bg-gradient-to-br from-primary/10 via-background/40 to-primary/5 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 py-6 md:py-8 px-6 md:px-10 shadow-2xl overflow-hidden">
                 {/* Background Sparkles Animation */}
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                     <motion.div
@@ -84,7 +84,7 @@ export function CountdownCard() {
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/80">Fecha Memorable</span>
                             <div className="h-px w-8 bg-primary/30" />
                         </div>
-                        <h3 className="text-4xl font-black text-foreground uppercase italic tracking-tighter leading-none group-hover:text-primary transition-colors">
+                        <h3 className="text-xl md:text-4xl font-black text-foreground uppercase italic tracking-tighter leading-none group-hover:text-primary transition-colors">
                             {settings.countdownTitle || 'Evento Especial'}
                         </h3>
                         <p className="text-slate-500 font-bold uppercase tracking-widest text-xs mt-2 flex items-center gap-2">
@@ -108,7 +108,7 @@ export function CountdownCard() {
                                         initial={{ y: 20, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         exit={{ y: -20, opacity: 0 }}
-                                        className="text-5xl md:text-6xl font-black text-foreground tabular-nums text-glow drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]"
+                                        className="text-3xl md:text-6xl font-black text-foreground tabular-nums text-glow drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]"
                                     >
                                         {unit.value.toString().padStart(2, '0')}
                                     </motion.span>

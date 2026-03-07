@@ -97,7 +97,7 @@ export default function MinistroDashboard() {
                 <Header />
             </div>
 
-            <main className="container mx-auto p-4 md:p-8 space-y-8">
+            <main className="container mx-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8">
                 {/* Saludo y Título Profesional */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <motion.div

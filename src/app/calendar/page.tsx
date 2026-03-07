@@ -118,7 +118,7 @@ export default function CalendarPage() {
                 <Header />
             </div>
 
-            <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <main className="container mx-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
                 {/* Print Title (Hidden in browser) */}
                 <div className="print-only text-center space-y-2 mb-8">

@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabaseClient';
 
+import { MobileNav } from './MobileNav';
+
 export function AppWrapper({ children }: { children: React.ReactNode }) {
     const { calendarStyles, settings, setAuthSession, syncUserWithCloud } = useAppStore();
     const [mounted, setMounted] = useState(false);
@@ -61,6 +63,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
             className="min-h-screen transition-colors duration-500 bg-background text-foreground"
         >
             {children}
+            <MobileNav />
         </div>
     );
 }

@@ -53,7 +53,7 @@ export function Header() {
                                 </div>
                             )}
                         </div>
-                        <span className="hidden font-black sm:inline-block text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground">
+                        <span className="font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground">
                             LLDM <span className="text-primary italic">RODEO</span>
                         </span>
                     </Link>

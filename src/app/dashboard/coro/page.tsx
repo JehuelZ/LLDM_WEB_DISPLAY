@@ -69,7 +69,7 @@ export default function CoroDashboard() {
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
             <Header />
-            <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
+            <main className="container mx-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8 animate-in fade-in duration-700">
 
                 {/* Enhanced Hero Section for Choir Leader */}
                 <section className="animate-in fade-in slide-in-from-top-8 duration-1000">

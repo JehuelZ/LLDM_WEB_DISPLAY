@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3 } from 'lucide-react';
+import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -319,7 +319,7 @@ export default function AttendanceDashboard() {
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
             <Header />
-            <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in duration-700">
+            <main className="container mx-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8 animate-in fade-in duration-700">
 
                 {/* Header Section */}
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-2">
@@ -412,6 +412,59 @@ export default function AttendanceDashboard() {
                             })}
                         </div>
                         <p className="text-[8px] text-center text-slate-600 font-bold uppercase tracking-widest mt-auto italic">Comparativa de Reuniones</p>
+                    </Card>
+
+                    {/* NEW: Morning Mountain Chart */}
+                    <Card className="glass-card bg-cyan-500/5 border-cyan-500/20 p-5 md:p-6 flex flex-col relative overflow-hidden group">
+                        <div className="flex items-center gap-2 mb-4 relative z-10">
+                            <TrendingUp className="h-4 w-4 text-cyan-400" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">Rendimiento Matinal</span>
+                        </div>
+
+                        <div className="flex-1 relative h-20 min-h-[80px] mt-2">
+                            <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="w-full h-full drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                                <defs>
+                                    <linearGradient id="morningGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="rgb(34,211,238)" stopOpacity="0.4" />
+                                        <stop offset="100%" stopColor="rgb(34,211,238)" stopOpacity="0" />
+                                    </linearGradient>
+                                </defs>
+                                <motion.path
+                                    initial={{ d: "M 0 40 L 0 40 L 50 40 L 100 40 L 100 40 Z" }}
+                                    animate={{
+                                        d: `M 0 40 L 20 40 L 45 ${Math.max(40 - (stats.session5am / (stats.total || 1) * 60), 5)} L 75 ${Math.max(40 - (stats.session9am / (stats.total || 1) * 60), 5)} L 100 40 Z`
+                                    }}
+                                    fill="url(#morningGradient)"
+                                    stroke="rgb(34,211,238)"
+                                    strokeWidth="1.5"
+                                    className="transition-all duration-[2000ms] ease-out"
+                                />
+
+                                <motion.circle
+                                    initial={{ cy: 40 }}
+                                    animate={{ cy: Math.max(40 - (stats.session5am / (stats.total || 1) * 60), 5) }}
+                                    cx="45" r="1.5" fill="rgb(34,211,238)" className="transition-all duration-[2000ms]"
+                                />
+                                <motion.circle
+                                    initial={{ cy: 40 }}
+                                    animate={{ cy: Math.max(40 - (stats.session9am / (stats.total || 1) * 60), 5) }}
+                                    cx="75" r="1.5" fill="rgb(34,211,238)" className="transition-all duration-[2000ms]"
+                                />
+                            </svg>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 mt-4 relative z-10">
+                            <div className="flex flex-col">
+                                <span className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Pico 5 AM</span>
+                                <span className="text-sm font-black text-cyan-400 italic">+{stats.session5am}</span>
+                            </div>
+                            <div className="flex flex-col text-right">
+                                <span className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Pico 9 AM</span>
+                                <span className="text-sm font-black text-emerald-400 italic">+{stats.session9am}</span>
+                            </div>
+                        </div>
+
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-cyan-500/10 transition-colors" />
                     </Card>
 
                     {/* Attendance Stats Chart (Based on session with most attendance) */}

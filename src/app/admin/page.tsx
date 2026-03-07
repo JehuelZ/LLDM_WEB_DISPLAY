@@ -717,7 +717,7 @@ export default function AdminDashboard() {
     }
 
     return (
-        <div className="p-8 space-y-8">
+        <div className="p-4 md:p-8 space-y-8 pb-32 md:pb-8">
             <div className="flex justify-between items-start pt-4">
                 <div className="space-y-1">
                     <h1 className="text-5xl font-black tracking-tighter text-foreground">Panel <span className="text-primary italic">General</span></h1>

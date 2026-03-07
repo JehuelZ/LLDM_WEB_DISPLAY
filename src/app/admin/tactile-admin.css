@@ -302,6 +302,7 @@
 
     .tactile-scroll {
         padding: 20px !important;
+        padding-bottom: 150px !important;
         height: auto;
         overflow-y: visible;
     }
