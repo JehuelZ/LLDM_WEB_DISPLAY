@@ -57,10 +57,10 @@ export default function AttendanceDashboard() {
         setOptimisticAttendance({}); // Reset optimistic on date change
     }, [selectedDate]);
 
-    // Cleanup optimistic when real data arrives
+    // Cleanup optimistic when real data arrives OR session changes
     useEffect(() => {
         setOptimisticAttendance({});
-    }, [attendanceRecords]);
+    }, [attendanceRecords, currentSession]);
 
     const adultUniform = uniforms.find(u => u.id === uniformSchedule[selectedDate]);
     const kidsAssignment = kidsAssignments[selectedDate];
