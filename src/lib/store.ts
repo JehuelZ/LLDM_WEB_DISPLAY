@@ -220,7 +220,7 @@ interface AppState {
     saveScheduleDayToCloud: (date: string, slots: DailySchedule['slots']) => Promise<void>;
     saveThemeToCloud: (theme: WeeklyTheme) => Promise<void>;
     loadUniformsFromCloud: () => Promise<void>;
-    saveUniformToCloud: (name: string, category: 'Adulto' | 'Niño') => Promise<void>;
+    saveUniformToCloud: (name: string, category: 'Adulto' | 'Niño', varones?: any, hermanas?: any, ninas?: any) => Promise<void>;
     deleteUniformFromCloud: (id: string) => Promise<void>;
     saveUniformForDateToCloud: (date: string, uniformId: string | null) => Promise<void>;
     loadKidsAssignmentsFromCloud: (date: string) => Promise<void>;
@@ -993,7 +993,14 @@ export const useAppStore = create<AppState>()(
             loadUniformsFromCloud: async () => {
                 const { data } = await supabase.from('uniforms').select('*');
                 if (data) {
-                    const mapped = data.map(u => ({ id: u.id, name: u.name, category: u.category }));
+                    const mapped = data.map(u => ({
+                        id: u.id,
+                        name: u.name,
+                        category: u.category,
+                        varones: u.varones,
+                        hermanas: u.hermanas,
+                        ninas: u.ninas
+                    }));
                     set({ uniforms: mapped });
 
                     // Load schedule too
@@ -1006,8 +1013,8 @@ export const useAppStore = create<AppState>()(
                 }
             },
 
-            saveUniformToCloud: async (name, category) => {
-                await supabase.from('uniforms').insert({ name, category });
+            saveUniformToCloud: async (name, category, varones, hermanas, ninas) => {
+                await supabase.from('uniforms').insert({ name, category, varones, hermanas, ninas });
                 get().loadUniformsFromCloud();
             },
 
