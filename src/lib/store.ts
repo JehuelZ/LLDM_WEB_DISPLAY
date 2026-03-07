@@ -1526,7 +1526,7 @@ export const useAppStore = create<AppState>()(
             },
         }),
         {
-            name: 'lldm-rodeo-storage-v8',
+            name: 'lldm-rodeo-storage-v10',
             storage: createJSONStorage(() => localStorage),
         }
     )

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Input } from '@/components/ui/input';
-import { MOCK_SCHEDULE, MOCK_THEME, MOCK_ANNOUNCEMENTS } from '@/lib/constants';
+import { MOCK_SCHEDULE, MOCK_THEME, MOCK_ANNOUNCEMENTS, MOCK_MEMBERS } from '@/lib/constants';
 import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -112,10 +112,20 @@ export default function Home() {
     loadMembersFromCloud();
   }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadThemeFromCloud, loadMembersFromCloud]);
 
-  const getMemberName = (id: string) => {
+  const getMemberName = (id: any) => {
     if (!id) return '';
-    const member = members.find(m => m.id === id);
-    return member ? member.name : id; // Fallback to ID if name not found
+    const cleanId = String(id).trim();
+    if (!cleanId) return '';
+
+    // First try real members from cloud
+    const member = members && members.find(m => String(m.id).trim() === cleanId);
+    if (member) return member.name;
+
+    // Then try mock members as fallback
+    const mockMember = MOCK_MEMBERS.find(m => String(m.id).trim() === cleanId);
+    if (mockMember) return mockMember.name;
+
+    return id; // Fallback to original ID
   };
 
   const handlePhotoClick = () => {
