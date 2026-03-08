@@ -545,30 +545,6 @@ export default function AttendanceDashboard() {
                     </Card>
                 </div>
 
-                {/* Primary Controls (Moved below stats for reachability) */}
-                <div className="flex flex-col sm:flex-row items-center gap-4 bg-background/50 backdrop-blur-md p-4 rounded-3xl border border-white/5 shadow-2xl">
-                    <div className="flex items-center justify-between gap-4 bg-foreground/5 p-2 rounded-2xl border border-border/20 w-full sm:flex-1 max-w-md">
-                        <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
-                            <ChevronLeft className="h-5 w-5" />
-                        </Button>
-                        <div className="flex flex-col items-center flex-1">
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-1 leading-none">Fecha Seleccionada</span>
-                            <span className="text-xs md:text-sm font-black text-foreground uppercase tracking-tight text-center">
-                                {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'de' MMMM", { locale: es })}
-                            </span>
-                        </div>
-                        <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
-                            <ChevronRight className="h-5 w-5" />
-                        </Button>
-                    </div>
-
-                    <Button
-                        onClick={handleFinalize}
-                        className="w-full sm:w-auto bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-black uppercase tracking-widest px-10 h-14 sm:h-14 rounded-2xl text-xs md:text-sm shrink-0"
-                    >
-                        <Save className="h-5 w-5 mr-3" /> Finalizar Lista
-                    </Button>
-                </div>
 
                 {/* Historial Semanal (Gráfico de Barras con Límite de miembros) */}
                 <Card className="glass-card bg-white/5 border-white/10 p-5 md:p-8">
@@ -630,6 +606,31 @@ export default function AttendanceDashboard() {
                         })}
                     </div>
                 </Card>
+
+                {/* Primary Controls (Date Selector & Finalize) relocated for better context grouping */}
+                <div className="flex flex-col lg:flex-row items-center gap-4 w-full">
+                    <div className="flex items-center justify-between gap-4 bg-foreground/5 p-2 rounded-2xl border border-border/20 w-full lg:max-w-md backdrop-blur-xl">
+                        <Button variant="ghost" size="icon" onClick={handlePrevDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
+                            <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <div className="flex flex-col items-center flex-1">
+                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-0.5 leading-none">Fecha Seleccionada</span>
+                            <span className="text-[11px] md:text-xs font-black text-foreground uppercase tracking-tighter text-center">
+                                {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'MMMM'", { locale: es })}
+                            </span>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
+                            <ChevronRight className="h-4 w-4" />
+                        </Button>
+                    </div>
+
+                    <Button
+                        onClick={handleFinalize}
+                        className="w-full lg:flex-1 bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-black uppercase tracking-widest px-8 h-12 rounded-2xl text-[10px] md:text-xs shrink-0"
+                    >
+                        <Save className="h-4 w-4 mr-2" /> Finalizar Asistencia
+                    </Button>
+                </div>
 
                 {/* View Tabs */}
                 <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2x md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">

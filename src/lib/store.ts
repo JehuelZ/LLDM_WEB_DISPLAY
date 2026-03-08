@@ -730,39 +730,45 @@ export const useAppStore = create<AppState>()(
                 const { data: { user: authUser } } = await supabase.auth.getUser();
                 if (!authUser) return;
 
-                const userEmail = authUser.email;
+                const userEmail = authUser.email?.toLowerCase();
                 const userName = authUser.user_metadata?.full_name || authUser.user_metadata?.name || 'Usuario Nuevo';
                 const userAvatar = authUser.user_metadata?.avatar_url || '';
                 const MASTER_ADMIN_EMAIL = 'jairojehuel@gmail.com';
 
-                // 1. Intentar buscar perfil existente por email
-                const { data: existingProfile } = await supabase
+                // 1. Intentar buscar perfil existente por email (insensible a mayúsculas)
+                let { data: existingProfile } = await supabase
                     .from('profiles')
                     .select('*')
-                    .eq('email', userEmail)
-                    .single();
+                    .ilike('email', userEmail || '')
+                    .maybeSingle();
 
                 if (existingProfile) {
-                    // Si es el correo del Administrador Maestro, nos aseguramos de que tenga el nombre y rol correcto
+                    // Si el perfil existe pero no tiene el ID de autenticación vinculado, lo vinculamos
+                    if (existingProfile.id !== authUser.id) {
+                        await supabase
+                            .from('profiles')
+                            .update({ id: authUser.id })
+                            .eq('email', existingProfile.email);
+                    }
+
+                    // Si es el correo del Administrador Maestro, aseguramos privilegios
                     if (userEmail === MASTER_ADMIN_EMAIL) {
                         const JAIRO_NAME = 'Jairo Zelaya';
-                        // Eliminamos la imagen de Unsplash que no pertenece al usuario
                         const needsUpdate = existingProfile.role !== 'Administrador' || existingProfile.name !== JAIRO_NAME;
 
                         if (needsUpdate) {
-                            const { error: updateError } = await supabase
+                            await supabase
                                 .from('profiles')
                                 .update({
                                     role: 'Administrador',
                                     name: JAIRO_NAME,
                                     roles: ['admin', 'leader']
                                 })
-                                .eq('id', existingProfile.id);
+                                .eq('id', authUser.id);
 
-                            if (!updateError) {
-                                existingProfile.role = 'Administrador';
-                                existingProfile.name = JAIRO_NAME;
-                            }
+                            existingProfile.role = 'Administrador';
+                            existingProfile.name = JAIRO_NAME;
+                            existingProfile.roles = ['admin', 'leader'];
                         }
                     }
 

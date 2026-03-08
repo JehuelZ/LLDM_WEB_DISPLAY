@@ -238,7 +238,11 @@ const MiniCountdown = () => {
 
         const calculateTimeLeft = () => {
             try {
-                const target = parseISO(settings.countdownDate!);
+                if (!settings.countdownDate) return false;
+
+                const target = parseISO(settings.countdownDate);
+                if (isNaN(target.getTime())) return false;
+
                 const now = new Date();
                 const diff = target.getTime() - now.getTime();
 
@@ -920,7 +924,7 @@ export default function AdminDashboard() {
                             <div className="flex flex-col items-center justify-center text-center">
                                 <MiniCountdown />
                                 <p className="mt-4 text-[10px] font-black uppercase tracking-widest text-slate-500 italic">
-                                    {settings.countdownDate ? format(parseISO(settings.countdownDate), 'd MMM, yyyy', { locale: es }) : '---'}
+                                    {settings.countdownDate && !isNaN(parseISO(settings.countdownDate).getTime()) ? format(parseISO(settings.countdownDate), 'd MMM, yyyy', { locale: es }) : '---'}
                                 </p>
                             </div>
                         </CardContent>

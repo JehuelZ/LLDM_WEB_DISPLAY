@@ -40,7 +40,7 @@ export function UserMenu() {
         {
             label: 'Mi Perfil',
             icon: User,
-            href: '/dashboard/profile',
+            href: currentUser.role === 'Administrador' ? '/admin?tab=perfil' : '/dashboard/profile',
             description: 'Ver y editar tus datos'
         },
         {
@@ -56,6 +56,7 @@ export function UserMenu() {
             description: 'Estadísticas y reportes'
         }
     ];
+
 
     const privilegeItems = [
         ...(currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia' || currentUser.privileges?.includes('monitor') || currentUser.privileges?.includes('admin') ? [{

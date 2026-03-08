@@ -96,7 +96,7 @@ export default function TactileAdmin() {
         seedMonthSchedule, announcements, saveAnnouncementToCloud,
         deleteAnnouncementFromCloud, currentUser, deleteMemberFromCloud,
         addMemberToCloud, updateProfileInCloud,
-        uploadAvatar,
+        uploadAvatar, setCurrentUser,
         theme, saveThemeToCloud, loadThemeFromCloud,
         uniforms, uniformSchedule, loadUniformsFromCloud,
         saveUniformToCloud, deleteUniformFromCloud,
@@ -115,7 +115,14 @@ export default function TactileAdmin() {
         }
     };
 
-    const [activeTab, setActiveTab] = useState('dashboard')
+    const [activeTab, setActiveTab] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const searchParams = new URLSearchParams(window.location.search);
+            const tab = searchParams.get('tab');
+            if (tab) return tab;
+        }
+        return 'dashboard';
+    });
     const [isSaving, setIsSaving] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
 
@@ -128,6 +135,7 @@ export default function TactileAdmin() {
         { id: 'coros', label: 'Coros', icon: Music2 },
         { id: 'miembros', label: 'Miembros', icon: Users },
         { id: 'ajustes', label: 'Ajustes', icon: Settings },
+        { id: 'perfil', label: 'Mi Perfil', icon: User },
     ]
     const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', priority: 0, expiresAt: '' })
     const [editingAnnId, setEditingAnnId] = useState<string | null>(null)
@@ -245,9 +253,15 @@ export default function TactileAdmin() {
                     {/* Header / Tabs */}
                     <div className="tactile-tabs">
                         <div className="flex-1 flex gap-4 md:gap-8 items-center overflow-x-auto no-scrollbar py-2">
-                            {/* User Profile Avatar Section */}
-                            <div className="flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-white/5 border border-white/5 mr-2">
-                                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]">
+                            {/* User Profile Avatar Section (Clickable) */}
+                            <button
+                                onClick={() => setActiveTab('perfil')}
+                                className={cn(
+                                    "flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-white/5 border border-white/5 mr-2 transition-colors hover:bg-white/10 text-left",
+                                    activeTab === 'perfil' && "bg-white/10 border-primary/50 ring-1 ring-primary/50"
+                                )}
+                            >
+                                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)] shrink-0">
                                     <img
                                         src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`}
                                         alt={currentUser.name}
@@ -256,15 +270,15 @@ export default function TactileAdmin() {
                                 </div>
                                 <div className="hidden lg:block">
                                     <p className="text-[10px] font-black uppercase tracking-tighter text-white leading-none mb-0.5">{currentUser.name}</p>
-                                    <p className="text-[8px] font-bold uppercase tracking-widest text-primary leading-none opacity-70">{currentUser.role}</p>
+                                    <p className="text-[8px] font-bold uppercase tracking-widest text-primary leading-none opacity-70">Ver Mi Perfil</p>
                                 </div>
-                            </div>
+                            </button>
 
                             <h1 className="text-xl md:text-2xl font-black italic tracking-tighter mr-4 md:mr-8 whitespace-nowrap">
                                 RODEO <span className="text-tactile-text-sub">ADMIN</span>
                             </h1>
                             <div className="flex gap-3 md:gap-6">
-                                {tabs.map(tab => (
+                                {tabs.filter(t => t.id !== 'perfil').map(tab => (
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
@@ -280,6 +294,7 @@ export default function TactileAdmin() {
                                 ))}
                             </div>
                         </div>
+
                         <div className="flex items-center gap-2 md:gap-4 ml-0 md:ml-4 mt-4 md:mt-0 w-full md:w-auto justify-between md:justify-end">
                             <button
                                 onClick={() => window.open('/display', '_blank')}
@@ -1363,6 +1378,136 @@ export default function TactileAdmin() {
                                                         </table>
                                                     </div>
                                                     <p className="text-[8px] font-bold text-tactile-text-sub/40 uppercase tracking-widest text-center">Esto solo simula la sesión localmente para pruebas rápidas.</p>
+                                                </div>
+                                            </div>
+                                        </TactileGlassCard>
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {activeTab === 'perfil' && (
+                                <motion.div
+                                    key="perfil"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    className="grid grid-cols-1 md:grid-cols-12 gap-8"
+                                >
+                                    <div className="col-span-1 md:col-span-12 px-4">
+                                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-8 group">Configuración de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mi Perfil</span></h2>
+                                    </div>
+
+                                    <div className="col-span-1 md:col-span-5 flex flex-col items-center">
+                                        <TactileGlassCard className="w-full h-full flex flex-col items-center justify-center py-12">
+                                            <div
+                                                className="w-48 h-48 rounded-3xl border-8 border-primary/20 p-2 relative group cursor-pointer overflow-hidden shadow-2xl"
+                                                onClick={() => document.getElementById('admin-avatar-upload')?.click()}
+                                            >
+                                                {currentUser.avatar ? (
+                                                    <img src={currentUser.avatar} className="w-full h-full object-cover rounded-2xl group-hover:scale-110 transition-transform duration-700" alt="Avatar" />
+                                                ) : (
+                                                    <div className="w-full h-full bg-primary/10 flex items-center justify-center rounded-2xl">
+                                                        <User className="w-20 h-20 text-primary opacity-20" />
+                                                    </div>
+                                                )}
+                                                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <Camera className="w-10 h-10 text-white mb-2" />
+                                                    <span className="text-[10px] font-black uppercase tracking-widest text-white">Cambiar Foto</span>
+                                                </div>
+                                            </div>
+
+                                            <input
+                                                type="file"
+                                                id="admin-avatar-upload"
+                                                className="hidden"
+                                                accept="image/*"
+                                                onChange={async (e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file) {
+                                                        setIsSaving(true);
+                                                        const publicUrl = await uploadAvatar(currentUser.id, file);
+                                                        if (publicUrl) {
+                                                            const updatedUser = { ...currentUser, avatar: publicUrl };
+                                                            await updateProfileInCloud(currentUser.id, updatedUser);
+                                                            setCurrentUser(updatedUser);
+                                                        }
+                                                        setIsSaving(false);
+                                                    }
+                                                }}
+                                            />
+
+                                            <div className="mt-8 text-center">
+                                                <h3 className="text-2xl font-black uppercase tracking-tighter">{currentUser.name}</h3>
+                                                <div className="flex items-center gap-2 justify-center mt-2 px-6 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">Super Administrador</span>
+                                                </div>
+                                            </div>
+                                        </TactileGlassCard>
+                                    </div>
+
+                                    <div className="col-span-1 md:col-span-7 space-y-6">
+                                        <TactileGlassCard title="DATOS PERSONALES Y CONTACTO">
+                                            <div className="grid grid-cols-1 gap-6">
+                                                <TactileInput
+                                                    label="NOMBRE COMPLETO"
+                                                    value={currentUser.name}
+                                                    onChange={(e: any) => setCurrentUser({ ...currentUser, name: e.target.value })}
+                                                    icon={User}
+                                                />
+                                                <TactileInput
+                                                    label="CORREO ELECTRÓNICO (SOLO LECTURA)"
+                                                    value={currentUser.email}
+                                                    disabled={true}
+                                                    icon={Mail}
+                                                />
+                                                <TactileInput
+                                                    label="TELÉFONO / WHATSAPP"
+                                                    value={currentUser.phone || ''}
+                                                    onChange={(e: any) => setCurrentUser({ ...currentUser, phone: e.target.value })}
+                                                    icon={Phone}
+                                                />
+                                            </div>
+
+                                            <div className="mt-8 pt-6 border-t border-white/5">
+                                                <button
+                                                    onClick={async () => {
+                                                        if (!currentUser.name || !currentUser.email) return;
+                                                        setIsSaving(true);
+                                                        const success = await updateProfileInCloud(currentUser.id, currentUser);
+                                                        if (success) {
+                                                            alert('Perfil actualizado correctamente en la nube');
+                                                        }
+                                                        setIsSaving(false);
+                                                    }}
+                                                    className="tactile-btn tactile-btn-orange w-full h-14 justify-center text-sm font-black tracking-widest gap-3 shadow-lg shadow-orange-500/20 active:scale-95 transition-all"
+                                                >
+                                                    {isSaving ? (
+                                                        <RefreshCw className="w-5 h-5 animate-spin" />
+                                                    ) : (
+                                                        <Save className="w-5 h-5" />
+                                                    )}
+                                                    {isSaving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS EN MI PERFIL'}
+                                                </button>
+                                            </div>
+                                        </TactileGlassCard>
+
+                                        <TactileGlassCard title="NIVEL DE PRIVILEGIOS">
+                                            <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-2xl relative overflow-hidden group">
+                                                <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-10 transition-opacity">
+                                                    <Shield className="w-24 h-24" />
+                                                </div>
+                                                <div className="flex items-center gap-4 relative z-10">
+                                                    <div className="p-3 bg-primary/20 rounded-xl border border-primary/30">
+                                                        <Shield className="w-5 h-5 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs font-black uppercase tracking-widest text-primary">Acceso Maestro</p>
+                                                        <p className="text-[10px] text-tactile-text-sub/70 font-bold uppercase tracking-widest">Control total sobre el sistema y miembros</p>
+                                                    </div>
+                                                </div>
+                                                <div className="px-4 py-1.5 bg-primary text-black rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-primary/20 relative z-10">
+                                                    VERIFICADO
                                                 </div>
                                             </div>
                                         </TactileGlassCard>

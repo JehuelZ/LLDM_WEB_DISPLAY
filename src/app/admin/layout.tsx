@@ -318,19 +318,20 @@ export default function AdminLayout({
                     </div>
                 </nav>
 
-                <div className={cn("p-6 border-t border-white/5", collapsed && "p-4")}>
+                <Link href="/admin?tab=perfil" className={cn("block p-6 border-t border-white/5 hover:bg-white/5 transition-colors cursor-pointer", collapsed && "p-4")}>
                     <div className={cn("flex items-center gap-3", collapsed ? "justify-center" : "px-2")}>
-                        <div className="w-9 h-9 rounded-full border border-primary/30 p-0.5 shrink-0 overflow-hidden bg-slate-800/50">
-                            <img src={currentUser.avatar} className="w-full h-full object-cover rounded-full" alt="Admin" />
+                        <div className="w-9 h-9 rounded-full border border-primary/30 p-0.5 shrink-0 overflow-hidden bg-slate-800/50 hover:border-primary transition-colors">
+                            <img src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`} className="w-full h-full object-cover rounded-full" alt="Admin" />
                         </div>
                         {!collapsed && (
                             <div className="overflow-hidden whitespace-nowrap">
-                                <div className="text-sm font-black text-white leading-none truncate">{currentUser.name}</div>
+                                <div className="text-sm font-black text-white leading-none truncate group-hover:text-primary transition-colors">{currentUser.name}</div>
                                 <div className="text-[9px] text-primary mt-1 uppercase font-black tracking-widest">{currentUser.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : currentUser.role}</div>
                             </div>
                         )}
                     </div>
-                </div>
+                </Link>
+
             </aside>
 
             {/* Main Content */}
