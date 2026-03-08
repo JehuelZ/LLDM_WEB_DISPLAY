@@ -326,7 +326,7 @@ export default function AdminLayout({
                         {!collapsed && (
                             <div className="overflow-hidden whitespace-nowrap">
                                 <div className="text-sm font-black text-white leading-none truncate">{currentUser.name}</div>
-                                <div className="text-[9px] text-slate-500 mt-1 uppercase font-black tracking-widest">{currentUser.role === 'Administrador' ? t.admin_role : currentUser.role}</div>
+                                <div className="text-[9px] text-primary mt-1 uppercase font-black tracking-widest">{currentUser.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : currentUser.role}</div>
                             </div>
                         )}
                     </div>
