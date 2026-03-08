@@ -56,6 +56,24 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/app/dashboard/page.tsx`.
     - `src/app/dashboard/profile/page.tsx`.
 
+#### 6. Correcciones en Panel de Coro (Choir Hub)
+- **Mejora:** El dirigente de coro no podía editar ni eliminar avisos publicados previamente.
+- **Solución:** 
+    - Se habilitó la lógica de `editingAnnId` en el dashboard de coro.
+    - Se añadieron iconos de **Ajustes** (Editar) y **Basura** (Eliminar) en la lista de avisos del coro.
+    - Los cambios se sincronizan en tiempo real con Supabase.
+- **Archivos Afectados:**
+    - `src/app/dashboard/coro/page.tsx`.
+
+#### 7. Banner de Servicio Informativo (Live Banner)
+- **Problema:** El sistema de display no avisaba de forma prominente cuando un servicio dominical u oración estaba en curso.
+- **Solución:**
+    - Se implementó un **Banner "En Curso"** dinámico en el encabezado global del tema **Iglesia (Cátedra)**.
+    - El banner detecta automáticamente si es domingo para mostrar "Escuela Dominical" o si es un día regular para mostrar "Oración".
+    - Incluye animación de pulsación para máxima visibilidad en televisiones y proyectores.
+- **Archivos Afectados:**
+    - `src/themes/Iglesia/Clock.tsx`.
+
 ---
 
 *Documento actualizado por Antigravity (Skill Doctor)*

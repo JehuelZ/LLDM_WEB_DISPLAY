@@ -60,7 +60,7 @@ const WeatherIcon = ({ code, className, size = 20 }: { code: string, className?:
 };
 
 export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: any[], currentSlide: number, isPaused?: boolean }) {
-    const { settings, theme } = useAppStore();
+    const { settings, theme, monthlySchedule } = useAppStore();
     const iglesiaVariant = useAppStore((s: any) => s.settings?.iglesiaVariant || 'light');
     const isDark = iglesiaVariant === 'dark';
     const T = getIglesiaTokens(iglesiaVariant);
@@ -95,90 +95,155 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                 </div>
                 <div style={{ pointerEvents: 'auto' }}>
                     {/* Unified Header Intelligence Box (Weather + Clock) */}
-                    {!hideExtra && (
-                        <div style={{
-                            display: 'flex', gap: 0, alignItems: 'stretch',
-                            padding: '0 24px', borderRadius: 28, background: T.surface,
-                            boxShadow: isDark ? '8px 8px 20px rgba(0,0,0,0.5), -5px -5px 15px rgba(255,255,255,0.02)' : neuShadow(T, false, 'md', isDark),
-                            border: `1px solid ${T.border}`,
-                            height: 110, // Tall enough for the big clock
-                            position: 'relative', overflow: 'hidden'
-                        }}>
-                            {/* Weather Lead Segment */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, paddingRight: 24, borderRight: `1px solid ${T.borderAccent}` }}>
-                                <div style={{
-                                    width: 50, height: 50, borderRadius: 16,
-                                    background: isDark ? 'rgba(51,154,240,0.1)' : 'rgba(51,154,240,0.05)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                }}>
-                                    {weather ? (
-                                        <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={28} />
-                                    ) : (
-                                        <Sunrise style={{ color: '#339AF0' }} size={28} />
-                                    )}
-                                </div>
-                                <div>
-                                    <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat, margin: 0 }}>
-                                        {settings.neonForgeCityData?.name || (settings as any).city || 'Rodeo'}
-                                    </p>
-                                    <p style={{ fontSize: 28, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0 }}>
-                                        {weather ? `${weather.temp}°C` : '--°C'}
-                                    </p>
-                                </div>
-                            </div>
+                    {!hideExtra && (() => {
+                        const curMin = currentTime.getHours() * 60 + currentTime.getMinutes();
+                        const isSunToday = currentTime.getDay() === 0;
+                        const dateKey = format(currentTime, 'yyyy-MM-dd');
+                        const sched = monthlySchedule?.[dateKey];
 
-                            {/* Forecast Strip */}
-                            <div style={{ display: 'flex', gap: 4, padding: '0 20px', alignItems: 'center', borderRight: `1px solid ${T.borderAccent}` }}>
-                                {(weather?.forecast || [0, 1, 2, 3]).map((item: any, offset: number) => {
-                                    const dayDate = addDays(currentTime, offset);
-                                    const dayName = offset === 0 ? 'Hoy' : format(dayDate, 'EEE', { locale: es });
-                                    const dIsToday = offset === 0;
+                        const defaults = {
+                            '5am': { start: '05:00', end: '06:15' },
+                            '9am': { start: isSunToday ? '10:00' : '09:00', end: isSunToday ? '12:00' : '10:15' },
+                            'evening': { start: '18:30', end: '20:30' },
+                        };
 
-                                    const temp = weather ? item.temp : (22 + offset);
-                                    const iconCode = weather ? item.icon : (offset % 2 === 0 ? '0' : '1');
+                        const parseTimeStr = (t?: string) => {
+                            if (!t) return null;
+                            const match = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+                            if (!match) return null;
+                            let [_, hStr, mStr, period] = match;
+                            let h = parseInt(hStr, 10);
+                            let m = parseInt(mStr, 10);
+                            if (period?.toUpperCase() === 'PM' && h < 12) h += 12;
+                            if (period?.toUpperCase() === 'AM' && h === 12) h = 0;
+                            return h * 60 + m;
+                        };
 
-                                    return (
-                                        <div key={offset} style={{
-                                            padding: '10px 16px', borderRadius: 18,
-                                            background: dIsToday ? T.surfaceDeep : 'transparent',
-                                            boxShadow: dIsToday ? (isDark ? 'inset 3px 3px 6px rgba(0,0,0,0.4)' : 'inset 3px 3px 6px rgba(0,0,0,0.05)') : 'none',
-                                            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2
-                                        }}>
-                                            <span style={{ fontSize: 8, fontWeight: 800, color: dIsToday ? T.accent : T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat, opacity: 0.8 }}>{dayName}</span>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                                <WeatherIcon code={iconCode} className={offset % 2 === 0 ? "text-amber-400" : "text-blue-300"} size={14} />
-                                                <span style={{ fontSize: 16, fontWeight: 600, color: T.textPrimary, fontFamily: T.fontInter }}>{temp}°</span>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                        const checkActive = (slotId: '5am' | '9am' | 'evening') => {
+                            const slot = (sched?.slots as any)?.[slotId];
+                            const start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
+                            const end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+                            return curMin >= start && curMin <= end;
+                        };
 
-                            {/* Clock Integrated Segment */}
-                            <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 32 }}>
-                                <IntegratedClock T={T} isDark={isDark} />
-                            </div>
+                        const activeSlot = checkActive('9am') ? '9am' : (checkActive('evening') ? 'evening' : (checkActive('5am') ? '5am' : null));
+                        const isLive = !!activeSlot;
 
-                            {/* Global Slide Progress Bar — Now integrated at the bottom of the header box */}
+                        let liveLabel = '';
+                        if (activeSlot === '9am') liveLabel = isSunToday ? 'Escuela Dominical' : 'Oración de 9 AM';
+                        else if (activeSlot === '5am') liveLabel = 'Oración de las 5';
+                        else if (activeSlot === 'evening') {
+                            const type = (sched?.slots as any)?.evening?.type || 'regular';
+                            const labels: any = { youth: 'Servicio Jóvenes', married: 'Servicio Casados', children: 'Escuela Niños', praise: 'Servicio Alabanza' };
+                            liveLabel = labels[type] || 'Servicio de Adoración';
+                        }
+
+                        return (
                             <div style={{
-                                position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
-                                background: isDark ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
-                                pointerEvents: 'none', overflow: 'hidden'
+                                display: 'flex', gap: 0, alignItems: 'stretch',
+                                padding: '0 24px', borderRadius: 28, background: isLive ? `${T.accent}05` : T.surface,
+                                boxShadow: isLive
+                                    ? `0 0 40px ${T.accent}20, ${neuShadow(T, false, 'md', isDark)}`
+                                    : (isDark ? '8px 8px 20px rgba(0,0,0,0.5), -5px -5px 15px rgba(255,255,255,0.02)' : neuShadow(T, false, 'md', isDark)),
+                                border: isLive ? `2px solid ${T.accent}` : `1px solid ${T.border}`,
+                                height: 110,
+                                position: 'relative', overflow: 'hidden',
+                                transition: 'all 0.5s ease'
                             }}>
-                                <motion.div
-                                    key={currentSlide}
-                                    initial={{ width: '0%' }}
-                                    animate={{ width: '100%' }}
-                                    transition={{ duration: 10, ease: 'linear' }}
-                                    style={{
-                                        height: '100%',
-                                        background: `linear-gradient(90deg, transparent, ${T.accent}, transparent)`,
-                                        boxShadow: `0 0 10px ${T.accent}44`,
-                                    }}
-                                />
+                                {/* Live Indicator Segment */}
+                                {isLive && (
+                                    <div style={{
+                                        display: 'flex', alignItems: 'center', gap: 16, padding: '0 24px',
+                                        background: `${T.accent}10`, borderRight: `1px solid ${T.accent}30`
+                                    }}>
+                                        <motion.div
+                                            animate={{ opacity: [1, 0.4, 1], scale: [1, 1.2, 1] }}
+                                            transition={{ repeat: Infinity, duration: 2 }}
+                                            style={{ width: 12, height: 12, borderRadius: '50%', background: T.accent, boxShadow: `0 0 15px ${T.accent}` }}
+                                        />
+                                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                            <span style={{ fontSize: 9, fontWeight: 900, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.2em', fontFamily: T.fontMontserrat }}>En Curso</span>
+                                            <span style={{ fontSize: 16, fontWeight: 800, color: T.textPrimary, fontFamily: T.fontInter, whiteSpace: 'nowrap' }}>{liveLabel}</span>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Weather Lead Segment */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 24px', borderRight: `1px solid ${T.borderAccent}` }}>
+                                    <div style={{
+                                        width: 50, height: 50, borderRadius: 16,
+                                        background: isDark ? 'rgba(51,154,240,0.1)' : 'rgba(51,154,240,0.05)',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                    }}>
+                                        {weather ? (
+                                            <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={28} />
+                                        ) : (
+                                            <Sunrise style={{ color: '#339AF0' }} size={28} />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat, margin: 0 }}>
+                                            {settings.neonForgeCityData?.name || (settings as any).city || 'Rodeo'}
+                                        </p>
+                                        <p style={{ fontSize: 28, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0 }}>
+                                            {weather ? `${weather.temp}°C` : '--°C'}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Forecast Strip */}
+                                <div style={{ display: 'flex', gap: 4, padding: '0 20px', alignItems: 'center', borderRight: `1px solid ${T.borderAccent}` }}>
+                                    {(weather?.forecast || [0, 1, 2, 3]).map((item: any, offset: number) => {
+                                        const dayDate = addDays(currentTime, offset);
+                                        const dayName = offset === 0 ? 'Hoy' : format(dayDate, 'EEE', { locale: es });
+                                        const dIsToday = offset === 0;
+
+                                        const temp = weather ? item.temp : (22 + offset);
+                                        const iconCode = weather ? item.icon : (offset % 2 === 0 ? '0' : '1');
+
+                                        return (
+                                            <div key={offset} style={{
+                                                padding: '10px 16px', borderRadius: 18,
+                                                background: dIsToday ? T.surfaceDeep : 'transparent',
+                                                boxShadow: dIsToday ? (isDark ? 'inset 3px 3px 6px rgba(0,0,0,0.4)' : 'inset 3px 3px 6px rgba(0,0,0,0.05)') : 'none',
+                                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2
+                                            }}>
+                                                <span style={{ fontSize: 8, fontWeight: 800, color: dIsToday ? T.accent : T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat, opacity: 0.8 }}>{dayName}</span>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                    <WeatherIcon code={iconCode} className={offset % 2 === 0 ? "text-amber-400" : "text-blue-300"} size={14} />
+                                                    <span style={{ fontSize: 16, fontWeight: 600, color: T.textPrimary, fontFamily: T.fontInter }}>{temp}°</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Clock Integrated Segment */}
+                                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 32 }}>
+                                    <IntegratedClock T={T} isDark={isDark} />
+                                </div>
+
+                                {/* Global Slide Progress Bar — Now integrated at the bottom of the header box */}
+                                <div style={{
+                                    position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
+                                    background: isDark ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                                    pointerEvents: 'none', overflow: 'hidden'
+                                }}>
+                                    <motion.div
+                                        key={currentSlide}
+                                        initial={{ width: '0%' }}
+                                        animate={{ width: '100%' }}
+                                        transition={{ duration: 10, ease: 'linear' }}
+                                        style={{
+                                            height: '100%',
+                                            background: `linear-gradient(90deg, transparent, ${T.accent}, transparent)`,
+                                            boxShadow: `0 0 10px ${T.accent}44`,
+                                        }}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    )}
+                        );
+                    })()}
 
                 </div>
             </div>
