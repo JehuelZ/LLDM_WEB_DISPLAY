@@ -95,8 +95,8 @@ export default function ResponsableDashboard() {
                         <div className="relative z-10 flex justify-between items-start">
                             <div>
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-primary/80 mb-1">Tu Grupo</p>
-                                <h3 className="text-4xl font-black text-foreground italic">Grupo 4</h3>
-                                <p className="text-xs text-slate-500 mt-2 font-bold uppercase tracking-tighter">18 Miembros activos</p>
+                                <h3 className="text-4xl font-black text-foreground italic">Grupo ---</h3>
+                                <p className="text-xs text-slate-500 mt-2 font-bold uppercase tracking-tighter">0 Miembros activos</p>
                             </div>
                             <Users className="h-8 w-8 text-primary/20" />
                         </div>
@@ -126,13 +126,9 @@ export default function ResponsableDashboard() {
                     <Card className="glass-card bg-accent/5 border-accent/20 p-6 relative overflow-hidden group">
                         <div className="relative z-10">
                             <p className="text-[10px] font-bold uppercase tracking-widest text-accent mb-1">Visitas Pendientes</p>
-                            <h3 className="text-3xl font-black text-foreground italic">3 HERMANOS</h3>
-                            <div className="mt-4 flex -space-x-2">
-                                {[1, 2, 3].map(i => (
-                                    <div key={i} className="w-8 h-8 rounded-full border-2 border-background bg-slate-800 flex items-center justify-center text-[10px] font-bold text-accent">
-                                        {i}
-                                    </div>
-                                ))}
+                            <h3 className="text-3xl font-black text-foreground italic">0 HERMANOS</h3>
+                            <div className="mt-4 flex -space-x-2 h-8">
+                                {/* No pending visits */}
                             </div>
                         </div>
                         <div className="absolute -right-4 -bottom-4 h-24 w-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors" />
@@ -164,40 +160,11 @@ export default function ResponsableDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
-                                        {[
-                                            { name: 'Juan P. Hernandez', asist: '12/15', status: 'Excelente', color: 'emerald', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop' },
-                                            { name: 'Ricardo Mendez', asist: '10/15', status: 'Regular', color: 'yellow', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop' },
-                                            { name: 'Samuel Rojas', asist: '4/15', status: 'En riesgo', color: 'red', avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop' },
-                                        ].map((m, i) => (
-                                            <tr key={i} className="group hover:bg-foreground/[0.02] transition-colors">
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden bg-primary/10">
-                                                            {m.avatar ? (
-                                                                <img src={m.avatar} alt={m.name} className="w-full h-full object-cover" />
-                                                            ) : (
-                                                                <span className="text-primary text-xs font-black">{m.name.charAt(0)}</span>
-                                                            )}
-                                                        </div>
-                                                        <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">{m.name}</span>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4 text-center">
-                                                    <span className="text-sm font-mono text-slate-400">{m.asist}</span>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <span className={cn(
-                                                        "px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest",
-                                                        m.color === 'emerald' ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" :
-                                                            m.color === 'yellow' ? "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20" :
-                                                                "bg-red-500/10 text-red-400 border border-red-500/20"
-                                                    )}>{m.status}</span>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase h-7 px-3 border border-border/20 hover:border-primary/30">Visitar</Button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        <tr>
+                                            <td colSpan={4} className="px-6 py-12 text-center text-slate-500 text-xs font-bold uppercase tracking-widest italic">
+                                                No hay miembros asignados a este grupo
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -215,7 +182,7 @@ export default function ResponsableDashboard() {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex flex-col gap-2">
-                                    <p className="text-xs text-slate-400 italic">"Abraham Samuel" es el responsable hoy.</p>
+                                    <p className="text-xs text-slate-400 italic">No hay responsable asignado hoy.</p>
                                     <Button variant="outline" className="w-full justify-between h-12 px-4 group">
                                         <span>Confirmar Asistencia</span>
                                         <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center group-hover:bg-secondary transition-colors">
@@ -234,8 +201,8 @@ export default function ResponsableDashboard() {
                             </CardHeader>
                             <CardContent>
                                 <ul className="space-y-3">
-                                    <li className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-200">
-                                        <span className="font-bold underline uppercase">Falta Crítica:</span> Samuel Rojas no ha asistido en las últimas 4 oraciones.
+                                    <li className="p-3 rounded-lg bg-foreground/5 border border-border/20 text-xs text-slate-500 text-center italic">
+                                        No hay alertas pendientes.
                                     </li>
                                 </ul>
                             </CardContent>

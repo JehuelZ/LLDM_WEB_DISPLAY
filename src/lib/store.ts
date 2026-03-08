@@ -88,6 +88,7 @@ export interface UserProfile {
     nextPrivilege?: string;
     parentName?: string;
     privileges: ('admin' | 'monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper' | 'youth_leader')[];
+    responsibilities?: { date: string; type: string; status: 'pending' | 'completed'; label: string }[];
     is_pre_registered?: boolean;
 }
 
@@ -272,18 +273,18 @@ interface AppState {
 }
 
 const INITIAL_USER: UserProfile = {
-    id: 'jairo-admin',
-    name: 'Jairo Zelaya',
+    id: 'admin-temp-id',
+    name: 'Administrador',
     email: 'jairojehuel@gmail.com',
     phone: '',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+    avatar: 'https://ui-avatars.com/api/?name=Admin&background=000&color=fff',
     category: 'Varon',
     member_group: 'Administración',
     role: 'Administrador',
     gender: 'Varon',
     status: 'Activo',
     lastActive: 'Hoy',
-    stats: { attendance: { attended: 85, total: 90 }, participation: { led: 12, total: 15 }, punctuality: 98 },
+    stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
     privileges: ['choir', 'leader']
 };
 
@@ -311,16 +312,16 @@ export const useAppStore = create<AppState>()(
                 language: 'es',
                 displayBgMode: 'official',
                 displayBgStyle: 'static',
-                showCountdown: true,
-                countdownTitle: '100 Años de Misericordia',
-                countdownDate: '2026-04-06',
+                showCountdown: false,
+                countdownTitle: '',
+                countdownDate: '',
                 iglesiaVariant: 'light',
-                facebookUrl: 'https://facebook.com/lldmrodeo',
-                instagramUrl: 'https://instagram.com/lldmrodeo',
-                youtubeUrl: 'https://youtube.com/@lldmrodeo',
-                customSocialUrl: 'https://lldm.org',
-                customSocialLabel: 'Sitio Oficial',
-                displayPin: '1922',
+                facebookUrl: '',
+                instagramUrl: '',
+                youtubeUrl: '',
+                customSocialUrl: '',
+                customSocialLabel: '',
+                displayPin: '0000',
                 displayTemplate: 'cristal',
                 displayScale: 1.0,
                 displayAuthorizedEmails: ['jairojehuel@gmail.com'],
@@ -328,59 +329,25 @@ export const useAppStore = create<AppState>()(
             },
             currentUser: INITIAL_USER,
             minister: {
-                id: 'minister-eliab',
-                name: 'Eliab',
-                email: 'eliab@lldmrodeo.org',
-                phone: '+1 (555) 000-0000',
-                avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop',
+                id: 'minister-placeholder',
+                name: 'Ministro Local',
+                email: '',
+                phone: '',
+                avatar: 'https://ui-avatars.com/api/?name=Ministro+Local&background=random',
                 category: 'Varon',
                 role: 'Ministro a Cargo',
                 gender: 'Varon',
                 status: 'Activo',
                 lastActive: 'Hoy',
-                stats: { attendance: { attended: 100, total: 100 }, participation: { led: 50, total: 50 }, punctuality: 100 },
+                stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
                 privileges: ['leader']
             },
 
-            uniforms: [
-                { id: 'u1', name: 'Gala Blanco', description: 'Traje completo blanco impecable.', category: 'Adulto', varones: { traje: 'Blanco', corbata: 'Negra' }, hermanas: { toga: 'Blanca', chalina: 'Blanca' } },
-                { id: 'u2', name: 'Gala Negro', description: 'Traje negro con corbata roja.', category: 'Adulto', varones: { traje: 'Negro', corbata: 'Roja' }, hermanas: { toga: 'Negra', chalina: 'Roja' } },
-                { id: 'u3', name: 'Jueves Azul', description: 'Uniforme de Jueves Azul Marino.', category: 'Adulto', varones: { pantalon: 'Azul Marino', camisa: 'Blanca', corbata: 'Azul' }, hermanas: { falda: 'Azul Marino', blusa: 'Blanca', chalina: 'Azul' } },
-                { id: 'k1', name: 'Túnicas Blancas', description: 'Túnicas reglamentarias para cantos.', category: 'Niño', varones: { traje: 'Blanco', corbata: 'Roja' }, ninas: { blusa: 'Blanca', falda: 'Blanca', chalina: 'Blanca' } },
-                { id: 'k2', name: 'Gala Infantil', description: 'Varoncitos traje azul, Niñas vestido blanco.', category: 'Niño', varones: { traje: 'Azul Marino', corbata: 'Azul Marino' }, ninas: { blusa: 'Blanca', falda: 'Azul Marino', chalina: 'Azul Marino' } },
-            ],
-            uniformSchedule: {
-                '2026-02-22': 'u1', // Domingo
-                '2026-02-26': 'u2', // Jueves
-            },
-            kidsAssignments: {
-                '2026-02-28': {
-                    serviceChild: 'Samuelito Hernandez',
-                    doctrineChild: 'Mateo Rojas',
-                    uniformId: 'k1'
-                }
-            },
-            rehearsals: [
-                { id: 'r1', dayOfWeek: 2, time: '07:00 PM', location: 'Salón de Actos', notes: 'Repaso general' },
-                { id: 'r2', dayOfWeek: 5, time: '06:00 PM', location: 'Templo', notes: 'Consagración y repaso' }
-            ],
-            members: [
-                ...MOCK_MEMBERS,
-                {
-                    id: 'keren-hernandez',
-                    name: 'Keren Hernandez',
-                    email: 'keren@lldmrodeo.org',
-                    phone: '555-0011',
-                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
-                    category: 'Hermana',
-                    role: 'Responsable de Asistencia',
-                    gender: 'Hermana',
-                    status: 'Activo',
-                    lastActive: 'Hoy',
-                    stats: { attendance: { attended: 50, total: 50 }, participation: { led: 20, total: 20 }, punctuality: 100 },
-                    privileges: ['monitor']
-                }
-            ],
+            uniforms: [],
+            uniformSchedule: {},
+            kidsAssignments: {},
+            rehearsals: [],
+            members: MOCK_MEMBERS,
             messages: [],
             attendanceRecords: {},
             isLoading: false,
@@ -626,6 +593,22 @@ export const useAppStore = create<AppState>()(
                             privileges: p.roles || [],
                             is_pre_registered: p.is_pre_registered || false
                         }));
+
+                        // Sincronizar estado del Ministro si se encuentra en la lista oficial
+                        const foundMinister = mapped.find(m => m.role === 'Ministro a Cargo');
+                        if (foundMinister) {
+                            set({
+                                minister: {
+                                    ...get().minister,
+                                    id: foundMinister.id,
+                                    name: foundMinister.name,
+                                    avatar: foundMinister.avatar || get().minister.avatar,
+                                    email: foundMinister.email,
+                                    phone: foundMinister.phone
+                                }
+                            });
+                        }
+
                         set({ members: mapped, isLoading: false });
                     }
                 } catch (err) {
@@ -711,7 +694,7 @@ export const useAppStore = create<AppState>()(
             uploadAvatar: async (userId, file) => {
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${userId}-${Date.now()}.${fileExt}`;
-                const filePath = `avatars/${fileName}`;
+                const filePath = fileName;
 
                 console.log('Attempting upload to bucket "avatars" at path:', filePath);
 
@@ -1677,15 +1660,6 @@ export const useAppStore = create<AppState>()(
 
             createTestAccounts: async () => {
                 const testAccounts = [
-                    {
-                        name: 'Test Ministro',
-                        email: 'ministro_test@lldmrodeo.org',
-                        role: 'Ministro a Cargo',
-                        category: 'Varon',
-                        gender: 'Varon',
-                        privileges: ['leader'],
-                        stats: { attendance: { attended: 45, total: 50 }, participation: { led: 30, total: 30 }, punctuality: 98 }
-                    },
                     {
                         name: 'Test Asistencia',
                         email: 'asistencia_test@lldmrodeo.org',

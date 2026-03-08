@@ -116,64 +116,9 @@ const StatDoughnut = ({
     );
 };
 
-// --- Interfaces ---
+import { UserProfile as Member } from '@/lib/store';
 
-interface MemberStats {
-    attendance: { attended: number; total: number };
-    participation: { led: number; total: number };
-    punctuality: number;
-}
-
-interface Member {
-    id: string;
-    name: string;
-    role: 'Miembro' | 'Administrador' | 'Ministro a Cargo' | 'Dirigente Coro Adultos' | 'Dirigente Coro Niños' | 'Responsable de Asistencia';
-    gender: 'Varon' | 'Hermana';
-    member_group?: 'Casados' | 'Casadas' | 'Solos y Solas' | 'Jovenes' | 'Niños' | 'Niñas' | 'Administración';
-    email: string;
-    phone: string;
-    status: 'Activo' | 'Inactivo';
-    lastActive: string;
-    stats?: MemberStats;
-    avatarUrl?: string;
-    privileges: ('monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper')[];
-    parentName?: string;
-    is_pre_registered?: boolean;
-}
-
-const INITIAL_MEMBERS: Member[] = [
-    {
-        id: '1', name: 'Abraham Diaz', role: 'Ministro a Cargo', gender: 'Varon', member_group: 'Casados', email: 'abraham.d@lldm.org', phone: '123-456-7890', status: 'Activo', lastActive: 'Hoy',
-        stats: { attendance: { attended: 85, total: 90 }, participation: { led: 12, total: 15 }, punctuality: 98 },
-        avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop',
-        privileges: ['leader']
-    },
-    {
-        id: '2', name: 'María Garcia', role: 'Miembro', gender: 'Hermana', member_group: 'Casadas', email: 'maria.g@gmail.com', phone: '987-654-3210', status: 'Activo', lastActive: 'Ayer',
-        stats: { attendance: { attended: 70, total: 90 }, participation: { led: 2, total: 5 }, punctuality: 92 },
-        avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop',
-        privileges: ['monitor']
-    },
-    {
-        id: '3', name: 'Samuel Rojas', role: 'Miembro', gender: 'Varon', member_group: 'Jovenes', email: 'samuel.r@yahoo.com', phone: '555-0199', status: 'Activo', lastActive: 'Hace 3 días',
-        stats: { attendance: { attended: 45, total: 90 }, participation: { led: 0, total: 5 }, punctuality: 85 },
-        avatarUrl: 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&h=100&fit=crop',
-        privileges: ['choir']
-    },
-    {
-        id: '4', name: 'Esther Lopez', role: 'Miembro', gender: 'Hermana', member_group: 'Solos y Solas', email: 'esther.l@gmail.com', phone: '444-555-6666', status: 'Activo', lastActive: 'Hace 2 horas',
-        stats: { attendance: { attended: 88, total: 90 }, participation: { led: 8, total: 10 }, punctuality: 95 },
-        avatarUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop',
-        privileges: []
-    },
-    {
-        id: '5', name: 'Samuelito Rojas Jr.', role: 'Miembro', gender: 'Varon', member_group: 'Niños', email: 'samuelito.jr@lldm.org', phone: '555-KIDS', status: 'Activo', lastActive: 'Hoy',
-        stats: { attendance: { attended: 12, total: 12 }, participation: { led: 4, total: 4 }, punctuality: 100 },
-        avatarUrl: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=200&h=200&fit=crop',
-        privileges: [],
-        parentName: 'Samuel Rojas'
-    },
-];
+const INITIAL_MEMBERS: Member[] = [];
 
 export default function MembersPage() {
     const {
@@ -213,6 +158,8 @@ export default function MembersPage() {
     const BLANK_MEMBER: Member = {
         id: '',
         name: '',
+        avatar: '',
+        category: 'Varon',
         role: 'Miembro',
         gender: 'Varon',
         member_group: 'Jovenes',
@@ -376,8 +323,8 @@ export default function MembersPage() {
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className="h-10 w-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20">
-                                                        {member.avatarUrl ? (
-                                                            <img src={member.avatarUrl} alt={member.name} className="w-full h-full object-cover" />
+                                                        {member.avatar ? (
+                                                            <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
                                                         ) : (
                                                             <span className="text-primary font-bold">{member.name.charAt(0)}</span>
                                                         )}
@@ -463,8 +410,8 @@ export default function MembersPage() {
                                                         <div className="col-span-1 border-r border-border/20 pr-8 space-y-6">
                                                             <div className="relative group/avatar w-24 h-24 mx-auto md:mx-0">
                                                                 <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.3)] bg-card">
-                                                                    {member.avatarUrl ? (
-                                                                        <img src={member.avatarUrl} className="w-full h-full object-cover" />
+                                                                    {member.avatar ? (
+                                                                        <img src={member.avatar} className="w-full h-full object-cover" />
                                                                     ) : (
                                                                         <div className="w-full h-full flex items-center justify-center text-4xl font-black text-primary/40 bg-primary/5">
                                                                             {member.name.charAt(0)}
@@ -614,8 +561,8 @@ export default function MembersPage() {
                                     <div className="flex items-center gap-6 mb-8 p-4 bg-foreground/5 rounded-2xl border border-border/40">
                                         <div className="relative group cursor-pointer" onClick={() => (document.getElementById('member-avatar-upload') as HTMLInputElement)?.click()}>
                                             <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.2)] bg-card">
-                                                {memberModal.data.avatarUrl ? (
-                                                    <img src={memberModal.data.avatarUrl} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                                                {memberModal.data.avatar ? (
+                                                    <img src={memberModal.data.avatar} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-4xl font-black text-primary/20">
                                                         {memberModal.data.name.charAt(0) || '?'}
@@ -809,7 +756,7 @@ export default function MembersPage() {
                                                 gender: memberModal.data.gender,
                                                 category: (memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas') ? 'Niño' : (memberModal.data.gender === 'Hermana' ? 'Hermana' : 'Varon'),
                                                 member_group: memberModal.data.member_group,
-                                                avatarUrl: memberModal.data.avatarUrl,
+                                                avatar: memberModal.data.avatar,
                                                 privileges: memberModal.data.privileges
                                             });
                                         } else {
@@ -845,7 +792,7 @@ export default function MembersPage() {
                             const file = dataURLtoFile(cropped, `avatar-${memberModal.data.id}.jpg`);
                             const publicUrl = await uploadAvatar(memberModal.data.id, file);
                             if (publicUrl) {
-                                setMemberModal({ ...memberModal, data: { ...memberModal.data, avatarUrl: publicUrl } });
+                                setMemberModal({ ...memberModal, data: { ...memberModal.data, avatar: publicUrl } });
                             }
                             setIsSaving(false);
                         }

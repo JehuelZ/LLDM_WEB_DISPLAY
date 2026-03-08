@@ -111,7 +111,7 @@ export function UserMenu() {
                 )}
             >
                 <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-sm relative group bg-foreground/5 flex items-center justify-center">
-                    {currentUser.avatar && !currentUser.avatar.includes('unsplash.com/photo-1507003211169-0a1dd7228f2d') ? (
+                    {currentUser.avatar ? (
                         <img
                             src={currentUser.avatar}
                             alt={currentUser.name}
@@ -146,7 +146,7 @@ export function UserMenu() {
                         <div className="p-5 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 border-b border-border/10">
                             <div className="flex items-center gap-4">
                                 <div className="w-14 h-14 rounded-2xl overflow-hidden border border-primary/30 shadow-inner bg-foreground/5 flex items-center justify-center">
-                                    {currentUser.avatar && !currentUser.avatar.includes('unsplash.com/photo-1507003211169-0a1dd7228f2d') ? (
+                                    {currentUser.avatar ? (
                                         <img src={currentUser.avatar} className="w-full h-full object-cover" alt="" />
                                     ) : (
                                         <span className="text-xl font-black text-primary uppercase italic">

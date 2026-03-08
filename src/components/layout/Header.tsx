@@ -30,87 +30,86 @@ export function Header() {
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/50 backdrop-blur-xl">
-            <div className="container flex h-16 items-center px-4">
-                <div className="mr-4 hidden md:flex">
-                    <Link href="/" className="mr-6 flex items-center space-x-3 group">
-                        <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/10 overflow-hidden group-hover:border-primary/50 transition-all">
-                            {isCustom || isDefaultLogo ? (
-                                <img
-                                    src={logoUrl}
-                                    className={cn(
-                                        "w-full h-full object-contain p-1.5 transition-transform group-hover:scale-110",
-                                        isDefaultLogo ? "dark:invert invert-0" : "dark:brightness-110"
-                                    )}
-                                    alt="Logo"
-                                />
-                            ) : (
-                                <div className="text-primary group-hover:scale-110 transition-transform">
-                                    {(() => {
-                                        const icons: Record<string, any> = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
-                                        const Icon = icons[settings.churchIcon] || Shield;
-                                        return <Icon className="w-6 h-6" />;
-                                    })()}
-                                </div>
-                            )}
-                        </div>
-                        <span className="font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground">
-                            LLDM <span className="text-primary italic">RODEO</span>
-                        </span>
+            <div className="container flex h-16 items-center justify-between px-4">
+                <Link href="/" className="flex items-center space-x-3 group">
+                    <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/10 overflow-hidden group-hover:border-primary/50 transition-all">
+                        {isCustom || isDefaultLogo ? (
+                            <img
+                                src={logoUrl}
+                                className={cn(
+                                    "w-full h-full object-contain p-1.5 transition-transform group-hover:scale-110",
+                                    isDefaultLogo ? "dark:invert invert-0" : "dark:brightness-110"
+                                )}
+                                alt="Logo"
+                            />
+                        ) : (
+                            <div className="text-primary group-hover:scale-110 transition-transform">
+                                {(() => {
+                                    const icons: Record<string, any> = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
+                                    const Icon = icons[settings.churchIcon] || Shield;
+                                    return <Icon className="w-6 h-6" />;
+                                })()}
+                            </div>
+                        )}
+                    </div>
+                    <span className="font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground">
+                        LLDM <span className="text-primary italic">RODEO</span>
+                    </span>
+                </Link>
+
+                <nav className="hidden md:flex items-center space-x-6 text-sm font-medium ml-6">
+                    <Link
+                        href="/dashboard"
+                        className="transition-colors hover:text-primary text-muted-foreground hover:text-primary uppercase tracking-widest text-[10px] font-black"
+                    >
+                        Dashboard
                     </Link>
-                    <nav className="flex items-center space-x-6 text-sm font-medium">
+                    <Link
+                        href="/display"
+                        className="transition-colors hover:text-primary text-muted-foreground hover:text-primary uppercase tracking-widest text-[10px] font-black"
+                    >
+                        Display Mode
+                    </Link>
+                    <Link
+                        href="/calendar"
+                        className="transition-colors hover:text-primary text-muted-foreground hover:text-primary uppercase tracking-widest text-[10px] font-black"
+                    >
+                        Schedule
+                    </Link>
+                    {(currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.name.includes(settings.ministerName || '')) && (
                         <Link
-                            href="/dashboard"
-                            className="transition-colors hover:text-primary text-muted-foreground hover:text-primary uppercase tracking-widest text-[10px] font-black"
+                            href="/dashboard/ministro"
+                            className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                         >
-                            Dashboard
+                            <Shield className="w-3 h-3 text-primary" /> Ministro
                         </Link>
+                    )}
+                    {(currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia') && (
                         <Link
-                            href="/display"
-                            className="transition-colors hover:text-primary text-muted-foreground hover:text-primary uppercase tracking-widest text-[10px] font-black"
+                            href="/dashboard/monitor"
+                            className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                         >
-                            Display Mode
+                            <ClipboardCheck className="w-3 h-3 text-emerald-500" /> Asistencia
                         </Link>
+                    )}
+                    {(currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos') && (
                         <Link
-                            href="/calendar"
-                            className="transition-colors hover:text-primary text-muted-foreground hover:text-primary uppercase tracking-widest text-[10px] font-black"
+                            href="/dashboard/coro"
+                            className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                         >
-                            Schedule
+                            <Music className="w-3 h-3 text-secondary" /> Coro
                         </Link>
-                        {(currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.name.includes(settings.ministerName || '')) && (
-                            <Link
-                                href="/dashboard/ministro"
-                                className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
-                            >
-                                <Shield className="w-3 h-3 text-primary" /> Ministro
-                            </Link>
-                        )}
-                        {(currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia') && (
-                            <Link
-                                href="/dashboard/monitor"
-                                className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
-                            >
-                                <ClipboardCheck className="w-3 h-3 text-emerald-500" /> Asistencia
-                            </Link>
-                        )}
-                        {(currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos') && (
-                            <Link
-                                href="/dashboard/coro"
-                                className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
-                            >
-                                <Music className="w-3 h-3 text-secondary" /> Coro
-                            </Link>
-                        )}
-                        {currentUser.role === 'Administrador' && (
-                            <Link
-                                href="/admin"
-                                className="transition-colors text-primary uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
-                            >
-                                <ShieldCheck className="w-3 h-3" /> Admin
-                            </Link>
-                        )}
-                    </nav>
-                </div>
-                <div className="flex flex-1 items-center justify-between space-x-4 md:justify-end">
+                    )}
+                    {currentUser.role === 'Administrador' && (
+                        <Link
+                            href="/admin"
+                            className="transition-colors text-primary uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
+                        >
+                            <ShieldCheck className="w-3 h-3" /> Admin
+                        </Link>
+                    )}
+                </nav>
+                <div className="flex items-center space-x-4">
                     <div className="flex items-center gap-4">
                         {authSession ? (
                             <div className="flex items-center gap-4">

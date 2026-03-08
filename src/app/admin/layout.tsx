@@ -55,8 +55,8 @@ const TRANSLATIONS = {
         simulador: 'Simulador de Roles',
         demo_mode: 'Modo Demo',
         configuracion: 'Configuración',
-        admin_user: 'Admin Usuario',
-        admin_role: 'Ministro a Cargo'
+        admin_user: 'Administrador',
+        admin_role: 'Panel de Control'
     },
     en: {
         principal: 'Primary',
@@ -320,11 +320,13 @@ export default function AdminLayout({
 
                 <div className={cn("p-6 border-t border-white/5", collapsed && "p-4")}>
                     <div className={cn("flex items-center gap-3", collapsed ? "justify-center" : "px-2")}>
-                        <div className="w-8 h-8 rounded-full bg-slate-800 border border-white/10 shrink-0" />
+                        <div className="w-9 h-9 rounded-full border border-primary/30 p-0.5 shrink-0 overflow-hidden bg-slate-800/50">
+                            <img src={currentUser.avatar} className="w-full h-full object-cover rounded-full" alt="Admin" />
+                        </div>
                         {!collapsed && (
                             <div className="overflow-hidden whitespace-nowrap">
-                                <div className="text-sm font-bold text-white leading-none">{t.admin_user}</div>
-                                <div className="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-widest">{t.admin_role}</div>
+                                <div className="text-sm font-black text-white leading-none truncate">{currentUser.name}</div>
+                                <div className="text-[9px] text-slate-500 mt-1 uppercase font-black tracking-widest">{currentUser.role === 'Administrador' ? t.admin_role : currentUser.role}</div>
                             </div>
                         )}
                     </div>

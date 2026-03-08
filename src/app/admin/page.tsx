@@ -766,18 +766,6 @@ export default function AdminDashboard() {
                             <Bell className="w-5 h-5 text-muted-foreground" />
                             <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full animate-ping" />
                         </div>
-                        <div className="w-px h-6 bg-border/20 mx-2" />
-
-                        {/* Current Logged In Admin Profile */}
-                        <div className="flex items-center gap-3 group">
-                            <div className="text-right">
-                                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{currentUser.role}</p>
-                                <p className="text-xs font-bold text-foreground">{currentUser.name}</p>
-                            </div>
-                            <div className="w-10 h-10 rounded-full border-2 border-primary/30 p-0.5 overflow-hidden">
-                                <img src={currentUser.avatar} className="w-full h-full object-cover rounded-full" alt="Admin" />
-                            </div>
-                        </div>
 
                         <div className="w-px h-6 bg-border/20 mx-2" />
 

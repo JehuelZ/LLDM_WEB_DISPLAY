@@ -2,256 +2,41 @@
 import { DailySchedule, WeeklyTheme, Announcement } from './types';
 
 export const MOCK_THEME: WeeklyTheme = {
-    id: 'theme-1',
+    id: 'initial-theme',
     startDate: new Date().toISOString(),
     endDate: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString(),
-    title: 'La Importancia de la Oración',
+    title: '',
     type: 'orthodoxy',
-    description: 'Estudio sobre la necesidad de la oración constante.',
+    description: '',
 };
 
 export const MOCK_SCHEDULE: DailySchedule = {
-    id: 'sched-1',
+    id: 'empty-sched',
     date: new Date().toISOString().split('T')[0],
     slots: {
         '5am': {
-            leaderId: 'Bro. Juan Pérez',
+            leaderId: '',
         },
         '9am': {
-            consecrationLeaderId: 'Sis. María G.',
-            doctrineLeaderId: 'Sis. Ana R.',
+            consecrationLeaderId: '',
+            doctrineLeaderId: '',
         },
         'evening': {
-            time: '6:30 PM',
-            type: 'youth',
-            leaderIds: ['Bro. Pedro', 'Bro. Lucas'],
-            topic: 'La Juventud y su Compromiso',
+            time: '07:00 PM',
+            type: 'regular',
+            leaderIds: [],
+            topic: '',
         },
     },
 };
 
-// Generate a month of data
+// Generate a month of empty data
 export const GENERATE_MONTH_SCHEDULE = (): Record<string, DailySchedule> => {
-    const schedule: Record<string, DailySchedule> = {};
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-    for (let i = 1; i <= daysInMonth; i++) {
-        const date = new Date(year, month, i);
-        // Using local format to avoid TZ issues that toISOString().split('T')[0] might have
-        const dateString = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-        const dayOfWeek = date.getDay(); // 0 = Sunday
-
-        // Vary the schedule slightly based on day
-        let eveningType = 'regular';
-        let eveningTime = '7:00 PM';
-
-        if (dayOfWeek === 0) { eveningType = 'praise'; eveningTime = '6:00 PM'; } // Sunday Alabanza
-        if (dayOfWeek === 4) { eveningType = 'youth'; eveningTime = '6:30 PM'; } // Thursday
-        if (dayOfWeek === 6) { eveningType = 'praise'; eveningTime = '7:00 PM'; } // Saturday Alabanza
-
-        // Double leaders for praise/sunday/special sessions
-        const hasDoubleLeaders = dayOfWeek === 0 || dayOfWeek === 4 || dayOfWeek === 6;
-        let leaderIds = hasDoubleLeaders ? ['Bro. Samuel', 'Bro. David'] : [i % 2 === 0 ? 'Bro. Samuel' : 'Bro. David'];
-
-        schedule[dateString] = {
-            ...MOCK_SCHEDULE,
-            id: `sched-${i}`,
-            date: dateString,
-            slots: {
-                ...MOCK_SCHEDULE.slots,
-                'evening': {
-                    ...MOCK_SCHEDULE.slots['evening'],
-                    time: eveningTime as any,
-                    type: eveningType as any,
-                    language: dayOfWeek === 4 ? 'en' : 'es',
-                    leaderIds: leaderIds,
-                }
-            }
-        };
-    }
-    return schedule;
+    return {};
 };
 
 export const MOCK_MONTH_SCHEDULE = GENERATE_MONTH_SCHEDULE();
 
-export const MOCK_ANNOUNCEMENTS: Announcement[] = [
-    {
-        id: 'ann-1',
-        title: 'Ensayo de Coro',
-        content: 'Todos los coros están convocados hoy a las 5:00 PM.',
-        timestamp: new Date().toISOString(),
-        category: 'choir',
-        active: true,
-        priority: 1,
-    },
-    {
-        id: 'ann-2',
-        title: 'Limpieza del Templo',
-        content: 'Grupo #3 encargado de la limpieza este sábado.',
-        timestamp: new Date().toISOString(),
-        category: 'important',
-        active: true,
-        priority: 2,
-    },
-];
+export const MOCK_ANNOUNCEMENTS: Announcement[] = [];
 
-export const MOCK_MEMBERS: any[] = [
-    {
-        id: 'Bro. Samuel',
-        name: 'Samuel Hernández',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
-        category: 'Varon',
-        role: 'Responsable',
-        privileges: ['choir', 'leader'],
-        member_group: 'Casados',
-        phone: '555-0101',
-        email: 'samuel@lldm.org',
-        stats: { attendance: { attended: 10, total: 10 }, participation: { led: 5, total: 5 }, punctuality: 100 }
-    },
-    {
-        id: 'Bro. David',
-        name: 'David Rojas',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop',
-        category: 'Varon',
-        role: 'Responsable',
-        member_group: 'Jóvenes',
-        phone: '555-0202',
-        email: 'david@lldm.org',
-        stats: { attendance: { attended: 10, total: 10 }, participation: { led: 5, total: 5 }, punctuality: 100 }
-    },
-    {
-        id: 'Sis. María G.',
-        name: 'María García',
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
-        category: 'Hermana',
-        role: 'Responsable',
-        member_group: 'Niños',
-        privileges: ['kids_leader'],
-        phone: '555-0303',
-        email: 'maria@lldm.org',
-        stats: { attendance: { attended: 10, total: 10 }, participation: { led: 5, total: 5 }, punctuality: 100 }
-    },
-    {
-        id: 'minister-eliab-test',
-        name: 'Eliab',
-        email: 'eliab_test@lldmrodeo.org',
-        role: 'Ministro a Cargo',
-        category: 'Varon',
-        gender: 'Varon',
-        privileges: ['leader'],
-        avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'Bro. Pedro',
-        name: 'Pedro Morales',
-        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&h=200&fit=crop',
-        category: 'Varon',
-        role: 'Administrador',
-        phone: '555-0404',
-        email: 'pedro@lldm.org',
-        stats: { attendance: { attended: 10, total: 10 }, participation: { led: 5, total: 5 }, punctuality: 100 }
-    },
-    {
-        id: 'abraham-test',
-        name: 'Abraham Diaz',
-        email: 'abraham_test@lldmrodeo.org',
-        role: 'Encargado de Jóvenes',
-        category: 'Varon',
-        gender: 'Varon',
-        privileges: ['youth_leader'],
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'rebeca-test',
-        name: 'Rebeca',
-        email: 'rebeca_test@lldmrodeo.org',
-        role: 'Encargada de Jóvenes',
-        category: 'Hermana',
-        gender: 'Hermana',
-        privileges: ['youth_leader'],
-        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'keren-test',
-        name: 'Keren',
-        email: 'keren_test@lldmrodeo.org',
-        role: 'Responsable de Asistencia',
-        category: 'Hermana',
-        gender: 'Hermana',
-        privileges: ['monitor'],
-        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'lucia-test',
-        name: 'Lucia Zelaya',
-        email: 'lucia_test@lldmrodeo.org',
-        role: 'Administrador',
-        category: 'Hermana',
-        gender: 'Hermana',
-        privileges: ['admin'],
-        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'judith-test',
-        name: 'Judith',
-        email: 'judith_test@lldmrodeo.org',
-        role: 'Dirigente Coro Adultos',
-        category: 'Hermana',
-        gender: 'Hermana',
-        privileges: ['choir'],
-        avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'amisadai-test',
-        name: 'Amisadai Alvarado',
-        email: 'amisadai_test@lldmrodeo.org',
-        role: 'Responsable de Niños',
-        category: 'Hermana',
-        gender: 'Hermana',
-        privileges: ['kids_leader'],
-        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'silvia-test',
-        name: 'Silvia Marrufo',
-        email: 'silvia_test@lldmrodeo.org',
-        role: 'Dirigente del Coro',
-        category: 'Hermana',
-        gender: 'Hermana',
-        privileges: ['choir'],
-        avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'minister-test',
-        name: 'Ministro Eliab',
-        email: 'minister_test@lldmrodeo.org',
-        role: 'Ministro a Cargo',
-        category: 'Varon',
-        gender: 'Varon',
-        privileges: ['admin'],
-        avatar: 'https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=400&h=400&fit=crop'
-    },
-    {
-        id: 'test-miembro',
-        name: 'Miembro de Prueba',
-        email: 'miembro_test@lldmrodeo.org',
-        role: 'Miembro',
-        category: 'Varon',
-        gender: 'Varon',
-        privileges: [],
-        avatar: 'https://ui-avatars.com/api/?name=Miembro+Prueba&background=random'
-    },
-    {
-        id: 'coro-member-test',
-        name: 'Cantor Regular',
-        email: 'coro_test@lldmrodeo.org',
-        role: 'Coro',
-        category: 'Varon',
-        gender: 'Varon',
-        privileges: ['choir'],
-        avatar: 'https://ui-avatars.com/api/?name=Cantor+Regular&background=10b981&color=fff'
-    }
-];
+export const MOCK_MEMBERS: any[] = [];

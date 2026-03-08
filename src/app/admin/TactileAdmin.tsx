@@ -249,7 +249,7 @@ export default function TactileAdmin() {
                             <div className="flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-white/5 border border-white/5 mr-2">
                                 <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]">
                                     <img
-                                        src={currentUser.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop'}
+                                        src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`}
                                         alt={currentUser.name}
                                         className="w-full h-full object-cover"
                                     />
@@ -335,7 +335,7 @@ export default function TactileAdmin() {
                                                 <TactileIconBox icon={CheckCircle2} color="#3b82f6" />
                                                 <div className="flex-1">
                                                     <h4 className="font-bold text-lg">Asistencia de Hoy</h4>
-                                                    <p className="text-tactile-text-sub text-sm">Cerca del 57% de los miembros confirmados</p>
+                                                    <p className="text-tactile-text-sub text-sm">Registro de asistencia en curso</p>
                                                 </div>
                                                 <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Normal</div>
                                             </div>
@@ -396,7 +396,7 @@ export default function TactileAdmin() {
                                                 </div>
                                                 <div className="flex justify-between items-center bg-black/20 p-4 rounded-2xl">
                                                     <span className="text-xs font-black text-tactile-text-sub uppercase">Racha</span>
-                                                    <span className="text-xl font-black italic text-orange-400">12 Días</span>
+                                                    <span className="text-xl font-black italic text-orange-400">0 Días</span>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -924,7 +924,7 @@ export default function TactileAdmin() {
                                             .map(member => (
                                                 <div key={member.id} className="tactile-glass-panel p-4 flex items-center gap-4 group cursor-pointer hover:bg-white/[0.03] transition-colors relative">
                                                     <div className="w-14 h-14 rounded-full border-2 border-white/10 overflow-hidden relative">
-                                                        <img src={member.avatar || 'https://via.placeholder.com/150'} className="w-full h-full object-cover" alt={member.name} />
+                                                        <img src={member.avatar || `https://ui-avatars.com/api/?name=${member.name}&background=random`} className="w-full h-full object-cover" alt={member.name} />
                                                         {member.role === 'Administrador' && (
                                                             <div className="absolute inset-0 border-2 border-primary rounded-full pointer-events-none" />
                                                         )}
@@ -1158,7 +1158,7 @@ export default function TactileAdmin() {
                                                         className="w-32 h-32 rounded-full border-4 border-primary/30 p-1 relative group cursor-pointer"
                                                         onClick={() => document.getElementById('minister-avatar-upload')?.click()}
                                                     >
-                                                        <img src={settings.ministerAvatar || 'https://via.placeholder.com/150'} className="w-full h-full object-cover rounded-full" alt="Ministro" />
+                                                        <img src={settings.ministerAvatar || `https://ui-avatars.com/api/?name=${settings.ministerName || 'Ministro'}&background=random`} className="w-full h-full object-cover rounded-full" alt="Ministro" />
                                                         <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                                             <Camera className="w-8 h-8 text-white" />
                                                         </div>
@@ -1241,7 +1241,7 @@ export default function TactileAdmin() {
                                             <div className="space-y-8">
                                                 <TactileInput
                                                     label="CÓDIGO PIN DE ACCESO"
-                                                    placeholder="1922"
+                                                    placeholder="0000"
                                                     value={settings.displayPin || ''}
                                                     onChange={(e: any) => setSettings({ displayPin: e.target.value.slice(0, 4) })}
                                                     icon={Lock}

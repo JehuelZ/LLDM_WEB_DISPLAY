@@ -121,7 +121,7 @@ export default function AttendanceDashboard() {
                 gender: m.gender as 'Varon' | 'Hermana',
                 category: (m.category === 'Niño' ? 'Niño' : 'Adulto') as 'Adulto' | 'Niño',
                 email: m.email,
-                avatar: m.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
+                avatar: m.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=random`,
                 attendance: {
                     '5am': getSessionData('5am'),
                     '9am': getSessionData('9am'),

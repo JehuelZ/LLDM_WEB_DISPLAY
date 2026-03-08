@@ -13,9 +13,9 @@ export default function YouthDashboard() {
     const router = useRouter();
 
     const stats = [
-        { label: 'Participación', value: '92%', icon: TrendingUp, color: 'text-indigo-400' },
-        { label: 'Actividades', value: '8/10', icon: Calendar, color: 'text-amber-400' },
-        { label: 'Puntos', value: '1,250', icon: Trophy, color: 'text-yellow-400' },
+        { label: 'Participación', value: '—%', icon: TrendingUp, color: 'text-indigo-400' },
+        { label: 'Actividades', value: '0/0', icon: Calendar, color: 'text-amber-400' },
+        { label: 'Puntos', value: '0', icon: Trophy, color: 'text-yellow-400' },
     ];
 
     return (
@@ -56,11 +56,7 @@ export default function YouthDashboard() {
                             Próximas Actividades
                         </h2>
                         <div className="space-y-4">
-                            {[
-                                { title: 'Reunión de Jóvenes', time: 'Sábado 6:00 PM', status: 'Confirmado' },
-                                { title: 'Ensayo de Coro Juvenil', time: 'Domingo 12:00 PM', status: 'Pendiente' },
-                                { title: 'Actividad Deportiva', time: 'Lunes 5:00 PM', status: 'Programado' }
-                            ].map((act, i) => (
+                            {([].map((act: any, i: number) => (
                                 <div key={i} className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer group">
                                     <div>
                                         <p className="font-bold text-white text-sm">{act.title}</p>
@@ -70,8 +66,9 @@ export default function YouthDashboard() {
                                         DETALLES <ArrowRight className="w-3 h-3" />
                                     </span>
                                 </div>
-                            ))}
+                            )))}
                         </div>
+                        {[].length === 0 && <p className="text-xs text-slate-500 italic text-center py-4">No hay próximas actividades programadas.</p>}
                     </Card>
 
                     <Card className="glass-card border-none bg-indigo-500/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-indigo-500/10">
@@ -80,7 +77,7 @@ export default function YouthDashboard() {
                             Comunicados Juveniles
                         </h2>
                         <div className="p-6 bg-indigo-500/10 rounded-2xl border border-indigo-500/20 italic text-sm text-indigo-100 mb-6">
-                            "Recordad que el amor al prójimo es nuestra mayor fortaleza. Estemos unidos en cada actividad."
+                            "El que tiene oídos para oír, oiga lo que el Espíritu dice a las iglesias. – Apocalipsis 2:7"
                         </div>
                         <Button className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-black uppercase tracking-widest h-12 rounded-2xl">
                             Enviar Mensaje al Grupo

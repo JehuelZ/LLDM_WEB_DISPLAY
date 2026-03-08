@@ -13,16 +13,16 @@ import { useAppStore } from '@/lib/store';
 export default function NiñosDashboard() {
     const { currentUser, kidsAssignments, uniforms } = useAppStore();
     const childProfile = currentUser.category === 'Niño' ? { ...currentUser, parentName: currentUser.parentName || 'Padre/Madre' } : {
-        name: 'Samuelito Rojas Jr.',
+        name: 'Sin Asignar',
         member_group: 'Niños',
-        avatar: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=200&h=200&fit=crop',
-        medals: 12,
-        nextPrivilege: 'Dirigente (Último Sábado)',
-        parentName: 'Samuel Rojas'
+        avatar: `https://ui-avatars.com/api/?name=Niño&background=random`,
+        medals: 0,
+        nextPrivilege: 'No definido',
+        parentName: 'N/A'
     };
 
     // Find the next available assignment in the store
-    const nextAssignmentDate = Object.keys(kidsAssignments).sort().find(d => new Date(d) >= new Date()) || '2026-02-28';
+    const nextAssignmentDate = Object.keys(kidsAssignments).sort().find(d => new Date(d) >= new Date()) || new Date().toISOString().split('T')[0];
     const assignment = kidsAssignments[nextAssignmentDate];
     const assignmentUniform = uniforms.find(u => u.id === assignment?.uniformId);
 
@@ -42,9 +42,9 @@ export default function NiñosDashboard() {
     ];
 
     const choirInfo = {
-        responsable: 'Hna. Rebeca Jimenez',
-        nextRehearsal: 'Mañana, 4:00 PM',
-        songs: ['Soy un niño de luz', 'Cantad alegres', 'Gratitud infantil'],
+        responsable: 'Responsable de Coro',
+        nextRehearsal: 'Por definir',
+        songs: [],
     };
 
     return (
@@ -225,7 +225,7 @@ export default function NiñosDashboard() {
                                     </div>
                                 </div>
                                 <p className="mt-6 text-[11px] text-slate-400 font-medium italic text-center border-t border-border/20 pt-4">
-                                    "¡Increíble Samuelito! Te falta solo <span className="text-amber-500 font-bold">1 medalla</span> para completar tu primer set de 13 medallas de oro."
+                                    "¡Sigue adelante! Cada participación te acerca a una nueva medalla de oro."
                                 </p>
                             </CardContent>
                         </Card>

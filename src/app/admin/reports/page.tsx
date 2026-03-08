@@ -124,32 +124,32 @@ export default function ReportsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <StatCard
                     title="Asistencia Promedio"
-                    value="92.4%"
-                    change="+2.1%"
+                    value="—%"
+                    change="0%"
                     trend="up"
                     icon={TrendingUp}
                     color="text-emerald-500"
                 />
                 <StatCard
                     title="Nuevos Registros"
-                    value="12"
-                    change="+5"
+                    value="0"
+                    change="0"
                     trend="up"
                     icon={Users}
                     color="text-primary"
                 />
                 <StatCard
                     title="Puntualidad"
-                    value="88%"
-                    change="-1.2%"
-                    trend="down"
+                    value="—%"
+                    change="0%"
+                    trend="up"
                     icon={Clock}
                     color="text-amber-500"
                 />
                 <StatCard
                     title="Actividad de Niños"
-                    value="98.1%"
-                    change="+4.5%"
+                    value="—%"
+                    change="0%"
                     trend="up"
                     icon={Baby}
                     color="text-cyan-400"
@@ -167,10 +167,10 @@ export default function ReportsPage() {
                         <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Resumen de participación activa</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8 pt-4">
-                        <AttendanceBar label=" Adultos (Varones/Hnas)" percent={85} value="84" color="bg-primary shadow-primary/50" />
-                        <AttendanceBar label="Solos y Solas" percent={92} value="28" color="bg-emerald-500 shadow-emerald-500/50" />
-                        <AttendanceBar label="Niños (Escuela Dominical)" percent={98} value="42" color="bg-cyan-400 shadow-cyan-400/50" />
-                        <AttendanceBar label="Miembros del Coro" percent={100} value="25" color="bg-indigo-500 shadow-indigo-500/50" />
+                        <AttendanceBar label=" Adultos (Varones/Hnas)" percent={0} value="0" color="bg-primary shadow-primary/50" />
+                        <AttendanceBar label="Solos y Solas" percent={0} value="0" color="bg-emerald-500 shadow-emerald-500/50" />
+                        <AttendanceBar label="Niños (Escuela Dominical)" percent={0} value="0" color="bg-cyan-400 shadow-cyan-400/50" />
+                        <AttendanceBar label="Miembros del Coro" percent={0} value="0" color="bg-indigo-500 shadow-indigo-500/50" />
 
                         <div className="pt-6 border-t border-white/5 flex items-center gap-3">
                             <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
@@ -178,7 +178,7 @@ export default function ReportsPage() {
                             </div>
                             <div>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Miembros Registrados</p>
-                                <p className="text-2xl font-black text-white italic tracking-tighter">179 <span className="text-xs text-emerald-500 not-italic font-bold ml-1">+6.5%</span></p>
+                                <p className="text-2xl font-black text-white italic tracking-tighter">0</p>
                             </div>
                         </div>
                     </CardContent>
@@ -211,44 +211,11 @@ export default function ReportsPage() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-white/5">
-                                    {[
-                                        { name: 'Abraham Samuel', group: 'Varones', expected: 12, done: 12, percent: 100, role: 'Monitor' },
-                                        { name: 'Maria Garcia', group: 'Hermanas', expected: 8, done: 8, percent: 100, role: 'Maestra' },
-                                        { name: 'Ricardo Mendez', group: 'Jóvenes', expected: 10, done: 9, percent: 90, role: 'Líder' },
-                                        { name: 'Samuelito Rojas Jr.', group: 'Niños', expected: 5, done: 5, percent: 100, role: 'Ayudante' },
-                                        { name: 'Samuel Rojas', group: 'Varones', expected: 4, done: 4, percent: 100, role: 'Coro' },
-                                        { name: 'Esther Lopez', group: 'Hermanas', expected: 12, done: 11, percent: 91, role: 'Maestra' },
-                                    ].map((row, i) => (
+                                    {([].map((row: any, i) => (
                                         <tr key={i} className="group hover:bg-white/5 transition-colors">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center font-bold text-emerald-500 text-xs uppercase">
-                                                        {row.name.charAt(0)}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-sm font-black text-white">{row.name}</p>
-                                                        <p className="text-[9px] font-bold text-slate-500 uppercase">{row.role}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span className="text-[10px] font-bold text-slate-400 border border-white/10 px-2 py-1 rounded bg-white/5 uppercase">{row.group}</span>
-                                            </td>
-                                            <td className="px-6 py-4 text-center text-sm font-bold text-slate-400">{row.expected}</td>
-                                            <td className="px-6 py-4 text-center text-sm font-bold text-white">{row.done}</td>
-                                            <td className="px-6 py-4 text-right">
-                                                <div className="flex flex-col items-end">
-                                                    <span className={cn(
-                                                        "text-sm font-black italic",
-                                                        row.percent >= 95 ? "text-emerald-400" : "text-amber-400"
-                                                    )}>{row.percent}%</span>
-                                                    <div className="w-16 h-1 bg-white/5 rounded-full overflow-hidden mt-1">
-                                                        <div className={cn("h-full", row.percent >= 95 ? "bg-emerald-500" : "bg-amber-500")} style={{ width: `${row.percent}%` }} />
-                                                    </div>
-                                                </div>
-                                            </td>
+                                            <td colSpan={5} className="py-8 text-center text-xs text-slate-500 font-bold uppercase tracking-widest italic">No hay datos de eficiencia registrados.</td>
                                         </tr>
-                                    ))}
+                                    )))}
                                 </tbody>
                             </table>
                         </div>

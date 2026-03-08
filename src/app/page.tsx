@@ -243,7 +243,7 @@ export default function Home() {
                 onClick={handlePhotoClick}
               >
                 <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)] bg-foreground/5 flex items-center justify-center">
-                  {currentUser.avatar && !currentUser.avatar.includes('unsplash.com/photo-1507003211169-0a1dd7228f2d') ? (
+                  {currentUser.avatar ? (
                     <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                   ) : (
                     <span className="text-xl md:text-2xl font-black text-primary uppercase italic">
@@ -412,25 +412,27 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {[
-                    { date: 'Hoy, 19 Feb', type: 'Oración 9:00 AM', status: 'pending', label: 'Pendiente' },
-                    { date: 'Martes, 17 Feb', type: 'Servicio 7:00 PM', status: 'completed', label: 'Cumplido' },
-                    { date: 'Domingo, 15 Feb', type: 'Oración 5:00 AM', status: 'completed', label: 'Cumplido' },
-                  ].map((resp, i) => (
-                    <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-foreground/5 border border-border/20 group hover:bg-foreground/10 transition-colors">
-                      <div>
-                        <p className="text-[10px] font-bold text-slate-500 uppercase">{resp.date}</p>
-                        <p className="text-sm font-bold text-foreground">{resp.type}</p>
+                  {currentUser.responsibilities && currentUser.responsibilities.length > 0 ? (
+                    currentUser.responsibilities.map((resp: any, i: number) => (
+                      <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-foreground/5 border border-border/20 group hover:bg-foreground/10 transition-colors">
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-500 uppercase">{resp.date}</p>
+                          <p className="text-sm font-bold text-foreground">{resp.type}</p>
+                        </div>
+                        <div className={cn(
+                          "flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter",
+                          resp.status === 'completed' ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse"
+                        )}>
+                          {resp.status === 'completed' ? <CheckCircle2 className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
+                          {resp.label}
+                        </div>
                       </div>
-                      <div className={cn(
-                        "flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter",
-                        resp.status === 'completed' ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse"
-                      )}>
-                        {resp.status === 'completed' ? <CheckCircle2 className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
-                        {resp.label}
-                      </div>
+                    ))
+                  ) : (
+                    <div className="py-8 text-center bg-black/5 rounded-2xl border border-dashed border-border/40">
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Sin responsabilidades pendientes</p>
                     </div>
-                  ))}
+                  )}
                   <p className="text-[9px] text-slate-500 italic mt-4 text-center">
                     * Validado oficialmente por el Responsable de Asistencia
                   </p>
