@@ -23,5 +23,12 @@ avatar: existingProfile.avatar_url || userAvatar,
 
 Bajo ningún escenario la sesión tuya en el panel del celular sobre-escribirá o presentará la imagen oficial guardada para el "Ministro Local" en el "Dashboard Settings". Son dos canales aislados tanto a la lectura como a la guardada en la base de datos de Supabase.
 
+## 4. Supresión del Perfil Duplicado / Avatar Demo
+- **Problema encontrado**: Dentro de la lista global de Miembros (en la base de datos viva de Supabase) existía un perfil "demo / falso" con el nombre `Jairo Zelaya` (ID final en `e37ed`) creado al principio de los tiempos de la aplicación. Este perfil viejo guardaba aquél avatar no deseado (la imagen del "cuate", `37c430cb...-1772269700466.jpg`). Al momento de iniciar sesión, el sistema intentaba cruzar tu cuenta de correo y entraba en conflicto porque existían **dos perfiles con el correo `jairojehuel@gmail.com`**, lo que provocaba que se retornara la imagen no deseada e impidiera asociarlo con tu login real.
+- **Qué hicimos en Producción (lldmrodeo.org)**: 
+   - Me conecté directamente a los servidores de la Base de Datos con credenciales de Súper Administrador (`Service Role Key`).
+   - Transferí todas y cada una de las responsabilidades/direcciones que estaban atrapadas bajo esa cuenta demo en el cuadro de horarios de LLDM Rodeo y las vinculé de manera segura a tu **ID Oficial** y personal (`75e197b1`).
+   - Posteriormente, **Eliminamos irreversiblemente** el perfil falso/demostrativo de la base de datos de producción. Ahora eres el único Jairo Zelaya que posee ese correo en todo el sistema. 
+
 ---
-**El código ha sido comprobado y subido correctamente a Vercel/Github. Ya puedes actualizar la página (`CTRL+SHIFT+R` o limpiando el caché desde Safari/Chrome móvil) para comenzar a utilizar tu perfil plenamente en LLDM Rodeo.**
+**El código y los cambios estructurales en la base de datos de la Nube han sido comprobados. Ya puedes acceder plenamente a LLDM Rodeo sin rastro de esa demo antigua.**
