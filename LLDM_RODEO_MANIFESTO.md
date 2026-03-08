@@ -80,4 +80,15 @@ Al trabajar en este código, yo (Antigravity) me comprometo a:
 4.  **Consistencia**: Antes de proponer un cambio, revisaré si el "Manifiesto" tiene una directriz sobre ese tema.
 
 ---
+
+## 🚀 6. ENTORNOS DE DESARROLLO (MANDATO ESTRICTO DE LLDM RODEO)
+
+**REGLA DE ORO DE DESARROLLO E INFRAESTRUCTURA:**
+*   **Prohibido el trabajo aislado en Local (Localhost)**: Debido a continuas confusiones y desincronización entre lo que ve el desarrollador/IA y lo que ve el usuario final, **TODO** desarrollo, prueba de renderizado o comprobación de fallas, debe tener como meta final y de evaluación el dominio de producción: `lldmrodeo.org`. 
+*   **Pipeline Obligatorio**: Cualquier modificación realizada al código fuente *no se considerará terminada* hasta que:
+    1. Se haga `commit` de los archivos y se haga `push` a GitHub.
+    2. Se espere el despliegue automático en Vercel (Production URL).
+    3. Se evalúe/compruebe la solución directamente en `lldmrodeo.org`.
+
+---
 _Última actualización: Marzo 2026_
