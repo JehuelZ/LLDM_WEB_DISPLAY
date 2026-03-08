@@ -84,7 +84,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled }
     </div>
 )
 
-export default function TactileAdmin() {
+export default function TactileAdmin({ propTab }: { propTab?: string }) {
     const {
         settings, setSettings,
         calendarStyles, setCalendarStyles,
@@ -133,7 +133,10 @@ export default function TactileAdmin() {
             // Map aliases (especially for layout.tsx compatibility)
             const aliasMap: Record<string, string> = {
                 'configuracion': 'ajustes',
-                'temas': 'contenido'
+                'temas': 'contenido',
+                'mensajes': 'dashboard',
+                'anuncios-resumen': 'dashboard',
+                'ajustes': 'ajustes'
             };
 
             const finalTab = (targetTab && aliasMap[targetTab]) || targetTab;
@@ -148,18 +151,22 @@ export default function TactileAdmin() {
             }
         };
 
-        // Listen for standard popstate and custom pushState/hashchange events
+        // Sync with prop if it changes (provided by parent page.tsx)
+        if (propTab && propTab !== activeTab) {
+            setActiveTab(propTab);
+        }
+
+        // Listen for standard popstate and custom hashchange events
         window.addEventListener('popstate', handleLocationChange);
         window.addEventListener('hashchange', handleLocationChange);
-
-        // This is a custom event we will dispatch from UserMenu
         window.addEventListener('tab-change', handleLocationChange);
 
         return () => {
             window.removeEventListener('popstate', handleLocationChange);
+            window.removeEventListener('hashchange', handleLocationChange);
             window.removeEventListener('tab-change', handleLocationChange);
         };
-    }, [activeTab]);
+    }, [activeTab, propTab]);
 
     const [isSaving, setIsSaving] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')

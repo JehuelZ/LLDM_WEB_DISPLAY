@@ -382,7 +382,9 @@ export default function AdminDashboard() {
             'anuncios-resumen': 'dashboard',
             'horarios': 'horarios',
             'temas': 'contenido',
-            'ajustes': 'configuracion'
+            'contenido': 'contenido',
+            'ajustes': 'configuracion',
+            'configuracion': 'configuracion'
         };
 
         const targetTab = queryTab;
@@ -410,12 +412,11 @@ export default function AdminDashboard() {
         loadMembersFromCloud();
         loadCloudMessages();
 
-        loadCloudMessages();
-
         // Listeners for layout-specific events if any
-        window.addEventListener('tab-change', () => {
-            // Let the useEffect with queryTab handle it after URL changes
-        });
+        const handleTabSync = () => {
+            // Let the useEffect with queryTab handle it after URL changes or dispatch
+        };
+        window.addEventListener('tab-change', handleTabSync);
 
         // Suscribirse a mensajes y ajustes nuevos en tiempo real
         const unsubMessages = subscribeToMessages();
@@ -424,6 +425,7 @@ export default function AdminDashboard() {
         return () => {
             unsubMessages();
             unsubSettings();
+            window.removeEventListener('tab-change', handleTabSync);
         };
     }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadKidsAssignmentsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
 
@@ -746,7 +748,7 @@ export default function AdminDashboard() {
     }
 
     if (settings.adminTheme === 'tactile') {
-        return <TactileAdmin />;
+        return <TactileAdmin propTab={activeTab} />;
     }
 
     return (

@@ -17,7 +17,7 @@ export default function CoroDashboard() {
     const {
         uniforms, uniformSchedule, rehearsals, announcements, currentUser,
         addUniform, removeUniform, setUniformForDate, setRehearsals,
-        saveAnnouncementToCloud, sendCloudMessage, saveUniformForDateToCloud, saveUniformToCloud, loadUniformsFromCloud
+        saveAnnouncementToCloud, deleteAnnouncementFromCloud, sendCloudMessage, saveUniformForDateToCloud, saveUniformToCloud, loadUniformsFromCloud
     } = useAppStore();
 
     useEffect(() => {
@@ -32,6 +32,8 @@ export default function CoroDashboard() {
         varones: { traje: '', pantalon: '', camisa: '', corbata: '' },
         hermanas: { toga: '', chalina: '', falda: '', blusa: '' }
     });
+    const [editingAnnId, setEditingAnnId] = useState<string | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
 
     // Get next 14 days to show upcoming uniform assignments
     const upcomingDays = Array.from({ length: 14 }).map((_, i) => {
@@ -304,24 +306,32 @@ export default function CoroDashboard() {
                                 />
                                 <div className="grid grid-cols-2 gap-2">
                                     <Button
-                                        onClick={() => {
+                                        onClick={async () => {
                                             const title = document.getElementById('choir-msg-title') as HTMLInputElement;
                                             const body = document.getElementById('choir-msg-body') as HTMLTextAreaElement;
                                             if (title.value && body.value) {
-                                                saveAnnouncementToCloud({
-                                                    title: title.value,
-                                                    content: body.value,
-                                                    category: 'choir',
-                                                    priority: 1
-                                                });
-                                                title.value = '';
-                                                body.value = '';
-                                                alert("Aviso público publicado en el panel.")
+                                                setIsSaving(true);
+                                                try {
+                                                    await saveAnnouncementToCloud({
+                                                        id: editingAnnId || undefined,
+                                                        title: title.value,
+                                                        content: body.value,
+                                                        category: 'choir',
+                                                        priority: 1
+                                                    });
+                                                    title.value = '';
+                                                    body.value = '';
+                                                    setEditingAnnId(null);
+                                                    alert(editingAnnId ? "Aviso actualizado." : "Aviso publicado.");
+                                                } finally {
+                                                    setIsSaving(false);
+                                                }
                                             }
                                         }}
+                                        disabled={isSaving}
                                         className="w-full bg-cyan-500 hover:bg-cyan-400 text-black text-[9px] font-black uppercase tracking-widest h-8"
                                     >
-                                        Aviso <Bell className="ml-1 w-3 h-3" />
+                                        {isSaving ? '...' : (editingAnnId ? 'Actualizar' : 'Aviso')} <Bell className="ml-1 w-3 h-3" />
                                     </Button>
                                     <Button
                                         onClick={() => {
@@ -343,6 +353,19 @@ export default function CoroDashboard() {
                                     >
                                         Interno <Send className="ml-1 w-3 h-3" />
                                     </Button>
+                                    {editingAnnId && (
+                                        <Button
+                                            variant="ghost"
+                                            className="col-span-2 text-[8px] h-6 uppercase font-bold"
+                                            onClick={() => {
+                                                setEditingAnnId(null);
+                                                (document.getElementById('choir-msg-title') as any).value = '';
+                                                (document.getElementById('choir-msg-body') as any).value = '';
+                                            }}
+                                        >
+                                            Cancelar Edición
+                                        </Button>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
@@ -465,13 +488,45 @@ export default function CoroDashboard() {
                     <CardContent>
                         <div className="space-y-4">
                             {announcements.filter(a => a.category === 'important' || a.category === 'choir' || a.title.toLowerCase().includes('coro')).map((a, i) => (
-                                <div key={i} className="p-4 rounded-xl bg-secondary/10 border border-secondary/20 flex gap-4 items-start animate-in slide-in-from-bottom duration-500" style={{ animationDelay: `${i * 100}ms` }}>
+                                <div key={i} className="p-4 rounded-xl bg-secondary/10 border border-secondary/20 flex gap-4 items-start animate-in slide-in-from-bottom duration-500 group" style={{ animationDelay: `${i * 100}ms` }}>
                                     <div className="p-2 bg-secondary/20 rounded-lg text-secondary"><Calendar className="h-5 w-5" /></div>
-                                    <div>
+                                    <div className="flex-1">
                                         <h4 className="font-bold text-foreground uppercase italic tracking-tight">{a.title}</h4>
                                         <p className="text-sm text-slate-400 mt-1">{a.content}</p>
                                         <span className="text-[8px] text-slate-600 font-bold uppercase mt-2 block">{format(parseISO(a.timestamp), 'Pp', { locale: es })}</span>
                                     </div>
+                                    {isLeader && (
+                                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <button
+                                                onClick={() => {
+                                                    setEditingAnnId(a.id);
+                                                    setShowLeaderPanel(true);
+                                                    setTimeout(() => {
+                                                        const title = document.getElementById('choir-msg-title') as HTMLInputElement;
+                                                        const body = document.getElementById('choir-msg-body') as HTMLTextAreaElement;
+                                                        if (title && body) {
+                                                            title.value = a.title;
+                                                            body.value = a.content;
+                                                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                        }
+                                                    }, 100);
+                                                }}
+                                                className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+                                            >
+                                                <Settings className="w-3.5 h-3.5" />
+                                            </button>
+                                            <button
+                                                onClick={async () => {
+                                                    if (confirm("¿Eliminar este aviso?")) {
+                                                        await deleteAnnouncementFromCloud(a.id);
+                                                    }
+                                                }}
+                                                className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
+                                            >
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                             {announcements.length === 0 && (
