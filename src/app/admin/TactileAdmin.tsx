@@ -115,14 +115,32 @@ export default function TactileAdmin() {
         }
     };
 
-    const [activeTab, setActiveTab] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const searchParams = new URLSearchParams(window.location.search);
-            const tab = searchParams.get('tab');
-            if (tab) return tab;
-        }
-        return 'dashboard';
-    });
+    const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const initialTab = searchParams?.get('tab') || 'dashboard';
+
+    const [activeTab, setActiveTab] = useState(initialTab);
+
+    useEffect(() => {
+        const handleLocationChange = () => {
+            const currentParams = new URLSearchParams(window.location.search);
+            const currentTab = currentParams.get('tab');
+            if (currentTab && currentTab !== activeTab) {
+                setActiveTab(currentTab);
+            }
+        };
+
+        // Listen for standard popstate and custom pushState events
+        window.addEventListener('popstate', handleLocationChange);
+
+        // This is a custom event we will dispatch from UserMenu
+        window.addEventListener('tab-change', handleLocationChange);
+
+        return () => {
+            window.removeEventListener('popstate', handleLocationChange);
+            window.removeEventListener('tab-change', handleLocationChange);
+        };
+    }, [activeTab]);
+
     const [isSaving, setIsSaving] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
 

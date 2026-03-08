@@ -172,7 +172,13 @@ export function UserMenu() {
                                 <Link
                                     key={idx}
                                     href={item.href}
-                                    onClick={() => setIsOpen(false)}
+                                    onClick={() => {
+                                        setIsOpen(false);
+                                        setTimeout(() => {
+                                            window.dispatchEvent(new Event('popstate'));
+                                            window.dispatchEvent(new Event('tab-change'));
+                                        }, 100);
+                                    }}
                                     className="flex items-center gap-3 p-3 rounded-2xl hover:bg-foreground/5 transition-all group"
                                 >
                                     <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/10 group-hover:scale-110 group-hover:bg-primary/10 transition-all">

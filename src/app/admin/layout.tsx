@@ -318,7 +318,16 @@ export default function AdminLayout({
                     </div>
                 </nav>
 
-                <Link href="/admin?tab=perfil" className={cn("block p-6 border-t border-white/5 hover:bg-white/5 transition-colors cursor-pointer", collapsed && "p-4")}>
+                <Link
+                    href="/admin?tab=perfil"
+                    onClick={() => {
+                        setTimeout(() => {
+                            window.dispatchEvent(new Event('popstate'));
+                            window.dispatchEvent(new Event('tab-change'));
+                        }, 100);
+                    }}
+                    className={cn("block p-6 border-t border-white/5 hover:bg-white/5 transition-colors cursor-pointer", collapsed && "p-4")}
+                >
                     <div className={cn("flex items-center gap-3", collapsed ? "justify-center" : "px-2")}>
                         <div className="w-9 h-9 rounded-full border border-primary/30 p-0.5 shrink-0 overflow-hidden bg-slate-800/50 hover:border-primary transition-colors">
                             <img src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`} className="w-full h-full object-cover rounded-full" alt="Admin" />
