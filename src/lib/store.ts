@@ -65,6 +65,14 @@ export interface AppSettings {
     displayOffsetY?: number; // New: Manual vertical adjustment
     displayAuthorizedEmails?: string[]; // New: List of emails allowed to use display mode
     lowPerformanceMode?: boolean; // New: Disable expensive visual effects for TVs
+    customLogo1?: string;
+    customLogo2?: string;
+    customLogo3?: string;
+    customLogo4?: string;
+    customLogo1FileId?: string;
+    customLogo2FileId?: string;
+    customLogo3FileId?: string;
+    customLogo4FileId?: string;
 }
 
 export interface UserProfile {
@@ -90,6 +98,7 @@ export interface UserProfile {
     privileges: ('admin' | 'monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper' | 'youth_leader')[];
     responsibilities?: { date: string; type: string; status: 'pending' | 'completed'; label: string }[];
     is_pre_registered?: boolean;
+    bio?: string;
 }
 
 export interface CalendarStyles {
@@ -227,7 +236,7 @@ interface AppState {
     loadMembersFromCloud: () => Promise<void>;
     updateProfileInCloud: (userId: string, updates: Partial<UserProfile>) => Promise<boolean>;
     deleteMemberFromCloud: (userId: string) => Promise<boolean>;
-    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[] }) => Promise<boolean>;
+    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
 
@@ -325,7 +334,11 @@ export const useAppStore = create<AppState>()(
                 displayTemplate: 'cristal',
                 displayScale: 1.0,
                 displayAuthorizedEmails: ['jairojehuel@gmail.com'],
-                adminTheme: 'classic'
+                adminTheme: 'classic',
+                customLogo1: '',
+                customLogo2: '',
+                customLogo3: '',
+                customLogo4: ''
             },
             currentUser: INITIAL_USER,
             minister: {
@@ -591,7 +604,8 @@ export const useAppStore = create<AppState>()(
                             lastActive: p.last_active || 'Hoy',
                             stats: p.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
                             privileges: p.roles || [],
-                            is_pre_registered: p.is_pre_registered || false
+                            is_pre_registered: p.is_pre_registered || false,
+                            bio: p.bio || ''
                         }));
 
                         // Sincronizar estado del Ministro si se encuentra en la lista oficial
@@ -630,6 +644,7 @@ export const useAppStore = create<AppState>()(
                 if (updates.status) dbUpdates.status = updates.status;
                 if (updates.stats) dbUpdates.stats = updates.stats;
                 if (updates.privileges) dbUpdates.roles = updates.privileges;
+                if (updates.bio) dbUpdates.bio = updates.bio;
 
                 const { error } = await supabase
                     .from('profiles')
@@ -678,7 +693,8 @@ export const useAppStore = create<AppState>()(
                         role: memberData.role,
                         category: memberData.category || 'Varon',
                         status: memberData.status || 'Activo',
-                        avatar_url: memberData.avatar || 'https://via.placeholder.com/150'
+                        avatar_url: memberData.avatar || 'https://via.placeholder.com/150',
+                        bio: memberData.bio || ''
                     });
 
                 if (error) {
@@ -819,7 +835,8 @@ export const useAppStore = create<AppState>()(
                             status: existingProfile.status || 'Activo',
                             lastActive: new Date().toISOString(),
                             stats: existingProfile.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
-                            privileges: existingProfile.roles || []
+                            privileges: existingProfile.roles || [],
+                            bio: existingProfile.bio || ''
                         }
                     });
                 } else {
@@ -880,6 +897,7 @@ export const useAppStore = create<AppState>()(
                 if (member.avatar) insertData.avatar_url = member.avatar;
                 if (member.avatarUrl) insertData.avatar_url = member.avatarUrl;
                 if (member.privileges) insertData.roles = member.privileges;
+                if (member.bio) insertData.bio = member.bio;
 
                 console.log('Adding member:', insertData);
 
@@ -1112,7 +1130,11 @@ export const useAppStore = create<AppState>()(
                             displayOffsetX: data.display_offset_x || 0,
                             displayOffsetY: data.display_offset_y || 0,
                             adminTheme: data.admin_theme || 'classic',
-                            lowPerformanceMode: data.low_performance_mode || false
+                            lowPerformanceMode: data.low_performance_mode || false,
+                            customLogo1: data.custom_logo_1,
+                            customLogo2: data.custom_logo_2,
+                            customLogo3: data.custom_logo_3,
+                            customLogo4: data.custom_logo_4
                         },
 
 
@@ -1171,7 +1193,11 @@ export const useAppStore = create<AppState>()(
                     display_offset_x: updated.displayOffsetX,
                     display_offset_y: updated.displayOffsetY,
                     admin_theme: updated.adminTheme,
-                    low_performance_mode: updated.lowPerformanceMode
+                    low_performance_mode: updated.lowPerformanceMode,
+                    custom_logo_1: updated.customLogo1,
+                    custom_logo_2: updated.customLogo2,
+                    custom_logo_3: updated.customLogo3,
+                    custom_logo_4: updated.customLogo4
                 };
 
 

@@ -1,0 +1,53 @@
+/* 
+  TV MODE OPTIMIZATIONS
+  Específicamente para Smart TVs, Proyectores y Chromecasts.
+*/
+
+:root {
+    --tv-bg: #000000;
+    --tv-text: #ffffff;
+}
+
+body.tv-mode {
+    background-color: var(--tv-bg);
+    color: var(--tv-text);
+    overflow: hidden !important;
+    cursor: none !important;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Ocultar cualquier elemento que no deba estar en la TV */
+.tv-mode .admin-only,
+.tv-mode button:not(.fullscreen-trigger),
+.tv-mode nav {
+    display: none !important;
+}
+
+/* Forzar que el contenedor principal ocupe todo */
+.tv-stage {
+    width: 1920px;
+    height: 1080px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    background: black;
+}
+
+/* Mejorar legibilidad de textos en TV (más contraste) */
+.tv-mode h1,
+.tv-mode h2,
+.tv-mode p {
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Animaciones más suaves para hardware limitado */
+.tv-mode * {
+    backface-visibility: hidden;
+    perspective: 1000px;
+}

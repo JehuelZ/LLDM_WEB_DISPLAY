@@ -9,7 +9,7 @@ import {
     ExternalLink, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Save,
     Trash2, Upload, Monitor, Sun, X, Shield, Church,
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
-    Bell, CheckCircle2, AlertTriangle, MessageSquare, Info,
+    Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
     Camera, Phone, Mail, User, Globe, Languages, Music2,
     Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power
 } from 'lucide-react'
@@ -103,7 +103,9 @@ export default function TactileAdmin() {
         saveUniformForDateToCloud, rehearsals,
         loadRehearsalsFromCloud, saveRehearsalToCloud, deleteRehearsalFromCloud,
         minister, setMinister, signOut,
-        createTestAccounts, simulateUser
+        createTestAccounts, simulateUser,
+        messages, loadCloudMessages, markMessageAsRead,
+        sendCloudMessage, subscribeToMessages
     } = useAppStore()
 
     const currentDaySchedule = monthlySchedule[currentDate] || {
@@ -123,14 +125,32 @@ export default function TactileAdmin() {
     useEffect(() => {
         const handleLocationChange = () => {
             const currentParams = new URLSearchParams(window.location.search);
-            const currentTab = currentParams.get('tab');
-            if (currentTab && currentTab !== activeTab) {
-                setActiveTab(currentTab);
+            const queryTab = currentParams.get('tab');
+            const hash = window.location.hash.replace('#', '');
+
+            const targetTab = queryTab || hash;
+
+            // Map aliases (especially for layout.tsx compatibility)
+            const aliasMap: Record<string, string> = {
+                'configuracion': 'ajustes',
+                'temas': 'contenido'
+            };
+
+            const finalTab = (targetTab && aliasMap[targetTab]) || targetTab;
+
+            if (finalTab) {
+                const validTabIds = tabs.map(t => t.id);
+                if (validTabIds.includes(finalTab) && finalTab !== activeTab) {
+                    setActiveTab(finalTab);
+                }
+            } else if (activeTab !== 'dashboard') {
+                setActiveTab('dashboard');
             }
         };
 
-        // Listen for standard popstate and custom pushState events
+        // Listen for standard popstate and custom pushState/hashchange events
         window.addEventListener('popstate', handleLocationChange);
+        window.addEventListener('hashchange', handleLocationChange);
 
         // This is a custom event we will dispatch from UserMenu
         window.addEventListener('tab-change', handleLocationChange);
@@ -153,6 +173,7 @@ export default function TactileAdmin() {
         { id: 'coros', label: 'Coros', icon: Music2 },
         { id: 'miembros', label: 'Miembros', icon: Users },
         { id: 'ajustes', label: 'Ajustes', icon: Settings },
+        { id: 'mensajes', label: 'Mensajes', icon: MessageSquare },
         { id: 'perfil', label: 'Mi Perfil', icon: User },
     ]
     const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', priority: 0, expiresAt: '' })
@@ -160,6 +181,8 @@ export default function TactileAdmin() {
     const [memberFilter, setMemberFilter] = useState('all')
     const [showAddMember, setShowAddMember] = useState(false)
     const [editingMember, setEditingMember] = useState<UserProfile | null>(null)
+    const [replyingTo, setReplyingTo] = useState<string | null>(null)
+    const [replyText, setReplyText] = useState('')
     const [newMemberData, setNewMemberData] = useState<Partial<UserProfile>>({
         name: '',
         email: '',
@@ -203,6 +226,12 @@ export default function TactileAdmin() {
     }, [loadMembersFromCloud, loadSettingsFromCloud, loadRehearsalsFromCloud]);
 
     useEffect(() => {
+        loadCloudMessages();
+        const unsubMessages = subscribeToMessages();
+        return () => unsubMessages();
+    }, [loadCloudMessages, subscribeToMessages]);
+
+    useEffect(() => {
         loadDayScheduleFromCloud(currentDate)
     }, [currentDate, loadDayScheduleFromCloud])
     const navigateDay = (days: number) => {
@@ -238,6 +267,28 @@ export default function TactileAdmin() {
             alert(`Error al guardar: ${error.message || 'Error desconocido'}`);
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleCustomLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>, slot: 1 | 2 | 3 | 4) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setIsSaving(true);
+            try {
+                const compressed = await compressImage(file, 800, 800);
+                const publicUrl = await uploadAvatar(`custom-logo-${slot}`, compressed);
+                if (publicUrl) {
+                    const settingKey = `customLogo${slot}` as any;
+                    await saveSettingsToCloud({
+                        [settingKey]: publicUrl
+                    });
+                    alert(`✅ Logo ${slot} actualizado.`);
+                }
+            } catch (error) {
+                console.error(`Error uploading custom logo ${slot}:`, error);
+            } finally {
+                setIsSaving(false);
+            }
         }
     };
 
@@ -299,7 +350,14 @@ export default function TactileAdmin() {
                                 {tabs.filter(t => t.id !== 'perfil').map(tab => (
                                     <button
                                         key={tab.id}
-                                        onClick={() => setActiveTab(tab.id)}
+                                        onClick={() => {
+                                            setActiveTab(tab.id);
+                                            const url = new URL(window.location.href);
+                                            url.searchParams.set('tab', tab.id);
+                                            window.history.pushState({}, '', url.toString());
+                                            window.dispatchEvent(new Event('popstate'));
+                                            window.dispatchEvent(new Event('tab-change'));
+                                        }}
                                         className={cn(
                                             "tactile-btn tactile-btn-glass whitespace-nowrap flex-shrink-0",
                                             activeTab === tab.id && "active"
@@ -1403,6 +1461,121 @@ export default function TactileAdmin() {
                                 </motion.div>
                             )}
 
+                            {activeTab === 'mensajes' && (
+                                <motion.div
+                                    key="mensajes"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="grid grid-cols-1 md:grid-cols-12 gap-8"
+                                >
+                                    <div className="col-span-1 md:col-span-12 px-4">
+                                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-8 group">Buzón de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mensajes Admin</span></h2>
+                                    </div>
+
+                                    <div className="col-span-1 md:col-span-12 space-y-4">
+                                        {messages.filter(m => m.targetRole === 'Administrador' || m.receiverId === currentUser?.id).length === 0 ? (
+                                            <TactileGlassCard className="py-20 flex flex-col items-center justify-center opacity-40">
+                                                <MessageSquare className="w-20 h-20 mb-6" />
+                                                <p className="text-sm font-black uppercase tracking-[0.3em]">No hay mensajes para el administrador</p>
+                                            </TactileGlassCard>
+                                        ) : (
+                                            <div className="grid grid-cols-1 gap-4">
+                                                {messages
+                                                    .filter(m => m.targetRole === 'Administrador' || m.receiverId === currentUser?.id)
+                                                    .map(msg => (
+                                                        <div key={msg.id} className={cn(
+                                                            "tactile-glass-panel p-6 border-l-4 transition-all",
+                                                            msg.isRead ? "border-l-white/10 opacity-70" : "border-l-primary bg-primary/5 active:scale-[0.99]"
+                                                        )}>
+                                                            <div className="flex justify-between items-start mb-4">
+                                                                <div className="flex items-center gap-4">
+                                                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary text-sm font-black uppercase shadow-inner">
+                                                                        {msg.senderName?.charAt(0) || 'U'}
+                                                                    </div>
+                                                                    <div>
+                                                                        <h4 className="font-black text-white text-lg italic flex items-center gap-2">
+                                                                            {msg.senderName || 'Usuario'}
+                                                                            {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
+                                                                        </h4>
+                                                                        <span className="text-[10px] text-tactile-text-sub uppercase font-bold tracking-widest">{format(parseISO(msg.createdAt), "d MMM, h:mm a")}</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex gap-2">
+                                                                    {!msg.isRead && (
+                                                                        <button
+                                                                            onClick={() => markMessageAsRead(msg.id)}
+                                                                            className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                                                                            title="Marcar como leído"
+                                                                        >
+                                                                            <CheckCircle className="w-5 h-5" />
+                                                                        </button>
+                                                                    )}
+                                                                    <button
+                                                                        onClick={() => setReplyingTo(replyingTo === msg.id ? null : msg.id)}
+                                                                        className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary hover:bg-primary/20 transition-all"
+                                                                        title="Responder"
+                                                                    >
+                                                                        <Reply className="w-5 h-5" />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="bg-black/40 p-5 rounded-2xl border border-white/5 shadow-inner mb-4">
+                                                                <p className="text-sm font-medium text-tactile-text-sub leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                                                            </div>
+
+                                                            <AnimatePresence>
+                                                                {replyingTo === msg.id && (
+                                                                    <motion.div
+                                                                        initial={{ opacity: 0, height: 0 }}
+                                                                        animate={{ opacity: 1, height: 'auto' }}
+                                                                        exit={{ opacity: 0, height: 0 }}
+                                                                        className="overflow-hidden"
+                                                                    >
+                                                                        <div className="pt-4 space-y-4">
+                                                                            <textarea
+                                                                                value={replyText}
+                                                                                onChange={(e) => setReplyText(e.target.value)}
+                                                                                placeholder={`Escribe tu respuesta para ${msg.senderName}...`}
+                                                                                className="w-full h-32 bg-black/60 border border-primary/20 rounded-2xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none shadow-inner"
+                                                                            />
+                                                                            <div className="flex justify-end gap-3">
+                                                                                <button
+                                                                                    onClick={() => setReplyingTo(null)}
+                                                                                    className="px-6 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest text-tactile-text-sub hover:text-white"
+                                                                                >
+                                                                                    CANCELAR
+                                                                                </button>
+                                                                                <button
+                                                                                    onClick={async () => {
+                                                                                        if (!replyText.trim()) return;
+                                                                                        await sendCloudMessage({
+                                                                                            senderId: currentUser.id,
+                                                                                            receiverId: msg.senderId,
+                                                                                            content: replyText,
+                                                                                            isRead: false
+                                                                                        });
+                                                                                        setReplyText('');
+                                                                                        setReplyingTo(null);
+                                                                                        alert('Respuesta enviada.');
+                                                                                    }}
+                                                                                    className="px-8 h-12 bg-primary text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+                                                                                >
+                                                                                    ENVIAR RESPUESTA
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </motion.div>
+                                                                )}
+                                                            </AnimatePresence>
+                                                        </div>
+                                                    ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                </motion.div>
+                            )}
+
                             {activeTab === 'perfil' && (
                                 <motion.div
                                     key="perfil"
@@ -1480,11 +1653,20 @@ export default function TactileAdmin() {
                                                     icon={Mail}
                                                 />
                                                 <TactileInput
-                                                    label="TELÉFONO / WHATSAPP"
-                                                    value={currentUser.phone || ''}
                                                     onChange={(e: any) => setCurrentUser({ ...currentUser, phone: e.target.value })}
                                                     icon={Phone}
                                                 />
+                                                <div className="space-y-2">
+                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2 flex items-center gap-2">
+                                                        <FileText className="w-3 h-3" /> ACERCA DE MÍ / BIOGRAFÍA
+                                                    </label>
+                                                    <textarea
+                                                        value={currentUser.bio || ''}
+                                                        onChange={(e) => setCurrentUser({ ...currentUser, bio: e.target.value })}
+                                                        placeholder="Escribe algo sobre ti para que los miembros te conozcan..."
+                                                        className="w-full h-32 bg-black/40 border border-white/10 rounded-3xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none shadow-inner"
+                                                    />
+                                                </div>
                                             </div>
 
                                             <div className="mt-8 pt-6 border-t border-white/5">
@@ -1676,6 +1858,87 @@ export default function TactileAdmin() {
                                 >
                                     <div className="col-span-1 md:col-span-12">
                                         <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-8">Temas del <span className="text-tactile-text-sub">Display</span></h2>
+                                    </div>
+
+                                    <div className="col-span-1 md:col-span-12">
+                                        <TactileGlassCard title="IDENTIDAD VISUAL" subtitle="Logos e Imagotipos de la Iglesia">
+                                            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                                                {/* Logo Oficial: Flama */}
+                                                <button
+                                                    onClick={() => saveSettingsToCloud({ churchLogoUrl: '/flama-oficial.svg', churchIcon: 'custom', customIconUrl: undefined })}
+                                                    className={cn(
+                                                        "group relative flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 transition-all h-full",
+                                                        (settings.churchLogoUrl === '/flama-oficial.svg') ? "bg-primary/20 border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/40 border-white/5 hover:bg-white/5"
+                                                    )}
+                                                >
+                                                    <div className="w-20 h-20 flex items-center justify-center p-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10">
+                                                        <img src="/flama-oficial.svg" className="w-full h-full object-contain" alt="Flama LLDM" />
+                                                    </div>
+                                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", (settings.churchLogoUrl === '/flama-oficial.svg') ? "text-primary" : "text-tactile-text-sub")}>
+                                                        Flama LLDM
+                                                    </span>
+                                                </button>
+
+                                                {/* 4 Slots Personalizados */}
+                                                {[1, 2, 3, 4].map((slotIndex) => {
+                                                    const slotKey = `customLogo${slotIndex}` as any;
+                                                    const slotUrl = (settings as any)[slotKey] as string;
+                                                    const isActive = settings.churchLogoUrl === slotUrl && slotUrl;
+
+                                                    return (
+                                                        <div key={slotIndex} className="relative group/slot h-full">
+                                                            <button
+                                                                onClick={() => {
+                                                                    if (slotUrl) {
+                                                                        saveSettingsToCloud({ churchLogoUrl: slotUrl, churchIcon: 'custom', customIconUrl: undefined });
+                                                                    } else {
+                                                                        document.getElementById(`tactile-custom-logo-${slotIndex}`)?.click();
+                                                                    }
+                                                                }}
+                                                                className={cn(
+                                                                    "w-full flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 border-dashed transition-all h-full",
+                                                                    isActive ? "bg-primary/20 border-primary/40 border-solid shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/20 border-white/10 hover:border-white/20"
+                                                                )}
+                                                            >
+                                                                {slotUrl ? (
+                                                                    <>
+                                                                        <div className="w-20 h-20 flex items-center justify-center p-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10">
+                                                                            <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
+                                                                        </div>
+                                                                        <span className={cn("text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-tactile-text-sub")}>
+                                                                            Logo {slotIndex}
+                                                                        </span>
+                                                                        <button
+                                                                            onClick={(e) => {
+                                                                                e.stopPropagation();
+                                                                                document.getElementById(`tactile-custom-logo-${slotIndex}`)?.click();
+                                                                            }}
+                                                                            className="absolute top-4 right-4 p-2 bg-white/10 rounded-full opacity-0 group-hover/slot:opacity-100 transition-opacity hover:bg-primary/20"
+                                                                        >
+                                                                            <Upload className="w-3 h-3 text-white" />
+                                                                        </button>
+                                                                    </>
+                                                                ) : (
+                                                                    <div className="flex flex-col items-center justify-center gap-3 py-4 h-full">
+                                                                        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/slot:border-primary/50 transition-colors">
+                                                                            <Plus className="w-6 h-6 text-white/30 group-hover/slot:text-primary transition-colors" />
+                                                                        </div>
+                                                                        <span className="text-[9px] font-black uppercase text-tactile-text-sub/40 tracking-widest">Logo {slotIndex}</span>
+                                                                    </div>
+                                                                )}
+                                                            </button>
+                                                            <input
+                                                                type="file"
+                                                                id={`tactile-custom-logo-${slotIndex}`}
+                                                                className="hidden"
+                                                                accept="image/*"
+                                                                onChange={(e) => handleCustomLogoUpload(e, slotIndex as any)}
+                                                            />
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </TactileGlassCard>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-4 space-y-4">
@@ -2018,20 +2281,11 @@ export default function TactileAdmin() {
                                                 label="ROL EN EL SISTEMA"
                                                 value={newMemberData.role || 'Miembro'}
                                                 onChange={(val: any) => {
-                                                    // Auto-assign logical privileges when role changes
                                                     const newPrivileges = [...(newMemberData.privileges || [])];
-                                                    if (val === 'Responsable de Asistencia' && !newPrivileges.includes('monitor')) {
-                                                        newPrivileges.push('monitor');
-                                                    }
-                                                    if (val === 'Dirigente Coro Adultos' && !newPrivileges.includes('choir')) {
-                                                        newPrivileges.push('choir');
-                                                    }
-                                                    if (val === 'Administrador' && !newPrivileges.includes('admin')) {
-                                                        newPrivileges.push('admin');
-                                                    }
-                                                    if (val === 'Encargado de Jóvenes' && !newPrivileges.includes('youth_leader')) {
-                                                        newPrivileges.push('youth_leader');
-                                                    }
+                                                    if (val === 'Responsable de Asistencia' && !newPrivileges.includes('monitor')) newPrivileges.push('monitor');
+                                                    if (val === 'Dirigente Coro Adultos' && !newPrivileges.includes('choir')) newPrivileges.push('choir');
+                                                    if (val === 'Administrador' && !newPrivileges.includes('admin')) newPrivileges.push('admin');
+                                                    if (val === 'Encargado de Jóvenes' && !newPrivileges.includes('youth_leader')) newPrivileges.push('youth_leader');
                                                     setNewMemberData({ ...newMemberData, role: val, privileges: [...new Set(newPrivileges)] as any });
                                                 }}
                                                 options={[
@@ -2045,6 +2299,15 @@ export default function TactileAdmin() {
                                                 ]}
                                                 icon={Shield}
                                             />
+                                            <div className="col-span-2 space-y-2">
+                                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ACERCA DE / BIOGRAFÍA</label>
+                                                <textarea
+                                                    value={newMemberData.bio || ''}
+                                                    onChange={(e) => setNewMemberData({ ...newMemberData, bio: e.target.value })}
+                                                    placeholder="Biografía o notas sobre el miembro..."
+                                                    className="w-full h-24 bg-black/40 border border-white/5 rounded-2xl p-4 text-xs font-bold outline-none focus:border-primary/50 transition-all resize-none"
+                                                />
+                                            </div>
                                             <div className="col-span-2 space-y-4">
                                                 <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">PRIVILEGIOS / ACCESOS</label>
                                                 <div className="flex flex-wrap gap-2">
@@ -2110,7 +2373,8 @@ export default function TactileAdmin() {
                                                             category: newMemberData.category || 'Varon',
                                                             member_group: newMemberData.member_group,
                                                             privileges: newMemberData.privileges as any,
-                                                            avatar: newMemberData.avatar
+                                                            avatar: newMemberData.avatar,
+                                                            bio: newMemberData.bio
                                                         });
                                                     }
 
@@ -2127,7 +2391,8 @@ export default function TactileAdmin() {
                                                             role: 'Miembro',
                                                             category: 'Varon',
                                                             status: 'Activo',
-                                                            avatar: undefined
+                                                            avatar: undefined,
+                                                            bio: ''
                                                         });
                                                     }
                                                     setIsSaving(false);

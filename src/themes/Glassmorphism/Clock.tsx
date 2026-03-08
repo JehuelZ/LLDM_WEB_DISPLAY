@@ -23,7 +23,7 @@ export const GlassmorphismClock = ({ now, isMounted, settings }: { now: Date, is
                     <div className="w-12 h-12 flex items-center justify-center relative z-10">
                         {settings.churchIcon === 'custom' ? (
                             <img
-                                src={settings.customIconUrl || settings.churchLogoUrl || "/lldm_rodeo_logo.svg"}
+                                src={settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg"}
                                 className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.7)]"
                                 alt="Church"
                             />

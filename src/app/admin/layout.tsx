@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
@@ -86,6 +86,8 @@ export default function AdminLayout({
     const t = TRANSLATIONS[settings.language as keyof typeof TRANSLATIONS] || TRANSLATIONS.es;
     const pathname = usePathname();
     const [collapsed, setCollapsed] = useState(false);
+    const searchParams = useSearchParams();
+    const currentTab = searchParams.get('tab') || 'dashboard';
 
     const isAuthorized = currentUser && currentUser.role === 'Administrador';
 
@@ -152,8 +154,8 @@ export default function AdminLayout({
 
     const isCustom = settings.churchIcon === 'custom' && (settings.customIconUrl || settings.churchLogoUrl);
     const ChurchIcon = ICON_MAP[settings.churchIcon as keyof typeof ICON_MAP] || Shield;
-    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/lldm_rodeo_logo.svg";
-    const isDefaultLogo = logoUrl.includes('/lldm_rodeo_logo.svg') || logoUrl.includes('/flama-oficial.svg') || logoUrl.includes('/lldm_aniversario.svg') || logoUrl.includes('/lldm_santa_cena.svg');
+    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg";
+    const isDefaultLogo = logoUrl.includes('/flama-oficial.svg');
 
     return (
         <div className="min-h-screen bg-background text-foreground flex transition-colors duration-500">
@@ -196,28 +198,50 @@ export default function AdminLayout({
                         collapsed && "text-center px-0 invisible h-0 py-0"
                     )}>{t.principal}</div>
 
-                    <Link href="/admin" className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all border",
-                        pathname === '/admin' ? "bg-primary/10 text-primary font-bold border-primary/20" : "bg-foreground/5 text-muted-foreground border-transparent",
-                        collapsed && "justify-center px-0"
-                    )}>
+                    <Link href="/admin?tab=dashboard"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 50);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all border",
+                            (pathname === '/admin' && currentTab === 'dashboard') ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-lg shadow-primary/5" : "bg-foreground/5 text-muted-foreground border-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
                         <LayoutDashboard className="w-5 h-5 shrink-0" />
                         {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.dashboard}</span>}
                     </Link>
 
-                    <Link href="/admin#horarios" className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                        pathname === '/admin' ? "bg-foreground/5 text-muted-foreground" : "bg-foreground/5 text-muted-foreground",
-                        collapsed && "justify-center px-0"
-                    )}>
+                    <Link href="/admin?tab=horarios"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 50);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
+                            currentTab === 'horarios' ? "bg-primary/10 text-primary font-bold border border-primary/20" : "bg-foreground/5 text-muted-foreground",
+                            collapsed && "justify-center px-0"
+                        )}>
                         <Calendar className="w-5 h-5 group-hover:text-primary transition-colors shrink-0" />
                         {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.horarios}</span>}
                     </Link>
 
-                    <Link href="/admin#temas" className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                        collapsed && "justify-center px-0"
-                    )}>
+                    <Link href="/admin?tab=contenido"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 50);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
+                            (currentTab === 'contenido' || currentTab === 'temas') ? "bg-secondary/10 text-secondary font-bold border border-secondary/20" : "bg-foreground/5 text-muted-foreground",
+                            collapsed && "justify-center px-0"
+                        )}>
                         <BookOpen className="w-5 h-5 group-hover:text-secondary transition-colors shrink-0" />
                         {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.temas}</span>}
                     </Link>
@@ -245,10 +269,17 @@ export default function AdminLayout({
                         {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.reportes}</span>}
                     </Link>
 
-                    <Link href="/admin#anuncios" className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                        collapsed && "justify-center px-0 bg-foreground/5 text-muted-foreground"
-                    )}>
+                    <Link href="/admin?tab=anuncios"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 50);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
+                            collapsed && "justify-center px-0 bg-foreground/5 text-muted-foreground"
+                        )}>
                         <Bell className="w-5 h-5 group-hover:text-yellow-500 transition-colors shrink-0" />
                         {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.anuncios}</span>}
                     </Link>
@@ -308,10 +339,17 @@ export default function AdminLayout({
                     </div>
 
                     <div className="mt-auto pt-10">
-                        <Link href="/admin#configuracion" className={cn(
-                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group border-t border-white/5 mt-auto",
-                            collapsed && "justify-center px-0 border-none"
-                        )}>
+                        <Link href="/admin?tab=ajustes"
+                            onClick={() => {
+                                setTimeout(() => {
+                                    window.dispatchEvent(new Event('popstate'));
+                                    window.dispatchEvent(new Event('tab-change'));
+                                }, 50);
+                            }}
+                            className={cn(
+                                "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group border-t border-white/5 mt-auto",
+                                collapsed && "justify-center px-0 border-none"
+                            )}>
                             <Settings className="w-5 h-5 group-hover:rotate-45 transition-transform duration-500 shrink-0" />
                             {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.configuracion}</span>}
                         </Link>

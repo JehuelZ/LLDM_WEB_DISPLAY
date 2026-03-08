@@ -91,4 +91,13 @@ Al trabajar en este código, yo (Antigravity) me comprometo a:
     3. Se evalúe/compruebe la solución directamente en `lldmrodeo.org`.
 
 ---
-_Última actualización: Marzo 2026_
+
+## 🛰️ 7. POLÍTICA DE SINCRONIZACIÓN AUTOMÁTICA (LIVE SYNC)
+
+**MANDATO DE ACTUALIZACIÓN INMEDIATA:**
+*   **Antigravity (La IA)** tiene la orden de **procesar y subir a producción** (`git push`) cada cambio realizado de forma automática y proactiva.
+*   No se debe esperar confirmación para "subir" el código. Si un cambio es validado localmente, se asume que debe estar en `lldmrodeo.org` inmediatamente.
+*   **Ciclo de trabajo:** `Edit Local` -> `Validate` -> `Auto-Commit & Push` -> `Check Live`.
+
+---
+_Última actualización: 8 de Marzo, 2026_

@@ -1,0 +1,61 @@
+# Bitácora de Mantenimiento - LLDM Rodeo
+
+Este documento registra las reparaciones técnicas, mejoras de UX y correcciones de errores realizadas en el proyecto.
+
+---
+
+### 🛡️ Reparaciones del Skill Doctor (8 de Marzo, 2026)
+
+#### 1. Reparación de Navegación Lateral (Temas Semanales)
+- **Problema:** El enlace "Temas Semanales" en la barra lateral del administrador no abría la sección correspondiente.
+- **Causa:** 
+    - El enlace usaba un hash de URL (`#temas`) que no estaba mapeado correctamente en ninguna de las dos interfaces (Clásica y Táctica).
+    - La interfaz "Táctica" no escuchaba cambios en el hash de la URL, solo parámetros de búsqueda.
+- **Solución:**
+    - Se migraron todos los enlaces de la barra lateral de **Hashes** (`#`) a **Parámetros de Búsqueda** (`?tab=`).
+    - Se implementó un sistema de **Alias Inteligentes** para que enlaces como `#temas` o `?tab=temas` abran automáticamente la sección de **Contenido**.
+    - Se unificó el comportamiento de `popstate` y custom events (`tab-change`) para que la navegación sea instantánea sin recargar la página.
+- **Archivos Afectados:**
+    - `src/app/admin/layout.tsx` (Actualización de enlaces y dispatchers).
+    - `src/app/admin/page.tsx` (Lógica de alias y escucha de query params en UI Clásica).
+    - `src/app/admin/TactileAdmin.tsx` (Lógica de alias y escucha de query params en UI Táctica).
+
+#### 2. Campo 'Bio' en Perfiles
+- **Mejora:** Se añadió la capacidad de guardar una biografía o notas personales para cada miembro.
+- **Solución:** Se actualizó el esquema de datos en el `store.ts` y se añadieron campos de texto en el registro de miembros y en la edición de perfil personal.
+- **Archivos Afectados:**
+    - `src/lib/store.ts`
+    - `src/app/admin/TactileAdmin.tsx`
+
+#### 3. Optimización para Smart TV / Chromecast
+- **Mejora:** Creación de una ruta dedicada para pantallas de la iglesia.
+- **Solución:** Se creó `/tv` que elimina el PIN de acceso, oculta el cursor y optimiza el rendimiento gráfico para hardware limitado.
+- **Archivos Afectados:**
+    - `src/app/tv/page.tsx`
+    - `src/app/tv/tv.css`
+
+#### 4. Nueva Identidad Visual y Custom Logos
+- **Mejora:** El administrador necesitaba renovar la imagen visual del sitio y tener flexibilidad para eventos futuros.
+- **Solución:**
+    - Se eliminaron los logos archivados ('Rodeo Oficial', 'Santa Cena', '100 Aniversario').
+    - Se estableció la **Flama LLDM** como el logo oficial predeterminado en todo el sistema.
+    - Se implementaron **4 ranuras (slots) dinámicas** para subir logos personalizados.
+    - Se modificaron los componentes `Header`, `Layout` y `Clock` de todos los temas para usar el nuevo sistema de iconos dinámicos.
+- **Archivos Afectados:**
+    - `src/lib/store.ts` (Nuevos campos de AppSettings).
+    - `src/app/admin/page.tsx` y `TactileAdmin.tsx` (Subida y selección en UI).
+    - `src/components/layout/Header.tsx`, `src/app/admin/layout.tsx`.
+    - `src/themes/MidnightGlow/Clock.tsx`, `src/themes/DarkMinimal/Clock.tsx`, `src/themes/Glassmorphism/Clock.tsx`.
+
+#### 5. Dashboard Mejorado (Mensajes y Stats)
+- **Mejora:** Centralizar la actividad del usuario y el acceso a mensajes.
+- **Solución:**
+    - Se añadió una tarjeta de **Mensajes** en el dashboard principal con redirección al perfil.
+    - Se rediseñó la página de perfil para incluir pestañas de **Perfil**, **Mensajes** y **Estadísticas**, organizando mejor la información.
+- **Archivos Afectados:**
+    - `src/app/dashboard/page.tsx`.
+    - `src/app/dashboard/profile/page.tsx`.
+
+---
+
+*Documento actualizado por Antigravity (Skill Doctor)*

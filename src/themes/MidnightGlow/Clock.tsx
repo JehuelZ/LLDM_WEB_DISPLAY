@@ -48,7 +48,7 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                         <div className="w-14 h-14 relative z-10 flex items-center justify-center filter drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                             {settings.churchIcon === 'custom' ? (
                                 <img
-                                    src={settings.customIconUrl || settings.churchLogoUrl || "/lldm_rodeo_logo.svg"}
+                                    src={settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg"}
                                     className="w-full h-full object-contain brightness-0 invert"
                                     alt="Church"
                                 />

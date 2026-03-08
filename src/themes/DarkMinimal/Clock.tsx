@@ -44,7 +44,7 @@ export const DarkMinimalClock = ({ now, isMounted, settings }: { now: Date, isMo
                         <div className="w-9 h-9 flex items-center justify-center text-white">
                             {settings.churchIcon === 'custom' ? (
                                 <img
-                                    src={settings.customIconUrl || settings.churchLogoUrl || '/lldm_rodeo_logo.svg'}
+                                    src={settings.customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'}
                                     className="w-full h-full object-contain brightness-0 invert"
                                     alt="Church"
                                 />

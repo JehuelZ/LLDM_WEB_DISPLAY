@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, ShieldCheck, ArrowRight, User } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, ShieldCheck, ArrowRight, User, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
@@ -16,12 +16,22 @@ export default function DashboardIndex() {
     const dashboards = [
         {
             title: 'Mi Perfil',
-            description: 'Gestiona tu información personal, correo y teléfono.',
+            description: 'Gestiona tu información personal, biografía y privacidad.',
             href: '/dashboard/profile',
             icon: User,
             color: 'text-violet-400',
             bgColor: 'bg-violet-400/10',
             borderColor: 'border-violet-400/20',
+            show: true
+        },
+        {
+            title: 'Mensajes',
+            description: 'Bandeja de entrada, avisos y comunicación directa.',
+            href: '/dashboard/profile?tab=mensajes',
+            icon: Mail,
+            color: 'text-primary',
+            bgColor: 'bg-primary/10',
+            borderColor: 'border-primary/20',
             show: true
         },
         {

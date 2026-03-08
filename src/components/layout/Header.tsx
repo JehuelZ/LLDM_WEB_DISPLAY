@@ -17,8 +17,8 @@ export function Header() {
     const unreadCount = useMemo(() => messages.filter(m => !m.isRead).length, [messages]);
 
     const isCustom = settings.churchIcon === 'custom';
-    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/lldm_rodeo_logo.svg";
-    const isDefaultLogo = logoUrl.includes('/lldm_rodeo_logo.svg') || logoUrl.includes('/flama-oficial.svg') || logoUrl.includes('/lldm_aniversario.svg') || logoUrl.includes('/lldm_santa_cena.svg');
+    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg";
+    const isDefaultLogo = logoUrl.includes('/flama-oficial.svg');
 
     useEffect(() => {
         if (authSession) {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import {
     Calendar, Users, User, FileText, Settings, ExternalLink,
     Sun, Moon, Monitor, Church, Cross, Star, Heart, Shield,
-    Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2,
+    Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2, Plus,
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, Globe, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
@@ -17,7 +18,7 @@ import {
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useAppStore } from '@/lib/store';
+import { useAppStore, AppSettings } from '@/lib/store';
 import { cn, compressImage } from '@/lib/utils';
 import { CitySearch } from '@/components/CitySearch';
 import { ImageEditor } from '@/components/ImageEditor';
@@ -370,7 +371,31 @@ export default function AdminDashboard() {
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
     const [editingRole, setEditingRole] = useState('Miembro');
-    const [activeTab, setActiveTab] = useState('dashboard');
+    const searchParams = useSearchParams();
+    const queryTab = searchParams.get('tab') || 'dashboard';
+    const [activeTab, setActiveTab] = useState(queryTab);
+
+    // Sync state with query param
+    useEffect(() => {
+        const aliasMap: Record<string, string> = {
+            'mensajes': 'dashboard',
+            'anuncios-resumen': 'dashboard',
+            'horarios': 'horarios',
+            'temas': 'contenido',
+            'ajustes': 'configuracion'
+        };
+
+        const targetTab = queryTab;
+        const mappedTab = aliasMap[targetTab] || targetTab;
+
+        const validTabs = ['dashboard', 'horarios', 'contenido', 'anuncios', 'coros', 'configuracion', 'miembros'];
+
+        if (mappedTab && validTabs.includes(mappedTab)) {
+            setActiveTab(mappedTab);
+        } else {
+            setActiveTab('dashboard');
+        }
+    }, [queryTab]);
     const [memberFilter, setMemberFilter] = useState('all');
 
     useEffect(() => {
@@ -385,29 +410,12 @@ export default function AdminDashboard() {
         loadMembersFromCloud();
         loadCloudMessages();
 
-        // Handle URL Hash for Tabs
-        const handleHashChange = () => {
-            const hash = window.location.hash.replace('#', '');
-            const validTabs = ['dashboard', 'horarios', 'contenido', 'anuncios', 'coros', 'configuracion', 'miembros'];
+        loadCloudMessages();
 
-            // Map specific element IDs to their parent tabs if necessary
-            const idToTabMap: Record<string, string> = {
-                'mensajes': 'dashboard',
-                'anuncios-resumen': 'dashboard',
-                'horarios': 'horarios'
-            };
-
-            if (hash && validTabs.includes(hash)) {
-                setActiveTab(hash);
-            } else if (hash && idToTabMap[hash]) {
-                setActiveTab(idToTabMap[hash]);
-            } else if (!hash) {
-                setActiveTab('dashboard');
-            }
-        };
-
-        handleHashChange(); // Initial check
-        window.addEventListener('hashchange', handleHashChange);
+        // Listeners for layout-specific events if any
+        window.addEventListener('tab-change', () => {
+            // Let the useEffect with queryTab handle it after URL changes
+        });
 
         // Suscribirse a mensajes y ajustes nuevos en tiempo real
         const unsubMessages = subscribeToMessages();
@@ -416,7 +424,6 @@ export default function AdminDashboard() {
         return () => {
             unsubMessages();
             unsubSettings();
-            window.removeEventListener('hashchange', handleHashChange);
         };
     }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadKidsAssignmentsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
 
@@ -486,6 +493,28 @@ export default function AdminDashboard() {
                 }
             } catch (error) {
                 console.error("Error uploading icon:", error);
+            } finally {
+                setIsSaving(false);
+            }
+        }
+    };
+
+    const handleCustomLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>, slot: 1 | 2 | 3 | 4) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setIsSaving(true);
+            try {
+                const compressed = await compressImage(file, 800, 800);
+                const publicUrl = await uploadAvatar(`custom-logo-${slot}`, compressed);
+                if (publicUrl) {
+                    const settingKey = `customLogo${slot}` as keyof AppSettings;
+                    await saveSettingsToCloud({
+                        [settingKey]: publicUrl
+                    });
+                    alert(`✅ Logo ${slot} actualizado.`);
+                }
+            } catch (error) {
+                console.error(`Error uploading custom logo ${slot}:`, error);
             } finally {
                 setIsSaving(false);
             }
@@ -1588,84 +1617,83 @@ export default function AdminDashboard() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-8">
-                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                                    {[
-                                        { id: 'rodeo', url: '/lldm_rodeo_logo.svg', label: 'Rodeo Oficial', color: 'from-blue-500/10' },
-                                        { id: 'santa-cena', url: '/lldm_santa_cena.svg', label: 'Santa Cena', color: 'from-red-500/10' },
-                                        { id: 'aniversario', url: '/lldm_aniversario.svg', label: '100 Aniversario', color: 'from-amber-500/10' },
-                                        { id: 'oficial', url: '/flama-oficial.svg', label: 'Flama LLDM', color: 'from-slate-500/10' }
-                                    ].map((logo) => (
-                                        <motion.button
-                                            key={logo.id}
-                                            whileHover={{ y: -5, scale: 1.02 }}
-                                            whileTap={{ scale: 0.98 }}
-                                            onClick={() => setSettings({ churchLogoUrl: logo.url, churchIcon: 'custom', customIconUrl: undefined })}
-                                            className={cn(
-                                                "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
-                                                (settings.churchLogoUrl === logo.url || (logo.id === 'oficial' && settings.churchLogoUrl === '/flama-oficial.svg')) ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)]" : "border-white/5 bg-foreground/5 hover:border-white/10"
-                                            )}
-                                        >
-                                            <div className={cn("absolute inset-0 bg-gradient-to-b opacity-0 group-hover:opacity-100 transition-opacity duration-500", logo.color, "to-transparent")} />
-                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 group-hover:border-white/10 transition-all">
-                                                <img src={logo.url} className="w-full h-full object-contain filter drop-shadow-2xl" alt={logo.label} />
-                                            </div>
-                                            <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest transition-colors", (settings.churchLogoUrl === logo.url) ? "text-primary" : "text-slate-500")}>
-                                                {logo.label}
-                                            </span>
-                                        </motion.button>
-                                    ))}
-                                </div>
-
-                                <div className="flex flex-col lg:flex-row gap-6 items-center p-6 rounded-3xl bg-foreground/5 border border-white/5">
-                                    <div className="flex-1 space-y-4 w-full">
-                                        <label className="text-[10px] font-black uppercase text-slate-500 ml-1">Iconos Rápidos</label>
-                                        <div className="flex gap-2 justify-center lg:justify-start">
-                                            {(['shield', 'church', 'cross', 'star', 'heart'] as const).map((iconKey) => {
-                                                const icons = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
-                                                const IconComp = icons[iconKey];
-                                                return (
-                                                    <Button
-                                                        key={iconKey}
-                                                        variant={settings.churchIcon === iconKey ? "neon" : "outline"}
-                                                        className="h-10 w-10 p-0 rounded-xl"
-                                                        size="icon"
-                                                        onClick={() => setSettings({ churchIcon: iconKey, churchLogoUrl: undefined })}
-                                                    >
-                                                        <IconComp className="h-4 w-4" />
-                                                    </Button>
-                                                );
-                                            })}
+                                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                                    {/* Logo Oficial: Flama */}
+                                    <motion.button
+                                        whileHover={{ y: -5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={() => setSettings({ churchLogoUrl: '/flama-oficial.svg', churchIcon: 'custom', customIconUrl: undefined })}
+                                        className={cn(
+                                            "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
+                                            (settings.churchLogoUrl === '/flama-oficial.svg') ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)]" : "border-white/5 bg-foreground/5 hover:border-white/10"
+                                        )}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-b from-slate-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 group-hover:border-white/10 transition-all">
+                                            <img src="/flama-oficial.svg" className="w-full h-full object-contain filter drop-shadow-2xl" alt="Flama LLDM" />
                                         </div>
-                                    </div>
-                                    <div className="hidden lg:block w-px h-12 bg-white/10 mx-4" />
-                                    <div className="flex-1 w-full">
-                                        <input
-                                            type="file"
-                                            id="main-logo-upload"
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={handleIconUpload}
-                                        />
-                                        <Button
-                                            variant={settings.churchIcon === 'custom' && !['/lldm_rodeo_logo.svg', '/flama-oficial.svg', '/lldm_aniversario.svg', '/lldm_santa_cena.svg'].includes(settings.churchLogoUrl || '') ? "neon" : "outline"}
-                                            className="w-full h-14 gap-3 border-dashed border-primary/30 group px-6 rounded-2xl"
-                                            onClick={() => document.getElementById('main-logo-upload')?.click()}
-                                        >
-                                            {settings.customIconUrl ? (
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded border border-white/10 overflow-hidden">
-                                                        <img src={settings.customIconUrl} className="w-full h-full object-cover" />
-                                                    </div>
-                                                    <span className="text-[10px] font-black uppercase">Logo Personalizado</span>
-                                                </div>
-                                            ) : (
-                                                <div className="flex items-center gap-2">
-                                                    <Upload className="w-5 h-5 text-primary group-hover:animate-bounce" />
-                                                    <span className="text-[10px] font-black uppercase">Subir Logo Local</span>
-                                                </div>
-                                            )}
-                                        </Button>
-                                    </div>
+                                        <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest transition-colors", (settings.churchLogoUrl === '/flama-oficial.svg') ? "text-primary" : "text-slate-500")}>
+                                            Flama LLDM
+                                        </span>
+                                    </motion.button>
+
+                                    {/* 4 Slots Personalizados */}
+                                    {[1, 2, 3, 4].map((slotIndex) => {
+                                        const slotKey = `customLogo${slotIndex}` as keyof AppSettings;
+                                        const slotUrl = (settings as any)[slotKey] as string;
+                                        const isActive = settings.churchLogoUrl === slotUrl && slotUrl;
+
+                                        return (
+                                            <div key={slotIndex} className="relative group">
+                                                <motion.button
+                                                    whileHover={{ y: -5 }}
+                                                    onClick={() => {
+                                                        if (slotUrl) {
+                                                            setSettings({ churchLogoUrl: slotUrl, churchIcon: 'custom', customIconUrl: undefined });
+                                                        } else {
+                                                            document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
+                                                        }
+                                                    }}
+                                                    className={cn(
+                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full",
+                                                        isActive ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)] border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
+                                                    )}
+                                                >
+                                                    {slotUrl ? (
+                                                        <>
+                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5">
+                                                                <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
+                                                            </div>
+                                                            <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-slate-500")}>
+                                                                Logo {slotIndex}
+                                                            </span>
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
+                                                                }}
+                                                                className="absolute top-2 right-2 p-2 bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/20 text-white"
+                                                            >
+                                                                <Upload className="w-3 h-3" />
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        <div className="flex flex-col items-center justify-center gap-2 h-full py-4">
+                                                            <Plus className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
+                                                            <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Subir Logo {slotIndex}</span>
+                                                        </div>
+                                                    )}
+                                                </motion.button>
+                                                <input
+                                                    type="file"
+                                                    id={`custom-logo-upload-${slotIndex}`}
+                                                    className="hidden"
+                                                    accept="image/*"
+                                                    onChange={(e) => handleCustomLogoUpload(e, slotIndex as any)}
+                                                />
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </CardContent>
                         </Card>
@@ -2220,7 +2248,11 @@ export default function AdminDashboard() {
                                                     <p className="text-[10px] text-slate-500 font-medium">{u.description}</p>
                                                 </div>
                                                 <button
-                                                    onClick={() => removeUniform(u.id)}
+                                                    onClick={async () => {
+                                                        if (confirm("¿Eliminar este uniforme?")) {
+                                                            await deleteUniformFromCloud(u.id);
+                                                        }
+                                                    }}
                                                     className="p-2 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
@@ -2248,20 +2280,23 @@ export default function AdminDashboard() {
                                                     <option value="Niño">Niño</option>
                                                 </select>
                                                 <Button
-                                                    onClick={() => {
+                                                    onClick={async () => {
                                                         if (newUniform.name) {
-                                                            addUniform({
-                                                                id: Math.random().toString(36).substr(2, 9),
-                                                                name: newUniform.name,
-                                                                description: 'Nuevo uniforme añadido.',
-                                                                category: newUniform.category
-                                                            });
-                                                            setNewUniform({ name: '', category: 'Adulto' });
+                                                            setIsSaving(true);
+                                                            try {
+                                                                await saveUniformToCloud(newUniform.name, newUniform.category);
+                                                                setNewUniform({ name: '', category: 'Adulto' });
+                                                            } catch (e) {
+                                                                alert("Error al guardar uniforme");
+                                                            } finally {
+                                                                setIsSaving(false);
+                                                            }
                                                         }
                                                     }}
                                                     className="h-8 text-[10px] font-black uppercase bg-secondary hover:bg-secondary/80 flex-1"
+                                                    disabled={isSaving}
                                                 >
-                                                    Agregar
+                                                    {isSaving ? '...' : 'Agregar'}
                                                 </Button>
                                             </div>
                                         </div>
@@ -2294,7 +2329,11 @@ export default function AdminDashboard() {
                                                 <label className="text-[10px] font-black uppercase text-slate-500">Para Jueves/Dom (Adultos)</label>
                                                 <select
                                                     value={uniformSchedule[currentDate] || ''}
-                                                    onChange={(e) => setUniformForDate(currentDate, e.target.value)}
+                                                    onChange={async (e) => {
+                                                        setIsSaving(true);
+                                                        await saveUniformForDateToCloud(currentDate, e.target.value);
+                                                        setIsSaving(false);
+                                                    }}
                                                     className="w-full bg-foreground/5 border border-border/40 rounded-xl h-10 px-3 text-xs font-bold text-foreground outline-none focus:border-secondary/50 transition-colors"
                                                 >
                                                     <option value="" className="bg-[#0f172a]">Sin uniforme asignado</option>
