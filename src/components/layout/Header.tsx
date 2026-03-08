@@ -81,7 +81,7 @@ export function Header() {
                             href="/dashboard/ministro"
                             className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                         >
-                            <Shield className="w-3 h-3 text-primary" /> Ministro
+                            Ministro
                         </Link>
                     )}
                     {(currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia') && (
@@ -89,7 +89,7 @@ export function Header() {
                             href="/dashboard/monitor"
                             className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                         >
-                            <ClipboardCheck className="w-3 h-3 text-emerald-500" /> Asistencia
+                            Asistencia
                         </Link>
                     )}
                     {(currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos') && (
@@ -97,7 +97,7 @@ export function Header() {
                             href="/dashboard/coro"
                             className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                         >
-                            <Music className="w-3 h-3 text-secondary" /> Coro
+                            Coro
                         </Link>
                     )}
                     {currentUser.role === 'Administrador' && (
@@ -105,7 +105,7 @@ export function Header() {
                             href="/admin"
                             className="transition-colors text-primary uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                         >
-                            <ShieldCheck className="w-3 h-3" /> Admin
+                            Admin
                         </Link>
                     )}
                 </nav>

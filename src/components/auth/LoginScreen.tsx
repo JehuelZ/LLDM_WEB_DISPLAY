@@ -163,7 +163,7 @@ export function LoginScreen() {
                             <div className="flex items-center gap-3">
                                 <span className="w-6 md:w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
                                 <span className="text-[9px] uppercase font-black tracking-[0.4em] text-amber-500/60 flex items-center gap-2">
-                                    <Sparkles className="w-2 h-2" /> Digital Experience
+                                    Digital Experience
                                 </span>
                                 <span className="w-6 md:w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
                             </div>
@@ -234,16 +234,6 @@ export function LoginScreen() {
                         </div>
 
                         {/* High Fidelity Footer */}
-                        <div className="mt-14 pt-8 border-t border-white/5 flex items-center justify-between text-[8px] font-bold uppercase tracking-widest text-slate-600">
-                            <div className="flex items-center gap-2">
-                                <Shield className="w-3 h-3 text-amber-500/50" />
-                                AES-256 SECURED
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Globe className="w-3 h-3 text-blue-500/50" />
-                                LLDM NETWORK
-                            </div>
-                        </div>
                     </div>
                 </div>
 

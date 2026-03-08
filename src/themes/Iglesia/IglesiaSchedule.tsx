@@ -244,8 +244,8 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
 
         const defaults = {
             '5am': { start: '05:00', end: '06:15' },
-            '9am': { start: isSunToday ? '10:00' : '09:00', end: isSunToday ? '12:00' : '10:15' },
-            'evening': { start: '18:30', end: '20:30' },
+            '9am': { start: isSunToday ? '09:00' : '09:00', end: isSunToday ? '12:30' : '10:15' },
+            'evening': { start: '18:15', end: '20:45' },
         };
 
         const parseTimeStr = (t?: string) => {
@@ -266,10 +266,9 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
 
         // Special handling for Sunday Dominical (the 9am slot is used for the morning service)
         if (slotId === '9am' && isSunToday) {
-            // If the DB record exists but has default weekday times (9-10 AM)
-            // we override it to Dominical times (10-12 PM) unless explicitly changed
-            if (slot?.time === '09:00 AM' || !slot?.time) start = 600; // 10:00 AM
-            if (slot?.endTime === '10:00 AM' || !slot?.endTime) end = 720; // 12:00 PM
+            // Expansion: Dominical usually starts between 9 and 10 AM and ends by 12:30 PM
+            if (slot?.time?.includes('09:00') || !slot?.time) start = Math.min(start, 540); // 9:00 AM
+            if (slot?.endTime?.includes('12:00') || !slot?.endTime) end = 750; // 12:30 PM
         }
 
         return curMin >= start && curMin <= end;
@@ -324,7 +323,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
         const isLive = isSlotActive(slotKey);
         const sched = monthlySchedule?.[dateKey];
         const slot = (sched?.slots as any)?.[slotKey];
-        const timeRange = slot?.time || (slotKey === '5am' ? '05:00 AM' : (slotKey === '9am' ? (isSun ? '10:00 AM' : '12:00 PM') : '06:30 PM'));
+        const timeRange = slot?.time || (slotKey === '5am' ? '05:00 AM' : (slotKey === '9am' ? (isSun ? '10:00 AM' : '09:00 AM') : '07:00 PM'));
         const language = slot?.language;
 
         return (
@@ -423,7 +422,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                 broadcast: { label: 'Transmisión Dominical', icon: Video },
                                 visitors: { label: 'Dominical de Visitas', icon: User }
                             };
-                            const type = slot9am?.sundayType || 'local';
+                            const type = slot9am?.sundayType || (schedule?.topic?.startsWith('dominical:') ? schedule.topic.replace('dominical:', '') : 'local');
                             const current = types[type] || types.local;
                             const Icon = current.icon;
 
@@ -440,14 +439,20 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                             }
 
                             return (
-                                <div style={{
-                                    width: 140, height: 140, borderRadius: '50%',
-                                    background: `${T.secondary}15`,
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    border: `4px solid ${T.surface}`,
-                                    boxShadow: '0 8px 25px rgba(58,134,255,0.15)'
-                                }}>
-                                    <Icon style={{ width: 70, height: 70, color: T.secondary }} />
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%' }}>
+                                    <div style={{
+                                        width: 140, height: 140, borderRadius: '50%',
+                                        background: `${T.secondary}15`,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        border: `4px solid ${T.surface}`,
+                                        boxShadow: '0 8px 25px rgba(58,134,255,0.15)'
+                                    }}>
+                                        <Icon style={{ width: 70, height: 70, color: T.secondary }} />
+                                    </div>
+                                    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                                        <AcademicButton label={current.label} icon={Icon} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
+                                        <RoleBadge label="Escuela Dominical" icon={Crown} T={T} isDark={isDark} />
+                                    </div>
                                 </div>
                             );
                         })() : (
@@ -543,7 +548,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                     })()}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

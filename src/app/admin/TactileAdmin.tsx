@@ -225,6 +225,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
     useEffect(() => {
         loadMembersFromCloud();
         loadSettingsFromCloud();
+        loadUniformsFromCloud();
         useAppStore.getState().loadAllSchedulesFromCloud();
         useAppStore.getState().loadAnnouncementsFromCloud();
         useAppStore.getState().loadThemeFromCloud();
@@ -232,7 +233,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
         const unsubSettings = useAppStore.getState().subscribeToSettings();
         return () => unsubSettings();
-    }, [loadMembersFromCloud, loadSettingsFromCloud, loadRehearsalsFromCloud]);
+    }, [loadMembersFromCloud, loadSettingsFromCloud, loadUniformsFromCloud, loadRehearsalsFromCloud]);
 
     useEffect(() => {
         loadCloudMessages();
@@ -408,6 +409,73 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                         </div>
                     </div>
 
+                    {/* Global Date & Status Header */}
+                    <div className="px-8 pt-4 pb-2 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-4 bg-black/30 p-2 rounded-[2.5rem] border border-white/5 shadow-inner">
+                            <button onClick={() => navigateDay(-1)} className="tactile-btn tactile-btn-glass !rounded-full w-12 h-12 flex items-center justify-center p-0 transition-transform hover:scale-110 active:scale-90">
+                                <ChevronLeft className="w-6 h-6" />
+                            </button>
+                            <div
+                                className="relative group cursor-pointer"
+                                onClick={() => document.getElementById('global-date-picker')?.showPicker()}
+                            >
+                                <div className="text-2xl font-black italic uppercase tracking-tighter min-w-[280px] text-center px-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary transition-all">
+                                    {format(parseISO(currentDate), "EEEE d 'de' MMMM", { locale: es })}
+                                </div>
+                                <input
+                                    type="date"
+                                    id="global-date-picker"
+                                    className="absolute inset-0 opacity-0 pointer-events-none"
+                                    value={currentDate}
+                                    onChange={(e) => setCurrentDate(e.target.value)}
+                                />
+                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </div>
+                            <button onClick={() => navigateDay(1)} className="tactile-btn tactile-btn-glass !rounded-full w-12 h-12 flex items-center justify-center p-0 transition-transform hover:scale-110 active:scale-90">
+                                <ChevronRight className="w-6 h-6" />
+                            </button>
+                            <button
+                                onClick={() => setCurrentDate(new Date().toISOString().split('T')[0])}
+                                className="tactile-btn tactile-btn-glass !rounded-full px-4 h-12 flex items-center justify-center text-[10px] font-black uppercase tracking-widest hover:text-primary"
+                            >
+                                Hoy
+                            </button>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                            {/* Service Status Indicator */}
+                            {(() => {
+                                const now = new Date();
+                                const isToday = currentDate === now.toISOString().split('T')[0];
+                                const isSun = parseISO(currentDate).getDay() === 0;
+                                const hrs = now.getHours();
+                                const mins = now.getMinutes();
+                                const curMin = hrs * 60 + mins;
+
+                                // Sunday School Detection (10:00 AM - 12:00 PM)
+                                const isDominical = isSun && curMin >= 600 && curMin <= 720;
+
+                                if (isToday && isDominical) {
+                                    return (
+                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-orange-500/20 border border-orange-500/40 shadow-[0_0_20px_rgba(249,115,22,0.2)] animate-pulse">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_10px_#f97316]" />
+                                            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-500">Dominical en Curso</span>
+                                        </div>
+                                    );
+                                }
+
+                                return null;
+                            })()}
+
+                            {isSaving && (
+                                <div className="flex items-center gap-3 px-5 py-2 rounded-full bg-primary/10 border border-primary/20">
+                                    <RefreshCw className="w-3.5 h-3.5 text-primary animate-spin" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Sincronizando...</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
                     {/* Main Workspace */}
                     <div className="flex-1 p-8 tactile-scroll">
                         <AnimatePresence mode="wait">
@@ -481,7 +549,24 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         </div>
 
                                         <div className="mt-12 flex gap-4">
-                                            <button className="tactile-btn tactile-btn-orange text-xs px-8">ACTUALIZAR NUBE</button>
+                                            <button
+                                                onClick={async () => {
+                                                    setIsSaving(true);
+                                                    await Promise.all([
+                                                        loadAllSchedulesFromCloud(),
+                                                        loadAnnouncementsFromCloud(),
+                                                        loadSettingsFromCloud(),
+                                                        loadMembersFromCloud(),
+                                                        loadUniformsFromCloud()
+                                                    ]);
+                                                    setIsSaving(false);
+                                                    alert('✅ Datos sincronizados con la nube');
+                                                }}
+                                                className="tactile-btn tactile-btn-orange text-xs px-8"
+                                            >
+                                                {isSaving ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : <Globe className="w-4 h-4 mr-2" />}
+                                                SINCRONIZAR AHORA
+                                            </button>
                                             <button className="tactile-btn tactile-btn-glass text-xs px-8">HISTORIAL</button>
                                         </div>
                                     </div>
@@ -524,305 +609,301 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     exit={{ opacity: 0, y: -20 }}
                                     className="space-y-8"
                                 >
-                                    <div className="flex items-center justify-between mb-12">
-                                        <div className="flex items-center gap-4 bg-black/30 p-2 rounded-[2.5rem] border border-white/5 shadow-inner">
-                                            <button onClick={() => navigateDay(-1)} className="tactile-btn tactile-btn-glass !rounded-full w-12 h-12 flex items-center justify-center p-0"><ChevronLeft /></button>
-                                            <div className="text-2xl font-black italic uppercase tracking-tighter min-w-[300px] text-center px-4">
-                                                {format(parseISO(currentDate), "PPPP", { locale: es })}
-                                            </div>
-                                            <button onClick={() => navigateDay(1)} className="tactile-btn tactile-btn-glass !rounded-full w-12 h-12 flex items-center justify-center p-0"><ChevronRight /></button>
-                                        </div>
-
-                                        <div className="flex items-center gap-4">
-                                            {isSaving && <div className="text-[9px] font-black text-primary animate-pulse uppercase tracking-widest mr-4">Sincronizando...</div>}
-                                            <button
-                                                onClick={() => {
-                                                    if (confirm("¿Poblar mes con datos aleatorios?")) seedMonthSchedule();
-                                                }}
-                                                className="tactile-btn tactile-btn-glass text-[10px]"
-                                            >
-                                                <Sparkles className="w-3.5 h-3.5" /> Poblar Mes
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                        {/* 5 AM Slot */}
-                                        <TactileGlassCard
-                                            title="05:00 AM"
-                                            subtitle="Oración de Primicias"
-                                            className="border-t-2 border-t-blue-500/30"
-                                        >
-                                            <div className="space-y-6">
-                                                <div className="flex items-center justify-between">
-                                                    <div className="flex gap-2">
-                                                        <input
-                                                            type="text"
-                                                            value={currentDaySchedule.slots['5am'].time}
-                                                            onChange={(e) => updateSlot('5am', { time: e.target.value })}
-                                                            className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none"
-                                                        />
-                                                    </div>
+                                    {(() => {
+                                        const isSun = parseISO(currentDate).getDay() === 0;
+                                        return (
+                                            <>
+                                                <div className="flex justify-end mb-8">
                                                     <button
-                                                        onClick={() => updateSlot('5am', { language: currentDaySchedule.slots['5am'].language === 'en' ? 'es' : 'en' })}
-                                                        disabled={isSaving}
-                                                        className={cn(
-                                                            "tactile-btn text-[10px] w-12 h-8 justify-center",
-                                                            currentDaySchedule.slots['5am'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
-                                                            isSaving && "opacity-50 cursor-wait"
-                                                        )}
-                                                        title="Alternar Idioma (Inglés/Español)"
+                                                        onClick={() => {
+                                                            if (confirm("¿Poblar el mes actual con datos de prueba?")) seedMonthSchedule();
+                                                        }}
+                                                        className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group"
                                                     >
-                                                        {currentDaySchedule.slots['5am'].language === 'en' ? 'EN' : 'ES'}
+                                                        <Sparkles className="w-3.5 h-3.5 mr-2 group-hover:text-amber-400 transition-colors" />
+                                                        Poblar Mes
                                                     </button>
                                                 </div>
-
-                                                <TactileSelect
-                                                    label="RESPONSABLE"
-                                                    value={currentDaySchedule.slots['5am'].leaderId}
-                                                    onChange={(val: string) => updateSlot('5am', { leaderId: val })}
-                                                    disabled={isSaving}
-                                                    options={memberOptions}
-                                                    icon={User}
-                                                />
-
-                                                <div className="flex gap-3">
-                                                    <button
-                                                        onClick={() => updateSlot('5am', { leaderId: currentDaySchedule.slots['5am'].leaderId })}
-                                                        className="tactile-btn tactile-btn-orange flex-1 justify-center h-10"
+                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                                    {/* 5 AM Slot */}
+                                                    <TactileGlassCard
+                                                        title="05:00 AM"
+                                                        subtitle="Oración de Primicias"
+                                                        className="border-t-2 border-t-blue-500/30"
                                                     >
-                                                        <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
-                                                    </button>
+                                                        <div className="space-y-6">
+                                                            <div className="flex items-center justify-between">
+                                                                <div className="flex gap-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        value={currentDaySchedule.slots['5am'].time}
+                                                                        onChange={(e) => updateSlot('5am', { time: e.target.value })}
+                                                                        className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none"
+                                                                    />
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => updateSlot('5am', { language: currentDaySchedule.slots['5am'].language === 'en' ? 'es' : 'en' })}
+                                                                    disabled={isSaving}
+                                                                    className={cn(
+                                                                        "tactile-btn text-[10px] w-12 h-8 justify-center",
+                                                                        currentDaySchedule.slots['5am'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
+                                                                        isSaving && "opacity-50 cursor-wait"
+                                                                    )}
+                                                                    title="Alternar Idioma (Inglés/Español)"
+                                                                >
+                                                                    {currentDaySchedule.slots['5am'].language === 'en' ? 'EN' : 'ES'}
+                                                                </button>
+                                                            </div>
+
+                                                            <TactileSelect
+                                                                label="RESPONSABLE"
+                                                                value={currentDaySchedule.slots['5am'].leaderId}
+                                                                onChange={(val: string) => updateSlot('5am', { leaderId: val })}
+                                                                disabled={isSaving}
+                                                                options={memberOptions}
+                                                                icon={User}
+                                                            />
+
+                                                            <div className="flex gap-3">
+                                                                <button
+                                                                    onClick={() => updateSlot('5am', { leaderId: currentDaySchedule.slots['5am'].leaderId })}
+                                                                    className="tactile-btn tactile-btn-orange flex-1 justify-center h-10"
+                                                                >
+                                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
+                                                                </button>
+                                                            </div>
+
+                                                            <div className="flex gap-3 pt-2 border-t border-white/5">
+                                                                <button
+                                                                    onClick={() => saveRecurringScheduleToCloud(currentDate, '5am', currentDaySchedule.slots['5am'].leaderId, 'next')}
+                                                                    disabled={isSaving}
+                                                                    className="tactile-btn tactile-btn-glass text-[9px] flex-1 justify-center disabled:opacity-50"
+                                                                >
+                                                                    PRÓX. LUNES
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => saveRecurringScheduleToCloud(currentDate, '5am', currentDaySchedule.slots['5am'].leaderId, 'month')}
+                                                                    disabled={isSaving}
+                                                                    className="tactile-btn tactile-btn-glass text-[9px] flex-1 justify-center disabled:opacity-50"
+                                                                >
+                                                                    TODO EL MES
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </TactileGlassCard>
+
+                                                    {/* 9 AM Slot */}
+                                                    <TactileGlassCard
+                                                        title={isSun ? "10:00 AM" : "09:00 AM"}
+                                                        subtitle={isSun ? "Escuela Dominical" : "Consagración / Doctrina"}
+                                                        className={cn("border-t-2", isSun ? "border-t-primary/30 shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)]" : "border-t-yellow-500/30")}
+                                                    >
+                                                        <div className="space-y-6">
+                                                            <div className="flex items-center justify-between">
+                                                                <input
+                                                                    type="text"
+                                                                    value={currentDaySchedule.slots['9am'].time}
+                                                                    disabled={isSaving}
+                                                                    onChange={(e) => updateSlot('9am', { time: e.target.value })}
+                                                                    className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
+                                                                />
+                                                                <button
+                                                                    onClick={() => updateSlot('9am', { language: currentDaySchedule.slots['9am'].language === 'en' ? 'es' : 'en' })}
+                                                                    disabled={isSaving}
+                                                                    className={cn(
+                                                                        "tactile-btn text-[10px] w-12 h-8 justify-center",
+                                                                        currentDaySchedule.slots['9am'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
+                                                                        isSaving && "opacity-50 cursor-wait"
+                                                                    )}
+                                                                    title="Alternar Idioma (Inglés/Español)"
+                                                                >
+                                                                    {currentDaySchedule.slots['9am'].language === 'en' ? 'EN' : 'ES'}
+                                                                </button>
+                                                            </div>
+
+                                                            {isSun ? (
+                                                                <TactileSelect
+                                                                    label="TIPO DE DOMINICAL"
+                                                                    value={currentDaySchedule.slots['9am'].sundayType || 'local'}
+                                                                    onChange={(val: string) => updateSlot('9am', { sundayType: val })}
+                                                                    disabled={isSaving}
+                                                                    options={[
+                                                                        { value: 'local', label: 'Dominical Local' },
+                                                                        { value: 'exchange', label: 'Intercambio Ministerial' },
+                                                                        { value: 'broadcast', label: 'Transmisión Dominical' },
+                                                                        { value: 'visitors', label: 'Dominical de Visitas' },
+                                                                    ]}
+                                                                    icon={Crown}
+                                                                />
+                                                            ) : (
+                                                                <>
+                                                                    <TactileSelect
+                                                                        label="CONSAGRACIÓN"
+                                                                        value={currentDaySchedule.slots['9am'].consecrationLeaderId}
+                                                                        onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
+                                                                        disabled={isSaving}
+                                                                        options={memberOptions}
+                                                                        icon={User}
+                                                                    />
+
+                                                                    <TactileSelect
+                                                                        label="DOCTRINA"
+                                                                        value={currentDaySchedule.slots['9am'].doctrineLeaderId}
+                                                                        onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
+                                                                        disabled={isSaving}
+                                                                        options={memberOptions}
+                                                                        icon={Shield}
+                                                                    />
+                                                                </>
+                                                            )}
+
+                                                            <button
+                                                                onClick={() => updateSlot('9am', {})}
+                                                                className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
+                                                            >
+                                                                <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR {isSun ? 'DOMINICAL' : 'PROGRAMA'}
+                                                            </button>
+                                                        </div>
+                                                    </TactileGlassCard>
+
+                                                    {/* 12 PM Slot */}
+                                                    <TactileGlassCard
+                                                        title="12:00 PM"
+                                                        subtitle="Oración de mediodía"
+                                                        className="border-t-2 border-t-emerald-500/30"
+                                                    >
+                                                        <div className="space-y-6">
+                                                            <div className="flex items-center justify-between">
+                                                                <input
+                                                                    type="text"
+                                                                    value={currentDaySchedule?.slots?.['12pm']?.time || '12:00 PM'}
+                                                                    disabled={isSaving}
+                                                                    onChange={(e) => updateSlot('12pm', { time: e.target.value })}
+                                                                    className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
+                                                                />
+                                                                <button
+                                                                    onClick={() => updateSlot('12pm', { language: currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'es' : 'en' })}
+                                                                    disabled={isSaving}
+                                                                    className={cn(
+                                                                        "tactile-btn text-[10px] w-12 h-8 justify-center",
+                                                                        currentDaySchedule?.slots?.['12pm']?.language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
+                                                                        isSaving && "opacity-50 cursor-wait"
+                                                                    )}
+                                                                >
+                                                                    {currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'EN' : 'ES'}
+                                                                </button>
+                                                            </div>
+                                                            <TactileSelect
+                                                                label="RESPONSABLE"
+                                                                value={currentDaySchedule?.slots?.['12pm']?.leaderId || ''}
+                                                                onChange={(val: string) => updateSlot('12pm', { leaderId: val })}
+                                                                disabled={isSaving}
+                                                                options={memberOptions}
+                                                                icon={User}
+                                                            />
+                                                            <button
+                                                                onClick={() => updateSlot('12pm', {})}
+                                                                className="tactile-btn tactile-btn-orange w-full justify-center h-10"
+                                                            >
+                                                                <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
+                                                            </button>
+                                                        </div>
+                                                    </TactileGlassCard>
+
+                                                    {/* Evening Slot */}
+                                                    <TactileGlassCard
+                                                        title="07:00 PM"
+                                                        subtitle="Servicio de Oración"
+                                                        className="border-t-2 border-t-tactile-neon-pink/30"
+                                                    >
+                                                        <div className="space-y-6">
+                                                            <div className="flex items-center justify-between">
+                                                                <input
+                                                                    type="text"
+                                                                    value={currentDaySchedule.slots['evening'].time}
+                                                                    disabled={isSaving}
+                                                                    onChange={(e) => updateSlot('evening', { time: e.target.value })}
+                                                                    className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
+                                                                />
+                                                                <button
+                                                                    onClick={() => updateSlot('evening', { language: currentDaySchedule.slots['evening'].language === 'en' ? 'es' : 'en' })}
+                                                                    disabled={isSaving}
+                                                                    className={cn(
+                                                                        "tactile-btn text-[10px] w-12 h-8 justify-center",
+                                                                        currentDaySchedule.slots['evening'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
+                                                                        isSaving && "opacity-50 cursor-wait"
+                                                                    )}
+                                                                    title="Alternar Idioma (Inglés/Español)"
+                                                                >
+                                                                    {currentDaySchedule.slots['evening'].language === 'en' ? 'EN' : 'ES'}
+                                                                </button>
+                                                            </div>
+
+                                                            <TactileSelect
+                                                                label="TIPO DE SERVICIO"
+                                                                value={currentDaySchedule.slots['evening'].type || 'regular'}
+                                                                disabled={isSaving}
+                                                                onChange={(val: string) => {
+                                                                    const updates: any = { type: val };
+                                                                    const isMulti = ['special', 'youth', 'praise', 'married', 'children'].includes(val);
+                                                                    if (!isMulti && currentDaySchedule.slots['evening'].leaderIds.length > 1) {
+                                                                        updates.leaderIds = [currentDaySchedule.slots['evening'].leaderIds[0]];
+                                                                    }
+                                                                    updateSlot('evening', updates);
+                                                                }}
+                                                                options={[
+                                                                    { value: 'regular', label: 'Regular' },
+                                                                    { value: 'youth', label: 'Jóvenes' },
+                                                                    { value: 'married', label: 'Casados' },
+                                                                    { value: 'children', label: 'Niños' },
+                                                                    { value: 'solos', label: 'Solos y Solas' },
+                                                                    { value: 'praise', label: 'Servicio de Alabanza' },
+                                                                    { value: 'special', label: 'Especial' },
+                                                                ]}
+                                                                icon={Sparkles}
+                                                            />
+
+                                                            {['youth', 'praise', 'children'].includes(currentDaySchedule.slots['evening'].type) ? (
+                                                                <div className="grid grid-cols-1 gap-4">
+                                                                    <TactileSelect
+                                                                        label="DIRIGE"
+                                                                        value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
+                                                                        onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
+                                                                        disabled={isSaving}
+                                                                        options={memberOptions}
+                                                                        icon={User}
+                                                                    />
+                                                                    <TactileSelect
+                                                                        label="DOCTRINA"
+                                                                        value={currentDaySchedule.slots['evening'].doctrineLeaderId || ''}
+                                                                        onChange={(val: string) => updateSlot('evening', { doctrineLeaderId: val })}
+                                                                        disabled={isSaving}
+                                                                        options={memberOptions}
+                                                                        icon={BookOpen}
+                                                                    />
+                                                                </div>
+                                                            ) : (
+                                                                <TactileSelect
+                                                                    label="ENCARGADO"
+                                                                    value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
+                                                                    onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
+                                                                    disabled={isSaving}
+                                                                    options={memberOptions}
+                                                                    icon={User}
+                                                                />
+                                                            )}
+                                                            <button
+                                                                onClick={() => updateSlot('evening', {})}
+                                                                className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
+                                                            >
+                                                                <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR SERVICIO
+                                                            </button>
+                                                        </div>
+                                                    </TactileGlassCard>
                                                 </div>
-
-                                                <div className="flex gap-3 pt-2 border-t border-white/5">
-                                                    <button
-                                                        onClick={() => saveRecurringScheduleToCloud(currentDate, '5am', currentDaySchedule.slots['5am'].leaderId, 'next')}
-                                                        disabled={isSaving}
-                                                        className="tactile-btn tactile-btn-glass text-[9px] flex-1 justify-center disabled:opacity-50"
-                                                    >
-                                                        PRÓX. LUNES
-                                                    </button>
-                                                    <button
-                                                        onClick={() => saveRecurringScheduleToCloud(currentDate, '5am', currentDaySchedule.slots['5am'].leaderId, 'month')}
-                                                        disabled={isSaving}
-                                                        className="tactile-btn tactile-btn-glass text-[9px] flex-1 justify-center disabled:opacity-50"
-                                                    >
-                                                        TODO EL MES
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </TactileGlassCard>
-
-                                        {/* 9 AM Slot */}
-                                        <TactileGlassCard
-                                            title={isSun ? "10:00 AM" : "09:00 AM"}
-                                            subtitle={isSun ? "Escuela Dominical" : "Consagración / Doctrina"}
-                                            className={cn("border-t-2", isSun ? "border-t-primary/30 shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)]" : "border-t-yellow-500/30")}
-                                        >
-                                            <div className="space-y-6">
-                                                <div className="flex items-center justify-between">
-                                                    <input
-                                                        type="text"
-                                                        value={currentDaySchedule.slots['9am'].time}
-                                                        disabled={isSaving}
-                                                        onChange={(e) => updateSlot('9am', { time: e.target.value })}
-                                                        className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
-                                                    />
-                                                    <button
-                                                        onClick={() => updateSlot('9am', { language: currentDaySchedule.slots['9am'].language === 'en' ? 'es' : 'en' })}
-                                                        disabled={isSaving}
-                                                        className={cn(
-                                                            "tactile-btn text-[10px] w-12 h-8 justify-center",
-                                                            currentDaySchedule.slots['9am'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
-                                                            isSaving && "opacity-50 cursor-wait"
-                                                        )}
-                                                        title="Alternar Idioma (Inglés/Español)"
-                                                    >
-                                                        {currentDaySchedule.slots['9am'].language === 'en' ? 'EN' : 'ES'}
-                                                    </button>
-                                                </div>
-
-                                                {isSun ? (
-                                                    <TactileSelect
-                                                        label="TIPO DE DOMINICAL"
-                                                        value={currentDaySchedule.slots['9am'].sundayType || 'local'}
-                                                        onChange={(val: string) => updateSlot('9am', { sundayType: val })}
-                                                        disabled={isSaving}
-                                                        options={[
-                                                            { value: 'local', label: 'Dominical Local' },
-                                                            { value: 'exchange', label: 'Intercambio Ministerial' },
-                                                            { value: 'broadcast', label: 'Transmisión Dominical' },
-                                                            { value: 'visitors', label: 'Dominical de Visitas' },
-                                                        ]}
-                                                        icon={Crown}
-                                                    />
-                                                ) : (
-                                                    <>
-                                                        <TactileSelect
-                                                            label="CONSAGRACIÓN"
-                                                            value={currentDaySchedule.slots['9am'].consecrationLeaderId}
-                                                            onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
-                                                            disabled={isSaving}
-                                                            options={memberOptions}
-                                                            icon={User}
-                                                        />
-
-                                                        <TactileSelect
-                                                            label="DOCTRINA"
-                                                            value={currentDaySchedule.slots['9am'].doctrineLeaderId}
-                                                            onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
-                                                            disabled={isSaving}
-                                                            options={memberOptions}
-                                                            icon={Shield}
-                                                        />
-                                                    </>
-                                                )}
-
-                                                <button
-                                                    onClick={() => updateSlot('9am', {})}
-                                                    className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
-                                                >
-                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR {isSun ? 'DOMINICAL' : 'PROGRAMA'}
-                                                </button>
-                                            </div>
-                                        </TactileGlassCard>
-
-                                        {/* 12 PM Slot */}
-                                        <TactileGlassCard
-                                            title="12:00 PM"
-                                            subtitle="Oración de mediodía"
-                                            className="border-t-2 border-t-emerald-500/30"
-                                        >
-                                            <div className="space-y-6">
-                                                <div className="flex items-center justify-between">
-                                                    <input
-                                                        type="text"
-                                                        value={currentDaySchedule?.slots?.['12pm']?.time || '12:00 PM'}
-                                                        disabled={isSaving}
-                                                        onChange={(e) => updateSlot('12pm', { time: e.target.value })}
-                                                        className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
-                                                    />
-                                                    <button
-                                                        onClick={() => updateSlot('12pm', { language: currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'es' : 'en' })}
-                                                        disabled={isSaving}
-                                                        className={cn(
-                                                            "tactile-btn text-[10px] w-12 h-8 justify-center",
-                                                            currentDaySchedule?.slots?.['12pm']?.language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
-                                                            isSaving && "opacity-50 cursor-wait"
-                                                        )}
-                                                    >
-                                                        {currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'EN' : 'ES'}
-                                                    </button>
-                                                </div>
-                                                <TactileSelect
-                                                    label="RESPONSABLE"
-                                                    value={currentDaySchedule?.slots?.['12pm']?.leaderId || ''}
-                                                    onChange={(val: string) => updateSlot('12pm', { leaderId: val })}
-                                                    disabled={isSaving}
-                                                    options={memberOptions}
-                                                    icon={User}
-                                                />
-                                                <button
-                                                    onClick={() => updateSlot('12pm', {})}
-                                                    className="tactile-btn tactile-btn-orange w-full justify-center h-10"
-                                                >
-                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
-                                                </button>
-                                            </div>
-                                        </TactileGlassCard>
-
-                                        {/* Evening Slot */}
-                                        <TactileGlassCard
-                                            title="07:00 PM"
-                                            subtitle="Servicio de Oración"
-                                            className="border-t-2 border-t-tactile-neon-pink/30"
-                                        >
-                                            <div className="space-y-6">
-                                                <div className="flex items-center justify-between">
-                                                    <input
-                                                        type="text"
-                                                        value={currentDaySchedule.slots['evening'].time}
-                                                        disabled={isSaving}
-                                                        onChange={(e) => updateSlot('evening', { time: e.target.value })}
-                                                        className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
-                                                    />
-                                                    <button
-                                                        onClick={() => updateSlot('evening', { language: currentDaySchedule.slots['evening'].language === 'en' ? 'es' : 'en' })}
-                                                        disabled={isSaving}
-                                                        className={cn(
-                                                            "tactile-btn text-[10px] w-12 h-8 justify-center",
-                                                            currentDaySchedule.slots['evening'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
-                                                            isSaving && "opacity-50 cursor-wait"
-                                                        )}
-                                                        title="Alternar Idioma (Inglés/Español)"
-                                                    >
-                                                        {currentDaySchedule.slots['evening'].language === 'en' ? 'EN' : 'ES'}
-                                                    </button>
-                                                </div>
-
-                                                <TactileSelect
-                                                    label="TIPO DE SERVICIO"
-                                                    value={currentDaySchedule.slots['evening'].type || 'regular'}
-                                                    disabled={isSaving}
-                                                    onChange={(val: string) => {
-                                                        const updates: any = { type: val };
-                                                        const isMulti = ['special', 'youth', 'praise', 'married', 'children'].includes(val);
-                                                        if (!isMulti && currentDaySchedule.slots['evening'].leaderIds.length > 1) {
-                                                            updates.leaderIds = [currentDaySchedule.slots['evening'].leaderIds[0]];
-                                                        }
-                                                        updateSlot('evening', updates);
-                                                    }}
-                                                    options={[
-                                                        { value: 'regular', label: 'Regular' },
-                                                        { value: 'youth', label: 'Jóvenes' },
-                                                        { value: 'married', label: 'Casados' },
-                                                        { value: 'children', label: 'Niños' },
-                                                        { value: 'solos', label: 'Solos y Solas' },
-                                                        { value: 'praise', label: 'Servicio de Alabanza' },
-                                                        { value: 'special', label: 'Especial' },
-                                                    ]}
-                                                    icon={Sparkles}
-                                                />
-
-                                                {['youth', 'praise', 'children'].includes(currentDaySchedule.slots['evening'].type) ? (
-                                                    <div className="grid grid-cols-1 gap-4">
-                                                        <TactileSelect
-                                                            label="DIRIGE"
-                                                            value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
-                                                            onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
-                                                            disabled={isSaving}
-                                                            options={memberOptions}
-                                                            icon={User}
-                                                        />
-                                                        <TactileSelect
-                                                            label="DOCTRINA"
-                                                            value={currentDaySchedule.slots['evening'].doctrineLeaderId || ''}
-                                                            onChange={(val: string) => updateSlot('evening', { doctrineLeaderId: val })}
-                                                            disabled={isSaving}
-                                                            options={memberOptions}
-                                                            icon={BookOpen}
-                                                        />
-                                                    </div>
-                                                ) : (
-                                                    <TactileSelect
-                                                        label="ENCARGADO"
-                                                        value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
-                                                        onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
-                                                        disabled={isSaving}
-                                                        options={memberOptions}
-                                                        icon={User}
-                                                    />
-                                                )}
-                                                <button
-                                                    onClick={() => updateSlot('evening', {})}
-                                                    className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
-                                                >
-                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR SERVICIO
-                                                </button>
-                                            </div>
-                                        </TactileGlassCard>
-                                    </div>
+                                            </>
+                                        );
+                                    })()}
                                 </motion.div>
                             )}
 
@@ -863,6 +944,17 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             { value: 2, label: 'Urgente' },
                                                         ]}
                                                         icon={Bell}
+                                                    />
+                                                    <TactileSelect
+                                                        label="CATEGORÍA"
+                                                        value={newAnn.category || 'general'}
+                                                        onChange={(val: string) => setNewAnn({ ...newAnn, category: val })}
+                                                        options={[
+                                                            { value: 'general', label: 'General' },
+                                                            { value: 'choir', label: 'Coro' },
+                                                            { value: 'ministers', label: 'Ministerio' },
+                                                        ]}
+                                                        icon={Filter}
                                                     />
                                                     <div className="grid grid-cols-2 gap-2">
                                                         <TactileInput
@@ -943,6 +1035,12 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         <div className="flex-1">
                                                             <div className="flex items-center gap-3 mb-1">
                                                                 <h4 className="font-bold text-lg">{ann.title}</h4>
+                                                                <span className={cn(
+                                                                    "text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border",
+                                                                    ann.category === 'choir' ? "border-pink-500/30 text-pink-500 bg-pink-500/10" : "border-white/10 opacity-40"
+                                                                )}>
+                                                                    {ann.category || 'general'}
+                                                                </span>
                                                                 <span className="text-[9px] font-black uppercase tracking-widest opacity-40 px-2 py-0.5 border border-white/10 rounded-full">
                                                                     {format(parseISO(ann.timestamp), "d MMM")}
                                                                 </span>
@@ -1947,6 +2045,62 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 })()}
                                             </div>
                                         </TactileGlassCard>
+                                    </div>
+
+                                    <div className="col-span-1 md:col-span-12 space-y-6 mt-12">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-xl font-black italic uppercase tracking-widest text-white">Avisos del Coro</h3>
+                                            <button
+                                                onClick={() => { setActiveTab('anuncios'); setNewAnn({ ...newAnn, category: 'choir' }); }}
+                                                className="tactile-btn tactile-btn-glass text-[9px] px-4 font-black"
+                                            >
+                                                <Plus className="w-3 h-3 mr-2" /> NUEVO AVISO
+                                            </button>
+                                        </div>
+                                        <div className="space-y-4">
+                                            {announcements.filter(a => a.category === 'choir' || a.title.toLowerCase().includes('coro')).length === 0 ? (
+                                                <div className="p-12 border-2 border-dashed border-white/5 rounded-[2.5rem] text-center bg-black/20">
+                                                    <p className="text-tactile-text-sub font-bold uppercase tracking-widest text-xs">No hay avisos específicos para el coro</p>
+                                                </div>
+                                            ) : (
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    {announcements.filter(a => a.category === 'choir' || a.title.toLowerCase().includes('coro')).map((ann) => (
+                                                        <div key={ann.id} className="tactile-glass-panel p-6 flex items-start gap-4 group hover:bg-white/5 transition-colors">
+                                                            <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-500 border border-pink-500/20">
+                                                                <Bell className="w-4 h-4" />
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <h4 className="font-black text-sm uppercase italic truncate">{ann.title}</h4>
+                                                                <p className="text-[11px] text-tactile-text-sub line-clamp-2 mt-1">{ann.content}</p>
+                                                            </div>
+                                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setEditingAnnId(ann.id);
+                                                                        setNewAnn({ ...ann });
+                                                                        setActiveTab('anuncios');
+                                                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                                    }}
+                                                                    className="tactile-btn tactile-btn-glass !rounded-full w-8 h-8 p-0 items-center justify-center hover:text-primary transition-all"
+                                                                >
+                                                                    <Edit2 className="w-3 h-3" />
+                                                                </button>
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        if (confirm('¿Eliminar este aviso de coro?')) {
+                                                                            await deleteAnnouncementFromCloud(ann.id);
+                                                                        }
+                                                                    }}
+                                                                    className="tactile-btn tactile-btn-glass !rounded-full w-8 h-8 p-0 items-center justify-center hover:text-red-500 transition-all"
+                                                                >
+                                                                    <Trash2 className="w-3 h-3" />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </motion.div>
                             )}
