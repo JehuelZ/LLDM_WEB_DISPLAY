@@ -121,8 +121,17 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
 
                         const checkActive = (slotId: '5am' | '9am' | 'evening') => {
                             const slot = (sched?.slots as any)?.[slotId];
-                            const start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
-                            const end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+                            let start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
+                            let end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+
+                            // Special handling for Sunday Dominical (the 9am slot is used for the morning service)
+                            if (slotId === '9am' && isSunToday) {
+                                // If the DB record exists but has default weekday times (9-10 AM)
+                                // we override it to Dominical times (10-12 PM) unless explicitly changed
+                                if (slot?.time === '09:00 AM' || !slot?.time) start = 600; // 10:00 AM
+                                if (slot?.endTime === '10:00 AM' || !slot?.endTime) end = 720; // 12:00 PM
+                            }
+
                             return curMin >= start && curMin <= end;
                         };
 

@@ -56,8 +56,17 @@ export function IglesiaCalendar() {
 
         const sched = monthlySchedule[dateKey];
         const slot = (sched?.slots as any)?.[slotId];
-        const start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
-        const end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+        let start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
+        let end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+
+        // Special handling for Sunday Dominical (the 9am slot is used for the morning service)
+        if (slotId === '9am' && isSunday) {
+            // If the DB record exists but has default weekday times (9-10 AM)
+            // we override it to Dominical times (10-12 PM) unless explicitly changed
+            if (slot?.time === '09:00 AM' || !slot?.time) start = 600; // 10:00 AM
+            if (slot?.endTime === '10:00 AM' || !slot?.endTime) end = 720; // 12:00 PM
+        }
+
         return curMin >= start && curMin <= end;
     };
 
@@ -239,7 +248,7 @@ export function IglesiaCalendar() {
                                             fontFamily: T.fontMontserrat,
                                             boxShadow: '0 4px 10px rgba(0,0,0,0.1)'
                                         }}>
-                                            {hasActive ? 'EN VIVO' : 'HOY'}
+                                            {hasActive ? 'EN CURSO' : 'HOY'}
                                         </div>
                                     )}
                                 </div>

@@ -510,6 +510,8 @@ export const useAppStore = create<AppState>()(
                     const newSchedule: Record<string, DailySchedule> = {};
                     data.forEach((entry: any) => {
                         const sundayType = parseSundayType(entry.topic);
+                        const isSunday = new Date(entry.date + 'T12:00:00').getDay() === 0;
+
                         newSchedule[entry.date] = {
                             id: entry.id,
                             date: entry.date,
@@ -524,8 +526,8 @@ export const useAppStore = create<AppState>()(
                                 '9am': {
                                     consecrationLeaderId: entry.nine_am_consecration_leader_id || '',
                                     doctrineLeaderId: entry.nine_am_doctrine_leader_id || '',
-                                    time: entry.nine_am_time || '09:00 AM',
-                                    endTime: entry.nine_am_end_time || '10:00 AM',
+                                    time: entry.nine_am_time || (isSunday ? '10:00 AM' : '09:00 AM'),
+                                    endTime: entry.nine_am_end_time || (isSunday ? '12:00 PM' : '10:15 AM'),
                                     customLabel: entry.nine_am_custom_label,
                                     language: entry.nine_am_language || 'es',
                                     sundayType: sundayType

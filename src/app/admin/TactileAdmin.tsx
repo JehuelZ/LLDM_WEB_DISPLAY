@@ -7,7 +7,7 @@ import {
     LayoutDashboard, CalendarDays, Sparkles, Megaphone,
     Shirt, Settings, Users, UserPlus, CalendarClock,
     ExternalLink, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Save,
-    Trash2, Upload, Monitor, Sun, X, Shield, Church,
+    Trash2, Upload, Monitor, Sun, X, Shield, Church, Crown,
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
     Camera, Phone, Mail, User, Globe, Languages, Music2,
@@ -107,6 +107,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         messages, loadCloudMessages, markMessageAsRead,
         sendCloudMessage, subscribeToMessages
     } = useAppStore()
+
+    const isSun = parseISO(currentDate).getDay() === 0;
 
     const currentDaySchedule = monthlySchedule[currentDate] || {
         slots: {
@@ -429,41 +431,53 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             )}
                                         </div>
                                         <div className="space-y-4">
-                                            <div className="flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors">
+                                            <button
+                                                onClick={() => setActiveTab('coros')}
+                                                className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
+                                            >
                                                 <TactileIconBox icon={CheckCircle2} color="#3b82f6" />
                                                 <div className="flex-1">
-                                                    <h4 className="font-bold text-lg">Asistencia de Hoy</h4>
+                                                    <h4 className="font-bold text-lg group-hover:text-primary transition-colors">Asistencia de Hoy</h4>
                                                     <p className="text-tactile-text-sub text-sm">Registro de asistencia en curso</p>
                                                 </div>
                                                 <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Normal</div>
-                                            </div>
+                                            </button>
 
-                                            <div className="flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors">
+                                            <button
+                                                onClick={() => setActiveTab('horarios')}
+                                                className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
+                                            >
                                                 <TactileIconBox icon={AlertTriangle} color="#f97316" />
                                                 <div className="flex-1">
-                                                    <h4 className="font-bold text-lg">Programación de Domingo</h4>
+                                                    <h4 className="font-bold text-lg group-hover:text-orange-500 transition-colors">Programación de Domingo</h4>
                                                     <p className="text-tactile-text-sub text-sm">Requiere definir tipo de servicio dominical</p>
                                                 </div>
                                                 <div className="text-[10px] font-black text-orange-500 uppercase tracking-widest">Atención</div>
-                                            </div>
+                                            </button>
 
-                                            <div className="flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors">
+                                            <button
+                                                onClick={() => setActiveTab('coros')}
+                                                className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
+                                            >
                                                 <TactileIconBox icon={Shirt} color="#db2777" />
                                                 <div className="flex-1">
-                                                    <h4 className="font-bold text-lg">Coros y Uniformes</h4>
+                                                    <h4 className="font-bold text-lg group-hover:text-pink-500 transition-colors">Coros y Uniformes</h4>
                                                     <p className="text-tactile-text-sub text-sm">Uniformes de la semana seleccionados correctamente</p>
                                                 </div>
                                                 <div className="text-[10px] font-black text-tactile-text-sub uppercase tracking-widest">Ok</div>
-                                            </div>
+                                            </button>
 
-                                            <div className="flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors">
+                                            <button
+                                                onClick={() => setActiveTab('estilos')}
+                                                className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
+                                            >
                                                 <TactileIconBox icon={Monitor} color="#6366f1" />
                                                 <div className="flex-1">
-                                                    <h4 className="font-bold text-lg">Estado de Pizarra</h4>
+                                                    <h4 className="font-bold text-lg group-hover:text-indigo-400 transition-colors">Estado de Pizarra</h4>
                                                     <p className="text-tactile-text-sub text-sm">Tema "{calendarStyles.template}" activo en el display</p>
                                                 </div>
                                                 <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Online</div>
-                                            </div>
+                                            </button>
                                         </div>
 
                                         <div className="mt-12 flex gap-4">
@@ -602,9 +616,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                         {/* 9 AM Slot */}
                                         <TactileGlassCard
-                                            title="09:00 AM"
-                                            subtitle="Consagración / Doctrina"
-                                            className="border-t-2 border-t-yellow-500/30"
+                                            title={isSun ? "10:00 AM" : "09:00 AM"}
+                                            subtitle={isSun ? "Escuela Dominical" : "Consagración / Doctrina"}
+                                            className={cn("border-t-2", isSun ? "border-t-primary/30 shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)]" : "border-t-yellow-500/30")}
                                         >
                                             <div className="space-y-6">
                                                 <div className="flex items-center justify-between">
@@ -629,29 +643,47 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     </button>
                                                 </div>
 
-                                                <TactileSelect
-                                                    label="CONSAGRACIÓN"
-                                                    value={currentDaySchedule.slots['9am'].consecrationLeaderId}
-                                                    onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
-                                                    disabled={isSaving}
-                                                    options={memberOptions}
-                                                    icon={User}
-                                                />
+                                                {isSun ? (
+                                                    <TactileSelect
+                                                        label="TIPO DE DOMINICAL"
+                                                        value={currentDaySchedule.slots['9am'].sundayType || 'local'}
+                                                        onChange={(val: string) => updateSlot('9am', { sundayType: val })}
+                                                        disabled={isSaving}
+                                                        options={[
+                                                            { value: 'local', label: 'Dominical Local' },
+                                                            { value: 'exchange', label: 'Intercambio Ministerial' },
+                                                            { value: 'broadcast', label: 'Transmisión Dominical' },
+                                                            { value: 'visitors', label: 'Dominical de Visitas' },
+                                                        ]}
+                                                        icon={Crown}
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <TactileSelect
+                                                            label="CONSAGRACIÓN"
+                                                            value={currentDaySchedule.slots['9am'].consecrationLeaderId}
+                                                            onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
+                                                            disabled={isSaving}
+                                                            options={memberOptions}
+                                                            icon={User}
+                                                        />
 
-                                                <TactileSelect
-                                                    label="DOCTRINA"
-                                                    value={currentDaySchedule.slots['9am'].doctrineLeaderId}
-                                                    onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
-                                                    disabled={isSaving}
-                                                    options={memberOptions}
-                                                    icon={Shield}
-                                                />
+                                                        <TactileSelect
+                                                            label="DOCTRINA"
+                                                            value={currentDaySchedule.slots['9am'].doctrineLeaderId}
+                                                            onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
+                                                            disabled={isSaving}
+                                                            options={memberOptions}
+                                                            icon={Shield}
+                                                        />
+                                                    </>
+                                                )}
 
                                                 <button
                                                     onClick={() => updateSlot('9am', {})}
                                                     className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
                                                 >
-                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR CAMBIOS
+                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR {isSun ? 'DOMINICAL' : 'PROGRAMA'}
                                                 </button>
                                             </div>
                                         </TactileGlassCard>
@@ -1735,7 +1767,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 <TactileInput
                                                     label="TÍTULO DEL TEMA"
                                                     value={theme.title || ''}
-                                                    onChange={(e: any) => saveThemeToCloud({ ...theme, title: e.target.value })}
+                                                    onChange={(e: any) => useAppStore.getState().setTheme({ ...theme, title: e.target.value })}
                                                     icon={Sparkles}
                                                 />
                                                 <div className="space-y-4">
@@ -1744,12 +1776,47 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         <input
                                                             className="flex-1 bg-black/40 border border-white/5 rounded-2xl h-12 px-4 text-xs font-bold outline-none"
                                                             value={theme.fileUrl || ''}
-                                                            onChange={(e) => saveThemeToCloud({ ...theme, fileUrl: e.target.value })}
+                                                            onChange={(e) => useAppStore.getState().setTheme({ ...theme, fileUrl: e.target.value })}
                                                             placeholder="https://..."
                                                         />
-                                                        <button className="tactile-btn tactile-btn-glass p-0 w-12 justify-center"><Upload className="w-4 h-4" /></button>
+                                                        <button
+                                                            onClick={async () => {
+                                                                const fileInput = document.createElement('input');
+                                                                fileInput.type = 'file';
+                                                                fileInput.accept = 'image/*';
+                                                                fileInput.onchange = async (e: any) => {
+                                                                    const file = e.target.files[0];
+                                                                    if (file) {
+                                                                        setIsSaving(true);
+                                                                        const url = await uploadAvatar(`theme-${Date.now()}`, file);
+                                                                        if (url) {
+                                                                            useAppStore.getState().setTheme({ ...theme, fileUrl: url });
+                                                                            alert('Imagen subida. No olvides guardar.');
+                                                                        }
+                                                                        setIsSaving(false);
+                                                                    }
+                                                                };
+                                                                fileInput.click();
+                                                            }}
+                                                            className="tactile-btn tactile-btn-glass p-0 w-12 justify-center"
+                                                        >
+                                                            <Upload className="w-4 h-4" />
+                                                        </button>
                                                     </div>
                                                 </div>
+
+                                                <button
+                                                    onClick={async () => {
+                                                        setIsSaving(true);
+                                                        await saveThemeToCloud(theme);
+                                                        setIsSaving(false);
+                                                        alert('✅ Tema guardado en la nube.');
+                                                    }}
+                                                    disabled={isSaving}
+                                                    className="tactile-btn tactile-btn-orange w-full h-12 justify-center"
+                                                >
+                                                    <Save className="w-4 h-4 mr-2" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR TEMA'}
+                                                </button>
                                             </div>
                                         </TactileGlassCard>
 
@@ -1835,20 +1902,49 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     <div className="col-span-1 md:col-span-6 space-y-6">
                                         <TactileGlassCard title="UNIFORMES DE LA SEMANA">
                                             <div className="space-y-4">
-                                                {Object.entries(uniformSchedule).map(([date, uniformId]) => {
-                                                    const uniform = uniforms.find(u => u.id === uniformId);
-                                                    return (
-                                                        <div key={date} className="flex items-center justify-between p-4 bg-black/20 rounded-2xl border border-white/5">
-                                                            <div className="flex flex-col">
-                                                                <span className="text-[9px] font-black text-tactile-text-sub uppercase tracking-widest mb-1">{format(parseISO(date), "EEEE d 'de' MMMM", { locale: es })}</span>
-                                                                <span className="font-black italic text-primary">{uniform?.name || 'No definido'}</span>
+                                                {(() => {
+                                                    const today = new Date(currentDate + 'T12:00:00');
+                                                    const start = new Date(today);
+                                                    const dayOfWeek = today.getDay();
+                                                    const offset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                                                    start.setDate(today.getDate() + offset);
+
+                                                    const weekDays = Array.from({ length: 7 }, (_, i) => {
+                                                        const d = new Date(start);
+                                                        d.setDate(start.getDate() + i);
+                                                        return format(d, 'yyyy-MM-dd');
+                                                    });
+
+                                                    return weekDays.map((date) => {
+                                                        const uniformId = uniformSchedule[date];
+                                                        const uniform = uniforms.find(u => u.id === uniformId);
+                                                        return (
+                                                            <div key={date} className="flex items-center justify-between p-4 bg-black/20 rounded-2xl border border-white/5 relative group/row">
+                                                                <div className="flex flex-col">
+                                                                    <span className="text-[9px] font-black text-tactile-text-sub uppercase font-black tracking-widest mb-1 truncate">
+                                                                        {format(parseISO(date), "EEEE d 'de' MMMM", { locale: es })}
+                                                                    </span>
+                                                                    <span className={cn("font-black italic px-4 py-1.5 rounded-xl border border-white/5 bg-black/40 text-xs", uniform ? "text-primary border-primary/20" : "text-white/20")}>
+                                                                        {uniform?.name || 'VESTUARIO NO DEFINIDO'}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex gap-2 relative">
+                                                                    <select
+                                                                        value={uniformId || ''}
+                                                                        onChange={(e) => saveUniformForDateToCloud(date, e.target.value)}
+                                                                        className="absolute inset-0 opacity-0 cursor-pointer z-10 w-full"
+                                                                    >
+                                                                        <option value="">(Sin Uniforme)</option>
+                                                                        {uniforms.map(u => (
+                                                                            <option key={u.id} value={u.id}>{u.name}</option>
+                                                                        ))}
+                                                                    </select>
+                                                                    <button className="tactile-btn tactile-btn-glass h-9 text-[9px] pointer-events-none group-hover/row:bg-primary group-hover/row:text-black transition-all">CAMBIAR</button>
+                                                                </div>
                                                             </div>
-                                                            <div className="flex gap-2">
-                                                                <button className="tactile-btn tactile-btn-glass h-9 text-[9px]">CAMBIAR</button>
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                })}
+                                                        )
+                                                    });
+                                                })()}
                                             </div>
                                         </TactileGlassCard>
                                     </div>

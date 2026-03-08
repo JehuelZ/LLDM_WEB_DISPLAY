@@ -85,7 +85,7 @@ function AcademicButton({ label, icon: Icon, primary = false, variant, T, isDark
 }
 
 
-function StatusBadge({ label, active = false, isLive = false, T, isDark, language }: { label?: string; active: boolean; isLive: boolean; T: any; isDark: boolean; language?: string }) {
+function StatusBadge({ label, active = false, isLive = false, T, isDark, language, settings }: { label?: string; active: boolean; isLive: boolean; T: any; isDark: boolean; language?: string; settings: any }) {
     return (
         <div style={{
             position: 'absolute',
@@ -113,8 +113,8 @@ function StatusBadge({ label, active = false, isLive = false, T, isDark, languag
                     />
                 )}
                 <span style={{ fontSize: 11, fontWeight: 900, color: (isLive || active) ? '#FFFFFF' : T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat }}>
-                    {label || (isLive ? 'En Vivo / En Curso' : '')}
-                    {isLive && label && ' - EN VIVO'}
+                    {label || (isLive ? 'En Curso' : '')}
+                    {isLive && label && ' - EN CURSO'}
                 </span>
             </div>
             {language === 'en' && (
@@ -261,8 +261,17 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
         };
 
         const slot = (sched?.slots as any)?.[slotId];
-        const start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
-        const end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+        let start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
+        let end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+
+        // Special handling for Sunday Dominical (the 9am slot is used for the morning service)
+        if (slotId === '9am' && isSunToday) {
+            // If the DB record exists but has default weekday times (9-10 AM)
+            // we override it to Dominical times (10-12 PM) unless explicitly changed
+            if (slot?.time === '09:00 AM' || !slot?.time) start = 600; // 10:00 AM
+            if (slot?.endTime === '10:00 AM' || !slot?.endTime) end = 720; // 12:00 PM
+        }
+
         return curMin >= start && curMin <= end;
     };
 
@@ -336,7 +345,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                     boxSizing: 'border-box'
                 }}
             >
-                <StatusBadge label={isLive ? (isTomorrow ? '' : 'EN CURSO') : title} active={isSync} isLive={isLive} T={T} isDark={isDark} language={language} />
+                <StatusBadge label={isLive ? (isTomorrow ? '' : 'EN CURSO') : title} active={isSync} isLive={isLive} T={T} isDark={isDark} language={language} settings={settings} />
 
                 <div style={{ padding: '35px 25px', display: 'flex', flexDirection: 'column', gap: 30, overflow: 'hidden', borderRadius: 40 }}>
                     {/* Time Center */}

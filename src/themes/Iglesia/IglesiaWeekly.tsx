@@ -281,8 +281,17 @@ export function IglesiaWeekly() {
 
         const sched = monthlySchedule[dateKey];
         const slot = (sched?.slots as any)?.[slotId];
-        const start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
-        const end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+        let start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
+        let end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
+
+        // Special handling for Sunday Dominical (the 9am slot is used for the morning service)
+        if (slotId === '9am' && isSunday) {
+            // If the DB record exists but has default weekday times (9-10 AM)
+            // we override it to Dominical times (10-12 PM) unless explicitly changed
+            if (slot?.time === '09:00 AM' || !slot?.time) start = 600; // 10:00 AM
+            if (slot?.endTime === '10:00 AM' || !slot?.endTime) end = 720; // 12:00 PM
+        }
+
         return curMin >= start && curMin <= end;
     };
 
@@ -375,7 +384,7 @@ export function IglesiaWeekly() {
                                                     <TimeBadge time={sched?.slots?.['5am']?.time || "05:00 AM"} T={T} isDark={isDark} />
                                                     {isActive && (
                                                         <motion.div animate={{ opacity: [1, 0.4, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} style={{ position: 'absolute', right: 0, top: 4, background: T.accent, padding: '2px 6px', borderRadius: 4, fontSize: 7, fontWeight: 900, color: '#FFF' }}>
-                                                            LIVE
+                                                            EN CURSO
                                                         </motion.div>
                                                     )}
                                                     <p style={{ fontSize: 7, fontWeight: 900, color: isActive ? T.accent : T.tertiary, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontInter, textAlign: 'right' }}>
@@ -482,7 +491,7 @@ export function IglesiaWeekly() {
                                                             {sched?.slots?.['9am']?.customLabel || getSlotLabel('9am_sunday', settings.language)}
                                                         </p>
                                                         <p style={{ fontSize: 13, fontWeight: 700, color: isActive ? T.accent : ((isDark || isToday) ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat }}>
-                                                            {current.label} {isActive && ' (EN VIVO)'}
+                                                            {current.label} {isActive && ' (EN CURSO)'}
                                                         </p>
                                                     </div>
                                                 </motion.div>
@@ -568,7 +577,7 @@ export function IglesiaWeekly() {
                                                         )}
                                                         {isActive && (
                                                             <motion.div animate={{ opacity: [1, 0.4, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} style={{ background: T.accent, padding: '2px 6px', borderRadius: 4, fontSize: 7, fontWeight: 900, color: '#FFF' }}>
-                                                                LIVE
+                                                                EN CURSO
                                                             </motion.div>
                                                         )}
                                                     </div>
