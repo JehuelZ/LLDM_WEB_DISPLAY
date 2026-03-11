@@ -32,13 +32,13 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/50 backdrop-blur-xl">
             <div className="container flex h-16 items-center justify-between px-4">
                 <Link href="/" className="flex items-center space-x-3 group">
-                    <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/10 overflow-hidden group-hover:border-primary/50 transition-all p-1.5">
+                    <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                         <img
                             src={logoUrl}
-                            className={cn(
-                                "w-full h-full object-contain transition-transform group-hover:scale-110",
-                                isDefaultLogo ? "dark:invert invert-0" : "dark:brightness-110"
-                            )}
+                            className="w-full h-full object-contain"
+                            style={{ 
+                                filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))'
+                            }}
                             alt="Logo"
                         />
                     </div>

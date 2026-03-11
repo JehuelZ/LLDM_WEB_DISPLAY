@@ -1111,7 +1111,7 @@ export const useAppStore = create<AppState>()(
                             displayBgStyle: data.display_bg_style || 'static',
                             displayBgUrl: data.display_bg_url || '/lldm_oficial_logo.svg',
                             displayCustomBgUrl: data.display_custom_bg_url,
-                            churchLogoUrl: data.church_logo_url || '/lldm_oficial_logo.svg',
+                            churchLogoUrl: data.church_logo_url || '/flama-oficial.svg',
                             ministerName: data.minister_name,
                             ministerPhone: data.minister_phone,
                             ministerEmail: data.minister_email,

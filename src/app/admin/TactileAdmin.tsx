@@ -2203,7 +2203,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             { id: 'cristal', label: 'Cristal Forge', icon: Sparkles, desc: 'Neo-Glassmorphism Premium' },
                                             { id: 'neon', label: 'Neon Forge', icon: Radio, desc: 'Retro-Futurista Vibrante' },
                                             { id: 'minimal', label: 'Dark Minimal', icon: Monitor, desc: 'Elegancia y Simplicidad' },
-                                            { id: 'iglesia', label: 'Iglesia', icon: Church, desc: 'Académico y Tradicional' },
+                                            { id: 'iglesia', label: 'Iglesia', icon: Flame, desc: 'Académico y Tradicional' },
                                             { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Atmosférico y Profundo' }
                                         ].map(themeOpt => (
                                             <button
