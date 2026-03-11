@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Church, Sun, ShieldCheck, Globe, Radio, Users, Crown, HeartHandshake, Mic, Check } from 'lucide-react';
+import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Check } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -326,7 +326,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                         <div className="w-12 h-12 rounded-xl overflow-hidden border border-[#3B82F6]/30 flex-shrink-0 bg-[#16171F] flex items-center justify-center">
                                             {detail.avatar
                                                 ? <img src={detail.avatar} alt="" className="w-full h-full object-cover" />
-                                                : <ShieldCheck className="w-5 h-5 text-[#4B5563]" />
+                                                : <Church className="w-5 h-5 text-[#4B5563]" />
                                             }
                                         </div>
                                         <div className="flex flex-col min-w-0">
@@ -414,7 +414,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             <p className="text-[16px] font-semibold text-white leading-tight">{cfg.label}</p>
                             {slot9am?.churchOrigin && type === 'exchange' && (
                                 <p className="text-[11px] text-[#9CA3AF] mt-0.5 flex items-center gap-1">
-                                    <Globe className="w-3 h-3" /> {slot9am.churchOrigin}
+                                    {slot9am.churchOrigin}
                                 </p>
                             )}
                         </div>

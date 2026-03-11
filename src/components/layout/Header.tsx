@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
-import { LogOut, User, LogIn, ShieldCheck, Mail, Shield, Church, Cross, Star, Heart, ClipboardCheck, Music } from 'lucide-react';
+import { LogOut, User, LogIn, Mail, Church, Cross, Star, Heart, ClipboardCheck, Music } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -45,8 +45,8 @@ export function Header() {
                         ) : (
                             <div className="text-primary group-hover:scale-110 transition-transform">
                                 {(() => {
-                                    const icons: Record<string, any> = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
-                                    const Icon = icons[settings.churchIcon] || Shield;
+                                    const icons: Record<string, any> = { church: Church, cross: Cross, star: Star, heart: Heart };
+                                    const Icon = icons[settings.churchIcon] || Church;
                                     return <Icon className="w-6 h-6" />;
                                 })()}
                             </div>

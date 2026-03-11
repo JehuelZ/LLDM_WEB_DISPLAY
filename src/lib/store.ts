@@ -18,7 +18,7 @@ import {
 
 export interface AppSettings {
     themeMode: 'light' | 'dark' | 'system';
-    churchIcon: 'shield' | 'church' | 'cross' | 'star' | 'heart' | 'custom';
+    churchIcon: 'church' | 'cross' | 'star' | 'heart' | 'custom';
     customIconUrl?: string;
     primaryColor: string;
     showMinisterOnDisplay: boolean;
@@ -294,7 +294,7 @@ const INITIAL_USER: UserProfile = {
     status: 'Activo',
     lastActive: 'Hoy',
     stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
-    privileges: ['choir', 'leader']
+    privileges: ['admin', 'choir', 'leader']
 };
 
 export const useAppStore = create<AppState>()(
@@ -315,7 +315,7 @@ export const useAppStore = create<AppState>()(
             },
             settings: {
                 themeMode: 'dark',
-                churchIcon: 'shield',
+                churchIcon: 'custom',
                 primaryColor: '#3b82f6',
                 showMinisterOnDisplay: true,
                 language: 'es',
@@ -780,13 +780,15 @@ export const useAppStore = create<AppState>()(
                                 .update({
                                     role: 'Administrador',
                                     name: JAIRO_NAME,
-                                    roles: ['admin', 'leader']
+                                    roles: ['admin', 'leader'],
+                                    avatar_url: '' // Force empty to avoid Google photo fallback
                                 })
                                 .eq('id', authUser.id);
 
                             existingProfile.role = 'Administrador';
                             existingProfile.name = JAIRO_NAME;
                             existingProfile.roles = ['admin', 'leader'];
+                            existingProfile.avatar_url = '';
                         }
                     }
 
@@ -829,7 +831,7 @@ export const useAppStore = create<AppState>()(
                             name: existingProfile.name,
                             email: existingProfile.email,
                             phone: existingProfile.phone || '',
-                            avatar: existingProfile.avatar_url || userAvatar,
+                            avatar: (existingProfile.avatar_url === null) ? userAvatar : existingProfile.avatar_url,
                             category: existingProfile.category || 'Varon',
                             member_group: existingProfile.member_group,
                             role: existingProfile.role || 'Miembro',

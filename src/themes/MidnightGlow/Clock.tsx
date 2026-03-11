@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { Shield, Church, Cross, Star, Heart } from 'lucide-react';
+import { Flame, Church, Cross, Star, Heart } from 'lucide-react';
 
 export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isMounted: boolean, settings: any }) => {
     // Circumference of the circle for the seconds ring
@@ -55,8 +55,8 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                             ) : (
                                 <div className="text-white">
                                     {(() => {
-                                        const icons = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
-                                        const Icon = (icons as any)[settings.churchIcon] || Shield;
+                                        const icons = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
+                                        const Icon = (icons as any)[settings.churchIcon] || Flame;
                                         return <Icon className="w-10 h-10" strokeWidth={2.5} />;
                                     })()}
                                 </div>

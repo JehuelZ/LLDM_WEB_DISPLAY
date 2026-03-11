@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { LayoutDashboard, Calendar, ClipboardCheck, User, Shield, Music } from 'lucide-react';
+import { LayoutDashboard, Calendar, ClipboardCheck, User, Settings, Music } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -44,7 +44,7 @@ export function MobileNav() {
         }] : []),
         ...(currentUser.role === 'Administrador' ? [{
             label: 'Admin',
-            icon: Shield,
+            icon: Settings,
             href: '/admin',
             active: pathname.startsWith('/admin'),
             color: 'text-primary'

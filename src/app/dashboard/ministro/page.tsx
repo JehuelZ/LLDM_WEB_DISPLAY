@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
-    Shield, Calendar, Users, TrendingUp, BookOpen, Clock,
+    Settings, Calendar, Users, TrendingUp, BookOpen, Clock,
     Bell, Mail, ChevronRight, Activity, Star, Award,
     MessageSquare, CheckCircle2, LayoutDashboard, Database
 } from 'lucide-react';
@@ -105,7 +105,7 @@ export default function MinistroDashboard() {
                         animate={{ opacity: 1, x: 0 }}
                     >
                         <div className="flex items-center gap-3 mb-1">
-                            <Shield className="w-5 h-5 text-primary" />
+                            <Settings className="w-5 h-5 text-primary" />
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Consola de Supervisión Ministerial</span>
                         </div>
                         <h1 className="text-4xl font-black tracking-tighter uppercase italic text-foreground">

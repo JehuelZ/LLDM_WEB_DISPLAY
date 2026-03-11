@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Shield, Church, Cross, Star, Heart } from 'lucide-react';
+import { Flame, Church, Cross, Star, Heart } from 'lucide-react';
 
 export const DarkMinimalClock = ({ now, isMounted, settings }: { now: Date, isMounted: boolean, settings: any }) => {
     const radius = 40;
@@ -47,11 +47,14 @@ export const DarkMinimalClock = ({ now, isMounted, settings }: { now: Date, isMo
                                     src={settings.customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'}
                                     className="w-full h-full object-contain brightness-0 invert"
                                     alt="Church"
+                                    onError={(e) => {
+                                        e.currentTarget.src = '/flama-oficial.svg';
+                                    }}
                                 />
                             ) : (
                                 (() => {
-                                    const icons = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
-                                    const Icon = (icons as any)[settings.churchIcon] || Shield;
+                                    const icons = { shield: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
+                                    const Icon = (icons as any)[settings.churchIcon] || Flame;
                                     return <Icon className="w-7 h-7" strokeWidth={1.8} />;
                                 })()
                             )}

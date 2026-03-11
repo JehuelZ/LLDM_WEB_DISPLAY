@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import {
     FileText, Download, Printer, Filter, Calendar,
     ArrowUpRight, ArrowDownRight, Users, Clock,
-    TrendingUp, Shield, Baby, Music, ChevronDown
+    TrendingUp, UserCheck, Baby, Music, ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -176,7 +176,7 @@ export function MonitorReport() {
                     <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <CardTitle className="text-lg md:text-xl font-black uppercase italic text-white flex items-center gap-3">
-                                <Shield className="w-5 h-5 text-emerald-500" />
+                                <UserCheck className="w-5 h-5 text-emerald-500" />
                                 Analítica Mensual de Grupos ({selectedMonth})
                             </CardTitle>
                             <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Tablas y datos listos para impresión PDF</CardDescription>
@@ -249,7 +249,7 @@ export function MonitorReport() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <Shield className="w-5 h-5 text-emerald-500 inline-block" />
+                                        <UserCheck className="w-5 h-5 text-emerald-500 inline-block" />
                                     </td>
                                 </tr>
                             </tbody>

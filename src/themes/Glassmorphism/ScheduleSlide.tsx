@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { format, parseISO, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { LeaderProfile } from '@/components/LeaderProfile';
-import { CalendarDays, User, Clock as ClockIcon, Shield, ChevronRight, Radio, Globe } from 'lucide-react';
+import { CalendarDays, User, Clock as ClockIcon, Church, ChevronRight, Radio } from 'lucide-react';
 import { getServiceTypeLabel } from '@/lib/display_labels';
 
 export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
@@ -101,7 +101,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     leaderId={schedule?.slots?.['5am']?.leaderId}
                     members={members}
                     colorClass="bg-blue-600"
-                    icon={<Shield className="w-10 h-10" />}
+                    icon={<Church className="w-10 h-10" />}
                     minimal={true}
                     language={schedule?.slots?.['5am']?.language}
                     isActive={isSlotActive('5am')}
@@ -185,7 +185,6 @@ const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colo
             {/* English Badge */}
             {language === 'en' && (
                 <div className="absolute top-8 right-8 z-30 flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-500/20 backdrop-blur-2xl border border-orange-500/50 shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                    <Globe className="w-3.5 h-3.5 text-orange-400" />
                     <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-400 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]">EN</span>
                 </div>
             )}

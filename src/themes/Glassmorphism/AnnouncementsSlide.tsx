@@ -1,7 +1,7 @@
 'use client';
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, User, Phone, Mail, Church, Shield } from 'lucide-react';
+import { Bell, User, Phone, Mail, Church } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn, getActiveAnnouncements } from '@/lib/utils';
 import { CountdownCard } from '@/components/CountdownCard';
@@ -131,7 +131,7 @@ export const GlassmorphismAnnouncements = () => {
                         </div>
 
                         <div className="mt-8 flex items-center gap-3 opacity-20 uppercase tracking-[0.5em] text-[10px] font-black italic">
-                            <Shield className="w-4 h-4" />
+                            <User className="w-4 h-4" />
                             <span>Contacto</span>
                         </div>
                     </motion.div>

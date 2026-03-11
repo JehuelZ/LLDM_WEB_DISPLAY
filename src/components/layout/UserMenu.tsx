@@ -6,7 +6,6 @@ import {
     LogOut,
     User,
     Settings,
-    Shield,
     LayoutDashboard,
     Bell,
     ChevronDown,
@@ -77,7 +76,7 @@ export function UserMenu() {
         }] : []),
         ...(currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.privileges?.includes('admin') ? [{
             label: 'Panel de Ministro',
-            icon: Shield,
+            icon: Settings,
             href: '/dashboard/ministro',
             description: 'Visión general de la iglesia',
             color: 'text-primary',
@@ -96,7 +95,7 @@ export function UserMenu() {
     const adminItems = [
         {
             label: 'Panel Administrativo',
-            icon: Shield,
+            icon: Settings,
             href: '/admin',
             active: currentUser.role === 'Administrador'
         }
@@ -226,7 +225,7 @@ export function UserMenu() {
                                     className="flex items-center gap-3 p-3 rounded-2xl bg-primary/5 hover:bg-primary/10 border border-primary/20 transition-all group"
                                 >
                                     <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
-                                        <Shield className="w-4 h-4 text-primary" />
+                                        <Settings className="w-4 h-4 text-primary" />
                                     </div>
                                     <div>
                                         <p className="text-xs font-black text-primary uppercase italic tracking-tight">Administración</p>

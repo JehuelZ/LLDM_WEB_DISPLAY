@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Search, MapPin, Phone, Mail, MessageSquare, ArrowLeft, Users, Shield, Music, Star } from 'lucide-react';
+import { Search, MapPin, Phone, Mail, MessageSquare, ArrowLeft, Users, Flame, Music, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -85,7 +85,7 @@ export default function DirectoryPage() {
                 <div className="flex flex-wrap gap-2">
                     {[
                         { id: 'all', label: 'Todos', icon: Users },
-                        { id: 'leadership', label: 'Liderazgo', icon: Shield },
+                        { id: 'leadership', label: 'Liderazgo', icon: Flame },
                         { id: 'choir', label: 'Coro', icon: Music },
                         { id: 'responsible', label: 'Responsables', icon: Star },
                     ].map(filter => (

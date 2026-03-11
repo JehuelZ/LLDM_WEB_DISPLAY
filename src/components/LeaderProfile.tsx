@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { User, Shield, Church, Cross, Star, Heart } from 'lucide-react';
+import { User, Church, Cross, Star, Heart } from 'lucide-react';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
 

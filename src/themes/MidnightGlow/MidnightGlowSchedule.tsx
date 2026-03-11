@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Church, Sun, ShieldCheck, Globe, Radio, Users, Crown, HeartHandshake, Mic } from 'lucide-react';
+import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -87,7 +87,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     </div>
                 ) : (
                     <div className="w-11 h-11 shrink-0 rounded-lg border border-[#1E3A6E] bg-[#071020] flex items-center justify-center">
-                        <ShieldCheck className="w-5 h-5 text-[#4F7FFF]/50" />
+                        <Church className="w-5 h-5 text-[#4F7FFF]/50" />
                     </div>
                 )}
                 {/* Text */}
@@ -389,7 +389,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                         } else if (type === 'broadcast') {
                             accent = "from-transparent via-[#EF4444]/50 to-[#EF4444]"; // Red
                             accentText = "text-[#EF4444] border-[#EF4444]/40";
-                            Icon = Globe;
+                            Icon = Radio;
                             bgClass = "bg-[#1a0a0a] border-[#EF4444]/40 shadow-[0_30px_90px_rgba(239,68,68,0.15)]"; // Dark Red Tint
                         } else if (type === 'visitors') {
                             accent = "from-transparent via-[#10B981]/50 to-[#10B981]"; // Emerald
@@ -412,7 +412,6 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                         <div className="absolute inset-x-0 top-0 h-[1px] bg-white/50" />
                                         <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 -translate-x-full animate-shimmer" />
                                         <span className="text-[14px] font-black uppercase tracking-widest flex items-center gap-1 drop-shadow-md">
-                                            <Globe className="w-3 h-3 opacity-50" />
                                             EN
                                         </span>
                                     </div>
@@ -500,7 +499,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                             </h3>
                                             {slot9am.churchOrigin && slot9am.churchOrigin !== 'Por Confirmar...' && (
                                                 <p className="text-[14px] font-bold mt-2 text-[#a855f7] uppercase tracking-[0.2em] flex items-center justify-center gap-2">
-                                                    <Globe className="w-4 h-4" /> {slot9am.churchOrigin}
+                                                    {slot9am.churchOrigin}
                                                 </p>
                                             )}
                                         </>

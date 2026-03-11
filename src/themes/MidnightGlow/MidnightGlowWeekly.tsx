@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Church, Sunrise, Sun, User, Globe, HeartHandshake, Radio, Users, Crown } from 'lucide-react';
+import { Church, Sunrise, Sun, User, HeartHandshake, Radio, Users, Crown } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -377,7 +377,6 @@ export function MidnightGlowWeekly() {
                                                             {slot.title}
                                                         </h3>
                                                         <p className="text-[10px] font-bold mt-1 uppercase tracking-[0.2em] flex items-center justify-center gap-1" style={{ color: topBorder }}>
-                                                            {slot.sundayType === 'exchange' && <Globe className="w-3 h-3" />}
                                                             {slot.subtitle}
                                                         </p>
                                                     </div>

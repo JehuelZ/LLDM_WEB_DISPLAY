@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
-import { Megaphone, Calendar, Quote, AlertCircle, Info, Star, Bookmark, Bell, Crown, Sunrise, Sun, Moon, User, Users, Music, Baby, ShieldCheck, Phone, Mail, Zap, Heart, Facebook, Instagram, Youtube, Globe } from 'lucide-react';
+import { Megaphone, Calendar, Quote, AlertCircle, Info, Star, Bookmark, Bell, Crown, Sunrise, Sun, Moon, User, Users, Music, Baby, Settings, Phone, Mail, Zap, Heart, Facebook, Instagram, Youtube } from 'lucide-react';
 import { BigAcademicTitle, ChurchHeaderBadge } from './BigAcademicTitle';
 import { getIglesiaTokens, neuShadow } from './tokens';
 import { IglesiaClockInline } from './Clock';
@@ -169,7 +169,7 @@ export function IglesiaAnnouncements() {
         { label: 'Jóvenes', icon: Zap, color: T.secondary, criteria: (m: any) => isGroup(m, 'joven') && isRole(m, 'joven'), key: 'jovenes' },
         { label: 'Niños', icon: Baby, color: '#FF9F1C', criteria: (m: any) => (isGroup(m, 'niño') || isGroup(m, 'niña') || m.privileges?.includes('kids_leader')) && isRole(m, 'niño'), key: 'ninos' },
         { label: 'Solos', icon: Heart, color: '#E91E63', criteria: (m: any) => isGroup(m, 'solos') && isRole(m, 'solos'), key: 'solos' },
-        { label: 'Administración', icon: ShieldCheck, color: T.tertiary, criteria: (m: any) => isAdmin(m), key: 'admin' }
+        { label: 'Administración', icon: Settings, color: T.tertiary, criteria: (m: any) => isAdmin(m), key: 'admin' }
     ];
 
     const teamData: any[] = [];
@@ -453,7 +453,7 @@ export function IglesiaAnnouncements() {
                                             { icon: Facebook, url: settings.facebookUrl, color: '#1877F2' },
                                             { icon: Instagram, url: settings.instagramUrl, color: '#E4405F' },
                                             { icon: Youtube, url: settings.youtubeUrl, color: '#FF0000' },
-                                            { icon: Globe, url: settings.customSocialUrl, color: T.accent, label: settings.customSocialLabel }
+                                            { icon: Info, url: settings.customSocialUrl, color: T.accent, label: settings.customSocialLabel }
                                         ].filter(s => s.url).map((s, idx) => (
                                             <div key={idx} style={{
                                                 width: 36, height: 36, borderRadius: '50%',
@@ -490,7 +490,7 @@ export function IglesiaAnnouncements() {
                                     }}
                                 >
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
-                                        <ShieldCheck size={20} style={{ color: T.accent }} />
+                                        <Settings size={20} style={{ color: T.accent }} />
                                         <h5 style={{ fontSize: 13, fontWeight: 800, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontMontserrat, margin: 0 }}>Directorio de Atención</h5>
                                     </div>
 

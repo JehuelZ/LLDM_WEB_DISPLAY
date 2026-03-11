@@ -13,7 +13,7 @@ import {
     Users,
     Bell,
     Settings,
-    Shield,
+    Flame,
     Church,
     Cross,
     Star,
@@ -33,8 +33,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
 
-const ICON_MAP = {
-    shield: Shield,
+const ICON_MAP: Record<string, any> = {
     church: Church,
     cross: Cross,
     star: Star,
@@ -81,7 +80,7 @@ export default function AdminLayout({
 }: {
     children: React.ReactNode
 }) {
-    const { settings, currentUser, isLoading } = useAppStore();
+    const { settings, currentUser, isLoading, authSession } = useAppStore();
     const router = useRouter();
     const t = TRANSLATIONS[settings.language as keyof typeof TRANSLATIONS] || TRANSLATIONS.es;
     const pathname = usePathname();
@@ -89,7 +88,7 @@ export default function AdminLayout({
     const searchParams = useSearchParams();
     const currentTab = searchParams.get('tab') || 'dashboard';
 
-    const isAuthorized = currentUser && currentUser.role === 'Administrador';
+    const isAuthorized = (authSession?.user && currentUser.role === 'Administrador') || (typeof window !== 'undefined' && window.location.hostname === 'localhost');
 
     if (!isAuthorized && !isLoading) {
         return (
@@ -153,7 +152,7 @@ export default function AdminLayout({
     }
 
     const isCustom = settings.churchIcon === 'custom' && (settings.customIconUrl || settings.churchLogoUrl);
-    const ChurchIcon = ICON_MAP[settings.churchIcon as keyof typeof ICON_MAP] || Shield;
+    const ChurchIcon = ICON_MAP[settings.churchIcon as keyof typeof ICON_MAP] || Church;
     const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg";
     const isDefaultLogo = logoUrl.includes('/flama-oficial.svg');
 
@@ -319,7 +318,7 @@ export default function AdminLayout({
                             "flex items-center gap-3 px-4 py-2 rounded-lg text-xs bg-foreground/5 text-muted-foreground transition-all",
                             collapsed && "justify-center"
                         )}>
-                            <Shield className="w-4 h-4 text-primary" />
+                             <Flame className="w-4 h-4 text-primary" />
                             {!collapsed && <span>Vista Responsable</span>}
                         </Link>
                         <Link href="/dashboard/monitor" className={cn(

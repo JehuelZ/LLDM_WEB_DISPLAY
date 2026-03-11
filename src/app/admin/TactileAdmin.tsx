@@ -7,10 +7,10 @@ import {
     LayoutDashboard, CalendarDays, Sparkles, Megaphone,
     Shirt, Settings, Users, UserPlus, CalendarClock,
     ExternalLink, ChevronLeft, ChevronRight, ChevronUp, ChevronDown, Save,
-    Trash2, Upload, Monitor, Sun, X, Shield, Church, Crown,
+    Trash2, Upload, Monitor, Sun, X, Flame, Church, Crown,
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
-    Camera, Phone, Mail, User, Globe, Languages, Music2,
+    Camera, Phone, Mail, User, Languages, Music2,
     Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
@@ -105,7 +105,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         minister, setMinister, signOut,
         createTestAccounts, simulateUser,
         messages, loadCloudMessages, markMessageAsRead,
-        sendCloudMessage, subscribeToMessages
+        sendCloudMessage, subscribeToMessages,
+        loadAllSchedulesFromCloud, loadAnnouncementsFromCloud
     } = useAppStore()
 
     const isSun = parseISO(currentDate).getDay() === 0;
@@ -417,7 +418,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                             </button>
                             <div
                                 className="relative group cursor-pointer"
-                                onClick={() => document.getElementById('global-date-picker')?.showPicker()}
+                                onClick={() => (document.getElementById('global-date-picker') as HTMLInputElement)?.showPicker()}
                             >
                                 <div className="text-2xl font-black italic uppercase tracking-tighter min-w-[280px] text-center px-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary transition-all">
                                     {format(parseISO(currentDate), "EEEE d 'de' MMMM", { locale: es })}
@@ -564,7 +565,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 }}
                                                 className="tactile-btn tactile-btn-orange text-xs px-8"
                                             >
-                                                {isSaving ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : <Globe className="w-4 h-4 mr-2" />}
+                                                {isSaving ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : <Flame className="w-4 h-4 mr-2" />}
                                                 SINCRONIZAR AHORA
                                             </button>
                                             <button className="tactile-btn tactile-btn-glass text-xs px-8">HISTORIAL</button>
@@ -752,7 +753,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
                                                                         disabled={isSaving}
                                                                         options={memberOptions}
-                                                                        icon={Shield}
+                                                                        icon={Flame}
                                                                     />
                                                                 </>
                                                             )}
@@ -1271,11 +1272,13 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     value={settings.churchIcon}
                                                     onChange={(val: any) => saveSettingsToCloud({ churchIcon: val })}
                                                     options={[
-                                                        { value: 'shield', label: 'Escudo' },
                                                         { value: 'church', label: 'Iglesia' },
                                                         { value: 'cross', label: 'Cruz' },
+                                                        { value: 'star', label: 'Estrella' },
+                                                        { value: 'heart', label: 'Corazón' },
+                                                        { value: 'custom', label: 'Oficial (Flama)' },
                                                     ]}
-                                                    icon={Shield}
+                                                    icon={Church}
                                                 />
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
@@ -1557,7 +1560,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             </thead>
                                                             <tbody className="divide-y divide-white/5 bg-black/20">
                                                                 {[
-                                                                    { role: 'Ministro', email: 'ministro_test@lldmrodeo.org', icon: Shield },
+                                                                    { role: 'Ministro', email: 'ministro_test@lldmrodeo.org', icon: Flame },
                                                                     { role: 'Asistencia', email: 'asistencia_test@lldmrodeo.org', icon: CheckCircle2 },
                                                                     { role: 'Coro', email: 'coro_test@lldmrodeo.org', icon: Music2 },
                                                                     { role: 'Jóvenes', email: 'jovenes_test@lldmrodeo.org', icon: Star },
@@ -1832,11 +1835,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         <TactileGlassCard title="NIVEL DE PRIVILEGIOS">
                                             <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-2xl relative overflow-hidden group">
                                                 <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-10 transition-opacity">
-                                                    <Shield className="w-24 h-24" />
+                                                    <Flame className="w-24 h-24" />
                                                 </div>
                                                 <div className="flex items-center gap-4 relative z-10">
                                                     <div className="p-3 bg-primary/20 rounded-xl border border-primary/30">
-                                                        <Shield className="w-5 h-5 text-primary" />
+                                                        <Flame className="w-5 h-5 text-primary" />
                                                     </div>
                                                     <div>
                                                         <p className="text-xs font-black uppercase tracking-widest text-primary">Acceso Maestro</p>
@@ -2554,7 +2557,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     { value: 'Responsable de Asistencia', label: 'Responsable de Asistencia' },
                                                     { value: 'Encargado de Jóvenes', label: 'Encargado de Jóvenes' },
                                                 ]}
-                                                icon={Shield}
+                                                icon={Flame}
                                             />
                                             <div className="col-span-2 space-y-2">
                                                 <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ACERCA DE / BIOGRAFÍA</label>

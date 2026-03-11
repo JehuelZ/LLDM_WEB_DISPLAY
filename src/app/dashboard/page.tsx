@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, ShieldCheck, ArrowRight, User, Mail } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, ArrowRight, User, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';

@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/Header';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useState, useMemo, useEffect } from 'react';
-import { Baby, Shield } from 'lucide-react';
+import { Baby } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -298,7 +298,7 @@ export default function AttendanceDashboard() {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center p-4">
                 <Card className="glass-card max-w-md w-full p-8 text-center border-rose-500/20 bg-rose-500/5">
-                    <Shield className="h-16 w-16 text-rose-500 mx-auto mb-6" />
+                    <AlertCircle className="h-16 w-16 text-rose-500 mx-auto mb-6" />
                     <h2 className="text-2xl font-black uppercase italic text-rose-500 mb-2">Acceso Restringido</h2>
                     <p className="text-slate-400 text-sm leading-relaxed mb-8">
                         Lo sentimos, no tienes los permisos necesarios para acceder al Panel de Asistencia Global.
@@ -550,7 +550,7 @@ export default function AttendanceDashboard() {
                             {/* Group Distribution (Mini Bars) */}
                             <Card className="glass-card bg-amber-500/5 border-amber-500/20 p-5 md:p-6 flex flex-col gap-4">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Shield className="h-4 w-4 text-amber-500" />
+                                    <Users className="h-4 w-4 text-amber-500" />
                                     <span className="text-[10px] font-black uppercase tracking-widest text-amber-500">Porcentaje por Grupo</span>
                                 </div>
 
@@ -674,7 +674,7 @@ export default function AttendanceDashboard() {
                                     activeTab === 'varones' ? "bg-primary text-black shadow-lg shadow-primary/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                                 )}
                             >
-                                <Shield className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones})</span>
+                                <Users className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones})</span>
                             </button>
                             <button
                                 onClick={() => setActiveTab('hermanas')}

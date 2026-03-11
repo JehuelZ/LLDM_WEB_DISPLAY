@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Shield, Users, Calendar, CheckCircle2, AlertCircle, Clock, TrendingUp, Filter, Search } from 'lucide-react';
+import { Settings, Users, Calendar, CheckCircle2, AlertCircle, Clock, TrendingUp, Filter, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -76,7 +76,7 @@ export default function ResponsableDashboard() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h1 className="text-4xl font-black tracking-tight text-foreground uppercase italic flex items-center gap-3">
-                            <Shield className="h-10 w-10 text-primary" />
+                            <Settings className="h-10 w-10 text-primary" />
                             Panel de <span className="text-primary">{currentUser.role === 'Administrador' ? 'Gestión de Grupos' : 'Responsable'}</span>
                         </h1>
                         <p className="text-muted-foreground font-light">Gestión de Grupo y Oración - LLDM RODEO</p>

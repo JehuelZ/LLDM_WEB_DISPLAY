@@ -3,7 +3,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
-import { Shield, Lock, ArrowRight, User, Globe, Sparkles } from 'lucide-react';
+import { Lock, ArrowRight, User, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -160,12 +160,10 @@ export function LoginScreen() {
                             <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-2 leading-none">
                                 LLDM <span className="text-amber-500">RODEO</span>
                             </h1>
-                            <div className="flex items-center gap-3">
-                                <span className="w-6 md:w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
-                                <span className="text-[9px] uppercase font-black tracking-[0.4em] text-amber-500/60 flex items-center gap-2">
+                            <div className="flex justify-center">
+                                <span className="text-[9px] uppercase font-black tracking-[0.4em] text-amber-500/60">
                                     Digital Experience
                                 </span>
-                                <span className="w-6 md:w-12 h-[1px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
                             </div>
                         </div>
 

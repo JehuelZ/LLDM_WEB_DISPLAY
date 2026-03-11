@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Shield, CheckCircle2, TrendingUp, Star } from 'lucide-react';
+import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Settings, CheckCircle2, TrendingUp, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -405,7 +405,7 @@ export default function Home() {
             <Card className="glass-card border-l-4 border-l-emerald-500 h-full bg-emerald-500/5">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center text-lg font-black text-emerald-500 uppercase italic">
-                  <Shield className="mr-2 h-5 w-5" />
+                  <Settings className="mr-2 h-5 w-5" />
                   Mis Responsabilidades
                 </CardTitle>
                 <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Privilegios Asignados</CardDescription>
@@ -624,7 +624,7 @@ export default function Home() {
                   <label className="text-[10px] font-black uppercase text-slate-500 ml-1">¿A quién va dirigido?</label>
                   <div className="grid grid-cols-1 gap-2">
                     {[
-                      { id: 'Administrador', icon: Shield, label: 'Administrador' },
+                      { id: 'Administrador', icon: Settings, label: 'Administrador' },
                       { id: 'Responsable de Asistencia', icon: ClipboardCheck, label: 'Responsable de Asistencia' },
                       { id: 'Ministro a Cargo', icon: Star, label: 'Ministro a Cargo' }
                     ].map((role) => (
@@ -700,7 +700,7 @@ export default function Home() {
                     <CardHeader className="pb-2">
                       <div className="flex justify-between items-start">
                         <div className="flex items-center gap-2">
-                          <Shield className="h-3 w-3 text-primary" />
+                          <Settings className="h-3 w-3 text-primary" />
                           <span className="text-[10px] font-black uppercase tracking-widest text-primary">Respuesta de {msg.senderName}</span>
                         </div>
                         {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}

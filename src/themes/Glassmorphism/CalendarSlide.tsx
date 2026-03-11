@@ -4,7 +4,7 @@ import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { CalendarDays, Shield, Clock, BookOpen, User, Star, Church, Cross, Heart, Radio } from 'lucide-react';
+import { CalendarDays, Clock, BookOpen, User, Star, Church, Cross, Heart, Radio } from 'lucide-react';
 import { LeaderProfile } from '@/components/LeaderProfile';
 
 export const GlassmorphismCalendar = () => {

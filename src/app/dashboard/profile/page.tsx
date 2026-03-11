@@ -11,7 +11,6 @@ import {
     ArrowLeft,
     CheckCircle2,
     TrendingUp,
-    Shield,
     Activity,
     Calendar,
     Star,
@@ -90,7 +89,7 @@ export default function ProfilePage() {
             actions.push({
                 title: 'Panel de Ministro',
                 description: 'Visión general de estadísticas y programación semanal.',
-                icon: Shield,
+                icon: Settings,
                 href: '/dashboard/ministro',
                 color: 'text-primary',
                 bgColor: 'bg-primary/10',
@@ -295,7 +294,7 @@ export default function ProfilePage() {
                                         <h3 className="text-xl font-black uppercase italic tracking-tighter text-white">LLDM <span className="text-primary italic">RODEO</span></h3>
                                     </div>
                                     <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md">
-                                        <Shield className="w-5 h-5 text-primary" />
+                                        <Settings className="w-5 h-5 text-primary" />
                                     </div>
                                 </div>
 
@@ -351,7 +350,7 @@ export default function ProfilePage() {
                                     </div>
                                     <div className="flex items-center gap-4 p-4 rounded-2xl bg-foreground/5 border border-border/10">
                                         <div className="w-10 h-10 rounded-xl bg-orange-400/10 flex items-center justify-center">
-                                            <Shield className="w-5 h-5 text-orange-400" />
+                                            <Settings className="w-5 h-5 text-orange-400" />
                                         </div>
                                         <div className="flex-1">
                                             <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Privilegios</p>

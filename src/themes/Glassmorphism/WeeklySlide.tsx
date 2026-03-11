@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { CalendarDays, BookOpen, User, Church, Shield, Music, Sparkles, Star, Cross, Radio } from 'lucide-react';
+import { CalendarDays, BookOpen, User, Church, Music, Sparkles, Star, Cross, Radio } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { format, addDays, parseISO } from 'date-fns';

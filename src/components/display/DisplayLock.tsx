@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Lock, LogIn, ChevronRight, Activity, Wifi } from 'lucide-react';
+import { Lock, LogIn, ChevronRight, Activity, Wifi } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 

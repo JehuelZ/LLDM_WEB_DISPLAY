@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Sun, Moon, Crown, User, Video, FileText, Zap, Thermometer, Hash, Layout, Clock as ClockIcon, BookOpen, Music, Info, Globe } from 'lucide-react';
+import { Sunrise, Sun, Moon, Crown, User, Video, FileText, Zap, Thermometer, Hash, Layout, Clock as ClockIcon, BookOpen, Music, Info } from 'lucide-react';
 import { BigAcademicTitle, ChurchHeaderBadge } from './BigAcademicTitle';
 import { useAppStore } from '@/lib/store';
 import { format, addDays } from 'date-fns';
@@ -120,8 +120,8 @@ function StatusBadge({ label, active = false, isLive = false, T, isDark, languag
             {language === 'en' && (
                 <div style={{
                     marginTop: 8,
-                    marginRight: 12,
-                    padding: '4px 12px',
+                    marginRight: 10,
+                    padding: '4px 10px',
                     borderRadius: 12,
                     background: '#F97316',
                     display: 'flex',
@@ -129,7 +129,6 @@ function StatusBadge({ label, active = false, isLive = false, T, isDark, languag
                     gap: 6,
                     boxShadow: '0 4px 12px rgba(249, 115, 22, 0.3)',
                 }}>
-                    <Globe style={{ width: 12, height: 12, color: '#FFF' }} />
                     <span style={{ fontSize: 10, fontWeight: 900, color: '#FFF', textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: T.fontMontserrat }}>
                         EN
                     </span>
@@ -236,7 +235,8 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
     const isSun = displayDate.getDay() === 0;
 
     const isSlotActive = (slotId: '5am' | '9am' | 'evening') => {
-        if (isTomorrow) return false;
+        const todayKey = format(currentTime, 'yyyy-MM-dd');
+        if (dateKey !== todayKey) return false;
 
         const curMin = currentTime.getHours() * 60 + currentTime.getMinutes();
         const sched = monthlySchedule?.[dateKey];
@@ -268,7 +268,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
         if (slotId === '9am' && isSunToday) {
             // Expansion: Dominical usually starts between 9 and 10 AM and ends by 12:30 PM
             if (slot?.time?.includes('09:00') || !slot?.time) start = Math.min(start, 540); // 9:00 AM
-            if (slot?.endTime?.includes('12:00') || !slot?.endTime) end = 750; // 12:30 PM
+            if (slot?.endTime?.includes('12:00') || !slot?.endTime) end = 765; // 12:45 PM
         }
 
         return curMin >= start && curMin <= end;

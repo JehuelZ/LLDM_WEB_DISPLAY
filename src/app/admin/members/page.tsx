@@ -12,7 +12,7 @@ import {
     MoreVertical,
     Mail,
     Phone,
-    ShieldCheck,
+    Flame,
     Filter,
     ArrowUpDown,
     CheckCircle2,
@@ -468,7 +468,7 @@ export default function MembersPage() {
                                                             {/* Privileges Assignment Section */}
                                                             <div className="pt-8 border-t border-border/20">
                                                                 <h4 className="text-sm font-black uppercase tracking-widest text-foreground mb-6 flex items-center gap-2 italic">
-                                                                    <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                                                                    <Flame className="w-5 h-5 text-emerald-500" />
                                                                     Asignación de Roles y Privilegios
                                                                 </h4>
                                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -480,7 +480,7 @@ export default function MembersPage() {
                                                                         { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, color: 'text-amber-500', adultOnly: true },
                                                                         { id: 'youth_leader', label: 'Responsable de Jóvenes', icon: Users, color: 'text-indigo-400', adultOnly: true },
                                                                         { id: 'kids_leader', label: 'Maestro / Dirigente de Niños', icon: Baby, color: 'text-cyan-400', adultOnly: true },
-                                                                        { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: ShieldCheck, color: 'text-rose-400', adultOnly: true },
+                                                                        { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: Flame, color: 'text-rose-400', adultOnly: true },
                                                                     ].filter(priv => {
                                                                         const isChild = member.member_group === 'Niños' || member.member_group === 'Niñas';
                                                                         return isChild ? !priv.adultOnly : true;
@@ -697,7 +697,7 @@ export default function MembersPage() {
                                             { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, adultOnly: true },
                                             { id: 'youth_leader', label: 'Responsable de Jóvenes', icon: Users, adultOnly: true },
                                             { id: 'kids_leader', label: 'Maestro / Dirigente de Niños', icon: Baby, adultOnly: true },
-                                            { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: ShieldCheck, adultOnly: true },
+                                            { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: Flame, adultOnly: true },
                                         ].filter(priv => {
                                             const isChild = memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas';
                                             return isChild ? !priv.adultOnly : true;

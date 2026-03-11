@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Shield, Church, Cross, Star, Heart } from 'lucide-react';
+import { Flame, Church, Cross, Star, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const GlassmorphismClock = ({ now, isMounted, settings }: { now: Date, isMounted: boolean, settings: any }) => {
@@ -30,8 +30,8 @@ export const GlassmorphismClock = ({ now, isMounted, settings }: { now: Date, is
                         ) : (
                             <div className="text-white filter drop-shadow-[0_0_15px_rgba(255,255,255,1)]">
                                 {(() => {
-                                    const icons = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
-                                    const Icon = (icons as any)[settings.churchIcon] || Shield;
+                                    const icons = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
+                                    const Icon = (icons as any)[settings.churchIcon] || Flame;
                                     return <Icon className="w-9 h-9" strokeWidth={2.5} />;
                                 })()}
                             </div>

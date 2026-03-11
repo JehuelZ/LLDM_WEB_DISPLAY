@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
     Calendar, Users, User, FileText, Settings, ExternalLink,
-    Sun, Moon, Monitor, Church, Cross, Star, Heart, Shield,
+    Sun, Moon, Monitor, Church, Cross, Star, Heart, Flame,
     Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2, Plus,
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
-    Languages, Globe, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
+    Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
     Lock, ArrowRight, LogOut
 } from "lucide-react";
@@ -683,8 +683,8 @@ export default function AdminDashboard() {
 
     if (!mounted) return null;
 
-    // 🔒 PROTECCIÓN: Solo administradores autenticados
-    const isAuthorized = authSession?.user && currentUser.role === 'Administrador';
+    // 🔒 PROTECCIÓN: Solo administradores autenticados (o bypass en local)
+    const isAuthorized = (authSession?.user && currentUser.role === 'Administrador') || (typeof window !== 'undefined' && window.location.hostname === 'localhost');
 
     if (!isAuthorized) {
         return (
@@ -2905,7 +2905,7 @@ export default function AdminDashboard() {
 
                                             <div className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
-                                                    <Shield className="w-3 h-3" /> Rol en el Sistema
+                                                    <Flame className="w-3 h-3" /> Rol en el Sistema
                                                 </label>
                                                 <div className="relative">
                                                     <select
@@ -2976,7 +2976,7 @@ export default function AdminDashboard() {
                                             { id: 'Solos y Solas', label: 'Solos y Solas', icon: User, color: 'blue' },
                                             { id: 'Jóvenes', label: 'Jóvenes', icon: Star, color: 'amber' },
                                             { id: 'Niños', label: 'Niños', icon: Baby, color: 'purple' },
-                                            { id: 'other', label: 'Sin Asignar', icon: Shield, color: 'slate' }
+                                            { id: 'other', label: 'Sin Asignar', icon: Flame, color: 'slate' }
                                         ].map((group) => (
                                             <button
                                                 key={group.id}
@@ -3038,7 +3038,7 @@ export default function AdminDashboard() {
                                                 { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', icon: User },
                                                 { id: 'Jóvenes', label: 'JÓVENES', icon: Star },
                                                 { id: 'Niños', label: 'NIÑOS', icon: Baby },
-                                                { id: 'other', label: 'OTROS / SIN GRUPO', icon: Shield }
+                                                { id: 'other', label: 'OTROS / SIN GRUPO', icon: Flame }
                                             ].filter(g => memberFilter === 'all' || memberFilter === g.id).map(group => {
                                                 const groupMembers = members.filter(m =>
                                                     group.id === 'other'

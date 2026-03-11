@@ -2,8 +2,8 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import {
-    Sunrise, Sun, Moon, Church, ShieldCheck,
-    Radio, Users, Crown, HeartHandshake, Zap, Globe
+    Sunrise, Sun, Moon, Church, Settings,
+    Radio, Users, Crown, HeartHandshake, Mic, LogIn, ChevronRight, Activity, Wifi, Zap
 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format } from 'date-fns';
@@ -118,9 +118,7 @@ const SquareCard = ({ children, accent, isLive, index, language }: {
     >
         {/* English Badge */}
         {language === 'en' && (
-            <div className="absolute top-24 right-5 z-20 flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-                style={{ background: 'rgba(249, 115, 22, 0.2)', border: '1px solid rgba(249, 115, 22, 0.5)' }}>
-                <Globe className="w-3 h-3 text-orange-400" />
+            <div className="absolute top-6 right-6 z-30 flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-500/10 backdrop-blur-md border border-orange-500/30">
                 <span className="text-[10px] font-black uppercase tracking-widest text-orange-400">EN</span>
             </div>
         )}
@@ -406,7 +404,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                                 const types = eveningType === 'children' ? ['Consagración', 'Doctrina'] : ['Director', 'Asistente'];
                                 return m.name
                                     ? <PersonRow key={i} label={is14th && types[i].includes('Doctrina') ? 'Historia' : types[i]} name={m.name} avatar={m.avatar}
-                                        icon={i === 0 ? <Church /> : <ShieldCheck />}
+                                        icon={i === 0 ? <Church /> : <Settings />}
                                         accent={i === 0 ? AEve : T.secondary} />
                                     : <EmptyRow key={i} label={is14th && types[i].includes('Doctrina') ? 'Historia' : types[i]} icon={<Church />} T={T} />;
                             })
