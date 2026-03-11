@@ -151,9 +151,7 @@ export default function AdminLayout({
         );
     }
 
-    const isCustom = settings.churchIcon === 'custom' && (settings.customIconUrl || settings.churchLogoUrl);
-    const ChurchIcon = ICON_MAP[settings.churchIcon as keyof typeof ICON_MAP] || Church;
-    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg";
+    const logoUrl = settings.churchLogoUrl || settings.customIconUrl || "/flama-oficial.svg";
     const isDefaultLogo = logoUrl.includes('/flama-oficial.svg');
 
     return (
@@ -166,19 +164,15 @@ export default function AdminLayout({
                 <div className={cn("p-6 flex items-center shrink-0", collapsed ? "justify-center" : "justify-between")}>
                     {!collapsed && (
                         <div className="flex items-center gap-3 px-2 py-1 overflow-hidden whitespace-nowrap">
-                            <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0 overflow-hidden">
-                                {isCustom || isDefaultLogo ? (
-                                    <img
-                                        src={logoUrl}
-                                        alt="Church Logo"
-                                        className={cn(
-                                            "w-full h-full object-cover",
-                                            isDefaultLogo ? "dark:invert invert-0" : "dark:brightness-110"
-                                        )}
-                                    />
-                                ) : (
-                                    <ChurchIcon className="w-5 h-5 text-primary" />
-                                )}
+                            <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0 overflow-hidden p-1.5">
+                                <img
+                                    src={logoUrl}
+                                    alt="Church Logo"
+                                    className={cn(
+                                        "w-full h-full object-contain",
+                                        isDefaultLogo ? "dark:invert invert-0" : "dark:brightness-110"
+                                    )}
+                                />
                             </div>
                             <h1 className="text-xl font-black text-foreground tracking-tighter uppercase italic">LLDM<span className="text-primary italic">RODEO</span></h1>
                         </div>

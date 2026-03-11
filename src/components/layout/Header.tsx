@@ -32,25 +32,15 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b border-border bg-background/50 backdrop-blur-xl">
             <div className="container flex h-16 items-center justify-between px-4">
                 <Link href="/" className="flex items-center space-x-3 group">
-                    <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/10 overflow-hidden group-hover:border-primary/50 transition-all">
-                        {isCustom || isDefaultLogo ? (
-                            <img
-                                src={logoUrl}
-                                className={cn(
-                                    "w-full h-full object-contain p-1.5 transition-transform group-hover:scale-110",
-                                    isDefaultLogo ? "dark:invert invert-0" : "dark:brightness-110"
-                                )}
-                                alt="Logo"
-                            />
-                        ) : (
-                            <div className="text-primary group-hover:scale-110 transition-transform">
-                                {(() => {
-                                    const icons: Record<string, any> = { church: Church, cross: Cross, star: Star, heart: Heart };
-                                    const Icon = icons[settings.churchIcon] || Church;
-                                    return <Icon className="w-6 h-6" />;
-                                })()}
-                            </div>
-                        )}
+                    <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/10 overflow-hidden group-hover:border-primary/50 transition-all p-1.5">
+                        <img
+                            src={logoUrl}
+                            className={cn(
+                                "w-full h-full object-contain transition-transform group-hover:scale-110",
+                                isDefaultLogo ? "dark:invert invert-0" : "dark:brightness-110"
+                            )}
+                            alt="Logo"
+                        />
                     </div>
                     <span className="font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground">
                         LLDM <span className="text-primary italic">RODEO</span>

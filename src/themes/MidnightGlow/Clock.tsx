@@ -46,21 +46,11 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                     <div className="absolute inset-2 rounded-full bg-[#0D1B3E] border-[2px] border-[#4F7FFF]/30 flex items-center justify-center shadow-[inset_0_0_20px_rgba(79,127,255,0.3),0_0_20px_rgba(79,127,255,0.2)]">
                         <div className="absolute inset-0 bg-gradient-to-br from-[#4F7FFF]/20 to-transparent rounded-full" />
                         <div className="w-14 h-14 relative z-10 flex items-center justify-center filter drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
-                            {settings.churchIcon === 'custom' ? (
-                                <img
-                                    src={settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg"}
-                                    className="w-full h-full object-contain brightness-0 invert"
-                                    alt="Church"
-                                />
-                            ) : (
-                                <div className="text-white">
-                                    {(() => {
-                                        const icons = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
-                                        const Icon = (icons as any)[settings.churchIcon] || Flame;
-                                        return <Icon className="w-10 h-10" strokeWidth={2.5} />;
-                                    })()}
-                                </div>
-                            )}
+                            <img
+                                src={settings.churchLogoUrl || settings.customIconUrl || "/flama-oficial.svg"}
+                                className="w-full h-full object-contain brightness-0 invert"
+                                alt="Church"
+                            />
                         </div>
                     </div>
                 </div>

@@ -1272,13 +1272,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     value={settings.churchIcon}
                                                     onChange={(val: any) => saveSettingsToCloud({ churchIcon: val })}
                                                     options={[
-                                                        { value: 'church', label: 'Iglesia' },
-                                                        { value: 'cross', label: 'Cruz' },
-                                                        { value: 'star', label: 'Estrella' },
-                                                        { value: 'heart', label: 'Corazón' },
                                                         { value: 'custom', label: 'Oficial (Flama)' },
                                                     ]}
-                                                    icon={Church}
+                                                    icon={Flame}
                                                 />
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
