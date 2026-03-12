@@ -1,9 +1,0 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Símbolo: Santa Cena / Copa de Bendición -->
-  <path d="M150 150 Q256 120 362 150 L340 300 Q256 340 172 300 Z" fill="white" />
-  <path d="M236 300 L236 420 L180 420 L180 450 L332 450 L332 420 L276 420 L276 300" fill="white" />
-  <path d="M140 160 Q256 130 372 160" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.5" />
-  <!-- Trigo lateral -->
-  <path d="M120 450 Q100 350 140 250" stroke="white" stroke-width="3" fill="none" opacity="0.4" />
-  <path d="M392 450 Q412 350 372 250" stroke="white" stroke-width="3" fill="none" opacity="0.4" />
-</svg>

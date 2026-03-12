@@ -52,7 +52,7 @@ export default function MinistroDashboard() {
 
     // Cálculo de estadísticas de la iglesia
     const stats = useMemo(() => {
-        const totalMembers = members.length;
+        const kidsCount = members.filter(m => m.category === 'Niño').length;
         const activeMembers = members.filter(m => m.status === 'Activo').length;
 
         // Distribución por grupos
@@ -65,6 +65,7 @@ export default function MinistroDashboard() {
 
         return {
             total: totalMembers,
+            kids: kidsCount,
             active: activeMembers,
             groups: groupCounts,
             attendanceRate: "88%"
@@ -137,13 +138,19 @@ export default function MinistroDashboard() {
                 </div>
 
                 {/* Resumen de la Iglesia (Doughnuts/Cartas) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <StatCard
                         icon={Users}
                         label="Membresía Total"
                         value={stats.total}
                         trend="+5 este mes"
                         color="text-blue-500"
+                    />
+                    <StatCard
+                        icon={Star}
+                        label="Total Niños"
+                        value={stats.kids}
+                        color="text-orange-500"
                     />
                     <StatCard
                         icon={CheckCircle2}

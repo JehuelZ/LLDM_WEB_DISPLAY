@@ -459,7 +459,18 @@ export default function CoroDashboard() {
                                 <div className="relative w-32 h-32 flex items-center justify-center">
                                     <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                                         <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-foreground/5" />
-                                        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="251.2" strokeDashoffset={251.2 * (1 - attRate / 100)} strokeLinecap="round" className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                        <circle 
+                                            cx="50" 
+                                            cy="50" 
+                                            r="40" 
+                                            stroke="currentColor" 
+                                            strokeWidth="8" 
+                                            fill="transparent" 
+                                            strokeDasharray="251.2" 
+                                            strokeDashoffset={251.2 * (1 - (isNaN(attRate) ? 0 : attRate) / 100)} 
+                                            strokeLinecap="round" 
+                                            className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" 
+                                        />
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <span className="text-2xl font-black text-foreground">{attRate}%</span>

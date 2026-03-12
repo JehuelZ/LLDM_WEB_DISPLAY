@@ -201,7 +201,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         sendCloudMessage, subscribeToMessages,
         loadAllSchedulesFromCloud, loadAnnouncementsFromCloud,
         attendanceRecords, loadAttendanceFromCloud, saveAttendanceToCloud,
-        loadWeeklyAttendanceStats
+        loadWeeklyAttendanceStats,
+        loadMonthlyGlobalAttendanceStats,
+        showNotification
     } = useAppStore()
 
     const isSun = parseISO(currentDate).getDay() === 0;
@@ -801,7 +803,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         loadUniformsFromCloud()
                                                     ]);
                                                     setIsSaving(false);
-                                                    alert('✅ Datos sincronizados con la nube');
+                                                    showNotification('Datos sincronizados con la nube', 'success');
                                                 }}
                                                 className="tactile-btn tactile-btn-orange text-xs px-8"
                                             >
@@ -849,18 +851,49 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     </div>
                                                 </div>
 
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div className="bg-black/40 p-4 rounded-3xl border border-white/[0.03]">
-                                                        <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Total Miembros</p>
-                                                        <div className="text-2xl font-black italic">{members.length}</div>
-                                                    </div>
-                                                    <div className="bg-black/40 p-4 rounded-3xl border border-white/[0.03]">
-                                                        <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Promedio Asis.</p>
-                                                        <div className="text-2xl font-black italic text-primary">
-                                                            {monthlyGlobalStats.length > 0 
-                                                                ? `${Math.round(monthlyGlobalStats.reduce((acc, d) => acc + d.percentage, 0) / monthlyGlobalStats.length)}%`
-                                                                : '0%'
-                                                            }
+                                                <div className="grid grid-cols-1 gap-4">
+                                                    <div className="bg-black/40 p-6 rounded-3xl border border-white/[0.03] flex items-center justify-between group hover:border-primary/20 transition-all">
+                                                        <div>
+                                                            <p className="text-[10px] font-black uppercase text-tactile-text-sub mb-1 tracking-widest">Total Miembros</p>
+                                                            <div className="text-4xl font-black italic text-white drop-shadow-lg">{members.length}</div>
+                                                            <div className="flex items-center gap-1.5 mt-2">
+                                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
+                                                                <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">
+                                                                    {members.filter(m => m.status === 'Activo').length} Activos
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="relative w-20 h-20 shrink-0">
+                                                            <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.2)]" viewBox="0 0 100 100">
+                                                                <defs>
+                                                                    <linearGradient id="globalProgressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                                        <stop offset="0%" stopColor="var(--primary)" />
+                                                                        <stop offset="100%" stopColor="#8b5cf6" />
+                                                                    </linearGradient>
+                                                                </defs>
+                                                                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
+                                                                <motion.circle 
+                                                                    cx="50" cy="50" r="42" fill="none" stroke="url(#globalProgressGrad)" strokeWidth="10" 
+                                                                    strokeDasharray="263.89" 
+                                                                    initial={{ strokeDashoffset: 263.89 }}
+                                                                    animate={{ 
+                                                                        strokeDashoffset: 263.89 - (263.89 * (monthlyGlobalStats.length > 0 
+                                                                            ? (monthlyGlobalStats.reduce((acc, d) => acc + d.percentage, 0) / monthlyGlobalStats.length) 
+                                                                            : 0) / 100) 
+                                                                    }}
+                                                                    transition={{ duration: 2, ease: "circOut" }}
+                                                                    className="drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]" 
+                                                                    strokeLinecap="round"
+                                                                />
+                                                            </svg>
+                                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                                <span className="text-sm font-black italic text-white">
+                                                                    {monthlyGlobalStats.length > 0 
+                                                                        ? `${Math.round(monthlyGlobalStats.reduce((acc, d) => acc + d.percentage, 0) / monthlyGlobalStats.length)}%`
+                                                                        : '0%'
+                                                                    }
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -878,7 +911,14 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             <div className="w-2 h-2 rounded-full bg-pink-500" />
                                                             <span className="text-[9px] font-black uppercase text-tactile-text-sub">Mujeres</span>
                                                         </div>
-                                                        <span className="text-xs font-black italic">{members.filter(m => m.gender === 'Hermana').length}</span>
+                                                        <span className="text-xs font-black italic">{members.filter(m => m.gender === 'Hermana' && m.category !== 'Niño').length}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 rounded-full bg-orange-500" />
+                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Niños / Niñas</span>
+                                                        </div>
+                                                        <span className="text-xs font-black italic">{members.filter(m => m.category === 'Niño').length}</span>
                                                     </div>
                                                     <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
                                                         <div className="flex items-center gap-2">
@@ -1000,22 +1040,35 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     
                                                     return (
                                                         <>
-                                                            <div className="relative w-28 h-28">
-                                                                <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                                                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-white/5" />
+                                                            <div className="relative w-32 h-32">
+                                                                <div className="absolute inset-2 rounded-full border border-white/5 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+                                                                <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" viewBox="0 0 100 100">
+                                                                    <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
                                                                     <motion.circle 
-                                                                        cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="10" strokeDasharray="282.7" 
-                                                                        initial={{ strokeDashoffset: 282.7 }}
-                                                                        animate={{ strokeDashoffset: 282.7 - (282.7 * percent / 100) }}
-                                                                        className="text-primary" strokeLinecap="round"
+                                                                        cx="50" cy="50" r="44" fill="none" stroke="url(#globalProgressGrad)" strokeWidth="10" strokeDasharray="276.46" 
+                                                                        initial={{ strokeDashoffset: 276.46 }}
+                                                                        animate={{ strokeDashoffset: 276.46 - (276.46 * percent / 100) }}
+                                                                        transition={{ duration: 1.5, ease: "backOut" }}
+                                                                        className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.6)]" strokeLinecap="round"
                                                                     />
                                                                 </svg>
-                                                                <div className="absolute inset-0 flex flex-col items-center justify-center rotate-0">
-                                                                    <span className="text-2xl font-black italic text-white">{percent}%</span>
-                                                                    <span className="text-[9px] font-black text-white/30 mt-1">{count}/{members.length}</span>
+                                                                <div className="absolute inset-0 flex flex-col items-center justify-center rotate-0 z-10">
+                                                                    <span className="text-3xl font-black italic text-white drop-shadow-md">{percent}%</span>
+                                                                    <div className="flex items-center gap-1 mt-1 px-2 py-0.5 bg-white/5 rounded-full border border-white/10">
+                                                                        <span className="text-[8px] font-black text-white/50">{count}</span>
+                                                                        <span className="text-[7px] font-bold text-white/20">/</span>
+                                                                        <span className="text-[8px] font-black text-white/50">{members.length}</span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <p className="text-[9px] font-black uppercase text-primary tracking-[0.2em]">Presentes Ahora</p>
+                                                            <div className="flex flex-col items-center gap-1 mt-4">
+                                                                <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em] italic">Asistencia en Vivo</p>
+                                                                <div className="flex gap-1">
+                                                                    <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                                    <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                                    <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                                </div>
+                                                            </div>
                                                         </>
                                                     );
                                                 })()}
@@ -1615,6 +1668,25 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     exit={{ opacity: 0, y: -20 }}
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
+                                    <div className="col-span-1 md:col-span-12 grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center">
+                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Membresía Total</p>
+                                            <div className="text-3xl font-black italic tracking-tighter text-white">{members.length}</div>
+                                        </div>
+                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center border-l-2 border-l-blue-500">
+                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Varones Adultos</p>
+                                            <div className="text-3xl font-black italic tracking-tighter text-blue-400">{members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length}</div>
+                                        </div>
+                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center border-l-2 border-l-pink-500">
+                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Hermanas Adultas</p>
+                                            <div className="text-3xl font-black italic tracking-tighter text-pink-400">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</div>
+                                        </div>
+                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center border-l-2 border-l-orange-500">
+                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Niños / Niñas</p>
+                                            <div className="text-3xl font-black italic tracking-tighter text-orange-400">{members.filter(m => m.category === 'Niño').length}</div>
+                                        </div>
+                                    </div>
+
                                     <div className="col-span-1 md:col-span-12 flex items-center justify-between mb-4">
                                         <div className="flex items-center gap-6">
                                             <h2 className="text-4xl font-black italic uppercase tracking-tighter">Directorio <span className="text-tactile-text-sub">Local</span></h2>
@@ -1666,9 +1738,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     <div className="col-span-1 md:col-span-9 grid grid-cols-1 lg:grid-cols-2 gap-4">
                                         {members
                                             .filter(m => {
-                                                const searchLower = searchTerm.toLowerCase();
-                                                const nameMatch = (m.name || '').toLowerCase().includes(searchLower);
-                                                const emailMatch = (m.email || '').toLowerCase().includes(searchLower);
+                                                const normalize = (text: string) => (text || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                                                const searchNormalized = normalize(searchTerm);
+                                                const nameMatch = normalize(m.name).includes(searchNormalized);
+                                                const emailMatch = normalize(m.email).includes(searchNormalized);
                                                 const matchesSearch = nameMatch || emailMatch;
 
                                                 if (!matchesSearch) return false;
@@ -2102,10 +2175,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                                 onClick={async () => {
                                                                                     const success = await simulateUser(testUser.email);
                                                                                     if (success) {
-                                                                                        alert(`Simulando sesión como: ${testUser.role}`);
+                                                                                        showNotification(`Simulando sesión como: ${testUser.role}`, 'info');
                                                                                         window.location.href = '/dashboard';
                                                                                     } else {
-                                                                                        alert('La cuenta aún no existe. Pulsa "GENERAR CUENTAS" primero.');
+                                                                                        showNotification('La cuenta aún no existe. Pulsa "GENERAR CUENTAS" primero.', 'warning');
                                                                                     }
                                                                                 }}
                                                                                 className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1 rounded-full font-black uppercase tracking-tighter transition-all"
@@ -2222,7 +2295,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                                         });
                                                                                         setReplyText('');
                                                                                         setReplyingTo(null);
-                                                                                        alert('Respuesta enviada.');
+                                                                                        showNotification('Respuesta enviada.', 'success');
                                                                                     }}
                                                                                     className="px-8 h-12 bg-primary text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
                                                                                 >
@@ -2341,7 +2414,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         setIsSaving(true);
                                                         const success = await updateProfileInCloud(currentUser.id, currentUser);
                                                         if (success) {
-                                                            alert('Perfil actualizado correctamente en la nube');
+                                                            showNotification('Perfil actualizado correctamente en la nube', 'success');
                                                         }
                                                         setIsSaving(false);
                                                     }}
@@ -2417,7 +2490,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         const url = await uploadAvatar(`theme-${Date.now()}`, file);
                                                                         if (url) {
                                                                             useAppStore.getState().setTheme({ ...theme, fileUrl: url });
-                                                                            alert('Imagen subida. No olvides guardar.');
+                                                                            showNotification('Imagen subida. No olvides guardar.', 'info');
                                                                         }
                                                                         setIsSaving(false);
                                                                     }
@@ -2436,7 +2509,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         setIsSaving(true);
                                                         await saveThemeToCloud(theme);
                                                         setIsSaving(false);
-                                                        alert('✅ Tema guardado en la nube.');
+                                                        showNotification('Tema guardado en la nube.', 'success');
                                                     }}
                                                     disabled={isSaving}
                                                     className="tactile-btn tactile-btn-orange w-full h-12 justify-center"
@@ -3140,7 +3213,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <button
                                                 onClick={async () => {
                                                     if (!newMemberData.name) {
-                                                        alert("El nombre es obligatorio");
+                                                        showNotification("El nombre es obligatorio", 'error');
                                                         return;
                                                     }
                                                     setIsSaving(true);
@@ -3280,6 +3353,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             const url = await uploadAvatar(idForUpload, file);
                                             if (url) {
                                                 setNewMemberData({ ...newMemberData, avatar: url });
+                                                // Persistencia inmediata para miembros existentes para mejorar la experiencia de usuario
+                                                if (editingMember) {
+                                                    await updateProfileInCloud(editingMember.id, { avatar: url });
+                                                    await loadMembersFromCloud(); // Recargar para sincronizar lista
+                                                }
                                             }
                                         } else {
                                             const file = dataURLtoFile(cropped, `minister-responsible.jpg`);

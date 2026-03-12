@@ -267,6 +267,7 @@ interface AppState {
     saveAttendanceToCloud: (records: AttendanceRecord[]) => Promise<void>;
     loadWeeklyAttendanceStats: () => Promise<any[]>;
     loadMonthlyGlobalAttendanceStats: () => Promise<any[]>;
+    loadDetailedWeeklyStats: (days: string[]) => Promise<any[]>;
 
     signInWithGoogle: () => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
@@ -278,6 +279,10 @@ interface AppState {
     subscribeToSettings: () => () => void;
     setAuthSession: (session: any) => void;
     createTestAccounts: () => Promise<void>;
+
+    notification: { message: string, type: 'success' | 'error' | 'warning' | 'info' } | null;
+    showNotification: (message: string, type: 'success' | 'error' | 'warning' | 'info') => void;
+    hideNotification: () => void;
     simulateUser: (email: string) => Promise<boolean>;
 }
 
@@ -651,10 +656,18 @@ export const useAppStore = create<AppState>()(
                 const { error } = await supabase
                     .from('profiles')
                     .update(dbUpdates)
-                    .eq('id', userId);
+                    .eq('id', userId)
+                    .select(); // Re-select to confirm success under RLS
 
                 if (error) {
-                    console.error('Error updating profile:', error.message, error.details, error.hint);
+                    console.error('CRITICAL: Profile Update Failed:', error.message, error.details);
+                    
+                    // Specific handling for RLS violation - usually means session sync issue
+                    if (error.message.includes('row-level security') || error.code === '42501') {
+                        alert("🔴 Error de Seguridad: No tienes permisos persistentes para editar este perfil. Por favor, CIERRA SESIÓN y vuelve a entrar para sincronizar tus credenciales de Administrador.");
+                    } else {
+                        alert(`Error al guardar: ${error.message}`);
+                    }
                     return false;
                 }
 
@@ -762,11 +775,19 @@ export const useAppStore = create<AppState>()(
 
                 if (existingProfile) {
                     // Si el perfil existe pero no tiene el ID de autenticación vinculado, lo vinculamos
-                    if (existingProfile.id !== authUser.id) {
-                        await supabase
+                    // Usamos auth_user_id para el vínculo, NO el id primario para evitar colisiones y errores de FK
+                    if (existingProfile.auth_user_id !== authUser.id) {
+                        const { error: linkError } = await supabase
                             .from('profiles')
-                            .update({ id: authUser.id })
-                            .eq('email', existingProfile.email);
+                            .update({ 
+                                auth_user_id: authUser.id,
+                                is_pre_registered: false // Ya no es un pre-registro una vez vinculado
+                            })
+                            .eq('id', existingProfile.id);
+                        
+                        if (linkError) {
+                            console.error("Error linking profile to auth account:", linkError.message);
+                        }
                     }
 
                     // Si es el correo del Administrador Maestro, aseguramos privilegios
@@ -1348,7 +1369,14 @@ export const useAppStore = create<AppState>()(
                 };
             },
 
-            setAuthSession: (session: any) => set({ authSession: session }),
+            setAuthSession: (session) => set({ authSession: session }),
+            
+            notification: null,
+            showNotification: (message, type = 'success') => {
+                set({ notification: { message, type } });
+                setTimeout(() => get().hideNotification(), 4000);
+            },
+            hideNotification: () => set({ notification: null }),
 
             saveRecurringScheduleToCloud: async (baseDate, slot, leaderId, recurrence) => {
                 const date = parseISO(baseDate);
@@ -1608,6 +1636,44 @@ export const useAppStore = create<AppState>()(
                         attended: uniqueAttended,
                         total: totalMembers,
                         percentage: totalMembers > 0 ? (uniqueAttended / totalMembers) * 100 : 0
+                    };
+                });
+            },
+            loadDetailedWeeklyStats: async (days) => {
+                if (days.length === 0) return [];
+                
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('date, session_type, member_id')
+                    .gte('date', days[0])
+                    .lte('date', days[days.length - 1]);
+
+                if (error) {
+                    console.error("Error loading detailed stats:", error);
+                    return [];
+                }
+
+                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
+
+                return days.map(d => {
+                    const dailyRecords = data?.filter(r => r.date === d) || [];
+                    
+                    const getCount = (session: string) => {
+                        return new Set(
+                            dailyRecords
+                                .filter(r => r.session_type === session)
+                                .map(r => r.member_id)
+                        ).size;
+                    };
+
+                    return {
+                        date: d,
+                        totalMembers,
+                        sessions: {
+                            '5am': getCount('5am'),
+                            '9am': getCount('9am'),
+                            'evening': getCount('evening')
+                        }
                     };
                 });
             },

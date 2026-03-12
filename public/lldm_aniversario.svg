@@ -1,8 +1,0 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Símbolo: Aniversario / Laureles -->
-  <path d="M256 100 L280 150 L330 150 L290 190 L305 240 L256 210 L207 240 L222 190 L182 150 L232 150 Z" fill="white" />
-  <path d="M120 400 Q80 250 200 150" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.6" />
-  <path d="M392 400 Q432 250 312 150" stroke="white" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.6" />
-  <text x="256" y="320" text-anchor="middle" font-family="serif" font-weight="bold" font-size="80" fill="white">AÑO</text>
-  <text x="256" y="420" text-anchor="middle" font-family="serif" font-weight="bold" font-size="120" fill="white">2026</text>
-</svg>

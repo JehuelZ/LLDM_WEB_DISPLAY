@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -75,7 +75,7 @@ const TRANSLATIONS = {
     }
 };
 
-export default function AdminLayout({
+function AdminLayoutContent({
     children,
 }: {
     children: React.ReactNode
@@ -397,5 +397,20 @@ export default function AdminLayout({
                 {children}
             </main>
         </div>
+    );
+}
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-slate-950">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-16 h-16 border-4 border-t-primary border-primary/20 rounded-full animate-spin" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/50">Cargando Administrador...</p>
+                </div>
+            </div>
+        }>
+            <AdminLayoutContent>{children}</AdminLayoutContent>
+        </Suspense>
     );
 }

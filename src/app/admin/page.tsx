@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,10 +13,10 @@ import {
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
-    Lock, ArrowRight, LogOut
+    Lock, ArrowRight, LogOut, Info, XCircle
 } from "lucide-react";
 import Link from 'next/link';
-import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns';
+import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useAppStore, AppSettings } from '@/lib/store';
 import { cn, compressImage } from '@/lib/utils';
@@ -311,7 +311,153 @@ const MiniCountdown = () => {
     );
 };
 
-export default function AdminDashboard() {
+const WeeklyAttendanceChart = () => {
+    const { loadDetailedWeeklyStats, members } = useAppStore();
+    const [weekStart, setWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
+    const [stats, setStats] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    const weekDays = useMemo(() => {
+        return Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+    }, [weekStart]);
+
+    const formattedDays = useMemo(() => {
+        return weekDays.map(d => format(d, 'yyyy-MM-dd'));
+    }, [weekDays]);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            setLoading(true);
+            const data = await loadDetailedWeeklyStats(formattedDays);
+            setStats(data);
+            setLoading(false);
+        };
+        fetchStats();
+    }, [formattedDays, loadDetailedWeeklyStats]);
+
+    const changeWeek = (direction: number) => {
+        setWeekStart(prev => addDays(prev, direction * 7));
+    };
+
+    return (
+        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm col-span-1 md:col-span-12">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
+            <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-10">
+                <div>
+                    <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                        <Activity className="w-3 h-3 text-primary" />
+                        Distribución Semanal de Asistencia
+                    </CardTitle>
+                    <CardDescription className="text-[9px] uppercase font-bold text-slate-400 mt-1">
+                        Semana del {format(weekDays[0], 'd MMM')} al {format(weekDays[6], 'd MMM')}
+                    </CardDescription>
+                </div>
+                <div className="flex gap-2">
+                    <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-7 w-7 rounded-lg border-white/5 bg-white/5 hover:bg-white/10"
+                        onClick={() => changeWeek(-1)}
+                    >
+                        <ChevronLeft className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                        variant="outline" 
+                        size="icon" 
+                        className="h-7 w-7 rounded-lg border-white/5 bg-white/5 hover:bg-white/10"
+                        onClick={() => changeWeek(1)}
+                        disabled={weekStart >= startOfWeek(new Date(), { weekStartsOn: 0 })}
+                    >
+                        <ChevronRight className="h-3 w-3" />
+                    </Button>
+                </div>
+            </CardHeader>
+            <CardContent className="pt-6 relative z-10">
+                <div className="h-64 flex items-end justify-between gap-4 px-8 pb-10 relative">
+                    {/* Y-axis Labels */}
+                    <div className="absolute left-0 top-0 bottom-10 flex flex-col justify-between text-[8px] font-black text-slate-600 pr-2 pointer-events-none select-none">
+                        <span>100%</span>
+                        <span>75%</span>
+                        <span>50%</span>
+                        <span>25%</span>
+                        <span>0%</span>
+                    </div>
+
+                    {/* Grid Lines */}
+                    <div className="absolute left-8 right-8 top-0 bottom-10 flex flex-col justify-between pointer-events-none opacity-20">
+                        <div className="w-full h-px bg-slate-500" />
+                        <div className="w-full h-px bg-slate-500 border-dashed" />
+                        <div className="w-full h-px bg-slate-500" />
+                        <div className="w-full h-px bg-slate-500 border-dashed" />
+                    </div>
+
+                    {loading ? (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                        </div>
+                    ) : stats.map((day, idx) => {
+                        const total = day.totalMembers || 1;
+                        const p5am = (day.sessions['5am'] / total) * 100;
+                        const p9am = (day.sessions['9am'] / total) * 100;
+                        const pEvening = (day.sessions['evening'] / total) * 100;
+                        
+                        return (
+                            <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full relative group">
+                                <div className="flex-1 w-full bg-slate-800/10 rounded-t-xl overflow-hidden relative flex flex-col justify-end border border-white/5">
+                                    {/* Evening Segment */}
+                                    <motion.div 
+                                        initial={{ height: 0 }}
+                                        animate={{ height: `${pEvening}%` }}
+                                        className="w-full bg-gradient-to-t from-orange-600/80 to-orange-400/80 relative z-30 group-hover:from-orange-500 group-hover:to-orange-300 transition-colors"
+                                    >
+                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 px-2 py-1 rounded text-[8px] font-black whitespace-nowrap z-50 border border-orange-500/30">
+                                            {day.sessions['evening']} Pers.
+                                        </div>
+                                    </motion.div>
+                                    {/* 9 AM Segment */}
+                                    <motion.div 
+                                        initial={{ height: 0 }}
+                                        animate={{ height: `${p9am}%` }}
+                                        className="w-full bg-gradient-to-t from-indigo-600/80 to-indigo-400/80 relative z-20 group-hover:from-indigo-500 group-hover:to-indigo-300 transition-colors"
+                                    />
+                                    {/* 5 AM Segment */}
+                                    <motion.div 
+                                        initial={{ height: 0 }}
+                                        animate={{ height: `${p5am}%` }}
+                                        className="w-full bg-gradient-to-t from-emerald-600/80 to-emerald-400/80 relative z-10 group-hover:from-emerald-500 group-hover:to-emerald-300 transition-colors"
+                                    />
+                                </div>
+                                <div className="text-[10px] font-black uppercase text-slate-500 mt-2">
+                                    {format(weekDays[idx], 'EEE', { locale: es })}
+                                </div>
+                                <div className="text-[8px] font-bold text-slate-600">
+                                    {format(weekDays[idx], 'dd/MM')}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="mt-4 flex flex-wrap justify-center gap-8 border-t border-white/5 pt-4">
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Oración 5 AM</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.4)]" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Doctrina 9 AM</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.4)]" />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Culto de Tarde</span>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+};
+
+function AdminDashboardContent() {
     const {
         theme, setTheme,
         announcements, addAnnouncement, removeAnnouncement,
@@ -355,7 +501,12 @@ export default function AdminDashboard() {
         seedMonthSchedule,
         subscribeToMessages,
         authSession,
-        signOut
+        signOut,
+        loadAttendanceFromCloud,
+        attendanceRecords,
+        showNotification,
+        notification,
+        hideNotification
     } = useAppStore();
 
     const [mounted, setMounted] = useState(false);
@@ -371,6 +522,9 @@ export default function AdminDashboard() {
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
     const [editingRole, setEditingRole] = useState('Miembro');
+    const showNiceNotification = (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'success') => {
+        showNotification(message, type);
+    };
     const searchParams = useSearchParams();
     const queryTab = searchParams.get('tab') || 'dashboard';
     const [activeTab, setActiveTab] = useState(queryTab);
@@ -411,6 +565,7 @@ export default function AdminDashboard() {
         loadSettingsFromCloud();
         loadMembersFromCloud();
         loadCloudMessages();
+        loadAttendanceFromCloud(currentDate);
 
         // Listeners for layout-specific events if any
         const handleTabSync = () => {
@@ -491,7 +646,7 @@ export default function AdminDashboard() {
                         customIconUrl: publicUrl,
                         churchLogoUrl: undefined
                     });
-                    alert('✅ Escudo de la iglesia actualizado.');
+                    showNiceNotification('Escudo de la iglesia actualizado.');
                 }
             } catch (error) {
                 console.error("Error uploading icon:", error);
@@ -513,7 +668,7 @@ export default function AdminDashboard() {
                     await saveSettingsToCloud({
                         [settingKey]: publicUrl
                     });
-                    alert(`✅ Logo ${slot} actualizado.`);
+                    showNiceNotification(`Logo ${slot} actualizado.`);
                 }
             } catch (error) {
                 console.error(`Error uploading custom logo ${slot}:`, error);
@@ -566,17 +721,17 @@ export default function AdminDashboard() {
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leaderIdOrName);
 
         if (!isUuid) {
-            alert("⚠️ Selecciona un hermano de la lista desplegable antes de usar la repetición. No se pueden repetir nombres escritos manualmente.");
+            showNiceNotification("Selecciona un hermano de la lista desplegable antes de usar la repetición. No se pueden repetir nombres escritos manualmente.", 'warning');
             return;
         }
 
         setIsSaving(true);
         try {
             await saveRecurringScheduleToCloud(currentDate, slot, leaderIdOrName, recurrence);
-            alert('✅ Programación recurrente guardada con éxito.');
+            showNiceNotification('Programación recurrente guardada con éxito.');
         } catch (e) {
             console.error(e);
-            alert('❌ Error al guardar la programación.');
+            showNiceNotification('Error al guardar la programación.', 'error');
         } finally {
             setIsSaving(false);
         }
@@ -646,6 +801,13 @@ export default function AdminDashboard() {
         date.setDate(date.getDate() + direction);
         setCurrentDate(date.toISOString().split('T')[0]);
     };
+
+    // --- Pre-calculate Statistics ---
+    const todayRecords = attendanceRecords[currentDate] || [];
+    const attendedCount = todayRecords.filter(r => r.present).length;
+    const totalMembersCount = members.filter(m => m.status === 'Activo').length;
+    const attendancePercentage = totalMembersCount > 0 ? Math.round((attendedCount / totalMembersCount) * 100) : 0;
+    const pendingCount = totalMembersCount - attendedCount;
 
     // Monthly Progress Calculation
     const getMonthProgress = () => {
@@ -858,39 +1020,73 @@ export default function AdminDashboard() {
                     className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
                 >
                     {/* Daily Attendance Donut Chart */}
-                    <Card className="glass-card bg-slate-900/40 dark:bg-slate-900/40 light:bg-white border-white/5 light:border-slate-200 relative overflow-hidden group shadow-sm">
+                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                                Asistencia Diaria
+                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                    Asistencia en Vivo
+                                </div>
+                                <Activity className="w-3 h-3 text-primary opacity-50" />
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4">
                             <div className="flex items-center gap-8">
                                 <div className="relative w-32 h-32 shrink-0">
-                                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" strokeWidth="10" className="text-slate-800" />
+                                    {/* Glass reflection effect */}
+                                    <div className="absolute inset-2 rounded-full border border-white/5 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+                                    
+                                    <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" viewBox="0 0 100 100">
+                                        <defs>
+                                            <linearGradient id="donutGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor="var(--primary)" />
+                                                <stop offset="100%" stopColor="#8b5cf6" />
+                                            </linearGradient>
+                                        </defs>
+                                        <circle cx="50" cy="50" r="42" fill="transparent" stroke="currentColor" strokeWidth="6" className="text-slate-800/50" />
                                         <motion.circle
-                                            cx="50" cy="50" r="40" fill="transparent" stroke="currentColor" strokeWidth="10"
-                                            strokeDasharray="251.2"
-                                            initial={{ strokeDashoffset: 251.2 }}
-                                            animate={{ strokeDashoffset: 251.2 - (251.2 * 0.57) }}
-                                            transition={{ duration: 2, ease: "easeOut" }}
-                                            className="text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]"
+                                            cx="50" cy="50" r="42" fill="transparent" stroke="url(#donutGradient)" strokeWidth="10"
+                                            strokeDasharray="263.89"
+                                            initial={{ strokeDashoffset: 263.89 }}
+                                            animate={{ strokeDashoffset: 263.89 - (263.89 * attendancePercentage / 100) }}
+                                            transition={{ duration: 1.5, ease: "circOut" }}
+                                            className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.5)]"
                                             strokeLinecap="round"
                                         />
                                     </svg>
                                     <div className="absolute inset-0 flex items-center justify-center flex-col z-10">
-                                        <span className="text-3xl font-black text-foreground italic drop-shadow-sm">57%</span>
+                                        <motion.span 
+                                            initial={{ scale: 0.5, opacity: 0 }}
+                                            animate={{ scale: 1, opacity: 1 }}
+                                            className="text-3xl font-black text-foreground italic drop-shadow-md"
+                                        >
+                                            {attendancePercentage}%
+                                        </motion.span>
                                     </div>
                                 </div>
-                                <div className="space-y-4 relative z-10">
-                                    <div>
-                                        <div className="text-2xl font-black text-foreground italic">4/7 <span className="text-xs font-bold text-slate-500 not-italic uppercase ml-1">tareas</span></div>
-                                        <p className="text-[11px] text-slate-400 font-medium leading-tight">400/700 Miembros<br />confirmados para hoy</p>
+                                <div className="space-y-4 relative z-10 w-full">
+                                    <div className="space-y-1">
+                                        <div className="text-2xl font-black text-foreground italic flex items-baseline gap-1">
+                                            {attendedCount}
+                                            <span className="text-xs font-bold text-slate-500 not-italic uppercase ml-1">/ {totalMembersCount}</span>
+                                        </div>
+                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-tight">
+                                            Miembros Presentes
+                                        </p>
                                     </div>
-                                    <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                                        <motion.div initial={{ width: 0 }} animate={{ width: "57%" }} className="h-full bg-primary" />
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between text-[9px] font-black uppercase tracking-tighter">
+                                            <span className="text-primary">Completado</span>
+                                            <span className="text-slate-500">{pendingCount} faltantes</span>
+                                        </div>
+                                        <div className="h-2 w-full bg-slate-800/50 rounded-full overflow-hidden border border-white/5">
+                                            <motion.div 
+                                                initial={{ width: 0 }} 
+                                                animate={{ width: `${attendancePercentage}%` }} 
+                                                transition={{ duration: 1, delay: 0.5 }}
+                                                className="h-full bg-gradient-to-r from-primary to-purple-500 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]" 
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -898,7 +1094,7 @@ export default function AdminDashboard() {
                     </Card>
 
                     {/* Member Growth Mountain Chart */}
-                    <Card className="glass-card bg-slate-900/40 dark:bg-slate-900/40 light:bg-white border-white/5 light:border-slate-200 relative overflow-hidden group shadow-sm">
+                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
                                 <TrendingUp className="w-3 h-3 text-secondary" />
@@ -914,31 +1110,52 @@ export default function AdminDashboard() {
                                             <stop offset="100%" stopColor="var(--secondary)" stopOpacity="0" />
                                         </linearGradient>
                                     </defs>
-                                    <motion.path d="M0,80 Q50,40 100,70 T200,80 T300,50 T400,30 V120 H0 Z" fill="url(#mountGrad)" />
-                                    <motion.path d="M0,80 Q50,40 100,70 T200,80 T300,50 T400,30" fill="none" stroke="var(--secondary)" strokeWidth="3" />
+                                    <motion.path 
+                                        initial={{ d: "M0,120 Q50,120 100,120 T200,120 T300,120 T400,120 V120 H0 Z" }}
+                                        animate={{ d: "M0,80 Q50,40 100,70 T200,80 T300,50 T400,30 V120 H0 Z" }}
+                                        transition={{ duration: 2, ease: "easeOut" }}
+                                        fill="url(#mountGrad)" 
+                                    />
+                                    <motion.path 
+                                        initial={{ pathLength: 0 }}
+                                        animate={{ pathLength: 1 }}
+                                        transition={{ duration: 2, ease: "easeOut" }}
+                                        d="M0,80 Q50,40 100,70 T200,80 T300,50 T400,30" 
+                                        fill="none" 
+                                        stroke="var(--secondary)" 
+                                        strokeWidth="3" 
+                                    />
                                 </svg>
                             </div>
                             <div className="flex items-end justify-between relative z-10 mt-auto pt-2">
                                 <div>
-                                    <div className="text-4xl font-black text-foreground italic">+{members.length > 0 ? members.length : 128}</div>
-                                    <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 italic">Este mes</p>
+                                    <div className="text-4xl font-black text-foreground italic">{totalMembersCount}</div>
+                                    <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 italic">Total Miembros</p>
                                 </div>
-                                <div className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black italic border border-emerald-500/30 backdrop-blur-md shadow-lg">+12.5%</div>
+                                <div className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black italic border border-emerald-500/30 backdrop-blur-md shadow-lg">+{members.filter(m => m.status === 'Activo').length} Activos</div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Consistency Streak */}
-                    <Card className="glass-card bg-slate-900/40 dark:bg-slate-900/40 light:bg-white border-white/5 light:border-slate-200 relative overflow-hidden group shadow-sm">
+                    {/* Consistency Streak / Top Members */}
+                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Consistencia</CardTitle>
+                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Compromiso</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4 flex flex-col items-center justify-center text-center h-full relative z-10">
-                            <div className="text-8xl font-black tracking-tighter bg-gradient-to-b from-orange-400 via-amber-500 to-orange-600 dark:from-white dark:via-amber-100 dark:to-amber-400 bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(245,158,11,0.2)]">12</div>
-                            <div className="mt-2 text-xs font-black uppercase tracking-[0.3em] text-orange-500 italic">Días de Racha</div>
-                            <div className="flex gap-2 mt-6">
-                                {[1, 2, 3, 4, 5, 6].map(i => (
-                                    <div key={i} className={cn("w-2.5 h-2.5 rounded-full", i <= 4 ? "bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]" : "bg-white/5")} />
+                            <div className="text-7xl font-black tracking-tighter bg-gradient-to-b from-orange-400 via-amber-200 to-white bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(245,158,11,0.3)] tabular-nums">
+                                {members.filter(m => (m.stats?.attendance?.attended || 0) > 0).length}
+                            </div>
+                            <div className="mt-2 text-xs font-black uppercase tracking-[0.3em] text-orange-500 italic">Hnos. Participantes</div>
+                            <div className="flex gap-1.5 mt-6">
+                                {[1, 2, 3, 4, 5, 6, 7].map(i => (
+                                    <motion.div 
+                                        key={i} 
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        transition={{ delay: 0.1 * i }}
+                                        className={cn("w-2 h-2 rounded-full", i <= (members.length % 7) + 1 ? "bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]" : "bg-white/5")} 
+                                    />
                                 ))}
                             </div>
                         </CardContent>
@@ -962,15 +1179,31 @@ export default function AdminDashboard() {
                     </Card>
 
                     {/* Active Announcements Stat */}
-                    <Card className="glass-card bg-slate-900/40 dark:bg-slate-900/40 light:bg-white border-white/5 light:border-slate-200 relative overflow-hidden group shadow-sm">
+                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Comunicados</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4 flex flex-col items-center justify-center text-center h-full relative z-10">
-                            <div className="text-6xl font-black text-orange-500 italic tabular-nums drop-shadow-sm">{announcements.length}</div>
-                            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-2 italic">Anuncios Activos</div>
+                            <div className="relative">
+                                <div className="text-6xl font-black text-white italic tabular-nums drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+                                    {announcements.length}
+                                </div>
+                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-slate-900" />
+                            </div>
+                            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mt-4 italic">Anuncios en curso</div>
+                            <div className="w-full h-1 bg-white/5 rounded-full mt-4 overflow-hidden">
+                                <motion.div 
+                                    initial={{ width: 0 }}
+                                    animate={{ width: "100%" }}
+                                    transition={{ duration: 4, repeat: Infinity }}
+                                    className="h-full bg-gradient-to-r from-orange-500 to-amber-300 opacity-50"
+                                />
+                            </div>
                         </CardContent>
                     </Card>
+
+                    {/* Integrated Weekly Chart */}
+                    <WeeklyAttendanceChart />
                 </motion.div>
 
             </div>
@@ -1016,7 +1249,7 @@ export default function AdminDashboard() {
                                     onMarkRead={markMessageAsRead}
                                     onReply={async (recipientId, content) => {
                                         await sendCloudMessage({ senderId: currentUser.id, receiverId: recipientId, content, subject: 'Respuesta de Administración' });
-                                        alert('Respuesta enviada');
+                                        showNiceNotification('Respuesta enviada');
                                     }}
                                 />
                             </div>
@@ -1047,6 +1280,17 @@ export default function AdminDashboard() {
                                     >
                                         + Crear Nuevo Anuncio
                                     </Button>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-6 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/10">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-1">Membresía Total</p>
+                                        <div className="text-3xl font-black italic">{members.length}</div>
+                                    </div>
+                                    <div className="p-6 rounded-[2rem] bg-orange-500/5 border border-orange-500/10">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-orange-500 mb-1">Total Niños</p>
+                                        <div className="text-3xl font-black italic">{members.filter(m => m.category === 'Niño').length}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2113,9 +2357,9 @@ export default function AdminDashboard() {
                                     setIsSaving(true);
                                     try {
                                         await saveSettingsToCloud(settings);
-                                        alert("✅ Todos los temas, estilos y cuenta regresiva han sido guardados correctamente.");
+                                        showNiceNotification("Todos los temas, estilos y cuenta regresiva han sido guardados correctamente.");
                                     } catch (e) {
-                                        alert("❌ Error al persistir los cambios.");
+                                        showNiceNotification("Error al persistir los cambios.", 'error');
                                     } finally {
                                         setIsSaving(false);
                                     }
@@ -2289,7 +2533,7 @@ export default function AdminDashboard() {
                                                                 await saveUniformToCloud(newUniform.name, newUniform.category);
                                                                 setNewUniform({ name: '', category: 'Adulto' });
                                                             } catch (e) {
-                                                                alert("Error al guardar uniforme");
+                                                                showNiceNotification("Error al guardar uniforme", 'error');
                                                             } finally {
                                                                 setIsSaving(false);
                                                             }
@@ -2590,7 +2834,7 @@ export default function AdminDashboard() {
                                                                 ministerAvatar: minister.avatar
                                                             });
                                                             setIsSaving(false);
-                                                            alert("✅ Información del Ministro guardada correctamente.");
+                                                            showNiceNotification("Información del Ministro guardada correctamente.");
                                                         }}
                                                         disabled={isSaving}
                                                     >
@@ -2770,6 +3014,28 @@ export default function AdminDashboard() {
                         animate={{ opacity: 1, y: 0 }}
                         className="space-y-8"
                     >
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <Card className="glass-card border-b-2 border-b-primary p-6 flex flex-col items-center justify-center text-center">
+                                <Users className="w-8 h-8 text-primary/40 mb-2" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Membresía Total</p>
+                                <h3 className="text-4xl font-black italic">{members.length}</h3>
+                            </Card>
+                            <Card className="glass-card border-b-2 border-b-blue-500 p-6 flex flex-col items-center justify-center text-center">
+                                <User className="w-8 h-8 text-blue-500/40 mb-2" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-blue-500">Varones Adultos</p>
+                                <h3 className="text-4xl font-black italic">{members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length}</h3>
+                            </Card>
+                            <Card className="glass-card border-b-2 border-b-pink-500 p-6 flex flex-col items-center justify-center text-center">
+                                <User className="w-8 h-8 text-pink-500/40 mb-2" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-pink-500">Hermanas Adultas</p>
+                                <h3 className="text-4xl font-black italic">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</h3>
+                            </Card>
+                            <Card className="glass-card border-b-2 border-b-orange-500 p-6 flex flex-col items-center justify-center text-center">
+                                <Sparkles className="w-8 h-8 text-orange-500/40 mb-2" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-orange-500 font-black">Niños / Niñas</p>
+                                <h3 className="text-4xl font-black italic text-orange-500">{members.filter(m => m.category === 'Niño').length}</h3>
+                            </Card>
+                        </div>
                         <Card id="miembros" className="glass-card border-t-4 border-t-emerald-500">
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">
@@ -3271,5 +3537,22 @@ export default function AdminDashboard() {
             }
 
         </div>
+    );
+}
+
+export default function AdminDashboard() {
+    return (
+        <Suspense fallback={
+            <div className="p-8 space-y-8">
+                <div className="h-48 w-full bg-foreground/5 rounded-3xl animate-pulse" />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="h-32 bg-foreground/5 rounded-3xl animate-pulse" />
+                    ))}
+                </div>
+            </div>
+        }>
+            <AdminDashboardContent />
+        </Suspense>
     );
 }
