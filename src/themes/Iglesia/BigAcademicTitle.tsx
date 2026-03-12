@@ -45,6 +45,7 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
 
     const isCustom = settings?.churchIcon === 'custom';
     const logoUrl = settings?.customIconUrl || settings?.churchLogoUrl;
+    const officialLogo = "/flama-oficial.svg";
 
     const icons: Record<string, any> = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
     const SelectedIcon = icons[settings?.churchIcon || 'flame'] || Flame;
@@ -59,16 +60,25 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
             width: 'fit-content'
         }}>
             <div style={{
-                width: 32, height: 32, borderRadius: 10,
+                width: 34, height: 34, borderRadius: 10,
                 background: `linear-gradient(135deg, ${T.accent}, ${T.accent}dd)`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 boxShadow: `0 4px 12px ${T.accent}40`,
                 overflow: 'hidden'
             }}>
-                {isCustom && logoUrl ? (
+                {(isCustom && logoUrl) ? (
                     <img src={logoUrl} alt="" style={{ width: '80%', height: '80%', objectFit: 'contain', filter: isDark ? 'brightness(1.2)' : 'none' }} />
                 ) : (
-                    <SelectedIcon size={18} color="#FFFFFF" strokeWidth={2} />
+                    <img 
+                        src={officialLogo} 
+                        alt="" 
+                        style={{ 
+                            width: '70%', 
+                            height: '70%', 
+                            objectFit: 'contain',
+                            filter: 'brightness(0) invert(1)'
+                        }} 
+                    />
                 )}
             </div>
             <h2 style={{
@@ -76,7 +86,7 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
                 letterSpacing: '-0.02em', fontFamily: T.fontMontserrat,
                 margin: 0, display: 'flex', gap: 6, alignItems: 'center'
             }}>
-                {name.toUpperCase() || 'LLDM'} <span style={{ color: T.accent, fontSize: 13, fontWeight: 800, letterSpacing: '0.1em', opacity: 0.9 }}>TABLERO</span>
+                {name.toUpperCase() || 'LLDM'} <span style={{ color: T.accent, fontSize: 13, fontWeight: 800, letterSpacing: '0.1em', opacity: 0.9 }}>RODEO</span>
             </h2>
         </div>
     );

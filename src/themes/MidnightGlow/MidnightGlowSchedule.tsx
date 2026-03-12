@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic } from 'lucide-react';
+import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Flame } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -87,7 +87,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     </div>
                 ) : (
                     <div className="w-11 h-11 shrink-0 rounded-lg border border-[#1E3A6E] bg-[#071020] flex items-center justify-center">
-                        <Church className="w-5 h-5 text-[#4F7FFF]/50" />
+                        <Flame className="w-5 h-5 text-[#4F7FFF]/50" />
                     </div>
                 )}
                 {/* Text */}
@@ -430,7 +430,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                                 {minister?.avatar ? (
                                                     <img src={minister.avatar} alt="Ministro" className="w-full h-full object-cover relative z-10" />
                                                 ) : (
-                                                    <Church className="w-16 h-16 text-[#FFB060]/60 relative z-10" />
+                                                    <Flame className="w-16 h-16 text-[#FFB060]/60 relative z-10" />
                                                 )}
                                             </motion.div>
                                             <motion.div className={`mt-3 px-6 py-2 rounded-xl bg-[#1A0C00] border border-[#3A1D04] ${accentText}`}>
@@ -628,9 +628,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                             {slotEvening.leaderIds[1] && getMemberDetail(slotEvening.leaderIds[1]).avatar ? (
                                                 <img src={getMemberDetail(slotEvening.leaderIds[1]).avatar!} alt="" className="w-full h-full rounded-full object-cover" />
                                             ) : (
-                                                <div className="flex flex-col items-center justify-center opacity-40">
-                                                    <span className="text-[40px]">👩</span>
-                                                </div>
+                                                <Flame className="w-16 h-16 text-[#A3FF57]/50" />
                                             )}
                                         </motion.div>
                                     </div>
@@ -671,7 +669,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                             {getMemberDetail(slotEvening.leaderIds[0]).avatar ? (
                                                 <img src={getMemberDetail(slotEvening.leaderIds[0]).avatar!} alt="" className="w-full h-full rounded-full object-cover" />
                                             ) : (
-                                                <Church className="w-16 h-16 text-[#4F7FFF]/50" />
+                                                <Flame className="w-16 h-16 text-[#4F7FFF]/50" />
                                             )}
                                         </motion.div>
                                         <motion.div className="mt-4 px-6 py-2 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#4F7FFF]/50 shadow-xl backdrop-blur-xl flex flex-col items-center min-w-[140px]">
@@ -692,7 +690,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                             {getMemberDetail(slotEvening.leaderIds[1]).avatar ? (
                                                 <img src={getMemberDetail(slotEvening.leaderIds[1]).avatar!} alt="" className="w-full h-full rounded-full object-cover" />
                                             ) : (
-                                                <Church className="w-16 h-16 text-[#A3FF57]/50" />
+                                                <Flame className="w-16 h-16 text-[#A3FF57]/50" />
                                             )}
                                         </motion.div>
                                         <motion.div className="mt-4 px-6 py-2 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-xl backdrop-blur-xl flex flex-col items-center min-w-[140px]">
@@ -714,7 +712,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                         {getMemberDetail(slotEvening.leaderIds[0]).avatar ? (
                                             <img src={getMemberDetail(slotEvening.leaderIds[0]).avatar!} alt="" className="w-full h-full rounded-full object-cover" />
                                         ) : (
-                                            <Church className="w-16 h-16 text-[#A3FF57]/50" />
+                                            <Flame className="w-16 h-16 text-[#A3FF57]/50" />
                                         )}
                                     </motion.div>
                                     <motion.div className="mt-4 px-8 py-3 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center min-w-[180px]">
@@ -726,7 +724,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                         ) : (
                             <div className="flex flex-col items-center">
                                 <div className="relative w-44 h-44 rounded-full bg-[#0D1B3E] border-4 border-[#1E3A6E] flex items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_40px_rgba(163,255,87,0.2)] overflow-visible">
-                                    <Church className="w-16 h-16 text-[#A3FF57]/50" />
+                                    <Flame className="w-16 h-16 text-[#A3FF57]/50" />
                                 </div>
                                 <div className="mt-4 px-10 py-3 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-2xl backdrop-blur-xl">
                                     <span className="text-[22px] font-black text-white uppercase tracking-[0.1em]">Por Asignar</span>

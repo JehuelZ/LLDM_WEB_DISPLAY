@@ -10,7 +10,7 @@ import {
     Trash2, Upload, Monitor, Sun, X, Flame, Church, Crown,
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
-    Camera, Phone, Mail, User, Languages, Music2,
+    Camera, Phone, Mail, User, Languages, Music2, ClipboardCheck,
     Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
@@ -59,30 +59,123 @@ const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = 
     </div>
 )
 
-const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled }: any) => (
-    <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
-        {label && <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
-        <div className="relative group">
-            {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-focus-within:text-primary transition-colors pointer-events-none" />}
-            <select
-                value={value}
-                disabled={disabled}
-                onChange={(e) => onChange(e.target.value)}
-                className={cn(
-                    "w-full bg-black/40 border border-white/5 rounded-2xl h-12 text-sm font-bold px-4 appearance-none cursor-pointer outline-none focus:border-primary/50 focus:bg-black/60",
-                    Icon && "pl-12"
-                )}
-            >
-                {options.map((opt: any) => (
-                    <option key={opt.value} value={opt.value} className="bg-[#1a1c20] text-white">
-                        {opt.label}
-                    </option>
-                ))}
-            </select>
-            <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub rotate-90 pointer-events-none" />
+const normalizeText = (text: string) => {
+    if (!text) return "";
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+};
+
+const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, searchable = true }: any) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const selectedOption = options.find((opt: any) => opt.value === value);
+
+    const filteredOptions = searchable
+        ? options.filter((opt: any) => opt.isHeader || normalizeText(opt.label).includes(normalizeText(searchQuery)))
+        : options;
+
+    return (
+        <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
+            {label && <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+            <div className="relative group">
+                <button
+                    type="button"
+                    onClick={() => !disabled && setIsOpen(!isOpen)}
+                    className={cn(
+                        "w-full bg-black/40 border border-white/5 rounded-2xl h-12 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
+                        isOpen && "border-primary/50 bg-black/60",
+                        Icon && "pl-12"
+                    )}
+                >
+                    {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-hover:text-primary transition-colors" />}
+                    <span className="truncate flex-1">
+                        {selectedOption ? selectedOption.label : 'Seleccionar...'}
+                    </span>
+                    <ChevronDown className={cn("w-4 h-4 text-tactile-text-sub transition-transform shrink-0", isOpen && "rotate-180")} />
+                </button>
+
+                <AnimatePresence>
+                    {isOpen && (
+                        <>
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 z-[100]" 
+                                onClick={() => { setIsOpen(false); setSearchQuery(''); }} 
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="absolute left-0 right-0 top-full mt-2 bg-[#1a1c20]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[350px]"
+                            >
+                                {searchable && (
+                                    <div className="p-2 border-b border-white/5 sticky top-0 bg-transparent z-10">
+                                        <div className="relative">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-tactile-text-sub" />
+                                            <input
+                                                autoFocus
+                                                type="text"
+                                                placeholder="Buscar..."
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                                className="w-full bg-black/40 border border-white/5 rounded-xl pl-9 pr-4 py-2 text-xs font-bold focus:outline-none focus:border-primary/50 transition-colors"
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                                <div className="overflow-y-auto custom-scrollbar p-1">
+                                    {filteredOptions.length > 0 ? (
+                                        filteredOptions.map((opt: any, i: number) => (
+                                            opt.isHeader ? (
+                                                <div 
+                                                    key={`header-${i}`} 
+                                                    className="px-4 py-2 text-[8px] font-black uppercase tracking-[0.2em] text-primary/60 border-t border-white/5 first:border-0 mt-3 first:mt-1 bg-white/5 rounded-lg mb-1"
+                                                >
+                                                    {opt.label}
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    key={opt.value}
+                                                    type="button"
+                                                    className={cn(
+                                                        "w-full px-4 py-2.5 text-xs font-bold text-left rounded-xl transition-all flex items-center gap-3 group/opt",
+                                                        value === opt.value ? "bg-primary/10 text-primary" : "text-white/70 hover:bg-white/5 hover:text-white"
+                                                    )}
+                                                    onClick={() => {
+                                                        onChange(opt.value);
+                                                        setIsOpen(false);
+                                                        setSearchQuery('');
+                                                    }}
+                                                >
+                                                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                                                        {opt.avatar ? (
+                                                            <div className="w-6 h-6 rounded-full overflow-hidden border border-white/10 shrink-0">
+                                                                <img src={opt.avatar} className="w-full h-full object-cover" alt="" />
+                                                            </div>
+                                                        ) : (
+                                                            !opt.isHeader && <div className="w-6 h-6 rounded-full bg-white/5 border border-white/5 shrink-0 flex items-center justify-center text-[8px] text-white/40">{opt.label?.charAt(0)}</div>
+                                                        )}
+                                                        <span className="truncate">{opt.label}</span>
+                                                    </div>
+                                                    {value === opt.value && <Check className="w-3.5 h-3.5" />}
+                                                </button>
+                                            )
+                                        ))
+                                    ) : (
+                                        <div className="py-8 text-center text-[10px] font-black uppercase tracking-widest text-tactile-text-sub italic">
+                                            Sin resultados
+                                        </div>
+                                    )}
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
+            </div>
         </div>
-    </div>
-)
+    );
+};
 
 export default function TactileAdmin({ propTab }: { propTab?: string }) {
     const {
@@ -106,7 +199,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         createTestAccounts, simulateUser,
         messages, loadCloudMessages, markMessageAsRead,
         sendCloudMessage, subscribeToMessages,
-        loadAllSchedulesFromCloud, loadAnnouncementsFromCloud
+        loadAllSchedulesFromCloud, loadAnnouncementsFromCloud,
+        attendanceRecords, loadAttendanceFromCloud, saveAttendanceToCloud,
+        loadWeeklyAttendanceStats
     } = useAppStore()
 
     const isSun = parseISO(currentDate).getDay() === 0;
@@ -120,10 +215,29 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         }
     };
 
-    const searchParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
-    const initialTab = searchParams?.get('tab') || 'dashboard';
+    const [mounted, setMounted] = useState(false);
+    const [activeTab, setActiveTab] = useState('dashboard');
 
-    const [activeTab, setActiveTab] = useState(initialTab);
+    useEffect(() => {
+        setMounted(true);
+        // Sync initial tab from URL on mount
+        const params = new URLSearchParams(window.location.search);
+        const queryTab = params.get('tab');
+        if (queryTab) {
+            const aliasMap: Record<string, string> = {
+                'configuracion': 'ajustes',
+                'temas': 'contenido',
+                'mensajes': 'dashboard',
+                'anuncios-resumen': 'dashboard',
+                'ajustes': 'ajustes'
+            };
+            const finalTab = aliasMap[queryTab] || queryTab;
+            const validTabIds = tabs.map(t => t.id);
+            if (validTabIds.includes(finalTab)) {
+                setActiveTab(finalTab);
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const handleLocationChange = () => {
@@ -176,12 +290,13 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
     const tabs = [
         { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard },
+        { id: 'asistencia', label: 'Asistencia', icon: ClipboardCheck },
         { id: 'horarios', label: 'Programación', icon: CalendarDays },
+        { id: 'miembros', label: 'Miembros', icon: Users },
+        { id: 'coros', label: 'Coros', icon: Music2 },
         { id: 'contenido', label: 'Contenido', icon: Sparkles },
         { id: 'anuncios', label: 'Comunicados', icon: Bell },
         { id: 'estilos', label: 'Temas TV', icon: Palette },
-        { id: 'coros', label: 'Coros', icon: Music2 },
-        { id: 'miembros', label: 'Miembros', icon: Users },
         { id: 'ajustes', label: 'Ajustes', icon: Settings },
         { id: 'mensajes', label: 'Mensajes', icon: MessageSquare },
         { id: 'perfil', label: 'Mi Perfil', icon: User },
@@ -206,6 +321,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
     const [showRehearsalModal, setShowRehearsalModal] = useState(false)
     const [editingRehearsal, setEditingRehearsal] = useState<any>(null)
+    const [currentAttendanceSession, setCurrentAttendanceSession] = useState<'5am' | '9am' | 'evening'>('5am')
+    const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({})
+    const [processingToggles, setProcessingToggles] = useState<Record<string, boolean>>({})
+    const [weeklyStats, setWeeklyStats] = useState<any[]>([])
+    const [monthlyGlobalStats, setMonthlyGlobalStats] = useState<any[]>([])
 
     const [newRehearsal, setNewRehearsal] = useState({ dayOfWeek: 1, time: '06:00 PM', location: 'Templo' })
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: 'member' | 'minister' } | null>(null)
@@ -244,13 +364,79 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
     useEffect(() => {
         loadDayScheduleFromCloud(currentDate)
-    }, [currentDate, loadDayScheduleFromCloud])
+        loadAttendanceFromCloud(currentDate)
+    }, [currentDate, loadDayScheduleFromCloud, loadAttendanceFromCloud])
+
+    useEffect(() => {
+        if (activeTab === 'asistencia' || activeTab === 'dashboard') {
+            const fetchStats = async () => {
+                const [wData, mData] = await Promise.all([
+                    loadWeeklyAttendanceStats(),
+                    loadMonthlyGlobalAttendanceStats()
+                ]);
+                setWeeklyStats(wData);
+                setMonthlyGlobalStats(mData);
+            };
+            fetchStats();
+        }
+    }, [activeTab, loadWeeklyAttendanceStats, loadMonthlyGlobalAttendanceStats]);
     const navigateDay = (days: number) => {
         const date = new Date(currentDate + 'T12:00:00')
         date.setDate(date.getDate() + days)
         const newDate = date.toISOString().split('T')[0]
         setCurrentDate(newDate)
     }
+
+    const toggleAttendance = async (memberId: string, session: string) => {
+        if (processingToggles[memberId]) return;
+
+        const date = currentDate;
+        const currentRecords = attendanceRecords[date] || [];
+        const record = currentRecords.find(r => r.member_id === memberId && r.session_type === session);
+        const willBePresent = !record?.present;
+
+        // Optimistic UI
+        setOptimisticAttendance(prev => ({
+            ...prev,
+            [memberId]: {
+                ...(prev[memberId] || {}),
+                [session]: willBePresent
+            }
+        }));
+
+        setProcessingToggles(prev => ({ ...prev, [memberId]: true }));
+
+        try {
+            await saveAttendanceToCloud([{
+                member_id: memberId,
+                date: date,
+                session_type: session as any,
+                present: willBePresent,
+                time: new Date().toLocaleTimeString('en-US', { hour12: false })
+            }]);
+        } catch (error) {
+            console.error("Error toggling attendance:", error);
+            setOptimisticAttendance(prev => ({
+                ...prev,
+                [memberId]: {
+                    ...(prev[memberId] || {}),
+                    [session]: !willBePresent
+                }
+            }));
+        } finally {
+            setProcessingToggles(prev => ({ ...prev, [memberId]: false }));
+            setTimeout(() => {
+                setOptimisticAttendance(prev => {
+                    const next = { ...prev };
+                    if (next[memberId]) {
+                        delete next[memberId][session];
+                        if (Object.keys(next[memberId]).length === 0) delete next[memberId];
+                    }
+                    return next;
+                });
+            }, 1000);
+        }
+    };
 
     const updateSlot = async (slot: '5am' | '9am' | 'evening' | '12pm', updates: any) => {
         const previousState = { ...currentDaySchedule };
@@ -304,15 +490,71 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
     };
 
     const ministerMember = members.find(m => m.name === settings.ministerName);
-    const otherMembers = members
-        .filter(m => m.id !== ministerMember?.id)
-        .sort((a, b) => a.name.localeCompare(b.name));
 
-    const memberOptions = [
-        { value: '', label: 'Seleccionar...' },
-        ...(ministerMember ? [{ value: ministerMember.id, label: `⭐ EL MINISTRO (${ministerMember.name})` }] : []),
-        ...otherMembers.map(m => ({ value: m.id, label: m.name }))
-    ];
+    const memberOptions = React.useMemo(() => {
+        const base = [{ value: '', label: 'Seleccionar...' }];
+        
+        const categories = [
+            { id: 'casados', label: 'CASADOS / CASADAS', variants: ['casados', 'casadas'] },
+            { id: 'jovenes', label: 'JÓVENES', variants: ['jovenes', 'jóvenes'] },
+            { id: 'solos', label: 'SOLOS Y SOLAS', variants: ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'] },
+            { id: 'ninos', label: 'NIÑOS / NIÑAS', variants: ['niños', 'niñas', 'niño', 'niña'] },
+        ];
+
+        let groupedItems: any[] = [];
+        let assignedMemberIds = new Set<string>();
+
+        // Ministro primero si existe
+        if (ministerMember) {
+            groupedItems.push({ value: 'header-minister', label: 'MINISTERIO', isHeader: true });
+            groupedItems.push({ 
+                value: ministerMember.id, 
+                label: `⭐ EL MINISTRO (${ministerMember.name})`,
+                avatar: ministerMember.avatar 
+            });
+            assignedMemberIds.add(ministerMember.id);
+        }
+
+        // Procesar categorías
+        categories.forEach(cat => {
+            const groupMembers = members.filter(m => {
+                const group = m.member_group?.toLowerCase().trim() || '';
+                return cat.variants.some(v => group.includes(v)) || cat.variants.includes(group);
+            }).sort((a, b) => a.name.localeCompare(b.name));
+
+            if (groupMembers.length > 0) {
+                groupedItems.push({ value: `header-${cat.id}`, label: cat.label, isHeader: true });
+                groupMembers.forEach(m => {
+                    if (m.id !== ministerMember?.id) {
+                        groupedItems.push({ 
+                            value: m.id, 
+                            label: m.name,
+                            avatar: m.avatar 
+                        });
+                        assignedMemberIds.add(m.id);
+                    }
+                });
+            }
+        });
+
+        // Otros miembros
+        const remainingMembers = members
+            .filter(m => !assignedMemberIds.has(m.id))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+        if (remainingMembers.length > 0) {
+            groupedItems.push({ value: 'header-other', label: 'OTROS / SIN GRUPO', isHeader: true });
+            remainingMembers.forEach(m => {
+                groupedItems.push({ 
+                    value: m.id, 
+                    label: m.name,
+                    avatar: m.avatar 
+                });
+            });
+        }
+
+        return [...base, ...groupedItems];
+    }, [members, ministerMember]);
 
     return (
         <div className="tactile-admin-root">
@@ -416,17 +658,15 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                             <button onClick={() => navigateDay(-1)} className="tactile-btn tactile-btn-glass !rounded-full w-12 h-12 flex items-center justify-center p-0 transition-transform hover:scale-110 active:scale-90">
                                 <ChevronLeft className="w-6 h-6" />
                             </button>
-                            <div
-                                className="relative group cursor-pointer"
-                                onClick={() => (document.getElementById('global-date-picker') as HTMLInputElement)?.showPicker()}
-                            >
-                                <div className="text-2xl font-black italic uppercase tracking-tighter min-w-[280px] text-center px-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary transition-all">
+                            <div className="relative group cursor-pointer">
+                                <div className="text-2xl font-black italic uppercase tracking-tighter min-w-[280px] text-center px-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary transition-all flex items-center justify-center gap-2">
+                                    <Calendar className="w-5 h-5 text-primary opacity-50 group-hover:opacity-100" />
                                     {format(parseISO(currentDate), "EEEE d 'de' MMMM", { locale: es })}
                                 </div>
                                 <input
                                     type="date"
                                     id="global-date-picker"
-                                    className="absolute inset-0 opacity-0 pointer-events-none"
+                                    className="absolute inset-0 opacity-0 cursor-pointer z-10"
                                     value={currentDate}
                                     onChange={(e) => setCurrentDate(e.target.value)}
                                 />
@@ -501,7 +741,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         </div>
                                         <div className="space-y-4">
                                             <button
-                                                onClick={() => setActiveTab('coros')}
+                                                onClick={() => setActiveTab('asistencia')}
                                                 className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
                                             >
                                                 <TactileIconBox icon={CheckCircle2} color="#3b82f6" />
@@ -573,9 +813,86 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     </div>
 
                                     {/* Right Column - Controls */}
-                                    <div className="col-span-1 md:col-span-4 space-y-8 flex flex-col items-center">
+                                    <div className="col-span-1 md:col-span-4 space-y-8">
+                                        <TactileGlassCard title="INTELIGENCIA DE DATOS" className="w-full">
+                                            <div className="space-y-6">
+                                                {/* Bar Chart */}
+                                                <div>
+                                                    <div className="flex items-center justify-between mb-4">
+                                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Asistencia 30 Días</h4>
+                                                        <span className="text-[10px] font-bold text-tactile-text-sub italic">Últimos registros</span>
+                                                    </div>
+                                                    <div className="h-40 flex items-end gap-1 px-2 border-b border-white/5 pb-1">
+                                                        {monthlyGlobalStats.length > 0 ? (
+                                                            monthlyGlobalStats.map((day, idx) => (
+                                                                <motion.div
+                                                                    key={idx}
+                                                                    initial={{ height: 0 }}
+                                                                    animate={{ height: `${Math.max(day.percentage, 5)}%` }}
+                                                                    className={cn(
+                                                                        "flex-1 rounded-t-sm transition-all relative group",
+                                                                        day.percentage > 70 ? "bg-emerald-500/60" : 
+                                                                        day.percentage > 40 ? "bg-primary/60" : "bg-orange-500/60"
+                                                                    )}
+                                                                >
+                                                                    {/* Tooltip */}
+                                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black/90 rounded text-[8px] font-black whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 border border-white/10 uppercase">
+                                                                        {format(parseISO(day.date), 'd MMM')}: {day.attended} Pers.
+                                                                    </div>
+                                                                </motion.div>
+                                                            ))
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center text-[10px] font-black uppercase tracking-widest text-white/20 italic">
+                                                                Sin Datos
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="bg-black/40 p-4 rounded-3xl border border-white/[0.03]">
+                                                        <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Total Miembros</p>
+                                                        <div className="text-2xl font-black italic">{members.length}</div>
+                                                    </div>
+                                                    <div className="bg-black/40 p-4 rounded-3xl border border-white/[0.03]">
+                                                        <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Promedio Asis.</p>
+                                                        <div className="text-2xl font-black italic text-primary">
+                                                            {monthlyGlobalStats.length > 0 
+                                                                ? `${Math.round(monthlyGlobalStats.reduce((acc, d) => acc + d.percentage, 0) / monthlyGlobalStats.length)}%`
+                                                                : '0%'
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="space-y-3">
+                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 rounded-full bg-blue-500" />
+                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Varones</span>
+                                                        </div>
+                                                        <span className="text-xs font-black italic">{members.filter(m => m.gender === 'Varon').length}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 rounded-full bg-pink-500" />
+                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Mujeres</span>
+                                                        </div>
+                                                        <span className="text-xs font-black italic">{members.filter(m => m.gender === 'Hermana').length}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-2 h-2 rounded-full bg-amber-500" />
+                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Niñez</span>
+                                                        </div>
+                                                        <span className="text-xs font-black italic">{members.filter(m => m.member_group?.includes('Niñ')).length}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </TactileGlassCard>
+
                                         <TactileGlassCard title="MASTER CONTROL" className="w-full">
-                                            <div className="flex flex-col items-center gap-8 py-8">
+                                            <div className="flex flex-col items-center gap-8 py-4">
                                                 <div className="tactile-circular-control">
                                                     <div className="tactile-circular-line" />
                                                 </div>
@@ -585,20 +902,213 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
+                                    </div>
+                                </motion.div>
+                            )}
 
-                                        <TactileGlassCard title="MÉTRICAS" className="w-full">
-                                            <div className="space-y-4">
-                                                <div className="flex justify-between items-center bg-black/20 p-4 rounded-2xl">
-                                                    <span className="text-xs font-black text-tactile-text-sub uppercase">Miembros</span>
-                                                    <span className="text-xl font-black italic">{members.length}</span>
+                            {activeTab === 'asistencia' && (
+                                <motion.div
+                                    key="asistencia"
+                                    initial={{ opacity: 0, scale: 0.98 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.98 }}
+                                    className="space-y-8"
+                                >
+                                    {/* Attendance Header & Controls */}
+                                    <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.03] p-8 rounded-[2.5rem] border border-white/5 backdrop-blur-xl">
+                                        <div className="flex flex-col gap-2 text-center md:text-left">
+                                            <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
+                                                Control de <span className="text-primary">Asistencia</span>
+                                            </h2>
+                                            <div className="flex items-center justify-center md:justify-start gap-4">
+                                                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
+                                                    <Calendar className="w-3.5 h-3.5 text-primary" />
+                                                    <span className="text-[10px] font-black uppercase text-primary">
+                                                        {format(parseISO(currentDate), "EEEE, d 'de' MMMM", { locale: es })}
+                                                    </span>
                                                 </div>
-                                                <div className="flex justify-between items-center bg-black/20 p-4 rounded-2xl">
-                                                    <span className="text-xs font-black text-tactile-text-sub uppercase">Racha</span>
-                                                    <span className="text-xl font-black italic text-orange-400">0 Días</span>
-                                                </div>
+                                                <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                                                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-none">
+                                                    {members.length} MIEMBROS REGISTRADOS
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-wrap justify-center gap-3">
+                                            {(['5am', '9am', 'evening'] as const).map(session => (
+                                                <button
+                                                    key={session}
+                                                    onClick={() => setCurrentAttendanceSession(session)}
+                                                    className={cn(
+                                                        "tactile-btn text-[10px] px-6 h-12 transition-all duration-300",
+                                                        currentAttendanceSession === session 
+                                                            ? "tactile-btn-primary scale-105 shadow-[0_0_30px_rgba(59,130,246,0.3)]" 
+                                                            : "tactile-btn-glass opacity-60 hover:opacity-100"
+                                                    )}
+                                                >
+                                                    {session === '5am' ? <Sunrise className="w-4 h-4 mr-2" /> : 
+                                                     session === '9am' ? <Sun className="w-4 h-4 mr-2" /> : 
+                                                     <Moon className="w-4 h-4 mr-2" />}
+                                                    {session === '5am' ? '5:00 AM' : session === '9am' ? '9:00 AM' : '7:00 PM'}
+                                                </button>
+                                            ))}
+                                            <div className="w-px h-10 bg-white/10 mx-2" />
+                                            <button
+                                                onClick={() => (document.getElementById('global-date-picker') as HTMLInputElement)?.showPicker()}
+                                                className="tactile-btn tactile-btn-glass text-[10px] px-6 h-12 border-white/10"
+                                            >
+                                                <CalendarClock className="w-4 h-4 mr-2 text-primary" />
+                                                OTRA FECHA
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Weekly Quick Graph (Miniature) */}
+                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                                        <TactileGlassCard title="RENDIMIENTO SEMANAL" className="md:col-span-3">
+                                            <div className="h-48 flex items-end gap-2 px-2 pb-2">
+                                                {weeklyStats.length > 0 ? weeklyStats.map((stat, i) => (
+                                                    <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
+                                                        <div className="w-full relative">
+                                                            <motion.div 
+                                                                initial={{ height: 0 }}
+                                                                animate={{ height: `${(stat.attended / (members.length || 1)) * 100}%` }}
+                                                                className="w-full bg-gradient-to-t from-primary/20 to-primary rounded-t-xl group-hover:from-primary/40 group-hover:to-primary group-hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-500"
+                                                                style={{ minHeight: stat.attended > 0 ? '4px' : '0' }}
+                                                            />
+                                                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-[10px] font-black px-2 py-1 rounded border border-primary/30">
+                                                                {stat.attended}
+                                                            </div>
+                                                        </div>
+                                                        <span className="text-[9px] font-black text-white/30 uppercase tracking-widest">{format(parseISO(stat.date), 'EEE', { locale: es })}</span>
+                                                    </div>
+                                                )) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-white/20 tracking-widest uppercase italic">
+                                                        Cargando estadísticas...
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </TactileGlassCard>
+
+                                        <TactileGlassCard title="SESIÓN ACTUAL" className="md:col-span-1">
+                                            <div className="flex flex-col items-center justify-center h-48 gap-4 py-4">
+                                                {(() => {
+                                                    const date = currentDate;
+                                                    const session = currentAttendanceSession;
+                                                    const count = (attendanceRecords[date] || []).filter(r => r.session_type === session && r.present).length;
+                                                    const percent = Math.round((count / (members.length || 1)) * 100);
+                                                    
+                                                    return (
+                                                        <>
+                                                            <div className="relative w-28 h-28">
+                                                                <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                                                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="8" className="text-white/5" />
+                                                                    <motion.circle 
+                                                                        cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="10" strokeDasharray="282.7" 
+                                                                        initial={{ strokeDashoffset: 282.7 }}
+                                                                        animate={{ strokeDashoffset: 282.7 - (282.7 * percent / 100) }}
+                                                                        className="text-primary" strokeLinecap="round"
+                                                                    />
+                                                                </svg>
+                                                                <div className="absolute inset-0 flex flex-col items-center justify-center rotate-0">
+                                                                    <span className="text-2xl font-black italic text-white">{percent}%</span>
+                                                                    <span className="text-[9px] font-black text-white/30 mt-1">{count}/{members.length}</span>
+                                                                </div>
+                                                            </div>
+                                                            <p className="text-[9px] font-black uppercase text-primary tracking-[0.2em]">Presentes Ahora</p>
+                                                        </>
+                                                    );
+                                                })()}
                                             </div>
                                         </TactileGlassCard>
                                     </div>
+
+                                    {/* Member List Grid */}
+                                    <TactileGlassCard title="LISTADO DE MIEMBROS" subtitle="TOQUE PARA MARCAR ASISTENCIA">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-4">
+                                            {members.filter(m => {
+                                                if (searchTerm) {
+                                                    const query = searchTerm.toLowerCase();
+                                                    return m.name.toLowerCase().includes(query) || m.member_group?.toLowerCase().includes(query);
+                                                }
+                                                return true;
+                                            }).sort((a,b) => a.name.localeCompare(b.name)).map(member => {
+                                                const date = currentDate;
+                                                const session = currentAttendanceSession;
+                                                
+                                                // Real state + optimistic overlay
+                                                const record = (attendanceRecords[date] || []).find(r => r.member_id === member.id && r.session_type === session);
+                                                const isOptimistic = optimisticAttendance[member.id]?.[session] !== undefined;
+                                                const isPresent = isOptimistic ? optimisticAttendance[member.id][session] : !!record?.present;
+                                                const isProcessing = processingToggles[member.id];
+
+                                                return (
+                                                    <motion.button
+                                                        key={member.id}
+                                                        layoutId={member.id}
+                                                        onClick={() => toggleAttendance(member.id, session)}
+                                                        disabled={isProcessing}
+                                                        whileTap={{ scale: 0.96 }}
+                                                        className={cn(
+                                                            "relative flex items-center gap-4 p-4 rounded-3xl border transition-all duration-300 text-left overflow-hidden group",
+                                                            isPresent 
+                                                                ? "bg-primary/20 border-primary/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]" 
+                                                                : "bg-white/[0.02] border-white/5 hover:border-white/10"
+                                                        )}
+                                                    >
+                                                        {/* Status Glow Background */}
+                                                        {isPresent && (
+                                                            <div className="absolute inset-0 bg-primary/5 animate-pulse" />
+                                                        )}
+
+                                                        {/* Avatar */}
+                                                        <div className="relative shrink-0">
+                                                            <div className={cn(
+                                                                "w-12 h-12 rounded-2xl border-2 overflow-hidden transition-all duration-500",
+                                                                isPresent ? "border-primary shadow-[0_0_15px_rgba(59,130,246,0.3)]" : "border-white/10"
+                                                            )}>
+                                                                {member.avatar ? (
+                                                                    <img src={member.avatar} className="w-full h-full object-cover" alt="" />
+                                                                ) : (
+                                                                    <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                                                                        <User className="w-6 h-6 text-white/20" />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            {isPresent && (
+                                                                <div className="absolute -right-1 -bottom-1 bg-primary text-black rounded-full p-0.5 border-2 border-[#050510]">
+                                                                    <Check className="w-3 h-3 font-bold" />
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Member Info */}
+                                                        <div className="flex-1 min-w-0 pr-4">
+                                                            <h4 className={cn(
+                                                                "font-black text-sm uppercase tracking-tight truncate",
+                                                                isPresent ? "text-primary" : "text-white/80"
+                                                            )}>
+                                                                {member.name}
+                                                            </h4>
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{member.member_group}</span>
+                                                                {record?.time && !isOptimistic && (
+                                                                    <span className="text-[9px] font-medium text-primary/50 tabular-nums">{record.time.slice(0, 5)}</span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Processing Loader */}
+                                                        {isProcessing && (
+                                                            <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] flex items-center justify-center">
+                                                                <RefreshCw className="w-5 h-5 text-primary animate-spin" />
+                                                            </div>
+                                                        )}
+                                                    </motion.button>
+                                                );
+                                            })}
+                                        </div>
+                                    </TactileGlassCard>
                                 </motion.div>
                             )}
 
@@ -614,16 +1124,31 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         const isSun = parseISO(currentDate).getDay() === 0;
                                         return (
                                             <>
-                                                <div className="flex justify-end mb-8">
-                                                    <button
-                                                        onClick={() => {
-                                                            if (confirm("¿Poblar el mes actual con datos de prueba?")) seedMonthSchedule();
-                                                        }}
-                                                        className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group"
-                                                    >
-                                                        <Sparkles className="w-3.5 h-3.5 mr-2 group-hover:text-amber-400 transition-colors" />
-                                                        Poblar Mes
-                                                    </button>
+                                                <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white/5 p-6 rounded-[2rem] border border-white/5">
+                                                    <div className="flex flex-col md:flex-row items-baseline gap-3">
+                                                        <h2 className="text-2xl font-black italic uppercase tracking-tighter">Programación</h2>
+                                                        <span className="text-lg font-bold text-tactile-text-sub uppercase tracking-tight opacity-70">
+                                                            {format(parseISO(currentDate), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es })}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        <button
+                                                            onClick={() => (document.getElementById('global-date-picker') as HTMLInputElement)?.showPicker()}
+                                                            className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50"
+                                                        >
+                                                            <CalendarClock className="w-3.5 h-3.5 mr-2 text-primary" />
+                                                            CAMBIAR FECHA
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                if (confirm("¿Poblar el mes actual con datos de prueba?")) seedMonthSchedule();
+                                                            }}
+                                                            className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group"
+                                                        >
+                                                            <Sparkles className="w-3.5 h-3.5 mr-2 group-hover:text-amber-400 transition-colors" />
+                                                            POBLAR MES
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                                                     {/* 5 AM Slot */}
@@ -723,240 +1248,245 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             </div>
 
                                                             {isSun ? (
+                                                                    <TactileSelect
+                                                                        label="TIPO DE DOMINICAL"
+                                                                        value={currentDaySchedule.slots['9am'].sundayType || 'local'}
+                                                                        onChange={(val: string) => updateSlot('9am', { sundayType: val })}
+                                                                        disabled={isSaving}
+                                                                        searchable={false}
+                                                                        options={[
+                                                                            { value: 'local', label: 'Dominical Local' },
+                                                                            { value: 'exchange', label: 'Intercambio Ministerial' },
+                                                                            { value: 'broadcast', label: 'Transmisión Dominical' },
+                                                                            { value: 'visitors', label: 'Dominical de Visitas' },
+                                                                        ]}
+                                                                        icon={Crown}
+                                                                    />
+                                                                ) : (
+                                                                    <>
+                                                                        <TactileSelect
+                                                                            label="CONSAGRACIÓN"
+                                                                            value={currentDaySchedule.slots['9am'].consecrationLeaderId}
+                                                                            onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
+                                                                            disabled={isSaving}
+                                                                            options={memberOptions}
+                                                                            icon={User}
+                                                                        />
+
+                                                                        <TactileSelect
+                                                                            label="DOCTRINA"
+                                                                            value={currentDaySchedule.slots['9am'].doctrineLeaderId}
+                                                                            onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
+                                                                            disabled={isSaving}
+                                                                            options={memberOptions}
+                                                                            icon={Flame}
+                                                                        />
+                                                                    </>
+                                                                )}
+
+                                                                <button
+                                                                    onClick={() => updateSlot('9am', {})}
+                                                                    className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
+                                                                >
+                                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR {isSun ? 'DOMINICAL' : 'PROGRAMA'}
+                                                                </button>
+                                                            </div>
+                                                        </TactileGlassCard>
+
+                                                        {/* 12 PM Slot */}
+                                                        <TactileGlassCard
+                                                            title="12:00 PM"
+                                                            subtitle="Oración de mediodía"
+                                                            className="border-t-2 border-t-emerald-500/30"
+                                                        >
+                                                            <div className="space-y-6">
+                                                                <div className="flex items-center justify-between">
+                                                                    <input
+                                                                        type="text"
+                                                                        value={currentDaySchedule?.slots?.['12pm']?.time || '12:00 PM'}
+                                                                        disabled={isSaving}
+                                                                        onChange={(e) => updateSlot('12pm', { time: e.target.value })}
+                                                                        className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
+                                                                    />
+                                                                    <button
+                                                                        onClick={() => updateSlot('12pm', { language: currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'es' : 'en' })}
+                                                                        disabled={isSaving}
+                                                                        className={cn(
+                                                                            "tactile-btn text-[10px] w-12 h-8 justify-center",
+                                                                            currentDaySchedule?.slots?.['12pm']?.language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
+                                                                            isSaving && "opacity-50 cursor-wait"
+                                                                        )}
+                                                                    >
+                                                                        {currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'EN' : 'ES'}
+                                                                    </button>
+                                                                </div>
                                                                 <TactileSelect
-                                                                    label="TIPO DE DOMINICAL"
-                                                                    value={currentDaySchedule.slots['9am'].sundayType || 'local'}
-                                                                    onChange={(val: string) => updateSlot('9am', { sundayType: val })}
+                                                                    label="RESPONSABLE"
+                                                                    value={currentDaySchedule?.slots?.['12pm']?.leaderId || ''}
+                                                                    onChange={(val: string) => updateSlot('12pm', { leaderId: val })}
                                                                     disabled={isSaving}
+                                                                    options={memberOptions}
+                                                                    icon={User}
+                                                                />
+                                                                <button
+                                                                    onClick={() => updateSlot('12pm', {})}
+                                                                    className="tactile-btn tactile-btn-orange w-full justify-center h-10"
+                                                                >
+                                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
+                                                                </button>
+                                                            </div>
+                                                        </TactileGlassCard>
+
+                                                        {/* Evening Slot */}
+                                                        <TactileGlassCard
+                                                            title="07:00 PM"
+                                                            subtitle="Servicio de Oración"
+                                                            className="border-t-2 border-t-tactile-neon-pink/30"
+                                                        >
+                                                            <div className="space-y-6">
+                                                                <div className="flex items-center justify-between">
+                                                                    <input
+                                                                        type="text"
+                                                                        value={currentDaySchedule.slots['evening'].time}
+                                                                        disabled={isSaving}
+                                                                        onChange={(e) => updateSlot('evening', { time: e.target.value })}
+                                                                        className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
+                                                                    />
+                                                                    <button
+                                                                        onClick={() => updateSlot('evening', { language: currentDaySchedule.slots['evening'].language === 'en' ? 'es' : 'en' })}
+                                                                        disabled={isSaving}
+                                                                        className={cn(
+                                                                            "tactile-btn text-[10px] w-12 h-8 justify-center",
+                                                                            currentDaySchedule.slots['evening'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
+                                                                            isSaving && "opacity-50 cursor-wait"
+                                                                        )}
+                                                                        title="Alternar Idioma (Inglés/Español)"
+                                                                    >
+                                                                        {currentDaySchedule.slots['evening'].language === 'en' ? 'EN' : 'ES'}
+                                                                    </button>
+                                                                </div>
+
+                                                                <TactileSelect
+                                                                    label="TIPO DE SERVICIO"
+                                                                    value={currentDaySchedule.slots['evening'].type || 'regular'}
+                                                                    disabled={isSaving}
+                                                                    searchable={false}
+                                                                    onChange={(val: string) => {
+                                                                        const updates: any = { type: val };
+                                                                        const isMulti = ['special', 'youth', 'praise', 'married', 'children'].includes(val);
+                                                                        if (!isMulti && currentDaySchedule.slots['evening'].leaderIds.length > 1) {
+                                                                            updates.leaderIds = [currentDaySchedule.slots['evening'].leaderIds[0]];
+                                                                        }
+                                                                        updateSlot('evening', updates);
+                                                                    }}
                                                                     options={[
-                                                                        { value: 'local', label: 'Dominical Local' },
-                                                                        { value: 'exchange', label: 'Intercambio Ministerial' },
-                                                                        { value: 'broadcast', label: 'Transmisión Dominical' },
-                                                                        { value: 'visitors', label: 'Dominical de Visitas' },
+                                                                        { value: 'regular', label: 'Regular' },
+                                                                        { value: 'youth', label: 'Jóvenes' },
+                                                                        { value: 'married', label: 'Casados' },
+                                                                        { value: 'children', label: 'Niños' },
+                                                                        { value: 'solos', label: 'Solos y Solas' },
+                                                                        { value: 'praise', label: 'Servicio de Alabanza' },
+                                                                        { value: 'special', label: 'Especial' },
                                                                     ]}
-                                                                    icon={Crown}
+                                                                    icon={Sparkles}
                                                                 />
-                                                            ) : (
-                                                                <>
+
+                                                                {['youth', 'praise', 'children'].includes(currentDaySchedule.slots['evening'].type) ? (
+                                                                    <div className="grid grid-cols-1 gap-4">
+                                                                        <TactileSelect
+                                                                            label="DIRIGE"
+                                                                            value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
+                                                                            onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
+                                                                            disabled={isSaving}
+                                                                            options={memberOptions}
+                                                                            icon={User}
+                                                                        />
+                                                                        <TactileSelect
+                                                                            label="DOCTRINA"
+                                                                            value={currentDaySchedule.slots['evening'].doctrineLeaderId || ''}
+                                                                            onChange={(val: string) => updateSlot('evening', { doctrineLeaderId: val })}
+                                                                            disabled={isSaving}
+                                                                            options={memberOptions}
+                                                                            icon={BookOpen}
+                                                                        />
+                                                                    </div>
+                                                                ) : (
                                                                     <TactileSelect
-                                                                        label="CONSAGRACIÓN"
-                                                                        value={currentDaySchedule.slots['9am'].consecrationLeaderId}
-                                                                        onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
-                                                                        disabled={isSaving}
-                                                                        options={memberOptions}
-                                                                        icon={User}
-                                                                    />
-
-                                                                    <TactileSelect
-                                                                        label="DOCTRINA"
-                                                                        value={currentDaySchedule.slots['9am'].doctrineLeaderId}
-                                                                        onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
-                                                                        disabled={isSaving}
-                                                                        options={memberOptions}
-                                                                        icon={Flame}
-                                                                    />
-                                                                </>
-                                                            )}
-
-                                                            <button
-                                                                onClick={() => updateSlot('9am', {})}
-                                                                className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
-                                                            >
-                                                                <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR {isSun ? 'DOMINICAL' : 'PROGRAMA'}
-                                                            </button>
-                                                        </div>
-                                                    </TactileGlassCard>
-
-                                                    {/* 12 PM Slot */}
-                                                    <TactileGlassCard
-                                                        title="12:00 PM"
-                                                        subtitle="Oración de mediodía"
-                                                        className="border-t-2 border-t-emerald-500/30"
-                                                    >
-                                                        <div className="space-y-6">
-                                                            <div className="flex items-center justify-between">
-                                                                <input
-                                                                    type="text"
-                                                                    value={currentDaySchedule?.slots?.['12pm']?.time || '12:00 PM'}
-                                                                    disabled={isSaving}
-                                                                    onChange={(e) => updateSlot('12pm', { time: e.target.value })}
-                                                                    className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
-                                                                />
-                                                                <button
-                                                                    onClick={() => updateSlot('12pm', { language: currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'es' : 'en' })}
-                                                                    disabled={isSaving}
-                                                                    className={cn(
-                                                                        "tactile-btn text-[10px] w-12 h-8 justify-center",
-                                                                        currentDaySchedule?.slots?.['12pm']?.language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
-                                                                        isSaving && "opacity-50 cursor-wait"
-                                                                    )}
-                                                                >
-                                                                    {currentDaySchedule?.slots?.['12pm']?.language === 'en' ? 'EN' : 'ES'}
-                                                                </button>
-                                                            </div>
-                                                            <TactileSelect
-                                                                label="RESPONSABLE"
-                                                                value={currentDaySchedule?.slots?.['12pm']?.leaderId || ''}
-                                                                onChange={(val: string) => updateSlot('12pm', { leaderId: val })}
-                                                                disabled={isSaving}
-                                                                options={memberOptions}
-                                                                icon={User}
-                                                            />
-                                                            <button
-                                                                onClick={() => updateSlot('12pm', {})}
-                                                                className="tactile-btn tactile-btn-orange w-full justify-center h-10"
-                                                            >
-                                                                <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
-                                                            </button>
-                                                        </div>
-                                                    </TactileGlassCard>
-
-                                                    {/* Evening Slot */}
-                                                    <TactileGlassCard
-                                                        title="07:00 PM"
-                                                        subtitle="Servicio de Oración"
-                                                        className="border-t-2 border-t-tactile-neon-pink/30"
-                                                    >
-                                                        <div className="space-y-6">
-                                                            <div className="flex items-center justify-between">
-                                                                <input
-                                                                    type="text"
-                                                                    value={currentDaySchedule.slots['evening'].time}
-                                                                    disabled={isSaving}
-                                                                    onChange={(e) => updateSlot('evening', { time: e.target.value })}
-                                                                    className="bg-transparent border-b border-white/10 text-xl font-bold w-20 focus:outline-none disabled:opacity-50"
-                                                                />
-                                                                <button
-                                                                    onClick={() => updateSlot('evening', { language: currentDaySchedule.slots['evening'].language === 'en' ? 'es' : 'en' })}
-                                                                    disabled={isSaving}
-                                                                    className={cn(
-                                                                        "tactile-btn text-[10px] w-12 h-8 justify-center",
-                                                                        currentDaySchedule.slots['evening'].language === 'en' ? "tactile-btn-orange shadow-[0_0_15px_rgba(249,115,22,0.4)]" : "tactile-btn-glass",
-                                                                        isSaving && "opacity-50 cursor-wait"
-                                                                    )}
-                                                                    title="Alternar Idioma (Inglés/Español)"
-                                                                >
-                                                                    {currentDaySchedule.slots['evening'].language === 'en' ? 'EN' : 'ES'}
-                                                                </button>
-                                                            </div>
-
-                                                            <TactileSelect
-                                                                label="TIPO DE SERVICIO"
-                                                                value={currentDaySchedule.slots['evening'].type || 'regular'}
-                                                                disabled={isSaving}
-                                                                onChange={(val: string) => {
-                                                                    const updates: any = { type: val };
-                                                                    const isMulti = ['special', 'youth', 'praise', 'married', 'children'].includes(val);
-                                                                    if (!isMulti && currentDaySchedule.slots['evening'].leaderIds.length > 1) {
-                                                                        updates.leaderIds = [currentDaySchedule.slots['evening'].leaderIds[0]];
-                                                                    }
-                                                                    updateSlot('evening', updates);
-                                                                }}
-                                                                options={[
-                                                                    { value: 'regular', label: 'Regular' },
-                                                                    { value: 'youth', label: 'Jóvenes' },
-                                                                    { value: 'married', label: 'Casados' },
-                                                                    { value: 'children', label: 'Niños' },
-                                                                    { value: 'solos', label: 'Solos y Solas' },
-                                                                    { value: 'praise', label: 'Servicio de Alabanza' },
-                                                                    { value: 'special', label: 'Especial' },
-                                                                ]}
-                                                                icon={Sparkles}
-                                                            />
-
-                                                            {['youth', 'praise', 'children'].includes(currentDaySchedule.slots['evening'].type) ? (
-                                                                <div className="grid grid-cols-1 gap-4">
-                                                                    <TactileSelect
-                                                                        label="DIRIGE"
+                                                                        label="ENCARGADO"
                                                                         value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
                                                                         onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
                                                                         disabled={isSaving}
                                                                         options={memberOptions}
                                                                         icon={User}
                                                                     />
-                                                                    <TactileSelect
-                                                                        label="DOCTRINA"
-                                                                        value={currentDaySchedule.slots['evening'].doctrineLeaderId || ''}
-                                                                        onChange={(val: string) => updateSlot('evening', { doctrineLeaderId: val })}
-                                                                        disabled={isSaving}
-                                                                        options={memberOptions}
-                                                                        icon={BookOpen}
-                                                                    />
-                                                                </div>
-                                                            ) : (
-                                                                <TactileSelect
-                                                                    label="ENCARGADO"
-                                                                    value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
-                                                                    onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
-                                                                    disabled={isSaving}
-                                                                    options={memberOptions}
-                                                                    icon={User}
-                                                                />
-                                                            )}
-                                                            <button
-                                                                onClick={() => updateSlot('evening', {})}
-                                                                className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
-                                                            >
-                                                                <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR SERVICIO
-                                                            </button>
-                                                        </div>
-                                                    </TactileGlassCard>
-                                                </div>
-                                            </>
-                                        );
-                                    })()}
-                                </motion.div>
-                            )}
+                                                                )}
+                                                                <button
+                                                                    onClick={() => updateSlot('evening', {})}
+                                                                    className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
+                                                                >
+                                                                    <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR SERVICIO
+                                                                </button>
+                                                            </div>
+                                                        </TactileGlassCard>
+                                                    </div>
+                                                </>
+                                            );
+                                        })()}
+                                    </motion.div>
+                                )}
 
-                            {activeTab === 'anuncios' && (
-                                <motion.div
-                                    key="anuncios"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -20 }}
-                                    className="grid grid-cols-1 md:grid-cols-12 gap-8"
-                                >
-                                    <div className="col-span-1 md:col-span-4 space-y-6">
-                                        <TactileGlassCard title={editingAnnId ? "EDITAR COMUNICADO" : "NUEVO COMUNICADO"}>
-                                            <div className="space-y-4">
-                                                <TactileInput
-                                                    label="TÍTULO"
-                                                    placeholder="Ej. Estudio Bíblico..."
-                                                    value={newAnn.title}
-                                                    onChange={(e: any) => setNewAnn({ ...newAnn, title: e.target.value })}
-                                                />
-                                                <div className="space-y-2">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO</label>
-                                                    <textarea
-                                                        className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-sm font-bold min-h-[120px] outline-none focus:border-primary/50"
-                                                        placeholder="Detalles del anuncio..."
-                                                        value={newAnn.content}
-                                                        onChange={(e: any) => setNewAnn({ ...newAnn, content: e.target.value })}
+                                {activeTab === 'anuncios' && (
+                                    <motion.div
+                                        key="anuncios"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -20 }}
+                                        className="grid grid-cols-1 md:grid-cols-12 gap-8"
+                                    >
+                                        <div className="col-span-1 md:col-span-4 space-y-6">
+                                            <TactileGlassCard title={editingAnnId ? "EDITAR COMUNICADO" : "NUEVO COMUNICADO"}>
+                                                <div className="space-y-4">
+                                                    <TactileInput
+                                                        label="TÍTULO"
+                                                        placeholder="Ej. Estudio Bíblico..."
+                                                        value={newAnn.title}
+                                                        onChange={(e: any) => setNewAnn({ ...newAnn, title: e.target.value })}
                                                     />
-                                                </div>
-                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    <TactileSelect
-                                                        label="PRIORIDAD"
-                                                        value={newAnn.priority}
-                                                        onChange={(val: string) => setNewAnn({ ...newAnn, priority: parseInt(val) })}
-                                                        options={[
-                                                            { value: 0, label: 'Normal' },
-                                                            { value: 1, label: 'Importante' },
-                                                            { value: 2, label: 'Urgente' },
-                                                        ]}
-                                                        icon={Bell}
-                                                    />
-                                                    <TactileSelect
-                                                        label="CATEGORÍA"
-                                                        value={newAnn.category || 'general'}
-                                                        onChange={(val: string) => setNewAnn({ ...newAnn, category: val })}
-                                                        options={[
-                                                            { value: 'general', label: 'General' },
-                                                            { value: 'choir', label: 'Coro' },
-                                                            { value: 'ministers', label: 'Ministerio' },
-                                                        ]}
-                                                        icon={Filter}
-                                                    />
+                                                    <div className="space-y-2">
+                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO</label>
+                                                        <textarea
+                                                            className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-sm font-bold min-h-[120px] outline-none focus:border-primary/50"
+                                                            placeholder="Detalles del anuncio..."
+                                                            value={newAnn.content}
+                                                            onChange={(e: any) => setNewAnn({ ...newAnn, content: e.target.value })}
+                                                        />
+                                                    </div>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <TactileSelect
+                                                            label="PRIORIDAD"
+                                                            value={newAnn.priority}
+                                                            onChange={(val: string) => setNewAnn({ ...newAnn, priority: parseInt(val) })}
+                                                            searchable={false}
+                                                            options={[
+                                                                { value: 0, label: 'Normal' },
+                                                                { value: 1, label: 'Importante' },
+                                                                { value: 2, label: 'Urgente' },
+                                                            ]}
+                                                            icon={Bell}
+                                                        />
+                                                        <TactileSelect
+                                                            label="CATEGORÍA"
+                                                            value={newAnn.category || 'general'}
+                                                            onChange={(val: string) => setNewAnn({ ...newAnn, category: val })}
+                                                            searchable={false}
+                                                            options={[
+                                                                { value: 'general', label: 'General' },
+                                                                { value: 'choir', label: 'Coro' },
+                                                                { value: 'ministers', label: 'Ministerio' },
+                                                            ]}
+                                                            icon={Filter}
+                                                        />
+                                                    </div>
                                                     <div className="grid grid-cols-2 gap-2">
                                                         <TactileInput
                                                             label="EXPIRA EL"
@@ -980,7 +1510,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className="flex gap-2">
+                                                <div className="flex gap-2 mt-6">
                                                     {editingAnnId && (
                                                         <button
                                                             onClick={() => {
@@ -1011,72 +1541,71 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         {isSaving ? 'GUARDANDO...' : (editingAnnId ? 'ACTUALIZAR' : 'PUBLICAR AHORA')}
                                                     </button>
                                                 </div>
-                                            </div>
-                                        </TactileGlassCard>
-                                    </div>
+                                            </TactileGlassCard>
+                                        </div>
 
-                                    <div className="col-span-1 md:col-span-8 space-y-4">
-                                        <h3 className="text-xl font-black italic uppercase tracking-widest mb-4">Comunicados Activos</h3>
-                                        {announcements.length === 0 ? (
-                                            <div className="p-12 border-2 border-dashed border-white/5 rounded-[2.5rem] text-center">
-                                                <p className="text-tactile-text-sub font-bold uppercase tracking-widest">No hay anuncios activos</p>
-                                            </div>
-                                        ) : (
-                                            <div className="space-y-4">
-                                                {announcements.map((ann) => (
-                                                    <div key={ann.id} className="tactile-glass-panel flex items-center gap-6 group hover:bg-white/[0.05] transition-colors p-6">
-                                                        <div className={cn(
-                                                            "w-12 h-12 rounded-full flex items-center justify-center border shadow-lg",
-                                                            ann.priority === 2 ? "bg-red-500/20 border-red-500/40 text-red-500" :
-                                                                ann.priority === 1 ? "bg-orange-500/20 border-orange-500/40 text-orange-500" :
-                                                                    "bg-blue-500/20 border-blue-500/40 text-blue-500"
-                                                        )}>
-                                                            <Bell className="w-5 h-5" />
-                                                        </div>
-                                                        <div className="flex-1">
-                                                            <div className="flex items-center gap-3 mb-1">
-                                                                <h4 className="font-bold text-lg">{ann.title}</h4>
-                                                                <span className={cn(
-                                                                    "text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border",
-                                                                    ann.category === 'choir' ? "border-pink-500/30 text-pink-500 bg-pink-500/10" : "border-white/10 opacity-40"
-                                                                )}>
-                                                                    {ann.category || 'general'}
-                                                                </span>
-                                                                <span className="text-[9px] font-black uppercase tracking-widest opacity-40 px-2 py-0.5 border border-white/10 rounded-full">
-                                                                    {format(parseISO(ann.timestamp), "d MMM")}
-                                                                </span>
+                                        <div className="col-span-1 md:col-span-8 space-y-4 overflow-y-auto tactile-scroll pr-2" style={{ maxHeight: 'calc(100vh - 250px)' }}>
+                                            <h3 className="text-xl font-black italic uppercase tracking-widest mb-4">Comunicados Activos</h3>
+                                            {announcements.length === 0 ? (
+                                                <div className="p-12 border-2 border-dashed border-white/5 rounded-[2.5rem] text-center">
+                                                    <p className="text-tactile-text-sub font-bold uppercase tracking-widest">No hay anuncios activos</p>
+                                                </div>
+                                            ) : (
+                                                <div className="space-y-4">
+                                                    {announcements.map((ann) => (
+                                                        <div key={ann.id} className="tactile-glass-panel flex items-center gap-6 group hover:bg-white/[0.05] transition-colors p-6">
+                                                            <div className={cn(
+                                                                "w-12 h-12 rounded-full flex items-center justify-center border shadow-lg",
+                                                                ann.priority === 2 ? "bg-red-500/20 border-red-500/40 text-red-500" :
+                                                                    ann.priority === 1 ? "bg-orange-500/20 border-orange-500/40 text-orange-500" :
+                                                                        "bg-blue-500/20 border-blue-500/40 text-blue-500"
+                                                            )}>
+                                                                <Bell className="w-5 h-5" />
                                                             </div>
-                                                            <p className="text-tactile-text-sub text-sm line-clamp-1">{ann.content}</p>
+                                                            <div className="flex-1">
+                                                                <div className="flex items-center gap-3 mb-1">
+                                                                    <h4 className="font-bold text-lg">{ann.title}</h4>
+                                                                    <span className={cn(
+                                                                        "text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border",
+                                                                        ann.category === 'choir' ? "border-pink-500/30 text-pink-500 bg-pink-500/10" : "border-white/10 opacity-40"
+                                                                    )}>
+                                                                        {ann.category || 'general'}
+                                                                    </span>
+                                                                    <span className="text-[9px] font-black uppercase tracking-widest opacity-40 px-2 py-0.5 border border-white/10 rounded-full">
+                                                                        {format(parseISO(ann.timestamp), "d MMM")}
+                                                                    </span>
+                                                                </div>
+                                                                <p className="text-tactile-text-sub text-sm line-clamp-1">{ann.content}</p>
+                                                            </div>
+                                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setEditingAnnId(ann.id);
+                                                                        setNewAnn({ ...ann });
+                                                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                                    }}
+                                                                    className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-primary transition-all"
+                                                                >
+                                                                    <Edit2 className="w-4 h-4" />
+                                                                </button>
+                                                                <button
+                                                                    onClick={async () => {
+                                                                        if (confirm('¿Eliminar este comunicado?')) {
+                                                                            await deleteAnnouncementFromCloud(ann.id);
+                                                                        }
+                                                                    }}
+                                                                    className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-red-500 transition-all"
+                                                                >
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <button
-                                                                onClick={() => {
-                                                                    setEditingAnnId(ann.id);
-                                                                    setNewAnn({ ...ann });
-                                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                                                                }}
-                                                                className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-primary transition-all"
-                                                            >
-                                                                <Edit2 className="w-4 h-4" />
-                                                            </button>
-                                                            <button
-                                                                onClick={async () => {
-                                                                    if (confirm('¿Eliminar este comunicado?')) {
-                                                                        await deleteAnnouncementFromCloud(ann.id);
-                                                                    }
-                                                                }}
-                                                                className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-red-500 transition-all"
-                                                            >
-                                                                <Trash2 className="w-4 h-4" />
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </motion.div>
-                            )}
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                )}
 
                             {activeTab === 'miembros' && (
                                 <motion.div

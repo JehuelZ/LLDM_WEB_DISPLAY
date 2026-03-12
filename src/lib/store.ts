@@ -265,8 +265,8 @@ interface AppState {
     // Attendance Actions
     loadAttendanceFromCloud: (date: string) => Promise<void>;
     saveAttendanceToCloud: (records: AttendanceRecord[]) => Promise<void>;
-    loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
     loadWeeklyAttendanceStats: () => Promise<any[]>;
+    loadMonthlyGlobalAttendanceStats: () => Promise<any[]>;
 
     signInWithGoogle: () => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
@@ -1109,9 +1109,9 @@ export const useAppStore = create<AppState>()(
                             showMinisterOnDisplay: data.show_minister_on_display,
                             displayBgMode: data.display_bg_mode || 'official',
                             displayBgStyle: data.display_bg_style || 'static',
-                            displayBgUrl: data.display_bg_url || '/lldm_oficial_logo.svg',
+                            displayBgUrl: (data.display_bg_url?.includes('oficial_logo') || data.display_bg_url?.includes('shield')) ? '/flama-oficial.svg' : (data.display_bg_url || '/flama-oficial.svg'),
                             displayCustomBgUrl: data.display_custom_bg_url,
-                            churchLogoUrl: data.church_logo_url || '/flama-oficial.svg',
+                            churchLogoUrl: (data.church_logo_url?.includes('oficial_logo') || data.church_logo_url?.includes('shield')) ? '/flama-oficial.svg' : (data.church_logo_url || '/flama-oficial.svg'),
                             ministerName: data.minister_name,
                             ministerPhone: data.minister_phone,
                             ministerEmail: data.minister_email,
@@ -1119,7 +1119,7 @@ export const useAppStore = create<AppState>()(
                             countdownTitle: data.countdown_title,
                             countdownDate: data.countdown_date,
                             showCountdown: data.show_countdown,
-                            countdownLogoUrl: data.countdown_logo_url,
+                            countdownLogoUrl: (data.countdown_logo_url?.includes('oficial_logo') || data.countdown_logo_url?.includes('shield')) ? '/flama-oficial.svg' : data.countdown_logo_url,
                             countdownBgColor: data.countdown_bg_color || '#ffffff',
                             countdownAccentColor: data.countdown_accent_color || '#d4af37',
                             countdownBgImageUrl: data.countdown_bg_image_url,
@@ -1535,7 +1535,7 @@ export const useAppStore = create<AppState>()(
                 await get().loadAttendanceFromCloud(date);
             },
 
-            loadMonthlyAttendanceStats: async (memberId) => {
+            loadMonthlyAttendanceStats: async (memberId: string) => {
                 const start = startOfMonth(new Date());
                 const end = endOfMonth(new Date());
 
@@ -1569,6 +1569,32 @@ export const useAppStore = create<AppState>()(
                     .select('date, member_id')
                     .gte('date', days[0])
                     .lte('date', days[6]);
+
+                if (error) return [];
+
+                const totalMembers = get().members.length;
+
+                return days.map(d => {
+                    const dailyRecords = data?.filter(r => r.date === d) || [];
+                    const uniqueAttended = new Set(dailyRecords.map(r => r.member_id)).size;
+                    return {
+                        date: d,
+                        attended: uniqueAttended,
+                        total: totalMembers,
+                        percentage: totalMembers > 0 ? (uniqueAttended / totalMembers) * 100 : 0
+                    };
+                });
+            },
+
+            loadMonthlyGlobalAttendanceStats: async () => {
+                const now = new Date();
+                const days = Array.from({ length: 30 }, (_, i) => format(subDays(now, 29 - i), 'yyyy-MM-dd'));
+
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('date, member_id')
+                    .gte('date', days[0])
+                    .lte('date', days[29]);
 
                 if (error) return [];
 

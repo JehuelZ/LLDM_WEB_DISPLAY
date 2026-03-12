@@ -2605,7 +2605,7 @@ export default function AdminDashboard() {
                                                     <div className="relative group/input">
                                                         <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40 group-focus-within/input:text-primary transition-colors" />
                                                         <Input
-                                                            value={minister.name}
+                                                            value={minister.name || ''}
                                                             onChange={(e) => setMinister({ name: e.target.value })}
                                                             className="h-16 bg-foreground/5 border-white/10 pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
                                                             placeholder="Ej. P.E. Benjamin Rojas"
@@ -2617,7 +2617,7 @@ export default function AdminDashboard() {
                                                     <div className="relative group/input">
                                                         <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40 group-focus-within/input:text-primary transition-colors" />
                                                         <Input
-                                                            value={minister.phone}
+                                                            value={minister.phone || ''}
                                                             onChange={(e) => setMinister({ phone: e.target.value })}
                                                             className="h-16 bg-foreground/5 border-white/10 pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
                                                             placeholder="+1 (555) 000-0000"
@@ -2629,7 +2629,7 @@ export default function AdminDashboard() {
                                                     <div className="relative group/input">
                                                         <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40 group-focus-within/input:text-primary transition-colors" />
                                                         <Input
-                                                            value={minister.email}
+                                                            value={minister.email || ''}
                                                             onChange={(e) => setMinister({ email: e.target.value })}
                                                             className="h-16 bg-foreground/5 border-white/10 pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
                                                             placeholder="contacto@lldmrodeo.org"
@@ -2844,7 +2844,7 @@ export default function AdminDashboard() {
                                                     <User className="w-3 h-3" /> Nombre Completo y Apellido
                                                 </label>
                                                 <Input
-                                                    value={newMember.name}
+                                                    value={newMember.name || ''}
                                                     onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
                                                     placeholder="Ej: María López"
                                                     className={cn(
@@ -2881,7 +2881,7 @@ export default function AdminDashboard() {
                                                     <Mail className="w-3 h-3" /> Correo Gmail (Vinculación)
                                                 </label>
                                                 <Input
-                                                    value={newMember.email}
+                                                    value={newMember.email || ''}
                                                     onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
                                                     placeholder="ejemplo@gmail.com"
                                                     className={cn(
@@ -2896,7 +2896,7 @@ export default function AdminDashboard() {
                                                     <Phone className="w-3 h-3" /> Teléfono de Contacto
                                                 </label>
                                                 <Input
-                                                    value={newMember.phone}
+                                                    value={newMember.phone || ''}
                                                     onChange={(e) => setNewMember({ ...newMember, phone: e.target.value })}
                                                     placeholder="+1 (555) 000-0000"
                                                     className="bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all outline-none"

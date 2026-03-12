@@ -56,16 +56,16 @@ export function DisplayLock({ onUnlock }: { onUnlock: () => void }) {
         <div className="fixed inset-0 z-[1000] bg-black flex items-center justify-center font-sans overflow-hidden">
             {/* 
               CINEMATIC STANDBY BACKGROUND 
-              Using the new GOLDEN FLAME SHIELD EMBLEM
+              Using the official FLAME EMBLEM
             */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.8 }}
-                className="absolute inset-0 z-0"
+                className="absolute inset-0 z-0 flex items-center justify-center p-20"
             >
                 <img
-                    src="/church_standby_flame_emblem.png"
-                    className="w-full h-full object-cover"
+                    src="/flama-oficial.svg"
+                    className="w-[60%] h-[60%] object-contain opacity-20 filter brightness-150"
                     alt="Standby Emblem"
                 />
                 <div className="absolute inset-0 bg-black/30" />
@@ -83,7 +83,7 @@ export function DisplayLock({ onUnlock }: { onUnlock: () => void }) {
                 >
                     {/* 
                         The trigger circle: 
-                        It aligns with the shield in the background.
+                        It aligns with the emblem in the background.
                         Provides a "touch target" without blocking the beautiful art.
                     */}
                     {!showLogin && (
