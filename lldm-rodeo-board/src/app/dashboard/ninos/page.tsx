@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Baby, Clock, Calendar, ShieldCheck, Star, Users, ArrowLeft, CheckCircle2, AlertCircle, Music, Trophy, Target, Download, ExternalLink, TrendingUp, Shirt } from 'lucide-react';
+import { Baby, Clock, Calendar, Star, Users, ArrowLeft, CheckCircle2, AlertCircle, Music, Trophy, Target, Download, ExternalLink, TrendingUp, Shirt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';

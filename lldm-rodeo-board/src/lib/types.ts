@@ -33,16 +33,35 @@ export interface DailySchedule {
     slots: {
         '5am': {
             leaderId: string;
+            time?: string;
+            endTime?: string;
+            customLabel?: string;
+            language?: string;
         };
         '9am': {
             consecrationLeaderId: string;
             doctrineLeaderId: string;
+            time?: string;
+            endTime?: string;
+            customLabel?: string;
+            language?: string;
+            sundayType?: 'local' | 'exchange' | 'broadcast' | 'visitors';
+        };
+        '12pm'?: {
+            leaderId: string;
+            time?: string;
+            endTime?: string;
+            customLabel?: string;
         };
         'evening': {
-            time: '6:30 PM' | '7:00 PM';
+            time: string;
             type: ServiceType;
-            leaderIds: string[]; // Can be 1 or multiple (e.g. 2 brothers, 2 sisters)
-            topic?: string; // Specific topic if overridden
+            leaderIds: string[];
+            doctrineLeaderId?: string;
+            topic?: string;
+            customLabel?: string;
+            language?: string;
+            endTime?: string;
         };
     };
 }
@@ -68,4 +87,5 @@ export interface Announcement {
     imageUrl?: string;
     active: boolean;
     priority: number;
+    expiresAt?: string;
 }

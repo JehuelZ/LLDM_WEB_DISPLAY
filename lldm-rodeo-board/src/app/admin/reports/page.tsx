@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import {
     FileText, Download, Printer, Filter, Calendar,
     ArrowUpRight, ArrowDownRight, Users, Clock,
-    TrendingUp, Shield, Baby, Music, ChevronDown
+    TrendingUp, Activity, Baby, Music, ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -189,7 +189,7 @@ export default function ReportsPage() {
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="text-xl font-black uppercase italic text-white flex items-center gap-3">
-                                <Shield className="w-5 h-5 text-emerald-500" />
+                                <Activity className="w-5 h-5 text-emerald-500" />
                                 Fidelidad de Responsabilidades
                             </CardTitle>
                             <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Cumplimiento de Monitores y Responsables</CardDescription>

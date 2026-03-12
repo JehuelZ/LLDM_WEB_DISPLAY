@@ -16,19 +16,58 @@ export const MOCK_SCHEDULE: DailySchedule = {
     slots: {
         '5am': {
             leaderId: 'Bro. Juan Pérez',
+            time: '05:00 AM',
+            endTime: '05:30 AM',
+            language: 'es'
         },
         '9am': {
             consecrationLeaderId: 'Sis. María G.',
             doctrineLeaderId: 'Sis. Ana R.',
+            time: '09:00 AM',
+            endTime: '10:00 AM',
+            language: 'es'
         },
         'evening': {
-            time: '6:30 PM',
-            type: 'youth',
+            time: '07:00 PM',
+            type: 'regular',
             leaderIds: ['Bro. Pedro', 'Bro. Lucas'],
             topic: 'La Juventud y su Compromiso',
+            language: 'es',
+            endTime: '08:30 PM'
         },
     },
 };
+
+export const MOCK_MEMBERS: any[] = [
+    {
+        id: '1',
+        name: 'Samuel Rojas',
+        email: 'samuel.rojas@example.com',
+        phone: '555-1234',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
+        category: 'Varon',
+        member_group: 'Casados',
+        role: 'Responsable',
+        gender: 'Varon',
+        status: 'Activo',
+        lastActive: 'Hoy',
+        privileges: ['leader']
+    },
+    {
+        id: '2',
+        name: 'Maria Garcia',
+        email: 'maria.garcia@example.com',
+        phone: '555-5678',
+        avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
+        category: 'Hermana',
+        member_group: 'Casadas',
+        role: 'Miembro',
+        gender: 'Hermana',
+        status: 'Activo',
+        lastActive: 'Hoy',
+        privileges: []
+    }
+];
 
 // Generate a month of data
 export const GENERATE_MONTH_SCHEDULE = (): Record<string, DailySchedule> => {

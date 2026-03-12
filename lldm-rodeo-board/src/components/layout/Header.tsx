@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
-import { LogOut, User, LogIn, ShieldCheck, Mail, Shield, Church, Cross, Star, Heart, ClipboardCheck, Music } from 'lucide-react';
+import { LogOut, User, LogIn, Mail, Flame, Church, Cross, Star, Heart, ClipboardCheck, Music, Activity } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
@@ -17,8 +17,13 @@ export function Header() {
     const unreadCount = useMemo(() => messages.filter(m => !m.isRead).length, [messages]);
 
     const isCustom = settings.churchIcon === 'custom';
-    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/lldm_rodeo_logo.svg";
-    const isDefaultLogo = logoUrl.includes('/lldm_rodeo_logo.svg') || logoUrl.includes('/flama-oficial.svg') || logoUrl.includes('/lldm_aniversario.svg') || logoUrl.includes('/lldm_santa_cena.svg');
+    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg";
+    const isDefaultLogo = logoUrl.includes('/lldm_rodeo_logo.svg') || 
+                         logoUrl.includes('/flama-oficial.svg') || 
+                         logoUrl.includes('/lldm_oficial_logo.svg') || 
+                         logoUrl.includes('/lldm_flama_3.svg') || 
+                         logoUrl.includes('/lldm_aniversario.svg') || 
+                         logoUrl.includes('/lldm_santa_cena.svg');
 
     useEffect(() => {
         if (authSession) {
@@ -46,8 +51,8 @@ export function Header() {
                             ) : (
                                 <div className="text-primary group-hover:scale-110 transition-transform">
                                     {(() => {
-                                        const icons: Record<string, any> = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
-                                        const Icon = icons[settings.churchIcon] || Shield;
+                                        const icons: Record<string, any> = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
+                                         const Icon = icons[settings.churchIcon] || Flame;
                                         return <Icon className="w-6 h-6" />;
                                     })()}
                                 </div>
@@ -81,7 +86,7 @@ export function Header() {
                                 href="/dashboard/ministro"
                                 className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                             >
-                                <Shield className="w-3 h-3 text-primary" /> Ministro
+                                <Flame className="w-3 h-3 text-primary" /> Ministro
                             </Link>
                         )}
                         {(currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia') && (
@@ -105,7 +110,7 @@ export function Header() {
                                 href="/admin"
                                 className="transition-colors text-primary uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
                             >
-                                <ShieldCheck className="w-3 h-3" /> Admin
+                                <Flame className="w-3 h-3" /> Admin
                             </Link>
                         )}
                     </nav>

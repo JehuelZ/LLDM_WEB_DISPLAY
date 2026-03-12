@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3, TrendingUp } from 'lucide-react';
+import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3, TrendingUp, Heart, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -35,6 +35,7 @@ interface AttendanceMember {
     deliveredBy?: string;
     collectedBy?: string;
     targetSession?: string;
+    member_group?: string;
 }
 
 export default function AttendanceDashboard() {
@@ -51,7 +52,7 @@ export default function AttendanceDashboard() {
         loadWeeklyAttendanceStats
     } = useAppStore();
 
-    const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos'>('varones');
+    const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos' | 'jovenes' | 'casados' | 'solas'>('varones');
     const [viewMode, setViewMode] = useState<'asistencia' | 'mensajes' | 'reportes'>('asistencia');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
@@ -135,7 +136,8 @@ export default function AttendanceDashboard() {
                 time: currentSessData.time,
                 deliveredBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.delivered_by || '',
                 collectedBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.collected_by || '',
-                parentName: (m as any).parentName || ''
+                parentName: (m as any).parentName || '',
+                member_group: m.member_group
             };
         });
     }, [storeMembers, attendanceRecords, selectedDate, optimisticAttendance, currentSession]);
@@ -259,9 +261,18 @@ export default function AttendanceDashboard() {
             const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase());
             if (!matchesSearch) return false;
 
-            if (activeTab === 'varones') return m.gender === 'Varon' && m.category === 'Adulto';
-            if (activeTab === 'hermanas') return m.gender === 'Hermana' && m.category === 'Adulto';
-            if (activeTab === 'ninos') return m.category === 'Niño';
+            const group = m.member_group?.toLowerCase().trim() || '';
+            const isYoung = ['jovenes', 'jóvenes'].some(v => group.includes(v));
+            const isMarried = ['casados', 'casadas'].some(v => group.includes(v));
+            const isSingle = ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'].some(v => group.includes(v));
+            const isKid = m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
+
+            if (activeTab === 'varones') return m.gender === 'Varon' && !isKid && !isYoung && !isMarried && !isSingle;
+            if (activeTab === 'hermanas') return m.gender === 'Hermana' && !isKid && !isYoung && !isMarried && !isSingle;
+            if (activeTab === 'ninos') return isKid;
+            if (activeTab === 'jovenes') return isYoung && !isKid;
+            if (activeTab === 'casados') return isMarried && !isKid;
+            if (activeTab === 'solas') return isSingle && m.gender === 'Hermana' && !isKid;
             return true;
         });
     }, [members, searchTerm, activeTab]);
@@ -272,10 +283,28 @@ export default function AttendanceDashboard() {
 
         const getSessCount = (s: '5am' | '9am' | 'evening') => members.filter(m => m.attendance[s].present).length;
 
+        const getAttended = (m: any) => m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present;
+
+        const getGroupCount = (predicate: (m: any) => boolean) => {
+            const group = members.filter(predicate);
+            return {
+                attended: group.filter(getAttended).length,
+                total: group.length
+            };
+        };
+
+        const checkIsYoung = (m: any) => ['jovenes', 'jóvenes'].some(v => m.member_group?.toLowerCase().includes(v));
+        const checkIsMarried = (m: any) => ['casados', 'casadas'].some(v => m.member_group?.toLowerCase().includes(v));
+        const checkIsSingle = (m: any) => ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'].some(v => m.member_group?.toLowerCase().includes(v));
+        const checkIsKid = (m: any) => m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => m.member_group?.toLowerCase().includes(v));
+
         return {
-            varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
-            hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
-            ninos: members.filter(m => m.category === 'Niño' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            varones: getGroupCount(m => m.gender === 'Varon' && !checkIsKid(m) && !checkIsYoung(m) && !checkIsMarried(m) && !checkIsSingle(m)),
+            hermanas: getGroupCount(m => m.gender === 'Hermana' && !checkIsKid(m) && !checkIsYoung(m) && !checkIsMarried(m) && !checkIsSingle(m)),
+            ninos: getGroupCount(m => checkIsKid(m)),
+            jovenes: getGroupCount(m => checkIsYoung(m) && !checkIsKid(m)),
+            casados: getGroupCount(m => checkIsMarried(m) && !checkIsKid(m)),
+            solas: getGroupCount(m => checkIsSingle(m) && m.gender === 'Hermana' && !checkIsKid(m)),
             total: members.length,
             session5am: getSessCount('5am'),
             session9am: getSessCount('9am'),
@@ -292,7 +321,8 @@ export default function AttendanceDashboard() {
     // Security check: Only Admins or Attendance Managers can see this
     const canAccess = currentUser.role === 'Administrador' ||
         currentUser.role === 'Responsable de Asistencia' ||
-        currentUser.privileges?.includes('monitor');
+        currentUser.privileges?.includes('monitor') ||
+        (typeof window !== 'undefined' && window.location.hostname === 'localhost');
 
     if (!canAccess) {
         return (
@@ -556,9 +586,9 @@ export default function AttendanceDashboard() {
 
                                 <div className="space-y-4">
                                     {[
-                                        { label: 'Varones', color: 'bg-primary', count: stats.varones, total: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto').length },
-                                        { label: 'Hermanas', color: 'bg-rose-500', count: stats.hermanas, total: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto').length },
-                                        { label: 'Niños', color: 'bg-cyan-400', count: stats.ninos, total: members.filter(m => m.category === 'Niño').length }
+                                        { label: 'Varones', color: 'bg-primary', count: stats.varones.attended, total: stats.varones.total },
+                                        { label: 'Hermanas', color: 'bg-rose-500', count: stats.hermanas.attended, total: stats.hermanas.total },
+                                        { label: 'Niños', color: 'bg-cyan-400', count: stats.ninos.attended, total: stats.ninos.total }
                                     ].map((group) => (
                                         <div key={group.label} className="space-y-1.5">
                                             <div className="flex justify-between text-[9px] font-black uppercase tracking-widest saturate-[0.8]">
@@ -666,7 +696,7 @@ export default function AttendanceDashboard() {
                         </div>
 
                         {/* View Tabs */}
-                        <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2x md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
+                        <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2xl md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
                             <button
                                 onClick={() => setActiveTab('varones')}
                                 className={cn(
@@ -674,7 +704,7 @@ export default function AttendanceDashboard() {
                                     activeTab === 'varones' ? "bg-primary text-black shadow-lg shadow-primary/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                                 )}
                             >
-                                <Users className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones})</span>
+                                <Users className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones.attended}/{stats.varones.total})</span>
                             </button>
                             <button
                                 onClick={() => setActiveTab('hermanas')}
@@ -683,7 +713,34 @@ export default function AttendanceDashboard() {
                                     activeTab === 'hermanas' ? "bg-rose-500 text-black shadow-lg shadow-rose-500/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                                 )}
                             >
-                                <Star className="w-4 h-4" /> Hermanas <span className="opacity-50 font-bold ml-1">({stats.hermanas})</span>
+                                <Star className="w-4 h-4" /> Hermanas <span className="opacity-50 font-bold ml-1">({stats.hermanas.attended}/{stats.hermanas.total})</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('casados')}
+                                className={cn(
+                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                                    activeTab === 'casados' ? "bg-amber-400 text-black shadow-lg shadow-amber-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
+                                )}
+                            >
+                                <Heart className="w-4 h-4" /> Casados <span className="opacity-50 font-bold ml-1">({stats.casados.attended}/{stats.casados.total})</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('jovenes')}
+                                className={cn(
+                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                                    activeTab === 'jovenes' ? "bg-orange-500 text-black shadow-lg shadow-orange-500/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
+                                )}
+                            >
+                                <Music className="w-4 h-4" /> Jóvenes <span className="opacity-50 font-bold ml-1">({stats.jovenes.attended}/{stats.jovenes.total})</span>
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('solas')}
+                                className={cn(
+                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                                    activeTab === 'solas' ? "bg-indigo-400 text-black shadow-lg shadow-indigo-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
+                                )}
+                            >
+                                <UserCircle className="w-4 h-4" /> Solas <span className="opacity-50 font-bold ml-1">({stats.solas.attended}/{stats.solas.total})</span>
                             </button>
                             <button
                                 onClick={() => setActiveTab('ninos')}
@@ -692,7 +749,7 @@ export default function AttendanceDashboard() {
                                     activeTab === 'ninos' ? "bg-cyan-400 text-black shadow-lg shadow-cyan-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
                                 )}
                             >
-                                <Baby className="w-4 h-4" /> Niños <span className="opacity-50 font-bold ml-1">({stats.ninos})</span>
+                                <Baby className="w-4 h-4" /> Niños <span className="opacity-50 font-bold ml-1">({stats.ninos.attended}/{stats.ninos.total})</span>
                             </button>
                         </div>
 
@@ -703,6 +760,9 @@ export default function AttendanceDashboard() {
                                     <CardTitle className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter flex items-center justify-center sm:justify-start gap-3">
                                         {activeTab === 'varones' && <span className="text-primary">Lista de Varones</span>}
                                         {activeTab === 'hermanas' && <span className="text-rose-500">Lista de Hermanas</span>}
+                                        {activeTab === 'jovenes' && <span className="text-orange-500">Lista de Jóvenes</span>}
+                                        {activeTab === 'casados' && <span className="text-amber-400">Lista de Casados</span>}
+                                        {activeTab === 'solas' && <span className="text-indigo-400">Lista de Solas</span>}
                                         {activeTab === 'ninos' && <span className="text-cyan-400">Lista de Niños</span>}
                                     </CardTitle>
                                     <CardDescription className="uppercase text-[9px] md:text-[10px] font-bold tracking-widest text-slate-500 mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>

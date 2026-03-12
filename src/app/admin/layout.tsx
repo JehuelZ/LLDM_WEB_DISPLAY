@@ -84,13 +84,30 @@ export default function AdminLayout({
     const router = useRouter();
     const t = TRANSLATIONS[settings.language as keyof typeof TRANSLATIONS] || TRANSLATIONS.es;
     const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
     const searchParams = useSearchParams();
     const currentTab = searchParams.get('tab') || 'dashboard';
 
-    const isAuthorized = (authSession?.user && currentUser.role === 'Administrador') || (typeof window !== 'undefined' && window.location.hostname === 'localhost');
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
-    if (!isAuthorized && !isLoading) {
+    const isAuthorized = (authSession?.user && currentUser.role === 'Administrador') || (mounted && typeof window !== 'undefined' && window.location.hostname === 'localhost');
+
+    // Prevent hydration mismatch by returning a consistent loader or null until mounted
+    if (!mounted) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-950">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-16 h-16 border-4 border-t-primary border-primary/20 rounded-full animate-spin" />
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/50 animate-pulse">Iniciando Panel...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!isAuthorized) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-950 p-4 relative overflow-hidden w-full">
                 {/* Fondo Animado */}

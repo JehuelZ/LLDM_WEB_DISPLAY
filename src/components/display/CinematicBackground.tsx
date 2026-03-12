@@ -104,10 +104,10 @@ export const CinematicBackground = () => {
     return (
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-black">
             {/* Cinematic Base Image */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 flex items-center justify-center p-40">
                 <img
-                    src="/church_standby_flame_emblem.png"
-                    className="w-full h-full object-cover"
+                    src="/flama-oficial.svg"
+                    className="w-[80%] h-[80%] object-contain opacity-10 filter brightness-150"
                     alt="Background"
                 />
                 <div className="absolute inset-0 bg-black/40" />
@@ -131,9 +131,9 @@ export const CinematicBackground = () => {
                     className="w-[80%] h-[80%] flex items-center justify-center mix-blend-screen"
                 >
                     <img
-                        src="/flame_logo_premium.png"
-                        className="w-full h-full object-contain filter drop-shadow-[0_0_50px_rgba(251,191,36,0.3)]"
-                        alt="Premium Flame Logo"
+                        src="/flama-oficial.svg"
+                        className="w-full h-full object-contain filter drop-shadow-[0_0_50px_rgba(251,191,36,0.5)]"
+                        alt="Official Flame Logo"
                     />
                 </motion.div>
             </div>

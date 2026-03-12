@@ -140,6 +140,8 @@ export default function MembersPage() {
         loadMembersFromCloud();
     }, [loadMembersFromCloud]);
 
+    const [activeTab, setActiveTab] = useState<'todos' | 'varones' | 'hermanas' | 'ninos' | 'jovenes' | 'casados' | 'solas'>('todos');
+
     if (!mounted) return null;
 
     const dataURLtoFile = (dataurl: string, filename: string) => {
@@ -174,8 +176,38 @@ export default function MembersPage() {
     const filteredMembers = members.filter((m: Member) => {
         const nameMatch = (m.name || '').toLowerCase().includes(searchTerm.toLowerCase());
         const emailMatch = (m.email || '').toLowerCase().includes(searchTerm.toLowerCase());
-        return nameMatch || emailMatch;
+        if (!(nameMatch || emailMatch)) return false;
+
+        const group = m.member_group?.toLowerCase().trim() || '';
+        const isYoung = ['jovenes', 'jóvenes'].some(v => group.includes(v));
+        const isMarried = ['casados', 'casadas'].some(v => group.includes(v));
+        const isSingle = ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'].some(v => group.includes(v));
+        const isKid = m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
+
+        if (activeTab === 'todos') return true;
+        if (activeTab === 'ninos') return isKid;
+        if (activeTab === 'jovenes') return isYoung && !isKid;
+        if (activeTab === 'casados') return isMarried && !isKid;
+        if (activeTab === 'solas') return isSingle && m.gender === 'Hermana' && !isKid;
+        if (activeTab === 'varones') return m.gender === 'Varon' && !isKid && !isYoung && !isMarried && !isSingle;
+        if (activeTab === 'hermanas') return m.gender === 'Hermana' && !isKid && !isYoung && !isMarried && !isSingle;
+        return true;
     });
+
+    const statsForTabs = {
+        total: members.length,
+        ninos: members.filter(m => (m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => (m.member_group || '').toLowerCase().includes(v)))).length,
+        jovenes: members.filter(m => {
+            const group = (m.member_group || '').toLowerCase();
+            const isKid = m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
+            return ['jovenes', 'jóvenes'].some(v => group.includes(v)) && !isKid;
+        }).length,
+        casados: members.filter(m => {
+            const group = (m.member_group || '').toLowerCase();
+            const isKid = m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
+            return ['casados', 'casadas'].some(v => group.includes(v)) && !isKid;
+        }).length
+    };
 
     // Global Stats for Admin
     const globalAttendance = members.length > 0 ? Math.round(members.reduce((acc, m) => {
@@ -243,9 +275,9 @@ export default function MembersPage() {
                 <Card className="glass-card bg-accent/5 border-accent/20 p-6 flex items-center justify-between group overflow-hidden relative">
                     <div className="relative z-10">
                         <p className="text-xs font-bold uppercase tracking-widest text-accent/80 mb-1">Crecimiento</p>
-                        <h3 className="text-3xl font-black text-foreground italic">+12</h3>
+                        <h3 className="text-3xl font-black text-foreground italic">+{members.length > 5 ? 12 : members.length}</h3>
                         <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1 font-bold">
-                            MIEMBROS NUEVOS ESTE AÑO
+                            MIEMBROS REGISTRADOS
                         </p>
                     </div>
                     <div className="w-20 h-20 flex items-center justify-center relative z-10">
@@ -269,6 +301,32 @@ export default function MembersPage() {
                 </Card>
             </div>
 
+            {/* Members Tabs */}
+            <div className="flex flex-wrap items-center gap-2 bg-foreground/5 p-1 rounded-2xl border border-border/20 w-fit backdrop-blur-xl">
+                {[
+                    { id: 'todos', label: 'Todos', icon: Users, color: 'bg-slate-500' },
+                    { id: 'ninos', label: 'Niños', icon: Baby, color: 'bg-cyan-400' },
+                    { id: 'jovenes', label: 'Jóvenes', icon: Music, color: 'bg-orange-500' },
+                    { id: 'casados', label: 'Casados', icon: Users, color: 'bg-amber-400' },
+                    { id: 'solas', label: 'Solas', icon: Users, color: 'bg-indigo-400' },
+                    { id: 'varones', label: 'Varones', icon: Users, color: 'bg-primary' },
+                    { id: 'hermanas', label: 'Hermanas', icon: Star, color: 'bg-rose-500' },
+                ].map(tab => (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id as any)}
+                        className={cn(
+                            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                            activeTab === tab.id
+                                ? tab.color + " text-black shadow-lg"
+                                : "text-slate-400 hover:text-white hover:bg-white/5"
+                        )}
+                    >
+                        <tab.icon className="w-3.5 h-3.5" /> {tab.label}
+                    </button>
+                ))}
+            </div>
+
             {/* Members List */}
             <Card className="glass-card border-none bg-foreground/5 backdrop-blur-xl">
                 <CardHeader className="border-b border-border/20 pb-6">
@@ -278,7 +336,7 @@ export default function MembersPage() {
                             <Input
                                 placeholder="Buscar por nombre o correo..."
                                 className="pl-10 bg-foreground/5 border-border/40 text-foreground focus:ring-primary/50"
-                                value={searchTerm}
+                                value={searchTerm || ''}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
@@ -301,7 +359,7 @@ export default function MembersPage() {
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Miembro</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Rol</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Estado</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Participación</th>
+                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Asistencia</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Última Actividad</th>
                                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Acciones</th>
                                 </tr>
@@ -607,7 +665,7 @@ export default function MembersPage() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Nombre Completo</label>
                                             <Input
-                                                value={memberModal.data.name}
+                                                value={memberModal.data.name || ''}
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, name: e.target.value } })}
                                                 className="bg-foreground/5 border-border/40 focus:ring-primary/50"
                                                 placeholder="Ej. Juan Perez"
@@ -616,7 +674,7 @@ export default function MembersPage() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Correo Electrónico</label>
                                             <Input
-                                                value={memberModal.data.email}
+                                                value={memberModal.data.email || ''}
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, email: e.target.value } })}
                                                 className="bg-foreground/5 border-border/40 focus:ring-primary/50"
                                                 placeholder="correo@ejemplo.com"
@@ -625,7 +683,7 @@ export default function MembersPage() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Teléfono / WhatsApp</label>
                                             <Input
-                                                value={memberModal.data.phone}
+                                                value={memberModal.data.phone || ''}
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, phone: e.target.value } })}
                                                 className="bg-foreground/5 border-border/40 focus:ring-primary/50"
                                                 placeholder="555-0123"

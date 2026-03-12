@@ -15,6 +15,8 @@ export default function CalendarPage() {
     const {
         monthlySchedule,
         loadAllSchedulesFromCloud,
+        members,
+        loadMembersFromCloud,
         theme,
         loadThemeFromCloud,
         settings
@@ -23,10 +25,17 @@ export default function CalendarPage() {
 
     useEffect(() => {
         loadAllSchedulesFromCloud();
+        loadMembersFromCloud();
         loadThemeFromCloud();
-    }, [loadAllSchedulesFromCloud, loadThemeFromCloud]);
+    }, [loadAllSchedulesFromCloud, loadMembersFromCloud, loadThemeFromCloud]);
 
-    // Use real cloud schedule data
+    const getMemberName = (id: string) => {
+        if (!id) return '';
+        const member = members.find(m => m.id === id);
+        if (member) return member.name;
+        // Fallback for names already stored as strings or legacy format
+        return id.includes('-') ? 'Asignado' : id;
+    };
 
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
@@ -202,17 +211,17 @@ export default function CalendarPage() {
                                                         <div className="mt-2 space-y-1">
                                                             {event.slots['5am'].leaderId && (
                                                                 <div className="p-1 rounded bg-blue-500/10 text-blue-400 text-[7px] font-black uppercase truncate">
-                                                                    5AM: {event.slots['5am'].leaderId.split(' ')[0]}
+                                                                    5AM: {getMemberName(event.slots['5am'].leaderId).split(' ')[0]}
                                                                 </div>
                                                             )}
                                                             {event.slots['9am'].doctrineLeaderId && (
                                                                 <div className="p-1 rounded bg-amber-500/10 text-amber-400 text-[7px] font-black uppercase truncate">
-                                                                    9AM: {event.slots['9am'].doctrineLeaderId.split(' ')[0]}
+                                                                    9AM: {getMemberName(event.slots['9am'].doctrineLeaderId).split(' ')[0]}
                                                                 </div>
                                                             )}
                                                             {event.slots.evening.leaderIds.length > 0 && (
                                                                 <div className="p-1 rounded bg-purple-500/10 text-purple-400 text-[7px] font-black uppercase truncate">
-                                                                    {event.slots.evening.time}: {event.slots.evening.leaderIds[0].split(' ')[0]}
+                                                                    {event.slots.evening.time}: {getMemberName(event.slots.evening.leaderIds[0]).split(' ')[0]}
                                                                 </div>
                                                             )}
                                                         </div>

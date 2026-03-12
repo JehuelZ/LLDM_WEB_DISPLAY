@@ -11,14 +11,13 @@ import {
     Users,
     Bell,
     Settings,
-    Shield,
+    Flame,
     Church,
     Cross,
     Star,
     Heart,
     ChevronLeft,
     Menu,
-    Activity,
     User,
     Music,
     ClipboardCheck,
@@ -30,7 +29,7 @@ import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
 
 const ICON_MAP = {
-    shield: Shield,
+    flame: Flame,
     church: Church,
     cross: Cross,
     star: Star,
@@ -83,7 +82,7 @@ export default function AdminLayout({
     const [collapsed, setCollapsed] = useState(false);
 
     const isCustom = settings.churchIcon === 'custom' && settings.customIconUrl;
-    const ChurchIcon = ICON_MAP[settings.churchIcon as keyof typeof ICON_MAP] || Shield;
+    const ChurchIcon = ICON_MAP[settings.churchIcon as keyof typeof ICON_MAP] || Flame;
 
     return (
         <div className="min-h-screen bg-background text-foreground flex transition-colors duration-500">
@@ -95,11 +94,11 @@ export default function AdminLayout({
                 <div className={cn("p-6 flex items-center shrink-0", collapsed ? "justify-center" : "justify-between")}>
                     {!collapsed && (
                         <div className="flex items-center gap-3 px-2 py-1 overflow-hidden whitespace-nowrap">
-                            <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0 overflow-hidden">
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0">
                                 {isCustom ? (
-                                    <img src={settings.customIconUrl} alt="Church Logo" className="w-full h-full object-cover" />
+                                    <img src={settings.customIconUrl} alt="Church Logo" className="w-full h-full object-contain" />
                                 ) : (
-                                    <ChurchIcon className="w-5 h-5 text-primary" />
+                                    <ChurchIcon className="w-7 h-7 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.4)]" />
                                 )}
                             </div>
                             <h1 className="text-xl font-black text-white tracking-tighter uppercase italic">LLDM<span className="text-primary italic">RODEO</span></h1>
@@ -189,7 +188,7 @@ export default function AdminLayout({
                         "px-4 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2",
                         collapsed && "invisible h-0 py-0"
                     )}>
-                        <Activity className="h-3 w-3 text-secondary animate-pulse" /> {t.simulador}
+                        <Flame className="h-3 w-3 text-primary animate-pulse" /> {t.simulador}
                     </div>
 
                     <div className="space-y-1">
@@ -211,7 +210,7 @@ export default function AdminLayout({
                             "flex items-center gap-3 px-4 py-2 rounded-lg text-xs bg-foreground/5 text-muted-foreground text-foreground transition-all",
                             collapsed && "justify-center"
                         )}>
-                            <Shield className="w-4 h-4 text-primary" />
+                            <Flame className="w-4 h-4 text-primary" />
                             {!collapsed && <span>Vista Responsable</span>}
                         </Link>
                         <Link href="/dashboard/monitor" className={cn(

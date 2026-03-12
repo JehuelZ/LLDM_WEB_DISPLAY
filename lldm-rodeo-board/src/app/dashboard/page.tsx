@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, ShieldCheck, ArrowRight } from 'lucide-react';
+import { LayoutDashboard, Users, ClipboardCheck, Music, Baby, Flame, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
@@ -41,7 +41,7 @@ export default function DashboardIndex() {
             title: 'Panel de Responsables',
             description: 'Herramientas para encargados de grupo.',
             href: '/dashboard/responsable',
-            icon: ShieldCheck,
+            icon: Flame,
             color: 'text-primary',
             bgColor: 'bg-primary/10',
             borderColor: 'border-primary/20'

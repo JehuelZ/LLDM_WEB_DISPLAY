@@ -216,7 +216,8 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
         return () => clearInterval(timer);
     }, []);
 
-    const iglesiaVariant = settings.iglesiaVariant || 'light';
+    const language = settings?.language || 'es';
+    const iglesiaVariant = settings?.iglesiaVariant || 'light';
     const isDark = iglesiaVariant === 'dark';
     const T = getIglesiaTokens(iglesiaVariant);
 
@@ -370,9 +371,9 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
         );
     };
 
-    const title5am = slot5am?.customLabel || getSlotLabel('5am', settings.language);
-    const title9am = slot9am?.customLabel || (isSun ? getSlotLabel('9am_sunday', settings.language) : getSlotLabel('9am_regular', settings.language));
-    const eveningTitle = slotEvening?.customLabel || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th);
+    const title5am = slot5am?.customLabel || getSlotLabel('5am', settings?.language);
+    const title9am = slot9am?.customLabel || (isSun ? getSlotLabel('9am_sunday', settings?.language) : getSlotLabel('9am_regular', settings?.language));
+    const eveningTitle = slotEvening?.customLabel || getServiceTypeLabel(slotEvening?.type || 'regular', settings?.language, is14th);
 
     return (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '30px 40px 180px 40px', gap: 20, fontFamily: T.fontFamily }}>
@@ -385,7 +386,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
                     <div style={{ width: 'fit-content', minWidth: 600 }}>
                         <BigAcademicTitle
-                            label={getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings.language)}
+                            label={getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language)}
                             icon={Layout}
                             T={T}
                             isDark={isDark}

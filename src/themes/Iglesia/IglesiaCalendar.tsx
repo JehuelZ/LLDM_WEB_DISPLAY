@@ -24,7 +24,7 @@ export function IglesiaCalendar() {
         return () => clearInterval(timer);
     }, []);
 
-    const iglesiaVariant = settings.iglesiaVariant || 'light';
+    const iglesiaVariant = settings?.iglesiaVariant || 'light';
     const isDark = iglesiaVariant === 'dark';
     const T = getIglesiaTokens(iglesiaVariant);
 
@@ -98,7 +98,7 @@ export function IglesiaCalendar() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{ width: 'fit-content', minWidth: 600 }}>
                     <BigAcademicTitle
-                        label={getSlideSystemTitle('calendar', settings.language)}
+                        label={getSlideSystemTitle('calendar', settings?.language)}
                         icon={CalendarIcon}
                         T={T}
                         isDark={isDark}

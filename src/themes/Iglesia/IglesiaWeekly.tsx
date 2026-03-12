@@ -250,7 +250,7 @@ export function IglesiaWeekly() {
         return () => clearInterval(timer);
     }, []);
 
-    const iglesiaVariant = settings.iglesiaVariant || 'light';
+    const iglesiaVariant = settings?.iglesiaVariant || 'light';
     const isDark = iglesiaVariant === 'dark';
     const T = getIglesiaTokens(iglesiaVariant);
 
@@ -326,7 +326,7 @@ export function IglesiaWeekly() {
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div style={{ width: 'fit-content', minWidth: 600 }}>
                         <BigAcademicTitle
-                            label={getSlideSystemTitle('weekly_program', settings.language)}
+                            label={getSlideSystemTitle('weekly_program', settings?.language)}
                             icon={Calendar}
                             T={T}
                             isDark={isDark}
@@ -388,7 +388,7 @@ export function IglesiaWeekly() {
                                                         </motion.div>
                                                     )}
                                                     <p style={{ fontSize: 7, fontWeight: 900, color: isActive ? T.accent : T.tertiary, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontInter, textAlign: 'right' }}>
-                                                        {sched?.slots?.['5am']?.customLabel || getSlotLabel('5am', settings.language)}
+                                                        {sched?.slots?.['5am']?.customLabel || getSlotLabel('5am', settings?.language)}
                                                     </p>
                                                 </div>
 
@@ -488,7 +488,7 @@ export function IglesiaWeekly() {
                                                     </div>
                                                     <div style={{ textAlign: 'center' }}>
                                                         <p style={{ fontSize: 7, fontWeight: 900, color: isActive ? T.accent : T.secondary, textTransform: 'uppercase', letterSpacing: '0.14em', fontFamily: T.fontInter, marginBottom: 4 }}>
-                                                            {sched?.slots?.['9am']?.customLabel || getSlotLabel('9am_sunday', settings.language)}
+                                                            {sched?.slots?.['9am']?.customLabel || getSlotLabel('9am_sunday', settings?.language)}
                                                         </p>
                                                         <p style={{ fontSize: 13, fontWeight: 700, color: isActive ? T.accent : ((isDark || isToday) ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat }}>
                                                             {current.label} {isActive && ' (EN CURSO)'}
@@ -516,7 +516,7 @@ export function IglesiaWeekly() {
                                                                 </motion.div>
                                                             )}
                                                             <p style={{ fontSize: 7, fontWeight: 900, color: isActive ? T.accent : T.secondary, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontInter, textAlign: 'right' }}>
-                                                                {sched?.slots?.['9am']?.customLabel || getSlotLabel('9am_regular', settings.language)}
+                                                                {sched?.slots?.['9am']?.customLabel || getSlotLabel('9am_regular', settings?.language)}
                                                             </p>
                                                         </div>
 
@@ -582,7 +582,7 @@ export function IglesiaWeekly() {
                                                         )}
                                                     </div>
                                                     <p style={{ fontSize: 7.5, fontWeight: 900, color: isActive ? T.accent : T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontInter, textAlign: 'right' }}>
-                                                        {sched?.slots?.['evening']?.customLabel || (isSun ? 'Servicio Vespertino' : getSlotLabel('evening_regular', settings.language))}
+                                                        {sched?.slots?.['evening']?.customLabel || (isSun ? 'Servicio Vespertino' : getSlotLabel('evening_regular', settings?.language))}
                                                     </p>
                                                 </div>
 

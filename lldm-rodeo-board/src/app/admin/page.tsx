@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
     Calendar, Users, FileText, Settings, ExternalLink,
-    Sun, Moon, Monitor, Church, Cross, Star, Heart, Shield,
+    Sun, Moon, Monitor, Church, Cross, Star, Heart, Flame,
     Upload, X, ChevronDown, Bell, FilePlus, AlertCircle, Save, Trash2,
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera,
-    Languages, Globe, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck
+    Languages, TrendingUp, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
@@ -356,7 +356,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-4 bg-foreground/5 p-1.5 px-3 rounded-2xl border border-border/40 backdrop-blur-md">
                         <div className="flex items-center gap-3">
                             <div className="relative flex items-center">
-                                <Globe className="w-3.5 h-3.5 text-primary/70 mr-2" />
+                                <TrendingUp className="w-3.5 h-3.5 text-primary/70 mr-2" />
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-2 flex items-center pointer-events-none">
                                         <Languages className="w-3 h-3 text-primary" />
@@ -1149,8 +1149,8 @@ export default function AdminDashboard() {
                         <div className="space-y-4">
                             <h3 className="text-sm font-bold uppercase tracking-widest text-slate-400">Icono de Identidad</h3>
                             <div className="grid grid-cols-6 gap-2">
-                                {(['shield', 'church', 'cross', 'star', 'heart'] as const).map((iconKey) => {
-                                    const icons = { shield: Shield, church: Church, cross: Cross, star: Star, heart: Heart };
+                                {(['flame', 'church', 'cross', 'star', 'heart'] as const).map((iconKey) => {
+                                    const icons = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
                                     const IconComp = icons[iconKey];
                                     return (
                                         <Button
@@ -1191,7 +1191,7 @@ export default function AdminDashboard() {
                                         <button
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setSettings({ customIconUrl: undefined, churchIcon: 'shield' });
+                                                setSettings({ customIconUrl: undefined, churchIcon: 'flame' });
                                             }}
                                             className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors z-10"
                                         >

@@ -12,7 +12,6 @@ import {
     MoreVertical,
     Mail,
     Phone,
-    ShieldCheck,
     Filter,
     ArrowUpDown,
     CheckCircle2,
@@ -118,25 +117,24 @@ const StatDoughnut = ({
 
 // --- Interfaces ---
 
-interface MemberStats {
-    attendance: { attended: number; total: number };
-    participation: { led: number; total: number };
-    punctuality: number;
-}
-
 interface Member {
     id: string;
     name: string;
-    role: 'Miembro' | 'Responsable' | 'Administrador';
+    role: string;
     gender: 'Varon' | 'Hermana';
-    member_group?: 'Casados' | 'Casadas' | 'Solteros' | 'Solteras' | 'Jovenes' | 'Niños' | 'Niñas';
+    member_group?: string;
     email: string;
     phone: string;
-    status: 'Activo' | 'Inactivo';
+    status: string;
     lastActive: string;
-    stats: MemberStats;
+    stats: {
+        attendance: { attended: number; total: number };
+        participation: { led: number; total: number };
+        punctuality: number;
+    };
     avatarUrl?: string;
-    privileges: ('monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper')[];
+    avatar?: string;
+    privileges: string[];
     parentName?: string;
     is_pre_registered?: boolean;
 }
@@ -225,13 +223,13 @@ export default function MembersPage() {
     );
 
     // Global Stats for Admin
-    const globalAttendance = members.length > 0 ? Math.round(members.reduce((acc: number, m: Member) => {
+    const globalAttendance = members.length > 0 ? Math.round(members.reduce((acc: number, m: any) => {
         const total = m.stats?.attendance?.total || 0;
         const attended = m.stats?.attendance?.attended || 0;
         return acc + (total > 0 ? attended / total : 0);
     }, 0) / members.length * 100) : 0;
 
-    const globalParticipation = members.length > 0 ? Math.round(members.reduce((acc: number, m: Member) => {
+    const globalParticipation = members.length > 0 ? Math.round(members.reduce((acc: number, m: any) => {
         const total = m.stats?.participation?.total || 0;
         const led = m.stats?.participation?.led || 0;
         return acc + (total > 0 ? led / total : 0);
@@ -515,7 +513,7 @@ export default function MembersPage() {
                                                             {/* Privileges Assignment Section */}
                                                             <div className="pt-8 border-t border-border/20">
                                                                 <h4 className="text-sm font-black uppercase tracking-widest text-white mb-6 flex items-center gap-2 italic">
-                                                                    <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                                                                    <Activity className="w-5 h-5 text-emerald-500" />
                                                                     Asignación de Roles y Privilegios
                                                                 </h4>
                                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -527,7 +525,7 @@ export default function MembersPage() {
                                                                         { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, color: 'text-amber-500', adultOnly: true },
                                                                         { id: 'youth_leader', label: 'Responsable de Jóvenes', icon: Users, color: 'text-indigo-400', adultOnly: true },
                                                                         { id: 'kids_leader', label: 'Maestro / Dirigente de Niños', icon: Baby, color: 'text-cyan-400', adultOnly: true },
-                                                                        { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: ShieldCheck, color: 'text-rose-400', adultOnly: true },
+                                                                        { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: Activity, color: 'text-rose-400', adultOnly: true },
                                                                     ].filter(priv => {
                                                                         const isChild = member.member_group === 'Niños' || member.member_group === 'Niñas';
                                                                         return isChild ? !priv.adultOnly : true;
@@ -654,7 +652,7 @@ export default function MembersPage() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Nombre Completo</label>
                                             <Input
-                                                value={memberModal.data.name}
+                                                value={memberModal.data.name || ''}
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, name: e.target.value } })}
                                                 className="bg-foreground/5 border-border/40 focus:ring-primary/50"
                                                 placeholder="Ej. Juan Perez"
@@ -663,7 +661,7 @@ export default function MembersPage() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Correo Electrónico</label>
                                             <Input
-                                                value={memberModal.data.email}
+                                                value={memberModal.data.email || ''}
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, email: e.target.value } })}
                                                 className="bg-foreground/5 border-border/40 focus:ring-primary/50"
                                                 placeholder="correo@ejemplo.com"
@@ -672,7 +670,7 @@ export default function MembersPage() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Teléfono / WhatsApp</label>
                                             <Input
-                                                value={memberModal.data.phone}
+                                                value={memberModal.data.phone || ''}
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, phone: e.target.value } })}
                                                 className="bg-foreground/5 border-border/40 focus:ring-primary/50"
                                                 placeholder="555-0123"
@@ -742,7 +740,7 @@ export default function MembersPage() {
                                             { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, adultOnly: true },
                                             { id: 'youth_leader', label: 'Responsable de Jóvenes', icon: Users, adultOnly: true },
                                             { id: 'kids_leader', label: 'Maestro / Dirigente de Niños', icon: Baby, adultOnly: true },
-                                            { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: ShieldCheck, adultOnly: true },
+                                            { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: Activity, adultOnly: true },
                                         ].filter(priv => {
                                             const isChild = memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas';
                                             return isChild ? !priv.adultOnly : true;

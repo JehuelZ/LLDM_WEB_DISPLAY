@@ -214,7 +214,7 @@ export function CeremonialCountdown() {
                     className="mt-20 flex flex-col items-center"
                 >
                     <img
-                        src={settings.countdownLogoUrl || "/lldm_oficial_logo.svg"}
+                        src={settings.countdownLogoUrl || "/flama-oficial.svg"}
                         className="w-56 h-auto filter brightness-90 opacity-90 drop-shadow-lg"
                         alt="Logo Evento"
                     />

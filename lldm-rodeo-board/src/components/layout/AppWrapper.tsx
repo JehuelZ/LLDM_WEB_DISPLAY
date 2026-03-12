@@ -7,11 +7,13 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabaseClient';
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
-    const { calendarStyles, settings, setAuthSession, syncUserWithCloud } = useAppStore();
+    const { calendarStyles, settings, setAuthSession, syncUserWithCloud, loadSettingsFromCloud, subscribeToSettings } = useAppStore();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
         setMounted(true);
+        loadSettingsFromCloud();
+        const unsubscribeSettings = subscribeToSettings();
 
         // Escuchar cambios de autenticación (login/logout)
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -32,8 +34,11 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
             }
         });
 
-        return () => subscription.unsubscribe();
-    }, [setAuthSession, syncUserWithCloud]);
+        return () => {
+            subscription.unsubscribe();
+            unsubscribeSettings();
+        };
+    }, [setAuthSession, syncUserWithCloud, loadSettingsFromCloud, subscribeToSettings]);
 
     const themeMode = settings.themeMode;
 

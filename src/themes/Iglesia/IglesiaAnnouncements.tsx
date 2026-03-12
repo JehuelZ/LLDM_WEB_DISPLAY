@@ -21,7 +21,7 @@ export function IglesiaAnnouncements() {
     useEffect(() => {
         if (loadMembersFromCloud) loadMembersFromCloud();
     }, [loadMembersFromCloud]);
-    const iglesiaVariant = settings.iglesiaVariant || 'light';
+    const iglesiaVariant = settings?.iglesiaVariant || 'light';
     const isDark = iglesiaVariant === 'dark';
     const T = getIglesiaTokens(iglesiaVariant);
 
@@ -203,7 +203,7 @@ export function IglesiaAnnouncements() {
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div style={{ width: 'fit-content', minWidth: 600 }}>
                         <BigAcademicTitle
-                            label={getSlideSystemTitle('announcements', settings.language)}
+                            label={getSlideSystemTitle('announcements', settings?.language)}
                             icon={Bell}
                             T={T}
                             isDark={isDark}
@@ -450,10 +450,10 @@ export function IglesiaAnnouncements() {
                                     {/* Social Media Row (Neumorphic Style) */}
                                     <div style={{ display: 'flex', gap: 14, marginTop: 4 }}>
                                         {[
-                                            { icon: Facebook, url: settings.facebookUrl, color: '#1877F2' },
-                                            { icon: Instagram, url: settings.instagramUrl, color: '#E4405F' },
-                                            { icon: Youtube, url: settings.youtubeUrl, color: '#FF0000' },
-                                            { icon: Info, url: settings.customSocialUrl, color: T.accent, label: settings.customSocialLabel }
+                                            { icon: Facebook, url: settings?.facebookUrl, color: '#1877F2' },
+                                            { icon: Instagram, url: settings?.instagramUrl, color: '#E4405F' },
+                                            { icon: Youtube, url: settings?.youtubeUrl, color: '#FF0000' },
+                                            { icon: Info, url: settings?.customSocialUrl, color: T.accent, label: settings?.customSocialLabel }
                                         ].filter(s => s.url).map((s, idx) => (
                                             <div key={idx} style={{
                                                 width: 36, height: 36, borderRadius: '50%',

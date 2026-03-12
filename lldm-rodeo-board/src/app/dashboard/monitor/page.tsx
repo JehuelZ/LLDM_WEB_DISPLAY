@@ -8,7 +8,7 @@ import { Header } from '@/components/layout/Header';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useState, useMemo, useEffect } from 'react';
-import { Baby, Shield } from 'lucide-react';
+import { Baby, AlertTriangle } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -29,6 +29,7 @@ interface AttendanceMember {
     present: boolean;
     time: string | null;
     parentName?: string;
+    member_group?: string;
     deliveredBy?: string;
     collectedBy?: string;
     targetSession?: string;
@@ -48,7 +49,7 @@ export default function AttendanceDashboard() {
         loadWeeklyAttendanceStats
     } = useAppStore();
 
-    const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos'>('varones');
+    const [activeTab, setActiveTab] = useState<'casados' | 'casadas' | 'jovenes' | 'solos' | 'ninos' | 'todos'>('casados');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
     const [isSaving, setIsSaving] = useState(false);
@@ -131,7 +132,8 @@ export default function AttendanceDashboard() {
                 time: currentSessData.time,
                 deliveredBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.delivered_by || '',
                 collectedBy: (recordsForDay.find(r => r.member_id === m.id && r.session_type === currentSession))?.collected_by || '',
-                parentName: (m as any).parentName || ''
+                parentName: (m as any).parentName || '',
+                member_group: m.member_group
             };
         });
     }, [storeMembers, attendanceRecords, selectedDate, optimisticAttendance, currentSession]);
@@ -255,10 +257,12 @@ export default function AttendanceDashboard() {
             const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase());
             if (!matchesSearch) return false;
 
-            if (activeTab === 'varones') return m.gender === 'Varon' && m.category === 'Adulto';
-            if (activeTab === 'hermanas') return m.gender === 'Hermana' && m.category === 'Adulto';
+            if (activeTab === 'casados') return m.member_group === 'Casados';
+            if (activeTab === 'casadas') return m.member_group === 'Casadas';
+            if (activeTab === 'jovenes') return m.member_group === 'Jovenes';
+            if (activeTab === 'solos') return m.member_group === 'Solos y Solas';
             if (activeTab === 'ninos') return m.category === 'Niño';
-            return true;
+            return true; // 'todos'
         });
     }, [members, searchTerm, activeTab]);
 
@@ -269,8 +273,10 @@ export default function AttendanceDashboard() {
         const getSessCount = (s: '5am' | '9am' | 'evening') => members.filter(m => m.attendance[s].present).length;
 
         return {
-            varones: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
-            hermanas: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            casados: members.filter(m => m.member_group === 'Casados' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            casadas: members.filter(m => m.member_group === 'Casadas' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            jovenes: members.filter(m => m.member_group === 'Jovenes' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
+            solos: members.filter(m => m.member_group === 'Solos y Solas' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
             ninos: members.filter(m => m.category === 'Niño' && (m.attendance['5am'].present || m.attendance['9am'].present || m.attendance['evening'].present)).length,
             total: members.length,
             session5am: getSessCount('5am'),
@@ -294,7 +300,7 @@ export default function AttendanceDashboard() {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center p-4">
                 <Card className="glass-card max-w-md w-full p-8 text-center border-rose-500/20 bg-rose-500/5">
-                    <Shield className="h-16 w-16 text-rose-500 mx-auto mb-6" />
+                    <AlertTriangle className="h-16 w-16 text-rose-500 mx-auto mb-6" />
                     <h2 className="text-2xl font-black uppercase italic text-rose-500 mb-2">Acceso Restringido</h2>
                     <p className="text-slate-400 text-sm leading-relaxed mb-8">
                         Lo sentimos, no tienes los permisos necesarios para acceder al Panel de Asistencia Global.
@@ -517,14 +523,15 @@ export default function AttendanceDashboard() {
                     {/* Group Distribution (Mini Bars) */}
                     <Card className="glass-card bg-amber-500/5 border-amber-500/20 p-5 md:p-6 flex flex-col gap-4">
                         <div className="flex items-center gap-2 mb-1">
-                            <Shield className="h-4 w-4 text-amber-500" />
+                            <TrendingUp className="h-4 w-4 text-amber-500" />
                             <span className="text-[10px] font-black uppercase tracking-widest text-amber-500">Porcentaje por Grupo</span>
                         </div>
 
                         <div className="space-y-4">
                             {[
-                                { label: 'Varones', color: 'bg-primary', count: stats.varones, total: members.filter(m => m.gender === 'Varon' && m.category === 'Adulto').length },
-                                { label: 'Hermanas', color: 'bg-rose-500', count: stats.hermanas, total: members.filter(m => m.gender === 'Hermana' && m.category === 'Adulto').length },
+                                { label: 'Casados', color: 'bg-primary', count: stats.casados, total: members.filter(m => m.member_group === 'Casados').length },
+                                { label: 'Casadas', color: 'bg-rose-500', count: stats.casadas, total: members.filter(m => m.member_group === 'Casadas').length },
+                                { label: 'Jóvenes', color: 'bg-amber-400', count: stats.jovenes, total: members.filter(m => m.member_group === 'Jovenes').length },
                                 { label: 'Niños', color: 'bg-cyan-400', count: stats.ninos, total: members.filter(m => m.category === 'Niño').length }
                             ].map((group) => (
                                 <div key={group.label} className="space-y-1.5">
@@ -632,34 +639,26 @@ export default function AttendanceDashboard() {
                 </Card>
 
                 {/* View Tabs */}
-                <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2x md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
-                    <button
-                        onClick={() => setActiveTab('varones')}
-                        className={cn(
-                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                            activeTab === 'varones' ? "bg-primary text-black shadow-lg shadow-primary/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
-                        )}
-                    >
-                        <Shield className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones})</span>
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('hermanas')}
-                        className={cn(
-                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                            activeTab === 'hermanas' ? "bg-rose-500 text-black shadow-lg shadow-rose-500/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
-                        )}
-                    >
-                        <Star className="w-4 h-4" /> Hermanas <span className="opacity-50 font-bold ml-1">({stats.hermanas})</span>
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('ninos')}
-                        className={cn(
-                            "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                            activeTab === 'ninos' ? "bg-cyan-400 text-black shadow-lg shadow-cyan-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
-                        )}
-                    >
-                        <Baby className="w-4 h-4" /> Niños <span className="opacity-50 font-bold ml-1">({stats.ninos})</span>
-                    </button>
+                <div className="flex p-1 bg-foreground/5 rounded-3xl border border-border/40 w-full lg:w-fit mx-auto lg:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
+                    {[
+                        { id: 'casados' as const, label: 'Casados', icon: Users, color: 'bg-primary', count: stats.casados },
+                        { id: 'casadas' as const, label: 'Casadas', icon: Star, color: 'bg-rose-500', count: stats.casadas },
+                        { id: 'jovenes' as const, label: 'Jóvenes', icon: TrendingUp, color: 'bg-amber-400', count: stats.jovenes },
+                        { id: 'solos' as const, label: 'Solos/as', icon: Users, color: 'bg-indigo-400', count: stats.solos },
+                        { id: 'ninos' as const, label: 'Niños', icon: Baby, color: 'bg-cyan-400', count: stats.ninos },
+                        { id: 'todos' as const, label: 'Todos', icon: ClipboardCheck, color: 'bg-slate-500', count: stats.total }
+                    ].map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={cn(
+                                "flex-1 md:flex-none px-5 py-3 rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap snap-center",
+                                activeTab === tab.id ? `${tab.color} text-black shadow-lg scale-[1.05]` : "text-slate-500 hover:text-foreground hover:bg-white/5"
+                            )}
+                        >
+                            <tab.icon className="w-4 h-4" /> {tab.label} <span className="opacity-50 font-bold ml-1">({tab.count})</span>
+                        </button>
+                    ))}
                 </div>
 
                 {/* Member Check-in List */}
@@ -667,9 +666,12 @@ export default function AttendanceDashboard() {
                     <CardHeader className="border-b border-border/20 flex flex-col sm:flex-row items-center justify-between gap-4 py-6 md:py-8">
                         <div className="text-center sm:text-left">
                             <CardTitle className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter flex items-center justify-center sm:justify-start gap-3">
-                                {activeTab === 'varones' && <span className="text-primary">Lista de Varones</span>}
-                                {activeTab === 'hermanas' && <span className="text-rose-500">Lista de Hermanas</span>}
+                                {activeTab === 'casados' && <span className="text-primary">Lista de Casados</span>}
+                                {activeTab === 'casadas' && <span className="text-rose-500">Lista de Casadas</span>}
+                                {activeTab === 'jovenes' && <span className="text-amber-400">Lista de Jóvenes</span>}
+                                {activeTab === 'solos' && <span className="text-indigo-400">Lista de Solos y Solas</span>}
                                 {activeTab === 'ninos' && <span className="text-cyan-400">Lista de Niños</span>}
+                                {activeTab === 'todos' && <span className="text-slate-400">Lista General</span>}
                             </CardTitle>
                             <CardDescription className="uppercase text-[9px] md:text-[10px] font-bold tracking-widest text-slate-500 mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
                         </div>

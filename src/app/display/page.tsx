@@ -105,7 +105,7 @@ export default function DisplayPage() {
         }
 
         return theme;
-    }, [calendarStyles?.template, calendarStyles?.fontSetIndex, settings.displayTemplate]);
+    }, [calendarStyles?.template, calendarStyles?.fontSetIndex, settings?.displayTemplate]);
 
     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
     const { Background, Clock, Progress } = activeTheme.components;
@@ -123,11 +123,11 @@ export default function DisplayPage() {
                 component: ThemeScheduleTomorrow ? <ThemeScheduleTomorrow /> : <Schedule isTomorrow={true} />,
                 enabled: true
             },
-            { id: 'countdown', component: <CountdownSlide />, enabled: settings.showCountdown },
+            { id: 'countdown', component: <CountdownSlide />, enabled: settings?.showCountdown },
             { id: 'ceremonial-countdown', component: <CeremonialCountdownSlide />, enabled: false },
         ];
         return s.filter(slide => slide.enabled);
-    }, [activeTheme, settings.showCountdown, members, monthlySchedule]);
+    }, [activeTheme, settings?.showCountdown, members, monthlySchedule]);
 
     useEffect(() => {
         if (slides.length === 0) return;
@@ -165,7 +165,7 @@ export default function DisplayPage() {
             clearInterval(refreshTimer);
             clearInterval(dateCheckTimer);
         };
-    }, [slides.length, settings.iglesiaSlideDuration, settings.displayTemplate, calendarStyles?.template]);
+    }, [slides.length, settings?.iglesiaSlideDuration, settings?.displayTemplate, calendarStyles?.template]);
 
 
     if (!isMounted) return null;
@@ -188,7 +188,7 @@ export default function DisplayPage() {
             <div
                 className="absolute z-10 flex items-center justify-center p-0 overflow-hidden w-[1920px] h-[1080px]"
                 style={{
-                    transform: `translate(calc(-50% + ${settings.displayOffsetX || 0}px), calc(-50% + ${settings.displayOffsetY || 0}px)) scale(${autoScale * (settings.displayScale || 1.0)})`,
+                    transform: `translate(calc(-50% + ${settings?.displayOffsetX || 0}px), calc(-50% + ${settings?.displayOffsetY || 0}px)) scale(${autoScale * (settings?.displayScale || 1.0)})`,
                     left: '50%',
                     top: '50%',
                     transformOrigin: 'center center'
@@ -215,9 +215,9 @@ export default function DisplayPage() {
 
 
                         if (isIglesia) {
-                            const speed = (settings.iglesiaAnimationSpeed || 2.4) as number;
-                            const animationType = settings.iglesiaAnimation || 'metro';
-                            const isLowPerf = settings.lowPerformanceMode;
+                            const speed = (settings?.iglesiaAnimationSpeed || 2.4) as number;
+                            const animationType = settings?.iglesiaAnimation || 'metro';
+                            const isLowPerf = settings?.lowPerformanceMode;
 
                             if (animationType === 'metro') {
                                 // Right to Left flow like a train line

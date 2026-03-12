@@ -60,15 +60,17 @@ const WeatherIcon = ({ code, className, size = 20 }: { code: string, className?:
 };
 
 export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: any[], currentSlide: number, isPaused?: boolean }) {
-    const { settings, theme, monthlySchedule } = useAppStore();
-    const iglesiaVariant = useAppStore((s: any) => s.settings?.iglesiaVariant || 'light');
+    const settings = useAppStore((s: any) => s.settings);
+    const theme = useAppStore((s: any) => s.theme);
+    const monthlySchedule = useAppStore((s: any) => s.monthlySchedule);
+    const iglesiaVariant = settings?.iglesiaVariant || 'light';
     const isDark = iglesiaVariant === 'dark';
     const T = getIglesiaTokens(iglesiaVariant);
 
     // Weather Fetching
     const { weather } = useWeather(
-        settings.neonForgeCityData?.lat || 24.341,
-        settings.neonForgeCityData?.lon || -104.28
+        settings?.neonForgeCityData?.lat || 24.341,
+        settings?.neonForgeCityData?.lon || -104.28
     );
 
     const total = slides?.length || 0;
@@ -88,9 +90,9 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                 zIndex: 30, pointerEvents: 'none'
             }}>
                 <div style={{ pointerEvents: 'auto' }}>
-                    <ChurchHeaderBadge name={(settings as any).churchName || 'LLDM'} T={T} isDark={isDark} settings={settings} />
+                    <ChurchHeaderBadge name={(settings as any)?.churchName || 'LLDM'} T={T} isDark={isDark} settings={settings} />
                     <p style={{ fontSize: 11, fontWeight: 400, color: T.textMuted, fontFamily: T.fontInter, marginTop: 12, marginLeft: 20 }}>
-                        {(settings as any).churchAddress || 'Sistema de Información Digital'}
+                        {(settings as any)?.churchAddress || 'Sistema de Información Digital'}
                     </p>
                 </div>
                 <div style={{ pointerEvents: 'auto' }}>
@@ -192,7 +194,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                     </div>
                                     <div>
                                         <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat, margin: 0 }}>
-                                            {settings.neonForgeCityData?.name || (settings as any).city || 'Rodeo'}
+                                            {settings?.neonForgeCityData?.name || (settings as any)?.city || 'Rodeo'}
                                         </p>
                                         <p style={{ fontSize: 28, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0 }}>
                                             {weather ? `${weather.temp}°C` : '--°C'}

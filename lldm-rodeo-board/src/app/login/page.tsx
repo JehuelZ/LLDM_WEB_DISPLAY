@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail, Github, Globe, Shield, Lock, ArrowRight } from "lucide-react";
+import { Mail, Github, Lock, ArrowRight } from "lucide-react";
 import { useAppStore } from '@/lib/store';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -43,8 +43,8 @@ export default function LoginPage() {
                 <div className="flex justify-center mb-8">
                     <div className="relative group">
                         <div className="absolute -inset-1 bg-gradient-to-r from-primary to-blue-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-                        <div className="relative p-4 bg-slate-900 rounded-2xl border border-white/5 flex items-center justify-center">
-                            <Shield className="w-12 h-12 text-primary" />
+                        <div className="relative p-2 bg-slate-900 rounded-2xl border border-white/5 flex items-center justify-center overflow-hidden">
+                            <img src="/flama-oficial.svg" className="w-16 h-16 object-contain brightness-110" alt="Logo" />
                         </div>
                     </div>
                 </div>

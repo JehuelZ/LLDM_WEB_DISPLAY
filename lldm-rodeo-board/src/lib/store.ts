@@ -18,7 +18,7 @@ import {
 
 export interface AppSettings {
     themeMode: 'light' | 'dark' | 'system';
-    churchIcon: 'shield' | 'church' | 'cross' | 'star' | 'heart' | 'custom';
+    churchIcon: 'flame' | 'church' | 'cross' | 'star' | 'heart' | 'custom';
     customIconUrl?: string;
     primaryColor: string;
     showMinisterOnDisplay: boolean;
@@ -305,7 +305,7 @@ export const useAppStore = create<AppState>()(
             },
             settings: {
                 themeMode: 'dark',
-                churchIcon: 'shield',
+                churchIcon: 'flame',
                 primaryColor: '#3b82f6',
                 showMinisterOnDisplay: true,
                 language: 'es',
@@ -324,7 +324,8 @@ export const useAppStore = create<AppState>()(
                 displayTemplate: 'cristal',
                 displayScale: 1.0,
                 displayAuthorizedEmails: ['jairojehuel@gmail.com'],
-                adminTheme: 'classic'
+                adminTheme: 'classic',
+                churchLogoUrl: '/flama-oficial.svg'
             },
             currentUser: INITIAL_USER,
             minister: {
@@ -1092,15 +1093,15 @@ export const useAppStore = create<AppState>()(
                             ...current,
                             themeMode: data.theme_mode,
                             language: data.language,
-                            churchIcon: data.church_icon,
+                            churchIcon: (data.church_icon === 'shield' || data.church_icon === 'globe') ? 'flame' : data.church_icon,
                             customIconUrl: data.custom_icon_url,
                             primaryColor: data.primary_color,
                             showMinisterOnDisplay: data.show_minister_on_display,
                             displayBgMode: data.display_bg_mode || 'official',
                             displayBgStyle: data.display_bg_style || 'static',
-                            displayBgUrl: data.display_bg_url || '/lldm_oficial_logo.svg',
+                            displayBgUrl: data.display_bg_url || '/flama-oficial.svg',
                             displayCustomBgUrl: data.display_custom_bg_url,
-                            churchLogoUrl: data.church_logo_url || '/lldm_oficial_logo.svg',
+                            churchLogoUrl: data.church_logo_url || '/flama-oficial.svg',
                             ministerName: data.minister_name,
                             ministerPhone: data.minister_phone,
                             ministerEmail: data.minister_email,
