@@ -114,7 +114,7 @@ export function MidnightGlowWeekly() {
     const getSlots = (sched: any, dayName: string): ServiceSlot[] => {
         const isSunday = dayName.toUpperCase() === 'DOM' || dayName.toUpperCase() === 'DOMINGO';
 
-        return [
+        const slots: ServiceSlot[] = [
             {
                 id: '5am',
                 hour: '05:00', period: 'AM',
@@ -126,38 +126,83 @@ export function MidnightGlowWeekly() {
                 timeAccent: 'text-white drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]',
                 roles: ['CONSAGRACIÓN'],
                 leaderIds: [sched?.slots?.['5am']?.leaderId || null],
-            },
-            {
-                id: '9am',
-                hour: isSunday ? '10:00' : '09:00', period: 'AM',
-                label: 'Intermedia',
-                title: isSunday ? (sched?.slots?.['9am']?.sundayType === 'exchange' ? 'INTERCAMBIO' : sched?.slots?.['9am']?.sundayType === 'broadcast' ? 'TRANSMISIÓN' : sched?.slots?.['9am']?.sundayType === 'visitors' ? 'DOMINICAL DE VISITAS' : 'ESCUELA DOMINICAL') : 'ORACIÓN DE NUEVE',
-                subtitle: isSunday ? (sched?.slots?.['9am']?.sundayType === 'exchange' ? (sched?.slots?.['9am']?.churchOrigin || 'DE MINISTRO') : sched?.slots?.['9am']?.sundayType === 'broadcast' ? 'INTERNACIONAL' : sched?.slots?.['9am']?.sundayType === 'visitors' ? (sched?.slots?.['9am']?.language === 'en' ? 'ENGLISH SERVICE' : 'PUERTAS ABIERTAS') : 'IGLESIA LOCAL') : 'CONSAGRACIÓN MATUTINA',
-                icon: isSunday ? (sched?.slots?.['9am']?.sundayType === 'exchange' ? <HeartHandshake className="w-4 h-4" /> : sched?.slots?.['9am']?.sundayType === 'broadcast' ? <Radio className="w-4 h-4" /> : sched?.slots?.['9am']?.sundayType === 'visitors' ? <Users className="w-4 h-4" /> : <Crown className="w-4 h-4" />) : <Sun className="w-3.5 h-3.5" />,
-                accent: isSunday ? (sched?.slots?.['9am']?.sundayType === 'exchange' ? 'purple' : sched?.slots?.['9am']?.sundayType === 'broadcast' ? 'red' : sched?.slots?.['9am']?.sundayType === 'visitors' ? 'emerald' : 'orange') : 'blue',
-                timeAccent: 'text-white',
-                roles: isSunday ? ['E.D. ELIAR'] : ['CONSAGRACIÓN', 'DOCTRINA'],
-                sundayType: sched?.slots?.['9am']?.sundayType,
-                language: sched?.slots?.['9am']?.language || 'es',
-                churchOrigin: sched?.slots?.['9am']?.churchOrigin,
-                leaderIds: isSunday
-                    ? [sched?.slots?.['9am']?.consecrationLeaderId || null]
-                    : [sched?.slots?.['9am']?.consecrationLeaderId || null, sched?.slots?.['9am']?.doctrineLeaderId || null],
-            },
-            {
-                id: 'evening',
-                hour: '06:00', period: 'PM',
-                label: 'Principal',
-                title: 'CULTO PRINCIPAL',
-                subtitle: 'SERVICIO VESPERTINO',
-                icon: <Church className="w-3.5 h-3.5" />,
-                accent: 'green',
-                timeAccent: 'text-[#A3FF57] drop-shadow-[0_0_15px_rgba(163,255,87,0.8)]',
-                roles: ['SERVICIO', 'DOCTRINA'],
-                language: sched?.slots?.evening?.language || 'es',
-                leaderIds: sched?.slots?.evening?.leaderIds || [null, null],
-            },
+            }
         ];
+
+        // 9 AM Slot
+        const slot9 = sched?.slots?.['9am'];
+        const hour9 = isSunday ? '10:00' : '09:00';
+        const title9 = isSunday ? (slot9?.sundayType === 'exchange' ? 'INTERCAMBIO' : slot9?.sundayType === 'broadcast' ? 'TRANSMISIÓN' : slot9?.sundayType === 'visitors' ? 'DOMINICAL DE VISITAS' : 'ESCUELA DOMINICAL') : 'ORACIÓN DE NUEVE';
+        const subtitle9 = isSunday ? (slot9?.sundayType === 'exchange' ? (slot9?.churchOrigin || 'DE MINISTRO') : slot9?.sundayType === 'broadcast' ? 'INTERNACIONAL' : slot9?.sundayType === 'visitors' ? (slot9?.language === 'en' ? 'ENGLISH SERVICE' : 'PUERTAS ABIERTAS') : 'IGLESIA LOCAL') : 'CONSAGRACIÓN MATUTINA';
+        const icons9 = {
+            exchange: <HeartHandshake className="w-4 h-4" />,
+            broadcast: <Radio className="w-4 h-4" />,
+            visitors: <Users className="w-4 h-4" />,
+            local: <Crown className="w-4 h-4" />
+        };
+        const icon9 = isSunday ? (icons9[slot9?.sundayType as keyof typeof icons9] || icons9.local) : <Sun className="w-3.5 h-3.5" />;
+        const accent9 = isSunday ? (slot9?.sundayType === 'exchange' ? 'purple' : slot9?.sundayType === 'broadcast' ? 'red' : slot9?.sundayType === 'visitors' ? 'emerald' : 'orange') : 'blue';
+
+        // Robust Sunday 9am Leader logic:
+        // If it's Sunday and "local", and no specific leaders assigned, we might want to show the Minister? 
+        // No, for Weekly View we usually show what's strictly in the slots.
+        const leaderIds9 = (isSunday && (slot9?.sundayType === 'exchange' || slot9?.sundayType === 'broadcast'))
+            ? [null] // No leaders shown for exchange/broadcast in weekly view usually
+            : [slot9?.consecrationLeaderId || null, slot9?.doctrineLeaderId || null].filter((id, i, arr) => id !== null || (i === 0 && arr[1] !== null));
+
+        slots.push({
+            id: '9am',
+            hour: hour9, period: 'AM',
+            label: 'Intermedia',
+            title: title9,
+            subtitle: subtitle9,
+            icon: icon9,
+            accent: accent9 as any,
+            timeAccent: 'text-white',
+            roles: isSunday ? ['CONS.', 'DOC.'] : ['CONSAGRACIÓN', 'DOCTRINA'],
+            sundayType: slot9?.sundayType,
+            language: slot9?.language || 'es',
+            churchOrigin: slot9?.churchOrigin,
+            leaderIds: leaderIds9,
+        });
+
+        // 12 PM Slot (Optional)
+        const slot12 = sched?.slots?.['12pm'];
+        if (slot12?.leaderId) {
+            slots.push({
+                id: '12pm',
+                hour: '12:00', period: 'PM',
+                label: 'Mediodía',
+                title: 'ORACIÓN DE DOCE',
+                subtitle: 'CONSAGRACIÓN',
+                icon: <Sun className="w-3.5 h-3.5" />,
+                accent: 'emerald',
+                timeAccent: 'text-white',
+                roles: ['CONSAGRACIÓN'],
+                leaderIds: [slot12.leaderId],
+            });
+        }
+
+        // Evening Slot
+        const slotEv = sched?.slots?.evening;
+        slots.push({
+            id: 'evening',
+            hour: '06:00', period: 'PM',
+            label: 'Principal',
+            title: 'CULTO PRINCIPAL',
+            subtitle: 'SERVICIO VESPERTINO',
+            icon: <Church className="w-3.5 h-3.5" />,
+            accent: 'green',
+            timeAccent: 'text-[#A3FF57] drop-shadow-[0_0_15px_rgba(163,255,87,0.8)]',
+            roles: ['SERVICIO', 'DOCTRINA'],
+            language: slotEv?.language || 'es',
+            leaderIds: [
+                slotEv?.leaderIds?.[0] || null,
+                slotEv?.doctrineLeaderId || slotEv?.leaderIds?.[1] || null
+            ],
+        });
+
+        return slots;
     };
 
     if (!mounted) return null;

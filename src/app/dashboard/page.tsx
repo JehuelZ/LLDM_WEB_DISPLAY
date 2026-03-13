@@ -63,6 +63,16 @@ export default function DashboardIndex() {
             bgColor: 'bg-indigo-400/10',
             borderColor: 'border-indigo-400/20',
             show: currentUser.role === 'Administrador' || currentUser.role === 'Encargado de Jóvenes' || currentUser.privileges?.includes('youth_leader')
+        },
+        {
+            title: 'Consola Ministerial',
+            description: 'Supervisión global de la iglesia y programación espiritual.',
+            href: '/dashboard/ministro',
+            icon: LayoutDashboard,
+            color: 'text-amber-500',
+            bgColor: 'bg-amber-500/10',
+            borderColor: 'border-amber-500/20',
+            show: currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.privileges?.includes('leader')
         }
     ].filter(d => d.show);
 

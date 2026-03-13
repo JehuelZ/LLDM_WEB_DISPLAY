@@ -149,7 +149,7 @@ export function DarkMinimalWeekly() {
                     const leader9amCons = getMemberDetail(slot9am?.consecrationLeaderId || null);
                     const leader9amDoc = getMemberDetail(slot9am?.doctrineLeaderId || null);
                     const leaderEv1 = getMemberDetail(slotEv?.leaderIds?.[0] || null);
-                    const leaderEv2 = getMemberDetail(slotEv?.leaderIds?.[1] || null);
+                    const leaderEv2 = getMemberDetail(slotEv?.doctrineLeaderId || (slotEv?.leaderIds?.[0] !== slotEv?.leaderIds?.[1] ? slotEv?.leaderIds?.[1] : null) || null);
 
                     const sundayType = slot9am?.sundayType;
                     const sundayLabel = sundayType === 'exchange' ? 'Intercambio'

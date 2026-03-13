@@ -148,10 +148,12 @@ export const GlassmorphismWeekly = () => {
                                         }
                                     } else if (slotKey === 'evening') {
                                         const ids = slot.leaderIds || [];
-                                        if (ids.length > 1) {
-                                            shortName = `${formatShortName(getMemberDetail(ids[0]).name)} | ${formatShortName(getMemberDetail(ids[1]).name)}`;
+                                        const l1Name = getMemberDetail(ids[0]).name;
+                                        const l2Name = getMemberDetail(slot.doctrineLeaderId || ids[1]).name;
+                                        if (l1Name && l2Name && l1Name.toLowerCase() !== l2Name.toLowerCase()) {
+                                            shortName = `${formatShortName(l1Name)} | ${formatShortName(l2Name)}`;
                                         } else {
-                                            shortName = formatShortName(getMemberDetail(ids[0]).name);
+                                            shortName = formatShortName(l1Name || l2Name);
                                         }
                                     }
 
@@ -159,7 +161,7 @@ export const GlassmorphismWeekly = () => {
 
                                     const isVertical = true; // Uniform vertical style for all slots
                                     const l1 = getMemberDetail(slotKey === '5am' ? slot.leaderId : (slotKey === '9am' ? slot.consecrationLeaderId : slot.leaderIds?.[0]));
-                                    const l2Id = slotKey === '9am' ? (slot.consecrationLeaderId !== slot.doctrineLeaderId ? slot.doctrineLeaderId : null) : slot.leaderIds?.[1];
+                                    const l2Id = slotKey === '9am' ? (slot.consecrationLeaderId !== slot.doctrineLeaderId ? slot.doctrineLeaderId : null) : (slot.doctrineLeaderId || (slot.leaderIds?.[0] !== slot.leaderIds?.[1] ? slot.leaderIds?.[1] : null));
                                     const l2 = getMemberDetail(l2Id);
 
                                     return (

@@ -1030,7 +1030,7 @@ function AdminDashboardContent() {
                                 <Activity className="w-3 h-3 text-primary opacity-50" />
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-4">
+                        <CardContent className="pt-4 pb-14">
                             <div className="flex items-center gap-8">
                                 <div className="relative w-32 h-32 shrink-0">
                                     {/* Glass reflection effect */}
@@ -1101,8 +1101,8 @@ function AdminDashboardContent() {
                                 Crecimiento de Miembros
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-4 flex flex-col h-full">
-                            <div className="flex-1 min-h-[100px] relative mb-4">
+                        <CardContent className="pt-4 pb-14 h-full flex flex-col">
+                            <div className="flex-1 min-h-[70px] relative mb-8">
                                 <svg className="w-full h-full" viewBox="0 0 400 120" preserveAspectRatio="none">
                                     <defs>
                                         <linearGradient id="mountGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -1127,12 +1127,12 @@ function AdminDashboardContent() {
                                     />
                                 </svg>
                             </div>
-                            <div className="flex items-end justify-between relative z-10 mt-auto pt-2">
-                                <div>
-                                    <div className="text-4xl font-black text-foreground italic">{totalMembersCount}</div>
-                                    <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 italic">Total Miembros</p>
+                            <div className="flex items-end justify-between relative z-10 mt-auto pt-8 pb-4">
+                                <div className="pl-1">
+                                    <div className="text-4xl font-black text-foreground italic leading-none py-3">{totalMembersCount}</div>
+                                    <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 italic uppercase">Total Miembros</p>
                                 </div>
-                                <div className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black italic border border-emerald-500/30 backdrop-blur-md shadow-lg">+{members.filter(m => m.status === 'Activo').length} Activos</div>
+                                <div className="bg-emerald-500/20 text-emerald-400 px-5 py-2.5 rounded-full text-[10px] font-black italic border border-emerald-500/30 backdrop-blur-md shadow-lg mb-4">+{members.filter(m => m.status === 'Activo').length} Activos</div>
                             </div>
                         </CardContent>
                     </Card>
@@ -1143,7 +1143,7 @@ function AdminDashboardContent() {
                             <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Compromiso</CardTitle>
                         </CardHeader>
                         <CardContent className="pt-4 flex flex-col items-center justify-center text-center h-full relative z-10">
-                            <div className="text-7xl font-black tracking-tighter bg-gradient-to-b from-orange-400 via-amber-200 to-white bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(245,158,11,0.3)] tabular-nums">
+                            <div className="text-7xl font-black tracking-tighter bg-gradient-to-b from-orange-400 via-amber-200 to-white bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(245,158,11,0.3)] tabular-nums py-2">
                                 {members.filter(m => (m.stats?.attendance?.attended || 0) > 0).length}
                             </div>
                             <div className="mt-2 text-xs font-black uppercase tracking-[0.3em] text-orange-500 italic">Hnos. Participantes</div>
@@ -1168,7 +1168,7 @@ function AdminDashboardContent() {
                                 {settings.countdownTitle || 'Evento'}
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-4 h-full">
+                        <CardContent className="pt-4 pb-14 h-full text-center">
                             <div className="flex flex-col items-center justify-center text-center">
                                 <MiniCountdown />
                                 <p className="mt-4 text-[10px] font-black uppercase tracking-widest text-slate-500 italic">
@@ -1185,7 +1185,7 @@ function AdminDashboardContent() {
                         </CardHeader>
                         <CardContent className="pt-4 flex flex-col items-center justify-center text-center h-full relative z-10">
                             <div className="relative">
-                                <div className="text-6xl font-black text-white italic tabular-nums drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
+                                <div className="text-6xl font-black text-white italic tabular-nums drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] leading-relaxed py-1">
                                     {announcements.length}
                                 </div>
                                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-slate-900" />

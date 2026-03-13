@@ -177,7 +177,18 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
     const leader5 = getMember(slot5?.leaderId);
     const cons9 = getMember(slot9?.consecrationLeaderId);
     const doc9 = getMember(slot9?.doctrineLeaderId);
-    const leaderIds = slotEve?.leaderIds || [];
+    const leaderIds = (slotEve?.leaderIds || []).slice(0, 2);
+    // If we have a specific doctrine leader, inject it as the second person if possible
+    if (slotEve?.doctrineLeaderId) {
+        if (leaderIds.length === 0) {
+            leaderIds.push(''); // dummy for service
+            leaderIds.push(slotEve.doctrineLeaderId);
+        } else if (leaderIds.length === 1) {
+            leaderIds.push(slotEve.doctrineLeaderId);
+        } else {
+            leaderIds[1] = slotEve.doctrineLeaderId;
+        }
+    }
     const eveningType = slotEve?.type || 'standard';
     const eveningTime = slotEve?.time || '6:00 PM';
     const [timePart, periodPart] = eveningTime.split(' ');

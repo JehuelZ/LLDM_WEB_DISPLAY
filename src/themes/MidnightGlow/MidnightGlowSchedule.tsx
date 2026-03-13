@@ -66,7 +66,26 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
     const slot5am = schedule?.slots['5am'];
     const slot9am = schedule?.slots['9am'];
     const slot12pm = schedule?.slots['12pm'];
-    const slotEvening = schedule?.slots['evening'];
+    const slotEveningRaw = schedule?.slots['evening'];
+    
+    // Process evening slot to include doctrineLeaderId in leaderIds if missing
+    const slotEvening = slotEveningRaw ? {
+        ...slotEveningRaw,
+        leaderIds: (() => {
+            const ids = [...(slotEveningRaw.leaderIds || [])].slice(0, 2);
+            if (slotEveningRaw.doctrineLeaderId) {
+                if (ids.length === 0) {
+                    ids.push(''); // dummy
+                    ids.push(slotEveningRaw.doctrineLeaderId);
+                } else if (ids.length === 1) {
+                    ids.push(slotEveningRaw.doctrineLeaderId);
+                } else {
+                    ids[1] = slotEveningRaw.doctrineLeaderId;
+                }
+            }
+            return ids;
+        })()
+    } : null;
 
     // Member row – hexagonal avatar + name
     const renderMember = (id: string | undefined | null, role: string, index = 0, hideAvatar = false) => {
@@ -433,9 +452,25 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                                     <Flame className="w-16 h-16 text-[#FFB060]/60 relative z-10" />
                                                 )}
                                             </motion.div>
-                                            <motion.div className={`mt-3 px-6 py-2 rounded-xl bg-[#1A0C00] border border-[#3A1D04] ${accentText}`}>
+                                            <motion.div className={`mt-3 px-6 py-2 rounded-xl bg-[#1A0C00] border border-[#3A1D04] ${accentText} flex flex-col items-center`}>
                                                 <span className="text-[12px] font-black uppercase tracking-[0.2em]">{minister?.name || 'Ministro Local'}</span>
                                             </motion.div>
+                                            
+                                            {/* Additional Assignments */}
+                                            {(slot9am?.consecrationLeaderId || slot9am?.doctrineLeaderId) && (
+                                                <div className="flex gap-4 mt-6 w-[120%] -mx-[10%] px-4">
+                                                    {slot9am?.consecrationLeaderId && (
+                                                        <div className="flex-1">
+                                                            {renderMember(slot9am.consecrationLeaderId, "Cons.", 0, true)}
+                                                        </div>
+                                                    )}
+                                                    {slot9am?.doctrineLeaderId && (
+                                                        <div className="flex-1">
+                                                            {renderMember(slot9am.doctrineLeaderId, "Clase", 1, true)}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     )}
 

@@ -312,7 +312,10 @@ export function IglesiaWeekly() {
         const leader5am = getMember(sched?.slots?.['5am']?.leaderId);
         const consec9am = getMember(sched?.slots?.['9am']?.consecrationLeaderId);
         const doctrine9am = getMember(sched?.slots?.['9am']?.doctrineLeaderId);
-        const evLeaders = (sched?.slots?.['evening']?.leaderIds || []).slice(0, 2).map((id: string) => getMember(id));
+        
+        const evLeader1 = getMember(sched?.slots?.['evening']?.leaderIds?.[0]);
+        const evLeader2 = getMember(sched?.slots?.['evening']?.doctrineLeaderId) || getMember(sched?.slots?.['evening']?.leaderIds?.[1]);
+        const evLeaders = [evLeader1, evLeader2].filter(Boolean);
 
         return { date, key, isSun, isToday, color, leader5am, consec9am, doctrine9am, evLeaders, sched };
     });
@@ -433,6 +436,9 @@ export function IglesiaWeekly() {
                                             const current = types[type] || types.local;
 
                                             if (type === 'local' && minister?.name) {
+                                                const consL = getMember(sched?.slots?.['9am']?.consecrationLeaderId);
+                                                const docL = getMember(sched?.slots?.['9am']?.doctrineLeaderId);
+
                                                 return (
                                                     <motion.div
                                                         animate={isActive ? { scale: [1, 1.02, 1] } : {}}
@@ -458,6 +464,13 @@ export function IglesiaWeekly() {
                                                             stacked={true}
                                                             depth={isActive}
                                                         />
+                                                        
+                                                        {(consL || docL) && (
+                                                            <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 8 }}>
+                                                                {consL?.name && <RoleBadge label={`Cons: ${consL.name.split(' ')[0]}`} T={T} isDark={isDark} />}
+                                                                {docL?.name && docL.name !== minister.name && <RoleBadge label={`Clase: ${docL.name.split(' ')[0]}`} T={T} isDark={isDark} />}
+                                                            </div>
+                                                        )}
                                                     </motion.div>
                                                 );
                                             }
@@ -558,6 +571,52 @@ export function IglesiaWeekly() {
                                         </>
                                     )}
 
+                                    {/* 12 PM - Optional Prayer */}
+                                    {sched?.slots?.['12pm']?.leaderId && (() => {
+                                        const leader12pm = getMember(sched?.slots?.['12pm']?.leaderId);
+                                        const isActive = isSlotActive(key, '12pm');
+                                        return (
+                                            <div style={{ marginBottom: 20 }}>
+                                                <div style={{
+                                                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                                    borderTop: `1px solid ${isActive ? T.accent + '60' : T.textMuted + '20'}`,
+                                                    paddingTop: 6, marginTop: 4, marginBottom: 4, position: 'relative'
+                                                }}>
+                                                    <TimeBadge time={sched?.slots?.['12pm']?.time || "12:00 PM"} T={T} isDark={isDark} />
+                                                    {isActive && (
+                                                        <motion.div animate={{ opacity: [1, 0.4, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} style={{ position: 'absolute', right: 0, top: 4, background: T.accent, padding: '2px 6px', borderRadius: 4, fontSize: 7, fontWeight: 900, color: '#FFF' }}>
+                                                            EN CURSO
+                                                        </motion.div>
+                                                    )}
+                                                    <p style={{ fontSize: 7, fontWeight: 900, color: isActive ? T.accent : T.tertiary, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontInter, textAlign: 'right' }}>
+                                                        {sched?.slots?.['12pm']?.customLabel || "Oración/Visitas"}
+                                                    </p>
+                                                </div>
+                                                <motion.div
+                                                    animate={isActive ? { scale: [1, 1.02, 1] } : {}}
+                                                    transition={{ repeat: Infinity, duration: 2 }}
+                                                    style={{
+                                                        padding: '8px 10px',
+                                                        display: 'flex', alignItems: 'center', gap: 12,
+                                                        background: T.surface,
+                                                        borderRadius: 20,
+                                                        boxShadow: isActive ? `0 0 20px ${T.accent}30, ${neuShadow(T, true, 'sm', isDark)}` : neuShadow(T, true, 'sm', isDark),
+                                                        border: isActive ? `1.5px solid ${T.accent}` : 'none',
+                                                        width: '100%'
+                                                    }}
+                                                >
+                                                    <Avatar src={leader12pm.avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${T.accent}` : `1.5px solid ${T.surface}`} />
+                                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                                        <p style={{ fontSize: 13, fontWeight: 800, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat, lineHeight: 1.1, marginBottom: 4 }}>
+                                                            {leader12pm.name}
+                                                        </p>
+                                                        <RoleBadge label="Oración" icon={Sun} T={T} isDark={isDark} />
+                                                    </div>
+                                                </motion.div>
+                                            </div>
+                                        );
+                                    })()}
+
                                     {evLeaders.length > 0 && (() => {
                                         const isActive = isSlotActive(key, 'evening');
                                         return (
@@ -598,12 +657,12 @@ export function IglesiaWeekly() {
                                                         border: isActive ? `1.5px solid ${T.accent}` : 'none'
                                                     }}
                                                 >
-                                                    {evLeaders.filter(Boolean).length === 1 ? (
+                                                    {evLeaders.length === 1 ? (
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '2px 0' }}>
-                                                            <Avatar src={evLeaders.filter(Boolean)[0].avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${T.accent}` : `1.5px solid ${T.surface}`} />
+                                                            <Avatar src={evLeaders[0]?.avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${T.accent}` : `1.5px solid ${T.surface}`} />
                                                             <div style={{ flex: 1, minWidth: 0 }}>
                                                                 <p style={{ fontSize: 13, fontWeight: 800, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat, lineHeight: 1.1, marginBottom: 4 }}>
-                                                                    {evLeaders.filter(Boolean)[0].name}
+                                                                    {evLeaders[0]?.name}
                                                                 </p>
                                                                 <RoleBadge
                                                                     label={isSun ? "Director" : "Consagración y Doctrina"}

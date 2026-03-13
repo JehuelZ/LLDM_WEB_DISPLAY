@@ -296,7 +296,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         { id: 'horarios', label: 'Programación', icon: CalendarDays },
         { id: 'miembros', label: 'Miembros', icon: Users },
         { id: 'coros', label: 'Coros', icon: Music2 },
-        { id: 'contenido', label: 'Contenido', icon: Sparkles },
+        { id: 'contenido', label: 'Tema Semanal', icon: Sparkles },
         { id: 'anuncios', label: 'Comunicados', icon: Bell },
         { id: 'estilos', label: 'Temas TV', icon: Palette },
         { id: 'ajustes', label: 'Ajustes', icon: Settings },
@@ -931,15 +931,48 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             </div>
                                         </TactileGlassCard>
 
-                                        <TactileGlassCard title="MASTER CONTROL" className="w-full">
-                                            <div className="flex flex-col items-center gap-8 py-4">
-                                                <div className="tactile-circular-control">
-                                                    <div className="tactile-circular-line" />
+                                        <TactileGlassCard title="TEMA SEMANAL" className="w-full">
+                                            <div className="space-y-5">
+                                                <TactileInput
+                                                    label="TÍTULO"
+                                                    value={theme.title || ''}
+                                                    onChange={(e: any) => useAppStore.getState().setTheme({ ...theme, title: e.target.value })}
+                                                    icon={Sparkles}
+                                                />
+                                                <div className="space-y-1">
+                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TIPO</label>
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        {['orthodoxy', 'apostolic_letter'].map(type => (
+                                                            <button 
+                                                                key={type}
+                                                                onClick={() => useAppStore.getState().setTheme({ ...theme, type })}
+                                                                className={cn(
+                                                                    "text-[9px] font-black uppercase py-2 rounded-xl transition-all",
+                                                                    theme.type === type ? "bg-primary text-black" : "bg-white/5 text-white/40 border border-white/5"
+                                                                )}
+                                                            >
+                                                                {type === 'orthodoxy' ? 'Ortodoxia' : 'Carta'}
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                                <div className="text-center">
-                                                    <p className="text-[10px] font-black text-tactile-text-sub uppercase tracking-[0.3em]">Brillo Display</p>
-                                                    <div className="text-3xl font-black italic mt-2 text-primary">100%</div>
-                                                </div>
+                                                <button
+                                                    onClick={async () => {
+                                                        setIsSaving(true);
+                                                        await saveThemeToCloud(theme);
+                                                        setIsSaving(false);
+                                                        showNotification('Tema de la semana actualizado', 'success');
+                                                    }}
+                                                    className="tactile-btn tactile-btn-orange w-full h-10 justify-center text-[10px]"
+                                                >
+                                                    <Save className="w-3.5 h-3.5 mr-2" /> ACTUALIZAR TEMA
+                                                </button>
+                                                <button
+                                                    onClick={() => setActiveTab('contenido')}
+                                                    className="tactile-btn tactile-btn-glass w-full h-10 justify-center text-[9px] border-white/5"
+                                                >
+                                                    VER DETALLES COMPLETOS
+                                                </button>
                                             </div>
                                         </TactileGlassCard>
                                     </div>
@@ -2469,6 +2502,43 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     onChange={(e: any) => useAppStore.getState().setTheme({ ...theme, title: e.target.value })}
                                                     icon={Sparkles}
                                                 />
+                                                <TactileSelect
+                                                    label="CATEGORÍA / TIPO DE TEMA"
+                                                    value={theme.type || 'orthodoxy'}
+                                                    onChange={(val: any) => useAppStore.getState().setTheme({ ...theme, type: val })}
+                                                    options={[
+                                                        { value: 'orthodoxy', label: 'Estudio de Ortodoxia' },
+                                                        { value: 'apostolic_letter', label: 'Carta Apostólica' },
+                                                        { value: 'history', label: 'Relato Histórico' },
+                                                        { value: 'free', label: 'Tema de Edificación' }
+                                                    ]}
+                                                    icon={BookOpen}
+                                                />
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <TactileInput
+                                                        label="FECHA INICIO"
+                                                        type="date"
+                                                        value={theme.startDate || ''}
+                                                        onChange={(e: any) => useAppStore.getState().setTheme({ ...theme, startDate: e.target.value })}
+                                                        icon={Calendar}
+                                                    />
+                                                    <TactileInput
+                                                        label="FECHA FIN"
+                                                        type="date"
+                                                        value={theme.endDate || ''}
+                                                        onChange={(e: any) => useAppStore.getState().setTheme({ ...theme, endDate: e.target.value })}
+                                                        icon={Calendar}
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">RESUMEN / DESCRIPCIÓN</label>
+                                                    <textarea
+                                                        className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all"
+                                                        value={theme.description || ''}
+                                                        onChange={(e) => useAppStore.getState().setTheme({ ...theme, description: e.target.value })}
+                                                        placeholder="Breve resumen del tema..."
+                                                    />
+                                                </div>
                                                 <div className="space-y-4">
                                                     <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO VISUAL (URL)</label>
                                                     <div className="flex gap-2">
@@ -2816,7 +2886,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 }}
                                                 className={cn(
                                                     "w-full flex items-center gap-4 px-6 py-5 rounded-[2rem] transition-all border text-left",
-                                                    (settings.displayTemplate || calendarStyles.template) === themeOpt.id ? "bg-primary/20 border-primary/40 text-primary shadow-lg" : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
+                                                    calendarStyles.template === themeOpt.id ? "bg-primary/20 border-primary/40 text-primary shadow-lg" : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
                                                 )}
                                             >
                                                 <themeOpt.icon className="w-6 h-6" />

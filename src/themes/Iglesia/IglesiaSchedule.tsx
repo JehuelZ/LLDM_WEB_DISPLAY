@@ -300,6 +300,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
 
     const slot5am = schedule?.slots?.['5am'];
     const slot9am = schedule?.slots?.['9am'];
+    const slot12pm = schedule?.slots?.['12pm'];
     const slotEvening = schedule?.slots?.['evening'];
 
     const leader5am = getMember(slot5am?.leaderId);
@@ -307,11 +308,21 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
     const doc9am = getMember(slot9am?.doctrineLeaderId);
 
     // Robust evening leader detection (fallback to leaderId if leaderIds is empty)
-    let evIds = (slotEvening?.leaderIds && slotEvening.leaderIds.length > 0)
+    let evIds = [...((slotEvening?.leaderIds && slotEvening.leaderIds.length > 0)
         ? slotEvening.leaderIds
-        : (slotEvening?.leaderId ? [slotEvening.leaderId] : []);
+        : (slotEvening?.leaderId ? [slotEvening.leaderId] : []))].slice(0, 2);
 
-    const evLeaders = [evIds[0], evIds[1]].map((id: string) => getMember(id));
+    if (slotEvening?.doctrineLeaderId) {
+        if (evIds.length === 0) {
+            evIds = ['', slotEvening.doctrineLeaderId];
+        } else if (evIds.length === 1) {
+            evIds.push(slotEvening.doctrineLeaderId);
+        } else {
+            evIds[1] = slotEvening.doctrineLeaderId;
+        }
+    }
+
+    const evLeaders = evIds.map((id: string) => getMember(id));
 
     const isPraise = slotEvening?.type === 'praise' ||
         slotEvening?.customLabel?.toLowerCase().includes('alabanza');
@@ -428,12 +439,38 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                             const Icon = current.icon;
 
                             if (type === 'local' && minister?.name) {
+                                // Add check for assigned leaders in local School
+                                const consL = getMember(slot9am?.consecrationLeaderId);
+                                const docL = getMember(slot9am?.doctrineLeaderId);
+
                                 return (
                                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%' }}>
                                         <Avatar src={minister.avatar} size={240} T={T} isDark={isDark} />
                                         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                             <AcademicButton label={minister.name} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
                                             <RoleBadge label="Ministro a Cargo" icon={Crown} T={T} isDark={isDark} />
+                                            
+                                            {/* Extra Assignments for Sunday School */}
+                                            {(consL.name || docL.name) && (
+                                                <div style={{ display: 'flex', gap: 12, marginTop: 10, width: '100%' }}>
+                                                    {consL.name && (
+                                                        <div style={{ flex: 1 }}>
+                                                            <AcademicButton label={consL.name} icon={User} variant="reliefMinimal" T={T} isDark={isDark} />
+                                                            <div style={{ marginTop: -8, display: 'flex', justifyContent: 'center' }}>
+                                                                <RoleBadge label="Cons." T={T} isDark={isDark} />
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {docL.name && docL.name !== minister.name && (
+                                                        <div style={{ flex: 1 }}>
+                                                            <AcademicButton label={docL.name} icon={User} variant="reliefMinimal" T={T} isDark={isDark} />
+                                                            <div style={{ marginTop: -8, display: 'flex', justifyContent: 'center' }}>
+                                                                <RoleBadge label="Clase" T={T} isDark={isDark} />
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 );
@@ -503,6 +540,23 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                         },
                         { label: slot9am?.sundayType === 'exchange' ? 'Intercambio Ministerial' : 'Escuela Dominical', icon: Crown, primary: true }
                     ] : [], true)}
+
+
+                    {/* 12 PM — Optional Prayer */}
+                    {slot12pm?.leaderId && renderCard('12pm' as any, "Oración de 12", (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
+                            <Avatar src={getMember(slot12pm.leaderId).avatar} size={240} T={T} isDark={isDark} />
+                            <AcademicButton
+                                label={getMember(slot12pm.leaderId).name || 'Por Asignar'}
+                                icon={User}
+                                variant="reliefAura"
+                                T={T}
+                                isDark={isDark}
+                                isTomorrow={isTomorrow}
+                            />
+                            <RoleBadge label="Consagración" icon={Sun} T={T} isDark={isDark} />
+                        </div>
+                    ), [], false)}
 
 
                     {/* Evening — Regular: 1 person (Consagración + Doctrina) | Special: 2 columns */}

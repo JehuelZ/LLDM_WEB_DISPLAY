@@ -40,14 +40,25 @@ export default function MinistroDashboard() {
     const {
         currentUser, monthlySchedule, currentDate, members,
         loadMembersFromCloud, loadAllSchedulesFromCloud, theme,
-        messages, loadCloudMessages, settings
+        messages, loadCloudMessages, settings, loadMonthlyGlobalAttendanceStats
     } = useAppStore();
     const router = useRouter();
+    const [attendanceRate, setAttendanceRate] = useState<string>('0%');
 
     useEffect(() => {
         loadMembersFromCloud();
         loadAllSchedulesFromCloud();
         loadCloudMessages();
+        
+        // Fetch and calculate real attendance rate
+        const getStats = async () => {
+            const stats = await loadMonthlyGlobalAttendanceStats();
+            if (stats && stats.length > 0) {
+                const avg = stats.reduce((acc, curr) => acc + curr.percentage, 0) / stats.length;
+                setAttendanceRate(`${Math.round(avg)}%`);
+            }
+        };
+        getStats();
     }, []);
 
     // Cálculo de estadísticas de la iglesia
@@ -64,12 +75,20 @@ export default function MinistroDashboard() {
             }
         });
 
+        // Calculate member trend based on createdAt
+        const monthAgo = new Date();
+        monthAgo.setMonth(monthAgo.getMonth() - 1);
+        const newMembersCount = members.filter(m => {
+            if (!m.createdAt) return false;
+            return new Date(m.createdAt) > monthAgo;
+        }).length;
+
         return {
             total: totalMembers,
             kids: kidsCount,
             active: activeMembers,
             groups: groupCounts,
-            attendanceRate: "88%"
+            memberTrend: newMembersCount > 0 ? `+${newMembersCount}` : '0'
         };
     }, [members]);
 
@@ -144,7 +163,7 @@ export default function MinistroDashboard() {
                         icon={Users}
                         label="Membresía Total"
                         value={stats.total}
-                        trend="+5 este mes"
+                        trend={stats.memberTrend + " este mes"}
                         color="text-blue-500"
                     />
                     <StatCard
@@ -162,7 +181,7 @@ export default function MinistroDashboard() {
                     <StatCard
                         icon={TrendingUp}
                         label="Asistencia Promedio"
-                        value={stats.attendanceRate}
+                        value={attendanceRate}
                         color="text-secondary"
                     />
                     <StatCard
@@ -195,6 +214,7 @@ export default function MinistroDashboard() {
                                     const dateStr = format(day, 'yyyy-MM-dd');
                                     const daySched = monthlySchedule[dateStr];
                                     const isToday = isSameDay(day, today);
+                                    const isSun = day.getDay() === 0;
 
                                     return (
                                         <motion.div
@@ -203,50 +223,126 @@ export default function MinistroDashboard() {
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: i * 0.05 }}
                                             className={cn(
-                                                "p-4 rounded-3xl border transition-all flex flex-col md:flex-row gap-4 items-center justify-between group",
-                                                isToday ? "bg-primary/5 border-primary/20 shadow-lg" : "bg-foreground/5 border-transparent hover:border-white/10"
+                                                "p-5 rounded-[2.5rem] border transition-all flex flex-col xl:flex-row gap-6 xl:items-center justify-between group",
+                                                isToday ? "bg-primary/5 border-primary/20 shadow-xl ring-1 ring-primary/10" : "bg-foreground/[0.03] border-white/5 hover:border-white/10"
                                             )}
                                         >
-                                            <div className="flex items-center gap-4 w-full md:w-auto">
+                                            <div className="flex items-center gap-5">
                                                 <div className={cn(
-                                                    "w-12 h-12 rounded-2xl flex flex-col items-center justify-center shrink-0 border",
-                                                    isToday ? "bg-primary text-black border-primary" : "bg-foreground/10 text-slate-400 border-white/5"
+                                                    "w-14 h-14 rounded-3xl flex flex-col items-center justify-center shrink-0 border transition-transform group-hover:scale-105",
+                                                    isToday ? "bg-primary text-black border-primary shadow-lg shadow-primary/20" : "bg-foreground/10 text-slate-400 border-white/5"
                                                 )}>
-                                                    <span className="text-[10px] font-black uppercase leading-none">{format(day, 'EEE', { locale: es })}</span>
-                                                    <span className="text-lg font-black leading-none">{format(day, 'dd')}</span>
+                                                    <span className="text-[10px] font-black uppercase leading-none mb-0.5">{format(day, 'EEE', { locale: es })}</span>
+                                                    <span className="text-xl font-black leading-none">{format(day, 'dd')}</span>
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm font-black text-foreground group-hover:text-primary transition-colors">
-                                                        {daySched?.slots['evening']?.type === 'youth' ? 'Servicio de Jóvenes' :
-                                                            daySched?.slots['evening']?.type === 'children' ? 'Servicio de la Niñez' : 'Culto de Adoración'}
+                                                <div className="space-y-1">
+                                                    <p className="text-base font-black text-foreground group-hover:text-primary transition-colors leading-none tracking-tight">
+                                                        {daySched?.slots['evening']?.topic || (isSun ? 'Servicio de Adoración' : 'Culto de Oración')}
                                                     </p>
-                                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">
-                                                        {daySched?.slots['evening']?.time || '18:30'} • {daySched?.slots['evening']?.topic || 'Privilegios Generales'}
-                                                    </p>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={cn(
+                                                            "px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider",
+                                                            daySched?.slots['evening']?.type === 'youth' ? "bg-blue-500/20 text-blue-400" :
+                                                            daySched?.slots['evening']?.type === 'children' ? "bg-orange-500/20 text-orange-400" : "bg-primary/20 text-primary"
+                                                        )}>
+                                                            {daySched?.slots['evening']?.type === 'youth' ? 'Jóvenes' :
+                                                             daySched?.slots['evening']?.type === 'children' ? 'Niñez' : 'General'}
+                                                        </span>
+                                                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none">
+                                                            {daySched?.slots['evening']?.time || '18:30'} 
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            <div className="flex gap-8 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 xl:gap-6 shrink-0">
                                                 {/* 5 AM */}
-                                                <div className="flex flex-col items-center gap-1 min-w-[60px]">
-                                                    <span className="text-[9px] font-black text-slate-600 uppercase text-center w-full">5 AM</span>
-                                                    <span className="text-xs font-bold text-foreground/80 truncate max-w-[80px]">
-                                                        {daySched?.slots['5am']?.leaderId ? members.find(m => m.id === daySched.slots['5am'].leaderId)?.name.split(' ')[0] : '—'}
+                                                <div className="bg-black/20 p-3 rounded-2xl border border-white/5 flex flex-col gap-2 min-w-[120px]">
+                                                    <span className="text-[9px] font-black text-slate-500 uppercase flex items-center gap-1">
+                                                        <Clock className="w-2.5 h-2.5" /> 5 AM
                                                     </span>
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-6 h-6 rounded-full bg-slate-800 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-black text-slate-400 uppercase italic">
+                                                            {(() => {
+                                                                const id = daySched?.slots['5am']?.leaderId;
+                                                                const m = members.find(x => x.id === id);
+                                                                return m?.avatar ? <img src={m.avatar} className="w-full h-full object-cover" /> : m?.name?.charAt(0) || '—';
+                                                            })()}
+                                                        </div>
+                                                        <span className="text-xs font-bold text-foreground/90 truncate">
+                                                            {daySched?.slots['5am']?.leaderId ? members.find(m => m.id === daySched.slots['5am'].leaderId)?.name.split(' ')[0] : '—'}
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                                {/* Evening */}
-                                                <div className="flex flex-col items-center gap-1 min-w-[100px]">
-                                                    <span className="text-[9px] font-black text-slate-600 uppercase text-center w-full">Encargado</span>
-                                                    <span className="text-xs font-bold text-primary truncate max-w-[100px]">
-                                                        {daySched?.slots['evening']?.leaderIds?.[0] ? members.find(m => m.id === daySched.slots['evening'].leaderIds[0])?.name.split(' ')[0] : '—'}
+
+                                                {/* 9 AM */}
+                                                <div className="bg-black/20 p-3 rounded-2xl border border-white/5 flex flex-col gap-2 min-w-[120px]">
+                                                    <span className="text-[9px] font-black text-amber-500/80 uppercase flex items-center gap-1">
+                                                        <Star className="w-2.5 h-2.5" /> 9 AM
                                                     </span>
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-5 h-5 rounded-full bg-slate-800 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-black text-amber-500/50 uppercase italic">
+                                                                {(() => {
+                                                                    const id = daySched?.slots['9am']?.consecrationLeaderId;
+                                                                    const m = members.find(x => x.id === id);
+                                                                    return m?.avatar ? <img src={m.avatar} className="w-full h-full object-cover" /> : m?.name?.charAt(0) || '—';
+                                                                })()}
+                                                            </div>
+                                                            <span className="text-xs font-bold text-foreground/90 truncate">
+                                                                {daySched?.slots['9am']?.consecrationLeaderId ? members.find(m => m.id === daySched.slots['9am'].consecrationLeaderId)?.name.split(' ')[0] : '—'}
+                                                            </span>
+                                                        </div>
+                                                        {daySched?.slots['9am']?.doctrineLeaderId && (
+                                                            <div className="flex items-center gap-2 opacity-80">
+                                                                <div className="w-5 h-5 rounded-full bg-slate-800 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-black text-blue-400 capitalize italic">
+                                                                    {(() => {
+                                                                        const id = daySched?.slots['9am']?.doctrineLeaderId;
+                                                                        const m = members.find(x => x.id === id);
+                                                                        return m?.avatar ? <img src={m.avatar} className="w-full h-full object-cover" /> : m?.name?.charAt(0) || 'D';
+                                                                    })()}
+                                                                </div>
+                                                                <span className="text-[10px] font-bold text-foreground/70 truncate">
+                                                                    {members.find(m => m.id === daySched.slots['9am'].doctrineLeaderId)?.name.split(' ')[0]}
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                {/* Doctrina */}
-                                                <div className="flex flex-col items-center gap-1 min-w-[100px]">
-                                                    <span className="text-[9px] font-black text-slate-600 uppercase text-center w-full">Doctrina</span>
-                                                    <span className="text-xs font-bold text-secondary truncate max-w-[100px]">
-                                                        {daySched?.slots['evening']?.doctrineLeaderId ? members.find(m => m.id === daySched.slots['evening'].doctrineLeaderId)?.name.split(' ')[0] : '—'}
+
+                                                {/* Tarde Responsables */}
+                                                <div className="col-span-2 md:col-span-1 bg-primary/5 p-3 rounded-2xl border border-primary/20 flex flex-col gap-2 min-w-[150px]">
+                                                    <span className="text-[9px] font-black text-primary uppercase flex items-center gap-1">
+                                                        <Activity className="w-2.5 h-2.5" /> Responsables Tarde
                                                     </span>
+                                                    <div className="flex flex-col gap-1.5">
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-5 h-5 rounded-full bg-primary/20 overflow-hidden shrink-0 flex items-center justify-center text-[8px] font-black text-primary uppercase italic">
+                                                                {(() => {
+                                                                    const id = daySched?.slots['evening']?.leaderIds?.[0];
+                                                                    const m = members.find(x => x.id === id);
+                                                                    return m?.avatar ? <img src={m.avatar} className="w-full h-full object-cover" /> : m?.name?.charAt(0) || '1';
+                                                                })()}
+                                                            </div>
+                                                            <span className="text-[11px] font-bold text-foreground truncate">
+                                                                {(daySched?.slots['evening']?.leaderIds && daySched.slots['evening'].leaderIds.length > 0) ? 
+                                                                    members.find(m => m.id === daySched.slots['evening'].leaderIds[0])?.name.split(' ')[0] : '—'}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-5 h-5 rounded-full bg-secondary/20 overflow-hidden shrink-0 flex items-center justify-center text-[8px] font-black text-secondary uppercase italic">
+                                                                {(() => {
+                                                                    const id = daySched?.slots['evening']?.doctrineLeaderId || daySched?.slots['9am']?.doctrineLeaderId;
+                                                                    const m = members.find(x => x.id === id);
+                                                                    return m?.avatar ? <img src={m.avatar} className="w-full h-full object-cover" /> : m?.name?.charAt(0) || '2';
+                                                                })()}
+                                                            </div>
+                                                            <span className="text-[11px] font-bold text-secondary truncate">
+                                                                {daySched?.slots['evening']?.doctrineLeaderId ? members.find(m => m.id === daySched.slots['evening'].doctrineLeaderId)?.name.split(' ')[0] : 
+                                                                daySched?.slots['9am']?.doctrineLeaderId ? members.find(m => m.id === daySched.slots['9am'].doctrineLeaderId)?.name.split(' ')[0] : '—'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </motion.div>

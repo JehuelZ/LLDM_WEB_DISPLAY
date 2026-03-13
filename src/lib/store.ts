@@ -99,6 +99,7 @@ export interface UserProfile {
     responsibilities?: { date: string; type: string; status: 'pending' | 'completed'; label: string }[];
     is_pre_registered?: boolean;
     bio?: string;
+    createdAt?: string;
 }
 
 export interface CalendarStyles {
@@ -549,6 +550,7 @@ export const useAppStore = create<AppState>()(
                                     type: entry.evening_service_type || 'regular',
                                     language: entry.evening_service_language || 'es',
                                     leaderIds: entry.evening_leader_ids || [],
+                                    doctrineLeaderId: entry.evening_doctrine_leader_id || '',
                                     topic: sundayType ? undefined : entry.topic,
                                     customLabel: entry.evening_custom_label
                                 }
@@ -609,6 +611,7 @@ export const useAppStore = create<AppState>()(
                             gender: p.gender || 'Varon',
                             status: p.status || 'Activo',
                             lastActive: p.last_active || 'Hoy',
+                            createdAt: p.created_at,
                             stats: p.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
                             privileges: p.roles || [],
                             is_pre_registered: p.is_pre_registered || false,
@@ -1227,8 +1230,8 @@ export const useAppStore = create<AppState>()(
 
 
 
-                await supabase.from('app_settings').update(dbSettings).eq('id', 1);
                 set({ settings: updated });
+                await supabase.from('app_settings').update(dbSettings).eq('id', 1);
             },
 
             signInWithGoogle: async () => {
