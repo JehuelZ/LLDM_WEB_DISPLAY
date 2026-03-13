@@ -52,6 +52,7 @@ export default function MinistroDashboard() {
 
     // Cálculo de estadísticas de la iglesia
     const stats = useMemo(() => {
+        const totalMembers = members.length;
         const kidsCount = members.filter(m => m.category === 'Niño').length;
         const activeMembers = members.filter(m => m.status === 'Activo').length;
 
