@@ -1038,12 +1038,19 @@ export const useAppStore = create<AppState>()(
                     file_url: theme.fileUrl
                 };
 
-                if (theme.id) {
-                    await supabase.from('weekly_themes').update(dbTheme).eq('id', theme.id);
-                } else {
-                    await supabase.from('weekly_themes').insert(dbTheme);
+                try {
+                    if (theme.id && theme.id !== 'initial-theme') {
+                        const { error } = await supabase.from('weekly_themes').update(dbTheme).eq('id', theme.id);
+                        if (error) throw error;
+                    } else {
+                        const { error } = await supabase.from('weekly_themes').insert(dbTheme);
+                        if (error) throw error;
+                    }
+                    await get().loadThemeFromCloud();
+                } catch (error: any) {
+                    console.error('Error saving theme:', error.message);
+                    throw error;
                 }
-                get().loadThemeFromCloud();
             },
 
             loadUniformsFromCloud: async () => {

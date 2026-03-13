@@ -959,13 +959,24 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 <button
                                                     onClick={async () => {
                                                         setIsSaving(true);
-                                                        await saveThemeToCloud(theme);
-                                                        setIsSaving(false);
-                                                        showNotification('Tema de la semana actualizado', 'success');
+                                                        try {
+                                                            await saveThemeToCloud(theme);
+                                                            showNotification('Tema de la semana actualizado', 'success');
+                                                        } catch (err) {
+                                                            showNotification('Error al guardar el tema', 'error');
+                                                        } finally {
+                                                            setIsSaving(false);
+                                                        }
                                                     }}
+                                                    disabled={isSaving}
                                                     className="tactile-btn tactile-btn-orange w-full h-10 justify-center text-[10px]"
                                                 >
-                                                    <Save className="w-3.5 h-3.5 mr-2" /> ACTUALIZAR TEMA
+                                                    {isSaving ? (
+                                                        <RefreshCw className="w-3.5 h-3.5 animate-spin mr-2" />
+                                                    ) : (
+                                                        <Save className="w-3.5 h-3.5 mr-2" />
+                                                    )}
+                                                    {isSaving ? 'GUARDANDO...' : 'ACTUALIZAR TEMA'}
                                                 </button>
                                                 <button
                                                     onClick={() => setActiveTab('contenido')}
@@ -2577,14 +2588,24 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 <button
                                                     onClick={async () => {
                                                         setIsSaving(true);
-                                                        await saveThemeToCloud(theme);
-                                                        setIsSaving(false);
-                                                        showNotification('Tema guardado en la nube.', 'success');
+                                                        try {
+                                                            await saveThemeToCloud(theme);
+                                                            showNotification('Tema guardado en la nube.', 'success');
+                                                        } catch (err) {
+                                                            showNotification('Error al guardar el tema', 'error');
+                                                        } finally {
+                                                            setIsSaving(false);
+                                                        }
                                                     }}
                                                     disabled={isSaving}
                                                     className="tactile-btn tactile-btn-orange w-full h-12 justify-center"
                                                 >
-                                                    <Save className="w-4 h-4 mr-2" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR TEMA'}
+                                                    {isSaving ? (
+                                                        <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+                                                    ) : (
+                                                        <Save className="w-4 h-4 mr-2" />
+                                                    )}
+                                                    {isSaving ? 'GUARDANDO...' : 'GUARDAR TEMA'}
                                                 </button>
                                             </div>
                                         </TactileGlassCard>
