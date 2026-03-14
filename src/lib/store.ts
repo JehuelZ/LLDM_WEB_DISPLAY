@@ -568,18 +568,20 @@ export const useAppStore = create<AppState>()(
                     .select('*')
                     .lte('start_date', today)
                     .gte('end_date', today)
-                    .single();
+                    .order('created_at', { ascending: false })
+                    .limit(1);
 
-                if (data) {
+                if (data && data.length > 0) {
+                    const latest = data[0];
                     set({
                         theme: {
-                            id: data.id,
-                            title: data.title,
-                            description: data.description || '',
-                            startDate: data.start_date,
-                            endDate: data.end_date,
-                            type: data.type as any,
-                            fileUrl: data.file_url
+                            id: latest.id,
+                            title: latest.title,
+                            description: latest.description || '',
+                            startDate: latest.start_date,
+                            endDate: latest.end_date,
+                            type: latest.type as any,
+                            fileUrl: latest.file_url
                         }
                     });
                 }
@@ -1029,9 +1031,13 @@ export const useAppStore = create<AppState>()(
             },
 
             saveThemeToCloud: async (theme) => {
+                // Ensure dates are simple YYYY-MM-DD
+                const sd = theme.startDate.includes('T') ? theme.startDate.split('T')[0] : theme.startDate;
+                const ed = theme.endDate.includes('T') ? theme.endDate.split('T')[0] : theme.endDate;
+
                 const dbTheme = {
-                    start_date: theme.startDate,
-                    end_date: theme.endDate,
+                    start_date: sd,
+                    end_date: ed,
                     title: theme.title,
                     description: theme.description,
                     type: theme.type,
@@ -1046,6 +1052,7 @@ export const useAppStore = create<AppState>()(
                         const { error } = await supabase.from('weekly_themes').insert(dbTheme);
                         if (error) throw error;
                     }
+                    // Immediate refresh to get the UUID in the state
                     await get().loadThemeFromCloud();
                 } catch (error: any) {
                     console.error('Error saving theme:', error.message);
