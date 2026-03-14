@@ -584,6 +584,28 @@ export const useAppStore = create<AppState>()(
                             fileUrl: latest.file_url
                         }
                     });
+                } else {
+                    // Fallback: If no theme for today, get the absolute latest one created
+                    const { data: latestAny } = await supabase
+                        .from('weekly_themes')
+                        .select('*')
+                        .order('created_at', { ascending: false })
+                        .limit(1);
+                    
+                    if (latestAny && latestAny.length > 0) {
+                        const theme = latestAny[0];
+                        set({
+                            theme: {
+                                id: theme.id,
+                                title: theme.title,
+                                description: theme.description || '',
+                                startDate: theme.start_date,
+                                endDate: theme.endDate,
+                                type: theme.type as any,
+                                fileUrl: theme.file_url
+                            }
+                        });
+                    }
                 }
             },
 
@@ -1045,15 +1067,30 @@ export const useAppStore = create<AppState>()(
                 };
 
                 try {
+                    let savedData;
                     if (theme.id && theme.id !== 'initial-theme') {
-                        const { error } = await supabase.from('weekly_themes').update(dbTheme).eq('id', theme.id);
+                        const { data, error } = await supabase.from('weekly_themes').update(dbTheme).eq('id', theme.id).select().single();
                         if (error) throw error;
+                        savedData = data;
                     } else {
-                        const { error } = await supabase.from('weekly_themes').insert(dbTheme);
+                        const { data, error } = await supabase.from('weekly_themes').insert(dbTheme).select().single();
                         if (error) throw error;
+                        savedData = data;
                     }
-                    // Immediate refresh to get the UUID in the state
-                    await get().loadThemeFromCloud();
+
+                    if (savedData) {
+                        set({
+                            theme: {
+                                id: savedData.id,
+                                title: savedData.title,
+                                description: savedData.description || '',
+                                startDate: savedData.start_date,
+                                endDate: savedData.end_date,
+                                type: savedData.type as any,
+                                fileUrl: savedData.file_url
+                            }
+                        });
+                    }
                 } catch (error: any) {
                     console.error('Error saving theme:', error.message);
                     throw error;
