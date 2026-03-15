@@ -604,7 +604,7 @@ export const useAppStore = create<AppState>()(
                                 title: theme.title,
                                 description: theme.description || '',
                                 startDate: theme.start_date,
-                                endDate: theme.endDate,
+                                endDate: theme.end_date,
                                 type: theme.type as any,
                                 fileUrl: theme.file_url
                             }
@@ -1060,9 +1060,14 @@ export const useAppStore = create<AppState>()(
             },
 
             saveThemeToCloud: async (theme) => {
-                // Ensure dates are simple YYYY-MM-DD
-                const sd = theme.startDate.includes('T') ? theme.startDate.split('T')[0] : theme.startDate;
-                const ed = theme.endDate.includes('T') ? theme.endDate.split('T')[0] : theme.endDate;
+                // Ensure dates are simple YYYY-MM-DD and handle undefined/null safely
+                const sd = (theme.startDate || format(new Date(), 'yyyy-MM-dd')).includes('T') 
+                    ? theme.startDate.split('T')[0] 
+                    : (theme.startDate || format(new Date(), 'yyyy-MM-dd'));
+                
+                const ed = (theme.endDate || format(addWeeks(new Date(), 1), 'yyyy-MM-dd')).includes('T') 
+                    ? theme.endDate.split('T')[0] 
+                    : (theme.endDate || format(addWeeks(new Date(), 1), 'yyyy-MM-dd'));
 
                 const dbTheme = {
                     start_date: sd,
