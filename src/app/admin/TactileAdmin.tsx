@@ -3076,7 +3076,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                     settings.lowPerformanceMode ? "tactile-btn-orange" : "tactile-btn-glass"
                                                                 )}
                                                             >
-                                                                MODO SMART TV
+                                                                {settings.lowPerformanceMode ? "TRANSICIONES: SIMPLES" : "TRANSICIONES: FLUIDAS"}
                                                             </button>
                                                         </div>
                                                     </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Maximize } from 'lucide-react';
+import { Maximize, Zap, ZapOff } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -49,6 +49,39 @@ export default function DisplayPage() {
     const settings = useAppStore((state) => state.settings);
     const members = useAppStore((state) => state.members);
     const monthlySchedule = useAppStore((state) => state.monthlySchedule);
+    const setSettings = useAppStore((state) => state.setSettings);
+    const saveSettingsToCloud = useAppStore((state) => state.saveSettingsToCloud);
+
+    // Secret Toggle State
+    const [clickCount, setClickCount] = useState(0);
+    const [showIndicator, setShowIndicator] = useState(false);
+    const [lastClickTime, setLastClickTime] = useState(0);
+
+    const togglePerfMode = async () => {
+        const newValue = !settings?.lowPerformanceMode;
+        setSettings({ lowPerformanceMode: newValue });
+        setShowIndicator(true);
+        setTimeout(() => setShowIndicator(false), 3000);
+        
+        // Persist to cloud
+        await saveSettingsToCloud({ lowPerformanceMode: newValue });
+    };
+
+    const handleSecretClick = () => {
+        const now = Date.now();
+        if (now - lastClickTime < 500) {
+            const newCount = clickCount + 1;
+            if (newCount >= 3) {
+                togglePerfMode();
+                setClickCount(0);
+            } else {
+                setClickCount(newCount);
+            }
+        } else {
+            setClickCount(1);
+        }
+        setLastClickTime(now);
+    };
 
 
 
@@ -293,6 +326,36 @@ export default function DisplayPage() {
                 <Clock now={now} isMounted={isMounted} settings={settings} />
                 <Progress slides={slides} currentSlide={currentSlide} />
             </div>
+
+            {/* Secret Toggle Area (Bottom Left) */}
+            <div 
+                className="fixed bottom-0 left-0 w-32 h-32 z-[1000] cursor-pointer"
+                onClick={handleSecretClick}
+            />
+
+            {/* Performance Mode Indicator */}
+            <AnimatePresence>
+                {showIndicator && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="fixed bottom-10 left-10 z-[1100] flex items-center gap-3 px-6 py-3 rounded-2xl bg-black/80 border border-white/20 backdrop-blur-xl shadow-2xl"
+                    >
+                        {settings?.lowPerformanceMode ? (
+                            <>
+                                <ZapOff className="w-5 h-5 text-amber-500" />
+                                <span className="text-xs font-black uppercase tracking-widest text-white">MODO RENDIMIENTO: <span className="text-amber-500 text-sm italic">OPTIMIZADO</span></span>
+                            </>
+                        ) : (
+                            <>
+                                <Zap className="w-5 h-5 text-primary" />
+                                <span className="text-xs font-black uppercase tracking-widest text-white">MODO RENDIMIENTO: <span className="text-primary text-sm italic">FLUIDO</span></span>
+                            </>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <div className="fixed bottom-10 right-10 z-[500] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
                 <FullscreenButton />
