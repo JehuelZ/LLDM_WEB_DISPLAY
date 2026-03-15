@@ -475,7 +475,8 @@ export const useAppStore = create<AppState>()(
                                         endTime: data.nine_am_end_time || '10:00 AM',
                                         customLabel: data.nine_am_custom_label,
                                         language: data.nine_am_language || 'es',
-                                        sundayType: parseSundayType(data.topic)
+                                        sundayType: parseSundayType(data.topic),
+                                        topic: data.topic && data.topic.includes('|') ? data.topic.split('|')[1] : (data.topic && !data.topic.startsWith('dominical:') ? data.topic : '')
                                     },
                                     '12pm': data.noon_leader_id ? {
                                         leaderId: data.noon_leader_id || '',
@@ -490,7 +491,7 @@ export const useAppStore = create<AppState>()(
                                         language: data.evening_service_language || 'es',
                                         leaderIds: data.evening_leader_ids || [],
                                         doctrineLeaderId: data.evening_doctrine_leader_id || '',
-                                        topic: parseSundayType(data.topic) ? undefined : data.topic,
+                                        topic: data.topic && data.topic.includes('|') ? data.topic.split('|')[1] : (data.topic && !data.topic.startsWith('dominical:') ? data.topic : ''),
                                         customLabel: data.evening_custom_label
                                     }
                                 }
@@ -536,7 +537,9 @@ export const useAppStore = create<AppState>()(
                                     endTime: entry.nine_am_end_time || (isSunday ? '12:00 PM' : '10:15 AM'),
                                     customLabel: entry.nine_am_custom_label,
                                     language: entry.nine_am_language || 'es',
-                                    sundayType: sundayType
+                                    sundayType: sundayType,
+                                    // Extract the actual topic if it's a Sunday string "dominical:type|Topic"
+                                    topic: entry.topic && entry.topic.includes('|') ? entry.topic.split('|')[1] : (entry.topic && !entry.topic.startsWith('dominical:') ? entry.topic : '')
                                 },
                                 '12pm': entry.noon_leader_id ? {
                                     leaderId: entry.noon_leader_id || '',
@@ -551,7 +554,7 @@ export const useAppStore = create<AppState>()(
                                     language: entry.evening_service_language || 'es',
                                     leaderIds: entry.evening_leader_ids || [],
                                     doctrineLeaderId: entry.evening_doctrine_leader_id || '',
-                                    topic: sundayType ? undefined : entry.topic,
+                                    topic: entry.topic && entry.topic.includes('|') ? entry.topic.split('|')[1] : (entry.topic && !entry.topic.startsWith('dominical:') ? entry.topic : ''),
                                     customLabel: entry.evening_custom_label
                                 }
                             }
@@ -1032,12 +1035,15 @@ export const useAppStore = create<AppState>()(
                     evening_doctrine_leader_id: cleanUuid(slots.evening.doctrineLeaderId || null),
                     evening_custom_label: slots.evening.customLabel,
 
-                    topic: slots['9am'].sundayType
-                        ? `dominical:${slots['9am'].sundayType}`
-                        : (slots.evening.topic && !slots.evening.topic.startsWith('dominical:')
-                            ? slots.evening.topic
-                            : (existing?.topic && !existing.topic.startsWith('dominical:') ? existing.topic : ''))
+                    topic: (slots['9am'] as any).topic || slots.evening.topic || ''
                 } as any;
+
+                // Handle Sunday Type prefix if applicable
+                if (slots['9am'].sundayType) {
+                    const prefix = `dominical:${slots['9am'].sundayType}`;
+                    const topicText = (slots['9am'] as any).topic || '';
+                    dbSchedule.topic = topicText ? `${prefix}|${topicText}` : prefix;
+                }
 
                 // Always provide an ID to satisfy the NOT NULL constraint
                 dbSchedule.id = existing?.id || generateId();

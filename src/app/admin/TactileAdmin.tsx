@@ -1345,20 +1345,30 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             </div>
 
                                                             {isSun ? (
-                                                                    <TactileSelect
-                                                                        label="TIPO DE DOMINICAL"
-                                                                        value={currentDaySchedule.slots['9am'].sundayType || 'local'}
-                                                                        onChange={(val: string) => updateSlot('9am', { sundayType: val })}
-                                                                        disabled={isSaving}
-                                                                        searchable={false}
-                                                                        options={[
-                                                                            { value: 'local', label: 'Dominical Local' },
-                                                                            { value: 'exchange', label: 'Intercambio Ministerial' },
-                                                                            { value: 'broadcast', label: 'Transmisión Dominical' },
-                                                                            { value: 'visitors', label: 'Dominical de Visitas' },
-                                                                        ]}
-                                                                        icon={Crown}
-                                                                    />
+                                                                    <div className="space-y-4">
+                                                                        <TactileSelect
+                                                                            label="TIPO DE DOMINICAL"
+                                                                            value={currentDaySchedule.slots['9am'].sundayType || 'local'}
+                                                                            onChange={(val: string) => updateSlot('9am', { sundayType: val })}
+                                                                            disabled={isSaving}
+                                                                            searchable={false}
+                                                                            options={[
+                                                                                { value: 'local', label: 'Dominical Local' },
+                                                                                { value: 'exchange', label: 'Intercambio Ministerial' },
+                                                                                { value: 'broadcast', label: 'Transmisión Dominical' },
+                                                                                { value: 'visitors', label: 'Dominical de Visitas' },
+                                                                            ]}
+                                                                            icon={Crown}
+                                                                        />
+                                                                        <TactileInput
+                                                                            label="TEMA / DETALLES (OPCIONAL)"
+                                                                            placeholder="Ej. Estudio de la Fe o Nombre del Ministro..."
+                                                                            value={(currentDaySchedule.slots['9am'] as any).topic || ''}
+                                                                            onChange={(e: any) => updateSlot('9am', { topic: e.target.value })}
+                                                                            disabled={isSaving}
+                                                                            icon={Sparkles}
+                                                                        />
+                                                                    </div>
                                                                 ) : (
                                                                     <>
                                                                         <TactileSelect
@@ -1517,6 +1527,14 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         icon={User}
                                                                     />
                                                                 )}
+                                                                <TactileInput
+                                                                    label="TEMA / ESTUDIO (OPCIONAL)"
+                                                                    placeholder="Ej. El Arrepentimiento..."
+                                                                    value={currentDaySchedule.slots['evening'].topic || ''}
+                                                                    onChange={(e: any) => updateSlot('evening', { topic: e.target.value })}
+                                                                    disabled={isSaving}
+                                                                    icon={Sparkles}
+                                                                />
                                                                 <button
                                                                     onClick={() => updateSlot('evening', {})}
                                                                     className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"

@@ -451,7 +451,7 @@ export function IglesiaWeekly() {
                                                             </motion.div>
                                                         )}
                                                         <SlotBox
-                                                            label={sched?.slots?.['9am']?.customLabel || 'Escuela Dominical'}
+                                                            label={sched?.slots?.['9am']?.customLabel || sched?.slots?.['9am']?.topic || 'Escuela Dominical'}
                                                             color={isActive ? T.accent : T.secondary}
                                                             leader={{ name: minister.name, avatar: minister.avatar }}
                                                             role="Ministro Local"
@@ -501,7 +501,7 @@ export function IglesiaWeekly() {
                                                     </div>
                                                     <div style={{ textAlign: 'center' }}>
                                                         <p style={{ fontSize: 7, fontWeight: 900, color: isActive ? T.accent : T.secondary, textTransform: 'uppercase', letterSpacing: '0.14em', fontFamily: T.fontInter, marginBottom: 4 }}>
-                                                            {sched?.slots?.['9am']?.customLabel || getSlotLabel('9am_sunday', settings?.language)}
+                                                            {sched?.slots?.['9am']?.customLabel || sched?.slots?.['9am']?.topic || getSlotLabel('9am_sunday', settings?.language)}
                                                         </p>
                                                         <p style={{ fontSize: 13, fontWeight: 700, color: isActive ? T.accent : ((isDark || isToday) ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat }}>
                                                             {current.label} {isActive && ' (EN CURSO)'}

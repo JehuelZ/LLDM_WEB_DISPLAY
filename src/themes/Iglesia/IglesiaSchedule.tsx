@@ -448,6 +448,23 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                         <Avatar src={minister.avatar} size={240} T={T} isDark={isDark} />
                                         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                             <AcademicButton label={minister.name} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
+                                            {slot9am?.topic && (
+                                                <div style={{ 
+                                                    background: 'rgba(255,255,255,0.05)', 
+                                                    padding: '10px 20px', 
+                                                    borderRadius: 15, 
+                                                    color: T.secondary,
+                                                    fontSize: 22,
+                                                    fontWeight: '900',
+                                                    textTransform: 'uppercase',
+                                                    letterSpacing: 1,
+                                                    border: `1px solid ${T.secondary}20`,
+                                                    textAlign: 'center',
+                                                    marginTop: 5
+                                                }}>
+                                                    {slot9am.topic}
+                                                </div>
+                                            )}
                                             <RoleBadge label="Ministro a Cargo" icon={Crown} T={T} isDark={isDark} />
                                             
                                             {/* Extra Assignments for Sunday School */}
@@ -489,6 +506,23 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                     </div>
                                     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                         <AcademicButton label={current.label} icon={Icon} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
+                                        {slot9am?.topic && (
+                                            <div style={{ 
+                                                background: 'rgba(255,255,255,0.05)', 
+                                                padding: '10px 20px', 
+                                                borderRadius: 15, 
+                                                color: T.secondary,
+                                                fontSize: 22,
+                                                fontWeight: '900',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: 1,
+                                                border: `1px solid ${T.secondary}20`,
+                                                textAlign: 'center',
+                                                marginTop: 5
+                                            }}>
+                                                {slot9am.topic}
+                                            </div>
+                                        )}
                                         <RoleBadge label="Escuela Dominical" icon={Crown} T={T} isDark={isDark} />
                                     </div>
                                 </div>
