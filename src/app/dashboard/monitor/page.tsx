@@ -267,8 +267,8 @@ export default function AttendanceDashboard() {
             const isSingle = ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'].some(v => group.includes(v));
             const isKid = m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
 
-            if (activeTab === 'varones') return m.gender === 'Varon' && !isKid && !isYoung && !isMarried && !isSingle;
-            if (activeTab === 'hermanas') return m.gender === 'Hermana' && !isKid && !isYoung && !isMarried && !isSingle;
+            if (activeTab === 'varones') return m.gender === 'Varon' && !isKid && !isYoung;
+            if (activeTab === 'hermanas') return m.gender === 'Hermana' && !isKid && !isYoung;
             if (activeTab === 'ninos') return isKid;
             if (activeTab === 'jovenes') return isYoung && !isKid;
             if (activeTab === 'casados') return isMarried && !isKid;
@@ -299,8 +299,8 @@ export default function AttendanceDashboard() {
         const checkIsKid = (m: any) => m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => m.member_group?.toLowerCase().includes(v));
 
         return {
-            varones: getGroupCount(m => m.gender === 'Varon' && !checkIsKid(m) && !checkIsYoung(m) && !checkIsMarried(m) && !checkIsSingle(m)),
-            hermanas: getGroupCount(m => m.gender === 'Hermana' && !checkIsKid(m) && !checkIsYoung(m) && !checkIsMarried(m) && !checkIsSingle(m)),
+            varones: getGroupCount(m => m.gender === 'Varon' && !checkIsKid(m) && !checkIsYoung(m)),
+            hermanas: getGroupCount(m => m.gender === 'Hermana' && !checkIsKid(m) && !checkIsYoung(m)),
             ninos: getGroupCount(m => checkIsKid(m)),
             jovenes: getGroupCount(m => checkIsYoung(m) && !checkIsKid(m)),
             casados: getGroupCount(m => checkIsMarried(m) && !checkIsKid(m)),

@@ -317,7 +317,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         role: 'Miembro',
         gender: 'Varon',
         category: 'Varon',
-        member_group: 'Casados',
+        member_group: 'Hermanos',
         status: 'Activo'
     })
 
@@ -3231,7 +3231,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             />
                                             <TactileSelect
                                                 label="GRUPO / CLASIFICACIÓN"
-                                                value={newMemberData.member_group || 'Casados'}
+                                                value={newMemberData.member_group || 'Hermanos'}
                                                 onChange={(val: any) => setNewMemberData({ ...newMemberData, member_group: val })}
                                                 options={[
                                                     { value: 'Administración', label: 'Administración' },
@@ -3354,7 +3354,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             email: '',
                                                             phone: '',
                                                             gender: 'Varon',
-                                                            member_group: 'Casados',
+                                                            member_group: 'Hermanos',
                                                             role: 'Miembro',
                                                             category: 'Varon',
                                                             status: 'Activo',
