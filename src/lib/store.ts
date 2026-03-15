@@ -266,6 +266,7 @@ interface AppState {
     // Attendance Actions
     loadAttendanceFromCloud: (date: string) => Promise<void>;
     saveAttendanceToCloud: (records: AttendanceRecord[]) => Promise<void>;
+    loadMemberAttendanceHistory: (memberId: string) => Promise<AttendanceRecord[]>;
     loadWeeklyAttendanceStats: () => Promise<any[]>;
     loadMonthlyGlobalAttendanceStats: () => Promise<any[]>;
     loadDetailedWeeklyStats: (days: string[]) => Promise<any[]>;
@@ -1646,6 +1647,30 @@ export const useAppStore = create<AppState>()(
                     }
                 };
                 return stats;
+            },
+            
+            loadMemberAttendanceHistory: async (memberId) => {
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('*')
+                    .eq('member_id', memberId)
+                    .order('date', { ascending: false });
+
+                if (error) {
+                    console.error("Error loading member attendance history:", error);
+                    return [];
+                }
+
+                return (data || []).map(r => ({
+                    id: r.id,
+                    member_id: r.member_id,
+                    date: r.date,
+                    session_type: r.session_type,
+                    present: r.present,
+                    time: r.time,
+                    delivered_by: r.delivered_by,
+                    collected_by: r.collected_by
+                }));
             },
 
             loadWeeklyAttendanceStats: async () => {

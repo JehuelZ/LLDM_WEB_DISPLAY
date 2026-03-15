@@ -203,6 +203,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         attendanceRecords, loadAttendanceFromCloud, saveAttendanceToCloud,
         loadWeeklyAttendanceStats,
         loadMonthlyGlobalAttendanceStats,
+        loadMemberAttendanceHistory,
         showNotification
     } = useAppStore()
 
@@ -321,6 +322,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         status: 'Activo'
     })
 
+    const [selectedMemberForHistory, setSelectedMemberForHistory] = useState<UserProfile | null>(null)
+    const [memberHistory, setMemberHistory] = useState<AttendanceRecord[]>([])
+    const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+
     const [showRehearsalModal, setShowRehearsalModal] = useState(false)
     const [editingRehearsal, setEditingRehearsal] = useState<any>(null)
     const [currentAttendanceSession, setCurrentAttendanceSession] = useState<'5am' | '9am' | 'evening'>('5am')
@@ -388,6 +393,19 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         const newDate = date.toISOString().split('T')[0]
         setCurrentDate(newDate)
     }
+
+    const handleViewHistory = async (member: UserProfile) => {
+        setSelectedMemberForHistory(member);
+        setIsLoadingHistory(true);
+        try {
+            const history = await loadMemberAttendanceHistory(member.id);
+            setMemberHistory(history);
+        } catch (error) {
+            console.error("Error loading member history:", error);
+        } finally {
+            setIsLoadingHistory(false);
+        }
+    };
 
     const toggleAttendance = async (memberId: string, session: string) => {
         if (processingToggles[memberId]) return;
@@ -1140,12 +1158,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 const isProcessing = processingToggles[member.id];
 
                                                 return (
-                                                    <motion.button
+                                                    <motion.div
                                                         key={member.id}
                                                         layoutId={member.id}
-                                                        onClick={() => toggleAttendance(member.id, session)}
-                                                        disabled={isProcessing}
-                                                        whileTap={{ scale: 0.96 }}
+                                                        initial={{ opacity: 0, scale: 0.9 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
                                                         className={cn(
                                                             "relative flex items-center gap-4 p-4 rounded-3xl border transition-all duration-300 text-left overflow-hidden group",
                                                             isPresent 
@@ -1158,8 +1175,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             <div className="absolute inset-0 bg-primary/5 animate-pulse" />
                                                         )}
 
-                                                        {/* Avatar */}
-                                                        <div className="relative shrink-0">
+                                                        {/* Avatar - Clickable for history */}
+                                                        <div className="relative shrink-0 cursor-pointer hover:scale-110 transition-transform z-10"
+                                                             onClick={(e) => { e.stopPropagation(); handleViewHistory(member); }}>
                                                             <div className={cn(
                                                                 "w-12 h-12 rounded-2xl border-2 overflow-hidden transition-all duration-500",
                                                                 isPresent ? "border-primary shadow-[0_0_15px_rgba(59,130,246,0.3)]" : "border-white/10"
@@ -1179,8 +1197,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             )}
                                                         </div>
 
-                                                        {/* Member Info */}
-                                                        <div className="flex-1 min-w-0 pr-4">
+                                                        {/* Member Info - Clickable for attendance toggle */}
+                                                        <div className="flex-1 min-w-0 pr-4 cursor-pointer" onClick={() => toggleAttendance(member.id, session)}>
                                                             <h4 className={cn(
                                                                 "font-black text-sm uppercase tracking-tight truncate",
                                                                 isPresent ? "text-primary" : "text-white/80"
@@ -1201,7 +1219,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                 <RefreshCw className="w-5 h-5 text-primary animate-spin" />
                                                             </div>
                                                         )}
-                                                    </motion.button>
+                                                    </motion.div>
                                                 );
                                             })}
                                         </div>
@@ -1815,7 +1833,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 return m.member_group === memberFilter;
                                             })
                                             .map(member => (
-                                                <div key={member.id} className="tactile-glass-panel p-4 flex items-center gap-4 group cursor-pointer hover:bg-white/[0.03] transition-colors relative">
+                                                <div key={member.id} 
+                                                     onClick={() => handleViewHistory(member)}
+                                                     className="tactile-glass-panel p-4 flex items-center gap-4 group cursor-pointer hover:bg-white/[0.03] transition-colors relative">
                                                     <div className="w-14 h-14 rounded-full border-2 border-white/10 overflow-hidden relative">
                                                         <img src={member.avatar || `https://ui-avatars.com/api/?name=${member.name}&background=random`} className="w-full h-full object-cover" alt={member.name} />
                                                         {member.role === 'Administrador' && (
@@ -3443,6 +3463,137 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             className="tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
                                         >
                                             {isSaving ? 'GUARDANDO...' : 'GUARDAR ENSAYO'}
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            </div>
+                        )}
+
+                        {selectedMemberForHistory && (
+                            <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => setSelectedMemberForHistory(null)}
+                                    className="absolute inset-0 bg-[#050510]/95 backdrop-blur-xl"
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                    className="relative w-full max-w-2xl bg-white/[0.03] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl"
+                                >
+                                    {/* Header / Banner */}
+                                    <div className="relative h-48 bg-gradient-to-br from-primary/30 to-purple-500/20">
+                                        <button 
+                                            onClick={() => setSelectedMemberForHistory(null)}
+                                            className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-red-500/20 hover:border-red-500/40 transition-all"
+                                        >
+                                            <X className="w-5 h-5 text-white" />
+                                        </button>
+
+                                        <div className="absolute -bottom-12 left-10 flex items-end gap-6">
+                                            <div className="w-32 h-32 rounded-[2.5rem] border-4 border-[#050510] overflow-hidden shadow-2xl bg-[#1a1a1a]">
+                                                <img 
+                                                    src={selectedMemberForHistory.avatar || `https://ui-avatars.com/api/?name=${selectedMemberForHistory.name}&background=random`} 
+                                                    className="w-full h-full object-cover" 
+                                                    alt="" 
+                                                />
+                                            </div>
+                                            <div className="mb-4">
+                                                <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">{selectedMemberForHistory.name}</h2>
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-primary text-black">
+                                                        {selectedMemberForHistory.member_group}
+                                                    </span>
+                                                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest italic">{selectedMemberForHistory.role}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Content */}
+                                    <div className="pt-16 p-10 space-y-8">
+                                        <div className="grid grid-cols-3 gap-4">
+                                            {[
+                                                { label: 'ORACIONES ASISTIDAS', value: memberHistory.filter(r => r.present).length, icon: CheckCircle, color: 'text-emerald-400' },
+                                                { label: 'PUNTUALIDAD', value: `${selectedMemberForHistory.stats?.punctuality || 95}%`, icon: Clock, color: 'text-primary' },
+                                                { label: 'TOTAL REGISTROS', value: memberHistory.length, icon: Calendar, color: 'text-white/40' }
+                                            ].map((stat, i) => (
+                                                <div key={i} className="bg-white/[0.02] border border-white/5 p-4 rounded-3xl flex flex-col items-center justify-center text-center">
+                                                    <stat.icon className={cn("w-5 h-5 mb-2", stat.color)} />
+                                                    <div className="text-xl font-black italic">{stat.value}</div>
+                                                    <p className="text-[8px] font-black uppercase text-white/30 tracking-widest mt-1">{stat.label}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between px-2">
+                                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50">HISTORIAL RECIENTE</h4>
+                                                <span className="text-[9px] font-bold text-primary italic uppercase tracking-widest">Últimos 30 días</span>
+                                            </div>
+                                            
+                                            <div className="bg-black/20 border border-white/5 rounded-[2rem] p-6 max-h-[300px] overflow-y-auto custom-scrollbar">
+                                                {isLoadingHistory ? (
+                                                    <div className="flex flex-col items-center justify-center py-12 gap-4">
+                                                        <RefreshCw className="w-8 h-8 text-primary animate-spin" />
+                                                        <p className="text-[10px] font-black uppercase tracking-widest text-white/30 italic">Cargando historial...</p>
+                                                    </div>
+                                                ) : memberHistory.length === 0 ? (
+                                                    <div className="py-12 text-center">
+                                                        <Info className="w-8 h-8 text-white/10 mx-auto mb-4" />
+                                                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20 italic">No hay registros previos</p>
+                                                    </div>
+                                                ) : (
+                                                    <div className="space-y-3">
+                                                        {(() => {
+                                                            // Group by individual day for clearer view
+                                                            const byDate: Record<string, AttendanceRecord[]> = {};
+                                                            memberHistory.forEach(r => {
+                                                                if (!byDate[r.date]) byDate[r.date] = [];
+                                                                byDate[r.date].push(r);
+                                                            });
+
+                                                            return Object.entries(byDate).slice(0, 14).map(([date, records]) => (
+                                                                <div key={date} className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-colors">
+                                                                    <div className="flex flex-col">
+                                                                        <span className="text-[10px] font-black uppercase italic text-white/80">{format(parseISO(date), "EEEE, d 'de' MMMM", { locale: es })}</span>
+                                                                        <div className="flex gap-1 mt-1">
+                                                                            {['5am', '9am', 'evening'].map(type => {
+                                                                                const rec = records.find(r => r.session_type === type);
+                                                                                const present = rec?.present;
+                                                                                return (
+                                                                                    <div key={type} className={cn(
+                                                                                        "px-2 py-0.5 rounded text-[7px] font-black uppercase tracking-tighter transition-all",
+                                                                                        present ? "bg-primary/20 text-primary border border-primary/30" : "bg-white/5 text-white/20 border border-white/5"
+                                                                                    )}>
+                                                                                        {type === '5am' ? '5 AM' : type === '9am' ? '9 AM' : 'TARDE'}
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="flex flex-col items-end">
+                                                                        <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest">{records.some(r => r.present) ? 'ASISTIÓ' : 'FALTA'}</span>
+                                                                        {records.some(r => r.present) && (
+                                                                            <span className="text-[9px] font-black text-emerald-400 mt-1 italic">✓ Visto</span>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            ));
+                                                        })()}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <button 
+                                            onClick={() => setSelectedMemberForHistory(null)}
+                                            className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all active:scale-[0.98]"
+                                        >
+                                            CERRAR DETALLE
                                         </button>
                                     </div>
                                 </motion.div>
