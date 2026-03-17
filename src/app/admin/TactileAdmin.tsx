@@ -11,7 +11,7 @@ import {
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
     Camera, Phone, Mail, User, Languages, Music2, ClipboardCheck,
-    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power, Thermometer
+    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power, Thermometer, Type
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -1956,6 +1956,26 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         ))}
                                                     </div>
                                                 </div>
+
+                                                <TactileSelect
+                                                    label="TIPOGRAFÍA DEL SISTEMA (GOOGLE FONTS)"
+                                                    value={settings.fontMain}
+                                                    onChange={(val: any) => saveSettingsToCloud({ fontMain: val })}
+                                                    options={[
+                                                        { value: 'outfit', label: 'Outfit (Predeterminada)' },
+                                                        { value: 'sora', label: 'Sora (Elegante)' },
+                                                        { value: 'inter', label: 'Inter (Limpia)' },
+                                                        { value: 'montserrat', label: 'Montserrat (Clásica)' },
+                                                        { value: 'poppins', label: 'Poppins (Moderna)' },
+                                                        { value: 'lexend', label: 'Lexend (Legibilidad)' },
+                                                        { value: 'orbitron', label: 'Orbitron (Futurista)' },
+                                                        { value: 'black-ops', label: 'Black Ops (Display)' },
+                                                        { value: 'syne', label: 'Syne (Artística)' },
+                                                        { value: 'playfair', label: 'Playfair (Elegante Serif)' },
+                                                        { value: 'lora', label: 'Lora (Clásica Serif)' },
+                                                    ]}
+                                                    icon={Type}
+                                                />
 
                                                 <TactileSelect
                                                     label="ICONO DE IDENTIDAD"

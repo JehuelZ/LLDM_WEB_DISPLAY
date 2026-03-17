@@ -13,7 +13,7 @@ import {
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
-    Lock, ArrowRight, LogOut, Info, XCircle
+    Lock, ArrowRight, LogOut, Info, XCircle, Type
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
@@ -2029,6 +2029,44 @@ function AdminDashboardContent() {
                                             }
                                         }}
                                     />
+                                </CardContent>
+                            </Card>
+
+                            <Card className="glass-card border-t-4 border-t-amber-500">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
+                                        <Type className="h-5 w-5 text-amber-500" /> Tipografía Global
+                                    </CardTitle>
+                                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Fuente del sistema (Google Fonts)</CardDescription>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        {[
+                                            { id: 'outfit', label: 'Outfit' },
+                                            { id: 'sora', label: 'Sora' },
+                                            { id: 'inter', label: 'Inter' },
+                                            { id: 'montserrat', label: 'Montserrat' },
+                                            { id: 'poppins', label: 'Poppins' },
+                                            { id: 'lexend', label: 'Lexend' },
+                                            { id: 'orbitron', label: 'Orbitron' },
+                                            { id: 'black-ops', label: 'Black Ops' },
+                                            { id: 'syne', label: 'Syne' },
+                                            { id: 'playfair', label: 'Playfair' },
+                                            { id: 'lora', label: 'Lora' },
+                                        ].map((font) => (
+                                            <button
+                                                key={font.id}
+                                                onClick={() => setSettings({ fontMain: font.id as any })}
+                                                className={cn(
+                                                    "p-3 rounded-2xl border-2 transition-all flex flex-col items-center gap-1",
+                                                    (settings.fontMain || 'outfit') === font.id ? "border-amber-500 bg-amber-500/10" : "border-white/5 bg-white/5 hover:border-white/10"
+                                                )}
+                                            >
+                                                <span className="text-lg font-black" style={{ fontFamily: font.id === 'outfit' ? 'var(--font-outfit)' : font.id === 'sora' ? 'var(--font-sora)' : font.id === 'inter' ? 'var(--font-inter)' : font.id }}>Aa</span>
+                                                <span className="text-[9px] font-bold uppercase tracking-widest">{font.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </CardContent>
                             </Card>
 

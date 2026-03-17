@@ -54,8 +54,44 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         return <>{children}</>;
     }
 
-    const fontFamily = calendarStyles.fontFamily;
-    const fontVar = fontFamily === 'sora' ? 'var(--font-sora)' : fontFamily === 'inter' ? 'var(--font-inter)' : 'var(--font-outfit)';
+    const fontFamily = settings.fontMain || 'outfit';
+    
+    // Mapping for pre-loaded Next.js fonts
+    const nextFontVarMap: Record<string, string> = {
+        'outfit': 'var(--font-outfit)',
+        'sora': 'var(--font-sora)',
+        'inter': 'var(--font-inter)',
+        'montserrat': 'var(--font-montserrat)',
+        'orbitron': 'var(--font-orbitron)',
+        'black-ops': 'var(--font-black-ops)',
+        'jetbrains': 'var(--font-jetbrains-mono)',
+    };
+
+    // Mapping for dynamic Google Fonts
+    const dynamicFontMap: Record<string, string> = {
+        'poppins': 'Poppins',
+        'lexend': 'Lexend',
+        'syne': 'Syne',
+        'playfair': 'Playfair Display',
+        'lora': 'Lora',
+    };
+
+    const fontVar = nextFontVarMap[fontFamily] || dynamicFontMap[fontFamily] || 'var(--font-outfit)';
+    const isDynamic = !!dynamicFontMap[fontFamily];
+
+    useEffect(() => {
+        if (isDynamic) {
+            const fontName = dynamicFontMap[fontFamily].replace(' ', '+');
+            const linkId = `google-font-${fontFamily}`;
+            if (!document.getElementById(linkId)) {
+                const link = document.createElement('link');
+                link.id = linkId;
+                link.rel = 'stylesheet';
+                link.href = `https://fonts.googleapis.com/css2?family=${fontName}:wght@400;500;600;700;800;900&display=swap`;
+                document.head.appendChild(link);
+            }
+        }
+    }, [fontFamily, isDynamic]);
 
     return (
         <div

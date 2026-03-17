@@ -86,6 +86,7 @@ export interface AppSettings {
     customLogo3FileId?: string;
     customLogo4FileId?: string;
     weatherUnit?: 'celsius' | 'fahrenheit';
+    fontMain?: string;
 }
 
 export interface UserProfile {
@@ -124,7 +125,7 @@ export interface CalendarStyles {
     thursdayColor: string;
     special14thColor: string;
     showGlassEffect: boolean;
-    fontFamily: 'outfit' | 'sora' | 'inter';
+    fontFamily: 'outfit' | 'sora' | 'inter' | 'montserrat' | 'poppins' | 'lexend' | 'orbitron' | 'black-ops' | 'syne' | 'playfair' | 'lora';
     fontSetIndex?: number;
 }
 
@@ -348,6 +349,7 @@ export const useAppStore = create<AppState>()(
                 iglesiaVariant: 'light',
                 facebookUrl: '',
                 instagramUrl: '',
+                fontMain: 'outfit',
                 youtubeUrl: '',
                 customSocialUrl: '',
                 customSocialLabel: '',
@@ -1292,6 +1294,7 @@ export const useAppStore = create<AppState>()(
                             customLogo3: data.custom_logo_3,
                             customLogo4: data.custom_logo_4,
                             weatherUnit: data.weather_unit || 'fahrenheit',
+                            fontMain: data.display_font_family || 'outfit',
                         },
 
 
@@ -1363,6 +1366,7 @@ export const useAppStore = create<AppState>()(
                     custom_logo_3: updated.customLogo3,
                     custom_logo_4: updated.customLogo4,
                     weather_unit: updated.weatherUnit,
+                    display_font_family: updated.fontMain,
                 };
 
 
