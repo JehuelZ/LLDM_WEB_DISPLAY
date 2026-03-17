@@ -1737,7 +1737,7 @@ function AdminDashboardContent() {
                                                         type="file"
                                                         id="countdown-logo-upload"
                                                         className="hidden"
-                                                        accept="image/*"
+                                                        accept="image/*,.svg"
                                                         onChange={async (e) => {
                                                             const file = e.target.files?.[0];
                                                             if (file) {
@@ -1809,7 +1809,7 @@ function AdminDashboardContent() {
                                                     type="file"
                                                     id="countdown-bg-upload"
                                                     className="hidden"
-                                                    accept="image/*"
+                                                    accept="image/*,.svg"
                                                     onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
@@ -1932,7 +1932,7 @@ function AdminDashboardContent() {
                                                     type="file"
                                                     id={`custom-logo-upload-${slotIndex}`}
                                                     className="hidden"
-                                                    accept="image/*"
+                                                    accept="image/*,.svg"
                                                     onChange={(e) => handleCustomLogoUpload(e, slotIndex as any)}
                                                 />
                                             </div>
@@ -2011,7 +2011,7 @@ function AdminDashboardContent() {
                                         id="display-bg-upload-styling"
                                         type="file"
                                         className="hidden"
-                                        accept="image/*"
+                                        accept="image/*,.svg"
                                         onChange={async (e) => {
                                             const file = e.target.files?.[0];
                                             if (file) {
@@ -2929,7 +2929,7 @@ function AdminDashboardContent() {
                                             id="minister-photo-upload"
                                             type="file"
                                             className="hidden"
-                                            accept="image/*"
+                                            accept="image/*,.svg"
                                             onChange={handleMinisterAvatarChange}
                                         />
                                     </div>

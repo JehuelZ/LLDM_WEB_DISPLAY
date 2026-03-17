@@ -646,7 +646,7 @@ export default function MembersPage() {
                                                 id="member-avatar-upload"
                                                 type="file"
                                                 className="hidden"
-                                                accept="image/*"
+                                                accept="image/*,.svg"
                                                 onChange={(e) => {
                                                     const file = e.target.files?.[0];
                                                     if (file) {

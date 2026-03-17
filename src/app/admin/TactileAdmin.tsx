@@ -2054,6 +2054,97 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
+                                        <TactileGlassCard title="FONDO DE PROYECCIÓN">
+                                            <div className="space-y-6">
+                                                <TactileSelect
+                                                    label="MODO DE LOGO / FONDO"
+                                                    value={settings.displayBgMode}
+                                                    onChange={(val: any) => saveSettingsToCloud({ displayBgMode: val })}
+                                                    options={[
+                                                        { value: 'official', label: 'Oficial (Flama)' },
+                                                        { value: 'custom', label: 'Personalizado (SVG/Imagen)' },
+                                                        { value: 'none', label: 'Sin Logo de Fondo' },
+                                                    ]}
+                                                    icon={Monitor}
+                                                />
+
+                                                {settings.displayBgMode === 'custom' && (
+                                                    <div className="space-y-4">
+                                                        <div 
+                                                            onClick={() => document.getElementById('tactile-bg-upload')?.click()}
+                                                            className="w-full aspect-video rounded-3xl border-2 border-dashed border-white/10 hover:border-primary/40 bg-black/40 flex flex-col items-center justify-center gap-4 cursor-pointer overflow-hidden transition-all group"
+                                                        >
+                                                            {settings.displayCustomBgUrl ? (
+                                                                <div className="relative w-full h-full">
+                                                                    <img src={settings.displayCustomBgUrl} className="w-full h-full object-cover" alt="Custom background" />
+                                                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                                        <Upload className="w-8 h-8 text-white" />
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <>
+                                                                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                                                        <Upload className="w-6 h-6 text-tactile-text-sub" />
+                                                                    </div>
+                                                                    <div className="text-center">
+                                                                        <p className="text-[10px] font-black uppercase tracking-widest">Subir Fondo Personalizado</p>
+                                                                        <p className="text-[8px] text-tactile-text-sub mt-2">Formatos aceptados: SVG, JPG, PNG, WEBP</p>
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                        <input
+                                                            id="tactile-bg-upload"
+                                                            type="file"
+                                                            className="hidden"
+                                                            accept="image/*,.svg"
+                                                            onChange={async (e) => {
+                                                                const file = e.target.files?.[0];
+                                                                if (file) {
+                                                                    setIsSaving(true);
+                                                                    const publicUrl = await uploadAvatar('display-bg', file);
+                                                                    if (publicUrl) {
+                                                                        await saveSettingsToCloud({
+                                                                            displayCustomBgUrl: publicUrl,
+                                                                            displayBgMode: 'custom',
+                                                                            churchLogoUrl: publicUrl, // Sincronizar también como logo principal
+                                                                            churchIcon: 'custom'
+                                                                        });
+                                                                        showNotification('Fondo actualizado exitosamente.', 'success');
+                                                                    }
+                                                                    setIsSaving(false);
+                                                                }
+                                                            }}
+                                                        />
+                                                    </div>
+                                                )}
+                                                
+                                                <div className="py-4 border-t border-white/5 space-y-4">
+                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE PUNTOS / ANIMACIÓN</label>
+                                                    <div className="grid grid-cols-2 gap-2">
+                                                        <button
+                                                            onClick={() => saveSettingsToCloud({ displayBgStyle: 'static' })}
+                                                            className={cn(
+                                                                "tactile-btn flex-1 text-[10px] py-2",
+                                                                settings.displayBgStyle === 'static' ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                            )}
+                                                        >
+                                                            ESTÁTICO
+                                                        </button>
+                                                        <button
+                                                            onClick={() => saveSettingsToCloud({ displayBgStyle: 'dynamic' })}
+                                                            className={cn(
+                                                                "tactile-btn flex-1 text-[10px] py-2",
+                                                                settings.displayBgStyle === 'dynamic' ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                            )}
+                                                        >
+                                                            DINÁMICO
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </TactileGlassCard>
+
 
                                         <button
                                             onClick={async () => {
@@ -2090,7 +2181,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         type="file"
                                                         id="minister-avatar-upload"
                                                         className="hidden"
-                                                        accept="image/*"
+                                                        accept="image/*,.svg"
                                                         onChange={(e) => {
                                                             const file = e.target.files?.[0];
                                                             if (file) {
@@ -2437,7 +2528,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 type="file"
                                                 id="admin-avatar-upload"
                                                 className="hidden"
-                                                accept="image/*"
+                                                accept="image/*,.svg"
                                                 onChange={async (e) => {
                                                     const file = e.target.files?.[0];
                                                     if (file) {
@@ -3301,7 +3392,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     type="file"
                                                     id="member-avatar-upload"
                                                     className="hidden"
-                                                    accept="image/*"
+                                                    accept="image/*,.svg"
                                                     onChange={(e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
