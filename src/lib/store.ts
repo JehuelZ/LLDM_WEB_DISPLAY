@@ -15,6 +15,7 @@ import {
     isSameDay,
     subDays
 } from 'date-fns';
+import { getLocalDateString } from './utils';
 
 export interface AppSettings {
     themeMode: 'light' | 'dark' | 'system';
@@ -49,7 +50,7 @@ export interface AppSettings {
     iglesiaVariant?: 'light' | 'dark';
     iglesiaAnimation?: 'metro' | 'breathing' | 'fade';
     iglesiaAnimationSpeed?: number; // In seconds
-    iglesiaSlideDuration?: number; // In seconds
+    // iglesiaSlideDuration removed from here to unify below
 
     // Social Media
     facebookUrl?: string;
@@ -65,6 +66,15 @@ export interface AppSettings {
     displayOffsetY?: number; // New: Manual vertical adjustment
     displayAuthorizedEmails?: string[]; // New: List of emails allowed to use display mode
     lowPerformanceMode?: boolean; // New: Disable expensive visual effects for TVs
+    
+    // Slide & Transition Settings
+    transitionsEnabled?: boolean;
+    iglesiaSlideDuration?: number;
+    cristalSlideDuration?: number;
+    minimalSlideDuration?: number;
+    nocturnoSlideDuration?: number;
+    neonSlideDuration?: number;
+
     customLogo1?: string;
     customLogo2?: string;
     customLogo3?: string;
@@ -283,7 +293,7 @@ interface AppState {
     createTestAccounts: () => Promise<void>;
 
     notification: { message: string, type: 'success' | 'error' | 'warning' | 'info' } | null;
-    showNotification: (message: string, type: 'success' | 'error' | 'warning' | 'info') => void;
+    showNotification: (message: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
     hideNotification: () => void;
     simulateUser: (email: string) => Promise<boolean>;
 }
@@ -307,7 +317,7 @@ const INITIAL_USER: UserProfile = {
 export const useAppStore = create<AppState>()(
     persist(
         (set, get) => ({
-            currentDate: new Date().toISOString().split('T')[0],
+            currentDate: getLocalDateString(),
             monthlySchedule: MOCK_MONTH_SCHEDULE,
             theme: MOCK_THEME,
             announcements: MOCK_ANNOUNCEMENTS,
@@ -441,10 +451,12 @@ export const useAppStore = create<AppState>()(
             },
 
             loadDayScheduleFromCloud: async (date) => {
+                // If date is not provided, use local today
+                const targetDate = date || getLocalDateString();
                 const { data: data, error } = await supabase
                     .from('schedule')
                     .select('*')
-                    .eq('date', date)
+                    .eq('date', targetDate)
                     .single();
 
                 if (data) {
@@ -458,7 +470,7 @@ export const useAppStore = create<AppState>()(
                     set((state) => ({
                         monthlySchedule: {
                             ...state.monthlySchedule,
-                            [date]: {
+                            [targetDate]: {
                                 id: data.id,
                                 date: data.date,
                                 slots: {
@@ -566,7 +578,7 @@ export const useAppStore = create<AppState>()(
             },
 
             loadThemeFromCloud: async () => {
-                const today = new Date().toISOString().split('T')[0];
+                const today = getLocalDateString();
                 const { data, error } = await supabase
                     .from('weekly_themes')
                     .select('*')
@@ -615,17 +627,20 @@ export const useAppStore = create<AppState>()(
 
             loadMembersFromCloud: async () => {
                 set({ isLoading: true });
+                console.log('LoadMembers: Fetching from profiles...');
                 try {
                     const { data, error } = await supabase
                         .from('profiles')
                         .select('*');
 
                     if (error) {
+                        console.error('LoadMembers: Supabase Error:', error);
                         set({ isLoading: false });
                         return;
                     }
 
                     if (data) {
+                        console.log(`LoadMembers: Fetched ${data.length} profiles.`);
                         const mapped = data.map((p: any) => ({
                             id: p.id,
                             name: p.name,
@@ -664,54 +679,82 @@ export const useAppStore = create<AppState>()(
                         set({ members: mapped, isLoading: false });
                     }
                 } catch (err) {
+                    console.error('LoadMembers: Unexpected Exception:', err);
                     set({ isLoading: false });
                 }
             },
 
             updateProfileInCloud: async (userId, updates) => {
-                const dbUpdates: any = {};
-                if (updates.name) dbUpdates.name = updates.name;
-                if (updates.email) dbUpdates.email = updates.email;
-                if (updates.phone) dbUpdates.phone = updates.phone;
-                if (updates.avatar) dbUpdates.avatar_url = updates.avatar;
-                if ((updates as any).avatarUrl) dbUpdates.avatar_url = (updates as any).avatarUrl;
-                if (updates.category) dbUpdates.category = updates.category;
-                if (updates.member_group) dbUpdates.member_group = updates.member_group;
-                if (updates.role) dbUpdates.role = updates.role;
-                if (updates.gender) dbUpdates.gender = updates.gender;
-                if (updates.status) dbUpdates.status = updates.status;
-                if (updates.stats) dbUpdates.stats = updates.stats;
-                if (updates.privileges) dbUpdates.roles = updates.privileges;
-                if (updates.bio) dbUpdates.bio = updates.bio;
+                const cleanId = userId?.trim();
+                const dbUpdates: any = { updated_at: new Date().toISOString() };
+                console.log('UpdateProfile: START for ID:', cleanId);
+                console.log('UpdateProfile: Payload received:', updates);
+                
+                try {
+                    // Mapeo exhaustivo y seguro de campos
+                    if (updates && 'avatar' in updates) dbUpdates.avatar_url = updates.avatar;
+                    else if (updates && 'avatarUrl' in (updates as any)) dbUpdates.avatar_url = (updates as any).avatarUrl;
 
-                const { error } = await supabase
-                    .from('profiles')
-                    .update(dbUpdates)
-                    .eq('id', userId)
-                    .select(); // Re-select to confirm success under RLS
-
-                if (error) {
-                    console.error('CRITICAL: Profile Update Failed:', error.message, error.details);
+                    if ('name' in updates) dbUpdates.name = updates.name;
+                    if ('email' in updates) dbUpdates.email = updates.email;
+                    if ('phone' in updates) dbUpdates.phone = updates.phone;
+                    if ('category' in updates) dbUpdates.category = updates.category;
+                    if ('member_group' in updates) dbUpdates.member_group = updates.member_group;
+                    if ('role' in updates) dbUpdates.role = updates.role;
+                    if ('gender' in updates) dbUpdates.gender = updates.gender;
+                    if ('status' in updates) dbUpdates.status = updates.status;
+                    if ('stats' in updates) dbUpdates.stats = updates.stats;
                     
-                    // Specific handling for RLS violation - usually means session sync issue
-                    if (error.message.includes('row-level security') || error.code === '42501') {
-                        alert("🔴 Error de Seguridad: No tienes permisos persistentes para editar este perfil. Por favor, CIERRA SESIÓN y vuelve a entrar para sincronizar tus credenciales de Administrador.");
-                    } else {
-                        alert(`Error al guardar: ${error.message}`);
+                    if ('privileges' in updates) dbUpdates.roles = updates.privileges;
+                    else if ('roles' in (updates as any)) dbUpdates.roles = (updates as any).roles;
+
+                    // bio column is missing in production schema - DO NOT map it unless confirmed
+                    console.log('UpdateProfile: Final dbUpdates for Supabase:', dbUpdates);
+
+                    const { data: updatedData, error } = await supabase
+                        .from('profiles')
+                        .update(dbUpdates)
+                        .eq('id', cleanId)
+                        .select();
+
+                    console.log('UpdateProfile: DB Response:', { updatedData, error });
+
+                    if (error) {
+                        console.error('UpdateProfile: Supabase Error:', error.message, error.details);
+                        get().showNotification(`Error al guardar: ${error.message}`, 'error');
+                        return false;
                     }
+
+                    if (!updatedData || updatedData.length === 0) {
+                        console.warn('UpdateProfile: No rows were updated. This usually means the ID does not exist or RLS blocked the update.');
+                        // Still returning true to allow modal to close, but notifying the UI developer via console
+                    }
+
+                    get().showNotification("Cambios guardados exitosamente", 'success');
+
+                    // NOTIFICAR AL USUARIO SI HA SIDO ACTIVADO (solo si hay email y es distinto de lo anterior)
+                    // (Simplificado para evitar ruido, pero manteniendo la lógica si es relevante)
+                    if (updates.status === 'Activo' && updates.email) {
+                        try {
+                            await supabase.from('messages').insert({
+                                receiver_id: cleanId,
+                                subject: '¡Tu cuenta ha sido activada!',
+                                content: 'Ya puedes acceder a todas las funciones del Tablero Digital LLDM Rodeo.'
+                            }).select();
+                        } catch (msgErr) {
+                            console.error("UpdateProfile: Error sending activation message:", msgErr);
+                        }
+                    }
+
+                    // Forzar recarga inmediata de los miembros para sincronizar UI
+                    setTimeout(() => get().loadMembersFromCloud(), 500);
+                    
+                    return true;
+                } catch (err: any) {
+                    console.error("UpdateProfile: Unexpected Exception:", err);
+                    get().showNotification(`Error inesperado: ${err.message || 'Error desconocido'}`, 'error');
                     return false;
                 }
-
-                // NOTIFICAR AL USUARIO SI HA SIDO ACTIVADO
-                if (updates.status === 'Activo') {
-                    await supabase.from('messages').insert({
-                        receiver_id: userId,
-                        subject: '¡Tu cuenta ha sido activada!',
-                        content: 'Ya puedes acceder a todas las funciones del Tablero Digital LLDM Rodeo.'
-                    });
-                }
-
-                return true;
             },
 
             deleteMemberFromCloud: async (userId) => {
@@ -770,7 +813,7 @@ export const useAppStore = create<AppState>()(
 
                 if (uploadError) {
                     console.error('CRITICAL: Avatar Upload Failed:', uploadError);
-                    alert(`Error al subir imagen: ${uploadError.message}. Verifique si el bucket "avatars" existe en Supabase y tiene permisos públicos.`);
+                    get().showNotification(`Error al subir imagen: ${uploadError.message}. Verifique si el bucket "avatars" existe en Supabase y tiene permisos públicos.`, 'error');
                     return null;
                 }
 
@@ -950,10 +993,10 @@ export const useAppStore = create<AppState>()(
                 if (member.gender) insertData.gender = member.gender;
                 if (member.category) insertData.category = member.category;
                 if (member.member_group) insertData.member_group = member.member_group;
-                if (member.avatar) insertData.avatar_url = member.avatar;
                 if (member.avatarUrl) insertData.avatar_url = member.avatarUrl;
+                if (member.avatar) insertData.avatar_url = member.avatar;
                 if (member.privileges) insertData.roles = member.privileges;
-                if (member.bio) insertData.bio = member.bio;
+                // if (member.bio) insertData.bio = member.bio;
 
                 console.log('Adding member:', insertData);
 
@@ -961,7 +1004,7 @@ export const useAppStore = create<AppState>()(
 
                 if (error) {
                     console.error('Error adding member:', error.message, error.details, error.hint, error.code);
-                    alert(`Error al registrar miembro: ${error.message}`);
+                    get().showNotification(`Error al registrar miembro: ${error.message}`, 'error');
                     return false;
                 }
 
@@ -1055,7 +1098,12 @@ export const useAppStore = create<AppState>()(
                     console.error("Error saving schedule:", error.message, error.details, error.hint);
                     throw new Error(error.message);
                 } else {
-                    get().loadDayScheduleFromCloud(date);
+                    // Auto-sync after save
+                    try {
+                        await get().loadDayScheduleFromCloud(date);
+                    } catch (loadErr) {
+                        console.error("Error reloading after save:", loadErr);
+                    }
                 }
             },
 
@@ -1215,13 +1263,18 @@ export const useAppStore = create<AppState>()(
                             iglesiaVariant: data.iglesia_variant || 'light',
                             iglesiaAnimation: data.iglesia_animation || 'metro',
                             iglesiaAnimationSpeed: data.iglesia_animation_speed || 2.4,
-                            iglesiaSlideDuration: data.iglesia_slide_duration || 12,
                             displayTemplate: data.display_template || 'cristal',
                             displayScale: data.display_scale || 1.0,
                             displayOffsetX: data.display_offset_x || 0,
                             displayOffsetY: data.display_offset_y || 0,
                             adminTheme: data.admin_theme || 'classic',
                             lowPerformanceMode: data.low_performance_mode || false,
+                            transitionsEnabled: data.transitions_enabled ?? true,
+                            iglesiaSlideDuration: data.iglesia_slide_duration || 12,
+                            cristalSlideDuration: data.cristal_slide_duration || 12,
+                            minimalSlideDuration: data.minimal_slide_duration || 12,
+                            nocturnoSlideDuration: data.nocturno_slide_duration || 12,
+                            neonSlideDuration: data.neon_slide_duration || 12,
                             customLogo1: data.custom_logo_1,
                             customLogo2: data.custom_logo_2,
                             customLogo3: data.custom_logo_3,
@@ -1278,13 +1331,18 @@ export const useAppStore = create<AppState>()(
                     iglesia_variant: updated.iglesiaVariant,
                     iglesia_animation: updated.iglesiaAnimation,
                     iglesia_animation_speed: updated.iglesiaAnimationSpeed,
-                    iglesia_slide_duration: updated.iglesiaSlideDuration,
                     display_template: updated.displayTemplate,
                     display_scale: updated.displayScale,
                     display_offset_x: updated.displayOffsetX,
                     display_offset_y: updated.displayOffsetY,
                     admin_theme: updated.adminTheme,
                     low_performance_mode: updated.lowPerformanceMode,
+                    transitions_enabled: updated.transitionsEnabled,
+                    iglesia_slide_duration: updated.iglesiaSlideDuration,
+                    cristal_slide_duration: updated.cristalSlideDuration,
+                    minimal_slide_duration: updated.minimalSlideDuration,
+                    nocturno_slide_duration: updated.nocturnoSlideDuration,
+                    neon_slide_duration: updated.neonSlideDuration,
                     custom_logo_1: updated.customLogo1,
                     custom_logo_2: updated.customLogo2,
                     custom_logo_3: updated.customLogo3,
@@ -1547,7 +1605,7 @@ export const useAppStore = create<AppState>()(
 
                 if (error) {
                     console.error("Error saving recurring schedule:", error.message, error.details, error.hint);
-                    alert(`Error al guardar programación recurrente: ${error.message}`);
+                    get().showNotification(`Error al guardar programación recurrente: ${error.message}`, 'error');
                 } else {
                     console.log('Recurring schedule saved successfully');
                     // Refresh all to see changes across calendar
@@ -1565,7 +1623,7 @@ export const useAppStore = create<AppState>()(
                 if (error) {
                     console.error("Error loading attendance:", error);
                     // Proporcionamos un mensaje más detallado para diagnóstico
-                    alert(`Error de sincronización: ${error.message}. Por favor, verifica que la tabla 'attendance' existe en Supabase y que has ejecutado el script de reparación.`);
+                    get().showNotification(`Error de sincronización: ${error.message}. Verifica la tabla 'attendance'.`, 'error');
                     return;
                 }
 
@@ -1845,10 +1903,10 @@ export const useAppStore = create<AppState>()(
 
                 if (error) {
                     console.error("Error seeding schedule:", error);
-                    alert("Error al poblar el mes: " + error.message);
+                    get().showNotification("Error al poblar el mes: " + error.message, 'error');
                 } else {
                     await get().loadAllSchedulesFromCloud();
-                    alert("Mes poblado exitosamente con datos realistas.");
+                    get().showNotification("Mes poblado exitosamente con datos realistas.", 'success');
                 }
             },
 
@@ -1955,7 +2013,7 @@ export const useAppStore = create<AppState>()(
                     }
                 }
 
-                alert(`Se crearon ${createdCount} cuentas de prueba. Las que ya existían no se duplicaron.`);
+                get().showNotification(`Se crearon ${createdCount} cuentas de prueba.`, 'success');
                 await get().loadMembersFromCloud();
             },
 

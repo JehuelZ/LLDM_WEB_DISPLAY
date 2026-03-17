@@ -53,6 +53,7 @@ export interface DailySchedule {
             exchangeMinisterName?: string;
             churchOrigin?: string;
             visitorsLanguage?: 'es' | 'en';
+            topic?: string;
         };
         '12pm'?: {
             leaderId: string;

@@ -1,11 +1,17 @@
 
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { format } from "date-fns";
 
 import { Announcement } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
+}
+
+export function getLocalDateString(date: Date = new Date()) {
+    // Uses date-fns format which respects local time by default
+    return format(date, 'yyyy-MM-dd');
 }
 
 export function getActiveAnnouncements(announcements: Announcement[]) {

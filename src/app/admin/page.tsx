@@ -19,7 +19,7 @@ import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useAppStore, AppSettings } from '@/lib/store';
-import { cn, compressImage } from '@/lib/utils';
+import { cn, compressImage, getLocalDateString } from '@/lib/utils';
 import { CitySearch } from '@/components/CitySearch';
 import { ImageEditor } from '@/components/ImageEditor';
 import { CountdownCard } from '@/components/CountdownCard';
@@ -522,9 +522,7 @@ function AdminDashboardContent() {
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
     const [editingRole, setEditingRole] = useState('Miembro');
-    const showNiceNotification = (message: string, type: 'success' | 'error' | 'warning' | 'info' = 'success') => {
-        showNotification(message, type);
-    };
+
     const searchParams = useSearchParams();
     const queryTab = searchParams.get('tab') || 'dashboard';
     const [activeTab, setActiveTab] = useState(queryTab);
@@ -595,11 +593,11 @@ function AdminDashboardContent() {
                     const updatedTheme = { ...theme, fileUrl: publicUrl };
                     setTheme(updatedTheme);
                     await saveThemeToCloud(updatedTheme);
-                    alert('✅ PDF del tema subido y guardado.');
+                    showNotification('✅ PDF del tema subido y guardado.');
                 }
             } catch (error) {
                 console.error("Error uploading PDF:", error);
-                alert('❌ Error al subir el PDF.');
+                showNotification('❌ Error al subir el PDF.', 'error');
             } finally {
                 setIsSaving(false);
             }
@@ -621,13 +619,13 @@ function AdminDashboardContent() {
                     if (minister.id && !minister.id.includes('mock')) {
                         await updateProfileInCloud(minister.id, { avatar: publicUrl });
                     }
-                    alert('✅ Foto del ministro actualizada y guardada.');
+                    showNotification('✅ Foto del ministro actualizada y guardada.');
                 } else {
-                    alert('❌ No se pudo subir la imagen. Verifique que el bucket "avatars" existe en Supabase con permisos públicos.');
+                    showNotification('❌ No se pudo subir la imagen. Verifique que el bucket "avatars" existe en Supabase con permisos públicos.', 'error');
                 }
             } catch (error) {
                 console.error("Error uploading avatar:", error);
-                alert(`❌ Error al subir imagen: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+                showNotification(`❌ Error al subir imagen: ${error instanceof Error ? error.message : 'Error desconocido'}`, 'error');
             } finally {
                 setIsSaving(false);
             }
@@ -646,7 +644,7 @@ function AdminDashboardContent() {
                         customIconUrl: publicUrl,
                         churchLogoUrl: undefined
                     });
-                    showNiceNotification('Escudo de la iglesia actualizado.');
+                    showNotification('Escudo de la iglesia actualizado.');
                 }
             } catch (error) {
                 console.error("Error uploading icon:", error);
@@ -668,7 +666,7 @@ function AdminDashboardContent() {
                     await saveSettingsToCloud({
                         [settingKey]: publicUrl
                     });
-                    showNiceNotification(`Logo ${slot} actualizado.`);
+                    showNotification(`Logo ${slot} actualizado.`);
                 }
             } catch (error) {
                 console.error(`Error uploading custom logo ${slot}:`, error);
@@ -721,17 +719,17 @@ function AdminDashboardContent() {
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(leaderIdOrName);
 
         if (!isUuid) {
-            showNiceNotification("Selecciona un hermano de la lista desplegable antes de usar la repetición. No se pueden repetir nombres escritos manualmente.", 'warning');
+            showNotification("Selecciona un hermano de la lista desplegable antes de usar la repetición. No se pueden repetir nombres escritos manualmente.", 'warning');
             return;
         }
 
         setIsSaving(true);
         try {
             await saveRecurringScheduleToCloud(currentDate, slot, leaderIdOrName, recurrence);
-            showNiceNotification('Programación recurrente guardada con éxito.');
+            showNotification('Programación recurrente guardada con éxito.');
         } catch (e) {
             console.error(e);
-            showNiceNotification('Error al guardar la programación.', 'error');
+            showNotification('Error al guardar la programación.', 'error');
         } finally {
             setIsSaving(false);
         }
@@ -799,7 +797,7 @@ function AdminDashboardContent() {
     const navigateDay = (direction: number) => {
         const date = new Date(currentDate + 'T12:00:00'); // Midday to avoid TZ issues
         date.setDate(date.getDate() + direction);
-        setCurrentDate(date.toISOString().split('T')[0]);
+        setCurrentDate(getLocalDateString(date));
     };
 
     // --- Pre-calculate Statistics ---
@@ -1249,7 +1247,7 @@ function AdminDashboardContent() {
                                     onMarkRead={markMessageAsRead}
                                     onReply={async (recipientId, content) => {
                                         await sendCloudMessage({ senderId: currentUser.id, receiverId: recipientId, content, subject: 'Respuesta de Administración' });
-                                        showNiceNotification('Respuesta enviada');
+                                        showNotification('Respuesta enviada');
                                     }}
                                 />
                             </div>
@@ -2357,9 +2355,9 @@ function AdminDashboardContent() {
                                     setIsSaving(true);
                                     try {
                                         await saveSettingsToCloud(settings);
-                                        showNiceNotification("Todos los temas, estilos y cuenta regresiva han sido guardados correctamente.");
+                                        showNotification("Todos los temas, estilos y cuenta regresiva han sido guardados correctamente.");
                                     } catch (e) {
-                                        showNiceNotification("Error al persistir los cambios.", 'error');
+                                        showNotification("Error al persistir los cambios.", 'error');
                                     } finally {
                                         setIsSaving(false);
                                     }
@@ -2533,7 +2531,7 @@ function AdminDashboardContent() {
                                                                 await saveUniformToCloud(newUniform.name, newUniform.category);
                                                                 setNewUniform({ name: '', category: 'Adulto' });
                                                             } catch (e) {
-                                                                showNiceNotification("Error al guardar uniforme", 'error');
+                                                                showNotification("Error al guardar uniforme", 'error');
                                                             } finally {
                                                                 setIsSaving(false);
                                                             }
@@ -2703,10 +2701,54 @@ function AdminDashboardContent() {
                             <CardContent className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                                    {/* Modo de Apariencia */}
+                                    {/* Transitions & Duration Setting */}
                                     <div className="space-y-4 p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 flex flex-col justify-center relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Sparkles className="w-32 h-32 text-indigo-500" />
+                                        </div>
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 ml-1 flex items-center gap-2">
+                                            <Monitor className="w-3.5 h-3.5" /> Configuración de Reproducción (Display)
+                                        </h4>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+                                            <div className="space-y-2">
+                                                <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-1">Efectos de Transición</label>
+                                                <select
+                                                    value={settings.transitionsEnabled !== false ? 'true' : 'false'}
+                                                    onChange={(e) => setSettings({ transitionsEnabled: e.target.value === 'true' })}
+                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
+                                                >
+                                                    <option value="true" className="bg-[#020617] text-white">Animaciones Activas (Moderno)</option>
+                                                    <option value="false" className="bg-[#020617] text-white">Sin Transiciones (Instantáneo)</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-1">Duración del Slide ({calendarStyles.template?.toUpperCase()})</label>
+                                                <select
+                                                    value={(() => {
+                                                        const themeId = calendarStyles.template || 'nocturno';
+                                                        const key = `${themeId}SlideDuration` as keyof typeof settings;
+                                                        return (settings[key] as number) || 12;
+                                                    })()}
+                                                    onChange={(e) => {
+                                                        const themeId = calendarStyles.template || 'nocturno';
+                                                        const key = `${themeId}SlideDuration` as any;
+                                                        setSettings({ [key]: parseInt(e.target.value) });
+                                                    }}
+                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
+                                                >
+                                                    <option value="5" className="bg-[#020617] text-white">Rápido (5 seg)</option>
+                                                    <option value="12" className="bg-[#020617] text-white">Normal (12 seg)</option>
+                                                    <option value="20" className="bg-[#020617] text-white">Lento (20 seg)</option>
+                                                    <option value="30" className="bg-[#020617] text-white">Muy Lento (30 seg)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Modo de Apariencia */}
+                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 flex flex-col justify-center relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                                            <Sun className="w-32 h-32 text-indigo-500" />
                                         </div>
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 ml-1 flex items-center gap-2">
                                             <Sun className="w-3.5 h-3.5" /> Estilo Visual del Dashboard
@@ -2834,7 +2876,7 @@ function AdminDashboardContent() {
                                                                 ministerAvatar: minister.avatar
                                                             });
                                                             setIsSaving(false);
-                                                            showNiceNotification("Información del Ministro guardada correctamente.");
+                                                            showNotification("Información del Ministro guardada correctamente.");
                                                         }}
                                                         disabled={isSaving}
                                                     >

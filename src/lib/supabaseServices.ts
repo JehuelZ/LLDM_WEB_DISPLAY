@@ -2,6 +2,7 @@
 import { supabase } from './supabaseClient';
 import { Announcement, DailySchedule, WeeklyTheme } from './types';
 import { UserProfile } from './store';
+import { getLocalDateString } from './utils';
 
 /**
  * SERVICIOS PARA SUPABASE
@@ -58,7 +59,7 @@ export const saveSchedule = async (schedule: any) => {
 
 // --- TEMAS SEMANALES ---
 export const getActiveTheme = async () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalDateString();
     const { data, error } = await supabase
         .from('weekly_themes')
         .select('*')

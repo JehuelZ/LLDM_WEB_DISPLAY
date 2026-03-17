@@ -125,6 +125,7 @@ export default function MembersPage() {
         members, loadMembersFromCloud,
         updateProfileInCloud, uploadAvatar,
         addMemberToCloud,
+        showNotification,
         isLoading: isStoreLoading
     } = useAppStore();
     const [searchTerm, setSearchTerm] = useState('');
@@ -341,10 +342,18 @@ export default function MembersPage() {
                             />
                         </div>
                         <div className="flex gap-2 w-full md:w-auto">
-                            <Button variant="outline" className="flex-1 md:flex-none gap-2 border-border/40 hover:bg-foreground/5">
+                            <Button 
+                                variant="outline" 
+                                className="flex-1 md:flex-none gap-2 border-border/40 hover:bg-foreground/5"
+                                onClick={() => showNotification('Filtrado avanzado próximamente', 'info')}
+                            >
                                 <Filter className="h-4 w-4" /> Filtrar
                             </Button>
-                            <Button variant="outline" className="flex-1 md:flex-none gap-2 border-border/40 hover:bg-foreground/5">
+                            <Button 
+                                variant="outline" 
+                                className="flex-1 md:flex-none gap-2 border-border/40 hover:bg-foreground/5"
+                                onClick={() => showNotification('Ordenamiento personalizado próximamente', 'info')}
+                            >
                                 <ArrowUpDown className="h-4 w-4" /> Ordenar
                             </Button>
                         </div>
@@ -476,7 +485,10 @@ export default function MembersPage() {
                                                                         </div>
                                                                     )}
                                                                 </div>
-                                                                <button className="absolute -bottom-2 -right-2 p-2 bg-primary text-black rounded-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity shadow-lg">
+                                                                <button 
+                                                                    className="absolute -bottom-2 -right-2 p-2 bg-primary text-black rounded-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity shadow-lg hover:scale-110 active:scale-95 transition-all"
+                                                                    onClick={() => showNotification(`Actividad reciente de ${member.name} sincronizada`, 'success')}
+                                                                >
                                                                     <Activity className="w-4 h-4" />
                                                                 </button>
                                                             </div>

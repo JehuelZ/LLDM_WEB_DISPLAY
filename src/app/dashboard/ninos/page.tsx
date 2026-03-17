@@ -5,7 +5,7 @@ import { Baby, Clock, Calendar, Star, Users, ArrowLeft, CheckCircle2, AlertCircl
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
-import { cn } from '@/lib/utils';
+import { cn, getLocalDateString } from '@/lib/utils';
 import Link from 'next/link';
 
 import { useAppStore } from '@/lib/store';
@@ -22,7 +22,7 @@ export default function NiñosDashboard() {
     };
 
     // Find the next available assignment in the store
-    const nextAssignmentDate = Object.keys(kidsAssignments).sort().find(d => new Date(d) >= new Date()) || new Date().toISOString().split('T')[0];
+    const nextAssignmentDate = Object.keys(kidsAssignments).sort().find(d => new Date(d) >= new Date()) || getLocalDateString();
     const assignment = kidsAssignments[nextAssignmentDate];
     const assignmentUniform = uniforms.find(u => u.id === assignment?.uniformId);
 

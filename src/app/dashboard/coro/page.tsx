@@ -17,7 +17,8 @@ export default function CoroDashboard() {
     const {
         uniforms, uniformSchedule, rehearsals, announcements, currentUser,
         addUniform, removeUniform, setUniformForDate, setRehearsals,
-        saveAnnouncementToCloud, deleteAnnouncementFromCloud, sendCloudMessage, saveUniformForDateToCloud, saveUniformToCloud, loadUniformsFromCloud
+        saveAnnouncementToCloud, deleteAnnouncementFromCloud, sendCloudMessage, 
+        saveUniformForDateToCloud, saveUniformToCloud, loadUniformsFromCloud, showNotification
     } = useAppStore();
 
     useEffect(() => {
@@ -322,7 +323,7 @@ export default function CoroDashboard() {
                                                     title.value = '';
                                                     body.value = '';
                                                     setEditingAnnId(null);
-                                                    alert(editingAnnId ? "Aviso actualizado." : "Aviso publicado.");
+                                                    showNotification(editingAnnId ? "Aviso actualizado." : "Aviso publicado.");
                                                 } finally {
                                                     setIsSaving(false);
                                                 }
@@ -346,7 +347,7 @@ export default function CoroDashboard() {
                                                 });
                                                 title.value = '';
                                                 body.value = '';
-                                                alert("Mensaje interno enviado al coro exitosamente.");
+                                                showNotification("Mensaje interno enviado al coro exitosamente.");
                                             }
                                         }}
                                         className="w-full bg-secondary hover:bg-secondary/80 text-white text-[9px] font-black uppercase tracking-widest h-8"
@@ -528,9 +529,8 @@ export default function CoroDashboard() {
                                             </button>
                                             <button
                                                 onClick={async () => {
-                                                    if (confirm("¿Eliminar este aviso?")) {
-                                                        await deleteAnnouncementFromCloud(a.id);
-                                                    }
+                                                    await deleteAnnouncementFromCloud(a.id);
+                                                    showNotification("Aviso eliminado correctamente.");
                                                 }}
                                                 className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
                                             >

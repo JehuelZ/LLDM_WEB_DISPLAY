@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
 import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import { cn, getLocalDateString } from '@/lib/utils';
 import { useState, useMemo, useEffect } from 'react';
 import { Baby } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
@@ -49,7 +49,8 @@ export default function AttendanceDashboard() {
         attendanceRecords,
         loadAttendanceFromCloud,
         saveAttendanceToCloud,
-        loadWeeklyAttendanceStats
+        loadWeeklyAttendanceStats,
+        showNotification
     } = useAppStore();
 
     const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos' | 'jovenes' | 'casados' | 'solas'>('varones');
@@ -57,7 +58,7 @@ export default function AttendanceDashboard() {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
     const [isSaving, setIsSaving] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(() => getLocalDateString());
     const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({});
     const [isRefreshing, setIsRefreshing] = useState(false);
     // Track which member+session is currently being saved to avoid race conditions
@@ -201,7 +202,7 @@ export default function AttendanceDashboard() {
                 delete updatedSession[sessionType];
                 return { ...prev, [memberId]: updatedSession };
             });
-            alert("Error al sincronizar con la nube. Verifica tu conexión.");
+            showNotification("Error al sincronizar con la nube. Verifica tu conexión.", "error");
         } finally {
             setProcessingToggles(prev => {
                 const newState = { ...prev };
@@ -246,11 +247,11 @@ export default function AttendanceDashboard() {
                     m.attendance['9am'].present ||
                     m.attendance['evening'].present
                 ).length;
-                alert(`Sincronización completa. ${attendedOverall} miembros marcados en total para el día.`);
+                showNotification(`Sincronización completa. ${attendedOverall} miembros marcados en total para el día.`, "success");
             }, 800);
         } catch (error) {
             setIsSaving(false);
-            alert("Hubo un problema al finalizar. Por favor, verifica tu conexión.");
+            showNotification("Hubo un problema al finalizar. Por favor, verifica tu conexión.", "error");
         }
     };
 

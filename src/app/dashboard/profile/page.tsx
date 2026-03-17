@@ -117,7 +117,7 @@ export default function ProfilePage() {
         setGender(currentUser.gender);
         setMemberGroup(currentUser.member_group);
         setBio(currentUser.bio || '');
-    }, [currentUser]);
+    }, [currentUser.id]);
 
     useEffect(() => {
         loadCloudMessages();

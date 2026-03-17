@@ -12,7 +12,7 @@ export const MOCK_THEME: WeeklyTheme = {
 
 export const MOCK_SCHEDULE: DailySchedule = {
     id: 'empty-sched',
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toLocaleDateString('en-CA'),
     slots: {
         '5am': {
             leaderId: '',

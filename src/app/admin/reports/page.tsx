@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { useAppStore } from '@/lib/store';
 
 const StatCard = ({ title, value, change, trend, icon: Icon, color }: any) => (
     <Card className="glass-card bg-white/5 border-white/10 overflow-hidden relative group">
@@ -54,6 +55,7 @@ const AttendanceBar = ({ label, percent, color, value }: any) => (
 );
 
 export default function ReportsPage() {
+    const { showNotification } = useAppStore();
     const [selectedMonth, setSelectedMonth] = useState('Febrero 2026');
     const [isGenerating, setIsGenerating] = useState(false);
 
@@ -81,11 +83,19 @@ export default function ReportsPage() {
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="bg-white/5 border border-white/10 p-1 rounded-xl flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase">
+                        <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="text-[10px] font-black uppercase"
+                            onClick={() => showNotification('Filtrado avanzado próximamente', 'info')}
+                        >
                             <Filter className="w-3 h-3 mr-2 text-emerald-500" /> Filtrar
                         </Button>
                         <div className="w-px h-4 bg-white/10" />
-                        <button className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-black uppercase text-white hover:text-emerald-400 transition-colors">
+                        <button 
+                            className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-black uppercase text-white hover:text-emerald-400 transition-colors"
+                            onClick={() => showNotification('Selección de mes próximamente', 'info')}
+                        >
                             {selectedMonth} <ChevronDown className="w-3 h-3" />
                         </button>
                     </div>

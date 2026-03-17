@@ -90,8 +90,10 @@ export default function TVModePage() {
     }, [activeTheme, settings.showCountdown]);
 
     useEffect(() => {
-        if (slides.length === 0) return;
-        const duration = settings.iglesiaSlideDuration || 12;
+        const themeId = settings?.displayTemplate || calendarStyles?.template || 'nocturno';
+        const durationKey = `${themeId}SlideDuration` as keyof typeof settings;
+        const duration = (settings[durationKey] as number) || 12;
+
         const rotationTimer = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % slides.length);
         }, duration * 1000);
@@ -119,6 +121,7 @@ export default function TVModePage() {
             <Background />
 
             <div
+                key={activeTheme.id}
                 className="absolute z-10 flex items-center justify-center p-0 overflow-hidden w-[1920px] h-[1080px]"
                 style={{
                     transform: `translate(-50%, -50%) scale(${autoScale})`,
@@ -130,10 +133,10 @@ export default function TVModePage() {
                 <AnimatePresence mode="popLayout" initial={false}>
                     <motion.div
                         key={slides[currentSlide]?.id}
-                        initial={{ opacity: 0, x: 100 }}
+                        initial={{ opacity: 0, x: settings.transitionsEnabled === false ? 0 : 100 }}
                         animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -100 }}
-                        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                        exit={{ opacity: 0, x: settings.transitionsEnabled === false ? 0 : -100 }}
+                        transition={{ duration: settings.transitionsEnabled === false ? 0 : 1.2, ease: [0.16, 1, 0.3, 1] }}
                         style={{ width: '100%', height: '100%', position: 'absolute' }}
                     >
                         {slides[currentSlide]?.component}

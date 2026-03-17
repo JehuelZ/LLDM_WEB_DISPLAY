@@ -23,7 +23,7 @@ export default function SimpleAdmin() {
 
     // Estado para horario rápido
     const [sched, setSched] = useState({
-        date: new Date().toISOString().split('T')[0],
+        date: new Date().toLocaleDateString('en-CA'),
         five_am_leader: '',
         nine_am_consecration: '',
         nine_am_doctrine: '',
@@ -36,8 +36,8 @@ export default function SimpleAdmin() {
         title: '',
         description: '',
         type: 'orthodoxy',
-        start_date: new Date().toISOString().split('T')[0],
-        end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        start_date: new Date().toLocaleDateString('en-CA'),
+        end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-CA'),
     });
 
     const handleSaveAnnouncement = async () => {

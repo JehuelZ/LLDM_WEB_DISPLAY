@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useAppStore, UserProfile } from '@/lib/store'
+import { useAppStore, UserProfile, AttendanceRecord } from '@/lib/store'
 import {
     LayoutDashboard, CalendarDays, Sparkles, Megaphone,
     Shirt, Settings, Users, UserPlus, CalendarClock,
@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { cn, compressImage } from '@/lib/utils'
+import { cn, compressImage, getLocalDateString } from '@/lib/utils'
 import { ImageEditor } from '@/components/ImageEditor'
 import './tactile-admin.css'
 
@@ -318,7 +318,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         role: 'Miembro',
         gender: 'Varon',
         category: 'Varon',
-        member_group: 'Hermanos',
+        member_group: 'Casados',
         status: 'Activo'
     })
 
@@ -390,7 +390,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
     const navigateDay = (days: number) => {
         const date = new Date(currentDate + 'T12:00:00')
         date.setDate(date.getDate() + days)
-        const newDate = date.toISOString().split('T')[0]
+        const newDate = getLocalDateString(date)
         setCurrentDate(newDate)
     }
 
@@ -481,7 +481,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
             console.error("Error updating slot:", error);
             // Revert on failure
             setScheduleForDay(currentDate, previousState);
-            alert(`Error al guardar: ${error.message || 'Error desconocido'}`);
+            showNotification(`Error al guardar: ${error.message || 'Error desconocido'}`, 'error');
         } finally {
             setIsSaving(false);
         }
@@ -499,7 +499,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                     await saveSettingsToCloud({
                         [settingKey]: publicUrl
                     });
-                    alert(`✅ Logo ${slot} actualizado.`);
+                    showNotification(`Logo ${slot} actualizado exitosamente.`, 'success');
                 }
             } catch (error) {
                 console.error(`Error uploading custom logo ${slot}:`, error);
@@ -696,7 +696,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                 <ChevronRight className="w-6 h-6" />
                             </button>
                             <button
-                                onClick={() => setCurrentDate(new Date().toISOString().split('T')[0])}
+                                onClick={() => setCurrentDate(getLocalDateString())}
                                 className="tactile-btn tactile-btn-glass !rounded-full px-4 h-12 flex items-center justify-center text-[10px] font-black uppercase tracking-widest hover:text-primary"
                             >
                                 Hoy
@@ -707,7 +707,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                             {/* Service Status Indicator */}
                             {(() => {
                                 const now = new Date();
-                                const isToday = currentDate === now.toISOString().split('T')[0];
+                                const isToday = currentDate === getLocalDateString(now);
                                 const isSun = parseISO(currentDate).getDay() === 0;
                                 const hrs = now.getHours();
                                 const mins = now.getMinutes();
@@ -963,7 +963,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         {['orthodoxy', 'apostolic_letter'].map(type => (
                                                             <button 
                                                                 key={type}
-                                                                onClick={() => useAppStore.getState().setTheme({ ...theme, type })}
+                                                                onClick={() => useAppStore.getState().setTheme({ ...theme, type: type as any })}
                                                                 className={cn(
                                                                     "text-[9px] font-black uppercase py-2 rounded-xl transition-all",
                                                                     theme.type === type ? "bg-primary text-black" : "bg-white/5 text-white/40 border border-white/5"
@@ -2973,6 +2973,58 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         icon={Edit2}
                                                     />
 
+                                                    <div className="space-y-4">
+                                                        <div className="flex items-center justify-between ml-2">
+                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub">TRANSICIONES ANIMADAS</label>
+                                                            <button
+                                                                onClick={() => {
+                                                                    const newValue = settings.transitionsEnabled === false;
+                                                                    setSettings({ transitionsEnabled: newValue });
+                                                                    saveSettingsToCloud({ transitionsEnabled: newValue });
+                                                                }}
+                                                                className={cn(
+                                                                    "w-12 h-6 rounded-full relative transition-colors border",
+                                                                    settings.transitionsEnabled !== false ? "bg-primary/40 border-primary/40" : "bg-black/40 border-white/10"
+                                                                )}
+                                                            >
+                                                                <div className={cn(
+                                                                    "absolute top-1 w-4 h-4 rounded-full transition-all shadow-lg",
+                                                                    settings.transitionsEnabled !== false ? "right-1 bg-white" : "left-1 bg-tactile-text-sub"
+                                                                )} />
+                                                            </button>
+                                                        </div>
+                                                        <p className="text-[8px] font-bold text-tactile-text-sub/40 uppercase tracking-widest ml-2">¿ACTUAR CON EFECTOS DE MOVIMIENTO?</p>
+                                                    </div>
+
+                                                    <div className="space-y-4">
+                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TIEMPO DE CADA SLIDE (SEGUNDOS)</label>
+                                                        <div className="grid grid-cols-4 gap-2">
+                                                            {[5, 12, 20, 30].map((sec) => {
+                                                                const themeId = calendarStyles.template || 'nocturno';
+                                                                const durationKey = `${themeId}SlideDuration` as any;
+                                                                const currentDuration = settings[durationKey as keyof typeof settings] || 12;
+                                                                const isActive = currentDuration === sec;
+
+                                                                return (
+                                                                    <button
+                                                                        key={sec}
+                                                                        onClick={() => {
+                                                                            setSettings({ [durationKey]: sec });
+                                                                            saveSettingsToCloud({ [durationKey]: sec });
+                                                                        }}
+                                                                        className={cn(
+                                                                            "tactile-btn justify-center font-black italic",
+                                                                            isActive ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                        )}
+                                                                    >
+                                                                        {sec}s
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                        <p className="text-[8px] font-bold text-primary/60 uppercase tracking-widest ml-2">GUARDADO POR TEMA: {calendarStyles.template?.toUpperCase()}</p>
+                                                    </div>
+
                                                     {calendarStyles.template === 'iglesia' && (
                                                         <div className="space-y-4">
                                                             <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE CÁTEDRA</label>
@@ -3374,7 +3426,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             email: '',
                                                             phone: '',
                                                             gender: 'Varon',
-                                                            member_group: 'Hermanos',
+                                                            member_group: 'Casados',
                                                             role: 'Miembro',
                                                             category: 'Varon',
                                                             status: 'Activo',

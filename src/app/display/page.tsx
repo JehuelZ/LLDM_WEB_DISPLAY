@@ -165,8 +165,9 @@ export default function DisplayPage() {
     useEffect(() => {
         if (slides.length === 0) return;
 
-        const isIglesia = (settings?.displayTemplate || calendarStyles?.template) === 'iglesia';
-        const slideDuration = (isIglesia ? settings.iglesiaSlideDuration : 12) || 12;
+        const themeId = settings?.displayTemplate || calendarStyles?.template || 'nocturno';
+        const durationKey = `${themeId}SlideDuration` as keyof typeof settings;
+        const slideDuration = (settings[durationKey] as number) || 12;
 
         // Slide rotation timer
         const rotationTimer = setInterval(() => {
@@ -219,6 +220,7 @@ export default function DisplayPage() {
 
             {/* MAIN CONTENT STAGE WITH AUTO-SCALING FOR TVS */}
             <div
+                key={activeTheme.id}
                 className="absolute z-10 flex items-center justify-center p-0 overflow-hidden w-[1920px] h-[1080px]"
                 style={{
                     transform: `translate(calc(-50% + ${settings?.displayOffsetX || 0}px), calc(-50% + ${settings?.displayOffsetY || 0}px)) scale(${autoScale * (settings?.displayScale || 1.0)})`,
@@ -241,9 +243,9 @@ export default function DisplayPage() {
                         };
 
                         let transition: any = {
-                            duration: 1.6,
+                            duration: settings.transitionsEnabled === false ? 0 : 1.6,
                             ease: [0.4, 0, 0.2, 1],
-                            opacity: { duration: 1.2 }
+                            opacity: { duration: settings.transitionsEnabled === false ? 0 : 1.2 }
                         };
 
 
