@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export function MonitorMessages() {
-    const { messages, markMessageAsRead, sendCloudMessage, currentUser } = useAppStore();
+    const { messages, markMessageAsRead, sendCloudMessage, currentUser, showNotification } = useAppStore();
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
     const [replyText, setReplyText] = useState('');
 
@@ -26,7 +26,7 @@ export function MonitorMessages() {
         });
         setReplyText('');
         setReplyingTo(null);
-        alert('Respuesta enviada correctamente.');
+        showNotification('Respuesta enviada correctamente.', 'success');
     };
 
     return (

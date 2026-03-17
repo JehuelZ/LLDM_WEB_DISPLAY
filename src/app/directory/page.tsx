@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 // Directory uses real members from store
 
 export default function DirectoryPage() {
-    const { members, loadMembersFromCloud, currentUser, sendCloudMessage } = useAppStore();
+    const { members, loadMembersFromCloud, currentUser, sendCloudMessage, showNotification } = useAppStore();
     const [searchTerm, setSearchTerm] = useState('');
     const [activeFilter, setActiveFilter] = useState('all');
 
@@ -49,7 +49,7 @@ export default function DirectoryPage() {
                 content,
                 subject: `Mensaje de ${currentUser.name}`
             });
-            alert('Mensaje enviado');
+            showNotification('Mensaje enviado', 'success');
         }
     };
 

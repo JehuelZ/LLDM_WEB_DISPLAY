@@ -80,7 +80,8 @@ export default function Home() {
     loadThemeFromCloud,
     loadMembersFromCloud,
     updateProfileInCloud,
-    uploadAvatar
+    uploadAvatar,
+    showNotification
   } = useAppStore();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -107,7 +108,7 @@ export default function Home() {
 
     // Cargar estadísticas personales
     if (currentUser?.id) {
-      loadMonthlyAttendanceStats(currentUser.id).then(stats => {
+      loadMonthlyAttendanceStats(currentUser.id).then((stats: any) => {
         setPersonalStats(stats);
       });
     }
@@ -186,7 +187,7 @@ export default function Home() {
     });
     setMsgContent('');
     setIsSendingMsg(false);
-    alert('Mensaje enviado correctamente');
+    showNotification('Mensaje enviado correctamente', 'success');
   };
 
   const handleSave = async () => {

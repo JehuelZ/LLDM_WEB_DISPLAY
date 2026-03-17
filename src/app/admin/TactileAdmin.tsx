@@ -493,16 +493,22 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
             setIsSaving(true);
             try {
                 const compressed = await compressImage(file, 800, 800);
+                console.log(`Uploading file ${file.name} to slot ${slot}...`, { type: file.type, size: file.size });
+                
                 const publicUrl = await uploadAvatar(`custom-logo-${slot}`, compressed);
+                
                 if (publicUrl) {
-                    const settingKey = `customLogo${slot}` as any;
+                    const settingKey = `custom_logo_${slot}` as any;
                     await saveSettingsToCloud({
                         [settingKey]: publicUrl
                     });
                     showNotification(`Logo ${slot} actualizado exitosamente.`, 'success');
+                } else {
+                    console.warn(`Upload returned no URL for slot ${slot}`);
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error(`Error uploading custom logo ${slot}:`, error);
+                showNotification(`Falla al subir logo: ${error.message || 'Error de conexión'}`, 'error');
             } finally {
                 setIsSaving(false);
             }
@@ -2918,8 +2924,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                 type="file"
                                                                 id={`tactile-custom-logo-${slotIndex}`}
                                                                 className="hidden"
-                                                                accept="image/*"
-                                                                onChange={(e) => handleCustomLogoUpload(e, slotIndex as any)}
+                                                                accept=".jpg,.jpeg,.png,.svg,.webp"
+                                                                onChange={(e) => {
+                                                                    console.log(`Starting upload for slot ${slotIndex}...`);
+                                                                    handleCustomLogoUpload(e, slotIndex as any);
+                                                                }}
                                                             />
                                                         </div>
                                                     );
@@ -3053,76 +3062,83 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         </div>
                                                     )}
 
+                                                    <div className="space-y-4">
+                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TRANSICIÓN DE PANTALLA</label>
+                                                        <div className="flex flex-col gap-3">
+                                                            {[
+                                                                { id: 'metro', label: 'ESTILO METRO (LÍNEA CONTINUA)', icon: Radio },
+                                                                { id: 'breathing', label: 'RESPIRACIÓN (SUAVE)', icon: Sunrise },
+                                                                { id: 'fade', label: 'FADE CLÁSICO', icon: Monitor }
+                                                            ].map((anim) => (
+                                                                <button
+                                                                    key={anim.id}
+                                                                    onClick={() => {
+                                                                        setSettings({ animationType: anim.id as any });
+                                                                        saveSettingsToCloud({ animationType: anim.id as any });
+                                                                    }}
+                                                                    className={cn(
+                                                                        "tactile-btn justify-center gap-3",
+                                                                        (settings.animationType === anim.id || (!settings.animationType && anim.id === 'metro')) ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                    )}
+                                                                >
+                                                                    <anim.icon className="w-4 h-4" />
+                                                                    {anim.label}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+
+                                                        <div className="mt-6 space-y-4">
+                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">VELOCIDAD DE TRANSICIÓN</label>
+                                                            <div className="flex gap-2">
+                                                                {[1.2, 2.4, 4.0].map((speed) => (
+                                                                    <button
+                                                                        key={speed}
+                                                                        onClick={() => {
+                                                                            setSettings({ animationSpeed: speed });
+                                                                            saveSettingsToCloud({ animationSpeed: speed });
+                                                                        }}
+                                                                        className={cn(
+                                                                            "tactile-btn flex-1 text-[10px] py-2",
+                                                                            (settings.animationSpeed === speed || (!settings.animationSpeed && speed === 2.4)) ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                        )}
+                                                                    >
+                                                                        {speed === 1.2 ? 'RÁPIDO' : speed === 2.4 ? 'NORMAL' : 'LENTO'}
+                                                                    </button>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                     {calendarStyles.template === 'iglesia' && (
-                                                        <div className="space-y-4">
-                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TRANSICIÓN DE PANTALLA</label>
-                                                            <div className="flex flex-col gap-3">
+                                                        <div className="space-y-4 mt-6">
+                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE CÁTEDRA</label>
+                                                            <div className="flex gap-4">
                                                                 <button
-                                                                    onClick={() => setSettings({ iglesiaAnimation: 'metro' })}
+                                                                    onClick={() => {
+                                                                        setSettings({ iglesiaVariant: 'light' });
+                                                                        saveSettingsToCloud({ iglesiaVariant: 'light' });
+                                                                    }}
                                                                     className={cn(
-                                                                        "tactile-btn justify-center gap-3",
-                                                                        settings.iglesiaAnimation === 'metro' || !settings.iglesiaAnimation ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                        "tactile-btn flex-1 justify-center gap-3",
+                                                                        settings.iglesiaVariant === 'light' ? "tactile-btn-primary" : "tactile-btn-glass"
                                                                     )}
                                                                 >
-                                                                    <Radio className="w-4 h-4" />
-                                                                    ESTILO METRO (LÍNEA CONTINUA)
+                                                                    <Sun className="w-4 h-4" />
+                                                                    CLARO
                                                                 </button>
                                                                 <button
-                                                                    onClick={() => setSettings({ iglesiaAnimation: 'breathing' })}
+                                                                    onClick={() => {
+                                                                        setSettings({ iglesiaVariant: 'dark' });
+                                                                        saveSettingsToCloud({ iglesiaVariant: 'dark' });
+                                                                    }}
                                                                     className={cn(
-                                                                        "tactile-btn justify-center gap-3",
-                                                                        settings.iglesiaAnimation === 'breathing' ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                        "tactile-btn flex-1 justify-center gap-3",
+                                                                        settings.iglesiaVariant === 'dark' ? "tactile-btn-primary" : "tactile-btn-glass"
                                                                     )}
                                                                 >
-                                                                    <Sunrise className="w-4 h-4" />
-                                                                    RESPIRACIÓN (SUAVE)
+                                                                    <Moon className="w-4 h-4" />
+                                                                    OSCURO
                                                                 </button>
-                                                                <button
-                                                                    onClick={() => setSettings({ iglesiaAnimation: 'fade' })}
-                                                                    className={cn(
-                                                                        "tactile-btn justify-center gap-3",
-                                                                        settings.iglesiaAnimation === 'fade' ? "tactile-btn-primary" : "tactile-btn-glass"
-                                                                    )}
-                                                                >
-                                                                    <Monitor className="w-4 h-4" />
-                                                                    FADE CLÁSICO
-                                                                </button>
-                                                            </div>
-
-                                                            <div className="mt-6 space-y-4">
-                                                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">VELOCIDAD DE TRANSICIÓN</label>
-                                                                <div className="flex gap-2">
-                                                                    {[1.2, 2.4, 4.0].map((speed) => (
-                                                                        <button
-                                                                            key={speed}
-                                                                            onClick={() => setSettings({ iglesiaAnimationSpeed: speed })}
-                                                                            className={cn(
-                                                                                "tactile-btn flex-1 text-[10px] py-2",
-                                                                                settings.iglesiaAnimationSpeed === speed || (!settings.iglesiaAnimationSpeed && speed === 2.4) ? "tactile-btn-primary" : "tactile-btn-glass"
-                                                                            )}
-                                                                        >
-                                                                            {speed === 1.2 ? 'RÁPIDO' : speed === 2.4 ? 'NORMAL' : 'LENTO'}
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="mt-6 space-y-4">
-                                                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TIEMPO ENTRE PANTALLAS</label>
-                                                                <div className="flex gap-2">
-                                                                    {[8, 12, 20, 30].map((sec) => (
-                                                                        <button
-                                                                            key={sec}
-                                                                            onClick={() => setSettings({ iglesiaSlideDuration: sec })}
-                                                                            className={cn(
-                                                                                "tactile-btn flex-1 text-[10px] py-2",
-                                                                                settings.iglesiaSlideDuration === sec || (!settings.iglesiaSlideDuration && sec === 12) ? "tactile-btn-primary" : "tactile-btn-glass"
-                                                                            )}
-                                                                        >
-                                                                            {sec}s
-                                                                        </button>
-                                                                    ))}
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     )}

@@ -219,10 +219,15 @@ export function LoginScreen() {
                                     whileTap={{ scale: 0.99 }}
                                     onClick={async () => {
                                         if (!email || !password) {
-                                            alert('Ingrese sus credenciales');
+                                            const { showNotification } = useAppStore.getState();
+                                            showNotification('Ingrese sus credenciales', 'error');
                                             return;
                                         }
-                                        await signInWithEmail(email, password);
+                                        const { success, error } = await signInWithEmail(email, password);
+                                        if (!success) {
+                                            const { showNotification } = useAppStore.getState();
+                                            showNotification(error || 'Falla en autenticación', 'error');
+                                        }
                                     }}
                                     className="w-full h-14 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-amber-500/10 transition-colors"
                                 >

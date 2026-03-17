@@ -65,74 +65,81 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
             {children}
             <MobileNav />
 
-            {/* Global Premium Notification Toast - Redesigned for Center Display */}
+            {/* Global Premium Notification Toast - Re-designed: Square Glassmorphism */}
             <AnimatePresence>
                 {notification && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.8, x: '-50%', y: '-40%' }}
+                        initial={{ opacity: 0, scale: 0.9, x: '-50%', y: '-60%' }}
                         animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
-                        exit={{ opacity: 0, scale: 0.8, x: '-50%', y: '-60%' }}
+                        exit={{ opacity: 0, scale: 0.9, x: '-50%', y: '-60%' }}
                         className={cn(
-                            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] flex items-center gap-10 p-12 rounded-[4.5rem] border shadow-[0_0_200px_rgba(0,0,0,0.8)] backdrop-blur-[120px] min-w-[580px] max-w-[95vw] overflow-hidden",
-                            notification.type === 'success' && "bg-[#0A0A0A]/80 border-amber-400/30 text-white shadow-amber-400/20",
-                            notification.type === 'error' && "bg-[#0A0A0A]/80 border-red-500/30 text-white shadow-red-500/20",
-                            notification.type === 'warning' && "bg-[#0A0A0A]/80 border-orange-500/30 text-white shadow-orange-500/20",
-                            notification.type === 'info' && "bg-[#0A0A0A]/80 border-primary/30 text-white shadow-primary/20"
+                            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999]",
+                            "flex flex-col items-center text-center p-8 rounded-[2.5rem]",
+                            "border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)]",
+                            "backdrop-blur-[64px] bg-black/40 min-w-[320px] max-w-[420px] overflow-hidden",
+                            notification.type === 'success' && "border-amber-400/20 shadow-amber-400/5",
+                            notification.type === 'error' && "border-red-500/20 shadow-red-500/5"
                         )}
                     >
-                        {/* Interactive Background Elements */}
-                        <div className="absolute inset-0 pointer-events-none opacity-20">
+                        {/* Interactive Shine Effect */}
+                        <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-to-tr from-white/[0.03] to-transparent pointer-events-none rotate-12" />
+
+                        {/* Dynamic Logo/Icon Section */}
+                        <div className="relative mb-6">
                             <div className={cn(
-                                "absolute -top-1/2 -left-1/2 w-full h-full blur-[100px] rounded-full",
-                                notification.type === 'success' ? "bg-amber-400" :
-                                notification.type === 'error' ? "bg-red-500" :
-                                notification.type === 'warning' ? "bg-orange-500" : "bg-primary"
-                            )} />
-                        </div>
-
-                        <div className={cn(
-                            "w-24 h-24 rounded-[2.5rem] flex items-center justify-center shrink-0 shadow-[0_15px_40px_rgba(0,0,0,0.4)] border-2 border-white/10 ring-8 ring-white/[0.03]",
-                            notification.type === 'success' && "bg-amber-400 text-black shadow-amber-400/50",
-                            notification.type === 'error' && "bg-red-500 text-white",
-                            notification.type === 'warning' && "bg-orange-500 text-white",
-                            notification.type === 'info' && "bg-primary text-black"
-                        )}>
-                            {notification.type === 'success' && <CheckCircle className="w-12 h-12" strokeWidth={3} />}
-                            {notification.type === 'error' && <XCircle className="w-12 h-12" strokeWidth={3} />}
-                            {notification.type === 'warning' && <AlertCircle className="w-12 h-12" strokeWidth={3} />}
-                            {notification.type === 'info' && <Info className="w-12 h-12" strokeWidth={3} />}
-                        </div>
-
-                        <div className="flex-1 space-y-2 relative z-10">
-                            <p className={cn(
-                                "text-[12px] font-black uppercase tracking-[0.6em] mb-1.5",
-                                notification.type === 'success' ? "text-amber-400" :
-                                notification.type === 'error' ? "text-red-400" :
-                                notification.type === 'warning' ? "text-orange-400" : "text-primary"
+                                "w-24 h-24 rounded-3xl flex items-center justify-center relative overflow-hidden bg-white/[0.03] border border-white/5",
+                                notification.type === 'success' ? "shadow-[0_0_40px_rgba(251,191,36,0.1)]" : "shadow-[0_0_40px_rgba(239,68,68,0.1)]"
+                             )}>
+                                <img 
+                                    src={settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg"} 
+                                    className={cn(
+                                        "w-14 h-14 object-contain brightness-0 invert opacity-60",
+                                        notification.type === 'success' && "sepia-[1] saturate-[10000%] hue-rotate-[0deg] transition-all"
+                                    )}
+                                    alt="Logo"
+                                />
+                                {/* Internal Glow */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+                            </div>
+                            
+                            {/* Small Status Badge */}
+                            <div className={cn(
+                                "absolute -bottom-1 -right-1 w-9 h-9 rounded-full border-4 border-[#0a0a0a] flex items-center justify-center shadow-lg",
+                                notification.type === 'success' ? "bg-amber-400 text-black" : "bg-red-500 text-white"
                             )}>
-                                {notification.type === 'success' ? 'ÉXITO' : 
-                                 notification.type === 'error' ? 'ERROR' : 
-                                 notification.type === 'warning' ? 'AVISO' : 'NOTIFICACIÓN'}
+                                {notification.type === 'success' ? <CheckCircle className="w-5 h-5" strokeWidth={3} /> : <XCircle className="w-5 h-5" />}
+                            </div>
+                        </div>
+
+                        {/* Text Content */}
+                        <div className="space-y-3 relative z-10">
+                            <p className={cn(
+                                "text-[10px] font-black uppercase tracking-[0.4em] opacity-40 mb-1",
+                                notification.type === 'success' ? "text-amber-400" : "text-red-400"
+                            )}>
+                                {notification.type === 'success' ? 'SISTEMA LLDM' : 'ALTA PRIORIDAD'}
                             </p>
-                            <h2 className="text-4xl font-black italic tracking-tighter leading-[0.9] text-white brightness-125">
+                            <h2 className="text-xl font-black italic tracking-tight text-white brightness-125 leading-tight">
                                 {notification.message.replace(/^[✅⚠️❌]\s*/, '')}
                             </h2>
-                            <p className="text-xs font-bold text-white/40 tracking-widest uppercase mt-4">Operación finalizada correctamente</p>
+                            <p className="text-[9px] font-bold text-white/30 tracking-widest uppercase pb-2">
+                                Operación finalizada satisfactoriamente
+                            </p>
                         </div>
 
+                        {/* Close Button / Understanding link */}
                         <button 
                             onClick={hideNotification} 
-                            className="absolute top-8 right-8 w-12 h-12 flex items-center justify-center rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 transition-all group shadow-lg"
+                            className="mt-6 w-full py-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-[9px] font-black uppercase tracking-[0.2em] text-white/40 transition-all hover:text-white group relative overflow-hidden"
                         >
-                            <X className="w-6 h-6 text-white/40 group-hover:text-white group-hover:scale-110 transition-all" />
+                            <span className="relative z-10 group-hover:scale-105 transition-transform inline-block">ENTENDIDO</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                         </button>
 
-                        {/* Bottom Accent Loader Effect */}
+                        {/* Background subtle glow center */}
                         <div className={cn(
-                            "absolute bottom-0 left-0 right-0 h-1.5 opacity-60",
-                            notification.type === 'success' ? "bg-amber-400" :
-                            notification.type === 'error' ? "bg-red-500" :
-                            notification.type === 'warning' ? "bg-orange-500" : "bg-primary"
+                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-48 h-48 blur-[100px] opacity-20",
+                            notification.type === 'success' ? "bg-amber-400" : "bg-red-500"
                         )} />
                     </motion.div>
                 )}

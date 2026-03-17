@@ -31,6 +31,11 @@ export function getActiveAnnouncements(announcements: Announcement[]) {
 }
 
 export async function compressImage(file: File, maxWidth = 1000, maxHeight = 1000, quality = 0.8): Promise<File> {
+    // Skip compression for SVG files (preserve vector nature and transparency)
+    if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg')) {
+        return file;
+    }
+
     // If the file is already small, don't bother
     if (file.size < 200 * 1024) return file;
 
@@ -64,21 +69,27 @@ export async function compressImage(file: File, maxWidth = 1000, maxHeight = 100
 
                 canvas.toBlob((blob) => {
                     if (blob) {
-                        // Change file extension to .jpg in the name if it's not already
+                        // Maintain the original file extension if possible, or use the appropriate one
                         let newName = file.name;
-                        if (!newName.toLowerCase().endsWith('.jpg') && !newName.toLowerCase().endsWith('.jpeg')) {
-                            newName = newName.replace(/\.[^/.]+$/, "") + ".jpg";
+                        const targetType = file.type || 'image/jpeg';
+                        
+                        // If we are forcing a conversion technically, but here we want to preserve type
+                        // Only change extension if it's not a common image extension
+                        const hasExt = /\.(jpg|jpeg|png|webp|svg)$/i.test(newName);
+                        if (!hasExt) {
+                            const ext = targetType.split('/')[1] || 'jpg';
+                            newName = `${newName}.${ext}`;
                         }
 
                         const newFile = new File([blob], newName, {
-                            type: 'image/jpeg',
+                            type: targetType,
                             lastModified: Date.now(),
                         });
                         resolve(newFile);
                     } else {
                         resolve(file); // Fallback to original
                     }
-                }, 'image/jpeg', quality);
+                }, file.type || 'image/jpeg', quality);
             };
             img.onerror = () => resolve(file);
         };

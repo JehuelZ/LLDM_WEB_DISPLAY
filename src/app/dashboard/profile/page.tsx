@@ -44,7 +44,7 @@ export default function ProfilePage() {
     const {
         currentUser, updateProfileInCloud, uploadAvatar, setCurrentUser,
         messages, loadCloudMessages, markMessageAsRead, sendCloudMessage,
-        subscribeToMessages
+        subscribeToMessages, showNotification
     } = useAppStore();
     const router = useRouter();
 
@@ -636,7 +636,7 @@ export default function ProfilePage() {
                                                                                             });
                                                                                             setReplyText('');
                                                                                             setReplyingTo(null);
-                                                                                            alert('Respuesta enviada.');
+                                                                                            showNotification('Respuesta enviada.', 'success');
                                                                                         }}
                                                                                         className="bg-primary text-black text-[10px] font-black uppercase tracking-widest px-8 rounded-xl h-12 shadow-lg shadow-primary/20"
                                                                                     >

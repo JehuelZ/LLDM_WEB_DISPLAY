@@ -74,6 +74,8 @@ export interface AppSettings {
     minimalSlideDuration?: number;
     nocturnoSlideDuration?: number;
     neonSlideDuration?: number;
+    animationType?: 'metro' | 'breathing' | 'fade';
+    animationSpeed?: number;
 
     customLogo1?: string;
     customLogo2?: string;
@@ -281,6 +283,7 @@ interface AppState {
     loadWeeklyAttendanceStats: () => Promise<any[]>;
     loadMonthlyGlobalAttendanceStats: () => Promise<any[]>;
     loadDetailedWeeklyStats: (days: string[]) => Promise<any[]>;
+    loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
 
     signInWithGoogle: () => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
@@ -1226,8 +1229,14 @@ export const useAppStore = create<AppState>()(
                     uniform_id: assignment.uniformId,
                     choir_participation: assignment.choirParticipation
                 };
-                await supabase.from('kids_assignments').upsert(dbAss);
+                const { error } = await supabase.from('kids_assignments').upsert(dbAss);
+                if (error) {
+                    console.error("Error saving kids assignments:", error);
+                    get().showNotification(`Error al guardar asignaciones: ${error.message}`, 'error');
+                    return;
+                }
                 get().loadKidsAssignmentsFromCloud(date);
+                get().showNotification("Asignaciones guardadas correctamente", 'success');
             },
 
             loadSettingsFromCloud: async () => {
@@ -1276,10 +1285,13 @@ export const useAppStore = create<AppState>()(
                             minimalSlideDuration: data.minimal_slide_duration || 12,
                             nocturnoSlideDuration: data.nocturno_slide_duration || 12,
                             neonSlideDuration: data.neon_slide_duration || 12,
+                            animationType: data.animation_type || 'metro',
+                            animationSpeed: data.animation_speed || 2.4,
                             customLogo1: data.custom_logo_1,
                             customLogo2: data.custom_logo_2,
                             customLogo3: data.custom_logo_3,
-                            customLogo4: data.custom_logo_4
+                            customLogo4: data.custom_logo_4,
+                            weatherUnit: data.weather_unit || 'fahrenheit',
                         },
 
 
@@ -1344,16 +1356,28 @@ export const useAppStore = create<AppState>()(
                     minimal_slide_duration: updated.minimalSlideDuration,
                     nocturno_slide_duration: updated.nocturnoSlideDuration,
                     neon_slide_duration: updated.neonSlideDuration,
+                    animation_type: updated.animationType,
+                    animation_speed: updated.animationSpeed,
                     custom_logo_1: updated.customLogo1,
                     custom_logo_2: updated.customLogo2,
                     custom_logo_3: updated.customLogo3,
-                    custom_logo_4: updated.customLogo4
+                    custom_logo_4: updated.customLogo4,
+                    weather_unit: updated.weatherUnit,
                 };
 
 
 
                 set({ settings: updated });
-                await supabase.from('app_settings').update(dbSettings).eq('id', 1);
+                const { error } = await supabase.from('app_settings').update(dbSettings).eq('id', 1);
+                
+                if (error) {
+                    console.error("Error saving settings to cloud:", error);
+                    // Revert local state to previous state if save failed
+                    set({ settings: current });
+                    get().showNotification(`Error al guardar: ${error.message}`, 'error');
+                } else {
+                    get().showNotification("Configuración sincronizada con la nube", 'success');
+                }
             },
 
             signInWithGoogle: async () => {
@@ -1499,7 +1523,9 @@ export const useAppStore = create<AppState>()(
             notification: null,
             showNotification: (message, type = 'success') => {
                 set({ notification: { message, type } });
-                setTimeout(() => get().hideNotification(), 4000);
+                if (type === 'success') {
+                    setTimeout(() => get().hideNotification(), 4000);
+                }
             },
             hideNotification: () => set({ notification: null }),
 
@@ -1937,12 +1963,17 @@ export const useAppStore = create<AppState>()(
                     notes: reh.notes
                 };
 
-                if (reh.id && reh.id.length > 10) { // Simple check for real UUID vs mock ID
-                    await supabase.from('choir_rehearsals').update(dbReh).eq('id', reh.id);
+                const { error } = await (reh.id && reh.id.length > 10
+                    ? supabase.from('choir_rehearsals').update(dbReh).eq('id', reh.id)
+                    : supabase.from('choir_rehearsals').insert(dbReh));
+
+                if (error) {
+                    console.error("Error saving rehearsal:", error);
+                    get().showNotification(`Error al guardar ensayo: ${error.message}`, 'error');
                 } else {
-                    await supabase.from('choir_rehearsals').insert(dbReh);
+                    await get().loadRehearsalsFromCloud();
+                    get().showNotification("Ensayo guardado exitosamente", 'success');
                 }
-                await get().loadRehearsalsFromCloud();
             },
 
             deleteRehearsalFromCloud: async (id) => {

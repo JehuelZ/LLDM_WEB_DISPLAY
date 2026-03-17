@@ -231,11 +231,10 @@ export default function DisplayPage() {
             >
                 <AnimatePresence mode="popLayout" initial={false}>
                     {(() => {
-                        const isIglesia = (settings?.displayTemplate || calendarStyles?.template) === 'iglesia';
-                        // ... (keep all the animation logic as is)
-                        const animationType = settings.iglesiaAnimation || 'metro';
+                        const isLowPerf = settings?.lowPerformanceMode;
+                        const animationType = settings?.animationType || settings?.iglesiaAnimation || 'metro';
+                        const speed = (settings?.animationSpeed || settings?.iglesiaAnimationSpeed || 2.4) as number;
 
-                        // Custom Animation Logic
                         let variants: any = {
                             initial: { opacity: 0, x: '-100%' },
                             animate: { opacity: 1, x: 0 },
@@ -243,69 +242,62 @@ export default function DisplayPage() {
                         };
 
                         let transition: any = {
-                            duration: settings.transitionsEnabled === false ? 0 : 1.6,
+                            duration: settings.transitionsEnabled === false ? 0 : speed,
                             ease: [0.4, 0, 0.2, 1],
-                            opacity: { duration: settings.transitionsEnabled === false ? 0 : 1.2 }
+                            opacity: { duration: settings.transitionsEnabled === false ? 0 : speed * 0.5 }
                         };
 
-
-                        if (isIglesia) {
-                            const speed = (settings?.iglesiaAnimationSpeed || 2.4) as number;
-                            const animationType = settings?.iglesiaAnimation || 'metro';
-                            const isLowPerf = settings?.lowPerformanceMode;
-
-                            if (animationType === 'metro') {
-                                // Right to Left flow like a train line
-                                variants = {
-                                    initial: {
-                                        opacity: 0,
-                                        x: (isLowPerf ? '20%' : '100%'),
-                                        filter: isLowPerf ? 'none' : 'blur(20px)',
-                                        scale: isLowPerf ? 1 : 1.05
-                                    },
-                                    animate: {
-                                        opacity: 1,
-                                        x: 0,
-                                        filter: isLowPerf ? 'none' : 'blur(0px)',
-                                        scale: 1
-                                    },
-                                    exit: {
-                                        opacity: 0,
-                                        x: (isLowPerf ? '-20%' : '-100%'),
-                                        filter: isLowPerf ? 'none' : 'blur(20px)',
-                                        scale: isLowPerf ? 1 : 0.95
-                                    }
-                                } as any;
-                                transition = {
-                                    duration: isLowPerf ? speed * 0.5 : speed,
-                                    ease: isLowPerf ? 'easeInOut' : [0.16, 1, 0.3, 1],
-                                    opacity: { duration: speed * 0.5 }
-                                } as any;
-                            } else if (animationType === 'breathing') {
-                                // Subtle scale pulse with fade
-                                variants = {
-                                    initial: { opacity: 0, scale: isLowPerf ? 1 : 1.1, filter: isLowPerf ? 'none' : 'blur(10px)' },
-                                    animate: { opacity: 1, scale: 1, filter: isLowPerf ? 'none' : 'blur(0px)' },
-                                    exit: { opacity: 0, scale: isLowPerf ? 1 : 0.9, filter: isLowPerf ? 'none' : 'blur(10px)' }
-                                } as any;
-                                transition = {
-                                    duration: isLowPerf ? speed * 0.5 : speed,
-                                    ease: 'easeInOut',
-                                    opacity: { duration: speed * 0.75 }
-                                } as any;
-                            } else if (animationType === 'fade') {
-                                // Pure elegant fade
-                                variants = {
-                                    initial: { opacity: 0 },
-                                    animate: { opacity: 1 },
-                                    exit: { opacity: 0 }
-                                } as any;
-                                transition = {
-                                    duration: isLowPerf ? speed * 0.5 : speed,
-                                    ease: 'linear',
-                                    opacity: { duration: speed }
-                                } as any;
-                            }
+                        if (animationType === 'metro') {
+                            // Right to Left flow like a train line
+                            variants = {
+                                initial: {
+                                    opacity: 0,
+                                    x: (isLowPerf ? '20%' : '100%'),
+                                    filter: isLowPerf ? 'none' : 'blur(20px)',
+                                    scale: isLowPerf ? 1 : 1.05
+                                },
+                                animate: {
+                                    opacity: 1,
+                                    x: 0,
+                                    filter: isLowPerf ? 'none' : 'blur(0px)',
+                                    scale: 1
+                                },
+                                exit: {
+                                    opacity: 0,
+                                    x: (isLowPerf ? '-20%' : '-100%'),
+                                    filter: isLowPerf ? 'none' : 'blur(20px)',
+                                    scale: isLowPerf ? 1 : 0.95
+                                }
+                            } as any;
+                            transition = {
+                                duration: isLowPerf ? speed * 0.5 : speed,
+                                ease: isLowPerf ? 'easeInOut' : [0.16, 1, 0.3, 1],
+                                opacity: { duration: speed * 0.5 }
+                            } as any;
+                        } else if (animationType === 'breathing') {
+                            // Subtle scale pulse with fade
+                            variants = {
+                                initial: { opacity: 0, scale: isLowPerf ? 1 : 1.1, filter: isLowPerf ? 'none' : 'blur(10px)' },
+                                animate: { opacity: 1, scale: 1, filter: isLowPerf ? 'none' : 'blur(0px)' },
+                                exit: { opacity: 0, scale: isLowPerf ? 1 : 0.9, filter: isLowPerf ? 'none' : 'blur(10px)' }
+                            } as any;
+                            transition = {
+                                duration: isLowPerf ? speed * 0.5 : speed,
+                                ease: 'easeInOut',
+                                opacity: { duration: speed * 0.75 }
+                            } as any;
+                        } else if (animationType === 'fade') {
+                            // Pure elegant fade
+                            variants = {
+                                initial: { opacity: 0 },
+                                animate: { opacity: 1 },
+                                exit: { opacity: 0 }
+                            } as any;
+                            transition = {
+                                duration: isLowPerf ? speed * 0.5 : speed,
+                                ease: 'linear',
+                                opacity: { duration: speed }
+                            } as any;
                         }
 
                         return (
