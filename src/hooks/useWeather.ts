@@ -12,14 +12,14 @@ export interface WeatherData {
     }[];
 }
 
-export function useWeather(lat: number = 24.341, lon: number = -104.28) {
+export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'celsius' | 'fahrenheit' = 'celsius') {
     const [weather, setWeather] = useState<WeatherData | null>(null);
     const [loading, setLoading] = useState(true);
 
     const fetchWeather = async () => {
         try {
             // Fetch current weather and 3-day forecast using Open-Meteo (Free, no API key)
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,weathercode&timezone=auto`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,weathercode&timezone=auto&temperature_unit=${unit}`;
             const response = await fetch(url);
             const data = await response.json();
 
@@ -60,7 +60,7 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28) {
         // Refresh every 30 minutes
         const timer = setInterval(fetchWeather, 30 * 60 * 1000);
         return () => clearInterval(timer);
-    }, [lat, lon]);
+    }, [lat, lon, unit]);
 
     return { weather, loading };
 }

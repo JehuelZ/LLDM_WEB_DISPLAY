@@ -11,7 +11,7 @@ import {
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
     Camera, Phone, Mail, User, Languages, Music2, ClipboardCheck,
-    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power
+    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power, Thermometer
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -3185,6 +3185,38 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         <p className="text-[8px] text-tactile-text-sub ml-2 italic leading-relaxed">
                                                             * Si el contenido se ve cortado en su TV (Overscan), baje la escala al 90% o 80%.
                                                         </p>
+                                                    </div>
+
+                                                    <div className="mt-8 space-y-4">
+                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">UNIDAD DE CLIMA</label>
+                                                        <div className="flex gap-2">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSettings({ weatherUnit: 'celsius' });
+                                                                    saveSettingsToCloud({ weatherUnit: 'celsius' });
+                                                                }}
+                                                                className={cn(
+                                                                    "tactile-btn flex-1 justify-center gap-3",
+                                                                    settings.weatherUnit === 'celsius' ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                )}
+                                                            >
+                                                                <Thermometer className="w-4 h-4" />
+                                                                CENTÍGRADOS (°C)
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSettings({ weatherUnit: 'fahrenheit' });
+                                                                    saveSettingsToCloud({ weatherUnit: 'fahrenheit' });
+                                                                }}
+                                                                className={cn(
+                                                                    "tactile-btn flex-1 justify-center gap-3",
+                                                                    settings.weatherUnit === 'fahrenheit' || !settings.weatherUnit ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                )}
+                                                            >
+                                                                <Thermometer className="w-4 h-4" />
+                                                                FAHRENHEIT (°F)
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

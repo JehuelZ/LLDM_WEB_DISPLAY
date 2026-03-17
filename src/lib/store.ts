@@ -83,6 +83,7 @@ export interface AppSettings {
     customLogo2FileId?: string;
     customLogo3FileId?: string;
     customLogo4FileId?: string;
+    weatherUnit?: 'celsius' | 'fahrenheit';
 }
 
 export interface UserProfile {

@@ -182,6 +182,9 @@ export function NeonForgeWeatherWidget() {
     const [forecast, setForecast] = useState<DayForecast[]>([]);
     const [loading, setLoading] = useState(true);
 
+    const unit = settings?.weatherUnit || 'fahrenheit';
+    const isCelsius = unit === 'celsius';
+
     useEffect(() => {
         if (!showWeather) return;
         setLoading(true);
@@ -189,8 +192,8 @@ export function NeonForgeWeatherWidget() {
         const url =
             `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
             `&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code` +
-            `&daily=temperature_2m_max,temperature_2m_min,weather_code` +
-            `&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=auto&forecast_days=6`;
+            `&daily=temperature_2m_max,temperature_2m_min,weathercode` +
+            `&temperature_unit=${unit}&wind_speed_unit=${isCelsius ? 'kmh' : 'mph'}&timezone=auto&forecast_days=6`;
 
         fetch(url)
             .then(r => r.json())
@@ -214,7 +217,7 @@ export function NeonForgeWeatherWidget() {
             .catch(() => { })
             .finally(() => setLoading(false));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cityData.lat, cityData.lon, showWeather]);
+    }, [cityData.lat, cityData.lon, showWeather, unit]);
 
     if (!showWeather) return null;
 
@@ -299,8 +302,8 @@ export function NeonForgeWeatherWidget() {
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginLeft: '2px' }}>
                                         {[
                                             { Icon: Droplets, value: `${current.humidity}%`, label: 'Humedad', color: '#60A5FA' },
-                                            { Icon: Wind, value: `${current.wind} mph`, label: 'Viento', color: '#34D399' },
-                                            { Icon: Thermometer, value: `${current.feels}°F`, label: 'Sensación', color: A },
+                                            { Icon: Wind, value: `${current.wind} ${isCelsius ? 'km/h' : 'mph'}`, label: 'Viento', color: '#34D399' },
+                                            { Icon: Thermometer, value: `${current.feels}°${isCelsius ? 'C' : 'F'}`, label: 'Sensación', color: A },
                                         ].map(({ Icon, value, label, color }) => (
                                             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                                 <div style={{
@@ -341,9 +344,9 @@ export function NeonForgeWeatherWidget() {
                                         fontFamily: 'var(--font-sora, ui-sans-serif)',
                                         letterSpacing: '-2px',
                                     }}>
-                                        {current ? `+${current.temp}` : '--'}
+                                        {current ? `${current.temp > 0 ? '+' : ''}${current.temp}` : '--'}
                                     </span>
-                                    <span style={{ fontSize: '18px', fontWeight: 700, color: `${A}80`, marginLeft: '2px' }}>°F</span>
+                                    <span style={{ fontSize: '18px', fontWeight: 700, color: `${A}80`, marginLeft: '2px' }}>°{isCelsius ? 'C' : 'F'}</span>
                                 </div>
 
                                 {/* Big weather icon */}

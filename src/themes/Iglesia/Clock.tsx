@@ -67,10 +67,14 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
     const isDark = iglesiaVariant === 'dark';
     const T = getIglesiaTokens(iglesiaVariant);
 
+    const unit = settings?.weatherUnit || 'fahrenheit';
+    const isCelsius = unit === 'celsius';
+
     // Weather Fetching
     const { weather } = useWeather(
         settings?.neonForgeCityData?.lat || 24.341,
-        settings?.neonForgeCityData?.lon || -104.28
+        settings?.neonForgeCityData?.lon || -104.28,
+        unit
     );
 
     const total = slides?.length || 0;
@@ -197,7 +201,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                             {settings?.neonForgeCityData?.name || (settings as any)?.city || 'Rodeo'}
                                         </p>
                                         <p style={{ fontSize: 28, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0 }}>
-                                            {weather ? `${weather.temp}°C` : '--°C'}
+                                            {weather ? `${weather.temp}°${isCelsius ? 'C' : 'F'}` : `--°${isCelsius ? 'C' : 'F'}`}
                                         </p>
                                     </div>
                                 </div>
