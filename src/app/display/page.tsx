@@ -212,21 +212,30 @@ export default function DisplayPage() {
         <main
             className={cn(
                 "fixed inset-0 text-slate-50 overflow-hidden select-none",
-                activeTheme.fonts.primary,
+                settings?.fontMain ? "" : activeTheme.fonts.primary,
                 "cursor-none"
             )}
         >
+            {/* Inject Google Font if configured */}
+            {settings?.fontMain && (
+                <link
+                    rel="stylesheet"
+                    href={`https://fonts.googleapis.com/css2?family=${settings.fontMain.replace(/ /g, '+')}:wght@400;700;800;900&display=swap`}
+                />
+            )}
+            
             <Background />
 
             {/* MAIN CONTENT STAGE WITH AUTO-SCALING FOR TVS */}
             <div
-                key={activeTheme.id}
+                key={`${activeTheme.id}-${settings?.fontMain}`}
                 className="absolute z-10 flex items-center justify-center p-0 overflow-hidden w-[1920px] h-[1080px]"
                 style={{
                     transform: `translate(calc(-50% + ${settings?.displayOffsetX || 0}px), calc(-50% + ${settings?.displayOffsetY || 0}px)) scale(${autoScale * (settings?.displayScale || 1.0)})`,
                     left: '50%',
                     top: '50%',
-                    transformOrigin: 'center center'
+                    transformOrigin: 'center center',
+                    fontFamily: settings?.fontMain ? `'${settings.fontMain}', sans-serif` : undefined
                 }}
             >
                 <AnimatePresence mode="popLayout" initial={false}>

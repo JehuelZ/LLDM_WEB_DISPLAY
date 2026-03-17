@@ -2074,6 +2074,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
+
                                         <TactileGlassCard title="FONDO DE PROYECCIÓN">
                                             <div className="space-y-6">
                                                 <TactileSelect
@@ -2165,7 +2166,6 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             </div>
                                         </TactileGlassCard>
 
-
                                         <button
                                             onClick={async () => {
                                                 setIsSaving(true);
@@ -2202,9 +2202,22 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         id="minister-avatar-upload"
                                                         className="hidden"
                                                         accept="image/*,.svg"
-                                                        onChange={(e) => {
+                                                        onChange={async (e) => {
                                                             const file = e.target.files?.[0];
                                                             if (file) {
+                                                                // If SVG, skip editor and upload directly
+                                                                if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg')) {
+                                                                    setIsSaving(true);
+                                                                    const url = await uploadAvatar(`minister-${Date.now()}`, file);
+                                                                    if (url) {
+                                                                        await saveSettingsToCloud({ ministerAvatar: url });
+                                                                        setMinister({ avatar: url });
+                                                                        showNotification("SVG ministerial actualizado exitosamente.", 'success');
+                                                                    }
+                                                                    setIsSaving(false);
+                                                                    return;
+                                                                }
+
                                                                 const reader = new FileReader();
                                                                 reader.onloadend = () => {
                                                                     setImageToEdit({ source: reader.result as string, target: 'minister' });
@@ -3413,9 +3426,21 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     id="member-avatar-upload"
                                                     className="hidden"
                                                     accept="image/*,.svg"
-                                                    onChange={(e) => {
+                                                    onChange={async (e) => {
                                                         const file = e.target.files?.[0];
                                                         if (file) {
+                                                            // If SVG, skip editor and upload directly or show it in the form
+                                                            if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg')) {
+                                                                setIsSaving(true);
+                                                                const url = await uploadAvatar(`member-svg-${Date.now()}`, file);
+                                                                if (url) {
+                                                                    setNewMemberData({ ...newMemberData, avatar: url });
+                                                                    showNotification("SVG del miembro subido exitosamente.", 'success');
+                                                                }
+                                                                setIsSaving(false);
+                                                                return;
+                                                            }
+
                                                             const reader = new FileReader();
                                                             reader.onloadend = () => {
                                                                 setImageToEdit({ source: reader.result as string, target: 'member' });
