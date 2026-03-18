@@ -50,10 +50,6 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         }
     }, [settings.themeMode, mounted, isPhone]);
 
-    if (!mounted) {
-        return <>{children}</>;
-    }
-
     const fontFamily = settings.fontMain || 'outfit';
     
     // Mapping for pre-loaded Next.js fonts
@@ -92,6 +88,10 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
             }
         }
     }, [fontFamily, isDynamic]);
+
+    if (!mounted) {
+        return <>{children}</>;
+    }
 
     return (
         <div

@@ -1,30 +1,41 @@
-# 🚨 SOLUCIÓN INMEDIATA: Desincronización Local vs. Producción
+# 🚨 REPARACIÓN Y ACTUALIZACIÓN DE PRODUCCIÓN
 
-Este documento registra un problema recurrente donde los cambios realizados en el código local (PC) no se reflejan en el sitio en vivo ([lldmrodeo.org](https://lldmrodeo.org)). 
+Este documento registra la solución a los problemas de refresco de página y errores de ejecución en el sitio en vivo ([lldmrodeo.org](https://lldmrodeo.org)).
 
-## 🔍 Síntoma del Problema
-Si después de programar una mejora (ej. nuevas notificaciones, cambio de logo, lógica de base de datos) el sitio web sigue mostrando la versión antigua o disparando errores que ya fueron corregidos localmente, significa que **el código no ha sido desplegado**.
+## ❌ Problemas Detectados y Corregidos Localmente
+1.  **Application Error (Hook Mismatch):** Corregido en `AppWrapper.tsx`. Era causado por una violación a las reglas de React Hooks que impedía la carga del sitio.
+2.  **Soporte SVG:** Habilitado para Ministros, Miembros y Fondos.
+3.  **Fuentes de Google:** Sincronizadas entre el Administrador y la Proyección.
+4.  **Fondos Personalizados:** Funcionales en todos los temas visuales.
 
-## 🛠️ Solución Obligatoria (Ejecutar de inmediato)
-Para forzar la actualización del sitio web, se deben enviar los cambios al repositorio de GitHub, lo cual dispara automáticamente el despliegue en Vercel:
+## 🛠️ PASOS PARA ACTUALIZAR EL SITIO EN VIVO
 
+Para que estos cambios funcionen en la web, **tienes que desplegarlos** siguiendo estos comandos exactos en tu terminal:
+
+### 1. Preparar y Sincronizar Código
 ```bash
-# 1. Preparar todos los archivos modificados
-git -C /Users/hardglobal/Documents/LLDM_RODEO_APP add .
+# Entrar a la carpeta del proyecto
+cd /Users/hardglobal/Documents/LLDM_RODEO_APP
 
-# 2. Crear el commit de guardado
-git -C /Users/hardglobal/Documents/LLDM_RODEO_APP commit -m "Fix: Despliegue de mejoras y sincronización de producción"
+# Guardar todos los cambios realizados (SVG, Fuentes, Fix de Error)
+git add .
+git commit -m "Fix: Solución de Application Error y soporte completo SVG/Fuentes"
 
-# 3. Empujar los cambios a la nube (GitHub)
-git -C /Users/hardglobal/Documents/LLDM_RODEO_APP push origin main
+# Subir a la nube
+git push origin main
 ```
 
-## ⏱️ Tiempo de Espera
-- **Despliegue**: El sitio tardará entre **2 y 3 minutos** en construir la nueva versión.
-- **Limpieza de Cache**: Es **VITAL** que el usuario haga un "Hard Refresh" en el navegador (`Cmd + Shift + R` en Mac / `Ctrl + F5` en Windows) para borrar la memoria vieja del sitio.
+### 2. Verificar el Despliegue en Vercel
+- Entra a tu panel de Vercel y asegúrate de que el último "Deployment" haya terminado sin errores.
+- Si el error persiste, usa el botón **"Redeploy"** con la opción **"Base Directory: . / Ignore Build Cache"** activada.
 
-## 📌 Nota para Antigravity
-Si detectas que el usuario dice "no veo los cambios" o "sigue saliendo el mensaje antiguo", **no sigas depurando el código**. Ejecuta primero el despliegue de Git arriba descrito.
+### 3. Limpieza de Memoria (VITAL)
+Una vez desplegado, el navegador guardará la versión vieja con error en cache. **DEBES hacer esto:**
+- En Mac: **`Cmd + Shift + R`** (en la página de admin y display).
+- En Windows: **`Ctrl + F5`**.
+
+## 📌 Nota de Mantenimiento
+Si el sistema vuelve a decir "Application error", lo más probable es que se haya introducido un Hook (`useEffect`, `useState`) dentro de una condición `if` o un bucle `map`. Siempre mantén los Hooks al principio de los componentes.
 
 ---
-*Última actualización: 17 de Marzo, 2026*
+*Última actualización: 17 de Marzo, 2026 - Fix de Excepción de Cliente aplicado.*
