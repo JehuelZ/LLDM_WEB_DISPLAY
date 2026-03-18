@@ -251,7 +251,7 @@ export default function DisplayPage() {
                     left: '50%',
                     top: '50%',
                     transformOrigin: 'center center',
-                    fontFamily: settings?.fontMain ? `'${settings.fontMain}', sans-serif` : undefined
+                    fontFamily: settings?.fontMain ? `'${settings.fontMain}', sans-serif` : 'inherit'
                 }}
             >
                 <AnimatePresence mode="popLayout" initial={false}>

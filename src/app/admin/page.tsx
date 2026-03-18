@@ -2086,31 +2086,31 @@ function AdminDashboardContent() {
                                 <CardContent className="space-y-6">
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                                         {[
-                                            { id: 'outfit', label: 'Outfit' },
-                                            { id: 'sora', label: 'Sora' },
-                                            { id: 'inter', label: 'Inter' },
-                                            { id: 'montserrat', label: 'Montserrat' },
-                                            { id: 'poppins', label: 'Poppins' },
-                                            { id: 'lexend', label: 'Lexend' },
-                                            { id: 'orbitron', label: 'Orbitron' },
-                                            { id: 'black-ops', label: 'Black Ops' },
-                                            { id: 'syne', label: 'Syne' },
-                                            { id: 'playfair', label: 'Playfair' },
-                                            { id: 'lora', label: 'Lora' },
+                                            { name: 'Outfit', id: 'outfit' },
+                                            { name: 'Sora', id: 'sora' },
+                                            { name: 'Inter', id: 'inter' },
+                                            { name: 'Montserrat', id: 'montserrat' },
+                                            { name: 'Poppins', id: 'poppins' },
+                                            { name: 'Lexend', id: 'lexend' },
+                                            { name: 'Orbitron', id: 'orbitron' },
+                                            { name: 'Black Ops One', id: 'black-ops' },
+                                            { name: 'Syne', id: 'syne' },
+                                            { name: 'Playfair Display', id: 'playfair' },
+                                            { name: 'Lora', id: 'lora' },
                                         ].map((font) => (
                                             <button
                                                 key={font.id}
                                                 onClick={() => {
-                                                    setSettings({ fontMain: font.id as any });
-                                                    saveSettingsToCloud({ fontMain: font.id as any });
+                                                    setSettings({ fontMain: font.name as any });
+                                                    saveSettingsToCloud({ fontMain: font.name as any });
                                                 }}
                                                 className={cn(
                                                     "p-3 rounded-2xl border-2 transition-all flex flex-col items-center gap-1",
-                                                    (settings.fontMain || 'outfit') === font.id ? "border-amber-500 bg-amber-500/10" : "border-white/5 bg-white/5 hover:border-white/10"
+                                                    (settings.fontMain === font.name) ? "border-amber-500 bg-amber-500/10" : "border-white/5 bg-white/5 hover:border-white/10"
                                                 )}
                                             >
-                                                <span className="text-lg font-black" style={{ fontFamily: font.id === 'outfit' ? 'var(--font-outfit)' : font.id === 'sora' ? 'var(--font-sora)' : font.id === 'inter' ? 'var(--font-inter)' : font.id }}>Aa</span>
-                                                <span className="text-[9px] font-bold uppercase tracking-widest">{font.label}</span>
+                                                <span className="text-lg font-black" style={{ fontFamily: `'${font.name}', sans-serif` }}>Aa</span>
+                                                <span className="text-[9px] font-bold uppercase tracking-widest">{font.name}</span>
                                             </button>
                                         ))}
                                     </div>

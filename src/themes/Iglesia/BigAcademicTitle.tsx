@@ -43,9 +43,11 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
         ? `6px 6px 15px rgba(0, 0, 0, 0.45), -6px -6px 15px rgba(255, 255, 255, 0.02)`
         : `5px 5px 12px rgba(0, 0, 0, 0.04), -5px -5px 12px #FFFFFF`;
 
-    const isCustom = settings?.churchIcon === 'custom';
-    const logoUrl = settings?.customIconUrl || settings?.churchLogoUrl;
     const officialLogo = "/flama-oficial.svg";
+    const currentLogo = settings?.churchLogoUrl;
+    // Explicit check for 'No Logo' (empty string)
+    const showLogo = currentLogo !== '';
+    const finalLogoUrl = (currentLogo === '' || !currentLogo) ? officialLogo : currentLogo;
 
     const icons: Record<string, any> = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
     const SelectedIcon = icons[settings?.churchIcon || 'flame'] || Flame;
@@ -59,24 +61,26 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
             border: 'none',
             width: 'fit-content'
         }}>
-            <div style={{
-                width: 34, height: 34, borderRadius: 10,
-                background: `linear-gradient(135deg, ${T.accent}, ${T.accent}dd)`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: `0 4px 12px ${T.accent}40`,
-                overflow: 'hidden'
-            }}>
-                <img 
-                    src={settings?.churchLogoUrl || officialLogo} 
-                    alt="" 
-                    style={{ 
-                        width: '80%', 
-                        height: '80%', 
-                        objectFit: 'contain', 
-                        filter: (isDark && settings?.churchLogoUrl) ? 'brightness(1.2)' : (isDark ? 'brightness(0) invert(1)' : 'none') 
-                    }} 
-                />
-            </div>
+            {showLogo && (
+                <div style={{
+                    width: 34, height: 34, borderRadius: 10,
+                    background: `linear-gradient(135deg, ${T.accent}, ${T.accent}dd)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: `0 4px 12px ${T.accent}40`,
+                    overflow: 'hidden'
+                }}>
+                    <img 
+                        src={finalLogoUrl} 
+                        alt="" 
+                        style={{ 
+                            width: '80%', 
+                            height: '80%', 
+                            objectFit: 'contain', 
+                            filter: (isDark && currentLogo !== '' && currentLogo !== '/flama-oficial.svg') ? 'brightness(1.2)' : (isDark ? 'brightness(0) invert(1)' : 'none') 
+                        }} 
+                    />
+                </div>
+            )}
             <h2 style={{
                 fontSize: 18, fontWeight: 700, color: isDark ? '#FFFFFF' : T.textPrimary,
                 letterSpacing: '-0.02em', fontFamily: T.fontMontserrat,

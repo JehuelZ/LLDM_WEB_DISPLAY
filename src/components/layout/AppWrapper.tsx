@@ -99,16 +99,21 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         'syne': 'Syne',
         'playfair': 'Playfair Display',
         'lora': 'Lora',
+        'outfit': 'Outfit',
+        'sora': 'Sora',
+        'inter': 'Inter',
+        'montserrat': 'Montserrat',
+        'orbitron': 'Orbitron'
     };
 
     const isNextFont = !!nextFontVarMap[fontFamily];
 
     useEffect(() => {
         if (!isNextFont && fontFamily) {
-            // Get the proper Google Font name
-            const realName = googleFontNameMap[fontFamily] || fontFamily;
+            // Check if fontFamily is already a Name or an ID
+            const realName = googleFontNameMap[fontFamily.toLowerCase()] || fontFamily;
             const fontNameForUrl = realName.replace(/\s+/g, '+');
-            const linkId = `google-font-dynamic-${fontFamily.replace(/\s+/g, '-').toLowerCase()}`;
+            const linkId = `google-font-dynamic-${realName.replace(/\s+/g, '-').toLowerCase()}`;
             
             if (!document.getElementById(linkId)) {
                 const link = document.createElement('link');
@@ -121,8 +126,8 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
     }, [fontFamily, isNextFont]);
 
     // Construct final font family for CSS
-    const realFontName = googleFontNameMap[fontFamily] || fontFamily;
-    const finalFontFamily = isNextFont ? nextFontVarMap[fontFamily] : `"${realFontName}"`;
+    const realFontName = googleFontNameMap[fontFamily.toLowerCase()] || fontFamily;
+    const finalFontFamily = isNextFont ? nextFontVarMap[fontFamily.toLowerCase()] : `"${realFontName}"`;
 
     if (!mounted) {
         return <>{children}</>;
@@ -162,7 +167,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                                 notification.type === 'success' ? "shadow-[0_0_40px_rgba(251,191,36,0.1)]" : "shadow-[0_0_40px_rgba(239,68,68,0.1)]"
                              )}>
                                 <img 
-                                    src={settings.churchLogoUrl ?? "/flama-oficial.svg"} 
+                                    src={(settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/flama-oficial.svg" : settings.churchLogoUrl} 
                                     className={cn(
                                         "w-14 h-14 object-contain brightness-0 invert opacity-60",
                                         notification.type === 'success' && "sepia-[1] saturate-[10000%] hue-rotate-[0deg] transition-all"

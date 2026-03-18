@@ -714,7 +714,10 @@ export const useAppStore = create<AppState>()(
                     if ('privileges' in updates) dbUpdates.roles = updates.privileges;
                     else if ('roles' in (updates as any)) dbUpdates.roles = (updates as any).roles;
 
-                    // bio column is missing in production schema - DO NOT map it unless confirmed
+                    // Unified bio and verse mapping (confirmed in production schema)
+                    if ('bio' in updates) dbUpdates.bio = updates.bio;
+                    if ('favorite_verse' in updates) dbUpdates.favorite_verse = (updates as any).favorite_verse || (updates as any).favoriteVerse;
+
                     console.log('UpdateProfile: Final dbUpdates for Supabase:', dbUpdates);
 
                     const { data: updatedData, error } = await supabase
