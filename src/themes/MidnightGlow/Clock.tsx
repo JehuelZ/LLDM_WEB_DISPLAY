@@ -46,11 +46,16 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                     <div className="absolute inset-2 rounded-full bg-[#0D1B3E] border-[2px] border-[#4F7FFF]/30 flex items-center justify-center shadow-[inset_0_0_20px_rgba(79,127,255,0.3),0_0_20px_rgba(79,127,255,0.2)]">
                         <div className="absolute inset-0 bg-gradient-to-br from-[#4F7FFF]/20 to-transparent rounded-full" />
                         <div className="w-14 h-14 relative z-10 flex items-center justify-center filter drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
-                            <img
-                                src={settings.churchLogoUrl || settings.customIconUrl || "/flama-oficial.svg"}
-                                className="w-full h-full object-contain brightness-0 invert"
-                                alt="Church"
-                            />
+                            {(() => {
+                                const logoUrl = settings.churchLogoUrl || settings.customIconUrl || "/flama-oficial.svg";
+                                switch (settings.churchIcon) {
+                                    case 'church': return <Church className="w-10 h-10 text-white" />;
+                                    case 'cross': return <Cross className="w-10 h-10 text-white" />;
+                                    case 'star': return <Star className="w-10 h-10 text-white" />;
+                                    case 'heart': return <Heart className="w-10 h-10 text-white" />;
+                                    default: return <img src={logoUrl} className="w-full h-full object-contain brightness-0 invert" alt="Church" />;
+                                }
+                            })()}
                         </div>
                     </div>
                 </div>
