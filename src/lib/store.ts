@@ -809,13 +809,37 @@ export const useAppStore = create<AppState>()(
 
                 console.log('Attempting upload to bucket "avatars" at path:', filePath);
 
-                const { error: uploadError } = await supabase.storage
+                // Intentar primero en el bucket 'avatars' (predeterminado)
+                let { error: uploadError } = await supabase.storage
                     .from('avatars')
                     .upload(filePath, file, {
                         upsert: true,
                         contentType: file.type,
                         cacheControl: '3600'
                     });
+
+                // Si falla (posiblemente por restricciones de MIME type como SVG), intentar en 'app_assets'
+                let bucketUsed = 'avatars';
+                if (uploadError) {
+                    console.warn('Upload to "avatars" failed, trying "app_assets" bucket...', uploadError.message);
+                    const { error: assetError } = await supabase.storage
+                        .from('app_assets')
+                        .upload(filePath, file, {
+                            upsert: true,
+                            contentType: file.type,
+                            cacheControl: '3600'
+                        });
+                    
+                    if (!assetError) {
+                        uploadError = null;
+                        bucketUsed = 'app_assets';
+                    } else {
+                        // Si ambos fallan, reportar el error original o el más relevante
+                        console.error('CRITICAL: All Upload Buckets Failed:', assetError);
+                        get().showNotification(`Error al subir imagen: ${assetError.message} (Bucket: app_assets).`, 'error');
+                        return null;
+                    }
+                }
 
                 if (uploadError) {
                     console.error('CRITICAL: Avatar Upload Failed:', uploadError);
@@ -824,10 +848,10 @@ export const useAppStore = create<AppState>()(
                 }
 
                 const { data } = supabase.storage
-                    .from('avatars')
+                    .from(bucketUsed)
                     .getPublicUrl(filePath);
 
-                console.log('Avatar uploaded successfully:', data.publicUrl);
+                console.log(`File uploaded successfully to ${bucketUsed}:`, data.publicUrl);
                 return data.publicUrl;
             },
 
