@@ -349,7 +349,7 @@ const WeeklyAttendanceChart = () => {
                         Distribución Semanal de Asistencia
                     </CardTitle>
                     <CardDescription className="text-[9px] uppercase font-bold text-slate-400 mt-1">
-                        Semana del {format(weekDays[0], 'd MMM')} al {format(weekDays[6], 'd MMM')}
+                        Semana del {format(weekDays[0], 'd MMM', { locale: es })} al {format(weekDays[6], 'd MMM', { locale: es })}
                     </CardDescription>
                 </div>
                 <div className="flex gap-2">
@@ -360,6 +360,14 @@ const WeeklyAttendanceChart = () => {
                         onClick={() => changeWeek(-1)}
                     >
                         <ChevronLeft className="h-3 w-3" />
+                    </Button>
+                    <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 text-[8px] font-black uppercase tracking-widest hover:bg-white/10"
+                        onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 0 }))}
+                    >
+                        HOY
                     </Button>
                     <Button 
                         variant="outline" 
@@ -431,7 +439,7 @@ const WeeklyAttendanceChart = () => {
                                     {format(weekDays[idx], 'EEE', { locale: es })}
                                 </div>
                                 <div className="text-[8px] font-bold text-slate-600">
-                                    {format(weekDays[idx], 'dd/MM')}
+                                    {format(weekDays[idx], 'dd/MM', { locale: es })}
                                 </div>
                             </div>
                         );
@@ -597,14 +605,14 @@ function AdminDashboardContent() {
         loadAttendanceFromCloud(currentDate);
 
         // Listeners for layout-specific events if any
-        // Preload Google Fonts for the Selector Gallery
+        // Preload Google Fonts for the Selector Gallery (including weights)
         const fontList = GOOGLE_FONTS.map(f => f.name.replace(/\s+/g, '+')).join('|');
         const linkId = 'admin-font-preloader';
         if (!document.getElementById(linkId)) {
             const link = document.createElement('link');
             link.id = linkId;
             link.rel = 'stylesheet';
-            link.href = `https://fonts.googleapis.com/css2?family=${fontList}:wght@400;700;900&display=swap`;
+            link.href = `https://fonts.googleapis.com/css2?family=${fontList}:wght@100;200;300;400;500;600;700;800;900&display=swap`;
             document.head.appendChild(link);
         }
 
@@ -2204,6 +2212,48 @@ function AdminDashboardContent() {
                                                     </button>
                                                 );
                                             })}
+                                        </div>
+
+                                        <div className="space-y-4 p-6 bg-amber-500/5 rounded-[2rem] border border-amber-500/10">
+                                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                                <div className="space-y-1">
+                                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400">Peso y Grosor (Varianza)</h4>
+                                                    <p className="text-[8px] text-slate-500 font-bold uppercase">Afecta la elegancia o fuerza del texto</p>
+                                                </div>
+                                                <div className="flex flex-wrap gap-2">
+                                                    {[
+                                                        { label: 'DELGADA', weight: '300' },
+                                                        { label: 'NORMAL', weight: '400' },
+                                                        { label: 'MEDIANA', weight: '500' },
+                                                        { label: 'BOLD', weight: '700' },
+                                                        { label: 'EXTRA', weight: '900' },
+                                                    ].map((w) => (
+                                                        <button 
+                                                            key={w.weight}
+                                                            onClick={async () => {
+                                                                setSettings({ fontWeight: w.weight });
+                                                                await saveSettingsToCloud({ fontWeight: w.weight });
+                                                                showNotification(`Grosor actualizado: ${w.label}`, 'success');
+                                                            }}
+                                                            className={cn(
+                                                                "px-3 py-2 rounded-xl text-[8px] font-black uppercase tracking-tighter transition-all",
+                                                                settings.fontWeight === w.weight ? "bg-amber-500 text-black shadow-lg" : "bg-white/5 text-slate-500 hover:bg-white/10"
+                                                            )}
+                                                            style={{ fontWeight: Number(w.weight) }}
+                                                        >
+                                                            {w.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="p-4 bg-black/20 rounded-2xl border border-white/5 min-h-[60px] flex items-center justify-center">
+                                                <p className="text-center text-sm" style={{ 
+                                                    fontFamily: settings.fontMain ? `"${settings.fontMain}", sans-serif` : 'inherit',
+                                                    fontWeight: Number(settings.fontWeight || '400')
+                                                }}>
+                                                    Previsualización: El Señor es mi fortaleza y mi escudo.
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </CardContent>

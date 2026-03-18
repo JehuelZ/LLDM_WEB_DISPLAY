@@ -87,6 +87,7 @@ export interface AppSettings {
     customLogo4FileId?: string;
     weatherUnit?: 'celsius' | 'fahrenheit';
     fontMain?: string;
+    fontWeight?: string;
 }
 
 export interface UserProfile {
