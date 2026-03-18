@@ -457,6 +457,33 @@ const WeeklyAttendanceChart = () => {
     );
 };
 
+const GOOGLE_FONTS = [
+    { id: 'outfit', name: 'Outfit', category: 'Modern Geometric Sans' },
+    { id: 'sora', name: 'Sora', category: 'High-Tech Sans' },
+    { id: 'inter', name: 'Inter', category: 'Professional Sans' },
+    { id: 'montserrat', name: 'Montserrat', category: 'Classic Geometric' },
+    { id: 'poppins', name: 'Poppins', category: 'Soft Sans Serif' },
+    { id: 'lexend', name: 'Lexend', category: 'Readability Focused' },
+    { id: 'orbitron', name: 'Orbitron', category: 'Cyberpunk Display' },
+    { id: 'black-ops', name: 'Black Ops One', category: 'Military Display' },
+    { id: 'syne', name: 'Syne', category: 'Avant-Garde Display' },
+    { id: 'playfair', name: 'Playfair Display', category: 'Elegant Serif' },
+    { id: 'lora', name: 'Lora', category: 'Classic Serif' },
+    { id: 'merriweather', name: 'Merriweather', category: 'Newspaper Serif' },
+    { id: 'eb-garamond', name: 'EB Garamond', category: 'Formal Luxury Serif' },
+    { id: 'roboto', name: 'Roboto', category: 'Standard Modern' },
+    { id: 'open-sans', name: 'Open Sans', category: 'Neutral Universal' },
+    { id: 'lato', name: 'Lato', category: 'Humanist Sans' },
+    { id: 'bebas-neue', name: 'Bebas Neue', category: 'Condensed Impact' },
+    { id: 'anton', name: 'Anton', category: 'Heavy Display' },
+    { id: 'righteous', name: 'Righteous', category: 'Art Deco Display' },
+    { id: 'cinzel', name: 'Cinzel', category: 'Classical Decorative' },
+    { id: 'jetbrains-mono', name: 'JetBrains Mono', category: 'Premium Code' },
+    { id: 'source-code-pro', name: 'Source Code Pro', category: 'Professional Monospace' },
+    { id: 'archivo-black', name: 'Archivo Black', category: 'Wide Impact' },
+    { id: 'dm-serif-display', name: 'DM Serif Display', category: 'Bold Editorial' }
+];
+
 function AdminDashboardContent() {
     const {
         theme, setTheme,
@@ -525,6 +552,9 @@ function AdminDashboardContent() {
     const [editingRole, setEditingRole] = useState('Miembro');
 
     const searchParams = useSearchParams();
+    const [fontSearch, setFontSearch] = useState('');
+    const [focusedFontIndex, setFocusedFontIndex] = useState(0);
+
     const queryTab = searchParams.get('tab') || 'dashboard';
     const [activeTab, setActiveTab] = useState(queryTab);
 
@@ -567,6 +597,17 @@ function AdminDashboardContent() {
         loadAttendanceFromCloud(currentDate);
 
         // Listeners for layout-specific events if any
+        // Preload Google Fonts for the Selector Gallery
+        const fontList = GOOGLE_FONTS.map(f => f.name.replace(/\s+/g, '+')).join('|');
+        const linkId = 'admin-font-preloader';
+        if (!document.getElementById(linkId)) {
+            const link = document.createElement('link');
+            link.id = linkId;
+            link.rel = 'stylesheet';
+            link.href = `https://fonts.googleapis.com/css2?family=${fontList}:wght@400;700;900&display=swap`;
+            document.head.appendChild(link);
+        }
+
         const handleTabSync = () => {
             // Let the useEffect with queryTab handle it after URL changes or dispatch
         };
@@ -2086,35 +2127,84 @@ function AdminDashboardContent() {
                                     <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Fuente del sistema (Google Fonts)</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-6">
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                        {[
-                                            { name: 'Outfit', id: 'outfit' },
-                                            { name: 'Sora', id: 'sora' },
-                                            { name: 'Inter', id: 'inter' },
-                                            { name: 'Montserrat', id: 'montserrat' },
-                                            { name: 'Poppins', id: 'poppins' },
-                                            { name: 'Lexend', id: 'lexend' },
-                                            { name: 'Orbitron', id: 'orbitron' },
-                                            { name: 'Black Ops One', id: 'black-ops' },
-                                            { name: 'Syne', id: 'syne' },
-                                            { name: 'Playfair Display', id: 'playfair' },
-                                            { name: 'Lora', id: 'lora' },
-                                        ].map((font) => (
-                                            <button
-                                                key={font.id}
-                                                onClick={() => {
-                                                    setSettings({ fontMain: font.name as any });
-                                                    saveSettingsToCloud({ fontMain: font.name as any });
-                                                }}
-                                                className={cn(
-                                                    "p-3 rounded-2xl border-2 transition-all flex flex-col items-center gap-1",
-                                                    (settings.fontMain === font.name) ? "border-amber-500 bg-amber-500/10" : "border-white/5 bg-white/5 hover:border-white/10"
-                                                )}
-                                            >
-                                                <span className="text-lg font-black" style={{ fontFamily: `'${font.name}', sans-serif` }}>Aa</span>
-                                                <span className="text-[9px] font-bold uppercase tracking-widest">{font.name}</span>
-                                            </button>
-                                        ))}
+                                    <div className="space-y-6">
+                                        <div className="relative group">
+                                            <div className="flex items-center gap-3 p-4 bg-foreground/5 border-2 border-border/10 rounded-3xl transition-all focus-within:border-amber-500/50 focus-within:bg-foreground/[0.08]">
+                                                <Search className="w-5 h-5 text-slate-500" />
+                                                <input 
+                                                    type="text"
+                                                    placeholder="Buscar fuente de Google..."
+                                                    className="bg-transparent border-none outline-none flex-1 font-black uppercase text-[10px] tracking-widest text-foreground"
+                                                    value={fontSearch}
+                                                    onChange={(e) => {
+                                                        setFontSearch(e.target.value);
+                                                        setFocusedFontIndex(0);
+                                                    }}
+                                                    onKeyDown={(e) => {
+                                                        const filtered = GOOGLE_FONTS.filter(f => f.name.toLowerCase().includes(fontSearch.toLowerCase()));
+                                                        if (e.key === 'ArrowDown') {
+                                                            e.preventDefault();
+                                                            setFocusedFontIndex(prev => Math.min(prev + 1, filtered.length - 1));
+                                                        } else if (e.key === 'ArrowUp') {
+                                                            e.preventDefault();
+                                                            setFocusedFontIndex(prev => Math.max(prev - 1, 0));
+                                                        } else if (e.key === 'Enter' && filtered[focusedFontIndex]) {
+                                                            const selected = filtered[focusedFontIndex];
+                                                            setSettings({ fontMain: selected.name as any });
+                                                            saveSettingsToCloud({ fontMain: selected.name as any });
+                                                            showNotification(`Fuente aplicada: ${selected.name}`, 'success');
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="max-h-[500px] overflow-y-auto pr-2 custom-scrollbar space-y-2">
+                                            {GOOGLE_FONTS.filter(f => f.name.toLowerCase().includes(fontSearch.toLowerCase())).map((font, idx) => {
+                                                const isSelected = settings.fontMain === font.name;
+                                                const isFocused = focusedFontIndex === idx;
+                                                
+                                                return (
+                                                    <button
+                                                        key={font.id}
+                                                        ref={(el) => { if (isFocused) el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }}
+                                                        onClick={() => {
+                                                            setSettings({ fontMain: font.name as any });
+                                                            saveSettingsToCloud({ fontMain: font.name as any });
+                                                            showNotification(`Fuente aplicada: ${font.name}`, 'success');
+                                                        }}
+                                                        onMouseEnter={() => setFocusedFontIndex(idx)}
+                                                        className={cn(
+                                                            "w-full p-4 rounded-2xl border-2 transition-all flex items-center justify-between group",
+                                                            isSelected ? "border-amber-500 bg-amber-500/10" : 
+                                                            isFocused ? "border-amber-500/30 bg-white/5" : "border-white/5 bg-white/5 hover:border-white/10"
+                                                        )}
+                                                    >
+                                                        <div className="flex items-center gap-4">
+                                                            <div className={cn(
+                                                                "w-10 h-10 rounded-xl flex items-center justify-center text-xl font-black bg-white/5 border border-white/5",
+                                                                isSelected && "bg-amber-500/20 border-amber-500/30 text-amber-500"
+                                                            )} style={{ fontFamily: `"${font.name}", sans-serif` }}>
+                                                                Aa
+                                                            </div>
+                                                            <div className="text-left">
+                                                                <p className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:text-amber-500 transition-colors">{font.name}</p>
+                                                                <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest opacity-60">{font.category}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-center gap-4">
+                                                            <span className="text-xs opacity-50 font-medium italic hidden md:block" style={{ fontFamily: `"${font.name}", sans-serif` }}>
+                                                                The quick brown fox jumps over the lazy dog
+                                                            </span>
+                                                            <div className={cn(
+                                                                "w-2 h-2 rounded-full transition-all",
+                                                                isSelected ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] scale-125" : "bg-white/10"
+                                                            )} />
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </CardContent>
                             </Card>
