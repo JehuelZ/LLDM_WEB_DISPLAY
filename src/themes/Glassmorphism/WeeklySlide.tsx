@@ -89,7 +89,7 @@ export const GlassmorphismWeekly = () => {
     if (!mounted) return null;
 
     return (
-        <div className="h-full flex flex-col p-8 pt-10 bg-transparent relative overflow-hidden font-sora">
+        <div className="h-full flex flex-col p-8 pt-10 bg-transparent relative overflow-hidden">
 
 
             <motion.div initial={{ y: -50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="flex justify-between items-end mb-6 border-b border-white/10 pb-4">

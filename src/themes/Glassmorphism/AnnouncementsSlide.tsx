@@ -13,7 +13,7 @@ export const GlassmorphismAnnouncements = () => {
     const minister = useAppStore((state) => state.minister);
 
     return (
-        <div className="h-full flex flex-col md:flex-row p-8 pt-10 gap-8 overflow-hidden bg-transparent font-sora relative">
+        <div className="h-full flex flex-col md:flex-row p-8 pt-10 gap-8 overflow-hidden bg-transparent relative">
             {/* Left Pillar: Announcements */}
             <div className="flex-1 flex flex-col min-w-0">
                 <motion.div

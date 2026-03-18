@@ -59,7 +59,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
     };
 
     return (
-        <div className="h-full flex flex-col p-8 pt-10 font-sora relative overflow-hidden bg-transparent">
+        <div className="h-full flex flex-col p-8 pt-10 relative overflow-hidden bg-transparent">
             {/* Header branding */}
             <motion.div
                 initial={{ opacity: 0, x: -50 }}

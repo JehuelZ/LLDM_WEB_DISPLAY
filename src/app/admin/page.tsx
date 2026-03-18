@@ -1866,7 +1866,10 @@ function AdminDashboardContent() {
                                     <motion.button
                                         whileHover={{ y: -5, scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
-                                        onClick={() => setSettings({ churchLogoUrl: '/flama-oficial.svg' })}
+                                        onClick={() => {
+                                            setSettings({ churchLogoUrl: '/flama-oficial.svg' });
+                                            saveSettingsToCloud({ churchLogoUrl: '/flama-oficial.svg' });
+                                        }}
                                         className={cn(
                                             "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
                                             (settings.churchLogoUrl === '/flama-oficial.svg') ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)]" : "border-white/5 bg-foreground/5 hover:border-white/10"
@@ -1893,7 +1896,8 @@ function AdminDashboardContent() {
                                                     whileHover={{ y: -5 }}
                                                     onClick={() => {
                                                         if (slotUrl) {
-                                                            setSettings({ churchLogoUrl: slotUrl });
+                                                        setSettings({ churchLogoUrl: slotUrl });
+                                                        saveSettingsToCloud({ churchLogoUrl: slotUrl });
                                                         } else {
                                                             document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
                                                         }
@@ -1965,6 +1969,7 @@ function AdminDashboardContent() {
                                                         document.getElementById('display-bg-upload-styling')?.click();
                                                     } else {
                                                         setSettings({ displayBgMode: bg.mode as any });
+                                                        saveSettingsToCloud({ displayBgMode: bg.mode as any });
                                                     }
                                                 }}
                                                 className={cn(
@@ -2056,7 +2061,10 @@ function AdminDashboardContent() {
                                         ].map((font) => (
                                             <button
                                                 key={font.id}
-                                                onClick={() => setSettings({ fontMain: font.id as any })}
+                                                onClick={() => {
+                                                    setSettings({ fontMain: font.id as any });
+                                                    saveSettingsToCloud({ fontMain: font.id as any });
+                                                }}
                                                 className={cn(
                                                     "p-3 rounded-2xl border-2 transition-all flex flex-col items-center gap-1",
                                                     (settings.fontMain || 'outfit') === font.id ? "border-amber-500 bg-amber-500/10" : "border-white/5 bg-white/5 hover:border-white/10"

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 export const GlassmorphismClock = ({ now, isMounted, settings }: { now: Date, isMounted: boolean, settings: any }) => {
     return (
-        <div className="fixed bottom-24 left-16 z-[200] scale-75 origin-bottom-left pointer-events-none font-sora">
+        <div className="fixed bottom-24 left-16 z-[200] scale-75 origin-bottom-left pointer-events-none">
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

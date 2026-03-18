@@ -129,16 +129,32 @@ export default function DisplayPage() {
         const themeId = settings?.displayTemplate || calendarStyles?.template || 'nocturno';
         const theme = getTheme(themeId);
 
-        // If the user selected a specific font set index for this theme
-        if (calendarStyles?.fontSetIndex !== undefined && theme.fontOptions && theme.fontOptions[calendarStyles.fontSetIndex]) {
-            return {
-                ...theme,
-                fonts: theme.fontOptions[calendarStyles.fontSetIndex]
+        // --- ULTIMATE FONT OVERRIDE ---
+        // If the user set a global font (settings.fontMain), it wins over the theme defaults.
+        // Otherwise, follow the theme's own font set index if selected.
+
+        let finalFonts = { ...theme.fonts };
+
+        if (settings?.fontMain) {
+            // Check if it's one of the common identifiers or just use it directly
+            const fontId = settings.fontMain;
+            // Pre-loaded font classes usually follow 'font-<id>'
+            const fontClass = fontId.startsWith('font-') ? fontId : `font-${fontId.toLowerCase().replace(/\s+/g, '-')}`;
+
+            finalFonts = {
+                primary: fontClass,
+                secondary: 'font-inter', // System fallback
+                accent: theme.fonts.accent
             };
+        } else if (calendarStyles?.fontSetIndex !== undefined && theme.fontOptions && theme.fontOptions[calendarStyles.fontSetIndex]) {
+            finalFonts = theme.fontOptions[calendarStyles.fontSetIndex];
         }
 
-        return theme;
-    }, [calendarStyles?.template, calendarStyles?.fontSetIndex, settings?.displayTemplate]);
+        return {
+            ...theme,
+            fonts: finalFonts
+        };
+    }, [calendarStyles?.template, calendarStyles?.fontSetIndex, settings?.displayTemplate, settings?.fontMain]);
 
     const { Schedule, Calendar, Weekly, Announcements } = activeTheme.slides;
     const { Background, Clock, Progress } = activeTheme.components;

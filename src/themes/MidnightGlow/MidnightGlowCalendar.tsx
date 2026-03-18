@@ -89,7 +89,7 @@ export function MidnightGlowCalendar() {
 
     return (
         <div
-            className="h-full w-full flex flex-col overflow-hidden relative font-orbitron"
+            className="h-full w-full flex flex-col overflow-hidden relative"
             style={{ background: 'radial-gradient(ellipse 120% 80% at 50% 20%, #071428 0%, #040D21 55%, #02080F 100%)' }}
         >
             {/* ── Background texture: dot grid ── */}

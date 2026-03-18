@@ -1338,7 +1338,8 @@ export const useAppStore = create<AppState>()(
                         // Sync calendarStyles.template from cloud displayTemplate
                         calendarStyles: {
                             ...get().calendarStyles,
-                            template: (data.display_template || get().calendarStyles.template) as any
+                            template: (data.display_template || get().calendarStyles.template) as any,
+                            fontFamily: (data.display_font_family || get().calendarStyles.fontFamily) as any
                         }
                     });
                 }

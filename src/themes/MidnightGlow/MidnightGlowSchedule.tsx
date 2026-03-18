@@ -308,7 +308,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
 
     return (
         <div
-            className="h-full w-full flex flex-col justify-center items-center overflow-hidden relative font-orbitron"
+            className="h-full w-full flex flex-col justify-center items-center overflow-hidden relative"
             style={{ background: 'radial-gradient(ellipse 120% 80% at 50% 30%, #071428 0%, #040D21 60%, #02080F 100%)' }}
         >
             {/* ── Background texture: grid pattern ── */}
@@ -516,7 +516,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                 </div>
 
                                 {/* Custom Titles depending on Type */}
-                                <div className="px-6 text-center z-10 font-orbitron">
+                                <div className="px-6 text-center z-10">
                                     {type === 'local' && (
                                         <>
                                             <h3 className="text-[28px] font-black text-white/90 uppercase tracking-[0.05em] leading-[1.1] drop-shadow-md">

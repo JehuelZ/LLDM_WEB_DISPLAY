@@ -209,7 +209,7 @@ export function MidnightGlowWeekly() {
 
     return (
         <div
-            className="h-full w-full flex flex-col overflow-hidden relative font-orbitron"
+            className="h-full w-full flex flex-col overflow-hidden relative"
             style={{ background: 'radial-gradient(ellipse 120% 80% at 50% 30%, #071428 0%, #040D21 60%, #02080F 100%)' }}
         >
             {/* ── Background texture: dot grid ── */}
@@ -315,7 +315,7 @@ export function MidnightGlowWeekly() {
                                                 <div className="absolute -top-[3.5rem] -left-16 w-[110vw] h-[1px] bg-gradient-to-r from-transparent via-[#4F7FFF]/20 to-transparent z-0 pointer-events-none flex items-center opacity-70">
                                                     <div className="absolute left-16 bg-[#040D21] px-4 py-1 rounded-full border border-[#4F7FFF]/20 shadow-[0_0_15px_rgba(79,127,255,0.15)] flex items-center gap-2">
                                                         <div className="w-1.5 h-1.5 rounded-full bg-[#4F7FFF] animate-pulse" />
-                                                        <span className="text-[10px] tracking-[0.4em] font-orbitron font-bold text-[#4F7FFF] uppercase mt-px">
+                                                        <span className="text-[10px] tracking-[0.4em] font-bold text-[#4F7FFF] uppercase mt-px">
                                                             {slot.hour} {slot.period}
                                                         </span>
                                                     </div>
@@ -415,7 +415,7 @@ export function MidnightGlowWeekly() {
 
                                                 {/* Titles perfectly matched to pill vs typography */}
                                                 {slot.sundayType ? (
-                                                    <div className="flex flex-col items-center justify-center mb-1.5 mt-1 w-full font-orbitron z-10 px-2 text-center">
+                                                    <div className="flex flex-col items-center justify-center mb-1.5 mt-1 w-full z-10 px-2 text-center">
                                                         <h3 className={`text-[17px] font-black uppercase tracking-[0.05em] leading-[1.1] drop-shadow-md ${slot.sundayType === 'exchange' ? 'text-[#d8b4fe]' :
                                                             slot.sundayType === 'visitors' ? 'text-[#6ee7b7]' : 'text-white/90'
                                                             }`}>

@@ -12,7 +12,7 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
     const strokeDashoffset = isMounted ? circumference - (now.getSeconds() / 60) * circumference : circumference;
 
     return (
-        <div className="fixed bottom-10 right-10 z-[200] scale-90 origin-bottom-right pointer-events-none font-orbitron">
+        <div className="fixed bottom-10 right-10 z-[200] scale-90 origin-bottom-right pointer-events-none">
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

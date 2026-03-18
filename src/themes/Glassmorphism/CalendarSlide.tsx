@@ -69,7 +69,7 @@ export const GlassmorphismCalendar = () => {
     };
 
     return (
-        <div className="h-full flex flex-col p-8 pt-10 font-sora relative overflow-hidden bg-transparent">
+        <div className="h-full flex flex-col p-8 pt-10 relative overflow-hidden bg-transparent">
             {/* Minimalist Header */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}

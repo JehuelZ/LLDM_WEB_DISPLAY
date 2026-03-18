@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export const GlassmorphismProgress = ({ slides, currentSlide }: { slides: any[], currentSlide: number }) => {
     return (
-        <div className="fixed bottom-0 left-0 w-full h-[8px] z-[300] bg-black/20 font-sora">
+        <div className="fixed bottom-0 left-0 w-full h-[8px] z-[300] bg-black/20">
             <motion.div
                 key={`progress-${currentSlide}`}
                 initial={{ width: '0%' }}

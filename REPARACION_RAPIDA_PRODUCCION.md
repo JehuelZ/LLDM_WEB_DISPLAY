@@ -1,52 +1,56 @@
-# 🚨 REPARACIÓN Y ACTUALIZACIÓN DE PRODUCCIÓN
+# 🚨 REPARACIÓN Y ACTUALIZACIÓN DE PRODUCCIÓN (MANDATO HD)
 
-Este documento registra la solución a los problemas de refresco de página y errores de ejecución en el sitio en vivo ([lldmrodeo.org](https://lldmrodeo.org)).
-
-## ❌ Problemas Detectados y Corregidos Localmente
-1.  **Application Error (Hook Mismatch):** Corregido en `AppWrapper.tsx`.
-2.  **Soporte SVG:** Habilitado para Ministros, Miembros y Fondos.
-3.  **Fuentes de Google:** Sincronizadas entre el Administrador y la Proyección.
-4.  **Error de Base de Datos:** Se identificó la columna faltante `display_font_family`.
+Este documento registra la solución definitiva a los problemas de desincronización, errores de base de datos y fallas de renderizado en [lldmrodeo.org](https://lldmrodeo.org).
 
 ---
-*Última actualización: 17 de Marzo, 2026 - Fix de Excepción de Cliente y Base de Datos.*
 
-## 🚀 PASOS PARA ACTUALIZAR EL SITIO EN VIVO
+## ⚡ PROTOCOLO DE ACTUALIZACIÓN RÁPIDA (ZERO-DELAY) - 18/MAR/2026
 
-Para que estos cambios funcionen en la web, **debes seguir este orden exacto**:
+Para que el sitio no se rompa al subir el código, **SIEMPRE EJECUTA EL SQL ANTES QUE EL PUSH**.
 
-### 🛡️ PASO 0: REPARAR BASE DE DATOS (Supabase)
-Antes de subir el código, tienes que habilitar el soporte para las nuevas fuentes en tu base de datos:
-1.  Abre tu [Dashboard de Supabase](https://app.supabase.com/).
-2.  Entra al **SQL Editor**.
-3.  Copia y pega el contenido del archivo local: `SOPORTE_TIPOGRAFIA_FIX.sql`.
-4.  Presiona **RUN**. Esto evitará el error: *"Could not find the 'display_font_family' column"*.
+### 🛡️ PASO 1: REPARAR BASE DE DATOS (SUPER-VITAL)
+Copia y pega este bloque en el **SQL Editor de Supabase** y presiona **RUN**:
 
-### 1. Preparar y Sincronizar Código
-Una vez reparada la base de datos, ejecuta esto en tu terminal:
+```sql
+-- REPARACIÓN COMPLETA PARA LLDM RODEO v2
+ALTER TABLE IF EXISTS app_settings 
+ADD COLUMN IF NOT EXISTS display_font_family TEXT DEFAULT 'Outfit',
+ADD COLUMN IF NOT EXISTS church_logo_url TEXT DEFAULT '/flama-oficial.svg',
+ADD COLUMN IF NOT EXISTS weather_unit TEXT DEFAULT 'fahrenheit';
+
+-- Asegurar políticas de permisos para Administradores
+DROP POLICY IF EXISTS "Admin full access settings" ON app_settings;
+CREATE POLICY "Admin full access settings" ON app_settings FOR ALL TO authenticated 
+USING (EXISTS (SELECT 1 FROM profiles WHERE auth_user_id = auth.uid() AND (role IN ('Admin', 'Administrador'))));
+
+-- Habilitar Realtime para cambios instantáneos
+DROP PUBLICATION IF EXISTS supabase_realtime;
+CREATE PUBLICATION supabase_realtime FOR TABLE app_settings, profiles, announcements, schedule;
+```
+
+### 🚀 PASO 2: SINCRONIZAR CÓDIGO (PUSH)
+Ejecuta esto en tu terminal una vez terminada la reparación de la DB:
+
 ```bash
-# Entrar a la carpeta del proyecto
+# Entrar y subir todo
 cd /Users/hardglobal/Documents/LLDM_RODEO_APP
-
-# Guardar todos los cambios realizados (SVG, Fuentes, Fix de Error)
 git add .
-git commit -m "Fix final: Sincronización de esquema DB y soporte de fuentes"
-
-# Subir a la nube
+git commit -m "feat: Premium Font Selector + Anti-Desynchronization Protocol"
 git push origin main
 ```
 
-### 2. Verificar el Despliegue en Vercel
-- Entra a tu panel de Vercel y asegúrate de que el último "Deployment" haya terminado sin errores.
-- Si el error persiste, usa el botón **"Redeploy"** con la opción **"Base Directory: . / Ignore Build Cache"** activada.
-
-### 3. Limpieza de Memoria (VITAL)
-Una vez desplegado, el navegador guardará la versión vieja con error en cache. **DEBES hacer esto:**
-- En Mac: **`Cmd + Shift + R`** (en la página de admin y display).
-- En Windows: **`Ctrl + F5`**.
-
-## 📌 Nota de Mantenimiento
-Si el sistema vuelve a decir "Application error", lo más probable es que se haya introducido un Hook (`useEffect`, `useState`) dentro de una condición `if` o un bucle `map`. Siempre mantén los Hooks al principio de los componentes.
+### 🔄 PASO 3: LIMPIEZA DE CACHÉ (OBLIGATORIO)
+Vercel tarda 1-2 minutos en reflejar el cambio. Para ver la nueva versión sin errores:
+1.  Espera que Vercel termine el despliegue.
+2.  Presiona **`Cmd + Shift + R`** (en Mac) o **`Ctrl + F5`** (en Windows) tanto en el admin como en el display.
 
 ---
-*Última actualización: 17 de Marzo, 2026 - Fix de Excepción de Cliente aplicado.*
+
+## 📌 Historial de Cambios (Marzo 2026)
+- **18 de Marzo**: Lanzamiento del **Selector de Fuentes Premium** con preview y flechas de teclado.
+- **17 de Marzo**: Solución a la excepción de cliente y sincronización de logos.
+- **Protocolo HD**: Las modificaciones se suben inmediatamente tras ser validadas.
+
+---
+
+_Documento de cumplimiento obligatorio para Antigravity y Mantenimiento._

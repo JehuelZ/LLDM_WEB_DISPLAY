@@ -13,7 +13,7 @@ export const MidnightGlowAnnouncements = () => {
     const minister = useAppStore((state) => state.minister);
 
     return (
-        <div className="h-full w-full flex flex-col md:flex-row overflow-hidden relative font-orbitron" style={{ background: 'radial-gradient(ellipse 120% 80% at 50% 30%, #071428 0%, #040D21 60%, #02080F 100%)' }}>
+        <div className="h-full w-full flex flex-col md:flex-row overflow-hidden relative" style={{ background: 'radial-gradient(ellipse 120% 80% at 50% 30%, #071428 0%, #040D21 60%, #02080F 100%)' }}>
             {/* ── Background texture: dot grid ── */}
             <div
                 className="absolute inset-0 pointer-events-none opacity-[0.04]"

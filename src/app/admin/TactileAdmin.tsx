@@ -2172,8 +2172,12 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                                 <TactileFontSelect
                                                     label="TIPOGRAFÍA DEL SISTEMA (GOOGLE FONTS PREVIEW)"
-                                                    value={settings.fontMain}
-                                                    onChange={(val: any) => saveSettingsToCloud({ fontMain: val })}
+                                                    value={settings.fontMain || calendarStyles.fontFamily || 'Outfit'}
+                                                    onChange={(val: any) => {
+                                                        setSettings({ fontMain: val });
+                                                        setCalendarStyles({ fontFamily: val });
+                                                        saveSettingsToCloud({ fontMain: val });
+                                                    }}
                                                     icon={Type}
                                                 />
 
@@ -3286,15 +3290,14 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         <TactileGlassCard title="CONFIGURACIÓN DEL TEMA">
                                             <div className="grid grid-cols-2 gap-8">
                                                 <div className="space-y-6">
-                                                    <TactileSelect
+                                                    <TactileFontSelect
                                                         label="TIPOGRAFÍA PRINCIPAL"
-                                                        value={calendarStyles.fontFamily || 'outfit'}
-                                                        onChange={(val: any) => setCalendarStyles({ fontFamily: val })}
-                                                        options={[
-                                                            { value: 'outfit', label: 'Outfit (Modern)' },
-                                                            { value: 'sora', label: 'Sora (Tech)' },
-                                                            { value: 'inter', label: 'Inter (Clean)' },
-                                                        ]}
+                                                        value={settings.fontMain || calendarStyles.fontFamily || 'Outfit'}
+                                                        onChange={(val: any) => {
+                                                            setSettings({ fontMain: val });
+                                                            setCalendarStyles({ fontFamily: val });
+                                                            saveSettingsToCloud({ fontMain: val });
+                                                        }}
                                                         icon={Edit2}
                                                     />
 
@@ -3501,16 +3504,19 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
                                                         </label>
                                                         <div className="flex gap-2">
-                                                            {[0.7, 0.8, 0.9, 1.0].map((sc) => (
+                                                            {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
                                                                 <button
                                                                     key={sc}
-                                                                    onClick={() => setSettings({ displayScale: sc })}
+                                                                    onClick={() => {
+                                                                        setSettings({ displayScale: sc });
+                                                                        saveSettingsToCloud({ displayScale: sc });
+                                                                    }}
                                                                     className={cn(
                                                                         "tactile-btn flex-1 text-[10px] py-2",
                                                                         (settings.displayScale || 1.0) === sc ? "tactile-btn-orange" : "tactile-btn-glass"
                                                                     )}
                                                                 >
-                                                                    {sc * 100}%
+                                                                    {Math.round(sc * 100)}%
                                                                 </button>
                                                             ))}
                                                         </div>
