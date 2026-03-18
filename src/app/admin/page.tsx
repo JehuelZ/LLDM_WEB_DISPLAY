@@ -1862,6 +1862,28 @@ function AdminDashboardContent() {
                             </CardHeader>
                             <CardContent className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+                                    {/* Sin Logotipo */}
+                                    <motion.button
+                                        whileHover={{ y: -5, scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        onClick={() => {
+                                            setSettings({ churchLogoUrl: '' });
+                                            saveSettingsToCloud({ churchLogoUrl: '' });
+                                        }}
+                                        className={cn(
+                                            "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
+                                            (settings.churchLogoUrl === '') ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)]" : "border-white/5 bg-foreground/5 hover:border-white/10"
+                                        )}
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-b from-slate-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 group-hover:border-white/10 transition-all text-slate-500">
+                                            <XCircle className="w-10 h-10" />
+                                        </div>
+                                        <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest transition-colors", (settings.churchLogoUrl === '') ? "text-primary" : "text-slate-500")}>
+                                            Sin Logotipo
+                                        </span>
+                                    </motion.button>
+
                                     {/* Logo Oficial: Flama */}
                                     <motion.button
                                         whileHover={{ y: -5, scale: 1.02 }}

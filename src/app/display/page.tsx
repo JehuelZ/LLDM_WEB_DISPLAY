@@ -135,7 +135,7 @@ export default function DisplayPage() {
 
         let finalFonts = { ...theme.fonts };
 
-        if (settings?.fontMain) {
+        if (settings?.fontMain !== undefined && settings?.fontMain !== null) {
             // Check if it's one of the common identifiers or just use it directly
             const fontId = settings.fontMain;
             // Pre-loaded font classes usually follow 'font-<id>'

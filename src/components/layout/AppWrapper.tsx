@@ -50,7 +50,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         }
     }, [settings.themeMode, mounted, isPhone]);
 
-    const fontFamily = settings.fontMain || 'Outfit';
+    const fontFamily = settings.fontMain ?? 'Outfit';
     
     // Mapping for pre-loaded Next.js fonts (para mayor performance con las base)
     const nextFontVarMap: Record<string, string> = {

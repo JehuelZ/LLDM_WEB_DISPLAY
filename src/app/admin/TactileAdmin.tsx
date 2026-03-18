@@ -11,7 +11,7 @@ import {
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
     Camera, Phone, Mail, User, Languages, Music2, ClipboardCheck,
-    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power, Thermometer, Type
+    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power, Thermometer, Type, XCircle
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -3177,7 +3177,23 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         <TactileGlassCard title="IDENTIDAD VISUAL" subtitle="Logos e Imagotipos de la Iglesia">
                                             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                                                 {/* Logo Oficial: Flama */}
-                                                <button
+                                                {/* Sin Logotipo */}
+                                            <button
+                                                onClick={() => saveSettingsToCloud({ churchLogoUrl: '' })}
+                                                className={cn(
+                                                    "flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-300",
+                                                    (settings.churchLogoUrl === '') ? "bg-primary/20 border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/40 border-white/5 hover:bg-white/5"
+                                                )}
+                                            >
+                                                <div className="w-16 h-16 flex items-center justify-center p-2 rounded-2xl bg-white/5 border border-white/10 text-slate-500">
+                                                    <XCircle className="w-10 h-10" />
+                                                </div>
+                                                <span className={cn("text-[10px] font-black uppercase tracking-widest", (settings.churchLogoUrl === '') ? "text-primary" : "text-tactile-text-sub")}>
+                                                    Sin Logotipo
+                                                </span>
+                                            </button>
+
+                                            <button
                                                     onClick={() => saveSettingsToCloud({ churchLogoUrl: '/flama-oficial.svg' })}
                                                     className={cn(
                                                         "group relative flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 transition-all h-full",
