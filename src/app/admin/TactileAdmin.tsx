@@ -498,7 +498,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                 const publicUrl = await uploadAvatar(`custom-logo-${slot}`, compressed);
                 
                 if (publicUrl) {
-                    const settingKey = `custom_logo_${slot}` as any;
+                    const settingKey = `customLogo${slot}` as any;
                     await saveSettingsToCloud({
                         [settingKey]: publicUrl
                     });
