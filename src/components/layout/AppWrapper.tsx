@@ -18,24 +18,54 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         setMounted(true);
 
-        // Escuchar cambios de autenticación (login/logout)
+        // --- AUTH & SYNC ---
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
                 setAuthSession(session);
                 if (session?.user) {
-                    // Sincronizar perfil del usuario autenticado
                     await syncUserWithCloud(session.user.id);
                 }
             }
         );
 
-        // Obtener la sesión actual al montar
         supabase.auth.getSession().then(({ data: { session } }) => {
             setAuthSession(session);
             if (session?.user) {
                 syncUserWithCloud(session.user.id);
             }
         });
+
+        // --- ROUTE GUARD (Client-side) ---
+        // Protege las rutas administrativas de usuarios no autorizados
+        const checkAdminAccess = async () => {
+            if (typeof window === 'undefined') return;
+            
+            const path = window.location.pathname;
+            if (path.startsWith('/admin')) {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                // Si no hay sesión, al login
+                if (!session) {
+                    window.location.href = '/login?returnTo=' + encodeURIComponent(path);
+                    return;
+                }
+                
+                // Si hay sesión, verificar que el perfil sea Administrador
+                // (Usamos una consulta directa para mayor seguridad que el estado local demorado)
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('role')
+                    .eq('auth_user_id', session.user.id)
+                    .single();
+                
+                if (profile?.role !== 'Administrador' && profile?.role !== 'Ministro a Cargo') {
+                    console.warn("Acceso denegado a admin: Usuario no tiene rol de Administrador");
+                    window.location.href = '/?error=access-denied';
+                }
+            }
+        };
+
+        checkAdminAccess();
 
         return () => subscription.unsubscribe();
     }, [setAuthSession, syncUserWithCloud]);
