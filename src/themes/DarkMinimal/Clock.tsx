@@ -43,7 +43,7 @@ export const DarkMinimalClock = ({ now, isMounted, settings }: { now: Date, isMo
                     <div className="absolute inset-[10px] rounded-xl bg-[#0F1117] border border-[#23242F] flex items-center justify-center">
                         <div className="w-9 h-9 flex items-center justify-center text-white">
                                 <img
-                                    src={settings.churchLogoUrl || '/flama-oficial.svg'}
+                                    src={settings.churchLogoUrl ?? '/flama-oficial.svg'}
                                     className="w-full h-full object-contain brightness-0 invert"
                                     alt="Church"
                                     onError={(e) => {

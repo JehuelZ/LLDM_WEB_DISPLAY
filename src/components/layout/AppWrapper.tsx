@@ -84,23 +84,30 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
     
     // Mapping for pre-loaded Next.js fonts (para mayor performance con las base)
     const nextFontVarMap: Record<string, string> = {
-        'Outfit': 'var(--font-outfit)',
-        'Sora': 'var(--font-sora)',
-        'Inter': 'var(--font-inter)',
-        'Montserrat': 'var(--font-montserrat)',
-        'Orbitron': 'var(--font-orbitron)',
-        'Black Ops One': 'var(--font-black-ops)',
         'outfit': 'var(--font-outfit)',
         'sora': 'var(--font-sora)',
         'inter': 'var(--font-inter)',
+        'montserrat': 'var(--font-montserrat)',
+        'orbitron': 'var(--font-orbitron)',
+    };
+
+    // Mapping to real Google Font names for dynamic loading
+    const googleFontNameMap: Record<string, string> = {
+        'poppins': 'Poppins',
+        'lexend': 'Lexend',
+        'black-ops': 'Black Ops One',
+        'syne': 'Syne',
+        'playfair': 'Playfair Display',
+        'lora': 'Lora',
     };
 
     const isNextFont = !!nextFontVarMap[fontFamily];
 
     useEffect(() => {
         if (!isNextFont && fontFamily) {
-            // Carga dinámica de cualquier fuente de Google no incluida en el bundle
-            const fontNameForUrl = fontFamily.replace(/\s+/g, '+');
+            // Get the proper Google Font name
+            const realName = googleFontNameMap[fontFamily] || fontFamily;
+            const fontNameForUrl = realName.replace(/\s+/g, '+');
             const linkId = `google-font-dynamic-${fontFamily.replace(/\s+/g, '-').toLowerCase()}`;
             
             if (!document.getElementById(linkId)) {
@@ -113,7 +120,9 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         }
     }, [fontFamily, isNextFont]);
 
-    const finalFontFamily = isNextFont ? nextFontVarMap[fontFamily] : `"${fontFamily}"`;
+    // Construct final font family for CSS
+    const realFontName = googleFontNameMap[fontFamily] || fontFamily;
+    const finalFontFamily = isNextFont ? nextFontVarMap[fontFamily] : `"${realFontName}"`;
 
     if (!mounted) {
         return <>{children}</>;
@@ -153,7 +162,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                                 notification.type === 'success' ? "shadow-[0_0_40px_rgba(251,191,36,0.1)]" : "shadow-[0_0_40px_rgba(239,68,68,0.1)]"
                              )}>
                                 <img 
-                                    src={settings.churchLogoUrl || "/flama-oficial.svg"} 
+                                    src={settings.churchLogoUrl ?? "/flama-oficial.svg"} 
                                     className={cn(
                                         "w-14 h-14 object-contain brightness-0 invert opacity-60",
                                         notification.type === 'success' && "sepia-[1] saturate-[10000%] hue-rotate-[0deg] transition-all"

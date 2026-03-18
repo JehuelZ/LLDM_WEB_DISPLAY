@@ -16,7 +16,7 @@ export function Header() {
 
     const unreadCount = useMemo(() => messages.filter(m => !m.isRead).length, [messages]);
 
-    const logoUrl = settings.churchLogoUrl || "/flama-oficial.svg";
+    const logoUrl = settings.churchLogoUrl ?? "/flama-oficial.svg";
 
     useEffect(() => {
         if (authSession) {

@@ -47,7 +47,7 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                         <div className="absolute inset-0 bg-gradient-to-br from-[#4F7FFF]/20 to-transparent rounded-full" />
                         <div className="w-14 h-14 relative z-10 flex items-center justify-center filter drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                             <img 
-                                src={settings.churchLogoUrl || "/flama-oficial.svg"} 
+                                src={settings.churchLogoUrl ?? "/flama-oficial.svg"} 
                                 className="w-full h-full object-contain brightness-0 invert filter drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" 
                                 alt="Church" 
                             />

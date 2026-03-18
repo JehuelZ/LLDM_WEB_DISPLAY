@@ -64,7 +64,7 @@ export function DisplayLock({ onUnlock }: { onUnlock: () => void }) {
                 className="absolute inset-0 z-0 flex items-center justify-center p-20"
             >
                 <img
-                    src={settings.churchLogoUrl || "/flama-oficial.svg"}
+                    src={settings.churchLogoUrl ?? "/flama-oficial.svg"}
                     className="w-[60%] h-[60%] object-contain opacity-20 filter brightness-150"
                     alt="Standby Emblem"
                 />

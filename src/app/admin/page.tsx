@@ -1914,6 +1914,23 @@ function AdminDashboardContent() {
 
                                         return (
                                             <div key={slotIndex} className="relative group">
+                                                {slotUrl && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            const updates: any = { [slotKey]: null };
+                                                            if (settings.churchLogoUrl === slotUrl) {
+                                                                updates.churchLogoUrl = '';
+                                                            }
+                                                            setSettings(updates);
+                                                            saveSettingsToCloud(updates);
+                                                        }}
+                                                        className="absolute top-2 right-2 z-50 p-2 bg-red-500/20 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100"
+                                                        title="Eliminar logo"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                )}
                                                 <motion.button
                                                     whileHover={{ y: -5 }}
                                                     onClick={() => {

@@ -25,7 +25,7 @@ export function NeonForgeClock({ now, isMounted, settings }: { now: Date; isMoun
             <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0"
                 style={{ background: '#181818', border: '1px solid #252525' }}>
                 <img 
-                    src={settings?.churchLogoUrl || "/flama-oficial.svg"} 
+                    src={settings?.churchLogoUrl ?? "/flama-oficial.svg"} 
                     alt="" 
                     className="w-full h-full object-contain p-1" 
                     style={{ filter: !settings?.churchLogoUrl ? 'brightness(0) invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg)' : 'none' }}

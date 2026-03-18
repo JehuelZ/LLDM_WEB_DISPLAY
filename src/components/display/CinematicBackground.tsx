@@ -106,7 +106,7 @@ export const CinematicBackground = () => {
             {/* Cinematic Base Image */}
             <div className="absolute inset-0 z-0 flex items-center justify-center p-40">
                 <img
-                    src={settings.churchLogoUrl || "/flama-oficial.svg"}
+                    src={settings.churchLogoUrl ?? "/flama-oficial.svg"}
                     className="w-[80%] h-[80%] object-contain opacity-10 filter brightness-150"
                     alt="Background"
                 />
@@ -131,7 +131,7 @@ export const CinematicBackground = () => {
                     className="w-[80%] h-[80%] flex items-center justify-center mix-blend-screen"
                 >
                     <img
-                        src={settings.churchLogoUrl || "/flama-oficial.svg"}
+                        src={settings.churchLogoUrl ?? "/flama-oficial.svg"}
                         className="w-full h-full object-contain filter drop-shadow-[0_0_50px_rgba(251,191,36,0.5)]"
                         alt="Official Flame Logo"
                     />
