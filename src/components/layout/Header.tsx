@@ -16,17 +16,7 @@ export function Header() {
 
     const unreadCount = useMemo(() => messages.filter(m => !m.isRead).length, [messages]);
 
-    const IconComponent = useMemo(() => {
-        switch (settings.churchIcon) {
-            case 'church': return Church;
-            case 'cross': return Cross;
-            case 'star': return Star;
-            case 'heart': return Heart;
-            default: return null;
-        }
-    }, [settings.churchIcon]);
-
-    const logoUrl = settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg";
+    const logoUrl = settings.churchLogoUrl || "/flama-oficial.svg";
 
     useEffect(() => {
         if (authSession) {
@@ -41,18 +31,14 @@ export function Header() {
             <div className="container flex h-16 items-center justify-between px-4">
                 <Link href="/" className="flex items-center space-x-3 group">
                     <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                        {IconComponent ? (
-                            <IconComponent className="w-8 h-8 text-primary drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" />
-                        ) : (
-                            <img
-                                src={logoUrl}
-                                className="w-full h-full object-contain"
-                                style={{ 
-                                    filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))'
-                                }}
-                                alt="Logo"
-                            />
-                        )}
+                        <img
+                            src={logoUrl}
+                            className="w-full h-full object-contain"
+                            style={{ 
+                                filter: 'brightness(0) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))'
+                            }}
+                            alt="Logo"
+                        />
                     </div>
                     <span className="font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground">
                         LLDM <span className="text-primary italic">RODEO</span>

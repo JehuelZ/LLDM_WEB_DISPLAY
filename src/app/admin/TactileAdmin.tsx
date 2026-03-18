@@ -501,9 +501,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                     const settingKey = `customLogo${slot}` as any;
                     await saveSettingsToCloud({
                         [settingKey]: publicUrl,
-                        churchLogoUrl: publicUrl, // Aplicar inmediatamente como logo activo
-                        churchIcon: 'custom',      // Cambiar a modo imagen
-                        customIconUrl: undefined   // Limpiar icono vectorial previo
+                        churchLogoUrl: publicUrl
                     });
                     showNotification(`Logo ${slot} actualizado y aplicado exitosamente.`, 'success');
                 } else {
@@ -1980,19 +1978,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     icon={Type}
                                                 />
 
-                                                <TactileSelect
-                                                    label="ICONO DE IDENTIDAD"
-                                                    value={settings.churchIcon}
-                                                    onChange={(val: any) => saveSettingsToCloud({ churchIcon: val })}
-                                                    options={[
-                                                        { value: 'custom', label: 'Imagen Personalizada / Flama' },
-                                                        { value: 'church', label: 'Icono: Iglesia' },
-                                                        { value: 'cross', label: 'Icono: Cruz' },
-                                                        { value: 'star', label: 'Icono: Estrella' },
-                                                        { value: 'heart', label: 'Icono: Corazón' },
-                                                    ]}
-                                                    icon={Flame}
-                                                />
+
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
                                                     <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2 flex justify-between">
@@ -2989,7 +2975,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
                                                 {/* Logo Oficial: Flama */}
                                                 <button
-                                                    onClick={() => saveSettingsToCloud({ churchLogoUrl: '/flama-oficial.svg', churchIcon: 'custom', customIconUrl: undefined })}
+                                                    onClick={() => saveSettingsToCloud({ churchLogoUrl: '/flama-oficial.svg' })}
                                                     className={cn(
                                                         "group relative flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 transition-all h-full",
                                                         (settings.churchLogoUrl === '/flama-oficial.svg') ? "bg-primary/20 border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/40 border-white/5 hover:bg-white/5"
@@ -3014,7 +3000,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             <button
                                                                 onClick={() => {
                                                                     if (slotUrl) {
-                                                                        saveSettingsToCloud({ churchLogoUrl: slotUrl, churchIcon: 'custom', customIconUrl: undefined });
+                                                                        saveSettingsToCloud({ churchLogoUrl: slotUrl });
                                                                     } else {
                                                                         document.getElementById(`tactile-custom-logo-${slotIndex}`)?.click();
                                                                     }

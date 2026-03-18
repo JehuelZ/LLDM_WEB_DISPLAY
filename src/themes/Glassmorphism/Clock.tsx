@@ -21,16 +21,11 @@ export const GlassmorphismClock = ({ now, isMounted, settings }: { now: Date, is
                 >
                     <div className="absolute inset-0 bg-gradient-to-tr from-white/30 via-transparent to-black/30 pointer-events-none" />
                     <div className="w-12 h-12 flex items-center justify-center relative z-10">
-                        {(() => {
-                            const logoUrl = settings.churchLogoUrl || settings.customIconUrl || "/flama-oficial.svg";
-                            switch (settings.churchIcon) {
-                                case 'church': return <Church className="w-10 h-10 text-white" />;
-                                case 'cross': return <Cross className="w-10 h-10 text-white" />;
-                                case 'star': return <Star className="w-10 h-10 text-white" />;
-                                case 'heart': return <Heart className="w-10 h-10 text-white" />;
-                                default: return <img src={logoUrl} className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.7)]" alt="Church" />;
-                            }
-                        })()}
+                        <img 
+                            src={settings.churchLogoUrl || "/flama-oficial.svg"} 
+                            className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(255,255,255,0.7)]" 
+                            alt="Church" 
+                        />
                     </div>
                 </div>
 
