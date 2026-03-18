@@ -821,7 +821,9 @@ export const useAppStore = create<AppState>()(
                 // Si falla (posiblemente por restricciones de MIME type como SVG), intentar en 'app_assets'
                 let bucketUsed = 'avatars';
                 if (uploadError) {
-                    console.warn('Upload to "avatars" failed, trying "app_assets" bucket...', uploadError.message);
+                    const errorMsg = (uploadError as any).message || 'Unknown error';
+                    console.warn(`Upload to "avatars" failed (${errorMsg}), trying "app_assets" bucket...`);
+                    
                     const { error: assetError } = await supabase.storage
                         .from('app_assets')
                         .upload(filePath, file, {
@@ -835,15 +837,17 @@ export const useAppStore = create<AppState>()(
                         bucketUsed = 'app_assets';
                     } else {
                         // Si ambos fallan, reportar el error original o el más relevante
-                        console.error('CRITICAL: All Upload Buckets Failed:', assetError);
-                        get().showNotification(`Error al subir imagen: ${assetError.message} (Bucket: app_assets).`, 'error');
+                        const finalError = (assetError as any).message || 'Unknown storage error';
+                        console.error('CRITICAL: All Upload Buckets Failed:', finalError);
+                        get().showNotification(`Error al subir imagen: ${finalError} (Bucket: app_assets).`, 'error');
                         return null;
                     }
                 }
 
                 if (uploadError) {
-                    console.error('CRITICAL: Avatar Upload Failed:', uploadError);
-                    get().showNotification(`Error al subir imagen: ${uploadError.message}. Verifique si el bucket "avatars" existe en Supabase y tiene permisos públicos.`, 'error');
+                    const finalError = (uploadError as any).message || 'Unknown';
+                    console.error('CRITICAL: Avatar Upload Failed:', finalError);
+                    get().showNotification(`Error al subir imagen: ${finalError}. Verifique si el bucket "avatars" existe en Supabase y tiene permisos públicos.`, 'error');
                     return null;
                 }
 
@@ -1396,15 +1400,20 @@ export const useAppStore = create<AppState>()(
 
 
                 set({ settings: updated });
+                console.log('SYNC: Persisting app settings to cloud:', dbSettings);
+
                 const { error } = await supabase.from('app_settings').update(dbSettings).eq('id', 1);
                 
                 if (error) {
-                    console.error("Error saving settings to cloud:", error);
+                    const errorMsg = (error as any).message || 'Unknown DB error';
+                    const errorCode = (error as any).code || 'N/A';
+                    console.error("SYNC ERROR: Failed to update app_settings:", error);
                     // Revert local state to previous state if save failed
                     set({ settings: current });
-                    get().showNotification(`Error al guardar: ${error.message}`, 'error');
+                    get().showNotification(`Falla de sincronización: ${errorMsg} (Código: ${errorCode}). Refresque la base de datos con el script MEGA_FIX.`, 'error');
                 } else {
-                    get().showNotification("Configuración sincronizada con la nube", 'success');
+                    console.log('SYNC SUCCESS: App settings saved to cloud.');
+                    get().showNotification("Configuración guardada y sincronizada globalmente", 'success');
                 }
             },
 

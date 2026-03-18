@@ -500,9 +500,12 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                 if (publicUrl) {
                     const settingKey = `customLogo${slot}` as any;
                     await saveSettingsToCloud({
-                        [settingKey]: publicUrl
+                        [settingKey]: publicUrl,
+                        churchLogoUrl: publicUrl, // Aplicar inmediatamente como logo activo
+                        churchIcon: 'custom',      // Cambiar a modo imagen
+                        customIconUrl: undefined   // Limpiar icono vectorial previo
                     });
-                    showNotification(`Logo ${slot} actualizado exitosamente.`, 'success');
+                    showNotification(`Logo ${slot} actualizado y aplicado exitosamente.`, 'success');
                 } else {
                     console.warn(`Upload returned no URL for slot ${slot}`);
                 }
