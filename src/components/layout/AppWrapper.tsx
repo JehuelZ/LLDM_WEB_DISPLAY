@@ -127,7 +127,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                                 notification.type === 'success' ? "shadow-[0_0_40px_rgba(251,191,36,0.1)]" : "shadow-[0_0_40px_rgba(239,68,68,0.1)]"
                              )}>
                                 <img 
-                                    src={settings.customIconUrl || settings.churchLogoUrl || "/flama-oficial.svg"} 
+                                    src={settings.churchLogoUrl || "/flama-oficial.svg"} 
                                     className={cn(
                                         "w-14 h-14 object-contain brightness-0 invert opacity-60",
                                         notification.type === 'success' && "sepia-[1] saturate-[10000%] hue-rotate-[0deg] transition-all"

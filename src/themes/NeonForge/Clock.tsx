@@ -24,25 +24,12 @@ export function NeonForgeClock({ now, isMounted, settings }: { now: Date; isMoun
             {/* Logo/Icon */}
             <div className="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center flex-shrink-0"
                 style={{ background: '#181818', border: '1px solid #252525' }}>
-                {logoUrl
-                    ? <img src={logoUrl} alt="" className="w-full h-full object-contain p-1" />
-                    : (
-                        <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="#BBFF00" strokeWidth="1.5">
-                            {icon === 'cross' && (
-                                <>
-                                    <line x1="12" y1="2" x2="12" y2="22" />
-                                    <line x1="5" y1="8" x2="19" y2="8" />
-                                </>
-                            )}
-                            {icon === 'church' && (
-                                <path d="M2 20h20M5 20V9l7-6 7 6v11M9 20v-6h6v6" />
-                            )}
-                            {(icon !== 'cross' && icon !== 'church') && (
-                                <circle cx="12" cy="12" r="8" />
-                            )}
-                        </svg>
-                    )
-                }
+                <img 
+                    src={settings?.churchLogoUrl || "/flama-oficial.svg"} 
+                    alt="" 
+                    className="w-full h-full object-contain p-1" 
+                    style={{ filter: !settings?.churchLogoUrl ? 'brightness(0) invert(1) sepia(100%) saturate(10000%) hue-rotate(45deg)' : 'none' }}
+                />
             </div>
 
             {/* Divider */}

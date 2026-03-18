@@ -169,8 +169,8 @@ function AdminLayoutContent({
     }
 
     // Force flama-oficial for branding regardless of settings, unless a real custom icon is intentionally set
-    const logoUrl = "/flama-oficial.svg";
-    const isDefaultLogo = true;
+    const logoUrl = settings.churchLogoUrl || "/flama-oficial.svg";
+    const isDefaultLogo = !settings.churchLogoUrl;
 
     return (
         <div className="min-h-screen bg-background text-foreground flex transition-colors duration-500">

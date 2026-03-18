@@ -94,7 +94,7 @@ const LightSweep = () => (
 );
 
 export function LoginScreen() {
-    const { signInWithGoogle, signInWithEmail } = useAppStore();
+    const { signInWithGoogle, signInWithEmail, settings } = useAppStore();
     const [isHovered, setIsHovered] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -149,7 +149,7 @@ export function LoginScreen() {
                                 <div className="absolute inset-0 bg-amber-500/30 rounded-3xl blur-2xl animate-pulse" />
                                 <div className="relative w-full h-full bg-slate-950/80 rounded-3xl border border-amber-500/20 flex items-center justify-center p-5 shadow-inner">
                                     <img
-                                        src="/flama-oficial.svg"
+                                        src={settings.churchLogoUrl || "/flama-oficial.svg"}
                                         style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%)' }}
                                         className="w-full h-full object-contain drop-shadow-[0_0_12px_rgba(212,175,55,0.6)]"
                                         alt="LLDM"

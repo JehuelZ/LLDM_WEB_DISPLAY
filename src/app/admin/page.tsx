@@ -1866,7 +1866,7 @@ function AdminDashboardContent() {
                                     <motion.button
                                         whileHover={{ y: -5, scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
-                                        onClick={() => setSettings({ churchLogoUrl: '/flama-oficial.svg', churchIcon: 'custom', customIconUrl: undefined })}
+                                        onClick={() => setSettings({ churchLogoUrl: '/flama-oficial.svg' })}
                                         className={cn(
                                             "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
                                             (settings.churchLogoUrl === '/flama-oficial.svg') ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)]" : "border-white/5 bg-foreground/5 hover:border-white/10"
@@ -1893,7 +1893,7 @@ function AdminDashboardContent() {
                                                     whileHover={{ y: -5 }}
                                                     onClick={() => {
                                                         if (slotUrl) {
-                                                            setSettings({ churchLogoUrl: slotUrl, churchIcon: 'custom', customIconUrl: undefined });
+                                                            setSettings({ churchLogoUrl: slotUrl });
                                                         } else {
                                                             document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
                                                         }

@@ -66,20 +66,16 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
                 boxShadow: `0 4px 12px ${T.accent}40`,
                 overflow: 'hidden'
             }}>
-                {(isCustom && logoUrl) ? (
-                    <img src={logoUrl} alt="" style={{ width: '80%', height: '80%', objectFit: 'contain', filter: isDark ? 'brightness(1.2)' : 'none' }} />
-                ) : (
-                    <img 
-                        src={officialLogo} 
-                        alt="" 
-                        style={{ 
-                            width: '70%', 
-                            height: '70%', 
-                            objectFit: 'contain',
-                            filter: 'brightness(0) invert(1)'
-                        }} 
-                    />
-                )}
+                <img 
+                    src={settings?.churchLogoUrl || officialLogo} 
+                    alt="" 
+                    style={{ 
+                        width: '80%', 
+                        height: '80%', 
+                        objectFit: 'contain', 
+                        filter: (isDark && settings?.churchLogoUrl) ? 'brightness(1.2)' : (isDark ? 'brightness(0) invert(1)' : 'none') 
+                    }} 
+                />
             </div>
             <h2 style={{
                 fontSize: 18, fontWeight: 700, color: isDark ? '#FFFFFF' : T.textPrimary,
