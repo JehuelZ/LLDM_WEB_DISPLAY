@@ -76,4 +76,26 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 
 ---
 
-*Documento actualizado por Antigravity (Skill Doctor)*
+### 🛡️ Reparaciones de Identidad y Almacenamiento (18 de Marzo, 2026)
+
+#### 8. Corrección en Selección de Logos Personalizados
+- **Problema:** Los administradores subían logos pero no podían activarlos correctamente en el panel táctil.
+- **Causa:** Inconsistencia de nombres (snake_case vs camelCase). El código usaba `custom_logo_1` mientras que el store esperaba `customLogo1`.
+- **Solución:** Se unificaron las claves a camelCase en el panel de administración táctil para asegurar la sincronización con el estado global y la base de datos.
+- **Archivos Afectados:**
+    - `src/app/admin/TactileAdmin.tsx`
+
+#### 9. Soporte SVG de Proyección y Sistema Multi-Bucket
+- **Problema:** Error `mime type image/svg+xml is not supported` al intentar subir fondos de proyección en formato SVG.
+- **Causa:** El bucket predeterminado de avatars en Supabase tiene restricciones de tipo de archivo para fotos de perfil.
+- **Solución:** 
+    - Se implementó un **Sistema de Fallback de Buckets** en la lógica de subida.
+    - Si la subida al bucket `avatars` falla, el sistema intenta automáticamente subir el archivo al bucket `app_assets`, el cual es más permisivo con archivos vectoriales (SVG).
+    - Se mejoró el reporte de errores para identificar qué bucket falló y por qué.
+- **Archivos Afectados:**
+    - `src/lib/store.ts` (Lógica de `uploadAvatar`).
+    - `src/app/admin/TactileAdmin.tsx` (UI de fondo de proyección).
+
+---
+
+*Documento actualizado por Antigravity (IA)*
