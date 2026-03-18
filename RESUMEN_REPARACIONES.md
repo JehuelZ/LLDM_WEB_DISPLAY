@@ -50,5 +50,10 @@ Se detectaron y corrigieron fallos finales en el sistema de identidad visual:
 - **Key Mismatch Fix:** Se corrigió una inconsistencia donde el panel táctil usaba `custom_logo_1` en lugar de `customLogo1`, lo que impedía guardar los cambios correctamente.
 - **Fallback de Buckets (SVG Support):** Ante restricciones de tipos MIME en el bucket de avatars para archivos SVG, se implementó un sistema de fallback automático que intenta subir el archivo al bucket `app_assets` si el primero falla. Esto garantiza que el administrador pueda subir fondos de proyección vectoriales (SVG) sin errores.
 
+### ✅ 7. Restauración de Iconos de Identidad Estándar
+Se habilitó de nuevo la personalización de los iconos de Lucide que estaban bloqueados:
+- **Iconos Habilitados:** El administrador ahora puede elegir de nuevo entre Iglesia, Cruz, Estrella y Corazón desde el panel táctil.
+- **Sincronización en Temas:** Se actualizaron los componentes `Header` y `Clock` para que respeten la elección entre imagen (Flama/Logo) o Icono Vectorial.
+
 ---
 *Nota: Este archivo fue generado por Antigravity (IA) como bitácora de trabajo.*
