@@ -177,6 +177,218 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
     );
 };
 
+const GOOGLE_FONTS_COLLECTION = [
+    { isHeader: true, label: 'Modern Sans (Limpias)' },
+    { value: 'Inter', label: 'Inter' },
+    { value: 'Outfit', label: 'Outfit' },
+    { value: 'Montserrat', label: 'Montserrat' },
+    { value: 'Poppins', label: 'Poppins' },
+    { value: 'Sora', label: 'Sora' },
+    { value: 'Lexend', label: 'Lexend' },
+    { value: 'Urbanist', label: 'Urbanist' },
+    { value: 'Rubik', label: 'Rubik' },
+    { value: 'Work Sans', label: 'Work Sans' },
+    { value: 'Manrope', label: 'Manrope' },
+    { value: 'Jost', label: 'Jost' },
+    { isHeader: true, label: 'Elegant Serif (Distinción)' },
+    { value: 'Playfair Display', label: 'Playfair Display' },
+    { value: 'Lora', label: 'Lora' },
+    { value: 'EB Garamond', label: 'EB Garamond' },
+    { value: 'Cormorant Garamond', label: 'Cormorant Garamond' },
+    { value: 'Cinzel', label: 'Cinzel' },
+    { value: 'Frank Ruhl Libre', label: 'Frank Ruhl Libre' },
+    { isHeader: true, label: 'Visual Display (Alto Impacto)' },
+    { value: 'Orbitron', label: 'Orbitron' },
+    { value: 'Black Ops One', label: 'Black Ops One' },
+    { value: 'Syne', label: 'Syne' },
+    { value: 'Righteous', label: 'Righteous' },
+    { value: 'Unbounded', label: 'Unbounded' },
+    { value: 'Bungee', label: 'Bungee' },
+    { value: 'Passion One', label: 'Passion One' },
+    { value: 'Syncopate', label: 'Syncopate' },
+    { value: 'Chakra Petch', label: 'Chakra Petch' },
+    { value: 'Space Grotesk', label: 'Space Grotesk' },
+    { value: 'Bruno Ace', label: 'Bruno Ace' },
+    { value: 'Michroma', label: 'Michroma' },
+];
+
+const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeIndex, setActiveIndex] = useState(-1);
+    const options = GOOGLE_FONTS_COLLECTION;
+    const selectedOption = options.find((opt: any) => opt.value === value);
+
+    const filteredOptions = options.filter((opt: any) => 
+        opt.isHeader || normalizeText(opt.label).includes(normalizeText(searchQuery))
+    );
+
+    const loadFont = (fontName: string) => {
+        const id = `font-preview-${fontName.replace(/\s+/g, '-').toLowerCase()}`;
+        if (document.getElementById(id)) return;
+        const link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s+/g, '+')}:wght@400;700;900&display=swap`;
+        document.head.appendChild(link);
+    };
+
+    useEffect(() => {
+        if (!isOpen) {
+            setActiveIndex(-1);
+            return;
+        }
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                setActiveIndex(prev => {
+                    let next = prev + 1;
+                    while (next < filteredOptions.length && filteredOptions[next].isHeader) next++;
+                    return next < filteredOptions.length ? next : prev;
+                });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                setActiveIndex(prev => {
+                    let next = prev - 1;
+                    while (next >= 0 && filteredOptions[next].isHeader) next--;
+                    return next >= 0 ? next : prev;
+                });
+            } else if (e.key === 'Enter' && activeIndex >= 0) {
+                e.preventDefault();
+                const opt = filteredOptions[activeIndex];
+                if (!opt.isHeader) {
+                    onChange(opt.value);
+                    setIsOpen(false);
+                    setSearchQuery('');
+                }
+            } else if (e.key === 'Escape') {
+                setIsOpen(false);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, activeIndex, filteredOptions, onChange]);
+
+    useEffect(() => {
+        if (isOpen) {
+            if (selectedOption?.value) loadFont(selectedOption.value);
+            filteredOptions.slice(0, 15).forEach(opt => {
+                if (!opt.isHeader && opt.value) loadFont(opt.value);
+            });
+        }
+    }, [isOpen, filteredOptions, selectedOption]);
+
+    return (
+        <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
+            {label && <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+            <div className="relative group">
+                <button
+                    type="button"
+                    onClick={() => !disabled && setIsOpen(!isOpen)}
+                    className={cn(
+                        "w-full bg-black/40 border border-white/5 rounded-2xl h-16 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
+                        isOpen && "border-primary/50 bg-black/60",
+                        Icon && "pl-12"
+                    )}
+                >
+                    {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-hover:text-primary transition-colors" />}
+                    <div className="flex flex-col flex-1 truncate">
+                        <span className="text-[8px] opacity-40 uppercase tracking-widest font-black mb-0.5">Tipografía Activa</span>
+                        <span className="truncate text-xl lg:text-2xl leading-tight" style={{ fontFamily: selectedOption?.value || 'inherit' }}>
+                            {selectedOption ? selectedOption.label : 'Seleccionar Fuente...'}
+                        </span>
+                    </div>
+                    <ChevronDown className={cn("w-4 h-4 text-tactile-text-sub transition-transform shrink-0", isOpen && "rotate-180")} />
+                </button>
+
+                <AnimatePresence>
+                    {isOpen && (
+                        <>
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 z-[100]" 
+                                onClick={() => { setIsOpen(false); setSearchQuery(''); }} 
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="absolute left-0 right-0 top-full mt-2 bg-[#1a1c20]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[450px]"
+                            >
+                                <div className="p-3 border-b border-white/10 sticky top-0 bg-transparent z-10 backdrop-blur-md">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-tactile-text-sub" />
+                                        <input
+                                            autoFocus
+                                            type="text"
+                                            placeholder="Buscar fuente... (↑ ↓ Enter)"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            className="w-full bg-black/40 border border-white/10 rounded-xl pl-9 pr-4 py-3 text-xs font-bold focus:outline-none focus:border-primary/50 transition-colors"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="overflow-y-auto custom-scrollbar p-1">
+                                    {filteredOptions.length > 0 ? (
+                                        filteredOptions.map((opt: any, i: number) => (
+                                            opt.isHeader ? (
+                                                <div 
+                                                    key={`header-${i}`} 
+                                                    className="px-4 py-2 text-[8px] font-black uppercase tracking-[0.2em] text-primary/60 border-t border-white/5 first:border-0 mt-3 first:mt-1 bg-white/5 rounded-lg mb-1"
+                                                >
+                                                    {opt.label}
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    key={opt.value}
+                                                    type="button"
+                                                    onMouseEnter={() => {
+                                                        loadFont(opt.value);
+                                                        setActiveIndex(i);
+                                                    }}
+                                                    className={cn(
+                                                        "w-full px-4 py-4 text-left rounded-xl transition-all flex items-center justify-between group/opt",
+                                                        (value === opt.value || activeIndex === i) ? "bg-primary/20 text-white" : "text-white/60 hover:bg-white/5 hover:text-white"
+                                                    )}
+                                                    onClick={() => {
+                                                        onChange(opt.value);
+                                                        setIsOpen(false);
+                                                        setSearchQuery('');
+                                                    }}
+                                                >
+                                                    <div className="flex flex-col flex-1 min-w-0">
+                                                        <span className="text-[10px] opacity-40 font-mono tracking-tighter mb-1">Muestra Técnica</span>
+                                                        <span style={{ fontFamily: opt.value }} className="text-2xl leading-none truncate pr-4">
+                                                            {opt.label}
+                                                        </span>
+                                                    </div>
+                                                    {(value === opt.value) && (
+                                                        <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                                                            <Check className="w-3 h-3 text-primary" strokeWidth={3} />
+                                                        </div>
+                                                    )}
+                                                </button>
+                                            )
+                                        ))
+                                    ) : (
+                                        <div className="p-12 text-center text-tactile-text-sub font-black uppercase tracking-widest text-[10px]">
+                                            Sin resultados
+                                        </div>
+                                    )}
+                                </div>
+                            </motion.div>
+                        </>
+                    )}
+                </AnimatePresence>
+            </div>
+        </div>
+    );
+};
+
 export default function TactileAdmin({ propTab }: { propTab?: string }) {
     const {
         settings, setSettings,
@@ -1958,23 +2170,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     </div>
                                                 </div>
 
-                                                <TactileSelect
-                                                    label="TIPOGRAFÍA DEL SISTEMA (GOOGLE FONTS)"
+                                                <TactileFontSelect
+                                                    label="TIPOGRAFÍA DEL SISTEMA (GOOGLE FONTS PREVIEW)"
                                                     value={settings.fontMain}
                                                     onChange={(val: any) => saveSettingsToCloud({ fontMain: val })}
-                                                    options={[
-                                                        { value: 'outfit', label: 'Outfit (Predeterminada)' },
-                                                        { value: 'sora', label: 'Sora (Elegante)' },
-                                                        { value: 'inter', label: 'Inter (Limpia)' },
-                                                        { value: 'montserrat', label: 'Montserrat (Clásica)' },
-                                                        { value: 'poppins', label: 'Poppins (Moderna)' },
-                                                        { value: 'lexend', label: 'Lexend (Legibilidad)' },
-                                                        { value: 'orbitron', label: 'Orbitron (Futurista)' },
-                                                        { value: 'black-ops', label: 'Black Ops (Display)' },
-                                                        { value: 'syne', label: 'Syne (Artística)' },
-                                                        { value: 'playfair', label: 'Playfair (Elegante Serif)' },
-                                                        { value: 'lora', label: 'Lora (Clásica Serif)' },
-                                                    ]}
                                                     icon={Type}
                                                 />
 

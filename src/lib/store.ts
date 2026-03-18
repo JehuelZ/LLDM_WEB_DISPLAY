@@ -349,7 +349,7 @@ export const useAppStore = create<AppState>()(
                 iglesiaVariant: 'light',
                 facebookUrl: '',
                 instagramUrl: '',
-                fontMain: 'outfit',
+                fontMain: 'Outfit',
                 youtubeUrl: '',
                 customSocialUrl: '',
                 customSocialLabel: '',

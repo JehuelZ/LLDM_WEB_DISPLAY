@@ -50,44 +50,40 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         }
     }, [settings.themeMode, mounted, isPhone]);
 
-    const fontFamily = settings.fontMain || 'outfit';
+    const fontFamily = settings.fontMain || 'Outfit';
     
-    // Mapping for pre-loaded Next.js fonts
+    // Mapping for pre-loaded Next.js fonts (para mayor performance con las base)
     const nextFontVarMap: Record<string, string> = {
+        'Outfit': 'var(--font-outfit)',
+        'Sora': 'var(--font-sora)',
+        'Inter': 'var(--font-inter)',
+        'Montserrat': 'var(--font-montserrat)',
+        'Orbitron': 'var(--font-orbitron)',
+        'Black Ops One': 'var(--font-black-ops)',
         'outfit': 'var(--font-outfit)',
         'sora': 'var(--font-sora)',
         'inter': 'var(--font-inter)',
-        'montserrat': 'var(--font-montserrat)',
-        'orbitron': 'var(--font-orbitron)',
-        'black-ops': 'var(--font-black-ops)',
-        'jetbrains': 'var(--font-jetbrains-mono)',
     };
 
-    // Mapping for dynamic Google Fonts
-    const dynamicFontMap: Record<string, string> = {
-        'poppins': 'Poppins',
-        'lexend': 'Lexend',
-        'syne': 'Syne',
-        'playfair': 'Playfair Display',
-        'lora': 'Lora',
-    };
-
-    const fontVar = nextFontVarMap[fontFamily] || dynamicFontMap[fontFamily] || 'var(--font-outfit)';
-    const isDynamic = !!dynamicFontMap[fontFamily];
+    const isNextFont = !!nextFontVarMap[fontFamily];
 
     useEffect(() => {
-        if (isDynamic) {
-            const fontName = dynamicFontMap[fontFamily].replace(' ', '+');
-            const linkId = `google-font-${fontFamily}`;
+        if (!isNextFont && fontFamily) {
+            // Carga dinámica de cualquier fuente de Google no incluida en el bundle
+            const fontNameForUrl = fontFamily.replace(/\s+/g, '+');
+            const linkId = `google-font-dynamic-${fontFamily.replace(/\s+/g, '-').toLowerCase()}`;
+            
             if (!document.getElementById(linkId)) {
                 const link = document.createElement('link');
                 link.id = linkId;
                 link.rel = 'stylesheet';
-                link.href = `https://fonts.googleapis.com/css2?family=${fontName}:wght@400;500;600;700;800;900&display=swap`;
+                link.href = `https://fonts.googleapis.com/css2?family=${fontNameForUrl}:wght@400;500;600;700;800;900&display=swap`;
                 document.head.appendChild(link);
             }
         }
-    }, [fontFamily, isDynamic]);
+    }, [fontFamily, isNextFont]);
+
+    const finalFontFamily = isNextFont ? nextFontVarMap[fontFamily] : `"${fontFamily}"`;
 
     if (!mounted) {
         return <>{children}</>;
@@ -95,7 +91,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
     return (
         <div
-            style={{ fontFamily: `${fontVar}, sans-serif` }}
+            style={{ fontFamily: `${finalFontFamily}, sans-serif` }}
             className="min-h-screen transition-colors duration-500 bg-background text-foreground"
         >
             {children}
