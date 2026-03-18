@@ -45,5 +45,10 @@ Se resolvieron errores de sincronización (`Failed to fetch`) mediante la creaci
 - **`uniform_schedule` y `uniforms`:** Soporte para la gestión de uniformes.
 - **Realtime:** Se habilitó el tiempo real para todas estas tablas para que los cambios se vean al instante sin refrescar.
 
+### ✅ 6. Soporte Robusto para Logos y Fondos SVG
+Se detectaron y corrigieron fallos finales en el sistema de identidad visual:
+- **Key Mismatch Fix:** Se corrigió una inconsistencia donde el panel táctil usaba `custom_logo_1` en lugar de `customLogo1`, lo que impedía guardar los cambios correctamente.
+- **Fallback de Buckets (SVG Support):** Ante restricciones de tipos MIME en el bucket de avatars para archivos SVG, se implementó un sistema de fallback automático que intenta subir el archivo al bucket `app_assets` si el primero falla. Esto garantiza que el administrador pueda subir fondos de proyección vectoriales (SVG) sin errores.
+
 ---
 *Nota: Este archivo fue generado por Antigravity (IA) como bitácora de trabajo.*
