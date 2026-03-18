@@ -113,6 +113,7 @@ export interface UserProfile {
     responsibilities?: { date: string; type: string; status: 'pending' | 'completed'; label: string }[];
     is_pre_registered?: boolean;
     bio?: string;
+    favorite_verse?: string;
     createdAt?: string;
 }
 

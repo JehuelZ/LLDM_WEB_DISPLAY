@@ -497,6 +497,7 @@ function AdminDashboardContent() {
         markMessageAsRead,
         messages,
         currentUser,
+        setCurrentUser,
         saveRecurringScheduleToCloud,
         seedMonthSchedule,
         subscribeToMessages,
@@ -1216,6 +1217,7 @@ function AdminDashboardContent() {
                     { id: 'coros', label: 'Coros y Uniformes', icon: Shirt, color: 'text-secondary' },
                     { id: 'configuracion', label: 'Configuración', icon: Settings, color: 'text-slate-400' },
                     { id: 'miembros', label: 'Miembros', icon: Users, color: 'text-emerald-400' },
+                    { id: 'perfil', label: 'Mi Perfil', icon: User, color: 'text-amber-400' },
                 ].map((tab) => (
                     <button
                         key={tab.id}
@@ -3615,6 +3617,144 @@ function AdminDashboardContent() {
                                 </div>
                             </CardContent>
                         </Card>
+                    </motion.div>
+                )
+            }
+
+            {
+                activeTab === 'perfil' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="space-y-8 max-w-4xl mx-auto"
+                    >
+                        <Card className="glass-card border-t-4 border-t-amber-500 overflow-hidden">
+                            <CardHeader className="relative">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-3xl pointer-events-none" />
+                                <CardTitle className="text-3xl font-black uppercase italic tracking-tighter flex items-center gap-4">
+                                    <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center border border-amber-500/30">
+                                        <User className="w-6 h-6 text-amber-500" />
+                                    </div>
+                                    Gestión de <span className="text-amber-500">Mi Perfil Personal</span>
+                                </CardTitle>
+                                <CardDescription className="text-xs font-bold uppercase tracking-widest text-slate-500">Actualiza tus datos públicos y biografía en el sistema</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-8 p-10">
+                                <div className="flex flex-col md:flex-row gap-12 items-start">
+                                    {/* Avatar Column */}
+                                    <div className="flex flex-col items-center gap-6 shrink-0 w-full md:w-auto">
+                                        <div className="relative group">
+                                            <div className="w-48 h-48 rounded-[3rem] overflow-hidden border-4 border-amber-500/20 p-2 bg-slate-900 shadow-2xl transition-all duration-500 group-hover:border-amber-500/40">
+                                                <img 
+                                                    src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`} 
+                                                    alt="Admin Avatar" 
+                                                    className="w-full h-full object-cover rounded-[2.2rem] group-hover:scale-105 transition-all duration-700" 
+                                                />
+                                            </div>
+                                            <button 
+                                                onClick={() => document.getElementById('admin-avatar-upload')?.click()}
+                                                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-amber-500 text-black px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 border-4 border-[#0a0a0a]"
+                                            >
+                                                <Camera className="w-3.5 h-3.5" /> Cambiar Foto
+                                            </button>
+                                            <input 
+                                                type="file" 
+                                                id="admin-avatar-upload" 
+                                                className="hidden" 
+                                                accept="image/*"
+                                                onChange={async (e) => {
+                                                    const file = e.target.files?.[0];
+                                                    if (file) {
+                                                        const compressed = await compressImage(file, 500, 500, 0.8);
+                                                        const publicUrl = await uploadAvatar(`admin-avatar-${Date.now()}`, compressed);
+                                                        if (publicUrl) {
+                                                            await updateProfileInCloud(currentUser.id, { avatar: publicUrl });
+                                                            setCurrentUser({ ...currentUser, avatar: publicUrl });
+                                                            showNotification("Foto actualizada con éxito", 'success');
+                                                        }
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic opacity-40">Resolución recomendada: 500x500px</p>
+                                    </div>
+
+                                    {/* Fields Column */}
+                                    <div className="flex-1 space-y-6 w-full">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Nombre Completo</label>
+                                                <Input 
+                                                    value={currentUser.name || ''} 
+                                                    onChange={(e) => setCurrentUser({ ...currentUser, name: e.target.value })}
+                                                    className="bg-white/5 border-white/10 h-14 rounded-2xl font-black focus:border-amber-500/50 transition-all font-outfit"
+                                                />
+                                            </div>
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Correo Electrónico</label>
+                                                <Input 
+                                                    value={currentUser.email || ''} 
+                                                    disabled
+                                                    className="bg-white/5 border-white/10 h-14 rounded-2xl font-bold opacity-40 cursor-not-allowed"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Versículo Favorito / Lema Personal</label>
+                                            <Input 
+                                                value={currentUser.favorite_verse || (currentUser as any).favoriteVerse || ''} 
+                                                onChange={(e) => setCurrentUser({ ...currentUser, favorite_verse: e.target.value })}
+                                                placeholder="Ej: Salmos 23:1 - Jehová es mi pastor..."
+                                                className="bg-white/5 border-white/10 h-14 rounded-2xl font-medium focus:border-amber-500/50 transition-all italic"
+                                            />
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Biografía Breve</label>
+                                            <textarea 
+                                                value={currentUser.bio || ''} 
+                                                onChange={(e) => setCurrentUser({ ...currentUser, bio: e.target.value })}
+                                                rows={4}
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-medium text-sm focus:border-amber-500/50 transition-all outline-none resize-none"
+                                                placeholder="Cuéntanos un poco sobre ti..."
+                                            />
+                                        </div>
+
+                                        <div className="flex justify-end pt-4">
+                                            <Button 
+                                                disabled={isSaving}
+                                                onClick={async () => {
+                                                    setIsSaving(true);
+                                                    const success = await updateProfileInCloud(currentUser.id, {
+                                                        name: currentUser.name,
+                                                        bio: currentUser.bio,
+                                                        favorite_verse: currentUser.favorite_verse
+                                                    });
+                                                    if (success) {
+                                                        showNotification("Perfil guardado correctamente", 'success');
+                                                    }
+                                                    setIsSaving(false);
+                                                }}
+                                                className="bg-amber-600 hover:bg-amber-500 text-black font-black uppercase tracking-widest h-14 px-12 rounded-2xl shadow-xl hover:translate-y-[-2px] transition-all active:translate-y-0"
+                                            >
+                                                {isSaving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
+                        <div className="p-6 rounded-[2rem] bg-amber-500/5 border border-amber-500/10 flex items-center gap-6">
+                            <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center shrink-0">
+                                <Activity className="w-6 h-6 text-amber-500" />
+                            </div>
+                            <div>
+                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400">Estado de la cuenta</h4>
+                                <p className="text-xs text-slate-400 font-medium">Logeado como <strong>{currentUser.email}</strong> • Privilegios: <strong>{currentUser.role}</strong></p>
+                            </div>
+                        </div>
                     </motion.div>
                 )
             }
