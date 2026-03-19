@@ -8,10 +8,17 @@ import { Header } from '@/components/layout/Header';
 import { cn, getLocalDateString } from '@/lib/utils';
 import Link from 'next/link';
 
+import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 
 export default function NiñosDashboard() {
     const { currentUser, kidsAssignments, uniforms } = useAppStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+
     const childProfile = currentUser.category === 'Niño' ? { ...currentUser, parentName: currentUser.parentName || 'Padre/Madre' } : {
         name: 'Sin Asignar',
         member_group: 'Niños',

@@ -47,22 +47,40 @@ export default function ProfilePage() {
         subscribeToMessages, showNotification
     } = useAppStore();
     const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
 
     const [activeTab, setActiveTab] = useState('perfil');
-    const [name, setName] = useState(currentUser.name);
-    const [phone, setPhone] = useState(currentUser.phone);
-    const [category, setCategory] = useState(currentUser.category);
-    const [gender, setGender] = useState(currentUser.gender);
-    const [memberGroup, setMemberGroup] = useState(currentUser.member_group);
-    const [bio, setBio] = useState(currentUser.bio || '');
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [category, setCategory] = useState('');
+    const [gender, setGender] = useState('');
+    const [memberGroup, setMemberGroup] = useState('');
+    const [bio, setBio] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [imageToEdit, setImageToEdit] = useState<string | null>(null);
     const [showSuccess, setShowSuccess] = useState(false);
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
     const [replyText, setReplyText] = useState('');
 
+    useEffect(() => {
+        if (currentUser) {
+            setName(currentUser.name || '');
+            setPhone(currentUser.phone || '');
+            setCategory(currentUser.category || '');
+            setGender(currentUser.gender || '');
+            setMemberGroup(currentUser.member_group || '');
+            setBio(currentUser.bio || '');
+        }
+    }, [currentUser]);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+
     const roleActions = useMemo(() => {
-        const actions = [];
+        const actions: any[] = [];
+        if (!currentUser) return actions;
+        
         if (currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia' || currentUser.privileges?.includes('monitor') || currentUser.privileges?.includes('admin')) {
             actions.push({
                 title: 'Pasar Asistencia',
@@ -110,14 +128,6 @@ export default function ProfilePage() {
         return actions;
     }, [currentUser.role, currentUser.privileges]);
 
-    useEffect(() => {
-        setName(currentUser.name);
-        setPhone(currentUser.phone);
-        setCategory(currentUser.category);
-        setGender(currentUser.gender);
-        setMemberGroup(currentUser.member_group);
-        setBio(currentUser.bio || '');
-    }, [currentUser.id]);
 
     useEffect(() => {
         loadCloudMessages();

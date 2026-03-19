@@ -21,12 +21,8 @@ export default function CoroDashboard() {
         saveUniformForDateToCloud, saveUniformToCloud, loadUniformsFromCloud, showNotification
     } = useAppStore();
 
-    useEffect(() => {
-        loadUniformsFromCloud();
-    }, [loadUniformsFromCloud]);
-
+    const [mounted, setMounted] = useState(false);
     const [showLeaderPanel, setShowLeaderPanel] = useState(false);
-    const isLeader = currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges.includes('leader');
     const [showUniformForm, setShowUniformForm] = useState(false);
     const [newUniform, setNewUniform] = useState({
         name: '',
@@ -35,6 +31,22 @@ export default function CoroDashboard() {
     });
     const [editingAnnId, setEditingAnnId] = useState<string | null>(null);
     const [isSaving, setIsSaving] = useState(false);
+    const [editingRehearsals, setEditingRehearsals] = useState<any[]>([]);
+
+    useEffect(() => {
+        setMounted(true);
+        loadUniformsFromCloud();
+    }, [loadUniformsFromCloud]);
+
+    useEffect(() => {
+        if (rehearsals) {
+            setEditingRehearsals(rehearsals);
+        }
+    }, [rehearsals]);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+
+    const isLeader = currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges.includes('leader');
 
     // Get next 14 days to show upcoming uniform assignments
     const upcomingDays = Array.from({ length: 14 }).map((_, i) => {
@@ -47,9 +59,6 @@ export default function CoroDashboard() {
             uniformId: uniformSchedule[dateStr]
         };
     }).filter(d => d.isRelevant);
-
-    // Rehearsal editing state
-    const [editingRehearsals, setEditingRehearsals] = useState(rehearsals);
 
     const toggleRehearsalDay = (dayIndex: number) => {
         const exists = editingRehearsals.some(r => r.dayOfWeek === dayIndex);

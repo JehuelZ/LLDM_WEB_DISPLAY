@@ -43,9 +43,11 @@ export default function MinistroDashboard() {
         messages, loadCloudMessages, settings, loadMonthlyGlobalAttendanceStats
     } = useAppStore();
     const router = useRouter();
+    const [mounted, setMounted] = useState(false);
     const [attendanceRate, setAttendanceRate] = useState<string>('0%');
 
     useEffect(() => {
+        setMounted(true);
         loadMembersFromCloud();
         loadAllSchedulesFromCloud();
         loadCloudMessages();
@@ -60,6 +62,8 @@ export default function MinistroDashboard() {
         };
         getStats();
     }, []);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
 
     // Cálculo de estadísticas de la iglesia
     const stats = useMemo(() => {

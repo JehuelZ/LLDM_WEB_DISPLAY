@@ -8,9 +8,16 @@ import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
 
+import { useState, useEffect } from 'react';
+
 export default function YouthDashboard() {
     const { currentUser } = useAppStore();
     const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
 
     const stats = [
         { label: 'Participación', value: '—%', icon: TrendingUp, color: 'text-indigo-400' },

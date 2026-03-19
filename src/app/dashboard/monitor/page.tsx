@@ -53,6 +53,7 @@ export default function AttendanceDashboard() {
         showNotification
     } = useAppStore();
 
+    const [mounted, setMounted] = useState(false);
     const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos' | 'jovenes' | 'casados' | 'solas'>('varones');
     const [viewMode, setViewMode] = useState<'asistencia' | 'mensajes' | 'reportes'>('asistencia');
     const [searchTerm, setSearchTerm] = useState('');
@@ -66,6 +67,7 @@ export default function AttendanceDashboard() {
     const [weeklyStats, setWeeklyStats] = useState<any[]>([]);
 
     useEffect(() => {
+        setMounted(true);
         loadMembersFromCloud();
         const fetchWeekly = async () => {
             const data = await loadWeeklyAttendanceStats();
@@ -73,6 +75,8 @@ export default function AttendanceDashboard() {
         };
         fetchWeekly();
     }, []);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
 
     useEffect(() => {
         // Al cambiar de fecha o sesión, limpiamos el estado optimista

@@ -65,8 +65,16 @@ const StatDoughnut = ({
     );
 };
 
+import { useState, useEffect } from 'react';
+
 export default function ResponsableDashboard() {
     const { currentUser } = useAppStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
             <Header />

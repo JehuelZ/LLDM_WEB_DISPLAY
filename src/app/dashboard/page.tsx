@@ -9,9 +9,15 @@ import { Button } from '@/components/ui/button';
 import { useAppStore } from '@/lib/store';
 import Link from 'next/link';
 import { CountdownCard } from '@/components/CountdownCard';
+import { useState, useEffect } from 'react';
 
 export default function DashboardIndex() {
     const { currentUser } = useAppStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
 
     const dashboards = [
         {
