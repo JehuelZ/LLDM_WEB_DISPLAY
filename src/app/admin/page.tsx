@@ -340,7 +340,7 @@ const WeeklyAttendanceChart = () => {
     };
 
     return (
-        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm col-span-1 md:col-span-12">
+        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm col-span-1 xl:col-span-5">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
             <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-10">
                 <div>
