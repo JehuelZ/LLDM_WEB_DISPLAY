@@ -13,7 +13,7 @@ import {
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
-    Lock, ArrowRight, LogOut, Info, XCircle, Type
+    Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
@@ -3052,11 +3052,82 @@ function AdminDashboardContent() {
                                 <h3 className="text-4xl font-black italic">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</h3>
                             </Card>
                             <Card className="glass-card border-b-2 border-b-orange-500 p-6 flex flex-col items-center justify-center text-center">
-                                <Sparkles className="w-8 h-8 text-orange-500/40 mb-2" />
-                                <p className="text-[10px] font-black uppercase tracking-widest text-orange-500 font-black">Niños / Niñas</p>
-                                <h3 className="text-4xl font-black italic text-orange-500">{members.filter(m => m.category === 'Niño').length}</h3>
+                                <ShieldAlert className="w-8 h-8 text-orange-500/40 mb-2 animate-pulse" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-orange-500 font-black">Pendientes</p>
+                                <h3 className="text-4xl font-black italic text-orange-500">{members.filter(m => m.status === 'Pendiente').length}</h3>
                             </Card>
                         </div>
+
+                        {/* 🔒 AUDITORÍA DE SEGURIDAD: REGISTROS PENDIENTES */}
+                        {members.filter(m => m.status === 'Pendiente').length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="p-8 rounded-[2.5rem] bg-amber-500/10 border-2 border-amber-500/30 space-y-6 relative overflow-hidden shadow-2xl shadow-amber-500/10"
+                            >
+                                <div className="absolute top-0 right-0 p-8 opacity-5">
+                                    <ShieldAlert className="w-32 h-32 text-amber-500" />
+                                </div>
+                                <div className="relative z-10 flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <h3 className="text-xl font-black uppercase text-amber-500 flex items-center gap-3 italic tracking-tight">
+                                           <AlertCircle className="w-6 h-6" /> Registros Pendientes de Auditoría
+                                        </h3>
+                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Nuevos usuarios detectados esperando aprobación oficial</p>
+                                    </div>
+                                    <div className="bg-amber-500/20 px-4 py-2 rounded-xl border border-amber-500/30">
+                                        <span className="text-sm font-black text-amber-500 italic">{members.filter(m => m.status === 'Pendiente').length} SOLICITUDES</span>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
+                                    {members.filter(m => m.status === 'Pendiente').map((pending) => (
+                                        <Card key={pending.id} className="glass-card bg-slate-900/80 border-amber-500/20 p-5 space-y-4 hover:border-amber-500/50 transition-all">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 overflow-hidden">
+                                                    {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-6 h-6 text-amber-500" />}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="text-sm font-black text-white truncate uppercase italic">{pending.name}</p>
+                                                    <p className="text-[9px] text-slate-500 truncate font-bold uppercase tracking-widest">{pending.email}</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-2">
+                                                <Button 
+                                                    className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
+                                                    disabled={isSaving}
+                                                    onClick={async () => {
+                                                        setIsSaving(true);
+                                                        await updateProfileInCloud(pending.id, { ...pending, status: 'Activo' });
+                                                        await loadMembersFromCloud();
+                                                        setIsSaving(false);
+                                                        showNotification(`El hermano(a) ${pending.name} ha sido activado.`);
+                                                    }}
+                                                >
+                                                    APROBAR
+                                                </Button>
+                                                <Button 
+                                                    variant="ghost" 
+                                                    className="h-10 text-rose-500 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-4 rounded-xl"
+                                                    onClick={async () => {
+                                                        if (confirm(`¿Estás seguro de RECHAZAR y eliminar el registro de ${pending.name}?`)) {
+                                                            setIsSaving(true);
+                                                            const { supabase } = useAppStore.getState();
+                                                            await supabase.from('profiles').delete().eq('id', pending.id);
+                                                            await loadMembersFromCloud();
+                                                            setIsSaving(false);
+                                                            showNotification(`Registro de ${pending.name} eliminado.`);
+                                                        }
+                                                    }}
+                                                >
+                                                    RECHAZAR
+                                                </Button>
+                                            </div>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </motion.div>
+                        )}
                         <Card id="miembros" className="glass-card border-t-4 border-t-emerald-500">
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">

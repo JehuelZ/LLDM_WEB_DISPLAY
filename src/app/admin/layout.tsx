@@ -280,21 +280,6 @@ function AdminLayoutContent({
                         {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.reportes}</span>}
                     </Link>
 
-                    <Link href="/admin?tab=anuncios"
-                        onClick={() => {
-                            setTimeout(() => {
-                                window.dispatchEvent(new Event('popstate'));
-                                window.dispatchEvent(new Event('tab-change'));
-                            }, 50);
-                        }}
-                        className={cn(
-                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                            collapsed && "justify-center px-0 bg-foreground/5 text-muted-foreground"
-                        )}>
-                        <Bell className="w-5 h-5 group-hover:text-yellow-500 transition-colors shrink-0" />
-                        {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.anuncios}</span>}
-                    </Link>
-
                     <Link href="/admin/cloud" className={cn(
                         "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
                         pathname === '/admin/cloud' ? "bg-primary/10 text-primary font-bold border-primary/20" : "bg-foreground/5 text-muted-foreground border-transparent",

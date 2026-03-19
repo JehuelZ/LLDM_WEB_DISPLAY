@@ -212,6 +212,94 @@ export default function Home() {
     return <LoginScreen />;
   }
 
+  // ⏳ Approval Guard: Show waiting screen while status is 'Pendiente'
+  if (currentUser && currentUser.status === 'Pendiente') {
+    return (
+      <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-6 relative overflow-hidden">
+        {/* Background Effects */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)]" />
+          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]" />
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 max-w-md w-full text-center space-y-8"
+        >
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full scale-150 animate-pulse" />
+            <div className="relative w-32 h-32 mx-auto bg-slate-900/80 rounded-[2.5rem] border border-amber-500/20 flex items-center justify-center p-6 shadow-2xl">
+              <img 
+                src={theme?.churchLogoUrl || "/flama-oficial.svg"} 
+                className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" 
+                style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%)' }}
+                alt="LLDM" 
+              />
+            </div>
+            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-amber-500 rounded-2xl flex items-center justify-center border-4 border-[#02040a] shadow-lg">
+                <Clock className="w-5 h-5 text-black animate-spin-slow" />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h1 className="text-4xl font-black italic uppercase text-white tracking-tighter leading-tight">
+              Registro <span className="text-amber-500">Pendiente</span>
+            </h1>
+            <p className="text-slate-400 text-sm leading-relaxed px-4">
+              Hola <span className="text-white font-bold">{currentUser.name}</span>, tu cuenta ha sido registrada con éxito en el sistema de <span className="text-amber-500/80 font-bold italic">LLDM Rodeo</span>.
+            </p>
+            <div className="p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
+               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500">
+                  Estado: Esperando Validación del Administrador
+               </p>
+            </div>
+            <p className="text-[11px] text-slate-500 font-medium leading-relaxed italic">
+              Por motivos de seguridad, un administrador debe verificar tu identidad antes de permitirte el acceso al contenido privado y estadísticas de la iglesia.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <Button 
+                variant="outline" 
+                className="w-full h-14 rounded-2xl border-white/10 bg-white/5 text-white font-black uppercase tracking-widest text-[10px] hover:bg-white/10"
+                onClick={() => window.location.reload()}
+            >
+                VERIFICAR ESTADO AHORA
+            </Button>
+            <Button 
+                variant="ghost" 
+                className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest"
+                onClick={async () => {
+                  const { supabase } = useAppStore.getState();
+                  await supabase.auth.signOut();
+                  window.location.reload();
+                }}
+            >
+                CERRAR SESIÓN
+            </Button>
+          </div>
+
+          <div className="pt-8 opacity-40">
+            <span className="text-[8px] uppercase font-black tracking-[0.5em] text-slate-600">
+                LLDM RODEO DIGITAL • EXPERIENCE
+            </span>
+          </div>
+        </motion.div>
+
+        <style jsx>{`
+            .animate-spin-slow {
+                animation: spin 3s linear infinite;
+            }
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `}</style>
+      </div>
+    );
+  }
+
   // Loading state (optional, or just return null while checking session)
   if (isLoading && !authSession) {
     return (

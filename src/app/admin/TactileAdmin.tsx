@@ -443,7 +443,6 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                 'configuracion': 'ajustes',
                 'temas': 'contenido',
                 'mensajes': 'dashboard',
-                'anuncios-resumen': 'dashboard',
                 'ajustes': 'ajustes'
             };
             const finalTab = aliasMap[queryTab] || queryTab;
@@ -467,7 +466,6 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                 'configuracion': 'ajustes',
                 'temas': 'contenido',
                 'mensajes': 'dashboard',
-                'anuncios-resumen': 'dashboard',
                 'ajustes': 'ajustes'
             };
 
@@ -510,7 +508,6 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         { id: 'miembros', label: 'Miembros', icon: Users },
         { id: 'coros', label: 'Coros', icon: Music2 },
         { id: 'contenido', label: 'Tema Semanal', icon: Sparkles },
-        { id: 'anuncios', label: 'Comunicados', icon: Bell },
         { id: 'estilos', label: 'Temas TV', icon: Palette },
         { id: 'ajustes', label: 'Ajustes', icon: Settings },
         { id: 'mensajes', label: 'Mensajes', icon: MessageSquare },
@@ -1787,177 +1784,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     </motion.div>
                                 )}
 
-                                {activeTab === 'anuncios' && (
-                                    <motion.div
-                                        key="anuncios"
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -20 }}
-                                        className="grid grid-cols-1 md:grid-cols-12 gap-8"
-                                    >
-                                        <div className="col-span-1 md:col-span-4 space-y-6">
-                                            <TactileGlassCard title={editingAnnId ? "EDITAR COMUNICADO" : "NUEVO COMUNICADO"}>
-                                                <div className="space-y-4">
-                                                    <TactileInput
-                                                        label="TÍTULO"
-                                                        placeholder="Ej. Estudio Bíblico..."
-                                                        value={newAnn.title}
-                                                        onChange={(e: any) => setNewAnn({ ...newAnn, title: e.target.value })}
-                                                    />
-                                                    <div className="space-y-2">
-                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO</label>
-                                                        <textarea
-                                                            className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-sm font-bold min-h-[120px] outline-none focus:border-primary/50"
-                                                            placeholder="Detalles del anuncio..."
-                                                            value={newAnn.content}
-                                                            onChange={(e: any) => setNewAnn({ ...newAnn, content: e.target.value })}
-                                                        />
-                                                    </div>
-                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        <TactileSelect
-                                                            label="PRIORIDAD"
-                                                            value={newAnn.priority}
-                                                            onChange={(val: string) => setNewAnn({ ...newAnn, priority: parseInt(val) })}
-                                                            searchable={false}
-                                                            options={[
-                                                                { value: 0, label: 'Normal' },
-                                                                { value: 1, label: 'Importante' },
-                                                                { value: 2, label: 'Urgente' },
-                                                            ]}
-                                                            icon={Bell}
-                                                        />
-                                                        <TactileSelect
-                                                            label="CATEGORÍA"
-                                                            value={newAnn.category || 'general'}
-                                                            onChange={(val: string) => setNewAnn({ ...newAnn, category: val })}
-                                                            searchable={false}
-                                                            options={[
-                                                                { value: 'general', label: 'General' },
-                                                                { value: 'choir', label: 'Coro' },
-                                                                { value: 'ministers', label: 'Ministerio' },
-                                                            ]}
-                                                            icon={Filter}
-                                                        />
-                                                    </div>
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                        <TactileInput
-                                                            label="EXPIRA EL"
-                                                            type="date"
-                                                            value={newAnn.expiresAt?.split('T')[0] || ''}
-                                                            onChange={(e: any) => {
-                                                                const time = newAnn.expiresAt?.includes('T') ? newAnn.expiresAt?.split('T')[1]?.slice(0, 5) : '23:59';
-                                                                setNewAnn({ ...newAnn, expiresAt: `${e.target.value}T${time}` });
-                                                            }}
-                                                            icon={CalendarClock}
-                                                        />
-                                                        <TactileInput
-                                                            label="HORA"
-                                                            type="time"
-                                                            value={newAnn.expiresAt?.includes('T') ? newAnn.expiresAt?.split('T')[1]?.slice(0, 5) : '23:59'}
-                                                            onChange={(e: any) => {
-                                                                const date = newAnn.expiresAt?.split('T')[0] || format(new Date(), 'yyyy-MM-dd');
-                                                                setNewAnn({ ...newAnn, expiresAt: `${date}T${e.target.value}` });
-                                                            }}
-                                                            icon={Clock}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="flex gap-2 mt-6">
-                                                    {editingAnnId && (
-                                                        <button
-                                                            onClick={() => {
-                                                                setEditingAnnId(null);
-                                                                setNewAnn({ title: '', content: '', priority: 0, expiresAt: '' });
-                                                            }}
-                                                            className="tactile-btn tactile-btn-glass flex-1 justify-center h-12"
-                                                        >
-                                                            CANCELAR
-                                                        </button>
-                                                    )}
-                                                    <button
-                                                        onClick={async () => {
-                                                            if (!newAnn.title || !newAnn.content) return;
-                                                            setIsSaving(true);
-                                                            await saveAnnouncementToCloud({
-                                                                ...newAnn,
-                                                                id: editingAnnId || undefined,
-                                                                timestamp: newAnn.timestamp || new Date().toISOString()
-                                                            });
-                                                            setNewAnn({ title: '', content: '', priority: 0, expiresAt: '' });
-                                                            setEditingAnnId(null);
-                                                            setIsSaving(false);
-                                                        }}
-                                                        disabled={isSaving}
-                                                        className="tactile-btn tactile-btn-orange flex-[2] justify-center h-12"
-                                                    >
-                                                        {isSaving ? 'GUARDANDO...' : (editingAnnId ? 'ACTUALIZAR' : 'PUBLICAR AHORA')}
-                                                    </button>
-                                                </div>
-                                            </TactileGlassCard>
-                                        </div>
 
-                                        <div className="col-span-1 md:col-span-8 space-y-4 overflow-y-auto tactile-scroll pr-2" style={{ maxHeight: 'calc(100vh - 250px)' }}>
-                                            <h3 className="text-xl font-black italic uppercase tracking-widest mb-4">Comunicados Activos</h3>
-                                            {announcements.length === 0 ? (
-                                                <div className="p-12 border-2 border-dashed border-white/5 rounded-[2.5rem] text-center">
-                                                    <p className="text-tactile-text-sub font-bold uppercase tracking-widest">No hay anuncios activos</p>
-                                                </div>
-                                            ) : (
-                                                <div className="space-y-4">
-                                                    {announcements.map((ann) => (
-                                                        <div key={ann.id} className="tactile-glass-panel flex items-center gap-6 group hover:bg-white/[0.05] transition-colors p-6">
-                                                            <div className={cn(
-                                                                "w-12 h-12 rounded-full flex items-center justify-center border shadow-lg",
-                                                                ann.priority === 2 ? "bg-red-500/20 border-red-500/40 text-red-500" :
-                                                                    ann.priority === 1 ? "bg-orange-500/20 border-orange-500/40 text-orange-500" :
-                                                                        "bg-blue-500/20 border-blue-500/40 text-blue-500"
-                                                            )}>
-                                                                <Bell className="w-5 h-5" />
-                                                            </div>
-                                                            <div className="flex-1">
-                                                                <div className="flex items-center gap-3 mb-1">
-                                                                    <h4 className="font-bold text-lg">{ann.title}</h4>
-                                                                    <span className={cn(
-                                                                        "text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border",
-                                                                        ann.category === 'choir' ? "border-pink-500/30 text-pink-500 bg-pink-500/10" : "border-white/10 opacity-40"
-                                                                    )}>
-                                                                        {ann.category || 'general'}
-                                                                    </span>
-                                                                    <span className="text-[9px] font-black uppercase tracking-widest opacity-40 px-2 py-0.5 border border-white/10 rounded-full">
-                                                                        {format(parseISO(ann.timestamp), "d MMM")}
-                                                                    </span>
-                                                                </div>
-                                                                <p className="text-tactile-text-sub text-sm line-clamp-1">{ann.content}</p>
-                                                            </div>
-                                                            <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setEditingAnnId(ann.id);
-                                                                        setNewAnn({ ...ann });
-                                                                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                                                                    }}
-                                                                    className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-primary transition-all"
-                                                                >
-                                                                    <Edit2 className="w-4 h-4" />
-                                                                </button>
-                                                                <button
-                                                                    onClick={async () => {
-                                                                        if (confirm('¿Eliminar este comunicado?')) {
-                                                                            await deleteAnnouncementFromCloud(ann.id);
-                                                                        }
-                                                                    }}
-                                                                    className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center hover:text-red-500 transition-all"
-                                                                >
-                                                                    <Trash2 className="w-4 h-4" />
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </motion.div>
-                                )}
 
                             {activeTab === 'miembros' && (
                                 <motion.div
