@@ -22,7 +22,7 @@ const StatDoughnut = ({
   value,
   total,
   color = "primary",
-  size = 120
+  size = 100
 }: {
   percent: number;
   label: string;
@@ -45,26 +45,34 @@ const StatDoughnut = ({
   };
 
   const glowMap = {
-    primary: "drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]",
-    secondary: "drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]",
-    accent: "drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]",
-    emerald: "drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]",
-    amber: "drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]",
-    cyan: "drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]"
+    primary: "drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]",
+    secondary: "drop-shadow-[0_0_8px_rgba(168,85,247,0.3)]",
+    accent: "drop-shadow-[0_0_8px_rgba(236,72,153,0.3)]",
+    emerald: "drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]",
+    amber: "drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]",
+    cyan: "drop-shadow-[0_0_8px_rgba(6,182,212,0.3)]"
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-1">
       <div className="relative" style={{ width: size, height: size }}>
         <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="6" className="text-foreground/5" />
-          <circle cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="6" strokeDasharray={circumference} style={{ strokeDashoffset }} strokeLinecap="round" className={cn("transition-all duration-1000 ease-out", colorMap[color], glowMap[color])} />
+          <circle cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="4" className="text-foreground/5" />
+          <motion.circle 
+            cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="8" 
+            strokeDasharray={circumference} 
+            initial={{ strokeDashoffset: circumference }}
+            animate={{ strokeDashoffset }}
+            transition={{ duration: 1.5, ease: "circOut" }}
+            strokeLinecap="round" 
+            className={cn("transition-all duration-1000 ease-out", colorMap[color], glowMap[color])} 
+          />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center -rotate-0">
-          <span className="text-lg font-black text-foreground">{percent}%</span>
+          <span className="text-lg font-black text-foreground italic">{percent}%</span>
         </div>
       </div>
-      {label && <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</span>}
+      {label && <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-70">{label}</span>}
     </div>
   );
 };
@@ -354,44 +362,92 @@ export default function Home() {
           </motion.div>
         )}
 
-        {/* Personal Stats Section (Donas) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-6"
         >
-          <Card className="glass-card border-none bg-foreground/5">
-            <CardHeader>
+          {/* Main Spiritual Stats */}
+          <Card className="glass-card border-none bg-foreground/5 lg:col-span-8 overflow-hidden relative group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none group-hover:bg-primary/20 transition-all duration-500" />
+            <CardHeader className="pb-2">
               <CardTitle className="text-xl font-black uppercase text-foreground italic flex items-center gap-3">
                 <TrendingUp className="h-6 w-6 text-primary" />
                 Mi Desempeño Espiritual
               </CardTitle>
-              <CardDescription>Resumen de fidelidad y puntualidad este mes</CardDescription>
+              <CardDescription className="text-[9px] uppercase font-bold tracking-widest text-slate-500">Resumen de fidelidad y puntualidad este mes</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-4 text-center">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 py-4 text-center">
                 <StatDoughnut
                   percent={personalStats ? Math.round((personalStats.attended / (personalStats.total || 1)) * 100) : 0}
-                  label="Asistencia General"
+                  label="Asistencia"
                   value={personalStats?.attended || 0}
                   total={personalStats?.total || 30}
                   color="emerald"
                 />
                 <StatDoughnut
                   percent={personalStats ? Math.round((personalStats.bySession?.['5am'] / (personalStats.total / 3 || 10)) * 100) : 0}
-                  label="Oración 5:00 AM"
+                  label="Oración 5am"
                   value={personalStats?.bySession?.['5am'] || 0}
                   total={10}
                   color="cyan"
                 />
-                <StatDoughnut
-                  percent={currentUser.stats?.punctuality || 95}
-                  label="Puntualidad"
-                  value={currentUser.stats?.punctuality || 95}
-                  total={100}
-                  color="amber"
-                />
+                <div className="hidden sm:block">
+                    <StatDoughnut
+                    percent={currentUser.stats?.punctuality || 95}
+                    label="Puntualidad"
+                    value={currentUser.stats?.punctuality || 95}
+                    total={100}
+                    color="amber"
+                    />
+                </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Personal Journey Chart (Area Chart) */}
+          <Card className="glass-card border-none bg-foreground/5 lg:col-span-4 overflow-hidden group">
+            <CardHeader className="pb-2">
+                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
+                    <Star className="w-3 h-3" />
+                    Mi Progreso
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="h-[120px] flex items-end px-2 pb-2">
+                <div className="w-full h-full relative group">
+                    <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="personalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.3" />
+                                <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <motion.path 
+                            d="M 0 40 Q 10 35 20 20 Q 30 5 40 15 Q 50 30 60 10 Q 70 5 80 25 Q 90 35 100 15 V 40 H 0"
+                            fill="url(#personalGrad)"
+                            initial={{ pathLength: 0, opacity: 0 }}
+                            animate={{ pathLength: 1, opacity: 1 }}
+                            transition={{ duration: 2 }}
+                        />
+                        <motion.path 
+                            d="M 0 40 Q 10 35 20 20 Q 30 5 40 15 Q 50 30 60 10 Q 70 5 80 25 Q 90 35 100 15"
+                            fill="none"
+                            stroke="var(--primary)"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: 1 }}
+                            transition={{ duration: 2 }}
+                            className="drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
+                        />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span className="text-2xl font-black text-foreground italic">+12%</span>
+                        <span className="text-[8px] font-bold text-emerald-400 uppercase">Mejora semanal</span>
+                    </div>
+                </div>
             </CardContent>
           </Card>
         </motion.div>
