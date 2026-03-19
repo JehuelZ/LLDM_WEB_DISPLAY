@@ -1101,9 +1101,13 @@ function AdminDashboardContent() {
                                                 <motion.div 
                                                     initial={{ height: 0 }}
                                                     animate={{ height: `${soc.value}%` }}
-                                                    className={cn("w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-500 group-hover/valla:brightness-125", colorGrad)}
-                                                    style={{ boxShadow: `0 0 20px ${glowColor}`, borderTop: '2px solid rgba(255,255,255,0.1)' }}
+                                                    className={cn("w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-500 group-hover/valla:scale-x-105", colorGrad)}
+                                                    style={{ 
+                                                        boxShadow: `0 0 30px ${glowColor.replace('0.5', '0.2')}`, 
+                                                        borderTop: '1.5px solid rgba(255,255,255,0.2)' 
+                                                    }}
                                                 />
+                                                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/valla:opacity-100 transition-opacity rounded-t-2xl pointer-events-none" />
                                             </div>
                                             <div className="text-center">
                                                 <div className="text-[11px] font-black italic">{soc.value}%</div>
@@ -2973,36 +2977,63 @@ function AdminDashboardContent() {
                                                     <p className="text-[9px] text-slate-500 truncate font-bold uppercase tracking-widest">{pending.email}</p>
                                                 </div>
                                             </div>
-                                            <div className="flex gap-2">
-                                                <Button 
-                                                    className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
-                                                    disabled={isSaving}
-                                                    onClick={async () => {
-                                                        setIsSaving(true);
-                                                        await updateProfileInCloud(pending.id, { ...pending, status: 'Activo' });
-                                                        await loadMembersFromCloud();
-                                                        setIsSaving(false);
-                                                        showNotification(`El hermano(a) ${pending.name} ha sido activado.`);
-                                                    }}
-                                                >
-                                                    APROBAR
-                                                </Button>
-                                                <Button 
-                                                    variant="ghost" 
-                                                    className="h-10 text-rose-500 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-4 rounded-xl"
-                                                    onClick={async () => {
-                                                        if (confirm(`¿Estás seguro de RECHAZAR y eliminar el registro de ${pending.name}?`)) {
+                                            <div className="flex flex-col gap-3">
+                                                <div className="flex gap-2">
+                                                    <Button 
+                                                        className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
+                                                        disabled={isSaving}
+                                                        onClick={async () => {
                                                             setIsSaving(true);
-                                                            const { supabase } = useAppStore.getState();
-                                                            await supabase.from('profiles').delete().eq('id', pending.id);
+                                                            await updateProfileInCloud(pending.id, { ...pending, status: 'Activo' });
                                                             await loadMembersFromCloud();
                                                             setIsSaving(false);
-                                                            showNotification(`Registro de ${pending.name} eliminado.`);
+                                                            showNotification(`El hermano(a) ${pending.name} ha sido activado.`);
+                                                        }}
+                                                    >
+                                                        APROBAR NUEVO
+                                                    </Button>
+                                                    <Button 
+                                                        variant="ghost" 
+                                                        className="h-10 text-rose-500 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-4 rounded-xl"
+                                                        onClick={async () => {
+                                                            if (confirm(`¿Estás seguro de RECHAZAR a ${pending.name}?`)) {
+                                                                setIsSaving(true);
+                                                                const { supabase } = useAppStore.getState();
+                                                                await supabase.from('profiles').delete().eq('id', pending.id);
+                                                                await loadMembersFromCloud();
+                                                                setIsSaving(false);
+                                                            }
+                                                        }}
+                                                    >
+                                                        RECHAZAR
+                                                    </Button>
+                                                </div>
+                                                <div className="pt-2 border-t border-white/5 space-y-2">
+                                                    <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest text-center">O Vincular con Registro Existente:</p>
+                                                    <select 
+                                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-[10px] font-black uppercase text-amber-500 outline-none focus:border-amber-500/50"
+                                                        onChange={async (e) => {
+                                                            const memberId = e.target.value;
+                                                            if (!memberId) return;
+                                                            if (confirm(`¿Vincular el Google de ${pending.name} con el registro de ${members.find(m => m.id === memberId)?.name}?`)) {
+                                                                setIsSaving(true);
+                                                                // @ts-ignore
+                                                                const { mergeProfiles } = useAppStore.getState();
+                                                                await mergeProfiles(pending.id, pending.email, memberId);
+                                                                setIsSaving(false);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <option value="">-- Seleccionar Nombre --</option>
+                                                        {members
+                                                            .filter(m => !m.email && m.status !== 'Pendiente')
+                                                            .sort((a,b) => a.name.localeCompare(b.name))
+                                                            .map(m => (
+                                                                <option key={m.id} value={m.id}>{m.name}</option>
+                                                            ))
                                                         }
-                                                    }}
-                                                >
-                                                    RECHAZAR
-                                                </Button>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </Card>
                                     ))}

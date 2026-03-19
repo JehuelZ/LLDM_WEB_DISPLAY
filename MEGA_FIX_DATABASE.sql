@@ -47,7 +47,8 @@ ADD COLUMN IF NOT EXISTS custom_logo_2 TEXT,
 ADD COLUMN IF NOT EXISTS custom_logo_3 TEXT,
 ADD COLUMN IF NOT EXISTS custom_logo_4 TEXT,
 ADD COLUMN IF NOT EXISTS weather_unit TEXT DEFAULT 'fahrenheit',
-ADD COLUMN IF NOT EXISTS display_font_family TEXT DEFAULT 'Outfit';
+ADD COLUMN IF NOT EXISTS display_font_family TEXT DEFAULT 'Outfit',
+ADD COLUMN IF NOT EXISTS display_font_weight TEXT DEFAULT '400';
 
 -- Asegurar que existe el registro único con ID=1
 INSERT INTO app_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;

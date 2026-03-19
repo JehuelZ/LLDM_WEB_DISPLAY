@@ -1945,6 +1945,33 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     icon={Type}
                                                 />
 
+                                                <div className="space-y-4 pt-2">
+                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
+                                                    <div className="grid grid-cols-5 gap-2">
+                                                        {[
+                                                            { label: 'THIN', weight: '300' },
+                                                            { label: 'NORM', weight: '400' },
+                                                            { label: 'MED', weight: '500' },
+                                                            { label: 'BOLD', weight: '700' },
+                                                            { label: 'MAX', weight: '900' },
+                                                        ].map((w) => (
+                                                            <button
+                                                                key={w.weight}
+                                                                onClick={() => {
+                                                                    setSettings({ fontWeight: w.weight });
+                                                                    saveSettingsToCloud({ fontWeight: w.weight });
+                                                                }}
+                                                                className={cn(
+                                                                    "tactile-btn justify-center text-[8px] font-black py-2",
+                                                                    (settings.fontWeight || '400') === w.weight ? "tactile-btn-primary" : "tactile-btn-orange"
+                                                                )}
+                                                            >
+                                                                {w.label}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
 
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
@@ -3080,6 +3107,33 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         }}
                                                         icon={Edit2}
                                                     />
+
+                                                    <div className="space-y-4 pt-2">
+                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
+                                                        <div className="grid grid-cols-5 gap-2">
+                                                            {[
+                                                                { label: 'THIN', weight: '300' },
+                                                                { label: 'NORM', weight: '400' },
+                                                                { label: 'MED', weight: '500' },
+                                                                { label: 'BOLD', weight: '700' },
+                                                                { label: 'MAX', weight: '900' },
+                                                            ].map((w) => (
+                                                                <button
+                                                                    key={w.weight}
+                                                                    onClick={() => {
+                                                                        setSettings({ fontWeight: w.weight });
+                                                                        saveSettingsToCloud({ fontWeight: w.weight });
+                                                                    }}
+                                                                    className={cn(
+                                                                        "tactile-btn justify-center text-[8px] font-black py-2",
+                                                                        (settings.fontWeight || '400') === w.weight ? "tactile-btn-primary" : "tactile-btn-orange"
+                                                                    )}
+                                                                >
+                                                                    {w.label}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
 
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between ml-2">

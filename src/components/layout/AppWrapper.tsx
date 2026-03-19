@@ -135,7 +135,10 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
     return (
         <div
-            style={{ fontFamily: `${finalFontFamily}, sans-serif` }}
+            style={{ 
+                fontFamily: `${finalFontFamily}, sans-serif`,
+                fontWeight: settings.fontWeight || '400'
+            }}
             className="min-h-screen transition-colors duration-500 bg-background text-foreground"
         >
             {children}

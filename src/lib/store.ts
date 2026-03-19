@@ -1000,20 +1000,70 @@ export const useAppStore = create<AppState>()(
                             set({ currentUser: { ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: newProfile.roles } as UserProfile });
                         }
                     } else {
-                        // USUARIO DESCONOCIDO O ELIMINADO: No auto-crear. 
-                        // Forzamos el estado a null o Pendiente para que la UI lo bloquee o lo mande a registrar
-                        console.warn("Acceso denegado: El perfil no existe en la base de datos de miembros.");
-                        set({ currentUser: null });
-                        // Opcional: Cerrar sesión si queremos ser agresivos
-                        // await supabase.auth.signOut();
+                        // USUARIO NUEVO O DESCONOCIDO: Creamos perfil 'Pendiente' para que el Admin lo vea y apruebe
+                        const newProfile = {
+                            id: authUserId,
+                            email: userEmail,
+                            name: userName,
+                            avatar_url: userAvatar,
+                            role: 'Miembro',
+                            status: 'Pendiente',
+                            category: 'Varon',
+                            stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
+                            roles: []
+                        };
+
+                        const { error: insertError } = await supabase.from('profiles').insert(newProfile);
+                        
+                        if (!insertError) {
+                            set({ currentUser: { ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: [] } as UserProfile });
+                            
+                            // Notificar al admin sobre la nueva solicitud
+                            await supabase.from('messages').insert({
+                                sender_id: authUserId,
+                                target_role: 'Administrador',
+                                subject: 'Nueva Solicitud de Acceso',
+                                content: `El usuario ${userName} (${userEmail}) ha iniciado sesión y espera aprobación del administrador.`
+                            });
+                        }
                     }
                 }
+            },
+            
+            mergeProfiles: async (pendingId: string, memberEmail: string, existingMemberId: string) => {
+                const { data: pendingProfile } = await supabase.from('profiles').select('*').eq('id', pendingId).single();
+                if (!pendingProfile) return false;
+
+                // 1. Actualizar el miembro antiguo con los datos de Auth y Email
+                const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({
+                        email: pendingProfile.email,
+                        auth_user_id: pendingProfile.id, // Enlace de seguridad
+                        status: 'Activo',
+                        avatar_url: pendingProfile.avatar_url,
+                        is_pre_registered: false
+                    })
+                    .eq('id', existingMemberId);
+
+                if (updateError) {
+                    console.error("Merge fallido:", updateError.message);
+                    return false;
+                }
+
+                // 2. Eliminar el perfil temporal 'Pendiente'
+                await supabase.from('profiles').delete().eq('id', pendingId);
+
+                await get().loadMembersFromCloud();
+                get().showNotification("Perfil vinculado y activado correctamente", 'success');
+                return true;
             },
 
             addMemberToCloud: async (member) => {
                 const insertData: any = {
                     name: member.name,
-                    is_pre_registered: true // Por defecto, si el admin lo crea, está pre-registrado
+                    status: 'Activo', // Si el admin lo crea, está activo por defecto
+                    is_pre_registered: true
                 };
                 if (member.email) insertData.email = member.email;
                 if (member.phone) insertData.phone = member.phone;
@@ -1316,7 +1366,8 @@ export const useAppStore = create<AppState>()(
                             customLogo3: data.custom_logo_3,
                             customLogo4: data.custom_logo_4,
                             weatherUnit: data.weather_unit || 'fahrenheit',
-                            fontMain: data.display_font_family || 'outfit',
+                            fontMain: data.display_font_family || 'Outfit',
+                            fontWeight: data.display_font_weight || '400',
                         },
 
 
@@ -1390,6 +1441,7 @@ export const useAppStore = create<AppState>()(
                     custom_logo_4: updated.customLogo4,
                     weather_unit: updated.weatherUnit,
                     display_font_family: updated.fontMain,
+                    display_font_weight: updated.fontWeight,
                 };
 
 
