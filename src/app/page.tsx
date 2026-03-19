@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Settings, CheckCircle2, TrendingUp, Star } from 'lucide-react';
+import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Settings, CheckCircle2, TrendingUp, Star, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -22,66 +22,141 @@ const StatDoughnut = ({
   value,
   total,
   color = "primary",
-  size = 100
+  size = 120
 }: {
   percent: number;
   label: string;
   value: number | string;
-  total: number | string;
+  total?: number | string;
   color?: 'primary' | 'secondary' | 'accent' | 'emerald' | 'amber' | 'cyan';
   size?: number;
 }) => {
-  const radius = 35;
+  const radius = 40;
+  const strokeWidth = 6;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percent / 100) * circumference;
 
-  const colorMap = {
-    primary: "stroke-blue-500",
-    secondary: "stroke-purple-500",
-    accent: "stroke-pink-500",
-    emerald: "stroke-emerald-500",
-    amber: "stroke-amber-500",
-    cyan: "stroke-cyan-500"
+  // Kinetic Observatory Multi-Stop Gradients
+  const gradientIds = {
+    primary: "grad-blue",
+    secondary: "grad-purple",
+    accent: "grad-pink",
+    emerald: "grad-green",
+    amber: "grad-orange",
+    cyan: "grad-cyan"
   };
 
-  const glowMap = {
-    primary: "drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]",
-    secondary: "drop-shadow-[0_0_8px_rgba(168,85,247,0.3)]",
-    accent: "drop-shadow-[0_0_8px_rgba(236,72,153,0.3)]",
-    emerald: "drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]",
-    amber: "drop-shadow-[0_0_8px_rgba(245,158,11,0.3)]",
-    cyan: "drop-shadow-[0_0_8px_rgba(6,182,212,0.3)]"
+  const glowColors = {
+    primary: "rgba(59, 130, 246, 0.5)",
+    secondary: "rgba(168, 85, 247, 0.5)",
+    accent: "rgba(236, 72, 153, 0.5)",
+    emerald: "rgba(16, 185, 129, 0.5)",
+    amber: "rgba(245, 158, 11, 0.5)",
+    cyan: "rgba(6, 182, 212, 0.5)"
   };
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-3 group">
       <div className="relative" style={{ width: size, height: size }}>
         <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="4" className="text-foreground/5" />
+          <defs>
+            <linearGradient id="grad-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#3b82f6" />
+              <stop offset="100%" stopColor="#1d4ed8" />
+            </linearGradient>
+            <linearGradient id="grad-purple" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#a855f7" />
+              <stop offset="100%" stopColor="#7e22ce" />
+            </linearGradient>
+            <linearGradient id="grad-pink" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ec4899" />
+              <stop offset="100%" stopColor="#be185d" />
+            </linearGradient>
+            <linearGradient id="grad-green" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#047857" />
+            </linearGradient>
+            <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="100%" stopColor="#b45309" />
+            </linearGradient>
+            <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#06b6d4" />
+              <stop offset="100%" stopColor="#0e7490" />
+            </linearGradient>
+            
+            <filter id="glow">
+               <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+               <feMerge>
+                   <feMergeNode in="coloredBlur"/>
+                   <feMergeNode in="SourceGraphic"/>
+               </feMerge>
+            </filter>
+          </defs>
+
+          {/* Background Track Circle - Uses a dim color to create a depth feel */}
+          <circle 
+            cx="50" cy="50" r={radius} 
+            fill="transparent" 
+            stroke="currentColor" 
+            strokeWidth={strokeWidth - 2} 
+            className="text-foreground/10" 
+          />
+          
+          {/* 
+            The 20px Visual Gap: 
+            Achieved by using a slightly larger radius for the progress segment 
+            than the track, or keeping the track thinner. 
+          */}
           <motion.circle 
-            cx="50" cy="50" r={radius} fill="transparent" stroke="currentColor" strokeWidth="8" 
+            cx="50" cy="50" r={radius} 
+            fill="transparent" 
+            stroke={`url(#${gradientIds[color]})`} 
+            strokeWidth={strokeWidth} 
             strokeDasharray={circumference} 
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
             transition={{ duration: 1.5, ease: "circOut" }}
             strokeLinecap="round" 
-            className={cn("transition-all duration-1000 ease-out", colorMap[color], glowMap[color])} 
+            filter="url(#glow)"
+            className="transition-all duration-1000 ease-out" 
+            style={{ 
+               filter: `drop-shadow(0 0 6px ${glowColors[color]})`
+            }}
           />
         </svg>
+        
+        {/* Center Labeling */}
         <div className="absolute inset-0 flex flex-col items-center justify-center -rotate-0">
-          <span className="text-lg font-black text-foreground italic">{percent}%</span>
+          <span 
+            className="text-2xl font-light text-foreground"
+            style={{ fontFamily: 'Manrope, sans-serif' }}
+          >
+            {percent}
+            <span className="text-xs opacity-50 ml-0.5">%</span>
+          </span>
         </div>
       </div>
-      {label && <span className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-muted-foreground opacity-70">{label}</span>}
+      
+      {/* Label with Kinetic Observatory Precision */}
+      {label && (
+        <div className="flex flex-col items-center gap-0.5">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors duration-300">
+                {label}
+            </span>
+            <div className="w-4 h-[1px] bg-foreground/10 group-hover:w-8 group-hover:bg-primary transition-all duration-500" />
+        </div>
+      )}
     </div>
   );
 };
+
 
 export default function Home() {
   const {
     currentUser, setCurrentUser,
     authSession, isLoading,
-    announcements, theme,
+    announcements, theme, settings,
     monthlySchedule, currentDate, members,
     loadAnnouncementsFromCloud,
     loadDayScheduleFromCloud,
@@ -170,7 +245,7 @@ export default function Home() {
 
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
+    if (file && currentUser) {
       setIsSaving(true);
       const publicUrl = await uploadAvatar(currentUser.id, file);
       if (publicUrl) {
@@ -185,7 +260,7 @@ export default function Home() {
   };
 
   const handleSendMessage = async () => {
-    if (!msgContent.trim()) return;
+    if (!msgContent.trim() || !currentUser) return;
     setIsSendingMsg(true);
     await sendCloudMessage({
       senderId: currentUser.id,
@@ -199,6 +274,7 @@ export default function Home() {
   };
 
   const handleSave = async () => {
+    if (!currentUser) return;
     setIsSaving(true);
     const success = await updateProfileInCloud(currentUser.id, currentUser);
     if (success) {
@@ -212,16 +288,32 @@ export default function Home() {
     return <LoginScreen />;
   }
 
+  // ⏳ Sync Guard: Wait for profile load if authenticated
+  if (authSession && !currentUser) {
+    return (
+      <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.03)_0%,transparent_70%)]" />
+        <div className="relative z-10 text-center space-y-6">
+            <div className="relative flex justify-center">
+                <div className="w-24 h-24 border-2 border-white/5 rounded-full animate-ping absolute" />
+                <div className="w-24 h-24 border-t-2 border-amber-500 rounded-full animate-spin relative z-10" />
+            </div>
+            <div className="space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white italic">Sincronizando</p>
+                <p className="text-[8px] font-bold uppercase tracking-widest text-slate-500">Verificando credenciales oficiales de LLDM Rodeo...</p>
+            </div>
+        </div>
+      </div>
+    );
+  }
+
   // ⏳ Approval Guard: Show waiting screen while status is 'Pendiente'
   if (currentUser && currentUser.status === 'Pendiente') {
     return (
       <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-6 relative overflow-hidden">
-        {/* Background Effects */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)]" />
-          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]" />
         </div>
-
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -231,64 +323,59 @@ export default function Home() {
             <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full scale-150 animate-pulse" />
             <div className="relative w-32 h-32 mx-auto bg-slate-900/80 rounded-[2.5rem] border border-amber-500/20 flex items-center justify-center p-6 shadow-2xl">
               <img 
-                src={theme?.churchLogoUrl || "/flama-oficial.svg"} 
-                className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(251,191,36,0.5)]" 
+                src={settings?.churchLogoUrl || "/flama-oficial.svg"} 
+                className="w-full h-full object-contain" 
                 style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%)' }}
                 alt="LLDM" 
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-amber-500 rounded-2xl flex items-center justify-center border-4 border-[#02040a] shadow-lg">
-                <Clock className="w-5 h-5 text-black animate-spin-slow" />
+            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-amber-500 rounded-2xl flex items-center justify-center border-4 border-[#02040a]">
+                <Clock className="w-5 h-5 text-black animate-spin" />
             </div>
           </div>
-
           <div className="space-y-4">
             <h1 className="text-4xl font-black italic uppercase text-white tracking-tighter leading-tight">
               Registro <span className="text-amber-500">Pendiente</span>
             </h1>
             <p className="text-slate-400 text-sm leading-relaxed px-4">
-              Hola <span className="text-white font-bold">{currentUser.name}</span>, tu cuenta está procesándose en el sistema de <span className="text-amber-500/80 font-bold italic">LLDM Rodeo</span>.
+              Hola <span className="text-white font-bold">{currentUser.name}</span>, tu cuenta está en revisión.
             </p>
-            <div className="p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
-               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500">
-                  Estado: Esperando Validación del Administrador
-               </p>
-            </div>
-            <p className="text-[11px] text-slate-500 font-medium leading-relaxed italic">
-              Por seguridad, un administrador debe verificar tu identidad antes de permitirte el acceso al contenido privado.
-            </p>
-          </div>
-
-          <div className="flex flex-col gap-3">
-            <Button 
-                variant="outline" 
-                className="w-full h-14 rounded-2xl border-white/10 bg-white/5 text-white font-black uppercase tracking-widest text-[10px] hover:bg-white/10"
-                onClick={() => window.location.reload()}
+            <button
+              onClick={() => useAppStore.getState().signOut()}
+              className="mt-6 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors"
             >
-                VERIFICAR ESTADO AHORA
-            </Button>
-            <Button 
-                variant="ghost" 
-                className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest"
-                onClick={async () => {
-                   await useAppStore.getState().supabase.auth.signOut();
-                   window.location.reload();
-                }}
-            >
-                CERRAR SESIÓN
-            </Button>
+              Cerrar Sesión
+            </button>
           </div>
         </motion.div>
+      </div>
+    );
+  }
 
-        <style jsx>{`
-            .animate-spin-slow {
-                animation: spin 3s linear infinite;
-            }
-            @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-        `}</style>
+  // ⛔ Restricted Guard: Show message if user is 'Inactivo'
+  if (currentUser && currentUser.status === 'Inactivo') {
+    return (
+      <div className="min-h-screen bg-[#02040a] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,68,68,0.05)_0%,transparent_70%)]" />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative z-10 max-w-md w-full text-center space-y-8"
+        >
+          <div className="w-24 h-24 mx-auto bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/20">
+            <X className="w-12 h-12 text-red-500" />
+          </div>
+          <div className="space-y-4">
+            <h2 className="text-3xl font-black uppercase text-white italic tracking-tighter">Acceso <span className="text-red-500">Denegado</span></h2>
+            <p className="text-slate-400 text-sm italic">Tu cuenta ha sido desactivada.</p>
+            <button
+              onClick={() => useAppStore.getState().signOut()}
+              className="mt-4 px-8 py-3 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl border border-white/10"
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+        </motion.div>
       </div>
     );
   }
@@ -328,7 +415,7 @@ export default function Home() {
              <Button 
                 className="w-full h-14 bg-rose-600 hover:bg-rose-500 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl shadow-rose-900/40 transition-all hover:translate-y-[-2px]"
                 onClick={async () => {
-                   await useAppStore.getState().supabase.auth.signOut();
+                   await useAppStore.getState().signOut();
                    window.location.href = '/';
                 }}
              >
@@ -582,13 +669,14 @@ export default function Home() {
         </motion.div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* My Responsibilities (New) */}
+          {/* My Responsibilities (Updated with Luna Aesthetic) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.05 }}
           >
-            <Card className="glass-card border-l-4 border-l-emerald-500 h-full bg-emerald-500/5">
+            <Card className="glass-card border-none h-full bg-surface-container/10 backdrop-blur-xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-500 to-emerald-900 group-hover:w-2 transition-all duration-500" />
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center text-lg font-black text-emerald-500 uppercase italic">
                   <Settings className="mr-2 h-5 w-5" />
@@ -600,7 +688,7 @@ export default function Home() {
                 <div className="space-y-3">
                   {currentUser.responsibilities && currentUser.responsibilities.length > 0 ? (
                     currentUser.responsibilities.map((resp: any, i: number) => (
-                      <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-foreground/5 border border-border/20 group hover:bg-foreground/10 transition-colors">
+                      <div key={i} className="flex items-center justify-between p-2 rounded-xl bg-foreground/5 border border-border/10 group/item hover:bg-foreground/10 transition-colors">
                         <div>
                           <p className="text-[10px] font-bold text-slate-500 uppercase">{resp.date}</p>
                           <p className="text-sm font-bold text-foreground">{resp.type}</p>
@@ -627,19 +715,21 @@ export default function Home() {
             </Card>
           </motion.div>
 
-          {/* Today's Schedule */}
+          {/* Today's Schedule (Updated with Luna Aesthetic) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.1 }}
           >
-            <Card className="glass-card border-l-4 border-l-primary h-full">
+            <Card className="glass-card border-none h-full bg-surface-container/10 backdrop-blur-xl relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary to-primary-container group-hover:w-2 transition-all duration-500" />
               <CardHeader className="pb-2">
-                <CardTitle className="flex items-center text-lg font-medium text-primary">
+                <CardTitle className="flex items-center text-lg font-black text-primary uppercase italic">
                   <Clock className="mr-2 h-5 w-5" />
                   Horario de Hoy
                 </CardTitle>
               </CardHeader>
+
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center border-b border-border/20 pb-2">

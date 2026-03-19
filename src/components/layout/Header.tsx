@@ -16,7 +16,7 @@ export function Header() {
 
     const unreadCount = useMemo(() => messages.filter(m => !m.isRead).length, [messages]);
 
-    const logoUrl = settings.churchLogoUrl ?? "/flama-oficial.svg";
+    const logoUrl = settings.churchLogoUrl ?? "/lldm_flama_3.svg";
 
     useEffect(() => {
         if (authSession) {
@@ -64,7 +64,7 @@ export function Header() {
                     >
                         Schedule
                     </Link>
-                    {(currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.name.includes(settings.ministerName || '')) && (
+                    {(currentUser?.role === 'Administrador' || currentUser?.role === 'Ministro a Cargo' || currentUser?.name?.includes(settings.ministerName || '')) && (
                         <Link
                             href="/dashboard/ministro"
                             className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
@@ -72,7 +72,7 @@ export function Header() {
                             Ministro
                         </Link>
                     )}
-                    {(currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia') && (
+                    {(currentUser?.role === 'Administrador' || currentUser?.role === 'Responsable de Asistencia') && (
                         <Link
                             href="/dashboard/monitor"
                             className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
@@ -80,7 +80,7 @@ export function Header() {
                             Asistencia
                         </Link>
                     )}
-                    {(currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos') && (
+                    {(currentUser?.role === 'Administrador' || currentUser?.role === 'Dirigente Coro Adultos') && (
                         <Link
                             href="/dashboard/coro"
                             className="transition-colors hover:text-primary text-muted-foreground uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
@@ -88,7 +88,7 @@ export function Header() {
                             Coro
                         </Link>
                     )}
-                    {currentUser.role === 'Administrador' && (
+                    {currentUser?.role === 'Administrador' && (
                         <Link
                             href="/admin"
                             className="transition-colors text-primary uppercase tracking-widest text-[10px] font-black flex items-center gap-1"
@@ -104,7 +104,7 @@ export function Header() {
                                 {unreadCount > 0 && (
                                     <div
                                         className="relative cursor-pointer group/msg p-2 hover:bg-foreground/5 rounded-xl transition-all"
-                                        onClick={() => router.push(currentUser.role === 'Administrador' ? '/admin#mensajes' : '/')}
+                                        onClick={() => router.push(currentUser?.role === 'Administrador' ? '/admin#mensajes' : '/')}
                                     >
                                         <Mail className="w-4 h-4 text-primary animate-pulse" />
                                         <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-red-500 text-[8px] font-black text-white flex items-center justify-center rounded-full border border-black group-hover/msg:scale-110 transition-transform">

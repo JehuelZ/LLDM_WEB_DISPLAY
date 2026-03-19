@@ -119,7 +119,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                 const link = document.createElement('link');
                 link.id = linkId;
                 link.rel = 'stylesheet';
-                link.href = `https://fonts.googleapis.com/css2?family=${fontNameForUrl}:wght@400;500;600;700;800;900&display=swap`;
+                link.href = `https://fonts.googleapis.com/css2?family=${fontNameForUrl}:wght@300;400;500;600;700;800;900&display=swap`;
                 document.head.appendChild(link);
             }
         }
@@ -170,7 +170,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                                 notification.type === 'success' ? "shadow-[0_0_40px_rgba(251,191,36,0.1)]" : "shadow-[0_0_40px_rgba(239,68,68,0.1)]"
                              )}>
                                 <img 
-                                    src={(settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/flama-oficial.svg" : settings.churchLogoUrl} 
+                                    src={(settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/lldm_flama_3.svg" : settings.churchLogoUrl} 
                                     className={cn(
                                         "w-14 h-14 object-contain brightness-0 invert opacity-60",
                                         notification.type === 'success' && "sepia-[1] saturate-[10000%] hue-rotate-[0deg] transition-all"

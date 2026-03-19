@@ -2069,7 +2069,6 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     value={settings.displayBgMode}
                                                     onChange={(val: any) => saveSettingsToCloud({ displayBgMode: val })}
                                                     options={[
-                                                        { value: 'official', label: 'Oficial (Flama)' },
                                                         { value: 'custom', label: 'Personalizado (SVG/Imagen)' },
                                                         { value: 'none', label: 'Sin Logo de Fondo' },
                                                     ]}
@@ -2984,20 +2983,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 </span>
                                             </button>
 
-                                            <button
-                                                    onClick={() => saveSettingsToCloud({ churchLogoUrl: '/flama-oficial.svg' })}
-                                                    className={cn(
-                                                        "group relative flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 transition-all h-full",
-                                                        (settings.churchLogoUrl === '/flama-oficial.svg') ? "bg-primary/20 border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/40 border-white/5 hover:bg-white/5"
-                                                    )}
-                                                >
-                                                    <div className="w-20 h-20 flex items-center justify-center p-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10">
-                                                        <img src="/flama-oficial.svg" className="w-full h-full object-contain" alt="Flama LLDM" />
-                                                    </div>
-                                                    <span className={cn("text-[10px] font-black uppercase tracking-widest", (settings.churchLogoUrl === '/flama-oficial.svg') ? "text-primary" : "text-tactile-text-sub")}>
-                                                        Flama LLDM
-                                                    </span>
-                                                </button>
+
 
                                                 {/* 4 Slots Personalizados */}
                                                 {[1, 2, 3, 4].map((slotIndex) => {

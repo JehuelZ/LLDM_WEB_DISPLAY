@@ -4,6 +4,16 @@
 import { useAppStore } from '@/lib/store';
 import { useEffect, useState } from 'react';
 
+export function useFont() {
+    return {
+        fonts: {
+            primary: 'Manrope, sans-serif',
+            secondary: 'Inter, sans-serif',
+            accent: 'IBM Plex Mono, monospace'
+        }
+    };
+}
+
 export function FontWrapper({ children }: { children: React.ReactNode }) {
     const fontFamily = useAppStore((state) => state.calendarStyles.fontFamily);
     const [mounted, setMounted] = useState(false);

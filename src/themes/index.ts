@@ -3,6 +3,7 @@ import { GlassmorphismTheme } from './Glassmorphism';
 import { DarkMinimalTheme } from './DarkMinimal';
 import { NeonForgeTheme } from './NeonForge';
 import { IglesiaTheme } from './Iglesia';
+import { LunaPremiumTheme } from './LunaPremium';
 
 export interface ThemeFonts {
     primary: string;
@@ -35,9 +36,11 @@ export const ALL_THEMES: Record<string, Theme> = {
     'minimal': DarkMinimalTheme,
     'nocturno': MidnightGlowTheme,
     'neon': NeonForgeTheme,
+    'luna': LunaPremiumTheme,
 };
 
 
 export const getTheme = (id: string): Theme => {
     return ALL_THEMES[id] || ALL_THEMES['nocturno'];
 };
+

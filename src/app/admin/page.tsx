@@ -18,7 +18,8 @@ import {
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useAppStore, AppSettings } from '@/lib/store';
+import { useAppStore, AppSettings, UserProfile } from '@/lib/store';
+import { supabase } from '@/lib/supabaseClient';
 import { cn, compressImage, getLocalDateString } from '@/lib/utils';
 import { CitySearch } from '@/components/CitySearch';
 import { ImageEditor } from '@/components/ImageEditor';
@@ -46,39 +47,60 @@ const MessagesPanel = ({
     };
 
     return (
-        <Card className="glass-card border-l-4 border-l-primary">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
-                    <Mail className="h-5 w-5 text-primary" /> Inbox de Mensajes
-                </CardTitle>
-                <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Comunicaciones de los miembros y responsables</CardDescription>
+        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-2xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+            <CardHeader className="relative z-10 pb-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <CardTitle className="flex items-center gap-3 text-2xl font-black uppercase italic tracking-tighter text-white drop-shadow-sm">
+                            <div className="w-10 h-10 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
+                                <Mail className="h-5 w-5 text-primary" />
+                            </div>
+                            Inbox de <span className="text-primary underline decoration-primary/30 underline-offset-4">Mensajes</span>
+                        </CardTitle>
+                        <CardDescription className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-500 mt-2 ml-1">Comunicaciones de la congregación</CardDescription>
+                    </div>
+                </div>
             </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
+            <CardContent className="relative z-10">
+                <div className="grid grid-cols-1 gap-5 max-h-[600px] overflow-y-auto pr-3 custom-scrollbar">
                     {messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-slate-500">
-                            <Mail className="h-12 w-12 opacity-10 mb-4" />
-                            <p className="text-xs font-bold uppercase tracking-widest">No hay mensajes nuevos</p>
+                        <div className="flex flex-col items-center justify-center py-20 text-slate-600">
+                            <div className="w-20 h-20 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center justify-center mb-6">
+                                <Mail className="h-8 w-8 opacity-20" />
+                            </div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.3em] italic text-center">Bandeja de entrada vacía</p>
                         </div>
                     ) : (
                         messages.map(msg => (
-                            <div key={msg.id} className={cn(
-                                "p-4 rounded-3xl border transition-all flex flex-col gap-3 relative group overflow-hidden",
-                                msg.isRead
-                                    ? "bg-foreground/[0.02] border-white/5 opacity-60"
-                                    : "bg-foreground/5 border-primary/20 shadow-lg shadow-primary/5"
-                            )}>
+                            <motion.div 
+                                key={msg.id} 
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className={cn(
+                                    "p-5 rounded-[2.5rem] border transition-all duration-500 flex flex-col gap-4 relative group overflow-hidden backdrop-blur-xl shadow-xl",
+                                    msg.isRead
+                                        ? "bg-white/[0.01] border-white/5 opacity-70 hover:opacity-100"
+                                        : "bg-white/[0.03] border-primary/20 ring-1 ring-primary/10 shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)]"
+                                )}
+                            >
                                 <div className="flex justify-between items-start">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-2xl bg-primary/20 flex items-center justify-center text-primary text-xs font-black">
+                                    <div className="flex items-center gap-4">
+                                        <div className={cn(
+                                            "w-12 h-12 rounded-2xl flex items-center justify-center text-sm font-black transition-all duration-500 shadow-inner",
+                                            msg.isRead ? "bg-slate-800 text-slate-500 border border-white/5" : "bg-gradient-to-br from-primary to-primary-foreground/50 text-black shadow-lg shadow-primary/20 border border-white/20"
+                                        )}>
                                             {msg.senderName?.charAt(0)}
                                         </div>
                                         <div>
-                                            <h4 className="font-extrabold text-foreground text-sm flex items-center gap-2">
+                                            <h4 className="font-black text-white text-base flex items-center gap-2 italic tracking-tight">
                                                 {msg.senderName}
-                                                {!msg.isRead && <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />}
+                                                {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),1)]" />}
                                             </h4>
-                                            <span className="text-[9px] text-slate-500 uppercase font-black tracking-widest">{new Date(msg.createdAt).toLocaleString()}</span>
+                                            <div className="flex items-center gap-2 opacity-60">
+                                                <Calendar className="w-2.5 h-2.5 ml-0.5" />
+                                                <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest leading-none">{new Date(msg.createdAt).toLocaleString()}</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="flex gap-2">
@@ -87,49 +109,53 @@ const MessagesPanel = ({
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => onMarkRead(msg.id)}
-                                                className="h-8 w-8 text-slate-500 hover:text-primary rounded-xl hover:bg-primary/10"
-                                                title="Marcar como leído"
+                                                className="h-10 w-10 text-slate-500 hover:text-primary rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all active:scale-90"
+                                                title="Marcar leído"
                                             >
-                                                <CheckCircle className="h-4 w-4" />
+                                                <CheckCircle className="h-5 w-5" />
                                             </Button>
                                         )}
                                         <Button
                                             variant="ghost"
                                             size="icon"
                                             onClick={() => setReplyingTo(replyingTo === msg.id ? null : msg.id)}
-                                            className="h-8 w-8 text-slate-500 hover:text-primary rounded-xl hover:bg-primary/10"
+                                            className={cn(
+                                                "h-10 w-10 rounded-2xl bg-white/[0.02] border border-white/5 transition-all active:scale-90",
+                                                replyingTo === msg.id ? "text-primary border-primary/30 bg-primary/10" : "text-slate-500 hover:text-white"
+                                            )}
                                             title="Responder"
                                         >
-                                            <Reply className="h-4 w-4" />
+                                            <Reply className="h-5 w-5" />
                                         </Button>
                                     </div>
                                 </div>
 
-                                <div className="bg-black/40 p-4 rounded-2xl border border-white/5">
-                                    <p className="text-sm text-slate-300 leading-relaxed">{msg.content}</p>
+                                <div className="bg-slate-900/60 p-5 rounded-[1.8rem] border border-white/5 shadow-inner">
+                                    <p className="text-[13px] text-slate-300 leading-relaxed font-outfit">{msg.content}</p>
                                 </div>
 
                                 {replyingTo === msg.id && (
                                     <motion.div
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="mt-2 space-y-2 p-4 bg-primary/5 rounded-2xl border border-primary/20"
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        className="mt-2 space-y-4 p-5 bg-[#0a0a0a]/80 rounded-[2rem] border border-primary/20 shadow-2xl relative overflow-hidden"
                                     >
+                                        <div className="absolute top-0 left-0 w-1 h-full bg-primary/50" />
                                         <textarea
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
-                                            placeholder={`Responder a ${msg.senderName}...`}
-                                            className="w-full h-24 bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-primary/50 resize-none"
+                                            placeholder={`Escribe tu respuesta a ${msg.senderName.split(' ')[0]}...`}
+                                            className="w-full h-32 bg-black/40 border border-white/10 rounded-2xl p-4 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all resize-none font-sans"
                                         />
-                                        <div className="flex justify-end gap-2">
-                                            <Button size="sm" variant="ghost" className="h-8 text-[10px] font-black uppercase" onClick={() => setReplyingTo(null)}>Cancelar</Button>
-                                            <Button size="sm" className="h-8 bg-primary text-black text-[10px] font-black uppercase px-4 rounded-lg" onClick={() => handleSendReply(msg.senderId)}>
-                                                <Send className="w-3 h-3 mr-2" /> Enviar Respuesta
+                                        <div className="flex justify-end gap-3">
+                                            <Button size="sm" variant="ghost" className="h-10 text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white" onClick={() => setReplyingTo(null)}>Cancelar</Button>
+                                            <Button size="sm" className="h-10 bg-primary hover:bg-primary/80 text-black text-[10px] font-black uppercase tracking-widest px-8 rounded-xl shadow-xl shadow-primary/20 transition-all hover:translate-y-[-1px] active:translate-y-0" onClick={() => handleSendReply(msg.senderId)}>
+                                                <Send className="w-3.5 h-3.5 mr-2" /> Enviar Respuesta
                                             </Button>
                                         </div>
                                     </motion.div>
                                 )}
-                            </div>
+                            </motion.div>
                         ))
                     )}
                 </div>
@@ -340,7 +366,7 @@ const WeeklyAttendanceChart = () => {
     };
 
     return (
-        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm col-span-1 xl:col-span-5">
+        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm col-span-1 xl:col-span-12">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
             <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-10">
                 <div>
@@ -411,14 +437,18 @@ const WeeklyAttendanceChart = () => {
                         
                         return (
                             <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full relative group">
-                                <div className="flex-1 w-full bg-slate-800/10 rounded-t-xl overflow-hidden relative flex flex-col justify-end border border-white/5">
+                                <div className="flex-1 w-full bg-slate-900/40 rounded-t-2xl overflow-hidden relative flex flex-col justify-end border border-white/[0.03] backdrop-blur-md transition-all duration-300 group-hover:border-primary/20 shadow-inner">
                                     {/* Evening Segment */}
                                     <motion.div 
                                         initial={{ height: 0 }}
                                         animate={{ height: `${pEvening}%` }}
-                                        className="w-full bg-gradient-to-t from-orange-600/80 to-orange-400/80 relative z-30 group-hover:from-orange-500 group-hover:to-orange-300 transition-colors"
+                                        className="w-full bg-gradient-to-t from-orange-600 to-orange-400 relative z-30 group-hover:from-orange-500 group-hover:to-orange-300 transition-all duration-500"
+                                        style={{ 
+                                            boxShadow: pEvening > 0 ? "0 -4px 15px rgba(249,115,22,0.4)" : "none",
+                                            borderTop: '1.5px solid rgba(255,255,255,0.3)'
+                                        }}
                                     >
-                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 px-2 py-1 rounded text-[8px] font-black whitespace-nowrap z-50 border border-orange-500/30">
+                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 px-2 py-1 rounded text-[8px] font-black uppercase tracking-widest whitespace-nowrap z-50 border border-orange-500/30 backdrop-blur-md">
                                             {day.sessions['evening']} Pers.
                                         </div>
                                     </motion.div>
@@ -426,19 +456,27 @@ const WeeklyAttendanceChart = () => {
                                     <motion.div 
                                         initial={{ height: 0 }}
                                         animate={{ height: `${p9am}%` }}
-                                        className="w-full bg-gradient-to-t from-indigo-600/80 to-indigo-400/80 relative z-20 group-hover:from-indigo-500 group-hover:to-indigo-300 transition-colors"
+                                        className="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 relative z-20 group-hover:from-indigo-500 group-hover:to-indigo-300 transition-all duration-500"
+                                        style={{ 
+                                            boxShadow: p9am > 0 ? "0 -4px 15px rgba(79,70,229,0.4)" : "none",
+                                            borderTop: '1.5px solid rgba(255,255,255,0.3)'
+                                        }}
                                     />
                                     {/* 5 AM Segment */}
                                     <motion.div 
                                         initial={{ height: 0 }}
                                         animate={{ height: `${p5am}%` }}
-                                        className="w-full bg-gradient-to-t from-emerald-600/80 to-emerald-400/80 relative z-10 group-hover:from-emerald-500 group-hover:to-emerald-300 transition-colors"
+                                        className="w-full bg-gradient-to-t from-emerald-600 to-emerald-400 relative z-10 group-hover:from-emerald-500 group-hover:to-emerald-300 transition-all duration-500"
+                                        style={{ 
+                                            boxShadow: p5am > 0 ? "0 -4px 15px rgba(16,185,129,0.4)" : "none",
+                                            borderTop: '1.5px solid rgba(255,255,255,0.3)'
+                                        }}
                                     />
                                 </div>
-                                <div className="text-[10px] font-black uppercase text-slate-500 mt-2">
+                                <div className="text-[10px] font-black uppercase text-slate-500 mt-3 italic tracking-tight group-hover:text-primary transition-colors">
                                     {format(weekDays[idx], 'EEE', { locale: es })}
                                 </div>
-                                <div className="text-[8px] font-bold text-slate-600">
+                                <div className="text-[8px] font-black text-slate-600 uppercase tracking-tighter opacity-50">
                                     {format(weekDays[idx], 'dd/MM', { locale: es })}
                                 </div>
                             </div>
@@ -506,7 +544,6 @@ function AdminDashboardContent() {
         minister, setMinister,
         uploadAvatar,
         updateProfileInCloud,
-        updateProfileInCloud,
         saveScheduleDayToCloud,
         saveThemeToCloud,
         loadDayScheduleFromCloud,
@@ -539,7 +576,8 @@ function AdminDashboardContent() {
         attendanceRecords,
         showNotification,
         notification,
-        hideNotification
+        hideNotification,
+        subscribeToProfiles
     } = useAppStore();
 
     const [mounted, setMounted] = useState(false);
@@ -586,6 +624,7 @@ function AdminDashboardContent() {
         }
     }, [queryTab]);
     const [memberFilter, setMemberFilter] = useState('all');
+    const [memberSearch, setMemberSearch] = useState('');
 
     useEffect(() => {
         setMounted(true);
@@ -616,13 +655,15 @@ function AdminDashboardContent() {
         };
         window.addEventListener('tab-change', handleTabSync);
 
-        // Suscribirse a mensajes y ajustes nuevos en tiempo real
+        // Suscribirse a mensajes, ajustes y perfiles en tiempo real
         const unsubMessages = subscribeToMessages();
         const unsubSettings = useAppStore.getState().subscribeToSettings();
+        const unsubProfiles = useAppStore.getState().subscribeToProfiles();
 
         return () => {
             unsubMessages();
             unsubSettings();
+            unsubProfiles();
             window.removeEventListener('tab-change', handleTabSync);
         };
     }, [currentDate, loadDayScheduleFromCloud, loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadKidsAssignmentsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
@@ -889,7 +930,7 @@ function AdminDashboardContent() {
     if (!mounted) return null;
 
     // 🔒 PROTECCIÓN: Solo administradores autenticados (o bypass en local)
-    const isAuthorized = (authSession?.user && currentUser.role === 'Administrador') || (typeof window !== 'undefined' && window.location.hostname === 'localhost');
+    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador') || (typeof window !== 'undefined' && window.location.hostname === 'localhost');
 
     if (!isAuthorized) {
         return (
@@ -1062,6 +1103,9 @@ function AdminDashboardContent() {
                     animate={{ opacity: 1, y: 0 }}
                     className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
                 >
+                    {/* Integrated Weekly Chart - MOVED TO TOP */}
+                    <WeeklyAttendanceChart />
+
                     {/* Monthly Performance Intelligence Dashboard - PRIMARY FOCUS */}
                     <Card className="glass-card bg-slate-900/40 border-white/5 xl:col-span-3 relative overflow-hidden group shadow-2xl">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
@@ -1101,17 +1145,17 @@ function AdminDashboardContent() {
                                                 <motion.div 
                                                     initial={{ height: 0 }}
                                                     animate={{ height: `${soc.value}%` }}
-                                                    className={cn("w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-500 group-hover/valla:scale-x-105", colorGrad)}
+                                                    className={cn("w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-700 group-hover/valla:scale-x-110", colorGrad)}
                                                     style={{ 
-                                                        boxShadow: `0 0 30px ${glowColor.replace('0.5', '0.2')}`, 
-                                                        borderTop: '1.5px solid rgba(255,255,255,0.2)' 
+                                                        boxShadow: `0 0 40px ${glowColor.replace('0.5', '0.3')}`, 
+                                                        borderTop: '2px solid rgba(255,255,255,0.4)' 
                                                     }}
                                                 />
-                                                <div className="absolute inset-0 bg-white/5 opacity-0 group-hover/valla:opacity-100 transition-opacity rounded-t-2xl pointer-events-none" />
+                                                <div className="absolute inset-x-0 bottom-0 top-0 bg-white/[0.02] opacity-0 group-hover/valla:opacity-100 transition-opacity rounded-t-2xl pointer-events-none border-x border-t border-white/5" />
                                             </div>
-                                            <div className="text-center">
-                                                <div className="text-[11px] font-black italic">{soc.value}%</div>
-                                                <span className="text-[8px] font-black uppercase tracking-tighter text-slate-500 truncate block w-10">{soc.label}</span>
+                                            <div className="text-center relative z-10">
+                                                <div className="text-[13px] font-black italic text-foreground tracking-tighter tabular-nums drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{soc.value}%</div>
+                                                <span className="text-[7.5px] font-black uppercase tracking-[0.15em] text-slate-500 truncate block w-12 group-hover/valla:text-primary transition-colors">{soc.label}</span>
                                             </div>
                                         </div>
                                     );
@@ -1133,23 +1177,52 @@ function AdminDashboardContent() {
                         </CardHeader>
                         <CardContent className="pt-4 pb-4">
                             <div className="flex items-center gap-4">
-                                <div className="relative w-20 h-20 shrink-0">
-                                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="42" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
+                                <div className="relative w-24 h-24 shrink-0 group/donut transition-transform duration-500 hover:scale-110">
+                                    <svg className="w-full h-full -rotate-90 drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" viewBox="0 0 100 100">
+                                        {/* Dynamic Gradient Definition */}
+                                        <defs>
+                                            <linearGradient id="lunaDonutGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                <stop offset="0%" stopColor="var(--primary)" />
+                                                <stop offset="100%" stopColor="hsl(var(--primary-container))" />
+                                            </linearGradient>
+                                        </defs>
+                                        
+                                        {/* Background Track */}
+                                        <circle 
+                                            cx="50" cy="50" r="42" 
+                                            fill="transparent" 
+                                            stroke="rgba(255,255,255,0.03)" 
+                                            strokeWidth="8" 
+                                        />
+                                        
+                                        {/* Progress Arc */}
                                         <motion.circle
-                                            cx="50" cy="50" r="42" fill="transparent" stroke="var(--primary)" strokeWidth="8"
+                                            cx="50" cy="50" r="42" 
+                                            fill="transparent" 
+                                            stroke="url(#lunaDonutGradient)" 
+                                            strokeWidth="10"
                                             strokeDasharray="263.89"
+                                            initial={{ strokeDashoffset: 263.89 }}
                                             animate={{ strokeDashoffset: 263.89 - (263.89 * attendancePercentage / 100) }}
+                                            transition={{ duration: 2, ease: "circOut" }}
                                             strokeLinecap="round"
+                                            className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.4)]"
                                         />
                                     </svg>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <span className="text-xl font-black italic">{attendancePercentage}%</span>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <span className="text-2xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent leading-none">
+                                            {attendancePercentage}%
+                                        </span>
+                                        <span className="text-[7px] font-black uppercase text-primary/50 tracking-tighter mt-0.5">ESTADO</span>
                                     </div>
                                 </div>
-                                <div className="min-w-0">
-                                    <div className="text-2xl font-black">{attendedCount}</div>
-                                    <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest">Hermanos</p>
+                                <div className="min-w-0 pr-2">
+                                    <div className="text-3xl font-black italic text-foreground leading-none mb-1 tabular-nums">{attendedCount}</div>
+                                    <p className="text-[9px] font-black uppercase text-slate-500 tracking-[0.2em] opacity-60">Hermanos</p>
+                                    <div className="flex items-center gap-1.5 mt-2 bg-primary/10 rounded-full px-2 py-0.5 border border-primary/20 w-fit">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
+                                        <span className="text-[7px] font-black text-primary uppercase tracking-widest leading-none">VIVO</span>
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>
@@ -1171,40 +1244,48 @@ function AdminDashboardContent() {
                             </div>
                         </CardContent>
                     </Card>
-
-                    {/* Integrated Weekly Chart */}
-                    <WeeklyAttendanceChart />
                 </motion.div>
 
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex gap-2 p-1.5 bg-foreground/5 rounded-3xl border border-white/5 overflow-x-auto no-scrollbar backdrop-blur-md sticky top-4 z-40">
+            <div className="flex gap-1.5 p-1.5 bg-slate-900/40 border border-white/5 rounded-[2rem] overflow-x-auto no-scrollbar underline-none backdrop-blur-xl sticky top-4 z-40 shadow-2xl">
                 {[
-                    { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard, color: 'text-primary' },
-                    { id: 'horarios', label: 'Horarios', icon: CalendarDays, color: 'text-emerald-500' },
-                    { id: 'contenido', label: 'Diseño y Visual', icon: Sparkles, color: 'text-amber-500' },
-                    { id: 'coros', label: 'Coros y Uniformes', icon: Shirt, color: 'text-secondary' },
-                    { id: 'configuracion', label: 'Configuración', icon: Settings, color: 'text-slate-400' },
-                    { id: 'miembros', label: 'Miembros', icon: Users, color: 'text-emerald-400' },
-                    { id: 'perfil', label: 'Mi Perfil', icon: User, color: 'text-amber-400' },
+                    { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard, color: 'text-primary', glow: 'shadow-primary/20' },
+                    { id: 'horarios', label: 'Horarios', icon: CalendarDays, color: 'text-emerald-400', glow: 'shadow-emerald-500/20' },
+                    { id: 'contenido', label: 'Diseño y Visual', icon: Sparkles, color: 'text-amber-400', glow: 'shadow-amber-500/20' },
+                    { id: 'coros', label: 'Coros y Uniformes', icon: Shirt, color: 'text-secondary', glow: 'shadow-purple-500/20' },
+                    { id: 'configuracion', label: 'Configuración', icon: Settings, color: 'text-slate-300', glow: 'shadow-slate-400/20' },
+                    { id: 'miembros', label: 'Miembros', icon: Users, color: 'text-emerald-400', glow: 'shadow-emerald-400/20' },
+                    { id: 'perfil', label: 'Mi Perfil', icon: User, color: 'text-amber-400', glow: 'shadow-amber-400/20' },
                 ].map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={cn(
-                            "flex items-center gap-2.5 px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] transition-all relative whitespace-nowrap group",
-                            activeTab === tab.id ? "text-foreground bg-foreground/10 shadow-lg" : "text-slate-500 hover:text-slate-300 hover:bg-foreground/5"
+                            "group relative flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap outline-none",
+                            activeTab === tab.id ? "text-white" : "text-slate-500 hover:text-slate-300"
                         )}
                     >
-                        <tab.icon className={cn("w-4 h-4 transition-transform group-hover:scale-110", activeTab === tab.id ? tab.color : "text-slate-500")} />
-                        {tab.label}
                         {activeTab === tab.id && (
-                            <motion.div layoutId="activeTabGlow" className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none" />
+                            <motion.div 
+                                layoutId="activeTabPill" 
+                                className={cn(
+                                    "absolute inset-0 bg-white/10 rounded-2xl border border-white/10 shadow-xl z-0",
+                                    tab.glow
+                                )}
+                                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                            >
+                                <div className={cn("absolute inset-x-4 bottom-0 h-[2px] rounded-full blur-[1px]", tab.color.replace('text-', 'bg-'))} />
+                            </motion.div>
                         )}
-                        {activeTab === tab.id && (
-                            <motion.div layoutId="activeTabUnderline" className={cn("absolute -bottom-1.5 left-4 right-4 h-1 rounded-full", tab.color.replace('text-', 'bg-'))} />
-                        )}
+                        <tab.icon className={cn(
+                            "relative z-10 w-4 h-4 transition-all duration-500", 
+                            activeTab === tab.id ? cn(tab.color, "scale-110 rotate-3 drop-shadow-[0_0_8px_currentColor]") : "text-slate-600 grayscale group-hover:grayscale-0"
+                        )} />
+                        <span className="relative z-10 italic">
+                            {tab.label}
+                        </span>
                     </button>
                 ))}
             </div>
@@ -1218,41 +1299,50 @@ function AdminDashboardContent() {
                                     messages={messages}
                                     onMarkRead={markMessageAsRead}
                                     onReply={async (recipientId, content) => {
-                                        await sendCloudMessage({ senderId: currentUser.id, receiverId: recipientId, content, subject: 'Respuesta de Administración' });
+                                        await sendCloudMessage({ senderId: currentUser?.id || '', receiverId: recipientId, content, subject: 'Respuesta de Administración' });
                                         showNotification('Respuesta enviada');
                                     }}
                                 />
                             </div>
                             <div id="analytics-overview" className="space-y-6">
-                                <div className="p-8 rounded-[2.5rem] bg-emerald-500/5 border border-emerald-500/10 space-y-6 relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl -mr-16 -mt-16" />
+                                <div className="p-10 rounded-[3rem] bg-emerald-500/[0.03] border border-emerald-500/10 space-y-8 relative overflow-hidden group/metrics backdrop-blur-xl shadow-2xl">
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-700 group-hover/metrics:bg-emerald-500/10" />
                                     <div className="flex items-center justify-between relative z-10">
-                                        <h3 className="text-lg font-black uppercase text-emerald-500 italic flex items-center gap-2">
-                                            <TrendingUp className="w-5 h-5" /> Métricas de Crecimiento
-                                        </h3>
-                                        <div className="px-3 py-1 bg-emerald-500 text-black text-[10px] font-black rounded-lg">LIVE</div>
+                                        <div className="space-y-1">
+                                            <h3 className="text-2xl font-black uppercase text-emerald-500 italic flex items-center gap-3 tracking-tighter drop-shadow-sm">
+                                                <TrendingUp className="w-6 h-6" /> Crecimiento <span className="text-white">Relativo</span>
+                                            </h3>
+                                            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 ml-1 opacity-70">Métricas de impacto en tiempo real</p>
+                                        </div>
+                                        <div className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0a]/80 rounded-xl border border-emerald-500/20 shadow-lg">
+                                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,1)]" />
+                                            <span className="text-[10px] font-black text-emerald-500 tracking-widest italic">MONITOREANDO</span>
+                                        </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-4 relative z-10">
-                                        <div className="p-5 rounded-2xl bg-slate-900/60 border border-white/5">
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Membresía Total</p>
-                                            <div className="text-3xl font-black italic text-white flex items-baseline gap-2">
+                                    <div className="grid grid-cols-2 gap-6 relative z-10">
+                                        <div className="p-6 rounded-[2rem] bg-slate-900/60 border border-white/5 group-hover/metrics:border-emerald-500/20 transition-all duration-500 shadow-inner">
+                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2 leading-none">Membresía Activa</p>
+                                            <div className="text-4xl font-black italic text-white flex items-baseline gap-2 tabular-nums">
                                                 {members.length}
-                                                <span className="text-[10px] text-emerald-500 font-bold not-italic">↑</span>
+                                                <span className="text-xs text-emerald-500 font-black not-italic drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]">↑</span>
                                             </div>
                                         </div>
-                                        <div className="p-5 rounded-2xl bg-slate-900/60 border border-white/5">
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Total Niñez</p>
-                                            <div className="text-3xl font-black italic text-white">
+                                        <div className="p-6 rounded-[2rem] bg-slate-900/60 border border-white/5 group-hover/metrics:border-emerald-500/20 transition-all duration-500 shadow-inner">
+                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2 leading-none">Total Niñez</p>
+                                            <div className="text-4xl font-black italic text-white tabular-nums">
                                                 {members.filter(m => m.category === 'Niño').length}
                                             </div>
                                         </div>
                                     </div>
                                     <Button
                                         onClick={() => setActiveTab('miembros')}
-                                        className="w-full bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl py-6 text-[10px] font-black uppercase tracking-[0.2em]"
+                                        className="w-full bg-[#0a0a0a]/80 hover:bg-emerald-500 text-slate-400 hover:text-black border border-white/5 hover:border-emerald-500/50 rounded-2xl py-7 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 shadow-xl group/btn"
                                     >
-                                        Gestionar Base de Datos
+                                        <div className="flex items-center gap-2 group-hover/btn:scale-110 transition-transform">
+                                            GESTIONAR BASE DE DATOS <ArrowRight className="w-4 h-4 ml-1" />
+                                        </div>
                                     </Button>
+                                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
                                 </div>
                             </div>
                         </div>
@@ -1658,30 +1748,84 @@ function AdminDashboardContent() {
                                         </span>
                                     </motion.button>
 
-                                    {/* Logo Oficial: Flama */}
-                                    <motion.button
-                                        whileHover={{ y: -5, scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={() => {
-                                            setSettings({ churchLogoUrl: '/flama-oficial.svg' });
-                                            saveSettingsToCloud({ churchLogoUrl: '/flama-oficial.svg' });
-                                        }}
-                                        className={cn(
-                                            "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
-                                            (settings.churchLogoUrl === '/flama-oficial.svg') ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)]" : "border-white/5 bg-foreground/5 hover:border-white/10"
-                                        )}
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-b from-slate-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                        <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 group-hover:border-white/10 transition-all">
-                                            <img src="/flama-oficial.svg" className="w-full h-full object-contain filter drop-shadow-2xl" alt="Flama LLDM" />
-                                        </div>
-                                        <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest transition-colors", (settings.churchLogoUrl === '/flama-oficial.svg') ? "text-primary" : "text-slate-500")}>
-                                            Flama LLDM
-                                        </span>
-                                    </motion.button>
+                                    {/* Slot 1 Reservado para personalización */}
+                                    {[1].map((slotIndex) => {
+                                        const slotKey = `customLogo${slotIndex}` as keyof AppSettings;
+                                        const slotUrl = (settings as any)[slotKey] as string;
+                                        const isActive = settings.churchLogoUrl === slotUrl && slotUrl;
 
-                                    {/* 4 Slots Personalizados */}
-                                    {[1, 2, 3, 4].map((slotIndex) => {
+                                        return (
+                                            <div key={slotIndex} className="relative group">
+                                                {slotUrl && (
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            const updates: any = { [slotKey]: null };
+                                                            if (settings.churchLogoUrl === slotUrl) {
+                                                                updates.churchLogoUrl = '';
+                                                            }
+                                                            setSettings(updates);
+                                                            saveSettingsToCloud(updates);
+                                                        }}
+                                                        className="absolute top-2 right-2 z-50 p-2 bg-red-500/20 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100"
+                                                        title="Eliminar logo"
+                                                    >
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                )}
+                                                <motion.button
+                                                    whileHover={{ y: -5 }}
+                                                    onClick={() => {
+                                                        if (slotUrl) {
+                                                        setSettings({ churchLogoUrl: slotUrl });
+                                                        saveSettingsToCloud({ churchLogoUrl: slotUrl });
+                                                        } else {
+                                                            document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
+                                                        }
+                                                    }}
+                                                    className={cn(
+                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full",
+                                                        isActive ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)] border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
+                                                    )}
+                                                >
+                                                    {slotUrl ? (
+                                                        <>
+                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5">
+                                                                <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
+                                                            </div>
+                                                            <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-slate-500")}>
+                                                                Logo Principal
+                                                            </span>
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
+                                                                }}
+                                                                className="absolute top-2 right-2 p-2 bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/20 text-white"
+                                                            >
+                                                                <Upload className="w-3 h-3" />
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        <div className="flex flex-col items-center justify-center gap-2 h-full py-4">
+                                                            <Plus className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
+                                                            <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Subir Logo 1</span>
+                                                        </div>
+                                                    )}
+                                                </motion.button>
+                                                <input
+                                                    type="file"
+                                                    id={`custom-logo-upload-${slotIndex}`}
+                                                    className="hidden"
+                                                    accept="image/*,.svg"
+                                                    onChange={(e) => handleCustomLogoUpload(e, slotIndex as any)}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+
+                                    {/* Slots 2, 3, 4 */}
+                                    {[2, 3, 4].map((slotIndex) => {
                                         const slotKey = `customLogo${slotIndex}` as keyof AppSettings;
                                         const slotUrl = (settings as any)[slotKey] as string;
                                         const isActive = settings.churchLogoUrl === slotUrl && slotUrl;
@@ -1771,7 +1915,6 @@ function AdminDashboardContent() {
                                 <CardContent className="space-y-6">
                                     <div className="grid grid-cols-3 gap-4">
                                         {[
-                                            { mode: 'official', label: 'Oficial', icon: <img src="/flama-oficial.svg" className="w-8 h-8 invert brightness-150" /> },
                                             { mode: 'custom', label: 'Custom', icon: <Upload className="w-5 h-5" /> },
                                             { mode: 'none', label: 'Limpio', icon: <X className="w-5 h-5" /> }
                                         ].map((bg) => (
@@ -2071,7 +2214,8 @@ function AdminDashboardContent() {
                                                     { id: 'cristal', label: '💎 Cristal (Moderno)' },
                                                     { id: 'minimal', label: '🌑 Minimal (SaaS)' },
                                                     { id: 'nocturno', label: '🌌 Nocturno (Estelar)' },
-                                                    { id: 'neon', label: '⚡ Neon (Dinámico)' }
+                                                    { id: 'neon', label: '⚡ Neon (Dinámico)' },
+                                                    { id: 'luna', label: '🌙 Luna (Premium)' }
                                                 ].map((tmpl) => (
                                                     <button
                                                         key={tmpl.id}
@@ -2921,84 +3065,105 @@ function AdminDashboardContent() {
                         className="space-y-8"
                     >
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <Card className="glass-card border-b-2 border-b-primary p-6 flex flex-col items-center justify-center text-center">
-                                <Users className="w-8 h-8 text-primary/40 mb-2" />
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Membresía Total</p>
-                                <h3 className="text-4xl font-black italic">{members.length}</h3>
+                            <Card className="glass-card bg-slate-900/40 border-white/5 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-xl relative overflow-hidden">
+                                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <Users className="w-10 h-10 text-primary mb-3 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]" />
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1 leading-none">Membresía Total</p>
+                                <h3 className="text-5xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent drop-shadow-sm tabular-nums">{members.length}</h3>
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
                             </Card>
-                            <Card className="glass-card border-b-2 border-b-blue-500 p-6 flex flex-col items-center justify-center text-center">
-                                <User className="w-8 h-8 text-blue-500/40 mb-2" />
-                                <p className="text-[10px] font-black uppercase tracking-widest text-blue-500">Varones Adultos</p>
-                                <h3 className="text-4xl font-black italic">{members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length}</h3>
+                            <Card className="glass-card bg-slate-900/40 border-white/5 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-xl relative overflow-hidden">
+                                <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <User className="w-10 h-10 text-blue-400 mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1 leading-none">Varones Adultos</p>
+                                <h3 className="text-5xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent drop-shadow-sm tabular-nums">{members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length}</h3>
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
                             </Card>
-                            <Card className="glass-card border-b-2 border-b-pink-500 p-6 flex flex-col items-center justify-center text-center">
-                                <User className="w-8 h-8 text-pink-500/40 mb-2" />
-                                <p className="text-[10px] font-black uppercase tracking-widest text-pink-500">Hermanas Adultas</p>
-                                <h3 className="text-4xl font-black italic">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</h3>
+                            <Card className="glass-card bg-slate-900/40 border-white/5 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-xl relative overflow-hidden">
+                                <div className="absolute inset-0 bg-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <User className="w-10 h-10 text-pink-400 mb-3 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1 leading-none">Hermanas Adultas</p>
+                                <h3 className="text-5xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent drop-shadow-sm tabular-nums">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</h3>
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent opacity-50" />
                             </Card>
-                            <Card className="glass-card border-b-2 border-b-orange-500 p-6 flex flex-col items-center justify-center text-center">
-                                <ShieldAlert className="w-8 h-8 text-orange-500/40 mb-2 animate-pulse" />
-                                <p className="text-[10px] font-black uppercase tracking-widest text-orange-500 font-black">Pendientes</p>
-                                <h3 className="text-4xl font-black italic text-orange-500">{members.filter(m => m.status === 'Pendiente').length}</h3>
+                            <Card className="glass-card bg-amber-500/5 border-amber-500/10 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-2xl relative overflow-hidden">
+                                <div className="absolute inset-0 bg-amber-500/10 animate-pulse opacity-30" />
+                                <ShieldAlert className="w-10 h-10 text-amber-500 mb-3 animate-pulse drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]" />
+                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-500 mb-1 leading-none">Auditoría Pendiente</p>
+                                <h3 className="text-5xl font-black italic text-amber-500 drop-shadow-lg tabular-nums">{members.filter(m => m.status === 'Pendiente').length}</h3>
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent shadow-[0_0_15px_rgba(245,158,11,0.8)]" />
                             </Card>
                         </div>
 
                         {/* 🔒 AUDITORÍA DE SEGURIDAD: REGISTROS PENDIENTES */}
                         {members.filter(m => m.status === 'Pendiente').length > 0 && (
                             <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className="p-8 rounded-[2.5rem] bg-amber-500/10 border-2 border-amber-500/30 space-y-6 relative overflow-hidden shadow-2xl shadow-amber-500/10"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="p-10 rounded-[3rem] bg-gradient-to-br from-amber-500/10 via-[#0a0a0a] to-amber-500/[0.03] border border-amber-500/20 space-y-8 relative overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.05)] backdrop-blur-3xl group/audit"
                             >
-                                <div className="absolute top-0 right-0 p-8 opacity-5">
-                                    <ShieldAlert className="w-32 h-32 text-amber-500" />
+                                <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12 group-hover/audit:rotate-0 transition-transform duration-700">
+                                    <ShieldAlert className="w-48 h-48 text-amber-500" />
                                 </div>
-                                <div className="relative z-10 flex items-center justify-between">
-                                    <div className="space-y-1">
-                                        <h3 className="text-xl font-black uppercase text-amber-500 flex items-center gap-3 italic tracking-tight">
-                                           <AlertCircle className="w-6 h-6" /> Registros Pendientes de Auditoría
-                                        </h3>
-                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Nuevos usuarios detectados esperando aprobación oficial</p>
+                                <div className="absolute -left-20 -top-20 w-64 h-64 bg-amber-500/10 rounded-full blur-[100px] pointer-events-none" />
+                                
+                                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                                    <div className="space-y-2 text-center md:text-left">
+                                        <div className="flex items-center justify-center md:justify-start gap-4">
+                                            <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+                                                <ShieldAlert className="w-6 h-6 text-black" />
+                                            </div>
+                                            <h3 className="text-3xl font-black italic uppercase tracking-tighter text-amber-500 drop-shadow-sm">
+                                               Auditoría de <span className="text-white">Seguridad</span>
+                                            </h3>
+                                        </div>
+                                        <p className="text-xs text-slate-400 font-black uppercase tracking-[0.25em] ml-1">Protocolo de aprobación de nuevos perfiles</p>
                                     </div>
-                                    <div className="bg-amber-500/20 px-4 py-2 rounded-xl border border-amber-500/30">
-                                        <span className="text-sm font-black text-amber-500 italic">{members.filter(m => m.status === 'Pendiente').length} SOLICITUDES</span>
+                                    <div className="bg-amber-500/10 px-8 py-3 rounded-2xl border border-amber-500/30 backdrop-blur-md shadow-xl">
+                                        <span className="text-lg font-black text-amber-500 italic tabular-nums tracking-tighter">{members.filter(m => m.status === 'Pendiente').length} SOLICITUDES ACTIVAS</span>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
                                     {members.filter(m => m.status === 'Pendiente').map((pending) => (
-                                        <Card key={pending.id} className="glass-card bg-slate-900/80 border-amber-500/20 p-5 space-y-4 hover:border-amber-500/50 transition-all">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-2xl bg-amber-500/20 flex items-center justify-center border border-amber-500/30 overflow-hidden">
-                                                    {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-6 h-6 text-amber-500" />}
+                                        <Card key={pending.id} className="glass-card bg-[#0a0a0a]/80 border-white/5 p-6 space-y-6 hover:border-amber-500/40 transition-all duration-500 group/member relative overflow-hidden shadow-2xl">
+                                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-0 group-hover/member:opacity-100 transition-opacity" />
+                                            <div className="flex items-center gap-5">
+                                                <div className="relative w-16 h-16 shrink-0">
+                                                    <div className="absolute inset-0 bg-amber-500/20 rounded-[1.5rem] blur-xl opacity-0 group-hover/member:opacity-100 transition-opacity" />
+                                                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden border-2 border-white/10 group-hover/member:border-amber-500/50 transition-all bg-slate-900 shadow-xl">
+                                                        {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover transition-transform group-hover/member:scale-110" /> : <User className="w-full h-full p-4 text-amber-500/40" />}
+                                                    </div>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-black text-white truncate uppercase italic">{pending.name}</p>
-                                                    <p className="text-[9px] text-slate-500 truncate font-bold uppercase tracking-widest">{pending.email}</p>
+                                                    <p className="text-lg font-black text-white truncate uppercase italic tracking-tighter leading-none mb-1">{pending.name}</p>
+                                                    <p className="text-[9px] text-slate-500 truncate font-black uppercase tracking-widest flex items-center gap-1.5 leading-none">
+                                                        <Mail className="w-2.5 h-2.5" />
+                                                        {pending.email}
+                                                    </p>
                                                 </div>
                                             </div>
-                                            <div className="flex flex-col gap-3">
-                                                <div className="flex gap-2">
+                                            <div className="flex flex-col gap-4">
+                                                <div className="flex gap-3">
                                                     <Button 
-                                                        className="flex-1 h-10 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
+                                                        className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-emerald-500/10 transition-all hover:translate-y-[-1px] active:translate-y-0"
                                                         disabled={isSaving}
                                                         onClick={async () => {
                                                             setIsSaving(true);
-                                                            await updateProfileInCloud(pending.id, { ...pending, status: 'Activo' });
+                                                            await updateProfileInCloud(pending.id, { ...pending, status: 'Activo' } as any);
                                                             await loadMembersFromCloud();
                                                             setIsSaving(false);
                                                             showNotification(`El hermano(a) ${pending.name} ha sido activado.`);
                                                         }}
                                                     >
-                                                        APROBAR NUEVO
+                                                        APROBAR
                                                     </Button>
                                                     <Button 
                                                         variant="ghost" 
-                                                        className="h-10 text-rose-500 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-4 rounded-xl"
+                                                        className="h-12 text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-5 rounded-2xl border border-rose-500/10 transition-all"
                                                         onClick={async () => {
                                                             if (confirm(`¿Estás seguro de RECHAZAR a ${pending.name}?`)) {
                                                                 setIsSaving(true);
-                                                                const { supabase } = useAppStore.getState();
                                                                 await supabase.from('profiles').delete().eq('id', pending.id);
                                                                 await loadMembersFromCloud();
                                                                 setIsSaving(false);
@@ -3008,10 +3173,10 @@ function AdminDashboardContent() {
                                                         RECHAZAR
                                                     </Button>
                                                 </div>
-                                                <div className="pt-2 border-t border-white/5 space-y-2">
-                                                    <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest text-center">O Vincular con Registro Existente:</p>
+                                                <div className="pt-4 border-t border-white/5 space-y-3">
+                                                    <p className="text-[7px] font-black uppercase text-slate-400 tracking-[0.2em] text-center opacity-70 italic">Vincular con Registro Manual:</p>
                                                     <select 
-                                                        className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-[10px] font-black uppercase text-amber-500 outline-none focus:border-amber-500/50"
+                                                        className="w-full bg-[#111]/80 border border-white/10 rounded-2xl px-4 py-3 text-[10px] font-black uppercase text-amber-500 outline-none focus:border-amber-500/50 appearance-none cursor-pointer transition-all hover:bg-[#151515]"
                                                         onChange={async (e) => {
                                                             const memberId = e.target.value;
                                                             if (!memberId) return;
@@ -3240,6 +3405,18 @@ function AdminDashboardContent() {
                                     {/* Sidebar Vertical Inteligente */}
                                     <div className="lg:w-64 shrink-0 space-y-2 pb-4 border-b lg:border-b-0 lg:border-r border-border/10 pr-0 lg:pr-8">
                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-6 pl-2">Filtrar por Grupo</p>
+                                        
+                                        {/* Search Filter Box */}
+                                        <div className="relative mb-6 px-2">
+                                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
+                                            <Input 
+                                                value={memberSearch}
+                                                onChange={(e) => setMemberSearch(e.target.value)}
+                                                placeholder="Buscar por nombre o email..."
+                                                className="bg-foreground/[0.03] border-white/5 pl-9 h-11 text-[10px] uppercase font-bold tracking-widest rounded-xl focus:border-emerald-500/30"
+                                            />
+                                        </div>
+
                                         {[
                                             { id: 'all', label: 'Todos los Miembros', icon: Users, color: 'emerald' },
                                             { id: 'Casados', label: 'Casados', icon: Heart, color: 'rose' },
@@ -3310,11 +3487,18 @@ function AdminDashboardContent() {
                                                 { id: 'Niños', label: 'NIÑOS', icon: Baby },
                                                 { id: 'other', label: 'OTROS / SIN GRUPO', icon: Flame }
                                             ].filter(g => memberFilter === 'all' || memberFilter === g.id).map(group => {
-                                                const groupMembers = members.filter(m =>
-                                                    group.id === 'other'
+                                                const groupMembers = members.filter(m => {
+                                                    const matchesGroup = group.id === 'other'
                                                         ? (!m.member_group || !['Casados', 'Solos y Solas', 'Jóvenes', 'Niños'].includes(m.member_group))
-                                                        : m.member_group === group.id
-                                                ).sort((a, b) => a.name.localeCompare(b.name));
+                                                        : m.member_group === group.id;
+
+                                                    const searchNorm = normalizeText(memberSearch);
+                                                    const nameNorm = normalizeText(m.name || '');
+                                                    const emailNorm = normalizeText(m.email || '');
+                                                    const matchesSearch = !memberSearch || nameNorm.includes(searchNorm) || emailNorm.includes(searchNorm);
+
+                                                    return matchesGroup && matchesSearch;
+                                                }).sort((a, b) => a.name.localeCompare(b.name));
 
                                                 if (groupMembers.length === 0) return null;
 
@@ -3521,7 +3705,7 @@ function AdminDashboardContent() {
                                         <div className="relative group">
                                             <div className="w-48 h-48 rounded-[3rem] overflow-hidden border-4 border-amber-500/20 p-2 bg-slate-900 shadow-2xl transition-all duration-500 group-hover:border-amber-500/40">
                                                 <img 
-                                                    src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`} 
+                                                    src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
                                                     alt="Admin Avatar" 
                                                     className="w-full h-full object-cover rounded-[2.2rem] group-hover:scale-105 transition-all duration-700" 
                                                 />
@@ -3542,8 +3726,8 @@ function AdminDashboardContent() {
                                                     if (file) {
                                                         const compressed = await compressImage(file, 500, 500, 0.8);
                                                         const publicUrl = await uploadAvatar(`admin-avatar-${Date.now()}`, compressed);
-                                                        if (publicUrl) {
-                                                            await updateProfileInCloud(currentUser.id, { avatar: publicUrl });
+                                                        if (publicUrl && currentUser) {
+                                                            await updateProfileInCloud(currentUser.id, { avatar: publicUrl } as any);
                                                             setCurrentUser({ ...currentUser, avatar: publicUrl });
                                                             showNotification("Foto actualizada con éxito", 'success');
                                                         }
@@ -3560,15 +3744,15 @@ function AdminDashboardContent() {
                                             <div className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Nombre Completo</label>
                                                 <Input 
-                                                    value={currentUser.name || ''} 
-                                                    onChange={(e) => setCurrentUser({ ...currentUser, name: e.target.value })}
+                                                    value={currentUser?.name || ''} 
+                                                    onChange={(e) => currentUser && setCurrentUser({ ...currentUser, name: e.target.value })}
                                                     className="bg-white/5 border-white/10 h-14 rounded-2xl font-black focus:border-amber-500/50 transition-all font-outfit"
                                                 />
                                             </div>
                                             <div className="space-y-3">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Correo Electrónico</label>
                                                 <Input 
-                                                    value={currentUser.email || ''} 
+                                                    value={currentUser?.email || ''} 
                                                     disabled
                                                     className="bg-white/5 border-white/10 h-14 rounded-2xl font-bold opacity-40 cursor-not-allowed"
                                                 />
@@ -3578,8 +3762,8 @@ function AdminDashboardContent() {
                                         <div className="space-y-3">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Versículo Favorito / Lema Personal</label>
                                             <Input 
-                                                value={currentUser.favorite_verse || (currentUser as any).favoriteVerse || ''} 
-                                                onChange={(e) => setCurrentUser({ ...currentUser, favorite_verse: e.target.value })}
+                                                value={currentUser?.favorite_verse || (currentUser as any)?.favoriteVerse || ''} 
+                                                onChange={(e) => currentUser && setCurrentUser({ ...currentUser, favorite_verse: e.target.value })}
                                                 placeholder="Ej: Salmos 23:1 - Jehová es mi pastor..."
                                                 className="bg-white/5 border-white/10 h-14 rounded-2xl font-medium focus:border-amber-500/50 transition-all italic"
                                             />
@@ -3588,8 +3772,8 @@ function AdminDashboardContent() {
                                         <div className="space-y-3">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Biografía Breve</label>
                                             <textarea 
-                                                value={currentUser.bio || ''} 
-                                                onChange={(e) => setCurrentUser({ ...currentUser, bio: e.target.value })}
+                                                value={currentUser?.bio || ''} 
+                                                onChange={(e) => currentUser && setCurrentUser({ ...currentUser, bio: e.target.value })}
                                                 rows={4}
                                                 className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-medium text-sm focus:border-amber-500/50 transition-all outline-none resize-none"
                                                 placeholder="Cuéntanos un poco sobre ti..."
@@ -3598,14 +3782,15 @@ function AdminDashboardContent() {
 
                                         <div className="flex justify-end pt-4">
                                             <Button 
-                                                disabled={isSaving}
+                                                disabled={isSaving || !currentUser}
                                                 onClick={async () => {
+                                                    if (!currentUser) return;
                                                     setIsSaving(true);
                                                     const success = await updateProfileInCloud(currentUser.id, {
                                                         name: currentUser.name,
                                                         bio: currentUser.bio,
                                                         favorite_verse: currentUser.favorite_verse
-                                                    });
+                                                    } as any);
                                                     if (success) {
                                                         showNotification("Perfil guardado correctamente", 'success');
                                                     }

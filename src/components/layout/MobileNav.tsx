@@ -11,9 +11,9 @@ export function MobileNav() {
     const { currentUser, authSession, messages } = useAppStore();
     const pathname = usePathname();
 
-    const unreadMessagesCount = messages.filter(m => !m.isRead && m.targetRole === currentUser.role).length;
+    const unreadMessagesCount = messages.filter(m => !m.isRead && m.targetRole === currentUser?.role).length;
 
-    if (!authSession) return null;
+    if (!authSession || !currentUser) return null;
 
     const navItems = [
         {

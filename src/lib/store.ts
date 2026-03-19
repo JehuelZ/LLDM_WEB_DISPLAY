@@ -60,7 +60,7 @@ export interface AppSettings {
     customSocialLabel?: string;
     adminTheme?: 'classic' | 'tactile';
     displayPin?: string; // New: Access code for TV/Display mode
-    displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon';
+    displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna';
     displayScale?: number; // New: Scale factor for TV displays (0.5 to 1.5)
     displayOffsetX?: number; // New: Manual horizontal adjustment
     displayOffsetY?: number; // New: Manual vertical adjustment
@@ -119,7 +119,7 @@ export interface UserProfile {
 }
 
 export interface CalendarStyles {
-    template: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon';
+    template: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna';
 
 
 
@@ -207,7 +207,7 @@ interface AppState {
     specialEventTitle: string;
     calendarStyles: CalendarStyles;
     settings: AppSettings;
-    currentUser: UserProfile;
+    currentUser: UserProfile | null;
     minister: UserProfile;
 
     // Uniforms & Assignments
@@ -222,7 +222,7 @@ interface AppState {
     authSession: any;
 
     // Actions
-    setCurrentUser: (user: UserProfile) => void;
+    setCurrentUser: (user: UserProfile | null) => void;
     setScheduleForDay: (date: string, schedule: DailySchedule) => void;
     setTheme: (theme: WeeklyTheme) => void;
     setAnnouncements: (announcements: Announcement[]) => void;
@@ -257,6 +257,7 @@ interface AppState {
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
 
+    subscribeToProfiles: () => () => void;
     // New Cloud Actions
     saveAnnouncementToCloud: (ann: Partial<Announcement>) => Promise<void>;
     deleteAnnouncementFromCloud: (id: string) => Promise<void>;
@@ -315,10 +316,10 @@ const INITIAL_USER: UserProfile = {
     member_group: 'Administración',
     role: 'Administrador',
     gender: 'Varon',
-    status: 'Activo',
+    status: 'Pendiente', // Por seguridad, inicia pendiente hasta que se valide
     lastActive: 'Hoy',
     stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
-    privileges: ['admin', 'choir', 'leader']
+    privileges: [] // Sin privilegios por defecto
 };
 
 export const useAppStore = create<AppState>()(
@@ -343,7 +344,7 @@ export const useAppStore = create<AppState>()(
                 primaryColor: '#3b82f6',
                 showMinisterOnDisplay: true,
                 language: 'es',
-                displayBgMode: 'official',
+                displayBgMode: 'none',
                 displayBgStyle: 'static',
                 showCountdown: false,
                 countdownTitle: '',
@@ -365,7 +366,7 @@ export const useAppStore = create<AppState>()(
                 customLogo3: '',
                 customLogo4: ''
             },
-            currentUser: INITIAL_USER,
+            currentUser: null,
             minister: {
                 id: 'minister-placeholder',
                 name: 'Ministro Local',
@@ -866,8 +867,8 @@ export const useAppStore = create<AppState>()(
 
             syncUserWithCloud: async (authUserId) => {
                 // BYPASS for Test Accounts - Keep the currentUser as assigned during login
-                if (get().currentUser?.email?.includes('_test@lldmrodeo.org')) {
-                    console.log("Sync bypass for test account:", get().currentUser.email);
+                if (get().currentUser && get().currentUser!.email?.includes('_test@lldmrodeo.org')) {
+                    console.log("Sync bypass for test account:", get().currentUser!.email);
                     return;
                 }
 
@@ -1529,13 +1530,15 @@ export const useAppStore = create<AppState>()(
                 const session = get().authSession;
                 if (!session?.user) return;
 
-                const isChoirMember = get().currentUser.privileges?.includes('choir') || get().currentUser.role.includes('Coro');
+                if (!get().currentUser) return;
+                const currentUser = get().currentUser!;
+                const isChoirMember = currentUser.privileges?.includes('choir') || currentUser.role.includes('Coro');
                 const choirQuery = isChoirMember ? `,target_role.eq.'Coro'` : '';
 
                 const { data, error } = await supabase
                     .from('messages')
                     .select('*, sender:profiles!sender_id(name)')
-                    .or(`receiver_id.eq.${session.user.id},target_role.eq.'${get().currentUser.role}'${choirQuery}`)
+                    .or(`receiver_id.eq.${session.user.id},target_role.eq.'${currentUser.role}'${choirQuery}`)
                     .order('created_at', { ascending: false });
 
                 if (error) {
@@ -1576,7 +1579,7 @@ export const useAppStore = create<AppState>()(
 
                         // Solo procesar si el mensaje es para nosotros (por ID o por Rol)
                         const isForUs = (newMsg.receiver_id === session?.user?.id) ||
-                            (newMsg.target_role === currentUser.role);
+                            (currentUser && newMsg.target_role === currentUser.role);
 
                         if (isForUs) {
                             get().loadCloudMessages(); // Recargar para obtener nombres de remitentes
@@ -1595,6 +1598,19 @@ export const useAppStore = create<AppState>()(
                     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'app_settings' }, () => {
                         console.log("Settings updated in cloud, reloading...");
                         get().loadSettingsFromCloud();
+                    })
+                    .subscribe();
+                return () => {
+                    supabase.removeChannel(channel);
+                };
+            },
+
+            subscribeToProfiles: () => {
+                const channel = supabase
+                    .channel('profiles_realtime')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+                        console.log("Profiles updated in cloud, reloading...");
+                        get().loadMembersFromCloud();
                     })
                     .subscribe();
                 return () => {
