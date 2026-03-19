@@ -1062,150 +1062,8 @@ function AdminDashboardContent() {
                     animate={{ opacity: 1, y: 0 }}
                     className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
                 >
-                    {/* Daily Attendance Donut Chart */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                                    Asistencia en Vivo
-                                </div>
-                                <Activity className="w-3 h-3 text-primary opacity-50" />
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-4 pb-14">
-                            <div className="flex items-center gap-8">
-                                <div className="relative w-32 h-32 shrink-0">
-                                    {/* Glass reflection effect */}
-                                    <div className="absolute inset-2 rounded-full border border-white/5 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-                                    
-                                    <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" viewBox="0 0 100 100">
-                                        <defs>
-                                            <linearGradient id="donutGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                <stop offset="0%" stopColor="var(--primary)" />
-                                                <stop offset="100%" stopColor="#8b5cf6" />
-                                            </linearGradient>
-                                        </defs>
-                                        <circle cx="50" cy="50" r="42" fill="transparent" stroke="currentColor" strokeWidth="6" className="text-slate-800/50" />
-                                        <motion.circle
-                                            cx="50" cy="50" r="42" fill="transparent" stroke="url(#donutGradient)" strokeWidth="10"
-                                            strokeDasharray="263.89"
-                                            initial={{ strokeDashoffset: 263.89 }}
-                                            animate={{ strokeDashoffset: 263.89 - (263.89 * attendancePercentage / 100) }}
-                                            transition={{ duration: 1.5, ease: "circOut" }}
-                                            className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.5)]"
-                                            strokeLinecap="round"
-                                        />
-                                    </svg>
-                                    <div className="absolute inset-0 flex items-center justify-center flex-col z-10">
-                                        <motion.span 
-                                            initial={{ scale: 0.5, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            className="text-3xl font-black text-foreground italic drop-shadow-md"
-                                        >
-                                            {attendancePercentage}%
-                                        </motion.span>
-                                    </div>
-                                </div>
-                                <div className="space-y-4 relative z-10 w-full">
-                                    <div className="space-y-1">
-                                        <div className="text-2xl font-black text-foreground italic flex items-baseline gap-1">
-                                            {attendedCount}
-                                            <span className="text-xs font-bold text-slate-500 not-italic uppercase ml-1">/ {totalMembersCount}</span>
-                                        </div>
-                                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-tight">
-                                            Miembros Presentes
-                                        </p>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <div className="flex justify-between text-[9px] font-black uppercase tracking-tighter">
-                                            <span className="text-primary">Completado</span>
-                                            <span className="text-slate-500">{pendingCount} faltantes</span>
-                                        </div>
-                                        <div className="h-2 w-full bg-slate-800/50 rounded-full overflow-hidden border border-white/5">
-                                            <motion.div 
-                                                initial={{ width: 0 }} 
-                                                animate={{ width: `${attendancePercentage}%` }} 
-                                                transition={{ duration: 1, delay: 0.5 }}
-                                                className="h-full bg-gradient-to-r from-primary to-purple-500 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]" 
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Member Growth Mountain Chart */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                                <TrendingUp className="w-3 h-3 text-secondary" />
-                                Crecimiento de Miembros
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-4 pb-14 h-full flex flex-col">
-                            <div className="flex-1 min-h-[70px] relative mb-8">
-                                <svg className="w-full h-full" viewBox="0 0 400 120" preserveAspectRatio="none">
-                                    <defs>
-                                        <linearGradient id="mountGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" stopColor="var(--secondary)" stopOpacity="0.4" />
-                                            <stop offset="100%" stopColor="var(--secondary)" stopOpacity="0" />
-                                        </linearGradient>
-                                    </defs>
-                                    <motion.path 
-                                        initial={{ d: "M0,120 Q50,120 100,120 T200,120 T300,120 T400,120 V120 H0 Z" }}
-                                        animate={{ d: "M0,80 Q50,40 100,70 T200,80 T300,50 T400,30 V120 H0 Z" }}
-                                        transition={{ duration: 2, ease: "easeOut" }}
-                                        fill="url(#mountGrad)" 
-                                    />
-                                    <motion.path 
-                                        initial={{ pathLength: 0 }}
-                                        animate={{ pathLength: 1 }}
-                                        transition={{ duration: 2, ease: "easeOut" }}
-                                        d="M0,80 Q50,40 100,70 T200,80 T300,50 T400,30" 
-                                        fill="none" 
-                                        stroke="var(--secondary)" 
-                                        strokeWidth="3" 
-                                    />
-                                </svg>
-                            </div>
-                            <div className="flex items-end justify-between relative z-10 mt-auto pt-8 pb-4">
-                                <div className="pl-1">
-                                    <div className="text-4xl font-black text-foreground italic leading-none py-3">{totalMembersCount}</div>
-                                    <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 italic uppercase">Total Miembros</p>
-                                </div>
-                                <div className="bg-emerald-500/20 text-emerald-400 px-5 py-2.5 rounded-full text-[10px] font-black italic border border-emerald-500/30 backdrop-blur-md shadow-lg mb-4">+{members.filter(m => m.status === 'Activo').length} Activos</div>
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Consistency Streak / Top Members */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Compromiso</CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-4 flex flex-col items-center justify-center text-center h-full relative z-10">
-                            <div className="text-7xl font-black tracking-tighter bg-gradient-to-b from-orange-400 via-amber-200 to-white bg-clip-text text-transparent drop-shadow-[0_10px_20px_rgba(245,158,11,0.3)] tabular-nums py-2">
-                                {members.filter(m => (m.stats?.attendance?.attended || 0) > 0).length}
-                            </div>
-                            <div className="mt-2 text-xs font-black uppercase tracking-[0.3em] text-orange-500 italic">Hnos. Participantes</div>
-                            <div className="flex gap-1.5 mt-6">
-                                {[1, 2, 3, 4, 5, 6, 7].map(i => (
-                                    <motion.div 
-                                        key={i} 
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{ delay: 0.1 * i }}
-                                        className={cn("w-2 h-2 rounded-full", i <= (members.length % 7) + 1 ? "bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]" : "bg-white/5")} 
-                                    />
-                                ))}
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Monthly Performance Intelligence Dashboard - REPLACING Event & Announcements */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 xl:col-span-2 relative overflow-hidden group shadow-2xl">
+                    {/* Monthly Performance Intelligence Dashboard - PRIMARY FOCUS */}
+                    <Card className="glass-card bg-slate-900/40 border-white/5 xl:col-span-3 relative overflow-hidden group shadow-2xl">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
                         <CardHeader className="pb-2 flex flex-row items-center justify-between">
                             <div>
@@ -1222,14 +1080,6 @@ function AdminDashboardContent() {
                         </CardHeader>
                         <CardContent className="pt-6 pb-4">
                             <div className="h-40 flex items-end justify-between gap-4 px-2 relative">
-                                {/* Grid lines for the chart */}
-                                <div className="absolute left-0 right-0 top-0 bottom-0 flex flex-col justify-between pointer-events-none opacity-5">
-                                    <div className="w-full h-px bg-white" />
-                                    <div className="w-full h-px bg-white border-dashed" />
-                                    <div className="w-full h-px bg-white" />
-                                    <div className="w-full h-px bg-white border-dashed" />
-                                </div>
-
                                 {[
                                     { label: 'Varones', value: 88, color: 'emerald' },
                                     { label: 'Mujeres', value: 92, color: 'emerald' },
@@ -1238,7 +1088,6 @@ function AdminDashboardContent() {
                                     { label: 'Niñez', value: 54, color: 'orange' },
                                     { label: 'Casados', value: 76, color: 'amber' },
                                 ].map((soc, idx) => {
-                                    // Progress-based dynamic colors
                                     const colorGrad = soc.value >= 80 ? "from-emerald-600 to-emerald-400" : 
                                                      soc.value >= 60 ? "from-amber-600 to-amber-400" : 
                                                      "from-orange-600 to-orange-400";
@@ -1249,40 +1098,72 @@ function AdminDashboardContent() {
                                     return (
                                         <div key={idx} className="flex-1 flex flex-col items-center gap-3 group/valla relative">
                                             <div className="w-full relative flex flex-col items-center justify-end h-full">
-                                                {/* The "Valla" (Bar) */}
                                                 <motion.div 
                                                     initial={{ height: 0 }}
                                                     animate={{ height: `${soc.value}%` }}
-                                                    transition={{ duration: 1.5, delay: 0.1 * idx, ease: "circOut" }}
-                                                    className={cn(
-                                                        "w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-500",
-                                                        "group-hover/valla:scale-x-105 group-hover/valla:brightness-125",
-                                                        colorGrad
-                                                    )}
-                                                    style={{ 
-                                                        boxShadow: `0 0 20px ${glowColor}`,
-                                                        borderTop: '2px solid rgba(135, 135, 135, 0.47)' 
-                                                    }}
-                                                >
-                                                    {/* Glow behind bar */}
-                                                    <div className="absolute inset-x-2 -inset-y-2 bg-white/10 blur-xl opacity-0 group-hover/valla:opacity-100 transition-opacity" />
-                                                </motion.div>
+                                                    className={cn("w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-500 group-hover/valla:brightness-125", colorGrad)}
+                                                    style={{ boxShadow: `0 0 20px ${glowColor}`, borderTop: '2px solid rgba(255,255,255,0.1)' }}
+                                                />
                                             </div>
-                                            {/* Label with dynamic weight */}
-                                            <div className="text-center space-y-1 w-full">
-                                                <div className="text-[12px] italic leading-none" style={{ 
-                                                    fontFamily: settings.fontMain ? `"${settings.fontMain}", sans-serif` : 'inherit',
-                                                    fontWeight: Number(settings.fontWeight || '900')
-                                                }}>
-                                                    {soc.value}%
-                                                </div>
-                                                <span className="text-[8px] font-black uppercase tracking-tighter text-slate-500 truncate block">
-                                                    {soc.label}
-                                                </span>
+                                            <div className="text-center">
+                                                <div className="text-[11px] font-black italic">{soc.value}%</div>
+                                                <span className="text-[8px] font-black uppercase tracking-tighter text-slate-500 truncate block w-10">{soc.label}</span>
                                             </div>
                                         </div>
                                     );
                                 })}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Daily Attendance Donut Chart */}
+                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                                    Asistencia en Vivo
+                                </div>
+                                <Activity className="w-3 h-3 text-primary opacity-50" />
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-4 pb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="relative w-20 h-20 shrink-0">
+                                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                        <circle cx="50" cy="50" r="42" fill="transparent" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
+                                        <motion.circle
+                                            cx="50" cy="50" r="42" fill="transparent" stroke="var(--primary)" strokeWidth="8"
+                                            strokeDasharray="263.89"
+                                            animate={{ strokeDashoffset: 263.89 - (263.89 * attendancePercentage / 100) }}
+                                            strokeLinecap="round"
+                                        />
+                                    </svg>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-xl font-black italic">{attendancePercentage}%</span>
+                                    </div>
+                                </div>
+                                <div className="min-w-0">
+                                    <div className="text-2xl font-black">{attendedCount}</div>
+                                    <p className="text-[8px] font-black uppercase text-slate-500 tracking-widest">Hermanos</p>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Member Growth Mountain Chart */}
+                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
+                                <TrendingUp className="w-3 h-3 text-secondary" />
+                                Membresía
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="pt-4 pb-4">
+                            <div className="text-4xl font-black italic mb-1">{totalMembersCount}</div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                                <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Activos</span>
                             </div>
                         </CardContent>
                     </Card>

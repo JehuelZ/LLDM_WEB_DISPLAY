@@ -1047,119 +1047,56 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <button className="tactile-btn tactile-btn-glass text-xs px-8">HISTORIAL</button>
                                         </div>
                                     </div>
-
-                                    {/* Right Column - Controls */}
+                                                         {/* Right Column - Intelligence */}
                                     <div className="col-span-1 md:col-span-4 space-y-8">
-                                        <TactileGlassCard title="INTELIGENCIA DE DATOS" className="w-full">
+                                        <TactileGlassCard title="INTELIGENCIA MENSUAL" className="w-full">
                                             <div className="space-y-6">
-                                                {/* Bar Chart */}
-                                                <div>
-                                                    <div className="flex items-center justify-between mb-4">
-                                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Asistencia 30 Días</h4>
-                                                        <span className="text-[10px] font-bold text-tactile-text-sub italic">Últimos registros</span>
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-[10px] font-black uppercase text-primary tracking-[0.2em]">Rendimiento 30 Días</p>
+                                                    <div className="flex items-center gap-2 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                                                        <TrendingUp className="w-3 h-3 text-emerald-500" />
+                                                        <span className="text-[9px] font-black text-emerald-500 italic">+12.4%</span>
                                                     </div>
-                                                    <div className="h-40 flex items-end gap-1 px-2 border-b border-white/5 pb-1">
-                                                        {monthlyGlobalStats.length > 0 ? (
-                                                            monthlyGlobalStats.map((day, idx) => (
-                                                                <motion.div
-                                                                    key={idx}
+                                                </div>
+
+                                                {/* Societies Chart */}
+                                                <div className="h-48 flex items-end justify-between gap-3 px-1 relative">
+                                                    {[
+                                                        { label: 'Varones', value: 88 },
+                                                        { label: 'Mujeres', value: 92 },
+                                                        { label: 'Jóvenes', value: 68 },
+                                                        { label: 'Coro', value: 85 },
+                                                        { label: 'Niños', value: 54 },
+                                                        { label: 'Casados', value: 76 },
+                                                    ].map((soc, idx) => {
+                                                        const colorGrad = soc.value >= 80 ? "from-emerald-500/60 to-emerald-400/20" : 
+                                                                         soc.value >= 60 ? "from-primary/60 to-primary/20" : 
+                                                                         "from-orange-500/60 to-orange-400/20";
+                                                        return (
+                                                            <div key={idx} className="flex-1 flex flex-col items-center gap-3 group relative h-full justify-end">
+                                                                <motion.div 
                                                                     initial={{ height: 0 }}
-                                                                    animate={{ height: `${Math.max(day.percentage, 5)}%` }}
-                                                                    className={cn(
-                                                                        "flex-1 rounded-t-sm transition-all relative group",
-                                                                        day.percentage > 70 ? "bg-emerald-500/60" : 
-                                                                        day.percentage > 40 ? "bg-primary/60" : "bg-orange-500/60"
-                                                                    )}
-                                                                >
-                                                                    {/* Tooltip */}
-                                                                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-black/90 rounded text-[8px] font-black whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 border border-white/10 uppercase">
-                                                                        {format(parseISO(day.date), 'd MMM')}: {day.attended} Pers.
-                                                                    </div>
-                                                                </motion.div>
-                                                            ))
-                                                        ) : (
-                                                            <div className="w-full h-full flex items-center justify-center text-[10px] font-black uppercase tracking-widest text-white/20 italic">
-                                                                Sin Datos
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                                <div className="grid grid-cols-1 gap-4">
-                                                    <div className="bg-black/40 p-6 rounded-3xl border border-white/[0.03] flex items-center justify-between group hover:border-primary/20 transition-all">
-                                                        <div>
-                                                            <p className="text-[10px] font-black uppercase text-tactile-text-sub mb-1 tracking-widest">Total Miembros</p>
-                                                            <div className="text-4xl font-black italic text-white drop-shadow-lg">{members.length}</div>
-                                                            <div className="flex items-center gap-1.5 mt-2">
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" />
-                                                                <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">
-                                                                    {members.filter(m => m.status === 'Activo').length} Activos
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div className="relative w-20 h-20 shrink-0">
-                                                            <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.2)]" viewBox="0 0 100 100">
-                                                                <defs>
-                                                                    <linearGradient id="globalProgressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                                        <stop offset="0%" stopColor="var(--primary)" />
-                                                                        <stop offset="100%" stopColor="#8b5cf6" />
-                                                                    </linearGradient>
-                                                                </defs>
-                                                                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
-                                                                <motion.circle 
-                                                                    cx="50" cy="50" r="42" fill="none" stroke="url(#globalProgressGrad)" strokeWidth="10" 
-                                                                    strokeDasharray="263.89" 
-                                                                    initial={{ strokeDashoffset: 263.89 }}
-                                                                    animate={{ 
-                                                                        strokeDashoffset: 263.89 - (263.89 * (monthlyGlobalStats.length > 0 
-                                                                            ? (monthlyGlobalStats.reduce((acc, d) => acc + d.percentage, 0) / monthlyGlobalStats.length) 
-                                                                            : 0) / 100) 
-                                                                    }}
-                                                                    transition={{ duration: 2, ease: "circOut" }}
-                                                                    className="drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]" 
-                                                                    strokeLinecap="round"
+                                                                    animate={{ height: `${soc.value}%` }}
+                                                                    className={cn("w-full rounded-t-xl bg-gradient-to-t border-t border-white/20", colorGrad)}
                                                                 />
-                                                            </svg>
-                                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                                <span className="text-sm font-black italic text-white">
-                                                                    {monthlyGlobalStats.length > 0 
-                                                                        ? `${Math.round(monthlyGlobalStats.reduce((acc, d) => acc + d.percentage, 0) / monthlyGlobalStats.length)}%`
-                                                                        : '0%'
-                                                                    }
-                                                                </span>
+                                                                <div className="text-center">
+                                                                    <div className="text-[10px] font-black italic">{soc.value}%</div>
+                                                                    <div className="text-[7px] font-black uppercase text-tactile-text-sub truncate w-10">{soc.label}</div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
+                                                        );
+                                                    })}
                                                 </div>
 
-                                                <div className="space-y-3">
-                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Varones</span>
+                                                <div className="grid grid-cols-1 gap-3">
+                                                    <div className="bg-white/[0.03] p-4 rounded-2xl border border-white/5 flex items-center justify-between">
+                                                        <div>
+                                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Membresía Activa</p>
+                                                            <div className="text-2xl font-black italic">{members.filter(m => m.status === 'Activo').length}</div>
                                                         </div>
-                                                        <span className="text-xs font-black italic">{members.filter(m => m.gender === 'Varon').length}</span>
-                                                    </div>
-                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-2 h-2 rounded-full bg-pink-500" />
-                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Mujeres</span>
+                                                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                                                            <Users className="w-5 h-5 text-emerald-500" />
                                                         </div>
-                                                        <span className="text-xs font-black italic">{members.filter(m => m.gender === 'Hermana' && m.category !== 'Niño').length}</span>
-                                                    </div>
-                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-2 h-2 rounded-full bg-orange-500" />
-                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Niños / Niñas</span>
-                                                        </div>
-                                                        <span className="text-xs font-black italic">{members.filter(m => m.category === 'Niño').length}</span>
-                                                    </div>
-                                                    <div className="flex justify-between items-center bg-white/[0.03] p-3 rounded-2xl border border-white/5">
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="w-2 h-2 rounded-full bg-amber-500" />
-                                                            <span className="text-[9px] font-black uppercase text-tactile-text-sub">Niñez</span>
-                                                        </div>
-                                                        <span className="text-xs font-black italic">{members.filter(m => m.member_group?.includes('Niñ')).length}</span>
                                                     </div>
                                                 </div>
                                             </div>
