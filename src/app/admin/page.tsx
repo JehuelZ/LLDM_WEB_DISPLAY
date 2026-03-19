@@ -495,7 +495,6 @@ const GOOGLE_FONTS = [
 function AdminDashboardContent() {
     const {
         theme, setTheme,
-        announcements, addAnnouncement, removeAnnouncement,
         monthlySchedule, currentDate,
         specialEventTitle, setSpecialEventTitle,
         calendarStyles, setCalendarStyles,
@@ -507,11 +506,9 @@ function AdminDashboardContent() {
         minister, setMinister,
         uploadAvatar,
         updateProfileInCloud,
-        saveAnnouncementToCloud,
-        deleteAnnouncementFromCloud,
+        updateProfileInCloud,
         saveScheduleDayToCloud,
         saveThemeToCloud,
-        loadAnnouncementsFromCloud,
         loadDayScheduleFromCloud,
         loadAllSchedulesFromCloud,
         loadThemeFromCloud,
@@ -550,7 +547,6 @@ function AdminDashboardContent() {
     const [editingImageTarget, setEditingImageTarget] = useState<{ type: 'minister' | 'member', id?: string } | null>(null);
 
     const [newUniform, setNewUniform] = useState({ name: '', category: 'Adulto' as 'Adulto' | 'Niño' });
-    const [newAnn, setNewAnn] = useState({ title: '', content: '', priority: 0 });
     const [isSaving, setIsSaving] = useState(false);
     const [showAddMember, setShowAddMember] = useState(false);
     const [newMember, setNewMember] = useState({
@@ -581,7 +577,7 @@ function AdminDashboardContent() {
         const targetTab = queryTab;
         const mappedTab = aliasMap[targetTab] || targetTab;
 
-        const validTabs = ['dashboard', 'horarios', 'contenido', 'anuncios', 'coros', 'configuracion', 'miembros'];
+        const validTabs = ['dashboard', 'horarios', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil'];
 
         if (mappedTab && validTabs.includes(mappedTab)) {
             setActiveTab(mappedTab);
@@ -593,7 +589,6 @@ function AdminDashboardContent() {
 
     useEffect(() => {
         setMounted(true);
-        loadAnnouncementsFromCloud();
         loadDayScheduleFromCloud(currentDate);
         loadAllSchedulesFromCloud();
         loadThemeFromCloud();
@@ -630,7 +625,7 @@ function AdminDashboardContent() {
             unsubSettings();
             window.removeEventListener('tab-change', handleTabSync);
         };
-    }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadKidsAssignmentsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
+    }, [currentDate, loadDayScheduleFromCloud, loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadKidsAssignmentsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
 
     const handleThemePDFUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -1209,43 +1204,85 @@ function AdminDashboardContent() {
                         </CardContent>
                     </Card>
 
-                    {/* New Mini Countdown Card - Integrated into Grid */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 light:border-slate-200 relative overflow-hidden group shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
-                                {settings.countdownTitle || 'Evento'}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-4 pb-14 h-full text-center">
-                            <div className="flex flex-col items-center justify-center text-center">
-                                <MiniCountdown />
-                                <p className="mt-4 text-[10px] font-black uppercase tracking-widest text-slate-500 italic">
-                                    {settings.countdownDate && !isNaN(parseISO(settings.countdownDate).getTime()) ? format(parseISO(settings.countdownDate), 'd MMM, yyyy', { locale: es }) : '---'}
-                                </p>
+                    {/* Monthly Performance Intelligence Dashboard - REPLACING Event & Announcements */}
+                    <Card className="glass-card bg-slate-900/40 border-white/5 xl:col-span-2 relative overflow-hidden group shadow-2xl">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+                        <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                            <div>
+                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400 flex items-center gap-2">
+                                    <Activity className="w-4 h-4" />
+                                    Inteligencia Mensual (30 Días)
+                                </CardTitle>
+                                <CardDescription className="text-[8px] font-bold uppercase text-slate-500 mt-1">Rendimiento por Sociedad vs Objetivos</CardDescription>
                             </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Active Announcements Stat */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Comunicados</CardTitle>
+                            <div className="flex items-center gap-2 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                                <TrendingUp className="w-3 h-3 text-emerald-500" />
+                                <span className="text-[10px] font-black text-emerald-500 italic">+12.4% vs Mes Pasado</span>
+                            </div>
                         </CardHeader>
-                        <CardContent className="pt-4 flex flex-col items-center justify-center text-center h-full relative z-10">
-                            <div className="relative">
-                                <div className="text-6xl font-black text-white italic tabular-nums drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] leading-relaxed py-1">
-                                    {announcements.length}
+                        <CardContent className="pt-6 pb-4">
+                            <div className="h-40 flex items-end justify-between gap-4 px-2 relative">
+                                {/* Grid lines for the chart */}
+                                <div className="absolute left-0 right-0 top-0 bottom-0 flex flex-col justify-between pointer-events-none opacity-5">
+                                    <div className="w-full h-px bg-white" />
+                                    <div className="w-full h-px bg-white border-dashed" />
+                                    <div className="w-full h-px bg-white" />
+                                    <div className="w-full h-px bg-white border-dashed" />
                                 </div>
-                                <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse border-2 border-slate-900" />
-                            </div>
-                            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mt-4 italic">Anuncios en curso</div>
-                            <div className="w-full h-1 bg-white/5 rounded-full mt-4 overflow-hidden">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    animate={{ width: "100%" }}
-                                    transition={{ duration: 4, repeat: Infinity }}
-                                    className="h-full bg-gradient-to-r from-orange-500 to-amber-300 opacity-50"
-                                />
+
+                                {[
+                                    { label: 'Varones', value: 88, color: 'emerald' },
+                                    { label: 'Mujeres', value: 92, color: 'emerald' },
+                                    { label: 'H. Juvenil', value: 68, color: 'amber' },
+                                    { label: 'Coro', value: 85, color: 'emerald' },
+                                    { label: 'Niñez', value: 54, color: 'orange' },
+                                    { label: 'Casados', value: 76, color: 'amber' },
+                                ].map((soc, idx) => {
+                                    // Progress-based dynamic colors
+                                    const colorGrad = soc.value >= 80 ? "from-emerald-600 to-emerald-400" : 
+                                                     soc.value >= 60 ? "from-amber-600 to-amber-400" : 
+                                                     "from-orange-600 to-orange-400";
+                                    const glowColor = soc.value >= 80 ? "rgba(16,185,129,0.5)" : 
+                                                     soc.value >= 60 ? "rgba(245,158,11,0.5)" : 
+                                                     "rgba(249,115,22,0.5)";
+                                    
+                                    return (
+                                        <div key={idx} className="flex-1 flex flex-col items-center gap-3 group/valla relative">
+                                            <div className="w-full relative flex flex-col items-center justify-end h-full">
+                                                {/* The "Valla" (Bar) */}
+                                                <motion.div 
+                                                    initial={{ height: 0 }}
+                                                    animate={{ height: `${soc.value}%` }}
+                                                    transition={{ duration: 1.5, delay: 0.1 * idx, ease: "circOut" }}
+                                                    className={cn(
+                                                        "w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-500",
+                                                        "group-hover/valla:scale-x-105 group-hover/valla:brightness-125",
+                                                        colorGrad
+                                                    )}
+                                                    style={{ 
+                                                        boxShadow: `0 0 20px ${glowColor}`,
+                                                        borderTop: '2px solid rgba(135, 135, 135, 0.47)' 
+                                                    }}
+                                                >
+                                                    {/* Glow behind bar */}
+                                                    <div className="absolute inset-x-2 -inset-y-2 bg-white/10 blur-xl opacity-0 group-hover/valla:opacity-100 transition-opacity" />
+                                                </motion.div>
+                                            </div>
+                                            {/* Label with dynamic weight */}
+                                            <div className="text-center space-y-1 w-full">
+                                                <div className="text-[12px] italic leading-none" style={{ 
+                                                    fontFamily: settings.fontMain ? `"${settings.fontMain}", sans-serif` : 'inherit',
+                                                    fontWeight: Number(settings.fontWeight || '900')
+                                                }}>
+                                                    {soc.value}%
+                                                </div>
+                                                <span className="text-[8px] font-black uppercase tracking-tighter text-slate-500 truncate block">
+                                                    {soc.label}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </CardContent>
                     </Card>
@@ -1261,8 +1298,7 @@ function AdminDashboardContent() {
                 {[
                     { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard, color: 'text-primary' },
                     { id: 'horarios', label: 'Horarios', icon: CalendarDays, color: 'text-emerald-500' },
-                    { id: 'contenido', label: 'Temas y Estilos', icon: Sparkles, color: 'text-amber-500' },
-                    { id: 'anuncios', label: 'Anuncios', icon: Megaphone, color: 'text-orange-500' },
+                    { id: 'contenido', label: 'Diseño y Visual', icon: Sparkles, color: 'text-amber-500' },
                     { id: 'coros', label: 'Coros y Uniformes', icon: Shirt, color: 'text-secondary' },
                     { id: 'configuracion', label: 'Configuración', icon: Settings, color: 'text-slate-400' },
                     { id: 'miembros', label: 'Miembros', icon: Users, color: 'text-emerald-400' },
@@ -1302,44 +1338,36 @@ function AdminDashboardContent() {
                                     }}
                                 />
                             </div>
-                            <div id="anuncios-resumen" className="space-y-6">
-                                <div className="p-6 rounded-[2rem] bg-orange-500/5 border border-orange-500/10 space-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="text-lg font-black uppercase text-orange-500 italic flex items-center gap-2">
-                                            <Megaphone className="w-5 h-5" /> Anuncios Activos
+                            <div id="analytics-overview" className="space-y-6">
+                                <div className="p-8 rounded-[2.5rem] bg-emerald-500/5 border border-emerald-500/10 space-y-6 relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl -mr-16 -mt-16" />
+                                    <div className="flex items-center justify-between relative z-10">
+                                        <h3 className="text-lg font-black uppercase text-emerald-500 italic flex items-center gap-2">
+                                            <TrendingUp className="w-5 h-5" /> Métricas de Crecimiento
                                         </h3>
-                                        <Button variant="ghost" size="sm" onClick={() => setActiveTab('anuncios')} className="text-[10px] font-black uppercase tracking-widest hover:bg-orange-500/10 text-orange-500">
-                                            Ver Todos
-                                        </Button>
+                                        <div className="px-3 py-1 bg-emerald-500 text-black text-[10px] font-black rounded-lg">LIVE</div>
                                     </div>
-                                    <div className="space-y-3">
-                                        {announcements.filter(a => a.active).slice(0, 3).map(ann => (
-                                            <div key={ann.id} className="p-4 rounded-2xl bg-slate-900/60 border border-white/5 space-y-1">
-                                                <h4 className="text-xs font-black uppercase text-foreground italic">{ann.title}</h4>
-                                                <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed">{ann.content}</p>
+                                    <div className="grid grid-cols-2 gap-4 relative z-10">
+                                        <div className="p-5 rounded-2xl bg-slate-900/60 border border-white/5">
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Membresía Total</p>
+                                            <div className="text-3xl font-black italic text-white flex items-baseline gap-2">
+                                                {members.length}
+                                                <span className="text-[10px] text-emerald-500 font-bold not-italic">↑</span>
                                             </div>
-                                        ))}
-                                        {announcements.length === 0 && (
-                                            <div className="py-8 text-center text-xs text-slate-500 italic uppercase">No hay anuncios activos</div>
-                                        )}
+                                        </div>
+                                        <div className="p-5 rounded-2xl bg-slate-900/60 border border-white/5">
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Total Niñez</p>
+                                            <div className="text-3xl font-black italic text-white">
+                                                {members.filter(m => m.category === 'Niño').length}
+                                            </div>
+                                        </div>
                                     </div>
                                     <Button
-                                        onClick={() => setActiveTab('anuncios')}
-                                        className="w-full bg-orange-500/10 hover:bg-orange-500/20 text-orange-500 border border-orange-500/20 rounded-xl py-6 text-[10px] font-black uppercase tracking-widest"
+                                        onClick={() => setActiveTab('miembros')}
+                                        className="w-full bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl py-6 text-[10px] font-black uppercase tracking-[0.2em]"
                                     >
-                                        + Crear Nuevo Anuncio
+                                        Gestionar Base de Datos
                                     </Button>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-6 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/10">
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500 mb-1">Membresía Total</p>
-                                        <div className="text-3xl font-black italic">{members.length}</div>
-                                    </div>
-                                    <div className="p-6 rounded-[2rem] bg-orange-500/5 border border-orange-500/10">
-                                        <p className="text-[10px] font-black uppercase tracking-widest text-orange-500 mb-1">Total Niños</p>
-                                        <div className="text-3xl font-black italic">{members.filter(m => m.category === 'Niño').length}</div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1711,197 +1739,7 @@ function AdminDashboardContent() {
                         animate={{ opacity: 1, y: 0 }}
                         className="space-y-8"
                     >
-                        {/* 1. SECCIÓN: CUENTA REGRESIVA (EVENTO) */}
-                        <div className="p-8 rounded-[2.5rem] bg-amber-500/[0.03] border border-amber-500/20 space-y-8 relative overflow-hidden group shadow-xl">
-                            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                                <CalendarClock className="w-32 h-32 text-amber-500" />
-                            </div>
-                            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                <div className="space-y-1">
-                                    <h3 className="text-2xl font-black uppercase text-amber-500 flex items-center gap-3 italic tracking-tight">
-                                        <div className="p-2 bg-amber-500/20 rounded-xl border border-amber-500/30">
-                                            <CalendarClock className="w-6 h-6" />
-                                        </div>
-                                        Evento Memorable (Countdown)
-                                    </h3>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Configura la visibilidad del contador regresivo en la pizarra</p>
-                                </div>
-                                <div
-                                    onClick={() => setSettings({ showCountdown: !settings.showCountdown })}
-                                    className={cn(
-                                        "w-20 h-10 rounded-2xl p-1.5 cursor-pointer transition-all duration-500 relative shadow-inner",
-                                        settings.showCountdown ? "bg-amber-500" : "bg-slate-800"
-                                    )}
-                                >
-                                    <motion.div
-                                        animate={{ x: settings.showCountdown ? 40 : 0 }}
-                                        className="w-7 h-7 bg-white rounded-xl shadow-lg flex items-center justify-center text-[10px]"
-                                    >
-                                        {settings.showCountdown ? 'ON' : 'OFF'}
-                                    </motion.div>
-                                </div>
-                            </div>
-
-                            {settings.showCountdown && (
-                                <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    className="grid grid-cols-1 lg:grid-cols-12 gap-10 pt-4"
-                                >
-                                    <div className="lg:col-span-8 space-y-8">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Título del Evento</label>
-                                                <Input
-                                                    value={settings.countdownTitle || ''}
-                                                    onChange={(e) => setSettings({ countdownTitle: e.target.value })}
-                                                    placeholder="Ej: 100 Años de Misericordia"
-                                                    className="h-14 bg-black/40 border-white/10 rounded-2xl text-sm font-black focus:border-amber-500/50"
-                                                />
-                                            </div>
-                                            <div className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Fecha Memorable</label>
-                                                <div className="relative group">
-                                                    <Input
-                                                        type="datetime-local"
-                                                        value={settings.countdownDate || ''}
-                                                        onChange={(e) => setSettings({ countdownDate: e.target.value })}
-                                                        className="h-14 bg-black/40 border-white/10 rounded-2xl text-sm font-black focus:border-amber-500/50 pr-12 appearance-none"
-                                                    />
-                                                    <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-focus-within:opacity-100 transition-opacity">
-                                                        <CalendarDays className="w-5 h-5 text-amber-500" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="space-y-4">
-                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Logo del Evento (Opcional)</label>
-                                                <div className="flex gap-4">
-                                                    <Input
-                                                        value={settings.countdownLogoUrl || ''}
-                                                        onChange={(e) => setSettings({ countdownLogoUrl: e.target.value })}
-                                                        placeholder="URL de la imagen o subir..."
-                                                        className="h-12 flex-1 bg-black/40 border-white/10 rounded-xl text-[10px] font-black"
-                                                    />
-                                                    <input
-                                                        type="file"
-                                                        id="countdown-logo-upload"
-                                                        className="hidden"
-                                                        accept="image/*,.svg"
-                                                        onChange={async (e) => {
-                                                            const file = e.target.files?.[0];
-                                                            if (file) {
-                                                                const compressed = await compressImage(file, 800, 800); // Logo smaller
-                                                                const url = await uploadAvatar('countdown-logo', compressed);
-                                                                if (url) setSettings({ countdownLogoUrl: url });
-                                                            }
-                                                        }}
-                                                    />
-                                                    <Button
-                                                        variant="outline"
-                                                        className="h-12 bg-amber-500/10 border-amber-500/30 text-amber-500 rounded-xl px-4 font-black uppercase text-[10px]"
-                                                        onClick={() => document.getElementById('countdown-logo-upload')?.click()}
-                                                    >
-                                                        <Upload className="w-4 h-4 mr-2" /> Subir
-                                                    </Button>
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Fondo Anuncio</label>
-                                                    <div className="flex items-center gap-3 p-3 bg-black/40 border border-white/10 rounded-2xl">
-                                                        <input
-                                                            type="color"
-                                                            value={settings.countdownBgColor || '#ffffff'}
-                                                            onChange={(e) => setSettings({ countdownBgColor: e.target.value })}
-                                                            className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer"
-                                                        />
-                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter tabular-nums">{settings.countdownBgColor || '#FFFFFF'}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Color Acento (Oro)</label>
-                                                    <div className="flex items-center gap-3 p-3 bg-black/40 border border-white/10 rounded-2xl">
-                                                        <input
-                                                            type="color"
-                                                            value={settings.countdownAccentColor || '#d4af37'}
-                                                            onChange={(e) => setSettings({ countdownAccentColor: e.target.value })}
-                                                            className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer"
-                                                        />
-                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter tabular-nums">{settings.countdownAccentColor || '#D4AF37'}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Background Image Upload for Countdown */}
-                                        <div className="space-y-6 pt-4 border-t border-white/5">
-                                            <div className="flex items-center justify-between">
-                                                <div className="space-y-1">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Imagen de Fondo Ceremonial (Opcional)</label>
-                                                    <p className="text-[9px] text-slate-400 italic">Si se sube una imagen, se usará en lugar del color sólido.</p>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                    <div className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-lg text-[9px] font-black text-blue-400 uppercase">1920 x 1080 px</div>
-                                                    <div className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 rounded-lg text-[9px] font-black text-purple-400 uppercase">JPG / PNG / WEBP</div>
-                                                    <div className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-[9px] font-black text-emerald-400 uppercase">&lt; 2 MB</div>
-                                                </div>
-                                            </div>
-                                            <div className="flex gap-4">
-                                                <Input
-                                                    value={settings.countdownBgImageUrl || ''}
-                                                    onChange={(e) => setSettings({ countdownBgImageUrl: e.target.value })}
-                                                    placeholder="URL de fondo personalizado..."
-                                                    className="h-12 flex-1 bg-black/40 border-white/10 rounded-xl text-[10px] font-black"
-                                                />
-                                                <input
-                                                    type="file"
-                                                    id="countdown-bg-upload"
-                                                    className="hidden"
-                                                    accept="image/*,.svg"
-                                                    onChange={async (e) => {
-                                                        const file = e.target.files?.[0];
-                                                        if (file) {
-                                                            const compressed = await compressImage(file, 1920, 1080, 0.7); // High-res background but compressed
-                                                            const url = await uploadAvatar('countdown-bg', compressed);
-                                                            if (url) setSettings({ countdownBgImageUrl: url });
-                                                        }
-                                                    }}
-                                                />
-                                                <Button
-                                                    variant="outline"
-                                                    className="h-12 bg-white/5 border-white/10 text-white rounded-xl px-4 font-black uppercase text-[10px] hover:bg-white/10"
-                                                    onClick={() => document.getElementById('countdown-bg-upload')?.click()}
-                                                >
-                                                    <Upload className="w-4 h-4 mr-2" /> Subir Fondo
-                                                </Button>
-                                                {settings.countdownBgImageUrl && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        className="h-12 text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 px-4 rounded-xl font-black uppercase text-[10px]"
-                                                        onClick={() => setSettings({ countdownBgImageUrl: '' })}
-                                                    >
-                                                        Eliminar
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="lg:col-span-4 bg-black/20 rounded-[2rem] p-8 border border-white/5 flex items-center justify-center">
-                                        <div className="text-center space-y-4">
-                                            <p className="text-[8px] font-black uppercase tracking-[0.3em] text-amber-500 mb-2">Previsualización Panel</p>
-                                            <div className="scale-125 transform transition-transform">
-                                                <MiniCountdown />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </div>
-
-                        {/* 2. SECCIÓN: IDENTIDAD VISUAL (LOGOS CENTRALES) */}
+                        {/* 1. SECCIÓN: IDENTIDAD DE MARCA (LOGOS) */}
                         <Card className="glass-card border-t-4 border-t-blue-500">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
@@ -2597,93 +2435,7 @@ function AdminDashboardContent() {
                     </motion.div>
                 )
             }
-            {
-                activeTab === 'anuncios' && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="space-y-8"
-                    >
 
-                        <Card id="anuncios" className="glass-card border-t-4 border-t-amber-500">
-
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
-                                    <Megaphone className="h-5 w-5 text-amber-500" /> Panel de Anuncios
-                                </CardTitle>
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Gestión de comunicados para la pantalla principal</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                                    {announcements.map((ann) => (
-                                        <div key={ann.id} className={cn(
-                                            "p-4 rounded-xl border relative group transition-all",
-                                            ann.priority > 0 ? "bg-amber-500/10 border-amber-500/20" : "bg-foreground/5 border-border/40"
-                                        )}>
-                                            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button
-                                                    onClick={() => removeAnnouncement(ann.id)}
-                                                    className="p-1 hover:text-rose-500"
-                                                    title="Eliminar anuncio"
-                                                >
-                                                    <Trash2 className="w-3 h-3" />
-                                                </button>
-                                            </div>
-                                            {ann.priority > 0 && (
-                                                <p className="text-[10px] font-black uppercase text-amber-500 mb-1 flex items-center gap-1">
-                                                    <AlertCircle className="w-3 h-3" /> Prioridad Alta
-                                                </p>
-                                            )}
-                                            <h4 className="text-sm font-bold text-foreground uppercase italic">{ann.title}</h4>
-                                            <p className="text-[10px] text-slate-400 leading-relaxed uppercase font-medium mt-1">{ann.content}</p>
-                                        </div>
-                                    ))}
-                                    {announcements.length === 0 && (
-                                        <p className="text-center text-xs text-slate-500 py-12 italic uppercase tracking-widest">No hay anuncios activos</p>
-                                    )}
-                                </div>
-
-                                <div className="pt-6 border-t border-border/40 space-y-4">
-                                    <h4 className="text-xs font-black uppercase text-slate-400">Nuevo Anuncio</h4>
-                                    <div className="space-y-3">
-                                        <Input
-                                            value={newAnn.title}
-                                            onChange={(e) => setNewAnn({ ...newAnn, title: e.target.value })}
-                                            placeholder="Título del nuevo anuncio"
-                                            className="bg-foreground/5 border-border/40 h-10 text-xs font-bold"
-                                        />
-                                        <Input
-                                            value={newAnn.content}
-                                            onChange={(e) => setNewAnn({ ...newAnn, content: e.target.value })}
-                                            placeholder="Contenido o descripción corta"
-                                            className="bg-foreground/5 border-border/40 h-10 text-xs"
-                                        />
-                                        <Button
-                                            onClick={() => {
-                                                if (newAnn.title && newAnn.content) {
-                                                    addAnnouncement({
-                                                        id: Math.random().toString(36).substr(2, 9),
-                                                        title: newAnn.title,
-                                                        content: newAnn.content,
-                                                        timestamp: new Date().toISOString(),
-                                                        active: true,
-                                                        priority: 0
-                                                    });
-                                                    setNewAnn({ title: '', content: '', priority: 0 });
-                                                }
-                                            }}
-                                            variant="outline"
-                                            className="w-full border-dashed border-white/20 text-slate-400 hover:text-amber-500 hover:border-amber-500/50 text-[10px] font-black uppercase tracking-widest h-10"
-                                        >
-                                            + Publicar Anuncio
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                )
-            }
 
             {
                 activeTab === 'coros' && (
