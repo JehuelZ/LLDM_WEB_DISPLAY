@@ -80,6 +80,11 @@ CREATE POLICY "Avatar Auth Upload" ON storage.objects FOR INSERT TO authenticate
 CREATE POLICY "Avatar Auth Update" ON storage.objects FOR UPDATE TO authenticated USING (bucket_id = 'avatars');
 CREATE POLICY "Avatar Auth Delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'avatars');
 
+-- Limpiar políticas de assets para evitar conflictos
+DROP POLICY IF EXISTS "Assets Public Access" ON storage.objects;
+DROP POLICY IF EXISTS "Assets Auth Upload" ON storage.objects;
+DROP POLICY IF EXISTS "Assets Auth Update" ON storage.objects;
+
 -- Políticas para el bucket 'app_assets'
 CREATE POLICY "Assets Public Access" ON storage.objects FOR SELECT USING (bucket_id = 'app_assets');
 CREATE POLICY "Assets Auth Upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'app_assets');
