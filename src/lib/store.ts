@@ -970,7 +970,7 @@ export const useAppStore = create<AppState>()(
                             member_group: existingProfile.member_group,
                             role: existingProfile.role || 'Miembro',
                             gender: existingProfile.gender || 'Varon',
-                            status: existingProfile.status || 'Activo',
+                            status: existingProfile.status || 'Pendiente', // Seguro por defecto
                             lastActive: new Date().toISOString(),
                             stats: existingProfile.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
                             privileges: existingProfile.roles || [],
@@ -978,45 +978,34 @@ export const useAppStore = create<AppState>()(
                         }
                     });
                 } else {
-                    // 2. Si NO existe el perfil, lo creamos automáticamente
+                    // 2. Si NO existe el perfil, verificamos si es el Master Admin
                     const isMasterAdmin = userEmail === MASTER_ADMIN_EMAIL;
 
-                    const newProfile = {
-                        id: authUserId,
-                        email: userEmail,
-                        name: userName,
-                        avatar_url: userAvatar,
-                        role: isMasterAdmin ? 'Administrador' : 'Miembro',
-                        status: isMasterAdmin ? 'Activo' : 'Pendiente', // Nuevos usuarios quedan pendientes
-                        category: 'Varon',
-                        stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
-                        roles: isMasterAdmin ? ['admin', 'leader'] : []
-                    };
+                    if (isMasterAdmin) {
+                        // Solo el Master Admin puede auto-crearse
+                        const newProfile = {
+                            id: authUserId,
+                            email: userEmail,
+                            name: userName,
+                            avatar_url: userAvatar,
+                            role: 'Administrador',
+                            status: 'Activo',
+                            category: 'Varon',
+                            stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
+                            roles: ['admin', 'leader']
+                        };
 
-                    const { error: insertError } = await supabase
-                        .from('profiles')
-                        .insert(newProfile);
-
-                    if (!insertError) {
-                        set({
-                            currentUser: {
-                                ...INITIAL_USER,
-                                ...newProfile,
-                                id: authUserId,
-                                avatar: userAvatar,
-                                privileges: newProfile.roles
-                            } as UserProfile
-                        });
-
-                        // NOTIFICAR A ADMINISTRADORES
-                        if (!isMasterAdmin) {
-                            await supabase.from('messages').insert({
-                                sender_id: authUserId,
-                                target_role: 'Administrador',
-                                subject: 'Nuevo Registro de Miembro',
-                                content: `El hermano(a) ${userName} (${userEmail}) se ha registrado y está esperando aprobación.`
-                            });
+                        const { error: insertError } = await supabase.from('profiles').insert(newProfile);
+                        if (!insertError) {
+                            set({ currentUser: { ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: newProfile.roles } as UserProfile });
                         }
+                    } else {
+                        // USUARIO DESCONOCIDO O ELIMINADO: No auto-crear. 
+                        // Forzamos el estado a null o Pendiente para que la UI lo bloquee o lo mande a registrar
+                        console.warn("Acceso denegado: El perfil no existe en la base de datos de miembros.");
+                        set({ currentUser: null });
+                        // Opcional: Cerrar sesión si queremos ser agresivos
+                        // await supabase.auth.signOut();
                     }
                 }
             },

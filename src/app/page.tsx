@@ -247,7 +247,7 @@ export default function Home() {
               Registro <span className="text-amber-500">Pendiente</span>
             </h1>
             <p className="text-slate-400 text-sm leading-relaxed px-4">
-              Hola <span className="text-white font-bold">{currentUser.name}</span>, tu cuenta ha sido registrada con éxito en el sistema de <span className="text-amber-500/80 font-bold italic">LLDM Rodeo</span>.
+              Hola <span className="text-white font-bold">{currentUser.name}</span>, tu cuenta está procesándose en el sistema de <span className="text-amber-500/80 font-bold italic">LLDM Rodeo</span>.
             </p>
             <div className="p-4 bg-amber-500/5 border border-amber-500/10 rounded-2xl">
                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500">
@@ -255,7 +255,7 @@ export default function Home() {
                </p>
             </div>
             <p className="text-[11px] text-slate-500 font-medium leading-relaxed italic">
-              Por motivos de seguridad, un administrador debe verificar tu identidad antes de permitirte el acceso al contenido privado y estadísticas de la iglesia.
+              Por seguridad, un administrador debe verificar tu identidad antes de permitirte el acceso al contenido privado.
             </p>
           </div>
 
@@ -271,19 +271,12 @@ export default function Home() {
                 variant="ghost" 
                 className="text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest"
                 onClick={async () => {
-                  const { supabase } = useAppStore.getState();
-                  await supabase.auth.signOut();
-                  window.location.reload();
+                   await useAppStore.getState().supabase.auth.signOut();
+                   window.location.reload();
                 }}
             >
                 CERRAR SESIÓN
             </Button>
-          </div>
-
-          <div className="pt-8 opacity-40">
-            <span className="text-[8px] uppercase font-black tracking-[0.5em] text-slate-600">
-                LLDM RODEO DIGITAL • EXPERIENCE
-            </span>
           </div>
         </motion.div>
 
@@ -296,6 +289,54 @@ export default function Home() {
                 to { transform: rotate(360deg); }
             }
         `}</style>
+      </div>
+    );
+  }
+
+  // 🚫 Unauthorized Guard: Show screen if currentUser is null (Not in profiles table)
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-black to-black flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-30 pointer-events-none" />
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative z-10 max-w-md w-full bg-black/40 border border-white/5 backdrop-blur-3xl p-10 rounded-[3rem] text-center space-y-8 shadow-[0_50px_100px_rgba(0,0,0,0.8)]"
+        >
+          <div className="relative inline-block">
+             <div className="absolute inset-0 bg-rose-500/20 blur-[80px] rounded-full" />
+             <div className="relative w-24 h-24 mx-auto bg-slate-950 rounded-[2rem] border border-rose-500/20 flex items-center justify-center">
+                <Lock className="w-10 h-10 text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.5)]" />
+             </div>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-3xl font-black uppercase text-white tracking-tighter italic">Acceso <span className="text-rose-500">Restringido</span></h2>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Lo sentimos, tu cuenta no figura en la <span className="text-white font-bold">lista oficial de miembros</span> autorizados de LLDM Rodeo.
+            </p>
+            <div className="bg-rose-500/5 border border-rose-500/10 p-5 rounded-3xl">
+              <p className="text-[10px] text-rose-400 font-black uppercase tracking-[0.2em]">Causa: Usuario no registrado o eliminado</p>
+            </div>
+            <p className="text-[11px] text-slate-500 italic leading-relaxed">
+              Si crees que esto es un error o has sido eliminado accidentalmente, por favor contacta al administrador de la iglesia para ser re-registrado.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+             <Button 
+                className="w-full h-14 bg-rose-600 hover:bg-rose-500 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl shadow-rose-900/40 transition-all hover:translate-y-[-2px]"
+                onClick={async () => {
+                   await useAppStore.getState().supabase.auth.signOut();
+                   window.location.href = '/';
+                }}
+             >
+                SALIR DEL SISTEMA
+             </Button>
+             <p className="text-[9px] uppercase font-black tracking-widest text-slate-700">Protected by Rodeo Security Architecture</p>
+          </div>
+        </motion.div>
       </div>
     );
   }
