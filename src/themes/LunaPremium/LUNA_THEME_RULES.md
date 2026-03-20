@@ -1,35 +1,38 @@
-# 🌑 LUNA PREMIUM: REGLAS MAESTRAS DE DISEÑO INDUSTRIAL (V5.0)
+# 🌑 LUNA PREMIUM THEME RULES (V10.0)
 
-Este documento centraliza las leyes visuales sagradas para el tema Luna Premium. Estas reglas aseguran el aislamiento total de la identidad visual de este tema frente a cualquier otro del proyecto.
+Este es el documento constitucional para el tema Luna Premium. Estas reglas DEBEN seguirse para mantener el aislamiento y la estética industrial premium.
 
-## 1. Tipografía y Color (Ley del Blanco Puro)
-- **Texto Crítico**: Todo el texto debe ser **blanco puro sólido (#ffffff)** al 100% de opacidad.
-- **Caso (Casing)**: Estricto uso de **minúsculas (lowercase)** en toda la interfaz (títulos, etiquetas, botones, sidebar). NO usar mayúsculas.
-- **Peso de Fuente (Weight)**: El grosor estándar para todo el texto blanco es **`300`** (`font-[300]`). Esto garantiza la legibilidad necesaria sin perder la elegancia industrial.
-- **Fuente**: `var(--font-saira)` (Saira).
+## 1. 🎨 Tipografía y Color
+- **Color Primario**: Blanco Puro sólido (`#ffffff`) para todo el texto.
+- **Caso (Casing)**: Estricto **lowercase** (minúsculas) en TODA la interfaz.
+- **Grosor**: Todas las etiquetas usan **`font-[300]`**.
+- **Fuente**: `Saira` (Google Fonts).
 
-## 2. Componentes de Asistencia (Arquitectura de Datos)
+## 2. 🧱 Layout y Geometría
+- **Dashboard**: Una única fila de **4 Columnas** (`lg:grid-cols-4`).
+- **Cajas**: Solo se permiten 4 cajas maestras: `asistencia semanal`, `asistencia anual`, `node registry` y `active density`.
+- **Minimalismo**: ELIMINADOS los textos de `logo`, `branding`, `administrator` o `status`. Solo iconos.
+- **Bordes**: Todas las barras y botones deben ser **`rounded-full`** (cápsulas).
 
-### **Asistencia Semanal (Density Matrix)**
-- **Título**: `asistencia semanal`.
-- **Estilo**: Barras delgadas (`w-3`) en forma de cápsula con **puntas redondeadas (`rounded-full`)**.
-- **Resplandor (Glow)**: Atenuado a un máximo de **`6px` o `8px`** en sombras para un look técnico sobrio.
-- **Etiquetas**: Días en **2 caracteres** (`lu`, `ma`, `mi`, `ju`, `vi`, `sa`, `do`) posicionados con `gap-3` debajo de las barras.
+## 3. 📊 Componentes Específicos
 
-### **Asistencia Anual (Yearly Trend)**
-- **Título**: `asistencia anual`.
-- **Eje Y**: 5 divisiones tácticas (**0, 25, 50, 75, 100**) en blanco puro (`font-300`).
-- **Eje X (Meses)**: 12 meses en formato de 2 caracteres (`en`, `fe`, `ma`, `ab`, `my`, `jn`, `jl`, `ag`, `se`, `oc`, `no`, `di`) con un **puntito táctico blanco sólido (`w-1 h-1`)** centrado sobre cada mes.
-- **Gráfica**: Curva de neón amarilla/ámbar (**`strokeWidth="5"`**) con brillo suavizado (**`feGaussianBlur stdDeviation="2.5"`**).
+### **Donas (LunaDonut)**
+- **Estilo**: Grosor táctico, colores con gradientes técnicos.
+- **Spacing**: Gaps técnicos entre segmentos si es posible.
+- **Alineación**: Centrado en su caja.
 
-## 3. Geometría Monolítica (Industrial)
-- **Contenedores**: Los módulos principales (Cards) deben conservar **esquinas rectas (`rounded-none`)** y **cero bordes (`border-none`)** para mantener el aire de monolito tecnológico.
-- **Botones e Indicadores (Pills)**: Todos los elementos pequeños interactivos o de estado (nodos, botones de acción, leyendas) deben ser **totalmente redondeados (`rounded-full`)**.
+### **Barras (Asistencia Semanal)**
+- **Forma**: Cápsulas delgadas (`w-3`) con puntas redondeadas.
+- **Etiquetas**: 2 caracteres (`lu`, `ma`...) en minúsculas y `font-300`.
 
-## 4. Paleta y Fondos
-- **Cards**: Gradiente diagonal de `#2b2e41` a `#1b1d2c`.
-- **Dona Luna**: Track en gris industrial (**`#525469`**) con progreso principal en Oro/Ámbar.
-- **Indicadores de Estado**: Puntos esmeralda con resplandor suave y animaciones `pulse`.
+### **Curva Anual (Trend)**
+- **Grosor**: Línea de neón amarilla con `strokeWidth="5"`.
+- **Glow**: Brillo suave (`stdDeviation="2.5"`).
+- **Indicadores**: Puntos blancos sólidos sobre cada mes.
+
+## 4. 🛡️ Aislamiento Táctico
+- Este archivo es la ÚNICA referencia de estilo para Luna Premium.
+- Evitar clases de Tailwind que no cumplan con el grosor 300 o el redondeo total.
 
 ---
-*Luna Premium: El Observatorio de Datos Minimalista y Aislado.*
+*V10.0: El Observatorio de Datos Absoluto.*
