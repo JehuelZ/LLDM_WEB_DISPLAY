@@ -379,7 +379,7 @@ const LunaAdmin = () => {
                                                 d="M 0,80 C 20,70 40,85 60,60 C 80,40 100,20 120,45 C 140,70 160,95 180,60 C 200,20 220,10 240,40 C 260,70 280,110 300,70 C 320,30 340,10 360,50 C 380,90 400,60 420,40"
                                                 fill="none"
                                                 stroke="url(#neon-grad-line)"
-                                                strokeWidth="3"
+                                                strokeWidth="5"
                                                 strokeLinecap="round"
                                                 filter="url(#neonPathGlow)"
                                                 style={{ vectorEffect: 'non-scaling-stroke' }}
