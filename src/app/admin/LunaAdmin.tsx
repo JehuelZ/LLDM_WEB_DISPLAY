@@ -212,8 +212,7 @@ const LunaAdmin = () => {
                             <Terminal className="text-white w-6 h-6 group-hover:scale-110 transition-transform" />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-2xl font-[300] tracking-tighter leading-none text-white">luna <span className="text-white">edition</span></h1>
-                            <p className="text-[9px] font-[300] text-white tracking-[0.5em] mt-2">observatorio v3.0</p>
+                            {/* Logo/Branding labels removed for extreme minimalism */}
                         </div>
                     </div>
                 </div>
@@ -266,10 +265,7 @@ const LunaAdmin = () => {
                 <div className="max-w-7xl mx-auto space-y-20">
                     <header className="flex justify-between items-start mb-24 gap-12">
                         <div className="space-y-6">
-                            <p className="text-[10px] font-[300] text-white tracking-[0.4em] mb-2 lowercase">administrator</p>
-                            <p className="text-[12px] font-[300] text-white tracking-[0.2em] lowercase">central comms</p>
-                            <h2 className="text-[11px] font-[300] text-white  tracking-[0.8em]">operational intelligence</h2>
-                            <h3 className="text-7xl font-[300] tracking-tighter text-white leading-none ">luna <span className="text-white font-[300] italic ml-2">dashboard</span></h3>
+                            {/* Header cleared for pure data focus */}
                         </div>
                         <div className="flex items-center gap-6 relative group">
                             {/* Empty for future elements */}
