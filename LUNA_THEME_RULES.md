@@ -1,40 +1,40 @@
-# LUNA PREMIUM THEME RULES (MASTER)
+# 🌑 LUNA PREMIUM: REGLAS MAESTRAS DE DISEÑO INDUSTRIAL
 
-## 1. Visual Aesthetics (Kinetic Observatory)
-- **Background**: Diagonal gradient from `#626c87` (top-right) to `#2b3043` (bottom-left).
-- **Cards/Boxes**: Diagonal gradient from `#2b2e41` (top-right) to `#1b1d2c` (bottom-left).
-- **Borders & Corners**: No borders, no rounding (`rounded-none`, `border-none`).
-- **Shadows**: Deep, soft dark shadows (`shadow-4xl` or manual `rgba(0,0,0,0.8)`).
-- **Monolithic Design**: Elements should look like solid blocks of data without separation lines.
+Este documento es la única fuente de verdad para el tema visual del dashboard administrativo. Cualquier cambio futuro debe respetar estas leyes de hierro para mantener la estética premium y monocromática.
 
-## 2. Typography & Casing
-- **Font Family**: Saira (Google Fonts).
-- **Base Weights**: 100 (Thin) for body/descriptions, 200 (Extra Light) for metrics/titles.
-- **Color**: Pure White (`#ffffff`) for ALL texts. Solid, no opacities (`text-white/40` is forbidden for labels).
-- **Casing**: ALL labels and titles must be in **lowercase** (e.g., "growth projections", "identity: verified").
-- **Alignment**: Box titles must always be aligned to the **left**.
+## 1. Tipografía y Color (Ley del Blanco Puro)
+- **Texto**: Todo el texto debe ser **blanco puro sólido (`#ffffff`)**. Queda prohibido el uso de opacidades (0.5, 0.7) en el texto principal.
+- **Caso (Casing)**: Todo se escribe en **minúsculas (`lowercase`)**. Esto incluye títulos de secciones, nombres de botones, estados de nodos y el sidebar.
+- **Peso de Fuente (`Font Weight`)**: Todo el texto blanco debe tener un grosor de **`300`** (`font-[300]`). Se descarta el peso ultraligero (100) en favor de mayor nitidez industrial.
+- **Fuente**: `Saira` (Google Fonts).
 
-## 3. LunaDonut Component (Standard)
-- **Structure**: Title at the top-left, centered percentage metric, horizontal pill legend at the bottom.
-- **Donut Width**: Stroke width 8px. Line caps: `round`.
-- **Colors**:
-  - **Active Segment**: Industrial Gold Gradient (`#cc9900` to `#b45309`) with intense glow.
-  - **Remaining Segment (Track)**: Sacred Gray **`#525469`**.
-- **Legend**: Two horizontal pill markers with numerical values below.
+## 2. Componentes de Asistencia (Métricas Críticas)
 
-## 4. Density Matrix (Weekly Distribution)
-- **Style**: Segmented bars with specific industrial palette:
-  - **Morning**: Emerald (`#10b981`)
-  - **Intermediate**: Indigo (`#6366f1`)
-  - **Evening**: Amber (`#f59e0b`)
-- **Glow**: Subtle sharp glows per segment. Clean background (no grid lines).
+### **Asistencia Semanal**
+- **Título**: `asistencia semanal`.
+- **Barras**: Formato cápsula delgada (`w-3`) con puntas totalmente redondeadas (`rounded-full`).
+- **Resplandor (`Glow`)**: Sombras de neón reducidas a **`6px`** o **`8px`** (`shadow-[0_0_6px_...]`) para un look técnico y sobrio.
+- **Etiquetas**: Días de **2 caracteres** (`lu`, `ma`, `mi`, `ju`, `vi`, `sa`, `do`) posicionados justo bajo la barra (`gap-3`).
 
-## 5. Line Charts (Trend Indicators)
-- **Style**: Smooth, fluid neon curves with high glow deviation (stdDeviation="5").
-- **Highlight**: Single white point with gold halo for key data markers.
-- **Minimalism**: No vertical axis. X-axis with lowercase day labels ('mo', 'tu'...).
+### **Asistencia Anual**
+- **Título**: `asistencia anual`.
+- **Eje Y**: 5 divisiones tácticas (**0, 25, 50, 75, 100**) en blanco puro (`font-300`).
+- **Eje X (Meses)**: 12 meses en formato de 2 caracteres (`en`, `fe`, `ma`, `ab`, `my`, `jn`, `jl`, `ag`, `se`, `oc`, `no`, `di`) con un **puntito táctico blanco** (`w-1 h-1`) sobre cada etiqueta.
+- **Gráfica**: Curva de neón amarilla gruesa (**`strokeWidth="5"`**) con brillo suavizado (**`feGaussianBlur stdDeviation="2.5"`**).
 
-## 6. Color Exceptions (System States)
-- **Emerald (#10b981)**: For active status indicators or small graphical dots (verified states).
-- **Red/Amber**: Only for critical alerts or specific chart segments.
-- **Text in Exceptions**: Even if an indicator is colored, the associated TEXT remains White.
+## 3. Geometría de Componentes (LunaDonut)
+- **Círculos**: El trayecto de fondo (track) debe ser el color sagrado **`#525469`**.
+- **Métrica**: Valor central en blanco puro (`font-300`).
+- **Legibilidad**: Los títulos de estos componentes deben ir alineados a la **IZQUIERDA**.
+
+## 4. Botones e Indicadores (Píldoras Tácticas)
+- **Bordes**: Todo botón, badge o indicador de estado debe ser **`rounded-full`** (forma de píldora). Se eliminan los cuadros con aristas rectas.
+- **Status Dots**: Puntos esmeralda con resplandor contenido (`6px`) y pulso suave.
+
+## 5. Layout y Fondos
+- **Cajas**: Degradado diagonal de `#2b2e41` (superior derecha) a `#1b1d2c` (inferior izquierda).
+- **Separación**: Espaciado generoso (`p-12`) para que la interfaz respire con aire premium.
+- **Header**: Selector de semana (`13 mar - 19 mar`) y botones de acción (`poblar semana`) en la derecha, título en la izquierda.
+
+---
+*Cualquier desviación de estas reglas romperá la integridad estética del sistema LUNA.*
