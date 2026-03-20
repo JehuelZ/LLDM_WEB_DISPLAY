@@ -347,15 +347,15 @@ const LunaAdmin = () => {
                                 >
                                     <div className="flex justify-between items-start mb-8 relative z-10">
                                         <div className="space-y-4">
-                                            <h3 className="text-[13px] font-[200] tracking-wider text-white ">growth projections</h3>
+                                            <h3 className="text-[13px] font-[200] tracking-wider text-white ">asistencia anual</h3>
                                             <div className="flex items-center gap-6">
-                                                <span className="text-5xl font-[200] tracking-tighter text-white">+28.4%</span>
-                                                <span className="text-[10px] font-[200] text-white border border-white/30 bg-white/5 px-3 py-1 tracking-widest">target met</span>
+                                                <span className="text-5xl font-[200] tracking-tighter text-white">+8.4%</span>
+                                                <span className="text-[10px] font-[200] text-white border border-white/30 bg-white/5 px-3 py-1 tracking-widest lowercase">target met</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    {/* SVG Line Chart (Reference Style) */}
+                                    {/* Yearly Trend Chart */}
                                     <div className="h-64 relative mt-12">
                                         <svg viewBox="0 0 400 100" className="w-full h-full overflow-visible">
                                             <defs>
@@ -374,26 +374,29 @@ const LunaAdmin = () => {
                                                 <line key={i} x1="0" y1={i * 33} x2="400" y2={i * 33} stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
                                             ))}
 
-                                            {/* Glowing Smooth Curve */}
+                                            {/* Glowing Smooth Curve (Yearly Trend) */}
                                             <path 
-                                                d="M 0,80 C 50,70 100,100 150,60 C 200,20 250,90 300,50 C 350,10 400,60 450,40"
+                                                d="M 0,80 C 20,70 40,85 60,60 C 80,40 100,20 120,45 C 140,70 160,95 180,60 C 200,20 220,10 240,40 C 260,70 280,110 300,70 C 320,30 340,10 360,50 C 380,90 400,60 420,40"
                                                 fill="none"
                                                 stroke="url(#neon-grad-line)"
-                                                strokeWidth="4"
+                                                strokeWidth="3"
                                                 strokeLinecap="round"
                                                 filter="url(#neonPathGlow)"
                                                 style={{ vectorEffect: 'non-scaling-stroke' }}
                                             />
                                             
                                             {/* Reference Highlight Point */}
-                                            <circle cx="280" cy="55" r="6" fill="white" />
-                                            <circle cx="280" cy="55" r="10" stroke="#f59e0b" strokeWidth="2" fill="none" filter="url(#neonPathGlow)" />
+                                            <circle cx="340" cy="30" r="5" fill="white" />
+                                            <circle cx="340" cy="30" r="8" stroke="#f59e0b" strokeWidth="2" fill="none" filter="url(#neonPathGlow)" />
                                         </svg>
                                         
-                                        {/* X-Axis from Reference */}
+                                        {/* X-Axis: 12 Months with indicator dots */}
                                         <div className="flex justify-between w-full mt-12 px-2">
-                                            {['lu', 'ma', 'mi', 'ju', 'vi', 'sa', 'do'].map(day => (
-                                                <span key={day} className="text-[11px] font-[300] text-white tracking-widest">{day}</span>
+                                            {['en','fe','ma','ab','my','jn','jl','ag','se','oc','no','di'].map(month => (
+                                                <div key={month} className="flex flex-col items-center gap-4">
+                                                    <div className="w-1 h-1 rounded-full bg-white opacity-40" />
+                                                    <span className="text-[9px] font-[300] text-white tracking-widest lowercase">{month}</span>
+                                                </div>
                                             ))}
                                         </div>
                                     </div>
