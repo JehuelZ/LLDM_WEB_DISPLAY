@@ -289,18 +289,8 @@ const LunaAdmin = () => {
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
                                     <div className="flex justify-between items-center mb-16 relative z-10">
-                                        {/* Left Side: Categories Only */}
-                                        <div className="flex gap-8">
-                                            {[
-                                                { label: 'morning', color: '#10b981' },
-                                                { label: 'intermediate', color: '#6366f1' },
-                                                { label: 'evening', color: '#f59e0b' }
-                                            ].map((seg, idx) => (
-                                                <div key={idx} className="flex items-center gap-3">
-                                                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: seg.color }} />
-                                                    <span className="text-[10px] font-[100] text-white tracking-[0.3em] lowercase">{seg.label}</span>
-                                                </div>
-                                            ))}
+                                        <div className="space-y-2">
+                                            <h3 className="text-[13px] font-[200] tracking-wider text-white ">asistencia semanal</h3>
                                         </div>
 
                                         {/* Right Side: Week Selector & Action */}
@@ -343,7 +333,7 @@ const LunaAdmin = () => {
                                                             style={{ height: `${(day.morning / total) * day.percentage}%` }} 
                                                         />
                                                     </div>
-                                                    <span className="text-[10px] font-[100] text-white tracking-widest group-hover/bar:text-white transition-colors">{['lun','ma','mi','ju','ve','sa','do'][i]}</span>
+                                                    <span className="text-[11px] font-[300] text-white tracking-widest group-hover/bar:text-white transition-colors">{['lu','ma','mi','ju','vi','sa','do'][i]}</span>
                                                 </div>
                                             );
                                         })}
@@ -403,7 +393,7 @@ const LunaAdmin = () => {
                                         {/* X-Axis from Reference */}
                                         <div className="flex justify-between w-full mt-12 px-2">
                                             {['lu', 'ma', 'mi', 'ju', 'vi', 'sa', 'do'].map(day => (
-                                                <span key={day} className="text-[10px] font-[100] text-white tracking-widest">{day}</span>
+                                                <span key={day} className="text-[11px] font-[300] text-white tracking-widest">{day}</span>
                                             ))}
                                         </div>
                                     </div>
