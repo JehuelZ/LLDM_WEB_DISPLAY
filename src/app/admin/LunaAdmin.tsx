@@ -272,8 +272,7 @@ const LunaAdmin = () => {
                             <h3 className="text-7xl font-[300] tracking-tighter text-white leading-none ">luna <span className="text-white font-[300] italic ml-2">dashboard</span></h3>
                         </div>
                         <div className="flex items-center gap-6 relative group">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_#10b981]" />
-                            <span className="text-[11px] font-[300] tracking-[0.5em] text-white">system status: optimized</span>
+                            {/* Empty for future elements */}
                         </div>
                     </header>
 
