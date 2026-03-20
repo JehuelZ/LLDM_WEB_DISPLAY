@@ -274,7 +274,7 @@ const LunaAdmin = () => {
                             style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                         >
                             <div className="absolute inset-0 bg-emerald-500/5  group-hover:scale-110 transition-opacity" />
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_15px_#10b981]" />
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_#10b981]" />
                             <span className="text-[11px] font-[100] tracking-[0.5em] text-white ">SYSTEM STATUS: OPTIMIZED</span>
                         </div>
                     </header>
@@ -415,7 +415,7 @@ const LunaAdmin = () => {
                                         <div className="text-[140px] font-[100] tracking-tighter text-white leading-none -ml-4">{activeMembersCount}</div>
                                     </div>
                                     <div className="flex items-center gap-6 text-[12px] font-[100] tracking-[0.5em] text-white">
-                                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_15px_#10b981] animate-pulse" />
+                                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981] animate-pulse" />
                                         <span className="text-white">Identity: Verified</span>
                                     </div>
                                                              {/* Card: Attendance */}
