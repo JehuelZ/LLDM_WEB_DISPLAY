@@ -301,7 +301,7 @@ const LunaAdmin = () => {
                                                         // logic for seeding
                                                     }
                                                 }}
-                                                className="text-[9px] font-[200] text-white border border-white/20 px-4 py-1.5 hover:bg-white/5 transition-colors tracking-widest lowercase"
+                                                className="text-[9px] font-[200] text-white border border-white/20 px-4 py-1.5 hover:bg-white/5 transition-colors tracking-widest lowercase rounded-full"
                                             >
                                                 poblar semana
                                             </button>
@@ -350,7 +350,7 @@ const LunaAdmin = () => {
                                             <h3 className="text-[13px] font-[200] tracking-wider text-white ">asistencia anual</h3>
                                             <div className="flex items-center gap-6">
                                                 <span className="text-5xl font-[200] tracking-tighter text-white">+8.4%</span>
-                                                <span className="text-[10px] font-[200] text-white border border-white/30 bg-white/5 px-3 py-1 tracking-widest lowercase">target met</span>
+                                                <span className="text-[10px] font-[200] text-white border border-white/30 bg-white/5 px-3 py-1 tracking-widest lowercase rounded-full">target met</span>
                                             </div>
                                         </div>
                                     </div>
