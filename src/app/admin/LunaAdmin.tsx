@@ -355,49 +355,60 @@ const LunaAdmin = () => {
                                         </div>
                                     </div>
 
-                                    {/* Yearly Trend Chart */}
-                                    <div className="h-64 relative mt-12">
-                                        <svg viewBox="0 0 400 100" className="w-full h-full overflow-visible">
-                                            <defs>
-                                                <filter id="neonPathGlow" x="-20%" y="-20%" width="140%" height="140%">
-                                                    <feGaussianBlur stdDeviation="2.5" result="blur" />
-                                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                                                </filter>
-                                                <linearGradient id="neon-grad-line" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                    <stop offset="0%" stopColor="#f59e0b" />
-                                                    <stop offset="100%" stopColor="#b45309" />
-                                                </linearGradient>
-                                            </defs>
-                                            
-                                            {/* Minimal Horizontal Grid */}
-                                            {[0, 1, 2, 3].map(i => (
-                                                <line key={i} x1="0" y1={i * 33} x2="400" y2={i * 33} stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-                                            ))}
+                                    {/* Yearly Trend Chart with Y-axis */}
+                                    <div className="h-64 relative mt-12 flex gap-6">
+                                        {/* Y-Axis Labels */}
+                                        <div className="flex flex-col justify-between items-end h-[100%] pb-12 pt-1 text-[9px] font-[100] text-white/50 tracking-widest lowercase">
+                                            <span>100</span>
+                                            <span>75</span>
+                                            <span>50</span>
+                                            <span>25</span>
+                                            <span>0</span>
+                                        </div>
 
-                                            {/* Glowing Smooth Curve (Yearly Trend) */}
-                                            <path 
-                                                d="M 0,80 C 20,70 40,85 60,60 C 80,40 100,20 120,45 C 140,70 160,95 180,60 C 200,20 220,10 240,40 C 260,70 280,110 300,70 C 320,30 340,10 360,50 C 380,90 400,60 420,40"
-                                                fill="none"
-                                                stroke="url(#neon-grad-line)"
-                                                strokeWidth="5"
-                                                strokeLinecap="round"
-                                                filter="url(#neonPathGlow)"
-                                                style={{ vectorEffect: 'non-scaling-stroke' }}
-                                            />
+                                        <div className="flex-1 relative h-full">
+                                            <svg viewBox="0 0 400 100" className="w-full h-full overflow-visible">
+                                                <defs>
+                                                    <filter id="neonPathGlow" x="-20%" y="-20%" width="140%" height="140%">
+                                                        <feGaussianBlur stdDeviation="2.5" result="blur" />
+                                                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                                    </filter>
+                                                    <linearGradient id="neon-grad-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                                                        <stop offset="0%" stopColor="#f59e0b" />
+                                                        <stop offset="100%" stopColor="#b45309" />
+                                                    </linearGradient>
+                                                </defs>
+                                                
+                                                {/* Minimal Horizontal Grid */}
+                                                {[0, 1, 2, 3, 4].map(i => (
+                                                    <line key={i} x1="0" y1={i * 25} x2="400" y2={i * 25} stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
+                                                ))}
+
+                                                {/* Glowing Smooth Curve (Yearly Trend) */}
+                                                <path 
+                                                    d="M 0,80 C 20,70 40,85 60,60 C 80,40 100,20 120,45 C 140,70 160,95 180,60 C 200,20 220,10 240,40 C 260,70 280,110 300,70 C 320,30 340,10 360,50 C 380,90 400,60 420,40"
+                                                    fill="none"
+                                                    stroke="url(#neon-grad-line)"
+                                                    strokeWidth="5"
+                                                    strokeLinecap="round"
+                                                    filter="url(#neonPathGlow)"
+                                                    style={{ vectorEffect: 'non-scaling-stroke' }}
+                                                />
+                                                
+                                                {/* Reference Highlight Point */}
+                                                <circle cx="340" cy="30" r="5" fill="white" />
+                                                <circle cx="340" cy="30" r="8" stroke="#f59e0b" strokeWidth="2" fill="none" filter="url(#neonPathGlow)" />
+                                            </svg>
                                             
-                                            {/* Reference Highlight Point */}
-                                            <circle cx="340" cy="30" r="5" fill="white" />
-                                            <circle cx="340" cy="30" r="8" stroke="#f59e0b" strokeWidth="2" fill="none" filter="url(#neonPathGlow)" />
-                                        </svg>
-                                        
-                                        {/* X-Axis: 12 Months with indicator dots */}
-                                        <div className="flex justify-between w-full mt-12 px-2">
-                                            {['en','fe','ma','ab','my','jn','jl','ag','se','oc','no','di'].map(month => (
-                                                <div key={month} className="flex flex-col items-center gap-4">
-                                                    <div className="w-1 h-1 rounded-full bg-white opacity-40" />
-                                                    <span className="text-[9px] font-[300] text-white tracking-widest lowercase">{month}</span>
-                                                </div>
-                                            ))}
+                                            {/* X-Axis: 12 Months with indicator dots */}
+                                            <div className="flex justify-between w-full mt-12 px-2">
+                                                {['en','fe','ma','ab','my','jn','jl','ag','se','oc','no','di'].map(month => (
+                                                    <div key={month} className="flex flex-col items-center gap-4">
+                                                        <div className="w-1 h-1 rounded-full bg-white opacity-40" />
+                                                        <span className="text-[9px] font-[300] text-white tracking-widest lowercase">{month}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
