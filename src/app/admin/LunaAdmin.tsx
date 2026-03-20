@@ -21,6 +21,9 @@ import {
     Database,
     Clock,
     LogOut,
+    Palette,
+    UserSearch,
+    User,
     CheckCircle2,
     XCircle,
     MoreHorizontal,
@@ -219,11 +222,13 @@ const LunaAdmin = () => {
 
                 <nav className="flex-1 px-8 space-y-4 overflow-y-auto no-scrollbar">
                     {[
-                        { id: 'dashboard', label: 'dashboard', icon: Layout },
-                        { id: 'miembros', label: 'registry', icon: Users },
-                        { id: 'reportes', label: 'intelligence', icon: BarChart3 },
-                        { id: 'cloud', label: 'cloud access', icon: Database },
-                        { id: 'configuracion', label: 'configuration', icon: SettingsIcon },
+                        { id: 'dashboard', label: 'resumen', icon: Layout },
+                        { id: 'horarios', label: 'horarios', icon: Clock },
+                        { id: 'diseño', label: 'diseño y visual', icon: Palette },
+                        { id: 'coros', label: 'coros y uniformes', icon: Users },
+                        { id: 'configuracion', label: 'configuración', icon: SettingsIcon },
+                        { id: 'miembros', label: 'miembros', icon: UserSearch },
+                        { id: 'perfil', label: 'mi perfil', icon: User },
                     ].map((item) => (
                         <button
                             key={item.id}
