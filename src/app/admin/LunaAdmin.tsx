@@ -41,7 +41,7 @@ const LunaDonut = ({ value, color, colorEnd, label }: { value: number; color?: s
     return (
         <div className="relative flex flex-col items-center justify-between h-full py-4 group font-[family-name:var(--font-saira)]">
             {/* Title from Reference (Top) */}
-            <h4 className="text-[13px] font-[200] text-white tracking-wider mb-8 ">{label}</h4>
+            <h4 className="text-[13px] font-[300] text-white tracking-wider mb-8 ">{label}</h4>
 
             <div className="relative flex items-center justify-center">
                 <svg className="w-48 h-48 transform -rotate-90 scale-100 transition-transform duration-700 overflow-visible">
@@ -73,7 +73,7 @@ const LunaDonut = ({ value, color, colorEnd, label }: { value: number; color?: s
                     />
                 </svg>
                 <div className="absolute flex flex-col items-center justify-center">
-                    <span className="text-4xl font-[200] tracking-tighter text-white">{value}%</span>
+                    <span className="text-4xl font-[300] tracking-tighter text-white">{value}%</span>
                 </div>
             </div>
 
@@ -81,11 +81,11 @@ const LunaDonut = ({ value, color, colorEnd, label }: { value: number; color?: s
             <div className="flex items-center justify-center gap-12 w-full mt-10">
                 <div className="flex items-center gap-2">
                     <div className="w-5 h-1.5 rounded-full" style={{ background: color || '#cc9900' }} />
-                    <span className="text-[11px] font-[100] text-white">{value.toLocaleString()}</span>
+                    <span className="text-[11px] font-[300] text-white">{value.toLocaleString()}</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="w-5 h-1.5 rounded-full bg-[#525469]" />
-                    <span className="text-[11px] font-[100] text-white">{((100-value)/100 * 1500).toFixed(0)}</span>
+                    <span className="text-[11px] font-[300] text-white">{((100-value)/100 * 1500).toFixed(0)}</span>
                 </div>
             </div>
         </div>
@@ -199,7 +199,7 @@ const LunaAdmin = () => {
     ];
 
     return (
-        <div className="flex h-screen text-white overflow-hidden font-[family-name:var(--font-saira)] font-[100] selection:bg-primary/30"
+        <div className="flex h-screen text-white overflow-hidden font-[family-name:var(--font-saira)] font-[300] selection:bg-primary/30"
              style={{ background: 'linear-gradient(225deg, #626c87 0%, #2b3043 100%)' }}>
             {/* Minimalist Industrial Sidebar */}
             <aside 
@@ -212,8 +212,8 @@ const LunaAdmin = () => {
                             <Terminal className="text-white w-6 h-6 group-hover:scale-110 transition-transform" />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-2xl font-[200] tracking-tighter leading-none text-white">luna <span className="text-white">edition</span></h1>
-                            <p className="text-[9px] font-[100] text-white tracking-[0.5em] mt-2">observatorio v3.0</p>
+                            <h1 className="text-2xl font-[300] tracking-tighter leading-none text-white">luna <span className="text-white">edition</span></h1>
+                            <p className="text-[9px] font-[300] text-white tracking-[0.5em] mt-2">observatorio v3.0</p>
                         </div>
                     </div>
                 </div>
@@ -236,7 +236,7 @@ const LunaAdmin = () => {
                         >
                             {activeTab === item.id && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white shadow-[0_0_15px_white]" />}
                             <item.icon className={cn("w-5 h-5 transition-transform group-hover:scale-110 text-white")} />
-                            <span className={cn("text-[11px] font-[100] tracking-[0.4em] transition-all text-white", activeTab === item.id ? "font-[200]" : "")}>{item.label}</span>
+                            <span className={cn("text-[11px] font-[300] tracking-[0.4em] transition-all text-white", activeTab === item.id ? "font-[300]" : "")}>{item.label}</span>
                         </button>
                     ))}
                     
@@ -244,11 +244,11 @@ const LunaAdmin = () => {
                         <div className="h-[1px] w-full bg-white/5" />
                     </div>
 
-                    <p className="px-4 text-[9px] font-[100] text-white tracking-[0.4em] mb-6">execution roles</p>
+                    <p className="px-4 text-[9px] font-[300] text-white tracking-[0.4em] mb-6">execution roles</p>
                     {['minister', 'coro', 'monitor'].map((role) => (
                         <button key={role} className="w-full flex items-center gap-6 px-4 py-3 text-white hover:text-white transition-all group rounded-none">
                             <Eye className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-                            <span className="text-[10px] font-[100] tracking-[0.3em] font-[100] text-white">{role}</span>
+                            <span className="text-[10px] font-[300] tracking-[0.3em] font-[300] text-white">{role}</span>
                         </button>
                     ))}
                 </nav>
@@ -256,7 +256,7 @@ const LunaAdmin = () => {
                 <div className="p-12 border-t border-white/5">
                     <button onClick={() => signOut()} className="w-full flex items-center gap-6 px-6 py-5 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all group relative overflow-hidden rounded-none">
                         <LogOut className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-                        <span className="text-[11px] font-[200] tracking-[0.3em] text-white">system exit</span>
+                        <span className="text-[11px] font-[300] tracking-[0.3em] text-white">system exit</span>
                     </button>
                 </div>
             </aside>
@@ -266,8 +266,8 @@ const LunaAdmin = () => {
                 <div className="max-w-7xl mx-auto space-y-20">
                     <header className="flex justify-between items-start mb-24 gap-12">
                         <div className="space-y-6">
-                            <h2 className="text-[11px] font-[100] text-white  tracking-[0.8em]">Operational Intelligence</h2>
-                            <h3 className="text-7xl font-[200] tracking-tighter text-white leading-none ">LUNA <span className="text-white font-[200] italic ml-2">DASHBOARD</span></h3>
+                            <h2 className="text-[11px] font-[300] text-white  tracking-[0.8em]">Operational Intelligence</h2>
+                            <h3 className="text-7xl font-[300] tracking-tighter text-white leading-none ">LUNA <span className="text-white font-[300] italic ml-2">DASHBOARD</span></h3>
                         </div>
                         <div 
                             className="flex items-center gap-6 px-10 py-6 shadow-[0_32px_64px_rgba(0,0,0,0.6)] relative overflow-hidden group rounded-none border-none"
@@ -275,7 +275,7 @@ const LunaAdmin = () => {
                         >
                             <div className="absolute inset-0 bg-emerald-500/5  group-hover:scale-110 transition-opacity" />
                             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_#10b981]" />
-                            <span className="text-[11px] font-[100] tracking-[0.5em] text-white ">SYSTEM STATUS: OPTIMIZED</span>
+                            <span className="text-[11px] font-[300] tracking-[0.5em] text-white ">SYSTEM STATUS: OPTIMIZED</span>
                         </div>
                     </header>
 
@@ -290,7 +290,7 @@ const LunaAdmin = () => {
                                 >
                                     <div className="flex justify-between items-center mb-16 relative z-10">
                                         <div className="space-y-2">
-                                            <h3 className="text-[13px] font-[200] tracking-wider text-white ">asistencia semanal</h3>
+                                            <h3 className="text-[13px] font-[300] tracking-wider text-white ">asistencia semanal</h3>
                                         </div>
 
                                         {/* Right Side: Week Selector & Action */}
@@ -301,13 +301,13 @@ const LunaAdmin = () => {
                                                         // logic for seeding
                                                     }
                                                 }}
-                                                className="text-[9px] font-[200] text-white border border-white/20 px-4 py-1.5 hover:bg-white/5 transition-colors tracking-widest lowercase rounded-full"
+                                                className="text-[9px] font-[300] text-white border border-white/20 px-4 py-1.5 hover:bg-white/5 transition-colors tracking-widest lowercase rounded-full"
                                             >
                                                 poblar semana
                                             </button>
                                             <div className="flex items-center gap-4 text-white">
                                                 <ChevronLeft className="w-4 h-4 cursor-pointer hover:text-white/50" />
-                                                <span className="text-[11px] font-[100] tracking-widest lowercase">13 mar - 19 mar</span>
+                                                <span className="text-[11px] font-[300] tracking-widest lowercase">13 mar - 19 mar</span>
                                                 <ChevronRight className="w-4 h-4 cursor-pointer hover:text-white/50" />
                                             </div>
                                         </div>
@@ -347,10 +347,10 @@ const LunaAdmin = () => {
                                 >
                                     <div className="flex justify-between items-start mb-8 relative z-10">
                                         <div className="space-y-4">
-                                            <h3 className="text-[13px] font-[200] tracking-wider text-white ">asistencia anual</h3>
+                                            <h3 className="text-[13px] font-[300] tracking-wider text-white ">asistencia anual</h3>
                                             <div className="flex items-center gap-6">
-                                                <span className="text-5xl font-[200] tracking-tighter text-white">+8.4%</span>
-                                                <span className="text-[10px] font-[200] text-white border border-white/30 bg-white/5 px-3 py-1 tracking-widest lowercase rounded-full">target met</span>
+                                                <span className="text-5xl font-[300] tracking-tighter text-white">+8.4%</span>
+                                                <span className="text-[10px] font-[300] text-white border border-white/30 bg-white/5 px-3 py-1 tracking-widest lowercase rounded-full">target met</span>
                                             </div>
                                         </div>
                                     </div>
@@ -358,7 +358,7 @@ const LunaAdmin = () => {
                                     {/* Yearly Trend Chart with Y-axis */}
                                     <div className="h-64 relative mt-12 flex gap-6">
                                         {/* Y-Axis Labels */}
-                                        <div className="flex flex-col justify-between items-end h-[100%] pb-12 pt-1 text-[9px] font-[100] text-white/50 tracking-widest lowercase">
+                                        <div className="flex flex-col justify-between items-end h-[100%] pb-12 pt-1 text-[9px] font-[300] text-white/50 tracking-widest lowercase">
                                             <span>100</span>
                                             <span>75</span>
                                             <span>50</span>
@@ -422,10 +422,10 @@ const LunaAdmin = () => {
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
                                     <div className="space-y-8">
-                                        <h4 className="text-[11px] font-[200] tracking-[0.8em] text-white">node registry</h4>
-                                        <div className="text-[140px] font-[100] tracking-tighter text-white leading-none -ml-4">{activeMembersCount}</div>
+                                        <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">node registry</h4>
+                                        <div className="text-[140px] font-[300] tracking-tighter text-white leading-none -ml-4">{activeMembersCount}</div>
                                     </div>
-                                    <div className="flex items-center gap-6 text-[12px] font-[100] tracking-[0.5em] text-white">
+                                    <div className="flex items-center gap-6 text-[12px] font-[300] tracking-[0.5em] text-white">
                                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981] animate-pulse" />
                                         <span className="text-white">Identity: Verified</span>
                                     </div>
@@ -434,13 +434,13 @@ const LunaAdmin = () => {
                                     className="p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[450px] rounded-none border-none"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
-                                    <h4 className="text-[11px] font-[200] tracking-[0.8em] text-white">active density</h4>
+                                    <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">active density</h4>
                                     <div className="flex items-center justify-center scale-125 my-8">
                                         <LunaDonut value={attendancePercentage} color="#cc9900" colorEnd="#ffff00" label="current" />
                                     </div>
-                                    <div className="flex justify-between items-end pt-8 text-[12px] font-[100] tracking-widest text-white">
+                                    <div className="flex justify-between items-end pt-8 text-[12px] font-[300] tracking-widest text-white">
                                         <span className="text-white">registered</span>
-                                        <span className="text-3xl font-[200] text-white">{presentTodayCount}</span>
+                                        <span className="text-3xl font-[300] text-white">{presentTodayCount}</span>
                                     </div>
                                 </div>
 
@@ -449,7 +449,7 @@ const LunaAdmin = () => {
                                     className="p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[450px] rounded-none border-none"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
-                                    <h4 className="text-[11px] font-[200] tracking-[0.8em] text-white">core utilization</h4>
+                                    <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">core utilization</h4>
                                     <div className="flex items-center justify-center scale-125 my-8">
                                         <LunaDonut value={82} label="load" />
                                     </div>
@@ -463,7 +463,7 @@ const LunaAdmin = () => {
                                     className="p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] rounded-none border-none"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
-                                    <h3 className="text-[11px] font-[200]  tracking-[0.8em] text-white mb-20 text-left">output nodes</h3>
+                                    <h3 className="text-[11px] font-[300]  tracking-[0.8em] text-white mb-20 text-left">output nodes</h3>
                                     <div className="h-64 flex items-end justify-around gap-10">
                                         {[
                                             { label: 'TV-01', value: 94, color: '#3b82f6' },
@@ -478,7 +478,7 @@ const LunaAdmin = () => {
                                                         style={{ height: `${tv.value}%`, background: tv.color, boxShadow: `0 0 30px ${tv.color}40` }}
                                                     />
                                                 </div>
-                                                <span className="text-[11px] font-[100]  tracking-[0.3em] text-white group-hover:text-white transition-all">{tv.label}</span>
+                                                <span className="text-[11px] font-[300]  tracking-[0.3em] text-white group-hover:text-white transition-all">{tv.label}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -488,7 +488,7 @@ const LunaAdmin = () => {
                                     className="lg:col-span-2 p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] rounded-none border-none"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
-                                    <h3 className="text-[11px] font-[200]  tracking-[0.8em] text-white mb-20">intelligence stream</h3>
+                                    <h3 className="text-[11px] font-[300]  tracking-[0.8em] text-white mb-20">intelligence stream</h3>
                                     <div className="space-y-12">
                                         {[
                                             { time: '14:20:05', text: 'Quantum synchronization success: A. Sanchez verified' },
@@ -496,8 +496,8 @@ const LunaAdmin = () => {
                                             { time: '11:45:00', text: 'Luna Protocol: Display initialization sequence: 100%' }
                                         ].map((log, i) => (
                                             <div key={i} className="flex items-start gap-16 group border-b border-white/5 pb-12 last:border-0 hover:bg-white/[0.01] transition-all">
-                                                <span className="text-[12px] font-[200] text-primary italic  tracking-[0.4em] w-32 pt-1">{log.time}</span>
-                                                <p className="flex-1 text-[14px] font-[100] tracking-[0.4em] text-white group-hover:text-white transition-all duration-500 ">
+                                                <span className="text-[12px] font-[300] text-primary italic  tracking-[0.4em] w-32 pt-1">{log.time}</span>
+                                                <p className="flex-1 text-[14px] font-[300] tracking-[0.4em] text-white group-hover:text-white transition-all duration-500 ">
                                                     {log.text}
                                                 </p>
                                             </div>
@@ -511,17 +511,17 @@ const LunaAdmin = () => {
                     {activeTab === 'configuracion' && (
                         <div className="max-w-4xl py-12 space-y-20">
                             <div className="space-y-4">
-                                <h3 className="text-7xl font-[200] italic tracking-tighter leading-none text-white">system <span className="text-white font-[200]">preferences</span></h3>
-                                <p className="text-[11px] font-[100] text-white tracking-[0.8em]">core architecture control</p>
+                                <h3 className="text-7xl font-[300] italic tracking-tighter leading-none text-white">system <span className="text-white font-[300]">preferences</span></h3>
+                                <p className="text-[11px] font-[300] text-white tracking-[0.8em]">core architecture control</p>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                                 <div className="space-y-12 p-12 bg-[#161821] border border-white/[0.03] shadow-2xl">
                                     <div className="flex items-center gap-6">
                                         <Monitor className="text-white w-6 h-6" />
-                                        <h4 className="text-[12px] font-[100]  tracking-[0.4em]">visual interface</h4>
+                                        <h4 className="text-[12px] font-[300]  tracking-[0.4em]">visual interface</h4>
                                     </div>
                                     <div className="flex justify-between items-center border-b border-white/5 pb-8">
-                                        <span className="text-[11px] font-[100]  tracking-[0.2em] text-white">global font weight</span>
+                                        <span className="text-[11px] font-[300]  tracking-[0.2em] text-white">global font weight</span>
                                         <select 
                                             value={settings.fontWeight || 'font-thin'}
                                             onChange={(e) => {
@@ -529,12 +529,12 @@ const LunaAdmin = () => {
                                                 setSettings({ fontWeight: val });
                                                 saveSettingsToCloud({ fontWeight: val });
                                             }}
-                                            className="bg-black/50 border border-white/10 text-[11px] font-[100] px-6 py-3  outline-none focus:border-primary transition-all text-white cursor-pointer"
+                                            className="bg-black/50 border border-white/10 text-[11px] font-[300] px-6 py-3  outline-none focus:border-primary transition-all text-white cursor-pointer"
                                         >
                                             <option value="font-thin">EXTRA LIGHT [LUNA]</option>
-                                            <option value="font-[100]">LIGHT</option>
+                                            <option value="font-[300]">LIGHT</option>
                                             <option value="font-normal">REGULAR</option>
-                                            <option value="font-[100]">BOLD</option>
+                                            <option value="font-[300]">BOLD</option>
                                         </select>
                                     </div>
                                     <p className="text-[10px] text-white italic tracking-widest leading-relaxed">
