@@ -465,10 +465,10 @@ const LunaAdmin = () => {
                                     <h3 className="text-[11px] font-[300]  tracking-[0.8em] text-white mb-20 text-left">output nodes</h3>
                                     <div className="h-64 flex items-end justify-around gap-10">
                                         {[
-                                            { label: 'TV-01', value: 94, color: '#3b82f6' },
-                                            { label: 'TV-02', value: 32, color: '#f59e0b' },
-                                            { label: 'TV-03', value: 88, color: '#10b981' },
-                                            { label: 'TV-04', value: 12, color: '#ef4444' }
+                                            { label: 'tv-01', value: 94, color: '#3b82f6' },
+                                            { label: 'tv-02', value: 32, color: '#f59e0b' },
+                                            { label: 'tv-03', value: 88, color: '#10b981' },
+                                            { label: 'tv-04', value: 12, color: '#ef4444' }
                                         ].map((tv, i) => (
                                             <div key={i} className="flex-1 flex flex-col items-center gap-8 h-full group">
                                                 <div className="flex-1 w-full bg-white/[0.01] relative overflow-hidden flex flex-col justify-end">
@@ -490,9 +490,9 @@ const LunaAdmin = () => {
                                     <h3 className="text-[11px] font-[300]  tracking-[0.8em] text-white mb-20">intelligence stream</h3>
                                     <div className="space-y-12">
                                         {[
-                                            { time: '14:20:05', text: 'Quantum synchronization success: A. Sanchez verified' },
-                                            { time: '12:05:12', text: 'Autonomous data backup completed on primary sector' },
-                                            { time: '11:45:00', text: 'Luna Protocol: Display initialization sequence: 100%' }
+                                            { time: '14:20:05', text: 'quantum synchronization success: a. sanchez verified' },
+                                            { time: '12:05:12', text: 'autonomous data backup completed on primary sector' },
+                                            { time: '11:45:00', text: 'luna protocol: display initialization sequence: 100%' }
                                         ].map((log, i) => (
                                             <div key={i} className="flex items-start gap-16 group border-b border-white/5 pb-12 last:border-0 hover:bg-white/[0.01] transition-all">
                                                 <span className="text-[12px] font-[300] text-primary italic  tracking-[0.4em] w-32 pt-1">{log.time}</span>
