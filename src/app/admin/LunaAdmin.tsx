@@ -421,7 +421,7 @@ const LunaAdmin = () => {
                                         <h4 className="text-[11px] font-[200] tracking-[0.8em] text-white">node registry</h4>
                                         <div className="text-[140px] font-[100] tracking-tighter text-white leading-none -ml-4">{activeMembersCount}</div>
                                     </div>
-                                    <div className="flex items-center gap-6 text-[12px] font-[100] tracking-[0.5em] text-emerald-400">
+                                    <div className="flex items-center gap-6 text-[12px] font-[100] tracking-[0.5em] text-white">
                                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_15px_#10b981] animate-pulse" />
                                         <span className="text-white">Identity: Verified</span>
                                     </div>
