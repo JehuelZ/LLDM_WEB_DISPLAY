@@ -274,45 +274,20 @@ const LunaAdmin = () => {
 
                     {activeTab === 'dashboard' && (
                         <div className="space-y-12">
-                            {/* ROW 1: Distribution & Trend */}
-                            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-                                {/* Weekly Distribution: Segmented Reference Style */}
+                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+                                {/* BOX 1: Weekly Distribution */}
                                 <div 
-                                    className="lg:col-span-2 p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] relative overflow-hidden group rounded-none border-none"
+                                    className="p-10 shadow-[0_32px_64px_rgba(0,0,0,0.6)] relative overflow-hidden group rounded-none border-none flex flex-col justify-between min-h-[420px]"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
-                                    <div className="flex justify-between items-center mb-16 relative z-10">
-                                        <div className="space-y-2">
-                                            <h3 className="text-[13px] font-[300] tracking-wider text-white ">asistencia semanal</h3>
-                                        </div>
-
-                                        {/* Right Side: Week Selector & Action */}
-                                        <div className="flex items-center gap-10">
-                                            <button 
-                                                onClick={() => {
-                                                    if(confirm('¿poblar semana actual?')) {
-                                                        // logic for seeding
-                                                    }
-                                                }}
-                                                className="text-[9px] font-[300] text-white border border-white/20 px-4 py-1.5 hover:bg-white/5 transition-colors tracking-widest lowercase rounded-full"
-                                            >
-                                                poblar semana
-                                            </button>
-                                            <div className="flex items-center gap-4 text-white">
-                                                <ChevronLeft className="w-4 h-4 cursor-pointer hover:text-white/50" />
-                                                <span className="text-[11px] font-[300] tracking-widest lowercase">13 mar - 19 mar</span>
-                                                <ChevronRight className="w-4 h-4 cursor-pointer hover:text-white/50" />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <h3 className="text-[11px] font-[300] tracking-[0.8em] text-white mb-12">asistencia semanal</h3>
                                     
-                                    <div className="h-64 flex items-end justify-between gap-4 relative z-10 px-2 mt-8">
+                                    <div className="h-64 flex items-end justify-between gap-3 relative z-10 px-2">
                                         {stats.map((day, i) => {
                                             const total = (day.morning || 0) + (day.intermediate || 0) + (day.evening || 0) || 1;
                                             return (
                                                 <div key={i} className="flex-1 flex flex-col items-center gap-3 h-full group/bar">
                                                     <div className="flex-1 w-3 mx-auto bg-white/[0.02] relative overflow-hidden flex flex-col justify-end gap-1.5 rounded-full">
-                                                        {/* Segmented Bars: Slim & Rounded Style */}
                                                         <div 
                                                             className="w-full bg-[#f59e0b] shadow-[0_0_6px_rgba(245,158,11,0.2)] transition-all duration-1000 rounded-full" 
                                                             style={{ height: `${(day.evening / total) * day.percentage}%` }} 
@@ -326,39 +301,25 @@ const LunaAdmin = () => {
                                                             style={{ height: `${(day.morning / total) * day.percentage}%` }} 
                                                         />
                                                     </div>
-                                                    <span className="text-[11px] font-[300] text-white tracking-widest group-hover/bar:text-white transition-colors">{['lu','ma','mi','ju','vi','sa','do'][i]}</span>
+                                                    <span className="text-[10px] font-[300] text-white tracking-widest group-hover/bar:text-white transition-colors lowercase">{['lu','ma','mi','ju','vi','sa','do'][i]}</span>
                                                 </div>
                                             );
                                         })}
                                     </div>
                                 </div>
 
-                                {/* Membership Trend: Neon & Interactive */}
+                                {/* BOX 2: Yearly Attendance */}
                                 <div 
-                                    className="lg:col-span-3 p-12 shadow-[0_32px_64px_rgba(0,0,0,0.8)] relative overflow-hidden rounded-none border-none"
+                                    className="p-10 shadow-[0_32px_64px_rgba(0,0,0,0.8)] relative overflow-hidden rounded-none border-none flex flex-col justify-between min-h-[420px]"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
-                                    <div className="flex justify-between items-start mb-8 relative z-10">
-                                        <div className="space-y-4">
-                                            <h3 className="text-[13px] font-[300] tracking-wider text-white ">asistencia anual</h3>
-                                            <div className="flex items-center gap-6">
-                                                <span className="text-5xl font-[300] tracking-tighter text-white">+8.4%</span>
-                                                <span className="text-[10px] font-[300] text-white border border-white/30 bg-white/5 px-3 py-1 tracking-widest lowercase rounded-full">target met</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Yearly Trend Chart with Y-axis */}
-                                    <div className="h-64 relative mt-12 flex gap-6">
-                                        {/* Y-Axis Labels */}
-                                        <div className="flex flex-col justify-between items-end h-[100%] pb-12 pt-1 text-[9px] font-[300] text-white/50 tracking-widest lowercase">
+                                    <h3 className="text-[11px] font-[300] tracking-[0.8em] text-white mb-12">asistencia anual</h3>
+                                    <div className="h-64 relative flex gap-4">
+                                        <div className="flex flex-col justify-between items-end h-[100%] pb-10 pt-1 text-[8px] font-[300] text-white/50 tracking-widest lowercase">
                                             <span>100</span>
-                                            <span>75</span>
                                             <span>50</span>
-                                            <span>25</span>
                                             <span>0</span>
                                         </div>
-
                                         <div className="flex-1 relative h-full">
                                             <svg viewBox="0 0 400 100" className="w-full h-full overflow-visible">
                                                 <defs>
@@ -371,13 +332,9 @@ const LunaAdmin = () => {
                                                         <stop offset="100%" stopColor="#b45309" />
                                                     </linearGradient>
                                                 </defs>
-                                                
-                                                {/* Minimal Horizontal Grid */}
-                                                {[0, 1, 2, 3, 4].map(i => (
+                                                {[0, 2, 4].map(i => (
                                                     <line key={i} x1="0" y1={i * 25} x2="400" y2={i * 25} stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
                                                 ))}
-
-                                                {/* Glowing Smooth Curve (Yearly Trend) */}
                                                 <path 
                                                     d="M 0,80 C 20,70 40,85 60,60 C 80,40 100,20 120,45 C 140,70 160,95 180,60 C 200,20 220,10 240,40 C 260,70 280,110 300,70 C 320,30 340,10 360,50 C 380,90 400,60 420,40"
                                                     fill="none"
@@ -387,113 +344,44 @@ const LunaAdmin = () => {
                                                     filter="url(#neonPathGlow)"
                                                     style={{ vectorEffect: 'non-scaling-stroke' }}
                                                 />
-                                                
-                                                {/* Reference Highlight Point */}
-                                                <circle cx="340" cy="30" r="5" fill="white" />
-                                                <circle cx="340" cy="30" r="8" stroke="#f59e0b" strokeWidth="2" fill="none" filter="url(#neonPathGlow)" />
                                             </svg>
-                                                                                 {/* X-Axis: 12 Months with solid indicator dots */}
-                                            <div className="flex justify-between w-full mt-12 px-2">
-                                                {['en','fe','ma','ab','my','jn','jl','ag','se','oc','no','di'].map(month => (
-                                                    <div key={month} className="flex flex-col items-center gap-3">
+                                            <div className="flex justify-between w-full mt-10 px-1">
+                                                {['en','ma','my','jl','se','no'].map(month => (
+                                                    <div key={month} className="flex flex-col items-center gap-2">
                                                         <div className="w-1 h-1 rounded-full bg-white" />
-                                                        <span className="text-[10px] font-[300] text-white tracking-widest lowercase">{month}</span>
+                                                        <span className="text-[8px] font-[300] text-white tracking-widest lowercase">{month}</span>
                                                     </div>
                                                 ))}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* ROW 2: Membership, Attendance, Performance */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                                {/* Card: Members */}
+                                {/* BOX 3: Node Registry */}
                                 <div 
-                                    className="p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[450px] group transition-all duration-700 rounded-none border-none"
+                                    className="p-10 shadow-[0_32px_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[420px] rounded-none border-none"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
-                                    <div className="space-y-8">
-                                        <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">node registry</h4>
-                                        <div className="text-[140px] font-[300] tracking-tighter text-white leading-none -ml-4">{activeMembersCount}</div>
+                                    <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">node registry</h4>
+                                    <div className="text-[100px] font-[300] tracking-tighter text-white leading-none -ml-2 my-auto">{activeMembersCount}</div>
+                                    <div className="flex items-center gap-4 text-[10px] font-[300] tracking-[0.4em] text-white/50 lowercase">
+                                        <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981] animate-pulse" />
+                                        <span>identity: verified</span>
                                     </div>
-                                    <div className="flex items-center gap-6 text-[12px] font-[300] tracking-[0.5em] text-white">
-                                        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981] animate-pulse" />
-                                        <span className="text-white">Identity: Verified</span>
-                                    </div>
-                                                             {/* Card: Attendance */}
+                                </div>
+
+                                {/* BOX 4: Active Density */}
                                 <div 
-                                    className="p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[450px] rounded-none border-none"
+                                    className="p-10 shadow-[0_32_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[420px] rounded-none border-none"
                                     style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
                                 >
                                     <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">active density</h4>
-                                    <div className="flex items-center justify-center scale-125 my-8">
+                                    <div className="flex items-center justify-center scale-110 my-auto">
                                         <LunaDonut value={attendancePercentage} color="#cc9900" colorEnd="#ffff00" label="current" />
                                     </div>
-                                    <div className="flex justify-between items-end pt-8 text-[12px] font-[300] tracking-widest text-white">
-                                        <span className="text-white">registered</span>
-                                        <span className="text-3xl font-[300] text-white">{presentTodayCount}</span>
-                                    </div>
-                                </div>
-
-                                {/* Card: Performance */}
-                                <div 
-                                    className="p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[450px] rounded-none border-none"
-                                    style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                                >
-                                    <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">core utilization</h4>
-                                    <div className="flex items-center justify-center scale-125 my-8">
-                                        <LunaDonut value={82} label="load" />
-                                    </div>
-                                </div>
-                            </div>
-    </div>
-
-                            {/* ROW 3: TV Status and Logs */}
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pb-32">
-                                <div 
-                                    className="p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] rounded-none border-none"
-                                    style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                                >
-                                    <h3 className="text-[11px] font-[300]  tracking-[0.8em] text-white mb-20 text-left">output nodes</h3>
-                                    <div className="h-64 flex items-end justify-around gap-10">
-                                        {[
-                                            { label: 'tv-01', value: 94, color: '#3b82f6' },
-                                            { label: 'tv-02', value: 32, color: '#f59e0b' },
-                                            { label: 'tv-03', value: 88, color: '#10b981' },
-                                            { label: 'tv-04', value: 12, color: '#ef4444' }
-                                        ].map((tv, i) => (
-                                            <div key={i} className="flex-1 flex flex-col items-center gap-8 h-full group">
-                                                <div className="flex-1 w-3 mx-auto bg-white/[0.01] relative overflow-hidden flex flex-col justify-end rounded-full">
-                                                    <div 
-                                                        className="w-full transition-all duration-[2s] shadow-[0_-4px_15px_rgba(255,255,255,0.05)] rounded-full"
-                                                        style={{ height: `${tv.value}%`, background: tv.color, boxShadow: `0 0 30px ${tv.color}40` }}
-                                                    />
-                                                </div>
-                                                <span className="text-[11px] font-[300]  tracking-[0.3em] text-white group-hover:text-white transition-all">{tv.label}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div 
-                                    className="lg:col-span-2 p-12 shadow-[0_32px_64px_rgba(0,0,0,0.6)] rounded-none border-none"
-                                    style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                                >
-                                    <h3 className="text-[11px] font-[300]  tracking-[0.8em] text-white mb-20">intelligence stream</h3>
-                                    <div className="space-y-12">
-                                        {[
-                                            { time: '14:20:05', text: 'quantum synchronization success: a. sanchez verified' },
-                                            { time: '12:05:12', text: 'autonomous data backup completed on primary sector' },
-                                            { time: '11:45:00', text: 'luna protocol: display initialization sequence: 100%' }
-                                        ].map((log, i) => (
-                                            <div key={i} className="flex items-start gap-16 group border-b border-white/5 pb-12 last:border-0 hover:bg-white/[0.01] transition-all">
-                                                <span className="text-[12px] font-[300] text-primary italic  tracking-[0.4em] w-32 pt-1">{log.time}</span>
-                                                <p className="flex-1 text-[14px] font-[300] tracking-[0.4em] text-white group-hover:text-white transition-all duration-500 ">
-                                                    {log.text}
-                                                </p>
-                                            </div>
-                                        ))}
+                                    <div className="flex justify-between items-end pt-8 text-[10px] font-[300] tracking-widest text-white/50 lowercase">
+                                        <span>registered</span>
+                                        <span className="text-2xl font-[300] text-white ">{presentTodayCount}</span>
                                     </div>
                                 </div>
                             </div>
