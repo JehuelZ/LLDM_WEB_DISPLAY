@@ -399,13 +399,12 @@ const LunaAdmin = () => {
                                                 <circle cx="340" cy="30" r="5" fill="white" />
                                                 <circle cx="340" cy="30" r="8" stroke="#f59e0b" strokeWidth="2" fill="none" filter="url(#neonPathGlow)" />
                                             </svg>
-                                            
-                                            {/* X-Axis: 12 Months with indicator dots */}
+                                                                                 {/* X-Axis: 12 Months with solid indicator dots */}
                                             <div className="flex justify-between w-full mt-12 px-2">
                                                 {['en','fe','ma','ab','my','jn','jl','ag','se','oc','no','di'].map(month => (
-                                                    <div key={month} className="flex flex-col items-center gap-4">
-                                                        <div className="w-1 h-1 rounded-full bg-white opacity-40" />
-                                                        <span className="text-[9px] font-[300] text-white tracking-widest lowercase">{month}</span>
+                                                    <div key={month} className="flex flex-col items-center gap-3">
+                                                        <div className="w-1 h-1 rounded-full bg-white" />
+                                                        <span className="text-[10px] font-[300] text-white tracking-widest lowercase">{month}</span>
                                                     </div>
                                                 ))}
                                             </div>
