@@ -234,7 +234,7 @@ const LunaAdmin = () => {
                                 activeTab === item.id ? "bg-white/5 text-white" : "text-white hover:text-white"
                             )}
                         >
-                            {activeTab === item.id && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white shadow-[0_0_15px_white]" />}
+                            {activeTab === item.id && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white shadow-[0_0_6px_white]" />}
                             <item.icon className={cn("w-5 h-5 transition-transform group-hover:scale-110 text-white")} />
                             <span className={cn("text-[11px] font-[300] tracking-[0.4em] transition-all text-white", activeTab === item.id ? "font-[300]" : "")}>{item.label}</span>
                         </button>
@@ -254,7 +254,7 @@ const LunaAdmin = () => {
                 </nav>
 
                 <div className="p-12 border-t border-white/5">
-                    <button onClick={() => signOut()} className="w-full flex items-center gap-6 px-6 py-5 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all group relative overflow-hidden rounded-none">
+                    <button onClick={() => signOut()} className="w-full flex items-center gap-6 px-6 py-5 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all group relative overflow-hidden rounded-full">
                         <LogOut className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
                         <span className="text-[11px] font-[300] tracking-[0.3em] text-white">system exit</span>
                     </button>
@@ -266,16 +266,14 @@ const LunaAdmin = () => {
                 <div className="max-w-7xl mx-auto space-y-20">
                     <header className="flex justify-between items-start mb-24 gap-12">
                         <div className="space-y-6">
-                            <h2 className="text-[11px] font-[300] text-white  tracking-[0.8em]">Operational Intelligence</h2>
-                            <h3 className="text-7xl font-[300] tracking-tighter text-white leading-none ">LUNA <span className="text-white font-[300] italic ml-2">DASHBOARD</span></h3>
+                            <p className="text-[10px] font-[300] text-white tracking-[0.4em] mb-2 lowercase">administrator</p>
+                            <p className="text-[12px] font-[300] text-white tracking-[0.2em] lowercase">central comms</p>
+                            <h2 className="text-[11px] font-[300] text-white  tracking-[0.8em]">operational intelligence</h2>
+                            <h3 className="text-7xl font-[300] tracking-tighter text-white leading-none ">luna <span className="text-white font-[300] italic ml-2">dashboard</span></h3>
                         </div>
-                        <div 
-                            className="flex items-center gap-6 px-10 py-6 shadow-[0_32px_64px_rgba(0,0,0,0.6)] relative overflow-hidden group rounded-none border-none"
-                            style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                        >
-                            <div className="absolute inset-0 bg-emerald-500/5  group-hover:scale-110 transition-opacity" />
+                        <div className="flex items-center gap-6 relative group">
                             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_#10b981]" />
-                            <span className="text-[11px] font-[300] tracking-[0.5em] text-white ">SYSTEM STATUS: OPTIMIZED</span>
+                            <span className="text-[11px] font-[300] tracking-[0.5em] text-white">system status: optimized</span>
                         </div>
                     </header>
 
@@ -471,9 +469,9 @@ const LunaAdmin = () => {
                                             { label: 'tv-04', value: 12, color: '#ef4444' }
                                         ].map((tv, i) => (
                                             <div key={i} className="flex-1 flex flex-col items-center gap-8 h-full group">
-                                                <div className="flex-1 w-full bg-white/[0.01] relative overflow-hidden flex flex-col justify-end">
+                                                <div className="flex-1 w-3 mx-auto bg-white/[0.01] relative overflow-hidden flex flex-col justify-end rounded-full">
                                                     <div 
-                                                        className="w-full transition-all duration-[2s] shadow-[0_-4px_15px_rgba(255,255,255,0.05)]"
+                                                        className="w-full transition-all duration-[2s] shadow-[0_-4px_15px_rgba(255,255,255,0.05)] rounded-full"
                                                         style={{ height: `${tv.value}%`, background: tv.color, boxShadow: `0 0 30px ${tv.color}40` }}
                                                     />
                                                 </div>
