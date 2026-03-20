@@ -321,15 +321,15 @@ const LunaAdmin = () => {
                                                     <div className="flex-1 w-3 mx-auto bg-white/[0.02] relative overflow-hidden flex flex-col justify-end gap-1.5 rounded-full">
                                                         {/* Segmented Bars: Slim & Rounded Style */}
                                                         <div 
-                                                            className="w-full bg-[#f59e0b] shadow-[0_0_15px_rgba(245,158,11,0.2)] transition-all duration-1000 rounded-full" 
+                                                            className="w-full bg-[#f59e0b] shadow-[0_0_6px_rgba(245,158,11,0.2)] transition-all duration-1000 rounded-full" 
                                                             style={{ height: `${(day.evening / total) * day.percentage}%` }} 
                                                         />
                                                         <div 
-                                                            className="w-full bg-[#6366f1] shadow-[0_0_20px_rgba(99,102,241,0.2)] transition-all duration-1000 rounded-full" 
+                                                            className="w-full bg-[#6366f1] shadow-[0_0_8px_rgba(99,102,241,0.2)] transition-all duration-1000 rounded-full" 
                                                             style={{ height: `${(day.intermediate / total) * day.percentage}%` }} 
                                                         />
                                                         <div 
-                                                            className="w-full bg-[#10b981] shadow-[0_0_15px_rgba(16,185,129,0.2)] transition-all duration-1000 rounded-full" 
+                                                            className="w-full bg-[#10b981] shadow-[0_0_6px_rgba(16,185,129,0.2)] transition-all duration-1000 rounded-full" 
                                                             style={{ height: `${(day.morning / total) * day.percentage}%` }} 
                                                         />
                                                     </div>
@@ -360,7 +360,7 @@ const LunaAdmin = () => {
                                         <svg viewBox="0 0 400 100" className="w-full h-full overflow-visible">
                                             <defs>
                                                 <filter id="neonPathGlow" x="-20%" y="-20%" width="140%" height="140%">
-                                                    <feGaussianBlur stdDeviation="5" result="blur" />
+                                                    <feGaussianBlur stdDeviation="2.5" result="blur" />
                                                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
                                                 </filter>
                                                 <linearGradient id="neon-grad-line" x1="0%" y1="0%" x2="100%" y2="0%">
