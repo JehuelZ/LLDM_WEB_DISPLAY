@@ -54,54 +54,58 @@ export default function DirectoryPage() {
     };
 
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+        <div className="min-h-screen text-foreground transition-colors duration-500">
             <Header />
             <main className="container mx-auto p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
 
                 {/* Navigation & Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    <div className="space-y-2">
-                        <Link href="/" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-xs font-black uppercase tracking-widest transition-colors mb-2">
-                            <ArrowLeft className="w-3 h-3" /> Volver al Inicio
-                        </Link>
-                        <h1 className="text-5xl font-black tracking-tighter text-foreground uppercase italic flex items-center gap-4">
-                            <Users className="w-12 h-12 text-primary" />
-                            Directorio <span className="text-primary">Iglesia</span>
-                        </h1>
-                        <p className="text-slate-500 font-medium">Mantente conectado con el cuerpo de Cristo en LLDM RODEO</p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+                    <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 rounded-[2rem] bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                             <Users className="w-8 h-8 text-primary animate-pulse" />
+                        </div>
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-2 leading-none">
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full animate-ping" />
+                                Church Network
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-foreground uppercase italic leading-none">
+                                Directorio <span className="text-primary lg:not-italic">IGLESIA</span>
+                            </h1>
+                            <p className="text-muted-foreground font-bold tracking-tight text-sm md:text-lg mt-2 opacity-80">Conectando con el cuerpo de Cristo en LLDM RODEO.</p>
+                        </div>
                     </div>
 
-                    <div className="relative w-full md:w-96">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                    <div className="relative w-full md:w-[28rem]">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                         <Input
-                            placeholder="Buscar por nombre o cargo..."
-                            className="pl-12 bg-foreground/5 border-border/40 h-14 rounded-2xl text-lg focus:ring-primary/50"
+                            placeholder="BUSCAR POR NOMBRE O CARGO..."
+                            className="pl-14 bg-black/40 border-white/10 h-16 rounded-2xl text-[11px] font-black tracking-[0.2em] uppercase focus:ring-primary/50 shadow-2xl transition-all"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3 mb-8">
                     {[
                         { id: 'all', label: 'Todos', icon: Users },
                         { id: 'leadership', label: 'Liderazgo', icon: Flame },
-                        { id: 'choir', label: 'Coro', icon: Music },
+                        { id: 'choir', label: 'Coros', icon: Music },
                         { id: 'responsible', label: 'Responsables', icon: Star },
                     ].map(filter => (
-                        <button
+                        <Button
                             key={filter.id}
                             onClick={() => setActiveFilter(filter.id)}
+                            variant={activeFilter === filter.id ? "primitivo" : "outline"}
                             className={cn(
-                                "flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 border",
-                                activeFilter === filter.id
-                                    ? "bg-primary text-black border-primary glow-blue scale-105"
-                                    : "bg-foreground/5 text-slate-400 border-border/20 hover:border-white/20 hover:bg-foreground/10"
+                                "h-14 px-8",
+                                activeFilter !== filter.id && "opacity-50 hover:opacity-100"
                             )}
                         >
-                            <filter.icon className="w-4 h-4" />
+                            <filter.icon className="w-4 h-4 mr-2" />
                             {filter.label}
-                        </button>
+                        </Button>
                     ))}
                 </div>
 
@@ -110,66 +114,65 @@ export default function DirectoryPage() {
                     {filtered.map((member, i) => (
                         <motion.div
                             key={member.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: i * 0.05 }}
                         >
-                            <Card className="glass-card border-none bg-foreground/5 group hover:bg-foreground/10 transition-all duration-500 overflow-hidden h-full">
+                            <Card className="glass-card border-none bg-black/40 group hover:bg-black/60 transition-all duration-700 overflow-hidden h-full rounded-[2.5rem] shadow-2xl relative">
+                                <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/10 transition-colors" />
                                 <CardContent className="p-0 flex flex-col h-full">
-                                    <div className="relative h-48 overflow-hidden">
+                                    <div className="relative h-64 overflow-hidden">
                                         <img
-                                            src={member.avatar}
+                                            src={member.avatar || 'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&h=400&fit=crop'}
                                             alt={member.name}
-                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 grayscale-[0.2] group-hover:grayscale-0"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent opacity-80" />
-                                        <div className="absolute bottom-4 left-4 flex flex-col gap-2">
-                                            <span className="px-2 py-1 rounded bg-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] border border-primary/20 backdrop-blur-md w-fit">
-                                                {member.role}
-                                            </span>
-                                            <div className="flex gap-2">
-                                                <span className={cn(
-                                                    "px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest border backdrop-blur-md",
-                                                    member.gender === 'Varon' ? "bg-blue-500/20 text-blue-400 border-blue-500/20" : "bg-pink-500/20 text-pink-400 border-pink-500/20"
-                                                )}>
-                                                    {member.gender}
-                                                </span>
-                                                <span className="px-2 py-0.5 rounded bg-foreground/10 text-foreground/70 text-[8px] font-black uppercase tracking-widest border border-border/40 backdrop-blur-md">
-                                                    {member.member_group}
-                                                </span>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80" />
+                                        <div className="absolute bottom-6 left-6 right-6">
+                                            <div className="flex flex-col gap-3">
+                                                <div className="flex gap-2">
+                                                     <span className="px-3 py-1 rounded-xl bg-primary text-black text-[9px] font-black uppercase tracking-[0.2em] shadow-xl">
+                                                        {member.role === 'Administrador' ? 'ADMIN' : (member.role || 'MIEMBRO')}
+                                                    </span>
+                                                    {member.gender && (
+                                                        <span className={cn(
+                                                            "px-3 py-1 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] border backdrop-blur-md shadow-xl",
+                                                            member.gender === 'Varon' ? "bg-blue-500/20 text-blue-400 border-blue-500/20" : "bg-pink-500/20 text-pink-400 border-pink-500/20"
+                                                        )}>
+                                                            {member.gender}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <h3 className="text-2xl font-black text-foreground uppercase italic tracking-tighter leading-none group-hover:text-primary transition-colors">
+                                                    {member.name}
+                                                </h3>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="p-6 space-y-6 flex-1 flex flex-col justify-between">
-                                        <div>
-                                            <h3 className="text-xl font-black text-foreground uppercase italic tracking-tighter leading-tight">
-                                                {member.name}
-                                            </h3>
-                                        </div>
-
-                                        <div className="space-y-3">
-                                            <div className="flex items-center gap-3 text-slate-400 hover:text-foreground transition-colors">
-                                                <div className="w-8 h-8 rounded-lg bg-foreground/5 flex items-center justify-center border border-border/20">
-                                                    <Phone className="w-4 h-4" />
+                                    <div className="p-8 space-y-6 flex-1 flex flex-col justify-between">
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group/link cursor-pointer">
+                                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 group-hover/link:border-primary/50 transition-colors">
+                                                    <Phone className="w-4 h-4 text-primary" />
                                                 </div>
-                                                <span className="text-sm font-medium">{member.phone}</span>
+                                                <span className="text-xs font-black uppercase tracking-widest">{member.phone || 'SIN CONTACTO'}</span>
                                             </div>
-                                            <div className="flex items-center gap-3 text-slate-400 hover:text-foreground transition-colors">
-                                                <div className="w-8 h-8 rounded-lg bg-foreground/5 flex items-center justify-center border border-border/20">
-                                                    <Mail className="w-4 h-4" />
+                                            <div className="flex items-center gap-4 text-muted-foreground hover:text-foreground transition-colors group/link cursor-pointer">
+                                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/5 group-hover/link:border-primary/50 transition-colors">
+                                                    <Mail className="w-4 h-4 text-primary" />
                                                 </div>
-                                                <span className="text-sm font-medium truncate">{member.email}</span>
+                                                <span className="text-xs font-black uppercase tracking-widest truncate">{member.email || 'SIN CORREO'}</span>
                                             </div>
                                         </div>
 
-                                        <div className="pt-4 flex gap-2">
+                                        <div className="pt-6 border-t border-white/5">
                                             <Button
-                                                variant="outline"
                                                 onClick={() => handleMessage(member)}
-                                                className="flex-1 rounded-xl border-border/40 hover:bg-primary hover:text-black hover:border-primary transition-all duration-300 font-black uppercase text-[10px] tracking-widest gap-2"
+                                                variant="primitivo"
+                                                className="w-full h-14 gap-3 group/btn"
                                             >
-                                                <MessageSquare className="w-3 h-3" /> Mensaje
+                                                <MessageSquare className="w-4 h-4 group-hover/btn:scale-110 transition-transform" /> ENVIAR COMUNICADO
                                             </Button>
                                         </div>
                                     </div>
@@ -181,8 +184,8 @@ export default function DirectoryPage() {
 
                 {filtered.length === 0 && (
                     <div className="text-center py-20 bg-foreground/5 rounded-3xl border border-dashed border-border/40">
-                        <Users className="w-16 h-16 text-slate-700 mx-auto mb-4" />
-                        <p className="text-slate-500 font-bold uppercase tracking-widest">No se encontraron miembros</p>
+                        <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground font-bold uppercase tracking-widest">No se encontraron miembros</p>
                     </div>
                 )}
 

@@ -83,36 +83,54 @@ export default function DashboardIndex() {
     ].filter(d => d.show);
 
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+        <div className="min-h-screen text-foreground transition-colors duration-500">
             <Header />
             <main className="container mx-auto p-4 md:p-8 space-y-8 md:space-y-12">
-                <div className="space-y-3 md:space-y-4 text-center md:text-left">
-                    <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4">
-                        <LayoutDashboard className="w-8 h-8 md:w-12 md:h-12 text-primary" />
-                        <span>Paneles de <span className="text-primary">Control</span></span>
-                    </h1>
-                    <p className="text-slate-500 font-medium tracking-tight text-sm md:text-lg">Seleccione el acceso correspondiente a su rol o departamento.</p>
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+                     <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                             <LayoutDashboard className="h-8 w-8 text-primary animate-pulse" />
+                        </div>
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-2 leading-none">
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                                Interactive Hub
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-foreground uppercase italic leading-none">
+                                Paneles de <span className="text-primary not-italic">CONTROL</span>
+                            </h1>
+                            <p className="text-muted-foreground font-bold tracking-tight text-sm md:text-lg mt-2 opacity-80">Seleccione el acceso correspondiente a su rol o departamento operativo.</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="px-1 md:px-0">
                     <CountdownCard />
                 </div>
 
-                <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {dashboards.map((dash, i) => (
                         <Link key={i} href={dash.href}>
-                            <motion.div
-                                whileHover={{ scale: 1.02, y: -5 }}
+                            <motion.div 
+                                whileHover={{ y: -5, scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className={`glass-card p-5 md:p-6 h-full flex flex-col border-t-4 border-t-transparent hover:border-t-current transition-all duration-300 group ${dash.color}`}
+                                className="glass-card bg-black/40 border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group cursor-pointer h-full flex flex-col justify-between"
                             >
-                                <div className={`w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl ${dash.bgColor} flex items-center justify-center border ${dash.borderColor} mb-4 md:mb-6 transition-transform group-hover:scale-110`}>
-                                    <dash.icon className="w-6 h-6 md:w-7 md:h-7" />
+                                <div className={`absolute top-0 right-0 w-32 h-32 ${dash.bgColor.replace('/10', '/5')} rounded-full blur-3xl pointer-events-none group-hover:opacity-100 transition-opacity opacity-50`} />
+                                
+                                <div className="relative z-10">
+                                    <div className={`w-14 h-14 rounded-2xl ${dash.bgColor} border ${dash.borderColor} flex items-center justify-center mb-6 group-hover:scale-110 transition-all duration-500 shadow-2xl`}>
+                                        <dash.icon className={`h-7 w-7 ${dash.color}`} />
+                                    </div>
+                                    <h3 className="text-xl font-black text-foreground italic tracking-tighter uppercase mb-3 leading-none group-hover:text-primary transition-colors">{dash.title}</h3>
+                                    <p className="text-muted-foreground text-xs font-bold tracking-tight opacity-70 leading-relaxed">{dash.description}</p>
                                 </div>
-                                <h3 className="text-lg md:text-xl font-black text-foreground italic uppercase tracking-tight mb-2">{dash.title}</h3>
-                                <p className="text-xs md:text-sm text-slate-500 font-medium leading-relaxed mb-6 md:mb-8">{dash.description}</p>
-                                <div className="mt-auto flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-70 md:opacity-0 group-hover:opacity-100 transition-opacity translate-x-0 md:translate-x-[-10px] md:group-hover:translate-x-0">
-                                    Acceder ahora <ArrowRight className="w-3 h-3" />
+
+                                <div className="mt-8 flex items-center justify-between relative z-10 w-full pt-6 border-t border-white/5">
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors">Acceder</span>
+                                    <div className={`w-10 h-10 rounded-xl ${dash.bgColor} flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0`}>
+                                        <ArrowRight className={`h-4 w-4 ${dash.color}`} />
+                                    </div>
                                 </div>
                             </motion.div>
                         </Link>
@@ -128,11 +146,11 @@ export default function DashboardIndex() {
                             </div>
                             <div>
                                 <h4 className="text-xl md:text-2xl font-black text-foreground uppercase italic">Developer / Admin Access</h4>
-                                <p className="text-sm md:text-base text-slate-500">Accede al panel maestro para gestionar toda la iglesia.</p>
+                                <p className="text-sm md:text-base text-muted-foreground font-bold italic opacity-80">Accede al panel maestro para gestionar toda la iglesia.</p>
                             </div>
                         </div>
                         <Link href="/admin" className="w-full md:w-auto">
-                            <Button className="w-full md:w-auto bg-primary hover:bg-primary/90 text-foreground font-black uppercase tracking-widest px-8 md:px-12 h-12 md:h-14 rounded-xl md:rounded-2xl shadow-[0_10px_30px_rgba(59,130,246,0.3)]">
+                            <Button variant="primitivo" className="w-full md:w-auto px-12 h-14">
                                 Administración
                             </Button>
                         </Link>

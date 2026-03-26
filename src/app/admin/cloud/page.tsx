@@ -90,7 +90,7 @@ export default function SimpleAdmin() {
             <Header />
             <main className="container mx-auto p-8 space-y-8">
                 <div>
-                    <h1 className="text-4xl font-black text-white italic uppercase tracking-tighter">
+                    <h1 className="text-4xl font-black text-white uppercase tracking-tighter">
                         Panel de Administración <span className="text-primary">Nube</span>
                     </h1>
                     <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">
@@ -110,7 +110,7 @@ export default function SimpleAdmin() {
                     {/* Crear Anuncio */}
                     <Card className="glass-card border-none bg-white/5 overflow-hidden">
                         <CardHeader className="bg-amber-500/10 border-b border-white/5">
-                            <CardTitle className="flex items-center gap-2 text-amber-500 italic uppercase">
+                            <CardTitle className="flex items-center gap-2 text-amber-500 uppercase">
                                 <Bell className="w-5 h-5" /> Nuevo Anuncio
                             </CardTitle>
                             <CardDescription>Aparecerá inmediatamente en el tablero</CardDescription>
@@ -137,7 +137,7 @@ export default function SimpleAdmin() {
                             <Button
                                 onClick={handleSaveAnnouncement}
                                 disabled={loading || !ann.title}
-                                className="w-full bg-amber-500 hover:bg-amber-600 text-black font-black uppercase italic tracking-wider py-6"
+                                className="w-full bg-amber-500 hover:bg-amber-600 text-black font-black uppercase tracking-wider py-6"
                             >
                                 <Save className="mr-2 w-4 h-4" /> Publicar en la Nube
                             </Button>
@@ -147,7 +147,7 @@ export default function SimpleAdmin() {
                     {/* Horario Rápido */}
                     <Card className="glass-card border-none bg-white/5 overflow-hidden">
                         <CardHeader className="bg-primary/10 border-b border-white/5">
-                            <CardTitle className="flex items-center gap-2 text-primary italic uppercase">
+                            <CardTitle className="flex items-center gap-2 text-primary uppercase">
                                 <Calendar className="w-5 h-5" /> Horario del Día
                             </CardTitle>
                             <CardDescription>Cambia el servicio principal de hoy</CardDescription>
@@ -192,7 +192,7 @@ export default function SimpleAdmin() {
                             <Button
                                 onClick={handleSaveSchedule}
                                 disabled={loading}
-                                className="w-full bg-primary hover:bg-primary/80 text-black font-black uppercase italic tracking-wider py-6"
+                                className="w-full bg-primary hover:bg-primary/80 text-black font-black uppercase tracking-wider py-6"
                             >
                                 <Save className="mr-2 w-4 h-4" /> Actualizar Horario
                             </Button>
@@ -202,7 +202,7 @@ export default function SimpleAdmin() {
                     {/* Tema Semanal */}
                     <Card className="glass-card border-none bg-white/5 overflow-hidden md:col-span-2">
                         <CardHeader className="bg-secondary/10 border-b border-white/5">
-                            <CardTitle className="flex items-center gap-2 text-secondary italic uppercase">
+                            <CardTitle className="flex items-center gap-2 text-secondary uppercase">
                                 <BookOpen className="w-5 h-5" /> Tema de la Semana
                             </CardTitle>
                             <CardDescription>Configura el título y descripción que aparecerá en el tablero</CardDescription>
@@ -268,7 +268,7 @@ export default function SimpleAdmin() {
                             <Button
                                 onClick={handleSaveTheme}
                                 disabled={loading || !theme.title}
-                                className="w-full bg-secondary hover:bg-secondary/80 text-black font-black uppercase italic tracking-wider py-6"
+                                className="w-full bg-secondary hover:bg-secondary/80 text-black font-black uppercase tracking-wider py-6"
                             >
                                 <Save className="mr-2 w-4 h-4" /> Actualizar Tema Semanal
                             </Button>

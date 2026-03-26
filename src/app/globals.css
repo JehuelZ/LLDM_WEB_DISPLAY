@@ -3,7 +3,7 @@
 @source "../../src";
 
 @theme {
-  --font-sans: var(--font-outfit);
+  --font-sans: var(--font-ubuntu);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
@@ -20,19 +20,19 @@
 :root,
 [data-theme='dark'],
 .dark-theme {
-  --background: #020617;
-  --foreground: #f8fafc;
+  --background: transparent;
+  --foreground: #ffffff;
   --card: 15, 23, 42;
   --card-opacity: 0.6;
-  --card-foreground: #f8fafc;
+  --card-foreground: #ffffff;
   --popover: #0f172a;
-  --popover-foreground: #f8fafc;
+  --popover-foreground: #ffffff;
   --primary: #fbbf24;
   --primary-foreground: #020617;
   --secondary: #3b82f6;
   --secondary-foreground: #ffffff;
   --muted: #1e293b;
-  --muted-foreground: #94a3b8;
+  --muted-foreground: #e2e8f0;
   --accent: #d946ef;
   --accent-foreground: #ffffff;
   --border: #1e293b;
@@ -43,70 +43,74 @@
 
 [data-theme='light'],
 .light-theme {
-  --background: #f8fafc;
-  --foreground: #020617;
+  --background: #f8fafc; /* Slate 50 */
+  --foreground: #0f172a; /* Slate 900 */
   --card: 255, 255, 255;
-  --card-opacity: 0.8;
-  --card-foreground: #020617;
+  --card-opacity: 1;
+  --card-foreground: #0f172a;
   --popover: #ffffff;
-  --popover-foreground: #020617;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --border: #e2e8f0;
+  --popover-foreground: #0f172a;
+  --primary: #fbbf24;
+  --primary-foreground: #020617;
+  --secondary: #3b82f6;
+  --secondary-foreground: #ffffff;
+  --muted: #f1f5f9; /* Slate 100 */
+  --muted-foreground: #64748b; /* Slate 500 */
+  --accent: #d946ef;
+  --accent-foreground: #ffffff;
+  --border: #e2e8f0; /* Slate 200 */
   --input: #e2e8f0;
+  --ring: #fbbf24;
 }
+
+/* --- THE NEW PEACE TREATY --- */
+/* We remove !important from global tags to allow component-level overrides */
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
-  overflow-x: hidden;
+    color: var(--foreground);
+    background: linear-gradient(225deg, #626c87 0%, #2b3043 100%) no-repeat fixed;
+    font-family: var(--font-poppins), sans-serif;
+    overflow-x: hidden;
+    font-weight: 400;
 }
 
-/* Glassmorphism Utilities */
-.glass-panel {
-  background: var(--card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+/* Titles and Headers Authority - SCOPED TO PREVENT ADMIN BREAKAGE */
+/* This only applies to the public site, not the admin panel */
+body:not([class*="admin-theme-"]) h1, 
+body:not([class*="admin-theme-"]) h2, 
+body:not([class*="admin-theme-"]) h3, 
+body:not([class*="admin-theme-"]) h4, 
+body:not([class*="admin-theme-"]) h5, 
+body:not([class*="admin-theme-"]) h6, 
+body:not([class*="admin-theme-"]) .title-sacro {
+  text-transform: capitalize;
+  font-style: normal;
 }
 
-.glass-card {
-  background: var(--card);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(128, 128, 128, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+/* Glassmorphism Utilities - Base Styles (No !important) */
+/* SCOPED to avoid breaking Admin Themes like Primitivo or Tactile */
+body:not([class*="admin-theme-"]) .glass-panel,
+body:not([class*="admin-theme-"]) .glass-card,
+body:not([class*="admin-theme-"]) .bg-card {
+  background: linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  border-radius: 1rem;
 }
 
-.dark-theme .glass-card {
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.05) 0%,
-      rgba(255, 255, 255, 0.01) 100%);
-  border-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+/* NESTED BOXES RULE: Boxes inside boxes must be transparent (Scoped to prevent breaking Admin Tags) */
+body:not([class*="admin-theme-"]) .glass-panel *, 
+body:not([class*="admin-theme-"]) .glass-card *, 
+body:not([class*="admin-theme-"]) .bg-card * {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
-.text-glow {
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
-  /* Gold glow */
-}
-
-.border-glow {
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-  /* Blue glow */
-}
-
-.glow-purple {
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-  border-color: rgba(168, 85, 247, 0.5);
-}
-
-.glow-emerald {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-  border-color: rgba(16, 185, 129, 0.5);
-}
-
+/* Premium UI Utilities */
 .premium-select-trigger {
   @apply flex items-center justify-between w-full bg-card backdrop-blur-xl border border-border text-foreground rounded-xl px-4 py-2.5 text-sm transition-all duration-300;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -127,7 +131,6 @@ body {
     opacity: 0;
     transform: translateY(-12px) scale(0.98);
   }
-
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -146,6 +149,7 @@ body {
   @apply bg-primary/40 text-foreground font-bold border-l-4 border-primary pl-6;
 }
 
+/* Patterns and Effects */
 .dots-pattern {
   background-image: radial-gradient(rgba(59, 130, 246, 0.08) 1.2px, transparent 1.2px);
   background-size: 32px 32px;
@@ -158,15 +162,20 @@ body {
 }
 
 @keyframes dotsMove {
-  from {
-    background-position: 0 0;
-  }
-
-  to {
-    background-position: 400px 400px;
-  }
+  from { background-position: 0 0; }
+  to { background-position: 400px 400px; }
 }
 
 .flame-glow {
   filter: drop-shadow(0 0 40px rgba(251, 191, 36, 0.3));
+}
+
+/* Semantic Utility Classes (Used in Tactile/Primitivo) */
+.text-tactile-orange { color: #f59e0b; }
+.bg-tactile-orange-pill { background-color: rgba(245, 158, 11, 0.15); }
+.bg-tactile-orange { background-color: #f59e0b; }
+.hover-text-tactile-orange:hover { color: #f59e0b; }
+.active-indicator-orange { 
+    background-color: #f59e0b;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
 }

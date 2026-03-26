@@ -237,7 +237,7 @@ export default function ProfilePage() {
                             <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic flex items-center gap-4">
                                 <span>Mi <span className="text-primary italic">Perfil</span></span>
                             </h1>
-                            <p className="text-slate-500 font-medium tracking-tight mt-1">Personaliza tu información y revisa tus estadísticas.</p>
+                            <p className="text-muted-foreground font-medium tracking-tight mt-1">Personaliza tu información y revisa tus estadísticas.</p>
                         </div>
                     </div>
 
@@ -247,7 +247,7 @@ export default function ProfilePage() {
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
-                                className="bg-emerald-500/10 border border-emerald-500/20 px-6 py-3 rounded-2xl flex items-center gap-3 text-emerald-500 shadow-lg shadow-emerald-500/5"
+                                className="bg-emerald-500/10 border border-emerald-500/20 px-6 py-3 rounded-2xl flex items-center gap-3 text-emerald-500"
                             >
                                 <CheckCircle2 className="w-5 h-5" />
                                 <span className="text-xs font-black uppercase tracking-widest italic">¡Cambios guardados con éxito!</span>
@@ -268,14 +268,14 @@ export default function ProfilePage() {
                             className={cn(
                                 "relative flex items-center gap-2 px-6 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                 activeTab === tab.id
-                                    ? "bg-primary text-black shadow-lg shadow-primary/20 scale-100"
-                                    : "text-slate-500 hover:text-foreground hover:bg-white/5 scale-95"
+                                    ? "bg-primary text-black scale-100"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-white/5 scale-95"
                             )}
                         >
                             <tab.icon className="w-3.5 h-3.5" />
                             {tab.label}
                             {(tab.count ?? 0) > 0 && (
-                                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-black rounded-full flex items-center justify-center text-[10px] font-black border-2 border-background shadow-lg">
+                                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-black rounded-full flex items-center justify-center text-[10px] font-black border-2 border-background">
                                     {tab.count}
                                 </span>
                             )}
@@ -290,7 +290,7 @@ export default function ProfilePage() {
                         <motion.div
                             initial={{ rotateY: 15, opacity: 0 }}
                             animate={{ rotateY: 0, opacity: 1 }}
-                            className="relative aspect-[1.6/1] w-full bg-gradient-to-br from-[#1a1c1e] to-[#0a0a0a] rounded-[2rem] p-6 shadow-2xl border border-white/5 overflow-hidden group perspective-[1000px]"
+                            className="relative aspect-[1.6/1] w-full bg-gradient-to-br from-[#1a1c1e] to-[#0a0a0a] rounded-[2rem] p-6 border border-white/5 overflow-hidden group perspective-[1000px]"
                         >
                             {/* Decorative background flare */}
                             <div className="absolute -top-20 -right-20 w-60 h-60 bg-primary/20 rounded-full blur-[80px] group-hover:bg-primary/30 transition-colors" />
@@ -301,7 +301,7 @@ export default function ProfilePage() {
                                 <div className="flex justify-between items-start">
                                     <div className="space-y-1">
                                         <p className="text-[8px] font-black uppercase tracking-[0.3em] text-primary">Credential Digital</p>
-                                        <h3 className="text-xl font-black uppercase italic tracking-tighter text-white">LLDM <span className="text-primary italic">RODEO</span></h3>
+                                        <h3 className="text-xl font-black uppercase italic tracking-tighter text-foreground">LLDM <span className="text-primary italic">RODEO</span></h3>
                                     </div>
                                     <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-md">
                                         <Settings className="w-5 h-5 text-primary" />
@@ -310,7 +310,7 @@ export default function ProfilePage() {
 
                                 <div className="flex items-center gap-4">
                                     <div
-                                        className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-lg shadow-black/50 cursor-pointer group/avatar"
+                                        className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-primary/30 cursor-pointer group/avatar"
                                         onClick={handleAvatarClick}
                                     >
                                         <img src={currentUser.avatar} className="w-full h-full object-cover transition-transform group-hover/avatar:scale-110" alt="" />
@@ -319,16 +319,16 @@ export default function ProfilePage() {
                                         </div>
                                     </div>
                                     <div className="flex-1">
-                                        <p className="text-lg font-black text-white leading-tight uppercase truncate">{currentUser.name}</p>
-                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{currentUser.role}</p>
+                                        <p className="text-lg font-black text-foreground leading-tight uppercase truncate">{currentUser.name}</p>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{currentUser.role}</p>
                                     </div>
                                 </div>
 
                                 <div className="flex justify-between items-end">
                                     <div className="space-y-1">
-                                        <p className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Estado de Membresía</p>
+                                        <p className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Estado de Membresía</p>
                                         <div className="flex items-center gap-1.5">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                                             <span className="text-[9px] font-black text-emerald-500 uppercase italic">Activo 2026</span>
                                         </div>
                                     </div>
@@ -345,7 +345,7 @@ export default function ProfilePage() {
                         </motion.div>
                         <Card className="glass-card overflow-hidden border-none bg-foreground/5 backdrop-blur-xl">
                             <CardHeader className="p-6 border-b border-white/5">
-                                <CardTitle className="text-xs font-black uppercase tracking-widest text-slate-400 italic">Detalles de la Cuenta</CardTitle>
+                                <CardTitle className="text-xs font-black uppercase tracking-widest text-muted-foreground italic">Detalles de la Cuenta</CardTitle>
                             </CardHeader>
                             <CardContent className="p-8 space-y-6">
                                 <div className="space-y-4">
@@ -354,7 +354,7 @@ export default function ProfilePage() {
                                             <Mail className="w-5 h-5 text-primary" />
                                         </div>
                                         <div className="flex-1 overflow-hidden">
-                                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Correo Electrónico</p>
+                                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Correo Electrónico</p>
                                             <p className="text-sm font-bold truncate text-foreground">{currentUser.email}</p>
                                         </div>
                                     </div>
@@ -363,13 +363,13 @@ export default function ProfilePage() {
                                             <Settings className="w-5 h-5 text-orange-400" />
                                         </div>
                                         <div className="flex-1">
-                                            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Privilegios</p>
+                                            <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Privilegios</p>
                                             <div className="flex flex-wrap gap-1 mt-1">
                                                 {currentUser.privileges?.length > 0 ? currentUser.privileges.map((p, i) => (
                                                     <span key={i} className="text-[8px] font-black uppercase text-orange-400/70 border border-orange-400/20 px-1.5 py-0.5 rounded italic">
                                                         {p}
                                                     </span>
-                                                )) : <span className="text-[10px] text-slate-500 italic">Ninguno asignado</span>}
+                                                )) : <span className="text-[10px] text-muted-foreground italic">Ninguno asignado</span>}
                                             </div>
                                         </div>
                                     </div>
@@ -408,7 +408,7 @@ export default function ProfilePage() {
 
                                         <div className="grid gap-8 md:grid-cols-2">
                                             <div className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Nombre Completo</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Nombre Completo</label>
                                                 <Input
                                                     value={name}
                                                     onChange={(e) => setName(e.target.value)}
@@ -417,7 +417,7 @@ export default function ProfilePage() {
                                                 />
                                             </div>
                                             <div className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Teléfono / WhatsApp</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Teléfono / WhatsApp</label>
                                                 <Input
                                                     value={phone}
                                                     onChange={(e) => setPhone(e.target.value)}
@@ -426,7 +426,7 @@ export default function ProfilePage() {
                                                 />
                                             </div>
                                             <div className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Categoría</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Categoría</label>
                                                 <select
                                                     className="w-full h-14 px-6 rounded-2xl bg-foreground/5 border border-border/20 text-sm font-bold focus:ring-primary/40 text-foreground outline-none"
                                                     value={category}
@@ -437,7 +437,7 @@ export default function ProfilePage() {
                                                 </select>
                                             </div>
                                             <div className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Género</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Género</label>
                                                 <select
                                                     className="w-full h-14 px-6 rounded-2xl bg-foreground/5 border border-border/20 text-sm font-bold focus:ring-primary/40 text-foreground outline-none"
                                                     value={gender}
@@ -448,7 +448,7 @@ export default function ProfilePage() {
                                                 </select>
                                             </div>
                                             <div className="space-y-3">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Grupo al que Pertenece</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Grupo al que Pertenece</label>
                                                 <select
                                                     className="w-full h-14 px-6 rounded-2xl bg-foreground/5 border border-border/20 text-sm font-bold focus:ring-primary/40 text-foreground outline-none"
                                                     value={memberGroup || ''}
@@ -464,7 +464,7 @@ export default function ProfilePage() {
                                                 </select>
                                             </div>
                                             <div className="space-y-3 md:col-span-2">
-                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Acerca de mí / Biografía</label>
+                                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-1">Acerca de mí / Biografía</label>
                                                 <textarea
                                                     value={bio}
                                                     onChange={(e) => setBio(e.target.value)}
@@ -478,7 +478,7 @@ export default function ProfilePage() {
                                             <Button
                                                 onClick={handleSaveChanges}
                                                 disabled={isSaving}
-                                                className="px-12 h-16 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black uppercase tracking-widest gap-4 shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                                className="px-12 h-16 rounded-2xl bg-primary hover:bg-primary/90 text-black font-black uppercase tracking-widest gap-4 transition-all hover:scale-[1.02] active:scale-[0.98]"
                                             >
                                                 <Save className="w-6 h-6" />
                                                 {isSaving ? 'Guardando...' : 'Guardar Cambios'}
@@ -543,7 +543,7 @@ export default function ProfilePage() {
                                         </h2>
                                         <div className="flex items-center gap-3">
                                             <div className="flex items-center gap-2 px-4 py-2 bg-foreground/5 rounded-full border border-border/10">
-                                                <Search className="w-3 h-3 text-slate-500" />
+                                                <Search className="w-3 h-3 text-muted-foreground" />
                                                 <input type="text" placeholder="Buscar mensajes..." className="bg-transparent border-none outline-none text-[10px] font-bold uppercase tracking-widest w-32" />
                                             </div>
                                         </div>
@@ -552,8 +552,8 @@ export default function ProfilePage() {
                                     <div className="space-y-4">
                                         {messages.filter(m => m.receiverId === currentUser?.id || (m.targetRole && currentUser?.privileges?.includes(m.targetRole.toLowerCase() as any))).length === 0 ? (
                                             <Card className="glass-card bg-foreground/5 border-none p-20 flex flex-col items-center justify-center text-center opacity-40">
-                                                <MessageSquare className="w-16 h-16 mb-4 text-slate-500" />
-                                                <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">No tienes mensajes en este momento</p>
+                                                <MessageSquare className="w-16 h-16 mb-4 text-muted-foreground" />
+                                                <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">No tienes mensajes en este momento</p>
                                             </Card>
                                         ) : (
                                             <div className="grid gap-4">
@@ -571,7 +571,7 @@ export default function ProfilePage() {
                                                             <div className="p-6">
                                                                 <div className="flex justify-between items-start mb-4">
                                                                     <div className="flex items-center gap-4">
-                                                                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black uppercase shadow-inner border border-primary/20">
+                                                                        <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black uppercase border border-primary/20">
                                                                             {msg.senderName?.charAt(0) || 'U'}
                                                                         </div>
                                                                         <div>
@@ -580,7 +580,7 @@ export default function ProfilePage() {
                                                                                 {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
                                                                             </h4>
                                                                             <div className="flex items-center gap-3 mt-0.5">
-                                                                                <span className="text-[10px] text-slate-500 uppercase font-bold tracking-widest flex items-center gap-1">
+                                                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest flex items-center gap-1">
                                                                                     <Clock className="w-3 h-3" /> {new Date(msg.createdAt).toLocaleString()}
                                                                                 </span>
                                                                                 {msg.targetRole && (
@@ -613,8 +613,8 @@ export default function ProfilePage() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="bg-background/40 p-5 rounded-2xl border border-border/10 shadow-inner mb-4">
-                                                                    <p className="text-sm font-medium text-slate-300 leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                                                                <div className="bg-background/40 p-5 rounded-2xl border border-border/10 mb-4">
+                                                                    <p className="text-sm font-medium text-muted-foreground leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                                                                 </div>
 
                                                                 <AnimatePresence>
@@ -630,10 +630,10 @@ export default function ProfilePage() {
                                                                                     value={replyText}
                                                                                     onChange={(e) => setReplyText(e.target.value)}
                                                                                     placeholder={`Escribe tu respuesta a ${msg.senderName}...`}
-                                                                                    className="w-full h-32 bg-background/60 border border-primary/20 rounded-2xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none shadow-inner"
+                                                                                    className="w-full h-32 bg-background/60 border border-primary/20 rounded-2xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none"
                                                                                 />
                                                                                 <div className="flex justify-end gap-3">
-                                                                                    <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-slate-500" onClick={() => setReplyingTo(null)}>Cancelar</Button>
+                                                                                    <Button variant="ghost" className="text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={() => setReplyingTo(null)}>Cancelar</Button>
                                                                                     <Button
                                                                                         onClick={async () => {
                                                                                             if (!replyText.trim()) return;
@@ -648,7 +648,7 @@ export default function ProfilePage() {
                                                                                             setReplyingTo(null);
                                                                                             showNotification('Respuesta enviada.', 'success');
                                                                                         }}
-                                                                                        className="bg-primary text-black text-[10px] font-black uppercase tracking-widest px-8 rounded-xl h-12 shadow-lg shadow-primary/20"
+                                                                                        className="bg-primary text-black text-[10px] font-black uppercase tracking-widest px-8 rounded-xl h-12"
                                                                                     >
                                                                                         <Send className="w-4 h-4 mr-2" /> ENVIAR RESPUESTA
                                                                                     </Button>
@@ -709,8 +709,8 @@ export default function ProfilePage() {
 
                                     {/* Placeholder for charts or future details */}
                                     <Card className="glass-card border-none bg-foreground/5 p-12 text-center opacity-40">
-                                        <Activity className="w-12 h-12 mx-auto mb-4 text-slate-500" />
-                                        <p className="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Próximamente: Gráficas de rendimiento histórico</p>
+                                        <Activity className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                                        <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Próximamente: Gráficas de rendimiento histórico</p>
                                     </Card>
                                 </motion.div>
                             )}

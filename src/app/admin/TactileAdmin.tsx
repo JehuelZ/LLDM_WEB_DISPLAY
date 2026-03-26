@@ -10,8 +10,10 @@ import {
     Trash2, Upload, Monitor, Sun, X, Flame, Church, Crown,
     Cross, Star, Heart, TrendingUp, Edit2, LogOut, Moon,
     Bell, CheckCircle2, AlertTriangle, MessageSquare, Info, CheckCircle, Reply, Check, FileText,
+    ShieldAlert,
     Camera, Phone, Mail, User, Languages, Music2, ClipboardCheck,
-    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power, Thermometer, Type, XCircle
+    Calendar, TrendingDown, Clock, Search, Filter, Plus, Radio, BookOpen, Lock, Sunrise, MapPin, Palette, RefreshCw, Power, Thermometer, Type, XCircle,
+    ArrowLeft, ArrowRight
 } from 'lucide-react'
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -26,12 +28,22 @@ const TactileIconBox = ({ icon: Icon, color }: { icon: any, color: string }) => 
     </div>
 )
 
+const TactileBadge = ({ children, className }: { children: React.ReactNode, className?: string }) => (
+    <div className={cn(
+        "bg-white/5 border border-white/10 rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest inline-flex items-center justify-center transition-all hover:bg-white/10",
+        className
+    )}>
+        {children}
+    </div>
+)
+
+
 const TactileGlassCard = ({ children, title, className, subtitle }: { children: React.ReactNode, title?: string, className?: string, subtitle?: string }) => (
     <div className={cn("tactile-glass-panel", className)}>
         {title && (
             <div className="mb-6">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-tactile-text-sub mb-1">{title}</h3>
-                {subtitle && <p className="text-[9px] font-bold text-tactile-text-sub/60 uppercase tracking-widest">{subtitle}</p>}
+                <h3 className="text-[10px] font-black capitalize tracking-[0.2em] text-tactile-text-sub mb-1">{title}</h3>
+                {subtitle && <p className="text-[9px] font-bold text-tactile-text-sub/60 capitalize tracking-widest">{subtitle}</p>}
             </div>
         )}
         {children}
@@ -41,7 +53,7 @@ const TactileGlassCard = ({ children, title, className, subtitle }: { children: 
 // Tactile Input Components
 const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = "text", disabled }: any) => (
     <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
-        {label && <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+        {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
         <div className="relative group">
             {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-focus-within:text-primary transition-colors" />}
             <input
@@ -75,7 +87,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
 
     return (
         <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
-            {label && <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+            {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
             <div className="relative group">
                 <button
                     type="button"
@@ -130,7 +142,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                                             opt.isHeader ? (
                                                 <div 
                                                     key={`header-${i}`} 
-                                                    className="px-4 py-2 text-[8px] font-black uppercase tracking-[0.2em] text-primary/60 border-t border-white/5 first:border-0 mt-3 first:mt-1 bg-white/5 rounded-lg mb-1"
+                                                    className="px-4 py-2 text-[8px] font-black capitalize tracking-[0.2em] text-primary/60 border-t border-white/5 first:border-0 mt-3 first:mt-1 bg-white/5 rounded-lg mb-1"
                                                 >
                                                     {opt.label}
                                                 </div>
@@ -163,7 +175,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                                             )
                                         ))
                                     ) : (
-                                        <div className="py-8 text-center text-[10px] font-black uppercase tracking-widest text-tactile-text-sub italic">
+                                        <div className="py-8 text-center text-[10px] font-black capitalize tracking-widest text-tactile-text-sub ">
                                             Sin resultados
                                         </div>
                                     )}
@@ -180,7 +192,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
 const GOOGLE_FONTS_COLLECTION = [
     { isHeader: true, label: 'Modern Sans (Limpias)' },
     { value: 'Inter', label: 'Inter' },
-    { value: 'Outfit', label: 'Outfit' },
+    { value: 'Poppins', label: 'Poppins' },
     { value: 'Montserrat', label: 'Montserrat' },
     { value: 'Poppins', label: 'Poppins' },
     { value: 'Sora', label: 'Sora' },
@@ -282,7 +294,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
 
     return (
         <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
-            {label && <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+            {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
             <div className="relative group">
                 <button
                     type="button"
@@ -295,7 +307,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                 >
                     {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-hover:text-primary transition-colors" />}
                     <div className="flex flex-col flex-1 truncate">
-                        <span className="text-[8px] opacity-40 uppercase tracking-widest font-black mb-0.5">Tipografía Activa</span>
+                        <span className="text-[8px] opacity-40 capitalize tracking-widest font-black mb-0.5">Tipografía Activa</span>
                         <span className="truncate text-xl lg:text-2xl leading-tight" style={{ fontFamily: selectedOption?.value || 'inherit' }}>
                             {selectedOption ? selectedOption.label : 'Seleccionar Fuente...'}
                         </span>
@@ -338,7 +350,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                                             opt.isHeader ? (
                                                 <div 
                                                     key={`header-${i}`} 
-                                                    className="px-4 py-2 text-[8px] font-black uppercase tracking-[0.2em] text-primary/60 border-t border-white/5 first:border-0 mt-3 first:mt-1 bg-white/5 rounded-lg mb-1"
+                                                    className="px-4 py-2 text-[8px] font-black capitalize tracking-[0.2em] text-primary/60 border-t border-white/5 first:border-0 mt-3 first:mt-1 bg-white/5 rounded-lg mb-1"
                                                 >
                                                     {opt.label}
                                                 </div>
@@ -375,7 +387,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                                             )
                                         ))
                                     ) : (
-                                        <div className="p-12 text-center text-tactile-text-sub font-black uppercase tracking-widest text-[10px]">
+                                        <div className="p-12 text-center text-tactile-text-sub font-black capitalize tracking-widest text-[10px]">
                                             Sin resultados
                                         </div>
                                     )}
@@ -416,8 +428,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         loadWeeklyAttendanceStats,
         loadMonthlyGlobalAttendanceStats,
         loadMemberAttendanceHistory,
+        loadMonthlyIntelligenceStats,
         showNotification
     } = useAppStore()
+
+    if (!currentUser) return null;
 
     const isSun = parseISO(currentDate).getDay() === 0;
 
@@ -432,9 +447,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
     const [mounted, setMounted] = useState(false);
     const [activeTab, setActiveTab] = useState('dashboard');
+    const [monthlyIntelligence, setMonthlyIntelligence] = useState<{ label: string, value: number }[]>([]);
 
     useEffect(() => {
         setMounted(true);
+        loadMonthlyIntelligenceStats().then(setMonthlyIntelligence);
         // Sync initial tab from URL on mount
         const params = new URLSearchParams(window.location.search);
         const queryTab = params.get('tab');
@@ -498,20 +515,21 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         };
     }, [activeTab, propTab]);
 
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
     const [searchTerm, setSearchTerm] = useState('')
 
     const tabs = [
-        { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard },
-        { id: 'asistencia', label: 'Asistencia', icon: ClipboardCheck },
-        { id: 'horarios', label: 'Programación', icon: CalendarDays },
-        { id: 'miembros', label: 'Miembros', icon: Users },
-        { id: 'coros', label: 'Coros', icon: Music2 },
-        { id: 'contenido', label: 'Tema Semanal', icon: Sparkles },
-        { id: 'estilos', label: 'Temas TV', icon: Palette },
-        { id: 'ajustes', label: 'Ajustes', icon: Settings },
-        { id: 'mensajes', label: 'Mensajes', icon: MessageSquare },
-        { id: 'perfil', label: 'Mi Perfil', icon: User },
+        { id: 'dashboard', label: 'RESUMEN', icon: LayoutDashboard },
+        { id: 'asistencia', label: 'ASISTENCIA', icon: ClipboardCheck },
+        { id: 'horarios', label: 'HORARIOS', icon: CalendarDays },
+        { id: 'miembros', label: 'MIEMBROS', icon: Users },
+        { id: 'coros', label: 'COROS Y UNIFORMES', icon: Music2 },
+        { id: 'contenido', label: 'TEMA SEMANAL', icon: Sparkles },
+        { id: 'estilos', label: 'DISEÑO Y VISUAL', icon: Palette },
+        { id: 'ajustes', label: 'CONFIGURACIÓN', icon: Settings },
+        { id: 'mensajes', label: 'MENSAJES', icon: MessageSquare },
+        { id: 'perfil', label: 'MI PERFIL', icon: User },
     ]
     const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', priority: 0, expiresAt: '' })
     const [editingAnnId, setEditingAnnId] = useState<string | null>(null)
@@ -538,6 +556,21 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
     const [showRehearsalModal, setShowRehearsalModal] = useState(false)
     const [editingRehearsal, setEditingRehearsal] = useState<any>(null)
     const [currentAttendanceSession, setCurrentAttendanceSession] = useState<'5am' | '9am' | 'evening'>('5am')
+
+    // Automatic Session Selection based on time
+    useEffect(() => {
+        const updateSession = () => {
+            const now = new Date();
+            const hrs = now.getHours();
+            if (hrs < 8) setCurrentAttendanceSession('5am');
+            else if (hrs < 15) setCurrentAttendanceSession('9am');
+            else setCurrentAttendanceSession('evening');
+        };
+        updateSession();
+        // Periodically check (every 5 mins)
+        const timer = setInterval(updateSession, 5 * 60 * 1000);
+        return () => clearInterval(timer);
+    }, []);
     const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({})
     const [processingToggles, setProcessingToggles] = useState<Record<string, boolean>>({})
     const [weeklyStats, setWeeklyStats] = useState<any[]>([])
@@ -645,6 +678,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
             }]);
         } catch (error) {
             console.error("Error toggling attendance:", error);
+            showNotification(`Error al guardar asistencia: ${error instanceof Error ? error.message : 'Error desconocido'}`, 'error');
             setOptimisticAttendance(prev => ({
                 ...prev,
                 [memberId]: {
@@ -798,126 +832,284 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
             <div className="base-glow" />
 
             <div className="tactile-main-container">
-                {/* Neon Side Border */}
-                <div className="tactile-neon-sidebar">
-                    <div className="neon-segment neon-orange" />
-                    <div className="neon-segment neon-blue" />
-                    <div className="neon-segment neon-pink" />
-                    <div className="neon-segment neon-purple" />
-                </div>
-
-                {/* Content Area */}
-                <div className="flex-1 flex flex-col">
-                    {/* Header / Tabs */}
-                    <div className="tactile-tabs">
-                        <div className="flex-1 flex gap-4 md:gap-8 items-center overflow-x-auto no-scrollbar py-2">
-                            {/* User Profile Avatar Section (Clickable) */}
-                            <button
-                                onClick={() => setActiveTab('perfil')}
-                                className={cn(
-                                    "flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-white/5 border border-white/5 mr-2 transition-colors hover:bg-white/10 text-left",
-                                    activeTab === 'perfil' && "bg-white/10 border-primary/50 ring-1 ring-primary/50"
-                                )}
+                {/* Actual Side Menu */}
+                <aside 
+                    className={cn(
+                        "relative z-30 flex flex-col bg-white/[0.02] border-r border-white/5 transition-all duration-500 ease-in-out h-full admin-sidebar-v2",
+                        isSidebarCollapsed ? "w-14" : "w-56"
+                    )}
+                >
+                    {/* Floating Toggle Button (Alair Style - Orange Version) */}
+                    <button 
+                        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                        className="absolute -right-3.5 top-20 w-7 h-7 bg-[#f59e0b] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)] z-50 text-white hover:scale-110 transition-transform border-none active:scale-95"
+                    >
+                        {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+                    </button>
+                    <div 
+                        onClick={() => setActiveTab('dashboard')}
+                        className={cn(
+                            "flex items-center transition-all duration-300 group cursor-pointer overflow-hidden",
+                            isSidebarCollapsed ? "p-3 justify-center" : "p-4 justify-start gap-3"
+                        )}
+                    >
+                        <div className="relative shrink-0">
+                            <div className="w-10 h-10 bg-[#f59e0b]/10 rounded-xl flex items-center justify-center border border-[#f59e0b]/20 shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-transform group-hover:scale-110">
+                                <img 
+                                    src={settings.churchLogoUrl || "/flama-oficial.svg"} 
+                                    className="w-6 h-6 object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-all"
+                                    alt="Logo"
+                                />
+                            </div>
+                            <div className="absolute inset-0 rounded-xl border border-white/20 ring-1 ring-white/5" />
+                        </div>
+                        
+                        {!isSidebarCollapsed && (
+                            <motion.div 
+                                initial={{ opacity: 0, x: -10 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                className="flex flex-col"
                             >
-                                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)] shrink-0">
-                                    <img
-                                        src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`}
-                                        alt={currentUser.name}
+                                <h1 className="text-xl font-bold tracking-tighter leading-none text-foreground whitespace-nowrap">
+                                    Rodeo <span className="text-[#f59e0b]">Admin</span>
+                                </h1>
+
+                            </motion.div>
+                        )}
+                    </div>
+
+                    {/* Search Bar (Alair Style) */}
+                    {!isSidebarCollapsed && (
+                        <div className="px-3 mb-4">
+                            <div className="relative group">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-[#f59e0b] transition-colors" />
+                                <input
+                                    type="text"
+                                    placeholder="Buscar..."
+                                    className="w-full bg-white/5 border border-white/5 rounded-lg h-9 pl-9 pr-3 text-[12px] font-semibold outline-none focus:bg-white/10 transition-all text-foreground placeholder:text-muted-foreground/30"
+                                />
+                            </div>
+                        </div>
+                    )}
+                    {isSidebarCollapsed && (
+                        <div className="flex justify-center mb-4">
+                            <div className="w-10 h-10 flex items-center justify-center text-white/20 hover:text-white transition-colors cursor-pointer">
+                                <Search className="w-5 h-5" />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Navigation Items */}
+                    <nav className="flex-1 px-3 space-y-2 overflow-y-auto no-scrollbar py-4">
+                        {tabs.map((tab) => {
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => {
+                                        setActiveTab(tab.id);
+                                        const url = new URL(window.location.href);
+                                        url.searchParams.set('tab', tab.id);
+                                        window.history.pushState({}, '', url.toString());
+                                    }}
+                                    className={cn(
+                                        "transition-all duration-300 group relative flex items-center outline-none mb-1 w-full",
+                                        isSidebarCollapsed 
+                                            ? "h-11 justify-center" 
+                                            : "px-3 py-2.5 gap-3 rounded-lg mx-1 w-auto",
+                                        isActive 
+                                            ? "bg-tactile-orange-pill text-white font-bold" 
+                                            : "text-white/40 hover:text-white hover:bg-white/[0.02]"
+                                    )}
+                                >
+                                    {/* Active Indicator Bar (Orange/Primary) */}
+                                    {isActive && (
+                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#f59e0b] rounded-r-full shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                                    )}
+
+                                    <div className={cn(
+                                        "transition-transform group-hover:scale-110 shrink-0",
+                                        isActive ? "text-primary" : "text-white/40 group-hover:text-white"
+                                    )}>
+                                        <tab.icon className="w-5 h-5" />
+                                    </div>
+                                    
+                                    {!isSidebarCollapsed && (
+                                        <span className="text-[12px] font-semibold capitalize tracking-wide whitespace-nowrap">
+                                            {tab.label}
+                                        </span>
+                                    )}
+
+                                    {/* Tooltip on Collapsed Mode */}
+                                    {isSidebarCollapsed && (
+                                        <div className="absolute left-full ml-4 px-3 py-1 bg-black/80 border border-white/10 rounded-lg text-[12px] font-semibold text-white opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all pointer-events-none whitespace-nowrap z-50">
+                                            {tab.label}
+                                        </div>
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </nav>
+
+                    <div className="p-4 space-y-4 border-t border-white/5">
+                        {/* Theme Switcher (Alair Style) */}
+                        {!isSidebarCollapsed && (
+                            <div className="flex bg-white/5 rounded-xl p-1">
+                                <button 
+                                    onClick={() => saveSettingsToCloud({ themeMode: 'light' })}
+                                    className={cn(
+                                        "flex-1 flex items-center justify-center gap-2 h-9 text-[12px] font-semibold rounded-lg transition-all",
+                                        settings.themeMode === 'light' ? "bg-white/10 text-white shadow-sm" : "text-white/30 hover:text-white"
+                                    )}
+                                >
+                                    <Sun className="w-3.5 h-3.5" />
+                                    <span>Light</span>
+                                </button>
+                                <button 
+                                    onClick={() => saveSettingsToCloud({ themeMode: 'dark' })}
+                                    className={cn(
+                                        "flex-1 flex items-center justify-center gap-2 h-9 text-[12px] font-semibold rounded-lg transition-all",
+                                        settings.themeMode === 'dark' ? "bg-white/10 text-white shadow-sm" : "text-white/30 hover:text-white"
+                                    )}
+                                >
+                                    <Moon className="w-3.5 h-3.5" />
+                                    <span>Dark</span>
+                                </button>
+                            </div>
+                        )}
+                        {isSidebarCollapsed && (
+                            <button 
+                                onClick={() => saveSettingsToCloud({ themeMode: settings.themeMode === 'light' ? 'dark' : 'light' })}
+                                className="w-10 h-10 mx-auto flex items-center justify-center bg-white/5 rounded-xl text-white/40 hover:text-white transition-all"
+                            >
+                                {settings.themeMode === 'light' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                            </button>
+                        )}
+
+                        {/* User Profile Footer (Alair Style) */}
+                        {!isSidebarCollapsed && (
+                            <div className="flex items-center gap-3 p-1.5 bg-white/5 rounded-lg group border border-transparent hover:border-white/5 transition-all">
+                                <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/10 shadow-lg">
+                                    <img 
+                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
+                                        alt={currentUser?.name}
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
-                                <div className="hidden lg:block">
-                                    <p className="text-[10px] font-black uppercase tracking-tighter text-white leading-none mb-0.5">{currentUser.name}</p>
-                                    <p className="text-[8px] font-bold uppercase tracking-widest text-primary leading-none opacity-70">Ver Mi Perfil</p>
+                                <div className="flex-1 min-w-0 text-left">
+                                    <p className="text-[12px] font-semibold text-foreground truncate leading-none mb-1">{currentUser?.name || 'Admin'}</p>
+                                    <p className="text-[11px] text-muted-foreground truncate leading-none">{currentUser?.email || 'admin@lldmrodeo.org'}</p>
                                 </div>
-                            </button>
-
-                            <h1 className="text-xl md:text-2xl font-black italic tracking-tighter mr-4 md:mr-8 whitespace-nowrap">
-                                RODEO <span className="text-tactile-text-sub">ADMIN</span>
-                            </h1>
-                            <div className="flex gap-3 md:gap-6">
-                                {tabs.filter(t => t.id !== 'perfil').map(tab => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => {
-                                            setActiveTab(tab.id);
-                                            const url = new URL(window.location.href);
-                                            url.searchParams.set('tab', tab.id);
-                                            window.history.pushState({}, '', url.toString());
-                                            window.dispatchEvent(new Event('popstate'));
-                                            window.dispatchEvent(new Event('tab-change'));
-                                        }}
-                                        className={cn(
-                                            "tactile-btn tactile-btn-glass whitespace-nowrap flex-shrink-0",
-                                            activeTab === tab.id && "active"
-                                        )}
-                                    >
-                                        <tab.icon className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                                        <span className="hidden xs:inline">{tab.label}</span>
-                                        <span className="xs:hidden">{tab.label.slice(0, 3)}</span>
-                                    </button>
-                                ))}
+                                <button 
+                                    onClick={() => signOut()}
+                                    className="p-1 text-white/20 hover:text-primary transition-colors"
+                                    title="Sign Out"
+                                >
+                                    <LogOut className="w-3.5 h-3.5" />
+                                </button>
                             </div>
-                        </div>
+                        )}
+                        {isSidebarCollapsed && (
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10">
+                                    <img 
+                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
+                                        alt="User"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </aside>
 
-                        <div className="flex items-center gap-2 md:gap-4 ml-0 md:ml-4 mt-4 md:mt-0 w-full md:w-auto justify-between md:justify-end">
-                            <button
-                                onClick={() => window.open('/display', '_blank')}
-                                className="tactile-btn tactile-btn-glass text-[9px] md:text-[10px] text-primary border-primary/20 hover:border-primary/50 group flex-1 md:flex-none justify-center"
-                            >
-                                <ExternalLink className="w-3 h-3 md:w-3.5 md:h-3.5 group-hover:scale-110 transition-transform" />
-                                <span className="hidden sm:inline">PROYECTAR</span>
-                                <span className="sm:hidden text-[8px]">LIVE</span>
-                            </button>
-                            <button
-                                onClick={() => saveSettingsToCloud({ adminTheme: 'classic' })}
-                                className="tactile-btn tactile-btn-glass text-[9px] md:text-[10px] flex-1 md:flex-none justify-center"
-                            >
-                                <Monitor className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                                <span className="hidden sm:inline">Classic UI</span>
-                                <span className="sm:hidden">Classic</span>
-                            </button>
-                            <button
-                                onClick={() => signOut()}
-                                className="tactile-btn tactile-btn-orange text-[9px] md:text-[10px] flex-1 md:flex-none justify-center"
-                            >
-                                <LogOut className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                                <span className="hidden sm:inline">Cerrar Sesión</span>
-                                <span className="sm:hidden text-[8px]">SALIR</span>
-                            </button>
+                {/* Content Area */}
+                <div className="flex-1 flex flex-col">
+                    {/* Global Primitivo Header (Horizontal Nav + Utils) */}
+                    <div className="px-8 pt-6 pb-2 flex flex-col gap-4">
+                        <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                            {tabs.filter(t => !['mensajes', 'perfil'].includes(t.id)).map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id)}
+                                    className={cn(
+                                        "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                        activeTab === tab.id 
+                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                            : "text-white/40 hover:text-white hover:bg-white/5"
+                                    )}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                            
+                            <div className="flex-1 min-w-[20px]" />
+
+                            <div className="flex items-center gap-2 pr-1">
+                                <button
+                                    onClick={() => (document.getElementById('global-sync-btn') as HTMLElement)?.click()}
+                                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-primary/20 hover:border-primary/30 transition-all text-white/40 hover:text-primary group"
+                                    title="Sincronizar Datos"
+                                >
+                                    <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" />
+                                </button>
+                                <button
+                                    onClick={() => window.open('/display', '_blank')}
+                                    className="tactile-btn tactile-btn-glass text-[9px] font-black tracking-widest h-10 border-white/5 group"
+                                >
+                                    <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform text-primary" />
+                                    PROYECTAR
+                                </button>
+                                <button
+                                    onClick={() => saveSettingsToCloud({ adminTheme: 'primitivo' })}
+                                    className="tactile-btn tactile-btn-glass text-[9px] font-black tracking-widest h-10 border-[#fbbf24]/20 bg-[#fbbf24]/10 text-[#fbbf24] hover:bg-[#fbbf24]/20 transition-all"
+                                    title="Activar Espejo Primitivo"
+                                >
+                                    PRIMITIVO
+                                </button>
+                                <button
+                                    onClick={() => saveSettingsToCloud({ adminTheme: 'classic' })}
+                                    className="tactile-btn tactile-btn-glass text-[9px] font-black tracking-widest h-10 border-white/5"
+                                    title="Volver a la UI Clásica"
+                                >
+                                    CLASSIC
+                                </button>
+                                <button
+                                    onClick={() => signOut()}
+                                    className="tactile-btn tactile-btn-orange text-[9px] font-black tracking-widest h-10 px-4"
+                                >
+                                    SALIR
+                                </button>
+                                
+                                <div className="w-px h-6 bg-white/10 mx-2" />
+                                
+                                <button
+                                    onClick={() => setActiveTab('perfil')}
+                                    className={cn(
+                                        "flex items-center gap-3 px-3 py-1.5 rounded-xl transition-all",
+                                        activeTab === 'perfil' ? "bg-[#576983]/20 border border-[#576983]/30" : "bg-white/5 border border-white/5 hover:bg-white/10"
+                                    )}
+                                >
+                                    <div className="w-7 h-7 rounded-lg overflow-hidden border border-primary/30">
+                                        <img 
+                                            src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
+                                            alt="" 
+                                            className="w-full h-full object-cover" 
+                                        />
+                                    </div>
+                                    <span className={cn(
+                                        "text-[9px] font-black uppercase tracking-widest hidden lg:inline",
+                                        activeTab === 'perfil' ? "text-white" : "text-white/40"
+                                    )}>
+                                        {currentUser?.name || 'ADMIN'}
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                     {/* Global Date & Status Header */}
                     <div className="px-8 pt-4 pb-2 flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div className="flex items-center gap-4 bg-black/30 p-2 rounded-[2.5rem] border border-white/5 shadow-inner">
-                            <button onClick={() => navigateDay(-1)} className="tactile-btn tactile-btn-glass !rounded-full w-12 h-12 flex items-center justify-center p-0 transition-transform hover:scale-110 active:scale-90">
-                                <ChevronLeft className="w-6 h-6" />
-                            </button>
-                            <div className="relative group cursor-pointer">
-                                <div className="text-2xl font-black italic uppercase tracking-tighter min-w-[280px] text-center px-4 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent group-hover:from-primary group-hover:to-primary transition-all flex items-center justify-center gap-2">
-                                    <Calendar className="w-5 h-5 text-primary opacity-50 group-hover:opacity-100" />
-                                    {format(parseISO(currentDate), "EEEE d 'de' MMMM", { locale: es })}
-                                </div>
-                                <input
-                                    type="date"
-                                    id="global-date-picker"
-                                    className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                                    value={currentDate}
-                                    onChange={(e) => setCurrentDate(e.target.value)}
-                                />
-                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                            <button onClick={() => navigateDay(1)} className="tactile-btn tactile-btn-glass !rounded-full w-12 h-12 flex items-center justify-center p-0 transition-transform hover:scale-110 active:scale-90">
-                                <ChevronRight className="w-6 h-6" />
-                            </button>
-                            <button
-                                onClick={() => setCurrentDate(getLocalDateString())}
-                                className="tactile-btn tactile-btn-glass !rounded-full px-4 h-12 flex items-center justify-center text-[10px] font-black uppercase tracking-widest hover:text-primary"
-                            >
-                                Hoy
-                            </button>
-                        </div>
 
                         <div className="flex items-center gap-4">
                             {/* Service Status Indicator */}
@@ -931,12 +1123,33 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                 // Sunday School Detection (10:00 AM - 12:00 PM)
                                 const isDominical = isSun && curMin >= 600 && curMin <= 720;
+                                const is5am = curMin >= 300 && curMin <= 345;
+                                const is9am = !isSun && curMin >= 540 && curMin <= 600;
+                                const is7pm = curMin >= 1140 && curMin <= 1230;
 
-                                if (isToday && isDominical) {
-                                    return (
+                                if (isToday) {
+                                    if (isDominical) return (
                                         <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-orange-500/20 border border-orange-500/40 shadow-[0_0_20px_rgba(249,115,22,0.2)] animate-pulse">
                                             <div className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_10px_#f97316]" />
-                                            <span className="text-[11px] font-black uppercase tracking-[0.2em] text-orange-500">Dominical en Curso</span>
+                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-orange-500">Dominical en Curso</span>
+                                        </div>
+                                    );
+                                    if (is5am) return (
+                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/20 border border-primary/40 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] animate-pulse">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
+                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-primary">5:00 AM en Curso</span>
+                                        </div>
+                                    );
+                                    if (is9am) return (
+                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/20 border border-primary/40 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] animate-pulse">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
+                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-primary">9:00 AM en Curso</span>
+                                        </div>
+                                    );
+                                    if (is7pm) return (
+                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/20 border border-primary/40 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] animate-pulse">
+                                            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
+                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-primary">7:00 PM en Curso</span>
                                         </div>
                                     );
                                 }
@@ -947,7 +1160,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                             {isSaving && (
                                 <div className="flex items-center gap-3 px-5 py-2 rounded-full bg-primary/10 border border-primary/20">
                                     <RefreshCw className="w-3.5 h-3.5 text-primary animate-spin" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Sincronizando...</span>
+                                    <span className="text-[10px] font-black capitalize tracking-widest text-primary">Sincronizando...</span>
                                 </div>
                             )}
                         </div>
@@ -955,6 +1168,40 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                     {/* Main Workspace */}
                     <div className="flex-1 p-8 tactile-scroll">
+                        {/* Secondary Horizontal Navigation Bar (Primitivo Tab Style) */}
+                        <div className="mb-8">
+                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
+                                {[
+                                    { id: 'dashboard', label: 'RESUMEN', icon: LayoutDashboard },
+                                    { id: 'horarios', label: 'HORARIOS', icon: CalendarDays },
+                                    { id: 'estilos', label: 'DISEÑO Y VISUAL', icon: Palette },
+                                    { id: 'coros', label: 'COROS Y UNIFORMES', icon: Music2 },
+                                    { id: 'ajustes', label: 'CONFIGURACIÓN', icon: Settings },
+                                    { id: 'miembros', label: 'MIEMBROS', icon: Users },
+                                    { id: 'perfil', label: 'MI PERFIL', icon: User }
+                                ].map(tab => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => {
+                                            setActiveTab(tab.id);
+                                            const url = new URL(window.location.href);
+                                            url.searchParams.set('tab', tab.id);
+                                            window.history.pushState({}, '', url.toString());
+                                        }}
+                                        className={cn(
+                                            "flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                            activeTab === tab.id 
+                                                ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                : "text-white/40 hover:text-white hover:bg-white/5"
+                                        )}
+                                    >
+                                        <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
+                                        <span>{tab.label}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
                         <AnimatePresence mode="wait">
                             {activeTab === 'dashboard' && (
                                 <motion.div
@@ -967,13 +1214,14 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     {/* Left Column - System Summary */}
                                     <div className="col-span-1 md:col-span-8 space-y-6">
                                         <div className="flex items-end justify-between mb-8">
-                                            <h2 className="text-4xl font-black italic" style={{ textShadow: '0 0 10px rgba(255,255,255,0.3)' }}>Resumen del Sistema</h2>
+                                            <h2 className="text-4xl font-black text-foreground" style={{ textShadow: '0 0 10px rgba(255,255,255,0.1)' }}>Resumen del Sistema</h2>
                                             {isSaving && (
-                                                <div className="flex items-center gap-3 px-4 py-2 rounded-2xl bg-primary/10 border border-primary/20 animate-pulse">
-                                                    <div className="w-2 h-2 rounded-full bg-primary animate-bounce" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">Sincronizando...</span>
-                                                </div>
+                                                <TactileBadge className="border-primary/20 bg-primary/10">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse mr-2" />
+                                                    <span className="text-primary">Sincronizando...</span>
+                                                </TactileBadge>
                                             )}
+
                                         </div>
                                         <div className="space-y-4">
                                             <button
@@ -982,47 +1230,16 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             >
                                                 <TactileIconBox icon={CheckCircle2} color="#3b82f6" />
                                                 <div className="flex-1">
-                                                    <h4 className="font-bold text-lg group-hover:text-primary transition-colors">Asistencia de Hoy</h4>
-                                                    <p className="text-tactile-text-sub text-sm">Registro de asistencia en curso</p>
+                                                    <h4 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">Asistencia de Hoy</h4>
+                                                    <p className="text-muted-foreground text-sm">Registro de asistencia en curso</p>
                                                 </div>
-                                                <div className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Normal</div>
+                                                <TactileBadge className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400">
+                                                    Normal
+                                                </TactileBadge>
+
                                             </button>
 
-                                            <button
-                                                onClick={() => setActiveTab('horarios')}
-                                                className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
-                                            >
-                                                <TactileIconBox icon={AlertTriangle} color="#f97316" />
-                                                <div className="flex-1">
-                                                    <h4 className="font-bold text-lg group-hover:text-orange-500 transition-colors">Programación de Domingo</h4>
-                                                    <p className="text-tactile-text-sub text-sm">Requiere definir tipo de servicio dominical</p>
-                                                </div>
-                                                <div className="text-[10px] font-black text-orange-500 uppercase tracking-widest">Atención</div>
-                                            </button>
-
-                                            <button
-                                                onClick={() => setActiveTab('coros')}
-                                                className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
-                                            >
-                                                <TactileIconBox icon={Shirt} color="#db2777" />
-                                                <div className="flex-1">
-                                                    <h4 className="font-bold text-lg group-hover:text-pink-500 transition-colors">Coros y Uniformes</h4>
-                                                    <p className="text-tactile-text-sub text-sm">Uniformes de la semana seleccionados correctamente</p>
-                                                </div>
-                                                <div className="text-[10px] font-black text-tactile-text-sub uppercase tracking-widest">Ok</div>
-                                            </button>
-
-                                            <button
-                                                onClick={() => setActiveTab('estilos')}
-                                                className="w-full flex items-center gap-6 p-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-colors group text-left"
-                                            >
-                                                <TactileIconBox icon={Monitor} color="#6366f1" />
-                                                <div className="flex-1">
-                                                    <h4 className="font-bold text-lg group-hover:text-indigo-400 transition-colors">Estado de Pizarra</h4>
-                                                    <p className="text-tactile-text-sub text-sm">Tema "{calendarStyles.template}" activo en el display</p>
-                                                </div>
-                                                <div className="text-[10px] font-black text-indigo-400 uppercase tracking-widest">Online</div>
-                                            </button>
+                                            {/* Redundant nav rows removed as they are now in the Sidemenu */}
                                         </div>
 
                                         <div className="mt-12 flex gap-4">
@@ -1042,9 +1259,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 className="tactile-btn tactile-btn-orange text-xs px-8"
                                             >
                                                 {isSaving ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : <Flame className="w-4 h-4 mr-2" />}
-                                                SINCRONIZAR AHORA
+                                                Sincronizar Ahora
                                             </button>
-                                            <button className="tactile-btn tactile-btn-glass text-xs px-8">HISTORIAL</button>
+                                            <button className="tactile-btn tactile-btn-glass text-xs px-8">Historial</button>
                                         </div>
                                     </div>
                                                          {/* Right Column - Intelligence */}
@@ -1052,23 +1269,24 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         <TactileGlassCard title="INTELIGENCIA MENSUAL" className="w-full">
                                             <div className="space-y-6">
                                                 <div className="flex items-center justify-between">
-                                                    <p className="text-[10px] font-black uppercase text-primary tracking-[0.2em]">Rendimiento 30 Días</p>
-                                                    <div className="flex items-center gap-2 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                                                        <TrendingUp className="w-3 h-3 text-emerald-500" />
-                                                        <span className="text-[9px] font-black text-emerald-500 italic">+12.4%</span>
-                                                    </div>
+                                                    <p className="text-[10px] font-black capitalize text-primary tracking-[0.2em]">Rendimiento 30 Días</p>
+                                                    <TactileBadge className="bg-emerald-500/10 border-emerald-500/20 text-emerald-500 gap-1.5">
+                                                        <TrendingUp className="w-3 h-3" />
+                                                        <span>+12.4%</span>
+                                                    </TactileBadge>
+
                                                 </div>
 
                                                 {/* Societies Chart */}
                                                 <div className="h-48 flex items-end justify-between gap-3 px-1 relative">
-                                                    {[
-                                                        { label: 'Varones', value: 88 },
-                                                        { label: 'Mujeres', value: 92 },
-                                                        { label: 'Jóvenes', value: 68 },
-                                                        { label: 'Coro', value: 85 },
-                                                        { label: 'Niños', value: 54 },
-                                                        { label: 'Casados', value: 76 },
-                                                    ].map((soc, idx) => {
+                                                    {(monthlyIntelligence.length > 0 ? monthlyIntelligence : [
+                                                        { label: 'Ene', value: 88 },
+                                                        { label: 'Feb', value: 92 },
+                                                        { label: 'Mar', value: 68 },
+                                                        { label: 'Abr', value: 85 },
+                                                        { label: 'May', value: 54 },
+                                                        { label: 'Jun', value: 76 },
+                                                    ]).map((soc, idx) => {
                                                         const colorGrad = soc.value >= 80 ? "from-emerald-500/60 to-emerald-400/20" : 
                                                                          soc.value >= 60 ? "from-primary/60 to-primary/20" : 
                                                                          "from-orange-500/60 to-orange-400/20";
@@ -1079,53 +1297,86 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                     animate={{ height: `${soc.value}%` }}
                                                                     className={cn("w-full rounded-t-xl bg-gradient-to-t border-t border-white/20", colorGrad)}
                                                                 />
-                                                                <div className="text-center">
-                                                                    <div className="text-[10px] font-black italic">{soc.value}%</div>
-                                                                    <div className="text-[7px] font-black uppercase text-tactile-text-sub truncate w-10">{soc.label}</div>
+                                                                <div className="text-center space-y-1.5">
+                                                                    <TactileBadge className="px-1.5 py-0.5 border-none bg-white/5">
+                                                                        <span className="text-white/90">{soc.value}%</span>
+                                                                    </TactileBadge>
+                                                                    <div className="text-[7px] font-black capitalize text-tactile-text-sub truncate w-10 mx-auto">{soc.label}</div>
                                                                 </div>
+
                                                             </div>
                                                         );
                                                     })}
                                                 </div>
 
-                                                <div className="grid grid-cols-1 gap-3">
+                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                                                     <div className="bg-white/[0.03] p-4 rounded-2xl border border-white/5 flex items-center justify-between">
                                                         <div>
-                                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Membresía Activa</p>
-                                                            <div className="text-2xl font-black italic">{members.filter(m => m.status === 'Activo').length}</div>
+                                                            <TactileBadge className="mb-2 bg-primary/10 border-primary/20 text-primary">
+                                                                Membresía Activa
+                                                            </TactileBadge>
+                                                            <div className="text-2xl font-black ">{members.filter(m => m.status === 'Activo').length}</div>
                                                         </div>
+
                                                         <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
                                                             <Users className="w-5 h-5 text-emerald-500" />
+                                                        </div>
+                                                    </div>
+                                                    <div 
+                                                        onClick={() => setActiveTab('miembros')}
+                                                        className={cn(
+                                                            "p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all hover:scale-[1.02]",
+                                                            members.filter(m => m.status === 'Pendiente').length > 0
+                                                                ? "bg-amber-500/10 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                                                                : "bg-white/[0.03] border-white/5 opacity-50"
+                                                        )}
+                                                    >
+                                                        <div>
+                                                            <TactileBadge className="mb-2 bg-amber-500/10 border-amber-500/20 text-amber-500">
+                                                                Auditoría Pendiente
+                                                            </TactileBadge>
+                                                            <div className={cn("text-2xl font-black", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white")}>
+                                                                {members.filter(m => m.status === 'Pendiente').length}
+                                                            </div>
+                                                        </div>
+
+                                                        <div className={cn(
+                                                            "w-10 h-10 rounded-full flex items-center justify-center",
+                                                            members.filter(m => m.status === 'Pendiente').length > 0 ? "bg-amber-500/20" : "bg-white/5"
+                                                        )}>
+                                                            <ShieldAlert className={cn("w-5 h-5", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white/20")} />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
 
-                                        <TactileGlassCard title="TEMA SEMANAL" className="w-full">
+                                        <TactileGlassCard title="Tema Semanal" className="w-full">
                                             <div className="space-y-5">
                                                 <TactileInput
-                                                    label="TÍTULO"
+                                                    label="Título"
                                                     value={theme.title || ''}
                                                     onChange={(e: any) => useAppStore.getState().setTheme({ ...theme, title: e.target.value })}
                                                     icon={Sparkles}
                                                 />
                                                 <div className="space-y-1">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TIPO</label>
-                                                    <div className="grid grid-cols-2 gap-2">
-                                                        {['orthodoxy', 'apostolic_letter'].map(type => (
-                                                            <button 
-                                                                key={type}
-                                                                onClick={() => useAppStore.getState().setTheme({ ...theme, type: type as any })}
-                                                                className={cn(
-                                                                    "text-[9px] font-black uppercase py-2 rounded-xl transition-all",
-                                                                    theme.type === type ? "bg-primary text-black" : "bg-white/5 text-white/40 border border-white/5"
-                                                                )}
-                                                            >
-                                                                {type === 'orthodoxy' ? 'Ortodoxia' : 'Carta'}
-                                                            </button>
-                                                        ))}
-                                                    </div>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">Tipo</label>
+                                                <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                                    {['orthodoxy', 'apostolic_letter'].map(type => (
+                                                        <button 
+                                                            key={type}
+                                                            onClick={() => useAppStore.getState().setTheme({ ...theme, type: type as any })}
+                                                            className={cn(
+                                                                "flex-1 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                                theme.type === type 
+                                                                    ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
+                                                            )}
+                                                        >
+                                                            {type === 'orthodoxy' ? 'Ortodoxia' : 'Carta de Apostolado'}
+                                                        </button>
+                                                    ))}
+                                                </div>
                                                 </div>
                                                 <button
                                                     onClick={async () => {
@@ -1172,41 +1423,46 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     {/* Attendance Header & Controls */}
                                     <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.03] p-8 rounded-[2.5rem] border border-white/5 backdrop-blur-xl">
                                         <div className="flex flex-col gap-2 text-center md:text-left">
-                                            <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">
-                                                Control de <span className="text-primary">Asistencia</span>
+                                            <h2 className="text-3xl font-black  capitalize tracking-tighter text-foreground">
+                                                Control de <span className="text-amber-400">Asistencia</span>
                                             </h2>
                                             <div className="flex items-center justify-center md:justify-start gap-4">
                                                 <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
                                                     <Calendar className="w-3.5 h-3.5 text-primary" />
-                                                    <span className="text-[10px] font-black uppercase text-primary">
-                                                        {format(parseISO(currentDate), "EEEE, d 'de' MMMM", { locale: es })}
+                                                    <span className="text-[10px] font-black capitalize text-primary">
+                                                        {(() => {
+                                                            try {
+                                                                return format(parseISO(currentDate), "EEEE, d 'de' MMMM", { locale: es });
+                                                            } catch (e) {
+                                                                return currentDate;
+                                                            }
+                                                        })()}
                                                     </span>
                                                 </div>
-                                                <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                                                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest leading-none">
-                                                    {members.length} MIEMBROS REGISTRADOS
+                                                <div className="w-1.5 h-1.5 rounded-full bg-foreground/20" />
+                                                <span className="text-[10px] font-bold text-muted-foreground capitalize tracking-widest leading-none">
+                                                    {members.length} Miembros Registrados
                                                 </span>
                                             </div>
                                         </div>
 
                                         <div className="flex flex-wrap justify-center gap-3">
-                                            {(['5am', '9am', 'evening'] as const).map(session => (
-                                                <button
-                                                    key={session}
-                                                    onClick={() => setCurrentAttendanceSession(session)}
-                                                    className={cn(
-                                                        "tactile-btn text-[10px] px-6 h-12 transition-all duration-300",
-                                                        currentAttendanceSession === session 
-                                                            ? "tactile-btn-primary scale-105 shadow-[0_0_30px_rgba(59,130,246,0.3)]" 
-                                                            : "tactile-btn-glass opacity-60 hover:opacity-100"
-                                                    )}
-                                                >
-                                                    {session === '5am' ? <Sunrise className="w-4 h-4 mr-2" /> : 
-                                                     session === '9am' ? <Sun className="w-4 h-4 mr-2" /> : 
-                                                     <Moon className="w-4 h-4 mr-2" />}
-                                                    {session === '5am' ? '5:00 AM' : session === '9am' ? '9:00 AM' : '7:00 PM'}
-                                                </button>
-                                            ))}
+                                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                                {(['5am', '9am', 'evening'] as const).map(session => (
+                                                    <button
+                                                        key={session}
+                                                        onClick={() => setCurrentAttendanceSession(session)}
+                                                        className={cn(
+                                                            "px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                            currentAttendanceSession === session 
+                                                                ? "bg-[#576983] text-black transform scale-[1.02]" 
+                                                                : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                                                        )}
+                                                    >
+                                                        {session === '5am' ? '5:00 AM' : session === '9am' ? '9:00 AM' : '7:00 PM'}
+                                                    </button>
+                                                ))}
+                                            </div>
                                             <div className="w-px h-10 bg-white/10 mx-2" />
                                             <button
                                                 onClick={() => (document.getElementById('global-date-picker') as HTMLInputElement)?.showPicker()}
@@ -1218,9 +1474,46 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         </div>
                                     </div>
 
+                                    {/* Horizontal Filter Bar & Search for Attendance Groups */}
+                                    <div className="flex flex-col md:flex-row items-center gap-6">
+                                        <div className="admin-member-filters-bar flex-1 flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                            {[
+                                                { id: 'all', label: 'TODOS', count: members.length },
+                                                { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
+                                                { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.member_group === 'Casados' || m.member_group === 'Casadas').length },
+                                                { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.member_group === 'Solos y Solas').length },
+                                                { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.member_group === 'Jovenes').length },
+                                                { id: 'Niños', label: 'NIÑOS', count: members.filter(m => m.member_group === 'Niños' || m.member_group === 'Niñas').length },
+                                            ].map(group => (
+                                                <button
+                                                    key={group.id}
+                                                    onClick={() => setMemberFilter(group.id)}
+                                                    className={cn(
+                                                        "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                        memberFilter === group.id 
+                                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                            : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                                                    )}
+                                                >
+                                                    {group.label} <span className="opacity-40 text-[8px] ml-1">{group.count}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <div className="relative w-full md:w-64 bg-[#121523] border border-white/5 rounded-2xl p-1 shadow-inner group">
+                                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
+                                            <input
+                                                type="text"
+                                                placeholder="BUSCAR..."
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                className="w-full bg-transparent h-9 pl-10 pr-4 text-[10px] font-black tracking-[0.15em] text-foreground outline-none placeholder:text-muted-foreground/30"
+                                            />
+                                        </div>
+                                    </div>
+
                                     {/* Weekly Quick Graph (Miniature) */}
                                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                                        <TactileGlassCard title="RENDIMIENTO SEMANAL" className="md:col-span-3">
+                                        <TactileGlassCard title="Rendimiento Semanal" className="md:col-span-3">
                                             <div className="h-48 flex items-end gap-2 px-2 pb-2">
                                                 {weeklyStats.length > 0 ? weeklyStats.map((stat, i) => (
                                                     <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
@@ -1235,49 +1528,56 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                 {stat.attended}
                                                             </div>
                                                         </div>
-                                                        <span className="text-[9px] font-black text-white/30 uppercase tracking-widest">{format(parseISO(stat.date), 'EEE', { locale: es })}</span>
+                                                        <span className="text-[9px] font-black text-muted-foreground/30 capitalize tracking-widest">{format(parseISO(stat.date), 'EEE', { locale: es })}</span>
                                                     </div>
                                                 )) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-white/20 tracking-widest uppercase italic">
+                                                    <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-muted-foreground/40 tracking-widest capitalize ">
                                                         Cargando estadísticas...
                                                     </div>
                                                 )}
                                             </div>
                                         </TactileGlassCard>
 
-                                        <TactileGlassCard title="SESIÓN ACTUAL" className="md:col-span-1">
+                                        <TactileGlassCard title="Sesión Actual" className="md:col-span-1">
                                             <div className="flex flex-col items-center justify-center h-48 gap-4 py-4">
                                                 {(() => {
                                                     const date = currentDate;
                                                     const session = currentAttendanceSession;
                                                     const count = (attendanceRecords[date] || []).filter(r => r.session_type === session && r.present).length;
                                                     const percent = Math.round((count / (members.length || 1)) * 100);
+                                                    const displayPercent = Math.max(percent, 0.5);
                                                     
                                                     return (
                                                         <>
                                                             <div className="relative w-32 h-32">
                                                                 <div className="absolute inset-2 rounded-full border border-white/5 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-                                                                <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" viewBox="0 0 100 100">
+                                                                <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(245,158,11,0.1)]" viewBox="0 0 100 100">
+                                                                    <defs>
+                                                                        <linearGradient id="globalProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                                            <stop offset="0%" stopColor="#cc9900" />
+                                                                            <stop offset="100%" stopColor="#f59e0b" />
+                                                                        </linearGradient>
+                                                                    </defs>
                                                                     <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
                                                                     <motion.circle 
                                                                         cx="50" cy="50" r="44" fill="none" stroke="url(#globalProgressGrad)" strokeWidth="10" strokeDasharray="276.46" 
                                                                         initial={{ strokeDashoffset: 276.46 }}
-                                                                        animate={{ strokeDashoffset: 276.46 - (276.46 * percent / 100) }}
+                                                                        animate={{ strokeDashoffset: 276.46 - (276.46 * displayPercent / 100) }}
                                                                         transition={{ duration: 1.5, ease: "backOut" }}
-                                                                        className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.6)]" strokeLinecap="round"
+                                                                        className="drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]" strokeLinecap="round"
                                                                     />
                                                                 </svg>
                                                                 <div className="absolute inset-0 flex flex-col items-center justify-center rotate-0 z-10">
-                                                                    <span className="text-3xl font-black italic text-white drop-shadow-md">{percent}%</span>
+                                                                    <span className="text-3xl font-black  text-foreground drop-shadow-md">{percent}%</span>
                                                                     <div className="flex items-center gap-1 mt-1 px-2 py-0.5 bg-white/5 rounded-full border border-white/10">
-                                                                        <span className="text-[8px] font-black text-white/50">{count}</span>
-                                                                        <span className="text-[7px] font-bold text-white/20">/</span>
-                                                                        <span className="text-[8px] font-black text-white/50">{members.length}</span>
+                                                                        <span className="text-[8px] font-black text-muted-foreground/70">{count}</span>
+                                                                        <span className="text-[7px] font-bold text-muted-foreground/30">/</span>
+                                                                        <span className="text-[8px] font-black text-muted-foreground/70">{members.length}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div className="flex flex-col items-center gap-1 mt-4">
-                                                                <p className="text-[10px] font-black uppercase text-primary tracking-[0.3em] italic">Asistencia en Vivo</p>
+                                                                <p className="text-[10px] font-black capitalize text-primary tracking-[0.3em] ">Asistencia en Vivo</p>
                                                                 <div className="flex gap-1">
                                                                     <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-primary" />
                                                                     <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} className="w-1.5 h-1.5 rounded-full bg-primary" />
@@ -1295,11 +1595,22 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     <TactileGlassCard title="LISTADO DE MIEMBROS" subtitle="TOQUE PARA MARCAR ASISTENCIA">
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 py-4">
                                             {members.filter(m => {
-                                                if (searchTerm) {
-                                                    const query = searchTerm.toLowerCase();
-                                                    return m.name.toLowerCase().includes(query) || m.member_group?.toLowerCase().includes(query);
-                                                }
-                                                return true;
+                                                const normalize = (text: string) => (text || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                                                const searchNormalized = normalize(searchTerm);
+                                                const nameMatch = normalize(m.name).includes(searchNormalized);
+                                                const groupMatch = normalize(m.member_group || '').includes(searchNormalized);
+                                                const matchesSearch = nameMatch || groupMatch;
+
+                                                if (!matchesSearch) return false;
+
+                                                if (memberFilter === 'all') return true;
+                                                if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';
+                                                if (memberFilter === 'Casados') return m.member_group === 'Casados' || m.member_group === 'Casadas';
+                                                if (memberFilter === 'Niños') return m.member_group === 'Niños' || m.member_group === 'Niñas';
+                                                if (memberFilter === 'Solos y Solas') return m.member_group === 'Solos y Solas';
+                                                if (memberFilter === 'Jovenes') return m.member_group === 'Jovenes';
+                                                
+                                                return m.member_group === memberFilter;
                                             }).sort((a,b) => a.name.localeCompare(b.name)).map(member => {
                                                 const date = currentDate;
                                                 const session = currentAttendanceSession;
@@ -1333,13 +1644,13 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                              onClick={(e) => { e.stopPropagation(); handleViewHistory(member); }}>
                                                             <div className={cn(
                                                                 "w-12 h-12 rounded-2xl border-2 overflow-hidden transition-all duration-500",
-                                                                isPresent ? "border-primary shadow-[0_0_15px_rgba(59,130,246,0.3)]" : "border-white/10"
+                                                                isPresent ? "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "border-white/10"
                                                             )}>
                                                                 {member.avatar ? (
                                                                     <img src={member.avatar} className="w-full h-full object-cover" alt="" />
                                                                 ) : (
                                                                     <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                                                                        <User className="w-6 h-6 text-white/20" />
+                                                                        <User className="w-6 h-6 text-muted-foreground/20" />
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -1348,18 +1659,30 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                     <Check className="w-3 h-3 font-bold" />
                                                                 </div>
                                                             )}
+                                                            {/* VIP Badge */}
+                                                            {member.role === 'Administrador' && (
+                                                                <div className="absolute -top-1.5 -left-1.5 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full p-1 border border-white/20 shadow-lg rotate-[-15deg] z-20">
+                                                                    <Crown className="w-2.5 h-2.5 text-black" strokeWidth={3} />
+                                                                </div>
+                                                            )}
+                                                            {/* PRE Badge */}
+                                                                {member.is_pre_registered && (
+                                                                    <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover:rotate-0 transition-transform z-20">
+                                                                        PRE
+                                                                    </div>
+                                                                )}
                                                         </div>
 
                                                         {/* Member Info - Clickable for attendance toggle */}
                                                         <div className="flex-1 min-w-0 pr-4 cursor-pointer" onClick={() => toggleAttendance(member.id, session)}>
                                                             <h4 className={cn(
-                                                                "font-black text-sm uppercase tracking-tight truncate",
-                                                                isPresent ? "text-primary" : "text-white/80"
+                                                                "font-black text-sm capitalize tracking-tight truncate",
+                                                                isPresent ? "text-primary" : "text-foreground"
                                                             )}>
                                                                 {member.name}
                                                             </h4>
                                                             <div className="flex items-center gap-2 mt-1">
-                                                                <span className="text-[9px] font-bold text-white/30 uppercase tracking-widest">{member.member_group}</span>
+                                                                <span className="text-[9px] font-bold text-muted-foreground/30 capitalize tracking-widest">{member.member_group}</span>
                                                                 {record?.time && !isOptimistic && (
                                                                     <span className="text-[9px] font-medium text-primary/50 tabular-nums">{record.time.slice(0, 5)}</span>
                                                                 )}
@@ -1394,19 +1717,34 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <>
                                                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white/5 p-6 rounded-[2rem] border border-white/5">
                                                     <div className="flex flex-col md:flex-row items-baseline gap-3">
-                                                        <h2 className="text-2xl font-black italic uppercase tracking-tighter">Programación</h2>
-                                                        <span className="text-lg font-bold text-tactile-text-sub uppercase tracking-tight opacity-70">
-                                                            {format(parseISO(currentDate), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es })}
+                                                        <h2 className="text-2xl font-black text-foreground capitalize tracking-tighter">Programación</h2>
+                                                        <span className="text-lg font-bold text-muted-foreground capitalize tracking-tight opacity-70">
+                                                            {(() => {
+                                                                try {
+                                                                    return format(parseISO(currentDate), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
+                                                                } catch (e) {
+                                                                    return currentDate;
+                                                                }
+                                                            })()}
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center gap-3">
-                                                        <button
-                                                            onClick={() => (document.getElementById('global-date-picker') as HTMLInputElement)?.showPicker()}
-                                                            className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50"
-                                                        >
-                                                            <CalendarClock className="w-3.5 h-3.5 mr-2 text-primary" />
-                                                            CAMBIAR FECHA
-                                                        </button>
+                                                        <div className="relative group">
+                                                            <button
+                                                                className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50"
+                                                            >
+                                                                <CalendarClock className="w-3.5 h-3.5 mr-2 text-primary" />
+                                                                CAMBIAR FECHA
+                                                            </button>
+                                                            <input 
+                                                                type="date" 
+                                                                className="absolute inset-0 opacity-0 cursor-pointer w-full z-10" 
+                                                                value={currentDate}
+                                                                onChange={(e) => {
+                                                                    if (e.target.value) setCurrentDate(e.target.value);
+                                                                }}
+                                                            />
+                                                        </div>
                                                         <button
                                                             onClick={() => {
                                                                 if (confirm("¿Poblar el mes actual con datos de prueba?")) seedMonthSchedule();
@@ -1729,164 +2067,271 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -20 }}
-                                    className="grid grid-cols-1 md:grid-cols-12 gap-8"
+                                    className="space-y-8"
                                 >
-                                    <div className="col-span-1 md:col-span-12 grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center">
-                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Membresía Total</p>
-                                            <div className="text-3xl font-black italic tracking-tighter text-white">{members.length}</div>
-                                        </div>
-                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center border-l-2 border-l-blue-500">
-                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Varones Adultos</p>
-                                            <div className="text-3xl font-black italic tracking-tighter text-blue-400">{members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length}</div>
-                                        </div>
-                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center border-l-2 border-l-pink-500">
-                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Hermanas Adultas</p>
-                                            <div className="text-3xl font-black italic tracking-tighter text-pink-400">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</div>
-                                        </div>
-                                        <div className="tactile-glass-panel p-4 flex flex-col justify-center border-l-2 border-l-orange-500">
-                                            <p className="text-[8px] font-black uppercase text-tactile-text-sub mb-1">Niños / Niñas</p>
-                                            <div className="text-3xl font-black italic tracking-tighter text-orange-400">{members.filter(m => m.category === 'Niño').length}</div>
-                                        </div>
+                                    {/* Header Summary */}
+                                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                                        {[
+                                            { label: 'MEMBRESÍA TOTAL', value: members.length, color: 'text-white' },
+                                            { label: 'VARONES ADULTOS', value: members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length, color: 'text-blue-400', border: 'border-l-blue-500' },
+                                            { label: 'HERMANAS ADULTAS', value: members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length, color: 'text-pink-400', border: 'border-l-pink-500' },
+                                            { label: 'NIÑOS / NIÑAS', value: members.filter(m => m.category === 'Niño').length, color: 'text-orange-400', border: 'border-l-orange-500' },
+                                        ].map((stat, i) => (
+                                            <div key={i} className={cn("bg-[#121523] p-4 rounded-2xl border border-white/5", stat.border && `border-l-2 ${stat.border}`)}>
+                                                <TactileBadge className="mb-2 bg-white/5 border-white/10 opacity-60">
+                                                    {stat.label}
+                                                </TactileBadge>
+                                                <div className={cn("text-3xl font-black tracking-tighter", stat.color)}>{stat.value}</div>
+                                            </div>
+                                        ))}
+
                                     </div>
 
-                                    <div className="col-span-1 md:col-span-12 flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-6">
-                                            <h2 className="text-4xl font-black italic uppercase tracking-tighter">Directorio <span className="text-tactile-text-sub">Local</span></h2>
-                                            <div className="relative">
-                                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub" />
+                                    {/* 🔒 AUDITORÍA DE SEGURIDAD: SOLICITUDES ACTIVAS */}
+                                    {members.filter(m => m.status === 'Pendiente').length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            className="bg-[#121523]/80 border border-amber-500/20 rounded-[2.5rem] p-8 space-y-6 shadow-2xl relative overflow-hidden backdrop-blur-xl"
+                                        >
+                                            <div className="absolute top-0 right-0 p-12 opacity-5">
+                                                <ShieldAlert className="w-32 h-32 text-amber-500" />
+                                            </div>
+                                            <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center border border-amber-500/30">
+                                                        <ShieldAlert className="w-6 h-6 text-amber-500" />
+                                                    </div>
+                                                    <div>
+                                                        <h3 className="text-2xl font-black tracking-tighter text-amber-500 uppercase">AUDITORÍA DE SEGURIDAD</h3>
+                                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 mt-1">PROTOCOLO DE APROBACIÓN DE NUEVOS PERFILES</p>
+                                                    </div>
+                                                </div>
+                                                <TactileBadge className="bg-amber-500/10 border-amber-500/30 text-amber-500 px-6 py-2">
+                                                    {members.filter(m => m.status === 'Pendiente').length} SOLICITUDES ACTIVAS
+                                                </TactileBadge>
+
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
+                                                {members.filter(m => m.status === 'Pendiente').map((pending) => (
+                                                    <div key={pending.id} className="bg-[#0b101e] border border-white/5 p-5 rounded-[1.75rem] space-y-4 hover:border-amber-500/40 transition-all duration-300 group/audit-card relative overflow-hidden flex flex-col justify-between">
+                                                        <div className="flex items-center gap-4">
+                                                            <div className="relative w-14 h-14 shrink-0">
+                                                                <div className="absolute inset-0 bg-amber-500/20 rounded-xl blur-lg opacity-0 group-hover/audit-card:opacity-100 transition-opacity" />
+                                                                <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/10 group-hover/audit-card:border-amber-500/50 transition-all bg-[#121523]">
+                                                                    {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-full h-full p-3 text-amber-500/40" />}
+                                                                </div>
+                                                                <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover:rotate-0 transition-transform z-20">PRE</div>
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className="text-sm font-black text-white truncate uppercase tracking-tight leading-none mb-1">{pending.name}</p>
+                                                                <p className="text-[8px] text-white/20 truncate font-black uppercase tracking-widest flex items-center gap-1.5 leading-none">
+                                                                    <Mail className="w-2.5 h-2.5" />
+                                                                    {pending.email}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex gap-2 pt-2">
+                                                            <button 
+                                                                className="flex-1 h-9 bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest rounded-xl shadow-lg transition-all"
+                                                                disabled={isSaving}
+                                                                onClick={async () => {
+                                                                    const { updateProfileInCloud, loadMembersFromCloud } = useAppStore.getState();
+                                                                    setIsSaving(true);
+                                                                    await updateProfileInCloud(pending.id, { ...pending, status: 'Activo' } as any);
+                                                                    await loadMembersFromCloud();
+                                                                    setIsSaving(false);
+                                                                }}
+                                                            >
+                                                                APROBAR
+                                                            </button>
+                                                            <button 
+                                                                className="px-4 h-9 bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-white text-[8px] font-black uppercase tracking-widest rounded-xl transition-all"
+                                                                onClick={async () => {
+                                                                    if (confirm(`¿ELIMINAR SOLICITUD DE ${pending.name.toUpperCase()}?`)) {
+                                                                        const { deleteMemberFromCloud, loadMembersFromCloud } = useAppStore.getState();
+                                                                        setIsSaving(true);
+                                                                        await deleteMemberFromCloud(pending.id);
+                                                                        await loadMembersFromCloud();
+                                                                        setIsSaving(false);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                RECHAZAR
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </motion.div>
+                                    )}
+
+                                    {/* Search & Actions Bar */}
+                                    <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-2">
+                                        <div className="w-full md:w-auto flex items-center gap-6">
+                                            <h2 className="text-4xl font-black tracking-tighter shrink-0">MIEMBROS <span className="text-muted-foreground/40">LOCALES</span></h2>
+
+                                            <div className="relative w-full max-w-md bg-[#121523] border border-white/10 rounded-2xl p-1 shadow-2xl backdrop-blur-xl group">
+                                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-amber-400 transition-colors" />
                                                 <input
                                                     type="text"
-                                                    placeholder="Buscar miembro..."
+                                                    placeholder="BUSCAR HERMANA O HERMANO..."
                                                     value={searchTerm}
                                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                                    className="bg-black/30 border border-white/5 rounded-2xl h-11 pl-12 pr-6 text-sm font-bold min-w-[300px] outline-none focus:border-primary/50"
+                                                    className="w-full bg-transparent h-10 pl-12 pr-6 text-[10px] font-black tracking-[0.15em] text-white outline-none placeholder:text-white/20"
                                                 />
                                             </div>
                                         </div>
                                         <button
                                             onClick={() => setShowAddMember(true)}
-                                            className="tactile-btn tactile-btn-orange"
+                                            className="w-full md:w-auto bg-[#576983] text-black h-11 px-8 rounded-2xl text-[10px] font-black tracking-widest hover:scale-[1.02] transition-transform active:scale-95 shadow-xl shadow-black/40"
                                         >
-                                            <Plus className="w-4 h-4" /> Agregar Miembro
+                                            AGREGAR MIEMBRO
                                         </button>
                                     </div>
 
-                                    {/* Sidebar Filters */}
-                                    <div className="col-span-1 md:col-span-3 space-y-3">
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-tactile-text-sub mb-4 ml-2">Filtrar por Grupo</h4>
+                                    <div className="flex items-center gap-2 mb-2 ml-1">
+                                        <Filter className="w-3 h-3 text-white/20" />
+                                        <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em] mb-0.5">FILTRAR POR GRUPO</span>
+                                    </div>
+
+                                    {/* Primitivo Horizontal Filter Bar (Standard Style) */}
+                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
                                         {[
-                                            { id: 'all', label: 'Todos', count: members.length },
-                                            { id: 'Administración', label: 'Siervos de Dios', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
-                                            { id: 'Casados', label: 'Matrimonios', count: members.filter(m => m.member_group === 'Casados' || m.member_group === 'Casadas').length },
-                                            { id: 'Solos y Solas', label: 'Solos y Solas', count: members.filter(m => m.member_group === 'Solos y Solas').length },
-                                            { id: 'Jovenes', label: 'Jóvenes', count: members.filter(m => m.member_group === 'Jovenes').length },
-                                            { id: 'Niños', label: 'Niños / Niñas', count: members.filter(m => m.member_group === 'Niños' || m.member_group === 'Niñas').length },
+                                            { id: 'all', label: 'TODOS LOS MIEMBROS', count: members.length },
+                                            { id: 'Administración', label: 'SIERVOS DE DIOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
+                                            { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.member_group === 'Casados' || m.member_group === 'Casadas').length },
+                                            { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.member_group === 'Solos y Solas').length },
+                                            { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.member_group === 'Jovenes').length },
+                                            { id: 'Niños', label: 'NIÑOS / NIÑAS', count: members.filter(m => m.member_group === 'Niños' || m.member_group === 'Niñas').length },
                                         ].map(group => (
                                             <button
                                                 key={group.id}
                                                 onClick={() => setMemberFilter(group.id)}
                                                 className={cn(
-                                                    "w-full flex items-center justify-between px-6 py-4 rounded-2xl transition-all border",
-                                                    memberFilter === group.id ? "bg-primary/20 border-primary/40 text-primary shadow-[inset_0_0_20px_rgba(var(--primary-rgb),0.2)]" : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
+                                                    "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                    memberFilter === group.id 
+                                                        ? "bg-amber-400 text-black shadow-none scale-[1.02]" 
+                                                        : "text-white/40 hover:text-white hover:bg-white/5"
                                                 )}
                                             >
-                                                <span className="font-black text-xs uppercase tracking-widest">{group.label}</span>
-                                                <span className="text-[10px] font-bold opacity-50">{group.count}</span>
+                                                {group.label} <span className="opacity-40 text-[8px] ml-1">{group.count}</span>
                                             </button>
                                         ))}
                                     </div>
 
-                                    {/* Members Grid */}
-                                    <div className="col-span-1 md:col-span-9 grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                        {members
-                                            .filter(m => {
-                                                const normalize = (text: string) => (text || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-                                                const searchNormalized = normalize(searchTerm);
-                                                const nameMatch = normalize(m.name).includes(searchNormalized);
-                                                const emailMatch = normalize(m.email).includes(searchNormalized);
-                                                const matchesSearch = nameMatch || emailMatch;
+                                    {/* Members Grid (Primitivo Style) */}
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                                            {members
+                                                .filter(m => {
+                                                    const normalize = (text: string) => (text || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                                                    const searchNormalized = normalize(searchTerm);
+                                                    const nameMatch = normalize(m.name).includes(searchNormalized);
+                                                    const emailMatch = normalize(m.email).includes(searchNormalized);
+                                                    const matchesSearch = nameMatch || emailMatch;
 
-                                                if (!matchesSearch) return false;
+                                                    if (!matchesSearch) return false;
 
-                                                if (memberFilter === 'all') return true;
-                                                if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';
-                                                if (memberFilter === 'Casados') return m.member_group === 'Casados' || m.member_group === 'Casadas';
-                                                if (memberFilter === 'Niños') return m.member_group === 'Niños' || m.member_group === 'Niñas';
-                                                return m.member_group === memberFilter;
-                                            })
-                                            .map(member => (
-                                                <div key={member.id} 
-                                                     onClick={() => handleViewHistory(member)}
-                                                     className="tactile-glass-panel p-4 flex items-center gap-4 group cursor-pointer hover:bg-white/[0.03] transition-colors relative">
-                                                    <div className="w-14 h-14 rounded-full border-2 border-white/10 overflow-hidden relative">
-                                                        <img src={member.avatar || `https://ui-avatars.com/api/?name=${member.name}&background=random`} className="w-full h-full object-cover" alt={member.name} />
-                                                        {member.role === 'Administrador' && (
-                                                            <div className="absolute inset-0 border-2 border-primary rounded-full pointer-events-none" />
-                                                        )}
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <h4 className="font-black text-base truncate italic">{member.name}</h4>
-                                                        <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                                            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-tactile-text-sub">
-                                                                {member.role}
-                                                            </span>
-                                                            <span className="text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-primary/20 text-primary">
-                                                                {member.member_group}
-                                                            </span>
-                                                            <span className={cn(
-                                                                "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full",
-                                                                member.status === 'Activo' ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-500"
+                                                    if (memberFilter === 'all') return true;
+                                                    if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';
+                                                    if (memberFilter === 'Casados') return m.member_group === 'Casados' || m.member_group === 'Casadas';
+                                                    if (memberFilter === 'Niños') return m.member_group === 'Niños' || m.member_group === 'Niñas';
+                                                    return m.member_group === memberFilter;
+                                                })
+                                                .map(member => (
+                                                    <div 
+                                                        key={member.id} 
+                                                        className="group bg-[#101420] border border-white/5 p-6 rounded-[1.5rem] flex items-center gap-6 hover:border-amber-400/30 transition-all duration-500 shadow-none relative overflow-hidden"
+                                                    >
+                                                        {/* Animated Hover Background (Subtle Aurora) */}
+                                                        <div className="absolute top-0 right-0 w-32 h-32 blur-[60px] bg-amber-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                                                        
+                                                        <div className="relative shrink-0 z-10">
+                                                            <div className={cn(
+                                                                "w-20 h-20 rounded-2xl border transition-all duration-500 group-hover:scale-105 bg-[#121523] p-1 shadow-none overflow-hidden",
+                                                                member.status === 'Activo' ? "border-emerald-500/30 bg-emerald-500/5" : "border-white/10"
                                                             )}>
-                                                                {member.status || 'Activo'}
-                                                            </span>
-                                                            {(member.privileges || []).map((p: string) => (
-                                                                <span key={p} className="text-[8px] font-black uppercase tracking-tighter px-1.5 py-0.5 rounded border border-orange-500/30 text-orange-500/70">
-                                                                    {p}
-                                                                </span>
-                                                            ))}
+                                                                <img 
+                                                                    src={member.avatar || `https://ui-avatars.com/api/?name=${member.name}&background=random`} 
+                                                                    className="w-full h-full object-cover rounded-[1.4rem]" 
+                                                                    alt={member.name} 
+                                                                />
+                                                            </div>
+                                                            {member.role === 'Administrador' && (
+                                                                <div className="absolute -top-1 -left-1 w-8 h-8 bg-[#EFB722] rounded-full border-2 border-[#101420] flex items-center justify-center shadow-none z-20">
+                                                                    <Crown className="w-4 h-4 text-black" />
+                                                                </div>
+                                                            )}
+                                                            {member.is_pre_registered && (
+                                                                <div className="absolute -top-1.5 -right-1.5 bg-[#FBBF24] text-[9px] font-black px-2 py-0.5 rounded-[6px] border border-[#101420] text-black shadow-none z-20 transition-transform group-hover:scale-110 tracking-[0.1em]">
+                                                                    PRE.
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Basic Info */}
+                                                        <div className="flex-1 min-w-0 z-10">
+                                                                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                                                                    <TactileBadge className={cn(
+                                                                        "px-2.5 py-0.5 shadow-none border trans",
+                                                                        (member.role === 'Administrador' || member.role === 'Ministro a Cargo')
+                                                                            ? "bg-amber-500/10 border-amber-500/20 text-amber-500" 
+                                                                            : ((member.role?.includes('Encargado') || member.role?.includes('Responsable') || member.status === 'Activo') ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-slate-400/10 border-slate-400/20 text-slate-400")
+                                                                    )}>
+                                                                        {member.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : member.role}
+                                                                    </TactileBadge>
+                                                                    {member.member_group && (
+                                                                        <TactileBadge className="bg-[#2A4364]/40 border-[#2A4364]/60 text-gray-300">
+                                                                            {member.member_group}
+                                                                        </TactileBadge>
+                                                                    )}
+                                                                </div>
+
+                                                        </div>
+
+                                                        {/* Actions Overlay */}
+                                                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                                                            <button 
+                                                                onClick={() => { setEditingMember(member); setShowAddMember(true); }}
+                                                                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all border border-white/5"
+                                                            >
+                                                                <Edit2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={async () => {
+                                                                    const { updateProfileInCloud, loadMembersFromCloud } = useAppStore.getState();
+                                                                    setIsSaving(true);
+                                                                    await updateProfileInCloud(member.id, { 
+                                                                        status: member.status === 'Activo' ? 'Inactivo' : 'Activo' 
+                                                                    });
+                                                                    await loadMembersFromCloud();
+                                                                    setIsSaving(false);
+                                                                }}
+                                                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 text-white/40 hover:bg-red-500/20 hover:text-red-500 transition-all"
+                                                                title={member.status === 'Activo' ? 'Desactivar' : 'Activar'}
+                                                            >
+                                                                <Power className="w-3.5 h-3.5" />
+                                                            </button>
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    if (confirm(`¿ELIMINAR A ${member.name.toUpperCase()}?`)) {
+                                                                        const { deleteMemberFromCloud, loadMembersFromCloud } = useAppStore.getState();
+                                                                        setIsSaving(true);
+                                                                        deleteMemberFromCloud(member.id);
+                                                                    }
+                                                                }}
+                                                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 text-white/40 hover:bg-red-600 hover:text-white transition-all"
+                                                                title="Eliminar"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
                                                         </div>
                                                     </div>
-                                                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button
-                                                            onClick={async () => {
-                                                                const newStatus = member.status === 'Activo' ? 'Inactivo' : 'Activo';
-                                                                const success = await updateProfileInCloud(member.id, { ...member, status: newStatus as any });
-                                                                if (success) {
-                                                                    await loadMembersFromCloud();
-                                                                }
-                                                            }}
-                                                            title={member.status === 'Activo' ? 'Desactivar Cuenta' : 'Activar Cuenta'}
-                                                            className={cn(
-                                                                "tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center transition-all",
-                                                                member.status === 'Activo' ? "hover:text-red-500" : "hover:text-emerald-500"
-                                                            )}
-                                                        >
-                                                            <Power className="w-3.5 h-3.5" />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => {
-                                                                setEditingMember(member);
-                                                                setNewMemberData({ ...member });
-                                                                setShowAddMember(true);
-                                                            }}
-                                                            className="tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center"
-                                                        >
-                                                            <Edit2 className="w-3.5 h-3.5" />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => {
-                                                                if (confirm(`¿Estás seguro de eliminar a ${member.name}?`)) {
-                                                                    deleteMemberFromCloud(member.id);
-                                                                }
-                                                            }}
-                                                            className="tactile-btn tactile-btn-glass !rounded-full w-9 h-9 p-0 items-center justify-center hover:text-red-500"
-                                                        ><Trash2 className="w-3.5 h-3.5" /></button>
-                                                    </div>
-
-                                                </div>
-                                            ))}
-                                    </div>
+                                                ))
+                                            }
+                                        </div>
                                 </motion.div>
                             )}
 
@@ -1899,7 +2344,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12">
-                                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-8">Preferencias del <span className="text-tactile-text-sub">Sistema</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8">Preferencias del <span className="text-tactile-text-sub">Sistema</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-6 space-y-8">
@@ -1918,7 +2363,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 />
 
                                                 <div className="space-y-4">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">COLOR PRIMARIO</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">COLOR PRIMARIO</label>
                                                     <div className="grid grid-cols-5 gap-3">
                                                         {['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'].map(color => (
                                                             <button
@@ -1936,7 +2381,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                                 <TactileFontSelect
                                                     label="TIPOGRAFÍA DEL SISTEMA (GOOGLE FONTS PREVIEW)"
-                                                    value={settings.fontMain || calendarStyles.fontFamily || 'Outfit'}
+                                                    value={settings.fontMain || calendarStyles.fontFamily || 'Poppins'}
                                                     onChange={(val: any) => {
                                                         setSettings({ fontMain: val });
                                                         setCalendarStyles({ fontFamily: val });
@@ -1946,8 +2391,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 />
 
                                                 <div className="space-y-4 pt-2">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
-                                                    <div className="grid grid-cols-5 gap-2">
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
                                                         {[
                                                             { label: 'THIN', weight: '300' },
                                                             { label: 'NORM', weight: '400' },
@@ -1962,8 +2407,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                     saveSettingsToCloud({ fontWeight: w.weight });
                                                                 }}
                                                                 className={cn(
-                                                                    "tactile-btn justify-center text-[8px] font-black py-2",
-                                                                    (settings.fontWeight || '400') === w.weight ? "tactile-btn-primary" : "tactile-btn-orange"
+                                                                    "flex-1 px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-300",
+                                                                    (settings.fontWeight || '400') === w.weight 
+                                                                        ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                                        : "text-white/40 hover:text-white hover:bg-white/5"
                                                                 )}
                                                             >
                                                                 {w.label}
@@ -1975,11 +2422,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2 flex justify-between">
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2 flex justify-between">
                                                         <span>OPTIMIZACIÓN DE TV (OVERSCAN / ESCALA)</span>
                                                         <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
                                                     </label>
-                                                    <div className="grid grid-cols-4 gap-2">
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
                                                         {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
                                                             <button
                                                                 key={sc}
@@ -1988,21 +2435,23 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                     saveSettingsToCloud({ displayScale: sc });
                                                                 }}
                                                                 className={cn(
-                                                                    "tactile-btn flex-1 text-[10px] py-2",
-                                                                    (settings.displayScale || 1.0) === sc ? "tactile-btn-orange" : "tactile-btn-glass"
+                                                                    "flex-1 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                                    (settings.displayScale || 1.0) === sc 
+                                                                        ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                                        : "text-white/40 hover:text-white hover:bg-white/5"
                                                                 )}
                                                             >
                                                                 {Math.round(sc * 100)}%
                                                             </button>
                                                         ))}
                                                     </div>
-                                                    <p className="text-[8px] text-tactile-text-sub ml-2 italic leading-relaxed">
+                                                    <p className="text-[8px] text-tactile-text-sub ml-2  leading-relaxed">
                                                         * Si el contenido se ve cortado en los bordes de la TV, baje la escala al 90%, 80% o 70%.
                                                     </p>
                                                 </div>
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">
                                                         AJUSTE MANUAL DE POSICIÓN (CENTRAR)
                                                     </label>
                                                     <div className="flex flex-col items-center gap-2">
@@ -2094,7 +2543,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         <Upload className="w-6 h-6 text-tactile-text-sub" />
                                                                     </div>
                                                                     <div className="text-center">
-                                                                        <p className="text-[10px] font-black uppercase tracking-widest">Subir Fondo Personalizado</p>
+                                                                        <p className="text-[10px] font-black capitalize tracking-widest">Subir Fondo Personalizado</p>
                                                                         <p className="text-[8px] text-tactile-text-sub mt-2">Formatos aceptados: SVG, JPG, PNG, WEBP</p>
                                                                     </div>
                                                                 </>
@@ -2127,13 +2576,15 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 )}
                                                 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE PUNTOS / ANIMACIÓN</label>
-                                                    <div className="grid grid-cols-2 gap-2">
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE PUNTOS / ANIMACIÓN</label>
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
                                                         <button
                                                             onClick={() => saveSettingsToCloud({ displayBgStyle: 'static' })}
                                                             className={cn(
-                                                                "tactile-btn flex-1 text-[10px] py-2",
-                                                                settings.displayBgStyle === 'static' ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                "flex-1 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                                settings.displayBgStyle === 'static' 
+                                                                    ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
                                                             )}
                                                         >
                                                             ESTÁTICO
@@ -2141,8 +2592,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         <button
                                                             onClick={() => saveSettingsToCloud({ displayBgStyle: 'dynamic' })}
                                                             className={cn(
-                                                                "tactile-btn flex-1 text-[10px] py-2",
-                                                                settings.displayBgStyle === 'dynamic' ? "tactile-btn-primary" : "tactile-btn-glass"
+                                                                "flex-1 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                                settings.displayBgStyle === 'dynamic' 
+                                                                    ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
                                                             )}
                                                         >
                                                             DINÁMICO
@@ -2179,7 +2632,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     </div>
                                                     <button
                                                         onClick={() => document.getElementById('minister-avatar-upload')?.click()}
-                                                        className="text-[10px] font-black uppercase text-primary mt-4 tracking-widest hover:underline"
+                                                        className="text-[10px] font-black capitalize text-primary mt-4 tracking-widest hover:underline"
                                                     >
                                                         Cambiar Fotografía
                                                     </button>
@@ -2257,7 +2710,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         }
                                                         setIsSaving(false);
                                                     }}
-                                                    className="tactile-btn tactile-btn-orange w-full h-12 justify-center mt-4 font-black uppercase tracking-widest"
+                                                    className="tactile-btn tactile-btn-orange w-full h-12 justify-center mt-4 font-black capitalize tracking-widest"
                                                 >
                                                     <Save className="w-4 h-4" /> {isSaving ? 'Guardando...' : 'Guardar Datos'}
                                                 </button>
@@ -2275,7 +2728,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 />
 
                                                 <div className="space-y-4">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">EMAILS AUTORIZADOS</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">EMAILS AUTORIZADOS</label>
                                                     <div className="space-y-3">
                                                         {(settings.displayAuthorizedEmails || []).map((email, idx) => (
                                                             <div key={idx} className="flex items-center gap-3 bg-black/40 p-3 rounded-2xl border border-white/5">
@@ -2320,7 +2773,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             </button>
                                                         </div>
                                                     </div>
-                                                    <p className="text-[8px] font-bold text-tactile-text-sub/50 uppercase tracking-widest mt-4">Los administradores siempre tienen acceso.</p>
+                                                    <p className="text-[8px] font-bold text-tactile-text-sub/50 capitalize tracking-widest mt-4">Los administradores siempre tienen acceso.</p>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -2328,7 +2781,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         <TactileGlassCard title="ENTORNO DE PRUEBAS">
                                             <div className="space-y-4">
                                                 <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl">
-                                                    <p className="text-[10px] font-bold text-orange-200 uppercase leading-relaxed">
+                                                    <p className="text-[10px] font-bold text-orange-200 capitalize leading-relaxed">
                                                         PARA VERIFICAR LOS ROLES, PUEDE CREAR CUENTAS DE PRUEBA CON EMAILS PREDEFINIDOS.
                                                     </p>
                                                 </div>
@@ -2338,16 +2791,16 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             await createTestAccounts();
                                                         }
                                                     }}
-                                                    className="tactile-btn tactile-btn-glass w-full h-12 justify-center gap-3 font-black uppercase tracking-widest"
+                                                    className="tactile-btn tactile-btn-glass w-full h-12 justify-center gap-3 font-black capitalize tracking-widest"
                                                 >
                                                     <UserPlus className="w-4 h-4 text-primary" /> GENERAR CUENTAS DE TEST
                                                 </button>
 
                                                 <div className="mt-8 space-y-4">
-                                                    <h4 className="text-[10px] font-black uppercase tracking-widest text-tactile-text-sub ml-2">SIMULADOR DE ROLES</h4>
+                                                    <h4 className="text-[10px] font-black capitalize tracking-widest text-tactile-text-sub ml-2">SIMULADOR DE ROLES</h4>
                                                     <div className="overflow-hidden rounded-2xl border border-white/5">
                                                         <table className="w-full text-left text-[10px] border-collapse">
-                                                            <thead className="bg-white/5 uppercase tracking-widest font-black text-tactile-text-sub">
+                                                            <thead className="bg-white/5 capitalize tracking-widest font-black text-tactile-text-sub">
                                                                 <tr>
                                                                     <th className="px-4 py-3">ROL</th>
                                                                     <th className="px-4 py-3">EMAIL</th>
@@ -2363,11 +2816,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                     { role: 'Miembro', email: 'miembro_test@lldmrodeo.org', icon: User },
                                                                 ].map((testUser) => (
                                                                     <tr key={testUser.email} className="group hover:bg-white/5 transition-colors">
-                                                                        <td className="px-4 py-3 font-black italic uppercase flex items-center gap-2">
+                                                                        <td className="px-4 py-3 font-black  capitalize flex items-center gap-2">
                                                                             <testUser.icon className="w-3 h-3 text-primary" />
                                                                             {testUser.role}
                                                                         </td>
-                                                                        <td className="px-4 py-3 font-medium opacity-60 lowercase">{testUser.email}</td>
+                                                                        <td className="px-4 py-3 font-medium opacity-60 ">{testUser.email}</td>
                                                                         <td className="px-4 py-3 text-right">
                                                                             <button
                                                                                 onClick={async () => {
@@ -2379,7 +2832,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                                         showNotification('La cuenta aún no existe. Pulsa "GENERAR CUENTAS" primero.', 'warning');
                                                                                     }
                                                                                 }}
-                                                                                className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1 rounded-full font-black uppercase tracking-tighter transition-all"
+                                                                                className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1 rounded-full font-black capitalize tracking-tighter transition-all"
                                                                             >
                                                                                 ENTRAR
                                                                             </button>
@@ -2389,7 +2842,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <p className="text-[8px] font-bold text-tactile-text-sub/40 uppercase tracking-widest text-center">Esto solo simula la sesión localmente para pruebas rápidas.</p>
+                                                    <p className="text-[8px] font-bold text-tactile-text-sub/40 capitalize tracking-widest text-center">Esto solo simula la sesión localmente para pruebas rápidas.</p>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -2405,14 +2858,14 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12 px-4">
-                                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-8 group">Buzón de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mensajes Admin</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8 group">Buzón de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mensajes Admin</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-12 space-y-4">
                                         {messages.filter(m => m.targetRole === 'Administrador' || m.receiverId === currentUser?.id).length === 0 ? (
                                             <TactileGlassCard className="py-20 flex flex-col items-center justify-center opacity-40">
                                                 <MessageSquare className="w-20 h-20 mb-6" />
-                                                <p className="text-sm font-black uppercase tracking-[0.3em]">No hay mensajes para el administrador</p>
+                                                <p className="text-sm font-black capitalize tracking-[0.3em]">No hay mensajes para el administrador</p>
                                             </TactileGlassCard>
                                         ) : (
                                             <div className="grid grid-cols-1 gap-4">
@@ -2425,15 +2878,15 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         )}>
                                                             <div className="flex justify-between items-start mb-4">
                                                                 <div className="flex items-center gap-4">
-                                                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary text-sm font-black uppercase shadow-inner">
+                                                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary text-sm font-black capitalize shadow-inner">
                                                                         {msg.senderName?.charAt(0) || 'U'}
                                                                     </div>
                                                                     <div>
-                                                                        <h4 className="font-black text-white text-lg italic flex items-center gap-2">
+                                                                        <h4 className="font-black text-white text-lg  flex items-center gap-2">
                                                                             {msg.senderName || 'Usuario'}
                                                                             {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
                                                                         </h4>
-                                                                        <span className="text-[10px] text-tactile-text-sub uppercase font-bold tracking-widest">{format(parseISO(msg.createdAt), "d MMM, h:mm a")}</span>
+                                                                        <span className="text-[10px] text-tactile-text-sub capitalize font-bold tracking-widest">{format(parseISO(msg.createdAt), "d MMM, h:mm a")}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex gap-2">
@@ -2478,7 +2931,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                             <div className="flex justify-end gap-3">
                                                                                 <button
                                                                                     onClick={() => setReplyingTo(null)}
-                                                                                    className="px-6 h-12 rounded-xl text-[10px] font-black uppercase tracking-widest text-tactile-text-sub hover:text-white"
+                                                                                    className="px-6 h-12 rounded-xl text-[10px] font-black capitalize tracking-widest text-tactile-text-sub hover:text-white"
                                                                                 >
                                                                                     CANCELAR
                                                                                 </button>
@@ -2495,7 +2948,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                                         setReplyingTo(null);
                                                                                         showNotification('Respuesta enviada.', 'success');
                                                                                     }}
-                                                                                    className="px-8 h-12 bg-primary text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
+                                                                                    className="px-8 h-12 bg-amber-500 text-black rounded-xl text-[10px] font-black capitalize tracking-widest shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all"
                                                                                 >
                                                                                     ENVIAR RESPUESTA
                                                                                 </button>
@@ -2521,7 +2974,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12 px-4">
-                                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-8 group">Configuración de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mi Perfil</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8 group">Configuración de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mi Perfil</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-5 flex flex-col items-center">
@@ -2539,7 +2992,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 )}
                                                 <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                                     <Camera className="w-10 h-10 text-white mb-2" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest text-white">Cambiar Foto</span>
+                                                    <span className="text-[10px] font-black capitalize tracking-widest text-white">Cambiar Foto</span>
                                                 </div>
                                             </div>
 
@@ -2552,8 +3005,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     const file = e.target.files?.[0];
                                                     if (file) {
                                                         setIsSaving(true);
-                                                        const publicUrl = await uploadAvatar(currentUser.id, file);
-                                                        if (publicUrl) {
+                                                        const publicUrl = await uploadAvatar(currentUser?.id || '', file);
+                                                        if (publicUrl && currentUser) {
                                                             const updatedUser = { ...currentUser, avatar: publicUrl };
                                                             await updateProfileInCloud(currentUser.id, updatedUser);
                                                             setCurrentUser(updatedUser);
@@ -2564,41 +3017,43 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             />
 
                                             <div className="mt-8 text-center">
-                                                <h3 className="text-2xl font-black uppercase tracking-tighter">{currentUser.name}</h3>
+                                                <h3 className="text-2xl font-black capitalize tracking-tighter">{currentUser?.name || 'Admin'}</h3>
                                                 <div className="flex items-center gap-2 justify-center mt-2 px-6 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
                                                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500">Super Administrador</span>
+                                                    <span className="text-[10px] font-black capitalize tracking-[0.2em] text-emerald-500">Super Administrador</span>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-7 space-y-6">
-                                        <TactileGlassCard title="DATOS PERSONALES Y CONTACTO">
+                                        <TactileGlassCard title="Datos Personales y Contacto">
                                             <div className="grid grid-cols-1 gap-6">
                                                 <TactileInput
-                                                    label="NOMBRE COMPLETO"
-                                                    value={currentUser.name}
-                                                    onChange={(e: any) => setCurrentUser({ ...currentUser, name: e.target.value })}
+                                                    label="Nombre Completo"
+                                                    value={currentUser?.name || ''}
+                                                    onChange={(e: any) => currentUser && setCurrentUser({ ...currentUser, name: e.target.value })}
                                                     icon={User}
                                                 />
                                                 <TactileInput
-                                                    label="CORREO ELECTRÓNICO (SOLO LECTURA)"
-                                                    value={currentUser.email}
+                                                    label="Correo Electrónico (Solo Lectura)"
+                                                    value={currentUser?.email || ''}
                                                     disabled={true}
                                                     icon={Mail}
                                                 />
                                                 <TactileInput
-                                                    onChange={(e: any) => setCurrentUser({ ...currentUser, phone: e.target.value })}
+                                                    label="TELÉFONO"
+                                                    value={currentUser?.phone || ''}
+                                                    onChange={(e: any) => currentUser && setCurrentUser({ ...currentUser, phone: e.target.value })}
                                                     icon={Phone}
                                                 />
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2 flex items-center gap-2">
-                                                        <FileText className="w-3 h-3" /> ACERCA DE MÍ / BIOGRAFÍA
+                                                    <label className="text-[10px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2 flex items-center gap-2">
+                                                        <FileText className="w-3 h-3" /> Acerca de Mí / Biografía
                                                     </label>
                                                     <textarea
-                                                        value={currentUser.bio || ''}
-                                                        onChange={(e) => setCurrentUser({ ...currentUser, bio: e.target.value })}
+                                                        value={currentUser?.bio || ''}
+                                                        onChange={(e) => currentUser && setCurrentUser({ ...currentUser, bio: e.target.value })}
                                                         placeholder="Escribe algo sobre ti para que los miembros te conozcan..."
                                                         className="w-full h-32 bg-black/40 border border-white/10 rounded-3xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none shadow-inner"
                                                     />
@@ -2608,7 +3063,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <div className="mt-8 pt-6 border-t border-white/5">
                                                 <button
                                                     onClick={async () => {
-                                                        if (!currentUser.name || !currentUser.email) return;
+                                                        if (!currentUser?.name || !currentUser?.email) return;
                                                         setIsSaving(true);
                                                         const success = await updateProfileInCloud(currentUser.id, currentUser);
                                                         if (success) {
@@ -2623,7 +3078,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     ) : (
                                                         <Save className="w-5 h-5" />
                                                     )}
-                                                    {isSaving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS EN MI PERFIL'}
+                                                    {isSaving ? 'Guardando...' : 'Guardar Cambios en Mi Perfil'}
                                                 </button>
                                             </div>
                                         </TactileGlassCard>
@@ -2638,11 +3093,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         <Flame className="w-5 h-5 text-primary" />
                                                     </div>
                                                     <div>
-                                                        <p className="text-xs font-black uppercase tracking-widest text-primary">Acceso Maestro</p>
-                                                        <p className="text-[10px] text-tactile-text-sub/70 font-bold uppercase tracking-widest">Control total sobre el sistema y miembros</p>
+                                                        <p className="text-xs font-black capitalize tracking-widest text-primary">Acceso Maestro</p>
+                                                        <p className="text-[10px] text-tactile-text-sub/70 font-bold capitalize tracking-widest">Control total sobre el sistema y miembros</p>
                                                     </div>
                                                 </div>
-                                                <div className="px-4 py-1.5 bg-primary text-black rounded-lg text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-primary/20 relative z-10">
+                                                <div className="px-4 py-1.5 bg-primary text-black rounded-lg text-[10px] font-black capitalize tracking-tighter shadow-lg shadow-primary/20 relative z-10">
                                                     VERIFICADO
                                                 </div>
                                             </div>
@@ -2696,7 +3151,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">RESUMEN / DESCRIPCIÓN</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">RESUMEN / DESCRIPCIÓN</label>
                                                     <textarea
                                                         className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all"
                                                         value={theme.description || ''}
@@ -2705,7 +3160,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     />
                                                 </div>
                                                 <div className="space-y-4">
-                                                    <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO VISUAL (URL)</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO VISUAL (URL)</label>
                                                     <div className="flex gap-2">
                                                         <input
                                                             className="flex-1 bg-black/40 border border-white/5 rounded-2xl h-12 px-4 text-xs font-bold outline-none"
@@ -2768,7 +3223,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <div className="flex items-center justify-between p-4 bg-black/20 rounded-2xl">
                                                 <div className="space-y-1">
                                                     <h4 className="font-bold text-sm">Contador Regresivo</h4>
-                                                    <p className="text-[10px] text-tactile-text-sub uppercase tracking-widest font-black">Activar en el Display</p>
+                                                    <p className="text-[10px] text-tactile-text-sub capitalize tracking-widest font-black">Activar en el Display</p>
                                                 </div>
                                                 <button
                                                     onClick={() => setSettings({ showCountdown: !settings.showCountdown })}
@@ -2788,12 +3243,12 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 ) : (
                                                     <div className="w-full h-full flex flex-col items-center justify-center text-tactile-text-sub/20">
                                                         <Sparkles className="w-20 h-20 mb-4" />
-                                                        <span className="font-black text-xs uppercase tracking-[0.3em]">Sin Contenido</span>
+                                                        <span className="font-black text-xs capitalize tracking-[0.3em]">Sin Contenido</span>
                                                     </div>
                                                 )}
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-8 flex flex-col justify-end">
-                                                    <h3 className="text-2xl font-black italic">{theme.title || 'Título del Tema'}</h3>
-                                                    <p className="text-[10px] uppercase font-black tracking-widest text-primary mt-2">Tema de la Semana</p>
+                                                    <h3 className="text-2xl font-black ">{theme.title || 'Título del Tema'}</h3>
+                                                    <p className="text-[10px] capitalize font-black tracking-widest text-primary mt-2">Tema de la Semana</p>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -2813,11 +3268,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <div className="space-y-4">
                                                 {rehearsals.map(reh => (
                                                     <div key={reh.id} className="flex items-center gap-4 p-4 bg-black/20 rounded-2xl border border-white/5 group">
-                                                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black italic text-xs">
+                                                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black  text-xs">
                                                             {['D', 'L', 'M', 'X', 'J', 'V', 'S'][reh.dayOfWeek]}
                                                         </div>
                                                         <div className="flex-1">
-                                                            <h4 className="font-black text-sm uppercase italic">{reh.location}</h4>
+                                                            <h4 className="font-black text-sm capitalize ">{reh.location}</h4>
                                                             <p className="text-[10px] font-bold text-tactile-text-sub">{reh.time}</p>
                                                         </div>
                                                         <button
@@ -2837,7 +3292,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     className="tactile-btn tactile-btn-glass w-full justify-start gap-4 h-12 px-6"
                                                 >
                                                     <Plus className="w-4 h-4" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">Agregar Ensayos</span>
+                                                    <span className="text-[10px] font-black capitalize tracking-widest">Agregar Ensayos</span>
                                                 </button>
                                             </div>
                                         </TactileGlassCard>
@@ -2865,10 +3320,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         return (
                                                             <div key={date} className="flex items-center justify-between p-4 bg-black/20 rounded-2xl border border-white/5 relative group/row">
                                                                 <div className="flex flex-col">
-                                                                    <span className="text-[9px] font-black text-tactile-text-sub uppercase font-black tracking-widest mb-1 truncate">
+                                                                    <span className="text-[9px] font-black text-tactile-text-sub capitalize font-black tracking-widest mb-1 truncate">
                                                                         {format(parseISO(date), "EEEE d 'de' MMMM", { locale: es })}
                                                                     </span>
-                                                                    <span className={cn("font-black italic px-4 py-1.5 rounded-xl border border-white/5 bg-black/40 text-xs", uniform ? "text-primary border-primary/20" : "text-white/20")}>
+                                                                    <span className={cn("font-black  px-4 py-1.5 rounded-xl border border-white/5 bg-black/40 text-xs", uniform ? "text-primary border-primary/20" : "text-white/20")}>
                                                                         {uniform?.name || 'VESTUARIO NO DEFINIDO'}
                                                                     </span>
                                                                 </div>
@@ -2883,7 +3338,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                             <option key={u.id} value={u.id}>{u.name}</option>
                                                                         ))}
                                                                     </select>
-                                                                    <button className="tactile-btn tactile-btn-glass h-9 text-[9px] pointer-events-none group-hover/row:bg-primary group-hover/row:text-black transition-all">CAMBIAR</button>
+                                                                    <button className="tactile-btn tactile-btn-glass h-9 text-[9px] pointer-events-none group-hover/row:bg-[#576983] group-hover/row:text-black transition-all">CAMBIAR</button>
                                                                 </div>
                                                             </div>
                                                         )
@@ -2895,7 +3350,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                     <div className="col-span-1 md:col-span-12 space-y-6 mt-12">
                                         <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-xl font-black italic uppercase tracking-widest text-white">Avisos del Coro</h3>
+                                            <h3 className="text-xl font-black  capitalize tracking-widest text-white">Avisos del Coro</h3>
                                             <button
                                                 onClick={() => { setActiveTab('anuncios'); setNewAnn({ ...newAnn, category: 'choir' }); }}
                                                 className="tactile-btn tactile-btn-glass text-[9px] px-4 font-black"
@@ -2906,7 +3361,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         <div className="space-y-4">
                                             {announcements.filter(a => a.category === 'choir' || a.title.toLowerCase().includes('coro')).length === 0 ? (
                                                 <div className="p-12 border-2 border-dashed border-white/5 rounded-[2.5rem] text-center bg-black/20">
-                                                    <p className="text-tactile-text-sub font-bold uppercase tracking-widest text-xs">No hay avisos específicos para el coro</p>
+                                                    <p className="text-tactile-text-sub font-bold capitalize tracking-widest text-xs">No hay avisos específicos para el coro</p>
                                                 </div>
                                             ) : (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -2916,7 +3371,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                 <Bell className="w-4 h-4" />
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <h4 className="font-black text-sm uppercase italic truncate">{ann.title}</h4>
+                                                                <h4 className="font-black text-sm capitalize  truncate">{ann.title}</h4>
                                                                 <p className="text-[11px] text-tactile-text-sub line-clamp-2 mt-1">{ann.content}</p>
                                                             </div>
                                                             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -2960,7 +3415,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12">
-                                        <h2 className="text-4xl font-black italic uppercase tracking-tighter mb-8">Temas del <span className="text-tactile-text-sub">Display</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8">Temas del <span className="text-tactile-text-sub">Display</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-12">
@@ -2978,7 +3433,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 <div className="w-16 h-16 flex items-center justify-center p-2 rounded-2xl bg-white/5 border border-white/10 text-slate-500">
                                                     <XCircle className="w-10 h-10" />
                                                 </div>
-                                                <span className={cn("text-[10px] font-black uppercase tracking-widest", (settings.churchLogoUrl === '') ? "text-primary" : "text-tactile-text-sub")}>
+                                                <span className={cn("text-[10px] font-black capitalize tracking-widest", (settings.churchLogoUrl === '') ? "text-primary" : "text-tactile-text-sub")}>
                                                     Sin Logotipo
                                                 </span>
                                             </button>
@@ -2993,7 +3448,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                                     return (
                                                         <div key={slotIndex} className="relative group/slot h-full">
-                                                            <button
+                                                            <div
+                                                                role="button"
+                                                                tabIndex={0}
                                                                 onClick={() => {
                                                                     if (slotUrl) {
                                                                         saveSettingsToCloud({ churchLogoUrl: slotUrl });
@@ -3001,8 +3458,18 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         document.getElementById(`tactile-custom-logo-${slotIndex}`)?.click();
                                                                     }
                                                                 }}
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                                        e.preventDefault();
+                                                                        if (slotUrl) {
+                                                                            saveSettingsToCloud({ churchLogoUrl: slotUrl });
+                                                                        } else {
+                                                                            document.getElementById(`tactile-custom-logo-${slotIndex}`)?.click();
+                                                                        }
+                                                                    }
+                                                                }}
                                                                 className={cn(
-                                                                    "w-full flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 border-dashed transition-all h-full",
+                                                                    "w-full flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 border-dashed transition-all h-full cursor-pointer",
                                                                     isActive ? "bg-primary/20 border-primary/40 border-solid shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/20 border-white/10 hover:border-white/20"
                                                                 )}
                                                             >
@@ -3011,7 +3478,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         <div className="w-20 h-20 flex items-center justify-center p-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10">
                                                                             <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
                                                                         </div>
-                                                                        <span className={cn("text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-tactile-text-sub")}>
+                                                                        <span className={cn("text-[10px] font-black capitalize tracking-widest", isActive ? "text-primary" : "text-tactile-text-sub")}>
                                                                             Logo {slotIndex}
                                                                         </span>
                                                                         <button
@@ -3029,10 +3496,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/slot:border-primary/50 transition-colors">
                                                                             <Plus className="w-6 h-6 text-white/30 group-hover/slot:text-primary transition-colors" />
                                                                         </div>
-                                                                        <span className="text-[9px] font-black uppercase text-tactile-text-sub/40 tracking-widest">Logo {slotIndex}</span>
+                                                                        <span className="text-[9px] font-black capitalize text-tactile-text-sub/40 tracking-widest">Logo {slotIndex}</span>
                                                                     </div>
                                                                 )}
-                                                            </button>
+                                                            </div>
                                                             <input
                                                                 type="file"
                                                                 id={`tactile-custom-logo-${slotIndex}`}
@@ -3051,7 +3518,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     </div>
 
                                     <div className="col-span-1 md:col-span-4 space-y-4">
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-tactile-text-sub mb-4 ml-2">Plantillas Disponibles</h4>
+                                        <h4 className="text-[10px] font-black capitalize tracking-[0.3em] text-tactile-text-sub mb-4 ml-2">Plantillas Disponibles</h4>
                                         {[
                                             { id: 'cristal', label: 'Cristal Forge', icon: Sparkles, desc: 'Neo-Glassmorphism Premium' },
                                             { id: 'neon', label: 'Neon Forge', icon: Radio, desc: 'Retro-Futurista Vibrante' },
@@ -3072,8 +3539,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             >
                                                 <themeOpt.icon className="w-6 h-6" />
                                                 <div>
-                                                    <span className="font-black text-xs uppercase tracking-widest block">{themeOpt.label}</span>
-                                                    <span className="text-[9px] font-bold opacity-50 uppercase tracking-tighter">{themeOpt.desc}</span>
+                                                    <span className="font-black text-xs capitalize tracking-widest block">{themeOpt.label}</span>
+                                                    <span className="text-[9px] font-bold opacity-50 capitalize tracking-tighter">{themeOpt.desc}</span>
                                                 </div>
                                             </button>
                                         ))}
@@ -3085,7 +3552,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 <div className="space-y-6">
                                                     <TactileFontSelect
                                                         label="TIPOGRAFÍA PRINCIPAL"
-                                                        value={settings.fontMain || calendarStyles.fontFamily || 'Outfit'}
+                                                        value={settings.fontMain || calendarStyles.fontFamily || 'Poppins'}
                                                         onChange={(val: any) => {
                                                             setSettings({ fontMain: val });
                                                             setCalendarStyles({ fontFamily: val });
@@ -3095,7 +3562,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     />
 
                                                     <div className="space-y-4 pt-2">
-                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
                                                         <div className="grid grid-cols-5 gap-2">
                                                             {[
                                                                 { label: 'THIN', weight: '300' },
@@ -3123,7 +3590,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between ml-2">
-                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub">TRANSICIONES ANIMADAS</label>
+                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub">TRANSICIONES ANIMADAS</label>
                                                             <button
                                                                 onClick={() => {
                                                                     const newValue = settings.transitionsEnabled === false;
@@ -3141,11 +3608,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                 )} />
                                                             </button>
                                                         </div>
-                                                        <p className="text-[8px] font-bold text-tactile-text-sub/40 uppercase tracking-widest ml-2">¿ACTUAR CON EFECTOS DE MOVIMIENTO?</p>
+                                                        <p className="text-[8px] font-bold text-tactile-text-sub/40 capitalize tracking-widest ml-2">¿ACTUAR CON EFECTOS DE MOVIMIENTO?</p>
                                                     </div>
 
                                                     <div className="space-y-4">
-                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TIEMPO DE CADA SLIDE (SEGUNDOS)</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">TIEMPO DE CADA SLIDE (SEGUNDOS)</label>
                                                         <div className="grid grid-cols-4 gap-2">
                                                             {[5, 12, 20, 30].map((sec) => {
                                                                 const themeId = calendarStyles.template || 'nocturno';
@@ -3161,7 +3628,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                             saveSettingsToCloud({ [durationKey]: sec });
                                                                         }}
                                                                         className={cn(
-                                                                            "tactile-btn justify-center font-black italic",
+                                                                            "tactile-btn justify-center font-black ",
                                                                             isActive ? "tactile-btn-primary" : "tactile-btn-glass"
                                                                         )}
                                                                     >
@@ -3170,12 +3637,12 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                 );
                                                             })}
                                                         </div>
-                                                        <p className="text-[8px] font-bold text-primary/60 uppercase tracking-widest ml-2">GUARDADO POR TEMA: {calendarStyles.template?.toUpperCase()}</p>
+                                                        <p className="text-[8px] font-bold text-primary/60 capitalize tracking-widest ml-2">GUARDADO POR TEMA: {calendarStyles.template?.toUpperCase()}</p>
                                                     </div>
 
                                                     {calendarStyles.template === 'iglesia' && (
                                                         <div className="space-y-4">
-                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE CÁTEDRA</label>
+                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE CÁTEDRA</label>
                                                             <div className="flex gap-4">
                                                                 <button
                                                                     onClick={() => setSettings({ iglesiaVariant: 'light' })}
@@ -3202,7 +3669,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     )}
 
                                                     <div className="space-y-4">
-                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">TRANSICIÓN DE PANTALLA</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">TRANSICIÓN DE PANTALLA</label>
                                                         <div className="flex flex-col gap-3">
                                                             {[
                                                                 { id: 'metro', label: 'ESTILO METRO (LÍNEA CONTINUA)', icon: Radio },
@@ -3227,7 +3694,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         </div>
 
                                                         <div className="mt-6 space-y-4">
-                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">VELOCIDAD DE TRANSICIÓN</label>
+                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">VELOCIDAD DE TRANSICIÓN</label>
                                                             <div className="flex gap-2">
                                                                 {[1.2, 2.4, 4.0].map((speed) => (
                                                                     <button
@@ -3248,44 +3715,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         </div>
                                                     </div>
 
-                                                    {calendarStyles.template === 'iglesia' && (
-                                                        <div className="space-y-4 mt-6">
-                                                            <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE CÁTEDRA</label>
-                                                            <div className="flex gap-4">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setSettings({ iglesiaVariant: 'light' });
-                                                                        saveSettingsToCloud({ iglesiaVariant: 'light' });
-                                                                    }}
-                                                                    className={cn(
-                                                                        "tactile-btn flex-1 justify-center gap-3",
-                                                                        settings.iglesiaVariant === 'light' ? "tactile-btn-primary" : "tactile-btn-glass"
-                                                                    )}
-                                                                >
-                                                                    <Sun className="w-4 h-4" />
-                                                                    CLARO
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setSettings({ iglesiaVariant: 'dark' });
-                                                                        saveSettingsToCloud({ iglesiaVariant: 'dark' });
-                                                                    }}
-                                                                    className={cn(
-                                                                        "tactile-btn flex-1 justify-center gap-3",
-                                                                        settings.iglesiaVariant === 'dark' ? "tactile-btn-primary" : "tactile-btn-glass"
-                                                                    )}
-                                                                >
-                                                                    <Moon className="w-4 h-4" />
-                                                                    OSCURO
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    )}
 
 
 
                                                     <div className="space-y-4">
-                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">EFECTOS ESPECIALES</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">EFECTOS ESPECIALES</label>
                                                         <div className="flex gap-4">
                                                             <button
                                                                 onClick={() => setCalendarStyles({ showGlassEffect: !calendarStyles.showGlassEffect })}
@@ -3314,67 +3748,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         <div className="w-20 h-20 rounded-full bg-primary/20 border-2 border-primary/40 flex items-center justify-center mb-4">
                                                             <Monitor className="w-10 h-10 text-primary" />
                                                         </div>
-                                                        <h4 className="font-black text-sm uppercase italic">Vista Previa</h4>
+                                                        <h4 className="font-black text-sm capitalize ">Vista Previa</h4>
                                                         <p className="text-[10px] text-tactile-text-sub mt-2 leading-relaxed">El tema se aplicará instantáneamente a todas las pantallas conectadas.</p>
-                                                    </div>
-
-                                                    <div className="mt-8 space-y-4">
-                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2 flex justify-between">
-                                                            <span>ESCALA DE DISPLAY (TV OPTIMIZACIÓN)</span>
-                                                            <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
-                                                        </label>
-                                                        <div className="flex gap-2">
-                                                            {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
-                                                                <button
-                                                                    key={sc}
-                                                                    onClick={() => {
-                                                                        setSettings({ displayScale: sc });
-                                                                        saveSettingsToCloud({ displayScale: sc });
-                                                                    }}
-                                                                    className={cn(
-                                                                        "tactile-btn flex-1 text-[10px] py-2",
-                                                                        (settings.displayScale || 1.0) === sc ? "tactile-btn-orange" : "tactile-btn-glass"
-                                                                    )}
-                                                                >
-                                                                    {Math.round(sc * 100)}%
-                                                                </button>
-                                                            ))}
-                                                        </div>
-                                                        <p className="text-[8px] text-tactile-text-sub ml-2 italic leading-relaxed">
-                                                            * Si el contenido se ve cortado en su TV (Overscan), baje la escala al 90% o 80%.
-                                                        </p>
-                                                    </div>
-
-                                                    <div className="mt-8 space-y-4">
-                                                        <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">UNIDAD DE CLIMA</label>
-                                                        <div className="flex gap-2">
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSettings({ weatherUnit: 'celsius' });
-                                                                    saveSettingsToCloud({ weatherUnit: 'celsius' });
-                                                                }}
-                                                                className={cn(
-                                                                    "tactile-btn flex-1 justify-center gap-3",
-                                                                    settings.weatherUnit === 'celsius' ? "tactile-btn-primary" : "tactile-btn-glass"
-                                                                )}
-                                                            >
-                                                                <Thermometer className="w-4 h-4" />
-                                                                CENTÍGRADOS (°C)
-                                                            </button>
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSettings({ weatherUnit: 'fahrenheit' });
-                                                                    saveSettingsToCloud({ weatherUnit: 'fahrenheit' });
-                                                                }}
-                                                                className={cn(
-                                                                    "tactile-btn flex-1 justify-center gap-3",
-                                                                    settings.weatherUnit === 'fahrenheit' || !settings.weatherUnit ? "tactile-btn-primary" : "tactile-btn-glass"
-                                                                )}
-                                                            >
-                                                                <Thermometer className="w-4 h-4" />
-                                                                FAHRENHEIT (°F)
-                                                            </button>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -3382,7 +3757,6 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     </div>
                                 </motion.div>
                             )}
-
                         </AnimatePresence>
                         {/* Retro-Light Glow (Behind everything) */}
                         <div className="fixed bottom-0 left-0 right-0 h-2 bg-orange-600 blur-xl opacity-20 pointer-events-none" />
@@ -3406,7 +3780,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         onClick={(e) => e.stopPropagation()}
                                     >
                                         <div className="p-8 border-b border-white/5 flex items-center justify-between">
-                                            <h2 className="text-2xl font-black italic uppercase tracking-tighter">
+                                            <h2 className="text-2xl font-black  capitalize tracking-tighter">
                                                 {editingMember ? 'Editar' : 'Nuevo'} <span className="text-primary">Miembro</span>
                                             </h2>
                                             <button
@@ -3468,7 +3842,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     }}
                                                 />
                                             </div>
-                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary mt-4">Foto de Perfil</p>
+                                            <p className="text-[9px] font-black capitalize tracking-[0.2em] text-primary mt-4">Foto de Perfil</p>
                                         </div>
 
                                         <div className="p-8 grid grid-cols-2 gap-8 max-h-[50vh] overflow-y-auto no-scrollbar">
@@ -3541,7 +3915,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 icon={Flame}
                                             />
                                             <div className="col-span-2 space-y-2">
-                                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">ACERCA DE / BIOGRAFÍA</label>
+                                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">ACERCA DE / BIOGRAFÍA</label>
                                                 <textarea
                                                     value={newMemberData.bio || ''}
                                                     onChange={(e) => setNewMemberData({ ...newMemberData, bio: e.target.value })}
@@ -3550,15 +3924,15 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 />
                                             </div>
                                             <div className="col-span-2 space-y-4">
-                                                <label className="text-[9px] font-black uppercase tracking-[0.2em] text-tactile-text-sub ml-2">PRIVILEGIOS / ACCESOS</label>
-                                                <div className="flex flex-wrap gap-2">
+                                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PRIVILEGIOS / ACCESOS</label>
+                                                <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl">
                                                     {[
-                                                        { id: 'admin', label: 'Administrador' },
-                                                        { id: 'monitor', label: 'Pase de Lista' },
-                                                        { id: 'leader', label: 'Director' },
-                                                        { id: 'choir', label: 'Gestión Coro' },
-                                                        { id: 'kids_leader', label: 'Esc. Dominical' },
-                                                        { id: 'youth_leader', label: 'Líder Juvenil' }
+                                                        { id: 'admin', label: 'ADMIN' },
+                                                        { id: 'monitor', label: 'PASE LISTA' },
+                                                        { id: 'leader', label: 'DIRECTOR' },
+                                                        { id: 'choir', label: 'CORO' },
+                                                        { id: 'kids_leader', label: 'DOMINICAL' },
+                                                        { id: 'youth_leader', label: 'JUVENIL' }
                                                     ].map(priv => (
                                                         <button
                                                             key={priv.id}
@@ -3570,10 +3944,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                 setNewMemberData({ ...newMemberData, privileges: next as any });
                                                             }}
                                                             className={cn(
-                                                                "px-4 h-10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border",
+                                                                "px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                                 (newMemberData.privileges || []).includes(priv.id as any)
-                                                                    ? "bg-primary/20 border-primary/40 text-primary"
-                                                                    : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
+                                                                    ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
+                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
                                                             )}
                                                         >
                                                             {priv.label}
@@ -3589,7 +3963,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     setShowAddMember(false);
                                                     setEditingMember(null);
                                                 }}
-                                                className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black uppercase tracking-widest"
+                                                className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black capitalize tracking-widest"
                                             >
                                                 Cancelar
                                             </button>
@@ -3640,7 +4014,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 }}
                                                 disabled={isSaving}
                                                 className={cn(
-                                                    "tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black uppercase tracking-widest shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]",
+                                                    "tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black capitalize tracking-widest shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]",
                                                     isSaving && "opacity-50 cursor-not-allowed"
                                                 )}
                                             >
@@ -3662,8 +4036,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                 >
                                     <div className="p-8 border-b border-white/5 flex items-center justify-between">
                                         <div>
-                                            <h3 className="text-2xl font-black italic uppercase tracking-tighter">Gestionar <span className="text-primary truncate">Ensayos</span></h3>
-                                            <p className="text-[10px] font-bold text-tactile-text-sub uppercase tracking-widest mt-1">Configuración del Coro</p>
+                                            <h3 className="text-2xl font-black  capitalize tracking-tighter">Gestionar <span className="text-primary truncate">Ensayos</span></h3>
+                                            <p className="text-[10px] font-bold text-tactile-text-sub capitalize tracking-widest mt-1">Configuración del Coro</p>
                                         </div>
                                         <button onClick={() => setShowRehearsalModal(false)} className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center"><Trash2 className="w-4 h-4" /></button>
                                     </div>
@@ -3756,12 +4130,12 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 />
                                             </div>
                                             <div className="mb-4">
-                                                <h2 className="text-3xl font-black italic uppercase tracking-tighter text-white">{selectedMemberForHistory.name}</h2>
+                                                <h2 className="text-3xl font-black  capitalize tracking-tighter text-white">{selectedMemberForHistory.name}</h2>
                                                 <div className="flex items-center gap-2 mt-1">
-                                                    <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-primary text-black">
+                                                    <span className="text-[10px] font-black capitalize tracking-widest px-3 py-1 rounded-full bg-primary text-black">
                                                         {selectedMemberForHistory.member_group}
                                                     </span>
-                                                    <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest italic">{selectedMemberForHistory.role}</span>
+                                                    <span className="text-[10px] font-bold text-white/40 capitalize tracking-widest ">{selectedMemberForHistory.role}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -3777,28 +4151,28 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             ].map((stat, i) => (
                                                 <div key={i} className="bg-white/[0.02] border border-white/5 p-4 rounded-3xl flex flex-col items-center justify-center text-center">
                                                     <stat.icon className={cn("w-5 h-5 mb-2", stat.color)} />
-                                                    <div className="text-xl font-black italic">{stat.value}</div>
-                                                    <p className="text-[8px] font-black uppercase text-white/30 tracking-widest mt-1">{stat.label}</p>
+                                                    <div className="text-xl font-black ">{stat.value}</div>
+                                                    <p className="text-[8px] font-black capitalize text-white/30 tracking-widest mt-1">{stat.label}</p>
                                                 </div>
                                             ))}
                                         </div>
 
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between px-2">
-                                                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50">HISTORIAL RECIENTE</h4>
-                                                <span className="text-[9px] font-bold text-primary italic uppercase tracking-widest">Últimos 30 días</span>
+                                                <h4 className="text-[10px] font-black capitalize tracking-[0.2em] text-white/50">HISTORIAL RECIENTE</h4>
+                                                <span className="text-[9px] font-bold text-primary  capitalize tracking-widest">Últimos 30 días</span>
                                             </div>
                                             
                                             <div className="bg-black/20 border border-white/5 rounded-[2rem] p-6 max-h-[300px] overflow-y-auto custom-scrollbar">
                                                 {isLoadingHistory ? (
                                                     <div className="flex flex-col items-center justify-center py-12 gap-4">
                                                         <RefreshCw className="w-8 h-8 text-primary animate-spin" />
-                                                        <p className="text-[10px] font-black uppercase tracking-widest text-white/30 italic">Cargando historial...</p>
+                                                        <p className="text-[10px] font-black capitalize tracking-widest text-white/30 ">Cargando historial...</p>
                                                     </div>
                                                 ) : memberHistory.length === 0 ? (
                                                     <div className="py-12 text-center">
                                                         <Info className="w-8 h-8 text-white/10 mx-auto mb-4" />
-                                                        <p className="text-[10px] font-black uppercase tracking-widest text-white/20 italic">No hay registros previos</p>
+                                                        <p className="text-[10px] font-black capitalize tracking-widest text-white/20 ">No hay registros previos</p>
                                                     </div>
                                                 ) : (
                                                     <div className="space-y-3">
@@ -3813,14 +4187,14 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             return Object.entries(byDate).slice(0, 14).map(([date, records]) => (
                                                                 <div key={date} className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-colors">
                                                                     <div className="flex flex-col">
-                                                                        <span className="text-[10px] font-black uppercase italic text-white/80">{format(parseISO(date), "EEEE, d 'de' MMMM", { locale: es })}</span>
+                                                                        <span className="text-[10px] font-black capitalize  text-white/80">{format(parseISO(date), "EEEE, d 'de' MMMM", { locale: es })}</span>
                                                                         <div className="flex gap-1 mt-1">
                                                                             {['5am', '9am', 'evening'].map(type => {
                                                                                 const rec = records.find(r => r.session_type === type);
                                                                                 const present = rec?.present;
                                                                                 return (
                                                                                     <div key={type} className={cn(
-                                                                                        "px-2 py-0.5 rounded text-[7px] font-black uppercase tracking-tighter transition-all",
+                                                                                        "px-2 py-0.5 rounded text-[7px] font-black capitalize tracking-tighter transition-all",
                                                                                         present ? "bg-primary/20 text-primary border border-primary/30" : "bg-white/5 text-white/20 border border-white/5"
                                                                                     )}>
                                                                                         {type === '5am' ? '5 AM' : type === '9am' ? '9 AM' : 'TARDE'}
@@ -3830,9 +4204,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                                         </div>
                                                                     </div>
                                                                     <div className="flex flex-col items-end">
-                                                                        <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest">{records.some(r => r.present) ? 'ASISTIÓ' : 'FALTA'}</span>
+                                                                        <span className="text-[8px] font-bold text-white/20 capitalize tracking-widest">{records.some(r => r.present) ? 'ASISTIÓ' : 'FALTA'}</span>
                                                                         {records.some(r => r.present) && (
-                                                                            <span className="text-[9px] font-black text-emerald-400 mt-1 italic">✓ Visto</span>
+                                                                            <span className="text-[9px] font-black text-emerald-400 mt-1 ">✓ Visto</span>
                                                                         )}
                                                                     </div>
                                                                 </div>
@@ -3845,7 +4219,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                         <button 
                                             onClick={() => setSelectedMemberForHistory(null)}
-                                            className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-white/10 transition-all active:scale-[0.98]"
+                                            className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black capitalize tracking-[0.2em] hover:bg-white/10 transition-all active:scale-[0.98]"
                                         >
                                             CERRAR DETALLE
                                         </button>

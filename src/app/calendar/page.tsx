@@ -51,7 +51,7 @@ export default function CalendarPage() {
     };
 
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+        <div className="min-h-screen text-foreground transition-colors duration-500">
             <style jsx global>{`
                 @media print {
                     @page {
@@ -136,32 +136,38 @@ export default function CalendarPage() {
                 </div>
 
                 {/* Navigation & Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
-                    <div className="space-y-1 md:space-y-2 w-full md:w-auto text-center md:text-left">
-                        <Link href="/" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors mb-2">
-                            <ArrowLeft className="w-3 h-3" /> Volver al Inicio
-                        </Link>
-                        <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4">
-                            <CalendarIcon className="w-10 h-10 md:w-12 md:h-12 text-primary" />
-                            Calendario <span className="text-primary lg:not-italic">Especial</span>
-                        </h1>
-                        <p className="text-slate-500 font-medium tracking-tight text-xs md:text-base">Servicios, oraciones y temas semanales</p>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12 no-print">
+                    <div className="flex items-center gap-6">
+                        <div className="w-16 h-16 rounded-[2rem] bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                             <CalendarIcon className="w-8 h-8 text-primary animate-pulse" />
+                        </div>
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-2 leading-none">
+                                <div className="w-1.5 h-1.5 bg-primary rounded-full animate-ping" />
+                                Special Event Calendar
+                            </div>
+                            <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic leading-none">
+                                Calendario <span className="text-primary lg:not-italic">ESPECIAL</span>
+                            </h1>
+                            <p className="text-muted-foreground font-bold tracking-tight text-sm mt-2 opacity-80">Servicios, oraciones y temas semanales integrados.</p>
+                        </div>
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                         <Button
                             onClick={handlePrint}
-                            className="w-full sm:w-auto bg-foreground/5 border border-border/40 bg-foreground/10 text-foreground font-black uppercase tracking-widest text-[10px] h-12 px-6 rounded-2xl gap-2 order-2 sm:order-1"
+                            variant="primitivo"
+                            className="w-full sm:w-auto h-14 px-8 gap-3 order-2 sm:order-1"
                         >
-                            <Printer className="w-4 h-4 text-primary" /> Imprimir / PDF
+                            <Printer className="w-4 h-4 text-primary-foreground" /> IMPRIMIR / PDF
                         </Button>
 
-                        <div className="flex items-center justify-between sm:justify-center gap-4 bg-foreground/5 p-2 rounded-2xl border border-border/20 backdrop-blur-xl w-full sm:w-auto order-1 sm:order-2">
-                            <Button variant="ghost" size="icon" className="rounded-xl bg-foreground/10 h-10 w-10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() - 1))}>
+                        <div className="flex items-center justify-between sm:justify-center gap-4 bg-black/40 p-2 rounded-2xl border border-white/5 backdrop-blur-3xl w-full sm:w-auto order-1 sm:order-2 shadow-2xl">
+                            <Button variant="ghost" size="icon" className="rounded-xl bg-white/5 h-10 w-10 hover:bg-white/10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() - 1))}>
                                 <ChevronLeft className="w-5 h-5 text-slate-400" />
                             </Button>
-                            <h2 className="text-base md:text-lg font-black uppercase italic text-foreground min-w-[120px] text-center">{monthName} {year}</h2>
-                            <Button variant="ghost" size="icon" className="rounded-xl bg-foreground/10 h-10 w-10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() + 1))}>
+                            <h2 className="text-base md:text-lg font-black uppercase italic text-foreground min-w-[140px] text-center tracking-tight">{monthName} {year}</h2>
+                            <Button variant="ghost" size="icon" className="rounded-xl bg-white/5 h-10 w-10 hover:bg-white/10" onClick={() => setCurrentDate(new Date(year, currentDate.getMonth() + 1))}>
                                 <ChevronRight className="w-5 h-5 text-slate-400" />
                             </Button>
                         </div>
@@ -172,14 +178,15 @@ export default function CalendarPage() {
 
                     {/* Calendar Grid */}
                     <div className="lg:col-span-3">
-                        <Card className="glass-card border-none bg-foreground/5 overflow-hidden">
+                        <Card className="glass-card border-none bg-black/40 overflow-hidden rounded-[2.5rem] shadow-2xl relative">
+                             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
                             <div className="overflow-x-auto no-scrollbar scroll-smooth">
-                                <div className="min-w-[700px] md:min-w-0">
+                                <div className="min-w-[750px] md:min-w-0">
                                     <div className="grid grid-cols-7 border-b border-border/20 bg-white/[0.02] calendar-grid-header">
                                         {['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'].map((day, i) => (
                                             <div key={day} className={cn(
                                                 "py-4 text-center text-[10px] font-black uppercase tracking-[0.2em]",
-                                                i === 0 ? "text-rose-500" : "text-slate-500"
+                                                i === 0 ? "text-rose-500" : "text-muted-foreground"
                                             )}>
                                                 {day}
                                             </div>
@@ -196,8 +203,8 @@ export default function CalendarPage() {
 
                                             return (
                                                 <div key={day} className={cn(
-                                                    "h-28 border-b border-r border-border/20 p-2 transition-all duration-300 group hover:bg-white/[0.02] relative",
-                                                    isToday && "bg-primary/[0.03]"
+                                                    "h-32 border-b border-r border-white/5 p-3 transition-all duration-500 group hover:bg-white/[0.04] relative",
+                                                    isToday && "bg-primary/[0.05]"
                                                 )}>
                                                     <div className="flex justify-between items-start">
                                                         <span className={cn(
@@ -237,46 +244,50 @@ export default function CalendarPage() {
 
                     {/* Side Info / Legend */}
                     <div className="space-y-6 no-print">
-                        <Card className="glass-card border-l-4 border-l-primary bg-primary/5">
-                            <CardHeader>
-                                <CardTitle className="text-sm font-black uppercase flex items-center gap-2">
+                        <Card className="glass-card border-none bg-black/40 rounded-[2rem] relative overflow-hidden group">
+                             <div className="absolute top-0 left-0 w-1 h-full bg-primary/50" />
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3 text-foreground">
                                     <BookOpen className="w-4 h-4 text-primary" /> Tema Principal
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="p-3 bg-foreground/5 rounded-xl border border-border/20">
-                                    <p className="text-[10px] font-bold text-slate-500 uppercase">Período Actual</p>
-                                    <p className="text-sm font-bold text-foreground mt-1">"{theme.title}"</p>
-                                    <p className="text-[10px] text-slate-400 mt-2 line-clamp-3">{theme.description}</p>
+                            <CardContent className="space-y-4 pb-8">
+                                <div className="p-5 bg-white/[0.02] rounded-2xl border border-white/5 shadow-inner">
+                                    <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none mb-3">Ciclo de Enseñanza</p>
+                                    <p className="text-lg font-black text-foreground leading-tight italic tracking-tighter">"{theme.title}"</p>
+                                    {theme.description && (
+                                        <p className="text-[11px] text-muted-foreground font-bold mt-4 leading-relaxed line-clamp-4 opacity-80">{theme.description}</p>
+                                    )}
                                 </div>
                             </CardContent>
                         </Card>
 
-                        <Card className="glass-card border-none bg-foreground/5">
-                            <CardHeader>
-                                <CardTitle className="text-sm font-black uppercase flex items-center gap-2">
-                                    <Star className="w-4 h-4 text-amber-500" /> Eventos Próximos
+                        <Card className="glass-card border-none bg-black/40 rounded-[2rem] relative overflow-hidden group">
+                             <div className="absolute top-0 left-0 w-1 h-full bg-amber-500/50" />
+                            <CardHeader className="pb-4">
+                                <CardTitle className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3 text-foreground">
+                                    <Star className="w-4 h-4 text-amber-500 animate-pulse" /> Eventos Próximos
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="flex gap-4 items-start pb-4 border-b border-border/20">
-                                    <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex flex-col items-center justify-center shrink-0">
-                                        <span className="text-xs font-black leading-none">22</span>
-                                        <span className="text-[8px] font-bold uppercase">Feb</span>
+                            <CardContent className="space-y-4 pb-8">
+                                <div className="flex gap-5 items-center p-4 rounded-2xl hover:bg-white/[0.02] transition-colors group/ev cursor-pointer">
+                                    <div className="w-12 h-12 rounded-[1.2rem] bg-amber-500/10 border border-amber-500/20 text-amber-500 flex flex-col items-center justify-center shrink-0 group-hover/ev:scale-110 transition-transform shadow-xl">
+                                        <span className="text-sm font-black leading-none">22</span>
+                                        <span className="text-[9px] font-black uppercase">Feb</span>
                                     </div>
                                     <div>
-                                        <p className="text-xs font-black text-foreground uppercase italic">Dominical General</p>
-                                        <p className="text-[10px] text-slate-500">Servicio especial de santa cena local.</p>
+                                        <p className="text-[11px] font-black text-foreground uppercase italic tracking-tighter leading-none mb-1">Dominical General</p>
+                                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">Servicio Especial</p>
                                     </div>
                                 </div>
-                                <div className="flex gap-4 items-start">
-                                    <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-500 flex flex-col items-center justify-center shrink-0">
-                                        <span className="text-xs font-black leading-none">14</span>
-                                        <span className="text-[8px] font-bold uppercase">Mar</span>
+                                <div className="flex gap-5 items-center p-4 rounded-2xl hover:bg-white/[0.02] transition-colors group/ev cursor-pointer">
+                                    <div className="w-12 h-12 rounded-[1.2rem] bg-rose-500/10 border border-rose-500/20 text-rose-500 flex flex-col items-center justify-center shrink-0 group-hover/ev:scale-110 transition-transform shadow-xl">
+                                        <span className="text-sm font-black leading-none">14</span>
+                                        <span className="text-[9px] font-black uppercase">Mar</span>
                                     </div>
                                     <div>
-                                        <p className="text-xs font-black text-foreground uppercase italic">Aniversario Local</p>
-                                        <p className="text-[10px] text-slate-500">Celebración de los 10 años de la iglesia.</p>
+                                        <p className="text-[11px] font-black text-foreground uppercase italic tracking-tighter leading-none mb-1">Aniversario Local</p>
+                                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">Celebración</p>
                                     </div>
                                 </div>
                             </CardContent>

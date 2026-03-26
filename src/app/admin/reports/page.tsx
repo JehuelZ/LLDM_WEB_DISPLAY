@@ -32,7 +32,7 @@ const StatCard = ({ title, value, change, trend, icon: Icon, color }: any) => (
                 </div>
             </div>
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">{title}</h3>
-            <p className="text-3xl font-black text-white italic tracking-tighter">{value}</p>
+            <p className="text-3xl font-black text-white tracking-tighter">{value}</p>
         </CardContent>
     </Card>
 );
@@ -41,14 +41,13 @@ const AttendanceBar = ({ label, percent, color, value }: any) => (
     <div className="space-y-2">
         <div className="flex justify-between items-end">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</span>
-            <span className="text-sm font-black text-white italic">{value} <span className="text-[10px] text-slate-500 not-italic uppercase tracking-widest font-bold ml-1">Miembros</span></span>
+            <span className="text-sm font-black text-white ">{value} <span className="text-[10px] text-slate-500 not-italic uppercase tracking-widest font-bold ml-1">Miembros</span></span>
         </div>
         <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
             <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${percent}%` }}
                 className={cn("h-full transition-all duration-1000", color)}
-                style={{ boxShadow: '0 0 10px currentColor' }}
             />
         </div>
     </div>
@@ -73,7 +72,7 @@ export default function ReportsPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
                 <div>
-                    <h2 className="text-4xl font-black tracking-tighter text-white uppercase italic flex items-center gap-3">
+                    <h2 className="text-4xl font-black tracking-tighter text-white uppercase flex items-center gap-3">
                         <FileText className="h-10 w-10 text-emerald-500" />
                         Reportes <span className="text-emerald-500">Sintetizados</span>
                     </h2>
@@ -120,7 +119,7 @@ export default function ReportsPage() {
             <div className="hidden print:block border-b-4 border-emerald-500 pb-6 mb-8">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-4xl font-black uppercase italic italic text-emerald-600">LLDM RODEO APP</h1>
+                        <h1 className="text-4xl font-black uppercase italic text-emerald-600">LLDM RODEO APP</h1>
                         <p className="uppercase tracking-[0.3em] font-bold text-slate-600">Reporte Mensual de Asistencia</p>
                     </div>
                     <div className="text-right">
@@ -170,17 +169,17 @@ export default function ReportsPage() {
                 {/* Groups Breakdown */}
                 <Card className="glass-card bg-white/5 border-white/10 lg:col-span-1 border-t-4 border-t-primary">
                     <CardHeader>
-                        <CardTitle className="text-xl font-black uppercase italic text-white flex items-center gap-3">
+                        <CardTitle className="text-xl font-black uppercase text-white flex items-center gap-3">
                             <TrendingUp className="w-5 h-5 text-primary" />
                             Distribución por Grupos
                         </CardTitle>
                         <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Resumen de participación activa</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8 pt-4">
-                        <AttendanceBar label=" Adultos (Varones/Hnas)" percent={0} value="0" color="bg-primary shadow-primary/50" />
-                        <AttendanceBar label="Solos y Solas" percent={0} value="0" color="bg-emerald-500 shadow-emerald-500/50" />
-                        <AttendanceBar label="Niños (Escuela Dominical)" percent={0} value="0" color="bg-cyan-400 shadow-cyan-400/50" />
-                        <AttendanceBar label="Miembros del Coro" percent={0} value="0" color="bg-indigo-500 shadow-indigo-500/50" />
+                        <AttendanceBar label=" Adultos (Varones/Hnas)" percent={0} value="0" color="bg-primary" />
+                        <AttendanceBar label="Solos y Solas" percent={0} value="0" color="bg-emerald-500" />
+                        <AttendanceBar label="Niños (Escuela Dominical)" percent={0} value="0" color="bg-cyan-400" />
+                        <AttendanceBar label="Miembros del Coro" percent={0} value="0" color="bg-indigo-500" />
 
                         <div className="pt-6 border-t border-white/5 flex items-center gap-3">
                             <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
@@ -188,7 +187,7 @@ export default function ReportsPage() {
                             </div>
                             <div>
                                 <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Miembros Registrados</p>
-                                <p className="text-2xl font-black text-white italic tracking-tighter">0</p>
+                                <p className="text-2xl font-black text-white tracking-tighter">0</p>
                             </div>
                         </div>
                     </CardContent>
@@ -198,7 +197,7 @@ export default function ReportsPage() {
                 <Card className="glass-card bg-white/5 border-white/10 lg:col-span-2 border-t-4 border-t-emerald-500">
                     <CardHeader className="flex flex-row items-center justify-between">
                         <div>
-                            <CardTitle className="text-xl font-black uppercase italic text-white flex items-center gap-3">
+                            <CardTitle className="text-xl font-black uppercase text-white flex items-center gap-3">
                                 <Flame className="w-5 h-5 text-emerald-500" />
                                 Fidelidad de Responsabilidades
                             </CardTitle>
@@ -223,7 +222,7 @@ export default function ReportsPage() {
                                 <tbody className="divide-y divide-white/5">
                                     {([].map((row: any, i) => (
                                         <tr key={i} className="group hover:bg-white/5 transition-colors">
-                                            <td colSpan={5} className="py-8 text-center text-xs text-slate-500 font-bold uppercase tracking-widest italic">No hay datos de eficiencia registrados.</td>
+                                            <td colSpan={5} className="py-8 text-center text-xs text-slate-500 font-bold uppercase tracking-widest ">No hay datos de eficiencia registrados.</td>
                                         </tr>
                                     )))}
                                 </tbody>

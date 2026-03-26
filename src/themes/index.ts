@@ -37,6 +37,7 @@ export const ALL_THEMES: Record<string, Theme> = {
     'nocturno': MidnightGlowTheme,
     'neon': NeonForgeTheme,
     'luna': LunaPremiumTheme,
+    'primitivo': IglesiaTheme,
 };
 
 

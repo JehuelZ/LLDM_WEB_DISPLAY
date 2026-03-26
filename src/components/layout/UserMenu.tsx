@@ -110,7 +110,7 @@ export function UserMenu() {
                     isOpen ? "bg-primary/20 ring-2 ring-primary/30 shadow-lg shadow-primary/10" : "hover:bg-foreground/5"
                 )}
             >
-                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/30 shadow-sm relative group bg-foreground/5 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full overflow-hidden border border-primary/60 shadow-sm relative group bg-foreground/5 flex items-center justify-center">
                     {currentUser.avatar ? (
                         <img
                             src={currentUser.avatar}
@@ -145,7 +145,7 @@ export function UserMenu() {
                         {/* Header Profile Info */}
                         <div className="p-5 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 border-b border-border/10">
                             <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-2xl overflow-hidden border border-primary/30 shadow-inner bg-foreground/5 flex items-center justify-center">
+                                <div className="w-14 h-14 rounded-2xl overflow-hidden border border-primary/60 shadow-inner bg-foreground/5 flex items-center justify-center">
                                     {currentUser.avatar ? (
                                         <img src={currentUser.avatar} className="w-full h-full object-cover" alt="" />
                                     ) : (
@@ -243,7 +243,7 @@ export function UserMenu() {
                                     router.push('/login');
                                     setIsOpen(false);
                                 }}
-                                className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-red-500/10 text-slate-400 hover:text-red-500 transition-all group"
+                                className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-all group"
                             >
                                 <div className="w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center border border-border/10 group-hover:bg-red-500/10 transition-all">
                                     <LogOut className="w-4 h-4" />

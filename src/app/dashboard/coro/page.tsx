@@ -79,52 +79,64 @@ export default function CoroDashboard() {
     const ledCount = currentUser.stats?.participation?.led || 0;
 
     return (
-        <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+        <div className="min-h-screen text-foreground transition-colors duration-500">
             <Header />
             <main className="container mx-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8 animate-in fade-in duration-700">
 
                 {/* Enhanced Hero Section for Choir Leader */}
                 <section className="animate-in fade-in slide-in-from-top-8 duration-1000">
-                    <div className="glass-card p-8 md:p-10 rounded-[3rem] border-secondary/10 bg-secondary/[0.02] backdrop-blur-3xl overflow-hidden relative border">
+                    <div className="glass-card p-8 md:p-12 rounded-[3.5rem] border-secondary/10 bg-black/40 backdrop-blur-3xl overflow-hidden relative border group">
+                        {/* Interactive Aura */}
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-secondary/20 transition-all duration-1000" />
+                        
                         <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
-                            <Music className="w-64 h-64 text-secondary" />
+                            <Music className="w-64 h-64 text-secondary rotate-12" />
                         </div>
 
                         <div className="flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
-                            <div className="flex flex-col md:flex-row items-center gap-6">
-                                <div className="relative group">
-                                    <div className="absolute -inset-1 bg-gradient-to-tr from-secondary to-purple-400 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-                                    <div className="w-20 h-20 md:w-24 md:h-24 rounded-[1.8rem] overflow-hidden border-2 border-secondary/20 relative bg-black shadow-2xl">
-                                        <img src={currentUser.avatar} alt={currentUser.name} className="w-full h-full object-cover" />
+                            <div className="flex flex-col md:flex-row items-center gap-8">
+                                <div className="relative group/avatar">
+                                    <div className="absolute -inset-2 bg-gradient-to-tr from-secondary to-purple-400 rounded-[2.5rem] blur opacity-20 group-hover/avatar:opacity-50 transition duration-700"></div>
+                                    <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-[2.2rem] overflow-hidden border-2 border-secondary/30 bg-black p-1">
+                                        <div className="w-full h-full rounded-[1.8rem] overflow-hidden">
+                                            <img src={currentUser.avatar} alt={currentUser.name} className="w-full h-full object-cover transition-transform duration-700 group-hover/avatar:scale-110" />
+                                        </div>
                                     </div>
-                                    <div className="absolute -bottom-1 -right-1 bg-secondary p-1.5 rounded-lg border-2 border-[#050505]">
-                                        <Star className="w-3 h-3 text-white fill-white" />
+                                    <div className="absolute -bottom-2 -right-2 bg-secondary p-2 rounded-xl border-4 border-[#020617] shadow-xl">
+                                        <Star className="w-4 h-4 text-white fill-white" />
                                     </div>
                                 </div>
 
-                                <div className="text-center md:text-left">
-                                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[9px] font-black uppercase tracking-widest mb-2">
+                                <div className="text-center md:text-left space-y-2">
+                                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-[10px] font-black uppercase tracking-[0.2em] mb-2">
+                                        <div className="w-1.5 h-1.5 bg-secondary rounded-full animate-pulse" />
                                         Dirigencia Vocal
                                     </div>
-                                    <h1 className="text-3xl md:text-5xl font-black tracking-tight text-white uppercase italic leading-none">
-                                        {currentUser.name} <span className="text-secondary italic">Choir Hub</span>
+                                    <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-foreground uppercase italic leading-none">
+                                        {currentUser.name.split(' ')[0]} <span className="text-secondary tracking-[-0.05em] not-italic">HUB</span>
                                     </h1>
-                                    <p className="text-slate-500 font-medium tracking-tight text-sm md:text-base mt-1">Gestión de ensayos, uniformes y cantos sagrados.</p>
+                                    <p className="text-muted-foreground font-bold tracking-tight text-sm md:text-lg max-w-md opacity-80">
+                                        Gestión maestra de ensayos, uniformes y cantos sagrados del Coro de Adultos.
+                                    </p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-4">
                                 {isLeader && (
                                     <Button
                                         onClick={() => setShowLeaderPanel(!showLeaderPanel)}
                                         className={cn(
-                                            "font-black uppercase tracking-[0.2em] px-8 h-14 rounded-2xl transition-all shadow-xl",
+                                            "font-black uppercase italic tracking-[0.2em] px-10 h-16 rounded-[2rem] transition-all shadow-2xl relative overflow-hidden group/btn",
                                             showLeaderPanel
-                                                ? "bg-white text-black hover:bg-slate-200 shadow-white/10"
-                                                : "bg-secondary hover:bg-secondary/90 text-white shadow-secondary/20"
+                                                ? "bg-white text-black hover:bg-slate-200"
+                                                : "bg-secondary hover:bg-secondary/90 text-white"
                                         )}
                                     >
-                                        <Settings className="h-4 w-4 mr-2" /> {showLeaderPanel ? 'Cerrar Panel' : 'Panel Dirigente'}
+                                        <span className="relative z-10 flex items-center gap-2">
+                                            <Settings className={cn("h-5 w-5 transition-transform duration-700", showLeaderPanel && "rotate-180")} /> 
+                                            {showLeaderPanel ? 'Cerrar Consola' : 'Cargar Consola'}
+                                        </span>
+                                        {!showLeaderPanel && <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />}
                                     </Button>
                                 )}
                             </div>
@@ -137,7 +149,7 @@ export default function CoroDashboard() {
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 bg-secondary/5 p-6 rounded-3xl border border-secondary/20 shadow-[0_0_30px_rgba(168,85,247,0.1)]"
+                        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 bg-secondary/5 p-6 rounded-3xl border border-secondary/20"
                     >
                         {/* Manage Rehearsals */}
                         <Card className="glass-card bg-transparent border-dashed border-border/40">
@@ -156,8 +168,8 @@ export default function CoroDashboard() {
                                             className={cn(
                                                 "w-8 h-8 rounded-lg text-[10px] font-black transition-all",
                                                 editingRehearsals.some(r => r.dayOfWeek === i)
-                                                    ? "bg-secondary text-foreground shadow-lg shadow-secondary/20"
-                                                    : "bg-foreground/5 text-slate-500 hover:bg-foreground/10"
+                                                    ? "bg-secondary text-foreground"
+                                                    : "bg-foreground/5 text-muted-foreground hover:bg-foreground/10"
                                             )}
                                         >
                                             {day}
@@ -167,7 +179,7 @@ export default function CoroDashboard() {
                                 <div className="space-y-2">
                                     {editingRehearsals.map(r => (
                                         <div key={r.id} className="flex items-center gap-2 bg-foreground/5 p-2 rounded-xl border border-border/20">
-                                            <span className="text-[10px] font-black text-slate-400 w-16 uppercase">{['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][r.dayOfWeek]}</span>
+                                            <span className="text-[10px] font-black text-muted-foreground w-16 uppercase">{['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'][r.dayOfWeek]}</span>
                                             <input
                                                 type="text"
                                                 defaultValue={r.time}
@@ -180,7 +192,7 @@ export default function CoroDashboard() {
                                             <input
                                                 type="text"
                                                 defaultValue={r.location}
-                                                className="bg-transparent text-[10px] font-medium text-slate-500 outline-none flex-1"
+                                                className="bg-transparent text-[10px] font-medium text-muted-foreground outline-none flex-1"
                                                 onBlur={(e) => {
                                                     const updated = editingRehearsals.map(existing => existing.id === r.id ? { ...existing, location: e.target.value } : existing);
                                                     setEditingRehearsals(updated);
@@ -210,7 +222,7 @@ export default function CoroDashboard() {
                             <CardContent className="space-y-3 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
                                 {upcomingDays.map((day, i) => (
                                     <div key={i} className="flex items-center gap-3">
-                                        <div className="text-[9px] font-black text-slate-500 uppercase w-20">{day.dayName} {format(parseISO(day.date), 'd')}</div>
+                                        <div className="text-[9px] font-black text-muted-foreground uppercase w-20">{day.dayName} {format(parseISO(day.date), 'd')}</div>
                                         <select
                                             value={day.uniformId || ''}
                                             onChange={async (e) => {
@@ -251,14 +263,14 @@ export default function CoroDashboard() {
                                         />
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
-                                                <p className="text-[9px] font-black uppercase text-slate-500 mb-1">Varones</p>
+                                                <p className="text-[9px] font-black uppercase text-muted-foreground mb-1">Varones</p>
                                                 <Input placeholder="Traje (Domingo)" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.traje} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, traje: e.target.value } })} />
                                                 <Input placeholder="Pantalón (Jueves)" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.pantalon} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, pantalon: e.target.value } })} />
                                                 <Input placeholder="Camisa (Jueves)" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.varones.camisa} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, camisa: e.target.value } })} />
                                                 <Input placeholder="Corbata" className="text-[9px] h-6 bg-background" value={newUniform.varones.corbata} onChange={e => setNewUniform({ ...newUniform, varones: { ...newUniform.varones, corbata: e.target.value } })} />
                                             </div>
                                             <div>
-                                                <p className="text-[9px] font-black uppercase text-slate-500 mb-1">Hermanas</p>
+                                                <p className="text-[9px] font-black uppercase text-muted-foreground mb-1">Hermanas</p>
                                                 <Input placeholder="Toga (Domingo)" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.hermanas.toga} onChange={e => setNewUniform({ ...newUniform, hermanas: { ...newUniform.hermanas, toga: e.target.value } })} />
                                                 <Input placeholder="Falda (Jueves)" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.hermanas.falda} onChange={e => setNewUniform({ ...newUniform, hermanas: { ...newUniform.hermanas, falda: e.target.value } })} />
                                                 <Input placeholder="Blusa (Jueves)" className="text-[9px] h-6 mb-1 bg-background" value={newUniform.hermanas.blusa} onChange={e => setNewUniform({ ...newUniform, hermanas: { ...newUniform.hermanas, blusa: e.target.value } })} />
@@ -284,7 +296,7 @@ export default function CoroDashboard() {
                                             <div key={u.id} className="flex items-center justify-between p-2 bg-foreground/5 rounded-lg border border-border/20 group">
                                                 <div>
                                                     <p className="text-[10px] font-bold text-foreground">{u.name}</p>
-                                                    <p className="text-[8px] text-slate-500 leading-tight mt-0.5">
+                                                    <p className="text-[8px] text-muted-foreground leading-tight mt-0.5">
                                                         V: {u.varones?.traje ? `Tr: ${u.varones.traje}` : (u.varones?.pantalon || u.varones?.camisa) ? `P: ${u.varones?.pantalon}, C: ${u.varones?.camisa}` : 'No Asignado'}, Corb: {u.varones?.corbata}<br />
                                                         H: {u.hermanas?.toga ? `T: ${u.hermanas.toga}` : (u.hermanas?.falda || u.hermanas?.blusa) ? `F: ${u.hermanas?.falda}, B: ${u.hermanas?.blusa}` : 'No Asignado'}, Ch: {u.hermanas?.chalina}
                                                     </p>
@@ -399,7 +411,7 @@ export default function CoroDashboard() {
                                             <div className="flex items-end justify-between">
                                                 <div>
                                                     <p className="text-3xl font-black text-foreground italic">{r.time}</p>
-                                                    <p className="text-xs text-slate-500 uppercase font-bold">
+                                                    <p className="text-xs text-muted-foreground uppercase font-bold">
                                                         Próximo {['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][r.dayOfWeek]}
                                                     </p>
                                                 </div>
@@ -408,49 +420,58 @@ export default function CoroDashboard() {
                                                 </div>
                                             </div>
                                             <div className="p-3 bg-foreground/5 rounded-lg border border-border/40 mt-4">
-                                                <p className="text-xs font-bold text-foreground mb-1 uppercase tracking-tighter">Ubicación: <span className="text-slate-400">{r.location}</span></p>
-                                                <p className="text-[10px] text-slate-500 font-medium italic">"{r.notes || 'Favor de ser puntuales.'}"</p>
+                                                <p className="text-xs font-bold text-foreground mb-1 uppercase tracking-tighter">Ubicación: <span className="text-muted-foreground">{r.location}</span></p>
+                                                <p className="text-[10px] text-muted-foreground font-medium italic">"{r.notes || 'Favor de ser puntuales.'}"</p>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-xs text-slate-500 italic">No hay ensayos programados.</p>
+                                <p className="text-xs text-muted-foreground italic">No hay ensayos programados.</p>
                             )}
                         </CardContent>
                     </Card>
 
                     {/* Calendario de Uniformes */}
-                    <Card className="glass-card border-l-4 border-l-amber-500 bg-amber-500/5 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 p-4 opacity-10">
-                            <Shirt className="w-16 h-16 text-amber-500" />
-                        </div>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-amber-500">
-                                <Shirt className="h-5 w-5" /> Calendario de Uniformes
+                    <Card className="glass-card border-none bg-black/40 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-1 h-full bg-amber-500 group-hover:w-2 transition-all opacity-50" />
+                        
+                        <CardHeader className="pb-4">
+                            <CardTitle className="flex items-center gap-2 text-amber-500 text-[11px] font-black uppercase tracking-widest">
+                                <Shirt className="h-4 w-4" /> Uniformes de Gala
                             </CardTitle>
-                            <CardDescription className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Presentaciones Jueves y Domingo</CardDescription>
+                            <CardDescription className="text-[9px] uppercase font-black text-muted-foreground tracking-tighter">Presentaciones Jueves y Domingo</CardDescription>
                         </CardHeader>
-                        <CardContent className="space-y-3">
+                        <CardContent className="space-y-3 pb-8 px-4">
                             {upcomingDays.map((day, i) => {
                                 const uniform = uniforms.find(u => u.id === day.uniformId);
                                 return (
-                                    <div key={i} className="flex items-center justify-between p-3 bg-foreground/5 rounded-xl border border-white/5 group hover:bg-amber-500/10 transition-colors">
-                                        <div>
-                                            <span className="text-[9px] font-black text-slate-500 uppercase italic">{day.dayName}, {format(parseISO(day.date), 'd MMM')}</span>
-                                            <p className="text-sm font-black text-foreground tracking-tight uppercase italic">{uniform ? uniform.name : 'Por asignar'}</p>
+                                    <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5 group/row hover:bg-amber-500/10 transition-all duration-500">
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <span className="text-[8px] font-black text-amber-500/70 uppercase italic tracking-widest">{day.dayName}, {format(parseISO(day.date), 'd MMM')}</span>
+                                                {uniform && <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />}
+                                            </div>
+                                            <p className="text-[15px] font-black text-foreground tracking-tight uppercase italic group-hover/row:text-amber-400 transition-colors leading-none">{uniform ? uniform.name : 'Por asignar'}</p>
                                             {uniform && (
-                                                <div className="flex gap-3 mt-1 opacity-70">
-                                                    <span className="text-[8px] font-medium leading-tight">
-                                                        <strong className="text-slate-400">Varones:</strong> {uniform.varones?.traje ? `Tr: ${uniform.varones.traje}` : (uniform.varones?.pantalon || uniform.varones?.camisa) ? `P: ${uniform.varones?.pantalon}, C: ${uniform.varones?.camisa}` : 'No Asignado'}, Corb: {uniform.varones?.corbata}
-                                                    </span>
-                                                    <span className="text-[8px] font-medium leading-tight border-l border-white/10 pl-3">
-                                                        <strong className="text-slate-400">Hermanas:</strong> {uniform.hermanas?.toga ? `T: ${uniform.hermanas.toga}` : (uniform.hermanas?.falda || uniform.hermanas?.blusa) ? `F: ${uniform.hermanas?.falda}, B: ${uniform.hermanas?.blusa}` : 'No Asignado'}, Ch: {uniform.hermanas?.chalina}
-                                                    </span>
+                                                <div className="flex flex-col gap-1 mt-3 opacity-60 group-hover/row:opacity-100 transition-opacity">
+                                                    <div className="flex items-start gap-2">
+                                                        <span className="text-[7px] font-black uppercase text-muted-foreground bg-white/5 px-1.5 py-0.5 rounded leading-none mt-0.5">V</span>
+                                                        <span className="text-[9px] font-bold text-muted-foreground leading-tight">
+                                                            {uniform.varones?.traje ? uniform.varones.traje : `${uniform.varones?.pantalon}, ${uniform.varones?.camisa}`}, {uniform.varones?.corbata}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2 border-t border-white/5 pt-1">
+                                                        <span className="text-[7px] font-black uppercase text-muted-foreground bg-white/5 px-1.5 py-0.5 rounded leading-none mt-0.5">H</span>
+                                                        <span className="text-[9px] font-bold text-muted-foreground leading-tight">
+                                                            {uniform.hermanas?.toga ? uniform.hermanas.toga : `${uniform.hermanas?.falda}, ${uniform.hermanas?.blusa}`}, {uniform.hermanas?.chalina}
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
-                                        {uniform && <div className="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center border border-amber-500/20"><Shirt className="w-4 h-4 text-amber-500" /></div>}
+                                        {uniform && <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/10 group-hover/row:scale-110 transition-transform"><Shirt className="w-4 h-4 text-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" /></div>}
                                     </div>
                                 );
                             })}
@@ -458,42 +479,65 @@ export default function CoroDashboard() {
                     </Card>
 
                     {/* Estadísticas de Asistencia (Coro) */}
-                    <Card className="glass-card border-l-4 border-l-emerald-500">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-emerald-500">
-                                <Users className="h-5 w-5" /> Mi Asistencia Coro
+                    <Card className="glass-card border-none bg-black/40 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-3xl pointer-events-none" />
+                        <CardHeader className="pb-2">
+                            <CardTitle className="flex items-center gap-2 text-secondary text-[11px] font-black uppercase tracking-widest">
+                                <Users className="h-4 w-4" /> Fidelidad Vocal
                             </CardTitle>
                         </CardHeader>
-                        <CardContent>
-                            <div className="flex flex-col items-center py-2">
-                                <div className="relative w-32 h-32 flex items-center justify-center">
+                        <CardContent className="pb-8">
+                            <div className="flex flex-col items-center py-4 relative">
+                                {/* Rotating Radar Effect */}
+                                <motion.div 
+                                    className="absolute w-40 h-40 rounded-full border border-secondary/5 pointer-events-none"
+                                    animate={{ rotate: 360 }}
+                                    transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                                >
+                                    <div className="absolute top-1/2 left-[50%] w-[50%] h-[1px] bg-gradient-to-r from-secondary/20 to-transparent origin-left" />
+                                </motion.div>
+
+                                <div className="relative w-36 h-36 flex items-center justify-center">
                                     <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                                        <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-foreground/5" />
-                                        <circle 
+                                        <defs>
+                                            <linearGradient id="choirAttGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stopColor="#ec4899" />
+                                                <stop offset="100%" stopColor="#f472b6" />
+                                            </linearGradient>
+                                            <filter id="choirAttGlow">
+                                                <feGaussianBlur stdDeviation="3.5" result="blur" />
+                                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                            </filter>
+                                        </defs>
+                                        <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.05)" strokeWidth="8" fill="transparent" />
+                                        <motion.circle 
                                             cx="50" 
                                             cy="50" 
                                             r="40" 
-                                            stroke="currentColor" 
-                                            strokeWidth="8" 
+                                            stroke="url(#choirAttGrad)" 
+                                            strokeWidth="10" 
                                             fill="transparent" 
                                             strokeDasharray="251.2" 
-                                            strokeDashoffset={251.2 * (1 - (isNaN(attRate) ? 0 : attRate) / 100)} 
+                                            initial={{ strokeDashoffset: 251.2 }}
+                                            animate={{ strokeDashoffset: 251.2 * (1 - (isNaN(attRate) ? 0 : attRate) / 100) }}
+                                            transition={{ duration: 2, ease: "circOut" }}
                                             strokeLinecap="round" 
-                                            className="text-emerald-500 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]" 
+                                            filter="url(#choirAttGlow)"
                                         />
                                     </svg>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-2xl font-black text-foreground">{attRate}%</span>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center pt-2">
+                                        <span className="text-4xl font-black text-foreground italic tracking-tighter leading-none">{attRate}%</span>
+                                        <span className="text-[7px] font-black text-muted-foreground uppercase tracking-widest mt-1 leading-none">Global</span>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-2 w-full mt-6 gap-4 text-center">
-                                    <div className="p-2 bg-foreground/5 rounded-lg">
-                                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Servicios</p>
-                                        <p className="text-xl font-black text-foreground">{att?.attended || 0}/{att?.total || 0}</p>
+                                <div className="grid grid-cols-2 w-full mt-10 gap-4 text-center">
+                                    <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/5 transition-all hover:bg-white/[0.05] group/stat">
+                                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mb-1 group-hover/stat:text-secondary transition-colors">Servicios</p>
+                                        <p className="text-2xl font-black text-foreground italic leading-none">{att?.attended || 0}/{att?.total || 0}</p>
                                     </div>
-                                    <div className="p-2 bg-foreground/5 rounded-lg">
-                                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Privilegios</p>
-                                        <p className="text-xl font-black text-foreground">{ledCount}</p>
+                                    <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/5 transition-all hover:bg-white/[0.05] group/stat">
+                                        <p className="text-[8px] font-black text-muted-foreground uppercase tracking-widest mb-1 group-hover/stat:text-secondary transition-colors">Privilegios</p>
+                                        <p className="text-2xl font-black text-foreground italic leading-none">{ledCount}</p>
                                     </div>
                                 </div>
                             </div>
@@ -513,8 +557,8 @@ export default function CoroDashboard() {
                                     <div className="p-2 bg-secondary/20 rounded-lg text-secondary"><Calendar className="h-5 w-5" /></div>
                                     <div className="flex-1">
                                         <h4 className="font-bold text-foreground uppercase italic tracking-tight">{a.title}</h4>
-                                        <p className="text-sm text-slate-400 mt-1">{a.content}</p>
-                                        <span className="text-[8px] text-slate-600 font-bold uppercase mt-2 block">{format(parseISO(a.timestamp), 'Pp', { locale: es })}</span>
+                                        <p className="text-sm text-muted-foreground mt-1">{a.content}</p>
+                                        <span className="text-[8px] text-muted-foreground font-bold uppercase mt-2 block">{format(parseISO(a.timestamp), 'Pp', { locale: es })}</span>
                                     </div>
                                     {isLeader && (
                                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -532,7 +576,7 @@ export default function CoroDashboard() {
                                                         }
                                                     }, 100);
                                                 }}
-                                                className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-white transition-colors"
+                                                className="p-1.5 hover:bg-white/10 rounded-lg text-muted-foreground hover:text-white transition-colors"
                                             >
                                                 <Settings className="w-3.5 h-3.5" />
                                             </button>
@@ -541,7 +585,7 @@ export default function CoroDashboard() {
                                                     await deleteAnnouncementFromCloud(a.id);
                                                     showNotification("Aviso eliminado correctamente.");
                                                 }}
-                                                className="p-1.5 hover:bg-white/10 rounded-lg text-slate-400 hover:text-red-400 transition-colors"
+                                                className="p-1.5 hover:bg-white/10 rounded-lg text-muted-foreground hover:text-red-400 transition-colors"
                                             >
                                                 <Trash2 className="w-3.5 h-3.5" />
                                             </button>
@@ -550,7 +594,7 @@ export default function CoroDashboard() {
                                 </div>
                             ))}
                             {announcements.length === 0 && (
-                                <p className="text-sm text-slate-500 italic">No hay avisos recientes para el coro.</p>
+                                <p className="text-sm text-muted-foreground italic">No hay avisos recientes para el coro.</p>
                             )}
                         </div>
                     </CardContent>

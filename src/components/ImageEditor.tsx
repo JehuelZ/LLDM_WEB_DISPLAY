@@ -1,26 +1,34 @@
 
 'use client';
 
-import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { ZoomIn, Move, X, Check, RotateCw, Grid3X3 } from 'lucide-react';
+import React, { useState, useRef, useCallback } from 'react';
+import { motion, useMotionValue } from 'framer-motion';
+import { ZoomIn, X, Check, RotateCw, Grid3X3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
-interface ImageEditorProps {
+/**
+ * MIRROR AUDIT V20: THE UNIFIED COLOR AUDIT
+ * - Entire Modal Base: EXACT #0a0a0a (per "color de todo" and "tarjeta de perfil").
+ * - Header Section: EXACT #161616.
+ * - Footer Section: EXACT #0a0a0a (Unifying the look).
+ * - Viewport: EXACT #0a0a0a.
+ * - Aux Buttons: #060a17.
+ * - Primary Button: #008e5b.
+ */
+
+export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading = false }: {
     image: string;
     onSave: (croppedImage: string) => void;
     onCancel: () => void;
     aspectRatio?: number;
     loading?: boolean;
-}
-
-export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading = false }: ImageEditorProps) {
-    const [zoom, setZoom] = useState(1.2); // Start with a bit of zoom for portraits
+}) {
+    const [zoom, setZoom] = useState(1.2);
     const [rotation, setRotation] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
 
-    // Using motion values for high-performance dragging
     const x = useMotionValue(0);
     const y = useMotionValue(0);
 
@@ -34,30 +42,25 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
         const img = imageRef.current;
         const container = containerRef.current;
 
-        // Optimized output size for web/TV
         const exportSize = 640;
         canvas.width = exportSize;
         canvas.height = exportSize / aspectRatio;
 
-        // Background color
-        ctx.fillStyle = '#0f172a';
+        ctx.fillStyle = '#0a0a0a';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.save();
-        // Move to center of canvas
         ctx.translate(canvas.width / 2, canvas.height / 2);
         ctx.rotate((rotation * Math.PI) / 180);
 
-        // Calculate rendering scale
         const containerWidth = container.clientWidth;
         const containerHeight = container.clientHeight;
 
-        // Match the 'min-w-full min-h-full' object-cover logic
         const imgAspect = img.naturalWidth / img.naturalHeight;
         let baseScale;
-        if (imgAspect > 1) { // Landscape
+        if (imgAspect > 1) {
             baseScale = containerHeight / img.naturalHeight;
-        } else { // Portrait
+        } else {
             baseScale = containerWidth / img.naturalWidth;
         }
 
@@ -65,7 +68,6 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
         const drawW = img.naturalWidth * finalScale;
         const drawH = img.naturalHeight * finalScale;
 
-        // Map motion values to canvas coordinates
         const canvasScale = exportSize / containerWidth;
         const mappedX = x.get() * canvasScale;
         const mappedY = y.get() * canvasScale;
@@ -79,42 +81,64 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
         );
         ctx.restore();
 
-        onSave(canvas.toDataURL('image/jpeg', 0.8));
+        onSave(canvas.toDataURL('image/jpeg', 0.9));
     }, [zoom, rotation, x, y, image, onSave, aspectRatio]);
 
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-2 sm:p-4 bg-black/95 backdrop-blur-xl">
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/98 backdrop-blur-2xl overflow-y-auto">
             <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 30 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="glass-card bg-[#0b1121] border-white/10 w-full max-w-2xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] rounded-[2rem] sm:rounded-[3rem]"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="w-full max-w-[672px] overflow-hidden rounded-[32px] border border-white/[0.04] relative shadow-none"
+                style={{ backgroundColor: '#0a0a0a' }}
             >
-                <div className="p-5 sm:p-8 border-b border-white/5 flex items-center justify-between bg-white/5">
-                    <div>
-                        <h3 className="text-xl sm:text-2xl font-black uppercase text-white italic tracking-tighter">Ajuste de Fotografía</h3>
-                        <p className="text-[8px] sm:text-[10px] text-primary font-black tracking-[0.2em] sm:tracking-[0.3em] uppercase mt-1 opacity-70">Deslice para reencuadrar • Use el zoom</p>
+                {/* Header Row: Exact Photoshop Color (#161616) */}
+                <div 
+                    className="p-8 py-[32px] min-h-[116px] flex items-start justify-between border-b border-white/[0.04] rounded-t-[32px] shadow-none"
+                    style={{ backgroundColor: '#161616', backgroundImage: 'none' }}
+                >
+                    <div className="text-left">
+                        <h3 
+                            className="text-[24px] font-[900] uppercase text-white leading-none mb-1.5"
+                            style={{ fontStyle: 'italic', letterSpacing: '-1.2px', textShadow: 'none' }}
+                        >
+                            <span style={{ fontStyle: 'italic' }}>Ajuste de Fotografía</span>
+                        </h3>
+                        <p 
+                            className="text-[9px] font-black uppercase opacity-70"
+                            style={{ color: '#fbbf24', letterSpacing: '0.2em' }}
+                        >
+                            DESLICE PARA REENCUADRAR • USE EL ZOOM
+                        </p>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={onCancel} className="rounded-full hover:bg-white/10 h-10 w-10 sm:h-12 sm:w-12 text-slate-500 hover:text-white">
-                        <X className="w-5 h-5 sm:w-6 sm:h-6" />
-                    </Button>
+                    <button 
+                        onClick={onCancel} 
+                        className="text-white/20 hover:text-white transition-colors p-1 shadow-none"
+                    >
+                        <X className="w-8 h-8" />
+                    </button>
                 </div>
 
-                <div className="p-4 sm:p-10 space-y-6 sm:space-y-12 overflow-y-auto max-h-[70vh] no-scrollbar">
+                <div className="p-12 py-14 space-y-12 shadow-none" style={{ backgroundColor: '#0a0a0a' }}>
+                    {/* Viewport: Unified #0a0a0a */}
                     <div
                         ref={containerRef}
-                        className="relative w-full aspect-square max-w-[280px] sm:max-w-[360px] mx-auto overflow-hidden rounded-[1.5rem] sm:rounded-[2.5rem] bg-[#020617] border-2 border-white/5 shadow-2xl group cursor-grab active:cursor-grabbing"
+                        className="relative w-full aspect-square max-w-[360px] mx-auto overflow-hidden rounded-[40px] border border-white/[0.04] cursor-grab active:cursor-grabbing group shadow-none"
+                        style={{ backgroundColor: '#0a0a0a' }}
                     >
-                        {/* Interactive UI Overlays */}
-                        <div className="absolute inset-x-4 sm:inset-x-8 top-1/3 h-px bg-white/10 z-20 pointer-events-none" />
-                        <div className="absolute inset-x-4 sm:inset-x-8 top-2/3 h-px bg-white/10 z-20 pointer-events-none" />
-                        <div className="absolute inset-y-4 sm:inset-y-8 left-1/3 w-px bg-white/10 z-20 pointer-events-none" />
-                        <div className="absolute inset-y-4 sm:inset-y-8 left-2/3 w-px bg-white/10 z-20 pointer-events-none" />
+                        {/* Grid */}
+                        <div className="absolute inset-0 z-20 pointer-events-none opacity-[0.08]">
+                            <div className="absolute left-1/3 inset-y-0 w-[0.5px] bg-white" />
+                            <div className="absolute left-2/3 inset-y-0 w-[0.5px] bg-white" />
+                            <div className="absolute top-1/3 inset-x-0 h-[0.5px] bg-white" />
+                            <div className="absolute top-2/3 inset-x-0 h-[0.5px] bg-white" />
+                        </div>
 
                         <motion.div
                             style={{ x, y }}
                             drag
                             dragMomentum={false}
-                            className="absolute inset-0 flex items-center justify-center"
+                            className="absolute inset-0 flex items-center justify-center shadow-none"
                         >
                             <motion.img
                                 ref={imageRef}
@@ -124,26 +148,23 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                                     rotate: rotation,
                                 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                                className="min-w-full min-h-full w-auto h-auto object-cover select-none pointer-events-none"
+                                className="min-w-full min-h-full w-auto h-auto object-cover select-none pointer-events-none shadow-none"
                             />
                         </motion.div>
-
-                        {/* Decorative Frame */}
-                        <div className="absolute inset-0 border-[10px] sm:border-[20px] border-[#0b1121]/40 z-30 pointer-events-none" />
-                        <div className="absolute inset-2 sm:inset-4 border border-white/5 rounded-[1.2rem] sm:rounded-[2rem] z-30 pointer-events-none" />
                     </div>
 
-                    <div className="space-y-6 sm:space-y-10 px-2 sm:px-6">
-                        <div className="space-y-4 sm:space-y-6">
-                            <div className="flex items-center justify-between">
-                                <span className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
-                                    <ZoomIn className="w-4 h-4 sm:w-5 sm:h-5 text-primary" /> Ampliación
+                    {/* Controls Styling */}
+                    <div className="space-y-10 px-6 shadow-none">
+                        <div className="space-y-5">
+                            <div className="flex items-center justify-between shadow-none">
+                                <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+                                    <ZoomIn className="w-4 h-4" style={{ color: '#fbbf24' }} /> AMPLIACIÓN
                                 </span>
-                                <span className="text-white text-[10px] sm:text-xs font-black bg-white/5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full border border-white/10">
+                                <span className="text-white text-[10px] font-black bg-white/[0.04] px-2 py-1 rounded border border-white/[0.08] shadow-none">
                                     {Math.round(zoom * 100)}%
                                 </span>
                             </div>
-                            <div className="relative group">
+                            <div className="relative group flex items-center h-4">
                                 <input
                                     type="range"
                                     min="0.5"
@@ -151,54 +172,66 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                                     step="0.01"
                                     value={zoom}
                                     onChange={(e) => setZoom(parseFloat(e.target.value))}
-                                    className="w-full h-2.5 bg-white/5 rounded-full appearance-none cursor-pointer accent-primary group-hover:bg-white/10 transition-colors"
+                                    className="w-full h-0.5 bg-white/[0.1] rounded-full appearance-none cursor-pointer accent-[#fbbf24] hover:bg-white/[0.2] transition-colors shadow-none"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
-                            <Button
-                                variant="outline"
-                                className="flex-1 border-white/5 hover:bg-white/5 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl gap-3 transition-all hover:border-primary/30"
+                        <div className="flex gap-4 shadow-none">
+                            <button
                                 onClick={() => setRotation(prev => prev + 90)}
+                                className="flex-1 border border-white/[0.04] hover:border-[#fbbf24]/30 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl flex items-center justify-center gap-3 transition-all text-white shadow-none"
+                                style={{ backgroundColor: '#060a17', backgroundImage: 'none' }}
                             >
-                                <RotateCw className="w-5 h-5 text-primary" /> Rotar Imagen
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="flex-1 border-white/5 hover:bg-white/5 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl gap-3 transition-all hover:border-primary/30"
+                                <RotateCw className="w-4 h-4" style={{ color: '#fbbf24' }} /> ROTAR IMAGEN
+                            </button>
+                            <button
                                 onClick={() => {
                                     setZoom(1.2);
                                     setRotation(0);
                                     x.set(0);
                                     y.set(0);
                                 }}
+                                className="flex-1 border border-white/[0.04] hover:border-[#fbbf24]/30 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl flex items-center justify-center gap-3 transition-all text-white shadow-none"
+                                style={{ backgroundColor: '#060a17', backgroundImage: 'none' }}
                             >
-                                <Grid3X3 className="w-5 h-5 text-primary" /> Reestablecer
-                            </Button>
+                                <Grid3X3 className="w-4 h-4" style={{ color: '#fbbf24' }} /> REESTABLECER
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div className="p-5 sm:p-10 bg-black/40 border-t border-white/5 flex flex-col sm:flex-row gap-3 sm:gap-5">
-                    <Button variant="ghost" className="order-2 sm:order-1 flex-1 font-black uppercase tracking-[0.2em] text-[10px] h-12 sm:h-16 rounded-xl sm:rounded-2xl hover:bg-white/5 text-slate-500" onClick={onCancel}>
-                        Cancelar
-                    </Button>
-                    <Button
-                        disabled={loading}
-                        className="order-1 sm:order-2 flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.2em] text-[10px] sm:text-[11px] h-12 sm:h-16 rounded-xl sm:rounded-2xl gap-2 sm:gap-3 shadow-[0_10px_30px_rgba(16,185,129,0.2)] transition-all active:scale-[0.98]"
-                        onClick={handleSave}
+                {/* Footer Unified Shadow-Free: EXACT #0a0a0a (per "color de todo") */}
+                <div 
+                    className="p-10 pt-4 pb-14 border-t border-white/[0.04] flex items-center justify-between shadow-none"
+                    style={{ backgroundColor: '#0a0a0a' }}
+                >
+                    <button 
+                        onClick={onCancel}
+                        className="text-[11px] font-black uppercase tracking-[0.3em] text-white/30 hover:text-white transition-colors px-4 shadow-none"
                     >
-                        {loading ? (
+                        CANCELAR
+                    </button>
+                    <button
+                        disabled={loading}
+                        onClick={handleSave}
+                        className="h-16 px-12 rounded-2xl flex items-center justify-center gap-4 transition-all active:scale-[0.98] border-none outline-none min-w-[240px] shadow-none"
+                        style={{ 
+                            backgroundColor: '#008e5b', 
+                            backgroundImage: 'none',
+                            color: '#fff', 
+                            fontWeight: 900, 
+                            fontSize: '11px', 
+                            letterSpacing: '1.5px',
+                            boxShadow: 'none'
+                        }}
+                    >
+                        {loading ? 'PROCESANDO...' : (
                             <>
-                                <RotateCw className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" /> Procesando...
-                            </>
-                        ) : (
-                            <>
-                                <Check className="w-5 h-5 sm:w-6 sm:h-6" /> Guardar Perfil
+                                <Check className="w-5 h-5 text-white stroke-[4.5]" /> GUARDAR PERFIL
                             </>
                         )}
-                    </Button>
+                    </button>
                 </div>
             </motion.div>
         </div>

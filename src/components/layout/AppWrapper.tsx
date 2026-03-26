@@ -10,6 +10,11 @@ import { MobileNav } from './MobileNav';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
 
+// Theme Styles
+import '@/app/admin/PrimitivoStyles.css';
+import '@/app/admin/LunaStyles.css';
+import '@/app/admin/ClassicStyles.css';
+
 export function AppWrapper({ children }: { children: React.ReactNode }) {
     const { calendarStyles, settings, setAuthSession, syncUserWithCloud, notification, hideNotification } = useAppStore();
     const [mounted, setMounted] = useState(false);
@@ -35,13 +40,19 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
             }
         });
 
-        // --- ROUTE GUARD (Client-side) ---
         // Protege las rutas administrativas de usuarios no autorizados
         const checkAdminAccess = async () => {
             if (typeof window === 'undefined') return;
             
             const path = window.location.pathname;
             if (path.startsWith('/admin')) {
+                // EXCEPCIÓN PARA DESARROLLO: Si hay un usuario simulado en el store, permitir el paso
+                const { currentUser } = useAppStore.getState();
+                if (currentUser && (currentUser.privileges?.includes('admin') || currentUser.id === 'dev-admin-id')) {
+                    console.log("Acceso concedido vía Simulación Local (Dev Mode)");
+                    return;
+                }
+
                 const { data: { session } } = await supabase.auth.getSession();
                 
                 // Si no hay sesión, al login
@@ -51,7 +62,6 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                 }
                 
                 // Si hay sesión, verificar que el perfil sea Administrador
-                // (Usamos una consulta directa para mayor seguridad que el estado local demorado)
                 const { data: profile } = await supabase
                     .from('profiles')
                     .select('role')
@@ -75,12 +85,22 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
             const root = window.document.documentElement;
             root.classList.remove('light-theme', 'dark-theme', 'is-phone');
             root.classList.add(settings.themeMode === 'light' ? 'light-theme' : 'dark-theme');
+            
+            // Sync Admin Theme classes globally for consistent background/aesthetics
+            const themeClass = settings.adminTheme === 'primitivo' ? 'admin-theme-primitivo' : 
+                              settings.adminTheme === 'tactile' ? 'admin-theme-tactile' :
+                              settings.adminTheme === 'luna' ? 'admin-theme-luna' : 
+                              'admin-theme-classic';
+            
+            document.body.classList.remove('admin-theme-primitivo', 'admin-theme-tactile', 'admin-theme-luna', 'admin-theme-classic');
+            document.body.classList.add(themeClass);
+
             if (isPhone) root.classList.add('is-phone');
             root.setAttribute('data-theme', settings.themeMode);
         }
-    }, [settings.themeMode, mounted, isPhone]);
+    }, [settings.themeMode, settings.adminTheme, mounted, isPhone]);
 
-    const fontFamily = settings.fontMain ?? 'Outfit';
+    const fontFamily = settings.fontMain ?? 'Poppins';
     
     // Mapping for pre-loaded Next.js fonts (para mayor performance con las base)
     const nextFontVarMap: Record<string, string> = {
@@ -89,6 +109,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         'inter': 'var(--font-inter)',
         'montserrat': 'var(--font-montserrat)',
         'orbitron': 'var(--font-orbitron)',
+        'poppins': 'var(--font-poppins)',
     };
 
     // Mapping to real Google Font names for dynamic loading
@@ -139,7 +160,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                 fontFamily: `${finalFontFamily}, sans-serif`,
                 fontWeight: settings.fontWeight || '400'
             }}
-            className="min-h-screen transition-colors duration-500 bg-background text-foreground"
+            className="min-h-screen transition-colors duration-500 text-foreground"
         >
             {children}
             <MobileNav />

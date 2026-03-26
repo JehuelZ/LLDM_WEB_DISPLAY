@@ -214,9 +214,8 @@ export function LoginScreen() {
                                     />
                                 </div>
 
-                                <motion.button
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.99 }}
+                                <Button
+                                    variant="primitivo"
                                     onClick={async () => {
                                         if (!email || !password) {
                                             const { showNotification } = useAppStore.getState();
@@ -229,10 +228,10 @@ export function LoginScreen() {
                                             showNotification(error || 'Falla en autenticación', 'error');
                                         }
                                     }}
-                                    className="w-full h-14 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-amber-500/10 transition-colors"
+                                    className="w-full h-14"
                                 >
                                     INGRESAR AL SISTEMA
-                                </motion.button>
+                                </Button>
                             </div>
                         </div>
 
@@ -240,14 +239,39 @@ export function LoginScreen() {
                     </div>
                 </div>
 
-                {/* Sub-Card Actions */}
-                <div className="mt-10 flex justify-center gap-8 px-4">
-                    {['Ayuda', 'Contacto', 'Privacidad'].map((item) => (
-                        <button key={item} className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 hover:text-amber-500 transition-colors">
-                            {item}
-                        </button>
-                    ))}
-                </div>
+                {/* Developer Quick Access (Only in Development) */}
+                {process.env.NODE_ENV === 'development' && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="mt-8 p-6 rounded-3xl bg-amber-500/10 border border-amber-500/20 backdrop-blur-md"
+                    >
+                        <div className="flex items-center gap-3 mb-4">
+                            <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500">Developer Quick Access</span>
+                        </div>
+                        <Button
+                            onClick={async () => {
+                                const { simulateUser, showNotification } = useAppStore.getState();
+                                const success = await simulateUser('jairojehuel@gmail.com');
+                                if (success) {
+                                    showNotification('Simulación de Admin exitosa (Local)', 'success');
+                                    // El router redirigirá automáticamente si el AppWrapper observa el cambio de currentUser
+                                    window.location.href = '/admin';
+                                } else {
+                                    showNotification('Error al simular usuario', 'error');
+                                }
+                            }}
+                            variant="primitivo"
+                            className="w-full h-12 text-[9px]"
+                        >
+                            ENTRAR COMO ADMIN (LOCAL)
+                        </Button>
+                        <p className="mt-3 text-[8px] text-center font-bold text-slate-600 uppercase tracking-tighter">
+                            ⚠️ Este panel solo es visible en modo LOCAL (Desarrollo)
+                        </p>
+                    </motion.div>
+                )}
             </motion.div>
 
             <style jsx>{`

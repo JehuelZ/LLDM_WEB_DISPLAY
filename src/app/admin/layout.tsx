@@ -19,6 +19,7 @@ import {
     Star,
     Heart,
     ChevronLeft,
+    ChevronRight,
     Menu,
     Activity,
     User,
@@ -28,10 +29,18 @@ import {
     FileText,
     Cloud,
     Lock,
-    ArrowRight
+    ArrowRight,
+    Sun,
+    Moon,
+    Contrast
 } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
+import './LunaStyles.css';
+import './ClassicStyles.css';
+import './PrimitivoStyles.css';
+import LunaAdmin from './LunaAdmin';
+import TactileAdmin from './TactileAdmin';
 
 const ICON_MAP: Record<string, any> = {
     church: Church,
@@ -80,7 +89,7 @@ function AdminLayoutContent({
 }: {
     children: React.ReactNode
 }) {
-    const { settings, currentUser, isLoading, authSession } = useAppStore();
+    const { settings, setSettings, currentUser, isLoading, authSession, saveSettingsToCloud } = useAppStore();
     const router = useRouter();
     const t = TRANSLATIONS[settings.language as keyof typeof TRANSLATIONS] || TRANSLATIONS.es;
     const pathname = usePathname();
@@ -89,11 +98,41 @@ function AdminLayoutContent({
     const searchParams = useSearchParams();
     const currentTab = searchParams.get('tab') || 'dashboard';
 
+    // Handle initial theme loading from localStorage for local dev robustness
     useEffect(() => {
-        setMounted(true);
+        const savedTheme = localStorage.getItem('admin_theme_choice') as any;
+        if (savedTheme && savedTheme !== settings.adminTheme) {
+            setSettings({ adminTheme: savedTheme });
+            setMounted(true);
+        } else {
+            setMounted(true);
+        }
     }, []);
 
-    const isAuthorized = (authSession?.user && currentUser.role === 'Administrador') || (mounted && typeof window !== 'undefined' && window.location.hostname === 'localhost');
+    // Apply theme class to body for global style control (Phase 2)
+    useEffect(() => {
+        if (!mounted) return;
+        
+        const themeClass = settings.adminTheme === 'primitivo' ? 'admin-theme-primitivo' : 
+                          settings.adminTheme === 'tactile' ? 'admin-theme-tactile' :
+                          settings.adminTheme === 'luna' ? 'admin-theme-luna' : 
+                          'admin-theme-classic';
+        
+        // Remove old theme classes
+        document.body.classList.remove('admin-theme-primitivo', 'admin-theme-tactile', 'admin-theme-luna', 'admin-theme-classic');
+        // Add new theme class
+        document.body.classList.add(themeClass);
+        
+        // Save to localStorage as fallback
+        localStorage.setItem('admin_theme_choice', settings.adminTheme || 'classic');
+
+        return () => {
+            document.body.classList.remove('admin-theme-primitivo', 'admin-theme-tactile', 'admin-theme-luna', 'admin-theme-classic');
+        };
+    }, [settings.adminTheme, mounted]);
+
+
+    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador') || (mounted && typeof window !== 'undefined' && window.location.hostname === 'localhost');
 
     // Prevent hydration mismatch by returning a consistent loader or null until mounted
     if (!mounted) {
@@ -135,7 +174,7 @@ function AdminLayoutContent({
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6 pb-10 px-8">
-                            {currentUser.id === '1' ? (
+                            {currentUser?.id === '1' ? (
                                 <div className="space-y-4">
                                     <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 text-center">Debes iniciar sesión con tu cuenta autorizada</p>
                                     <Link href="/login" className="block">
@@ -148,7 +187,7 @@ function AdminLayoutContent({
                                 <div className="space-y-4">
                                     <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-center">
                                         <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-1">Usuario Activo</p>
-                                        <p className="text-sm font-bold text-foreground">{currentUser.email}</p>
+                                        <p className="text-sm font-bold text-foreground">{currentUser?.email}</p>
                                         <p className="text-[9px] text-red-400 font-black uppercase mt-2 italic">Sin permisos de administrador</p>
                                     </div>
                                     <Link href="/" className="block">
@@ -161,7 +200,7 @@ function AdminLayoutContent({
                         </CardContent>
                     </Card>
                     <p className="text-center mt-8 text-[10px] font-black uppercase tracking-widest text-slate-600">
-                        ID de Intento: {currentUser.id.slice(0, 8)}...
+                        ID de Intento: {currentUser?.id.slice(0, 8)}...
                     </p>
                 </motion.div>
             </div>
@@ -170,42 +209,81 @@ function AdminLayoutContent({
 
     // Force flama-oficial for branding regardless of settings, unless a real custom icon is intentionally set
     const logoUrl = settings.churchLogoUrl || "/flama-oficial.svg";
-    const isDefaultLogo = !settings.churchLogoUrl;
+
+    // --- LUNA THEME REDIRECT ---
+    // If Admin Theme is Luna, we delegate everything to LunaAdmin component
+    // this ensures 100% independence as requested, while keeping the children accessible
+    if ((settings.adminTheme as any) === 'luna') {
+        return (
+            <div className="admin-theme-luna min-h-screen">
+                <LunaAdmin propTab={currentTab}>
+                    {children}
+                </LunaAdmin>
+            </div>
+        );
+    }
+
+    // --- TACTILE THEME REDIRECT ---
+    // If Admin Theme is Tactile, we delegate to TactileAdmin
+    if ((settings.adminTheme as any) === 'tactile') {
+        return (
+            <div className="admin-theme-tactile min-h-screen">
+                <TactileAdmin propTab={currentTab}>
+                    {children}
+                </TactileAdmin>
+            </div>
+        );
+    }
+
+    const themeClass = (settings.adminTheme as any) === 'primitivo' ? 'admin-theme-primitivo' : 
+                      (settings.adminTheme as any) === 'luna' ? 'admin-theme-luna' : 
+                      'admin-theme-classic';
+
 
     return (
-        <div className="min-h-screen bg-background text-foreground flex transition-colors duration-500">
+        <div className={cn("min-h-screen bg-background text-foreground flex transition-colors duration-500 overflow-hidden", themeClass)}>
             {/* Sidebar */}
-            <aside className={cn(
-                "border-r border-border/40 bg-card/50 backdrop-blur-xl hidden lg:flex flex-col sticky top-0 h-screen transition-all duration-300 ease-in-out z-50",
-                collapsed ? "w-20" : "w-72"
+            <aside 
+                id="admin-sidebar-master"
+                className={cn(
+                "relative h-screen flex flex-col transition-all duration-300 z-40 admin-sidebar-v2 overflow-visible",
+                collapsed ? "w-24" : "w-64",
+                themeClass === 'admin-theme-primitivo' 
+                    ? "admin-sidebar-isolation-primitivo" 
+                    : "bg-white/[0.02] border-r border-white/5"
             )}>
-                <div className={cn("p-6 flex items-center shrink-0", collapsed ? "justify-center" : "justify-between")}>
+                <button
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="absolute -right-3.5 top-20 w-7 h-7 bg-[#f59e0b] rounded-full flex items-center justify-center z-50 text-white hover:scale-110 transition-transform border-none active:scale-95"
+                    title={collapsed ? "Expandir" : "Contraer"}
+                >
+                    {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+                </button>
+                <div className={cn("p-6 flex items-center transition-all", collapsed ? "justify-center px-2" : "gap-3")}>
+                    <div className="w-11 h-11 flex items-center justify-center shrink-0 hover:scale-105 transition-transform">
+                        <img 
+                            src={logoUrl} 
+                            className="w-full h-full object-contain" 
+                            style={{ 
+                                filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))'
+                            }} 
+                            alt="Logo" 
+                        />
+                    </div>
                     {!collapsed && (
-                        <div className="flex items-center gap-3 px-2 py-1 overflow-hidden whitespace-nowrap">
-                            <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                                <img
-                                    src={logoUrl}
-                                    className="w-full h-full object-contain"
-                                    style={{
-                                        filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))'
-                                    }}
-                                    alt="Logo"
-                                />
-                            </div>
-                            <h1 className="text-xl font-black text-foreground tracking-tighter uppercase italic">LLDM<span className="text-primary italic">RODEO</span></h1>
-                        </div>
+                        <h1 className={cn(
+                            "text-[14px] font-black tracking-[0.2em] transition-all duration-500 admin-sidebar-logo-text",
+                            themeClass === 'admin-theme-primitivo' ? "uppercase italic" : "lowercase"
+                        )}>
+                            <span className="logo-lldm">lldm</span> <span className="logo-rodeo">rodeo</span>
+                        </h1>
                     )}
-                    <button
-                        onClick={() => setCollapsed(!collapsed)}
-                        className="p-2 rounded-lg bg-foreground/10 text-muted-foreground transition-colors"
-                    >
-                        {collapsed ? <Menu className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-                    </button>
                 </div>
 
-                <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto custom-scrollbar">
+                <nav className={cn("flex-1 py-6 flex flex-col items-stretch overflow-y-auto scrollbar-hide", collapsed ? "px-2" : "px-4")}>
                     <div className={cn(
-                        "px-4 py-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500",
+                        "px-4 py-3 text-[11px] font-bold lowercase tracking-[0.2em]",
+                        settings.adminTheme === 'primitivo' ? "text-muted-foreground" : "text-white/30",
                         collapsed && "text-center px-0 invisible h-0 py-0"
                     )}>{t.principal}</div>
 
@@ -217,12 +295,17 @@ function AdminLayoutContent({
                             }, 50);
                         }}
                         className={cn(
-                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all border",
-                            (pathname === '/admin' && currentTab === 'dashboard') ? "bg-primary/10 text-primary font-bold border-primary/20 shadow-lg shadow-primary/5" : "bg-foreground/5 text-muted-foreground border-transparent",
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            (pathname === '/admin' && currentTab === 'dashboard') 
+                                ? "bg-tactile-orange-pill text-white font-bold rounded-full" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white" 
+                                    : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        <LayoutDashboard className="w-5 h-5 shrink-0" />
-                        {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.dashboard}</span>}
+                        {(pathname === '/admin' && currentTab === 'dashboard') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <LayoutDashboard className={cn("w-5 h-5 shrink-0 transition-colors", (pathname === '/admin' && currentTab === 'dashboard') ? "text-white" : "")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.dashboard}</span>}
                     </Link>
 
                     <Link href="/admin?tab=horarios"
@@ -233,12 +316,17 @@ function AdminLayoutContent({
                             }, 50);
                         }}
                         className={cn(
-                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                            currentTab === 'horarios' ? "bg-primary/10 text-primary font-bold border border-primary/20" : "bg-foreground/5 text-muted-foreground",
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'horarios' 
+                                ? "bg-tactile-orange-pill text-white font-bold rounded-full" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        <Calendar className="w-5 h-5 group-hover:text-primary transition-colors shrink-0" />
-                        {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.horarios}</span>}
+                        {currentTab === 'horarios' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <Calendar className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'horarios' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.horarios}</span>}
                     </Link>
 
                     <Link href="/admin?tab=contenido"
@@ -249,93 +337,120 @@ function AdminLayoutContent({
                             }, 50);
                         }}
                         className={cn(
-                            "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                            (currentTab === 'contenido' || currentTab === 'temas') ? "bg-secondary/10 text-secondary font-bold border border-secondary/20" : "bg-foreground/5 text-muted-foreground",
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            (currentTab === 'contenido' || currentTab === 'temas') 
+                                ? "bg-tactile-orange-pill text-tactile-orange font-bold rounded-full" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        <BookOpen className="w-5 h-5 group-hover:text-secondary transition-colors shrink-0" />
-                        {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.temas}</span>}
+                        {(currentTab === 'contenido' || currentTab === 'temas') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <BookOpen className={cn("w-5 h-5 transition-colors shrink-0", (currentTab === 'contenido' || currentTab === 'temas') ? "text-tactile-orange" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-orange")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.temas}</span>}
                     </Link>
 
                     <div className={cn(
-                        "px-4 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500",
+                        "px-4 py-6 text-[11px] font-bold lowercase tracking-[0.2em]",
+                        settings.adminTheme === 'primitivo' ? "text-muted-foreground" : "text-white/30",
                         collapsed && "invisible h-0 py-0"
                     )}>{t.gestion}</div>
 
                     <Link href="/admin/members" className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                        pathname === '/admin/members' ? "bg-accent/10 text-accent font-bold border border-accent/20" : "bg-foreground/5 text-muted-foreground",
+                        "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                        pathname === '/admin/members' 
+                            ? "bg-tactile-orange-pill text-tactile-orange font-bold rounded-full" 
+                            : settings.adminTheme === 'primitivo' 
+                                ? "text-muted-foreground hover:text-foreground" 
+                                : "text-white/40 hover:text-white bg-transparent",
                         collapsed && "justify-center px-0"
                     )}>
-                        <Users className="w-5 h-5 group-hover:text-accent transition-colors shrink-0" />
-                        {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.miembros}</span>}
+                        {pathname === '/admin/members' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <Users className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/members' ? "text-tactile-orange" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-orange")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.miembros}</span>}
                     </Link>
 
                     <Link href="/admin/reports" className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                        pathname === '/admin/reports' ? "bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20" : "bg-foreground/5 text-muted-foreground",
+                        "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                        pathname === '/admin/reports' 
+                            ? "bg-tactile-orange-pill text-tactile-orange font-bold rounded-full" 
+                            : settings.adminTheme === 'primitivo' 
+                                ? "text-muted-foreground hover:text-foreground" 
+                                : "text-white/40 hover:text-white bg-transparent",
                         collapsed && "justify-center px-0"
                     )}>
-                        <FileText className="w-5 h-5 group-hover:text-emerald-400 transition-colors shrink-0" />
-                        {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.reportes}</span>}
+                        {pathname === '/admin/reports' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <FileText className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/reports' ? "text-tactile-orange" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-orange")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.reportes}</span>}
                     </Link>
 
                     <Link href="/admin/cloud" className={cn(
-                        "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group",
-                        pathname === '/admin/cloud' ? "bg-primary/10 text-primary font-bold border-primary/20" : "bg-foreground/5 text-muted-foreground border-transparent",
+                        "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                        pathname === '/admin/cloud' 
+                            ? "bg-tactile-orange-pill text-tactile-orange font-bold rounded-full" 
+                            : settings.adminTheme === 'primitivo' 
+                                ? "text-muted-foreground hover:text-foreground" 
+                                : "text-white/40 hover:text-white bg-transparent",
                         collapsed && "justify-center px-0"
                     )}>
-                        <Cloud className="w-5 h-5 shrink-0" />
-                        {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.admin_cloud}</span>}
+                        {pathname === '/admin/cloud' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <Cloud className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/cloud' ? "text-tactile-orange" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.admin_cloud}</span>}
                     </Link>
 
                     <div className={cn(
-                        "px-4 py-6 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2",
+                        "px-4 py-6 text-[11px] font-bold lowercase tracking-[0.2em] flex items-center gap-2",
+                        settings.adminTheme === 'primitivo' ? "text-muted-foreground" : "text-white/30",
                         collapsed && "invisible h-0 py-0"
                     )}>
-                        <Activity className="h-3 w-3 text-secondary animate-pulse" /> {t.simulador}
+                        <Activity className="h-3 w-3 text-[#f59e0b] animate-pulse" /> {t.simulador}
                     </div>
 
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                         <Link href="/" className={cn(
-                            "flex items-center gap-3 px-4 py-2 rounded-lg text-xs bg-foreground/5 text-muted-foreground transition-all",
-                            collapsed && "justify-center"
+                            "flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold bg-transparent transition-all shadow-none",
+                            settings.adminTheme === 'primitivo' ? "text-muted-foreground hover:text-foreground" : "text-white/40 hover:text-white",
+                            collapsed && "justify-center px-0"
                         )}>
-                            <User className="w-4 h-4 text-emerald-500" />
-                            {!collapsed && <span>Vista Miembro</span>}
+                            <User className="w-5 h-5 text-emerald-500 shrink-0" />
+                            {!collapsed && <span className="overflow-hidden whitespace-nowrap">Vista Miembro</span>}
                         </Link>
                         <Link href="/dashboard/coro" className={cn(
-                            "flex items-center gap-3 px-4 py-2 rounded-lg text-xs bg-foreground/5 text-muted-foreground transition-all",
-                            collapsed && "justify-center"
+                            "flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold bg-transparent transition-all shadow-none",
+                            settings.adminTheme === 'primitivo' ? "text-muted-foreground hover:text-foreground" : "text-white/40 hover:text-white",
+                            collapsed && "justify-center px-0"
                         )}>
-                            <Music className="w-4 h-4 text-secondary" />
-                            {!collapsed && <span>Vista Coro</span>}
+                            <Music className="w-5 h-5 text-[#f59e0b] shrink-0" />
+                            {!collapsed && <span className="overflow-hidden whitespace-nowrap">Vista Coro</span>}
                         </Link>
                         <Link href="/dashboard/responsable" className={cn(
-                            "flex items-center gap-3 px-4 py-2 rounded-lg text-xs bg-foreground/5 text-muted-foreground transition-all",
-                            collapsed && "justify-center"
+                            "flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold bg-transparent transition-all shadow-none",
+                            settings.adminTheme === 'primitivo' ? "text-muted-foreground hover:text-foreground" : "text-white/40 hover:text-white",
+                            collapsed && "justify-center px-0"
                         )}>
-                             <Flame className="w-4 h-4 text-primary" />
-                            {!collapsed && <span>Vista Responsable</span>}
+                             <Flame className="w-5 h-5 text-tactile-orange shrink-0" />
+                            {!collapsed && <span className="overflow-hidden whitespace-nowrap">Vista Responsable</span>}
                         </Link>
                         <Link href="/dashboard/monitor" className={cn(
-                            "flex items-center gap-3 px-4 py-2 rounded-lg text-xs bg-foreground/5 text-muted-foreground transition-all",
-                            collapsed && "justify-center"
+                            "flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold bg-transparent transition-all shadow-none",
+                            settings.adminTheme === 'primitivo' ? "text-muted-foreground hover:text-foreground" : "text-white/40 hover:text-white",
+                            collapsed && "justify-center px-0"
                         )}>
-                            <ClipboardCheck className="w-4 h-4 text-emerald-500" />
-                            {!collapsed && <span>Vista Monitor</span>}
+                            <ClipboardCheck className="w-5 h-5 text-emerald-500 shrink-0" />
+                            {!collapsed && <span className="overflow-hidden whitespace-nowrap">Vista Monitor</span>}
                         </Link>
                         <Link href="/dashboard/ninos" className={cn(
-                            "flex items-center gap-3 px-4 py-2 rounded-lg text-xs bg-foreground/5 text-muted-foreground transition-all",
-                            collapsed && "justify-center"
+                            "flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold bg-transparent transition-all shadow-none",
+                            settings.adminTheme === 'primitivo' ? "text-muted-foreground hover:text-foreground" : "text-white/40 hover:text-white",
+                            collapsed && "justify-center px-0"
                         )}>
-                            <Baby className="w-4 h-4 text-cyan-400" />
-                            {!collapsed && <span>Vista Niños</span>}
+                            <Baby className="w-5 h-5 text-cyan-400 shrink-0" />
+                            {!collapsed && <span className="overflow-hidden whitespace-nowrap">Vista Niños</span>}
                         </Link>
                     </div>
 
-                    <div className="mt-auto pt-10">
-                        <Link href="/admin?tab=ajustes"
+                    <div className={cn("mt-auto pt-6 px-4 space-y-4", collapsed && "px-0")}>
+                        <Link href="/admin?tab=configuracion"
                             onClick={() => {
                                 setTimeout(() => {
                                     window.dispatchEvent(new Event('popstate'));
@@ -343,12 +458,65 @@ function AdminLayoutContent({
                                 }, 50);
                             }}
                             className={cn(
-                                "flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all group border-t border-white/5 mt-auto",
-                                collapsed && "justify-center px-0 border-none"
+                                "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                                currentTab === 'configuracion' 
+                                    ? "bg-tactile-orange-pill text-white font-semibold rounded-full" 
+                                    : settings.adminTheme === 'primitivo' 
+                                        ? "text-muted-foreground hover:text-foreground" 
+                                        : "text-white/40 hover:text-white bg-transparent",
+                                collapsed && "justify-center px-0"
                             )}>
-                            <Settings className="w-5 h-5 group-hover:rotate-45 transition-transform duration-500 shrink-0" />
-                            {!collapsed && <span className="overflow-hidden whitespace-nowrap">{t.configuracion}</span>}
+                            {currentTab === 'configuracion' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/2 bg-slate-400 rounded-r-full" />}
+                            <Settings className={cn("w-5 h-5 group-hover:rotate-45 transition-transform duration-500 shrink-0 shadow-none", currentTab === 'configuracion' ? "" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
+                            {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">{t.configuracion}</span>}
                         </Link>
+
+                        {/* Theme Switcher - Divided Icon Pill (Alair Style) */}
+                        <div className={cn(
+                            "transition-all duration-500 shadow-none border-none",
+                            collapsed ? "flex justify-center" : "bg-white/[0.08] p-1 rounded-full flex items-center gap-0 w-fit mx-auto"
+                        )}>
+                            {collapsed ? (
+                                <button
+                                    onClick={() => saveSettingsToCloud({ themeMode: settings.themeMode === 'light' ? 'dark' : 'light' })}
+                                    className="w-10 h-10 flex items-center justify-center rounded-full text-white hover:text-primary transition-all shadow-none group/theme"
+                                    title={settings.themeMode === 'light' ? "Cambiar a Oscuro" : "Cambiar a Claro"}
+                                >
+                                    <Contrast className="w-5 h-5 transition-transform group-hover/theme:rotate-180 duration-500 shadow-none" />
+                                </button>
+                            ) : (
+                                <>
+                                    <button
+                                        onClick={() => saveSettingsToCloud({ themeMode: 'light' })}
+                                        className={cn(
+                                            "w-10 h-10 flex items-center justify-center rounded-full transition-all group/btn shadow-none border-none",
+                                            settings.themeMode === 'light' 
+                                                ? "bg-[#2b3043] text-white" 
+                                                : "text-white/40 hover:text-white"
+                                        )}
+                                        title="Modo Claro"
+                                    >
+                                        <Sun className={cn("w-4 h-4 shrink-0 shadow-none", settings.themeMode === 'light' ? "text-white" : "text-white/40")} />
+                                    </button>
+                                    
+                                    {/* Subtle Vertical Divider */}
+                                    <div className="w-[1px] h-4 bg-white/10 mx-1" />
+                                    
+                                    <button
+                                        onClick={() => saveSettingsToCloud({ themeMode: 'dark' })}
+                                        className={cn(
+                                            "w-10 h-10 flex items-center justify-center rounded-full transition-all group/btn shadow-none border-none",
+                                            settings.themeMode === 'dark' 
+                                                ? "bg-[#2b3043] text-white" 
+                                                : "text-white/40 hover:text-white"
+                                        )}
+                                        title="Modo Oscuro"
+                                    >
+                                        <Moon className={cn("w-4 h-4 shrink-0 shadow-none", settings.themeMode === 'dark' ? "text-white" : "text-white/40")} />
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </nav>
 
@@ -360,16 +528,16 @@ function AdminLayoutContent({
                             window.dispatchEvent(new Event('tab-change'));
                         }, 100);
                     }}
-                    className={cn("block p-6 border-t border-white/5 hover:bg-white/5 transition-colors cursor-pointer", collapsed && "p-4")}
+                    className={cn("block px-4 py-3 transition-colors cursor-pointer bg-transparent shadow-none border-none", collapsed ? "p-3" : "mt-2")}
                 >
-                    <div className={cn("flex items-center gap-3", collapsed ? "justify-center" : "px-2")}>
-                        <div className="w-9 h-9 rounded-full border border-primary/30 p-0.5 shrink-0 overflow-hidden bg-slate-800/50 hover:border-primary transition-colors">
-                            <img src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.name}&background=random`} className="w-full h-full object-cover rounded-full" alt="Admin" />
+                    <div className={cn("flex items-center gap-3", collapsed ? "justify-center" : "px-1")}>
+                        <div className="w-9 h-9 shrink-0 overflow-hidden bg-transparent shadow-none border-none">
+                            <img src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name}&background=random`} className="w-full h-full object-cover rounded-full" alt="Admin" />
                         </div>
                         {!collapsed && (
                             <div className="overflow-hidden whitespace-nowrap">
-                                <div className="text-sm font-black text-white leading-none truncate group-hover:text-primary transition-colors">{currentUser.name}</div>
-                                <div className="text-[9px] text-primary mt-1 uppercase font-black tracking-widest">{currentUser.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : currentUser.role}</div>
+                                <div className="text-[13px] font-semibold text-white leading-none truncate group-hover:text-[#f59e0b] transition-colors shadow-none">{currentUser?.name}</div>
+                                <div className="text-[11px] text-white/30 mt-1.5 uppercase font-bold tracking-[0.15em] truncate shadow-none">{currentUser?.role === 'Administrador' ? 'SISTEMA ADMIN' : currentUser?.role}</div>
                             </div>
                         )}
                     </div>

@@ -26,39 +26,66 @@ export default function YouthDashboard() {
     ];
 
     return (
-        <div className="min-h-screen bg-background text-foreground transition-all duration-500">
+        <div className="min-h-screen text-foreground transition-all duration-500">
             <Header />
 
             <main className="container mx-auto p-4 md:p-8 space-y-8 pb-32 md:pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="flex items-center gap-4">
-                        <div className="w-16 h-16 rounded-[2rem] bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
-                            <Star className="w-8 h-8 text-indigo-400" />
+                <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-12">
+                    <div className="flex items-center gap-6">
+                        <div className="relative group">
+                            <div className="absolute -inset-1 bg-gradient-to-tr from-indigo-500 to-cyan-400 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-700"></div>
+                            <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-[2.2rem] bg-indigo-500/10 border-2 border-indigo-500/30 flex items-center justify-center p-1 overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                                <div className="w-full h-full rounded-[1.8rem] bg-black/40 flex items-center justify-center overflow-hidden">
+                                     <Star className="w-10 h-10 text-indigo-400 animate-pulse fill-indigo-400/20" />
+                                </div>
+                            </div>
+                            <div className="absolute -bottom-2 -right-2 bg-indigo-500 p-2 rounded-xl border-4 border-[#020617] shadow-lg">
+                                 <Trophy className="w-4 h-4 text-white" />
+                            </div>
                         </div>
                         <div>
-                            <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-foreground uppercase italic leading-none">
-                                Juventud <span className="text-indigo-400 italic">LLDM</span>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-black uppercase tracking-[0.2em] mb-2 leading-none">
+                                <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full animate-ping" />
+                                Active Youth Hub
+                            </div>
+                            <h1 className="text-4xl md:text-6xl font-black tracking-tighter text-foreground uppercase italic leading-none">
+                                Juventud <span className="text-indigo-400 italic">RODEO</span>
                             </h1>
-                            <p className="text-slate-500 font-medium tracking-tight mt-2">Panel del Encargado de Jóvenes</p>
+                            <p className="text-muted-foreground font-bold tracking-tight text-sm md:text-lg mt-2 opacity-80">Coordination & spiritual growth panel for the youth group.</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {stats.map((stat, i) => (
-                        <div key={i} className="glass-card p-6 rounded-3xl border border-white/5 bg-foreground/[0.02]">
-                            <div className="flex items-center justify-between mb-4">
-                                <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                                <span className={`text-[10px] font-black uppercase tracking-widest ${stat.color} opacity-70`}>{stat.label}</span>
+                        <motion.div 
+                            key={i} 
+                            whileHover={{ y: -5, scale: 1.02 }}
+                            className="glass-card p-8 rounded-[2.5rem] border border-white/5 bg-black/40 relative overflow-hidden group"
+                        >
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-indigo-500/10 transition-colors" />
+                            <div className="flex items-center justify-between mb-6 relative z-10">
+                                <div className={`p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 group-hover:scale-110 transition-transform duration-500 shadow-xl`}>
+                                     <stat.icon className={`w-6 h-6 ${stat.color} shadow-[0_0_15px_rgba(99,102,241,0.3)]`} />
+                                </div>
+                                <span className={`text-[11px] font-black uppercase tracking-[0.2em] ${stat.color} opacity-60`}>{stat.label}</span>
                             </div>
-                            <h4 className="text-3xl font-black text-white italic">{stat.value}</h4>
-                        </div>
+                            <h4 className="text-4xl md:text-5xl font-black text-foreground italic tracking-tighter relative z-10 leading-none group-hover:translate-x-1 transition-transform">{stat.value}</h4>
+                            <div className="mt-4 w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                                <motion.div 
+                                    className={`h-full bg-gradient-to-r from-indigo-500 to-transparent`}
+                                    initial={{ x: '-100%' }}
+                                    animate={{ x: '0%' }}
+                                    transition={{ duration: 1.5, delay: i * 0.2 }}
+                                />
+                            </div>
+                        </motion.div>
                     ))}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <Card className="glass-card border-none bg-foreground/[0.02] backdrop-blur-xl p-8 rounded-[2.5rem]">
-                        <h2 className="text-xl font-black text-white uppercase italic flex items-center gap-4 mb-6">
+                        <h2 className="text-xl font-black text-foreground uppercase italic flex items-center gap-4 mb-6">
                             <Calendar className="w-6 h-6 text-indigo-400" />
                             Próximas Actividades
                         </h2>
@@ -66,8 +93,8 @@ export default function YouthDashboard() {
                             {([].map((act: any, i: number) => (
                                 <div key={i} className="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between hover:bg-white/10 transition-colors cursor-pointer group">
                                     <div>
-                                        <p className="font-bold text-white text-sm">{act.title}</p>
-                                        <p className="text-xs text-slate-500">{act.time}</p>
+                                        <p className="font-bold text-foreground text-sm">{act.title}</p>
+                                        <p className="text-xs text-muted-foreground">{act.time}</p>
                                     </div>
                                     <span className="text-[10px] font-black uppercase tracking-tighter text-indigo-400 opacity-60 group-hover:opacity-100 transition-opacity flex items-center gap-1">
                                         DETALLES <ArrowRight className="w-3 h-3" />
@@ -75,11 +102,11 @@ export default function YouthDashboard() {
                                 </div>
                             )))}
                         </div>
-                        {[].length === 0 && <p className="text-xs text-slate-500 italic text-center py-4">No hay próximas actividades programadas.</p>}
+                        {[].length === 0 && <p className="text-xs text-muted-foreground italic text-center py-4">No hay próximas actividades programadas.</p>}
                     </Card>
 
                     <Card className="glass-card border-none bg-indigo-500/5 backdrop-blur-xl p-8 rounded-[2.5rem] border border-indigo-500/10">
-                        <h2 className="text-xl font-black text-white uppercase italic flex items-center gap-4 mb-6">
+                        <h2 className="text-xl font-black text-foreground uppercase italic flex items-center gap-4 mb-6">
                             <MessageSquare className="w-6 h-6 text-indigo-400" />
                             Comunicados Juveniles
                         </h2>

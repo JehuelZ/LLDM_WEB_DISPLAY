@@ -12,7 +12,7 @@ import {
     Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2, Plus,
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
-    Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target,
+    Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target, Contrast,
     Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert
 } from "lucide-react";
 import Link from 'next/link';
@@ -26,15 +26,18 @@ import { ImageEditor } from '@/components/ImageEditor';
 import { CountdownCard } from '@/components/CountdownCard';
 import { ALL_THEMES } from '@/themes';
 import TactileAdmin from './TactileAdmin';
+import LunaAdmin from './LunaAdmin';
 
 const MessagesPanel = ({
     messages,
     onMarkRead,
-    onReply
+    onReply,
+    settings
 }: {
     messages: any[],
     onMarkRead: (id: string) => void,
-    onReply: (recipientId: string, content: string) => Promise<void>
+    onReply: (recipientId: string, content: string) => Promise<void>,
+    settings: AppSettings
 }) => {
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
     const [replyText, setReplyText] = useState('');
@@ -47,59 +50,91 @@ const MessagesPanel = ({
     };
 
     return (
-        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+        <Card className={cn(
+            "card border-none relative overflow-hidden group transition-all duration-500",
+            settings.adminTheme === 'primitivo' 
+                ? "bg-[#101420] rounded-[1.5rem] border border-white/5 shadow-none" 
+                : "bg-slate-900/60 rounded-none glass-card shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+        )}>
+            <div className={cn(
+                "absolute top-0 right-0 w-64 h-64 blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-700",
+                settings.adminTheme === 'primitivo' ? "bg-transparent" : "bg-white/5"
+            )} />
             <CardHeader className="relative z-10 pb-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <CardTitle className="flex items-center gap-3 text-2xl font-black uppercase italic tracking-tighter text-white drop-shadow-sm">
-                            <div className="w-10 h-10 bg-primary/20 rounded-2xl flex items-center justify-center border border-primary/30 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]">
-                                <Mail className="h-5 w-5 text-primary" />
+                        <CardTitle className="relative z-10 flex items-center gap-4 text-2xl font-black uppercase tracking-tighter text-foreground drop-shadow-sm w-full">
+                            <div className="flex items-center gap-3">
+                                <div className={cn(
+                                    "w-10 h-10 flex items-center justify-center shadow-none transition-all",
+                                    settings.adminTheme === 'primitivo' ? "bg-white/5 rounded-2xl border border-white/10" : "bg-white/5 rounded-none border border-white/10"
+                                )}>
+                                    <Mail className={cn("h-4 w-4", settings.adminTheme === 'primitivo' ? "text-white/70" : "text-white")} />
+                                </div>
+                                <span className="whitespace-nowrap text-foreground">inbox de <span className={cn("text-foreground underline underline-offset-8", settings.adminTheme === 'primitivo' ? "decoration-foreground/10" : "decoration-white/30")}>mensajes</span></span>
                             </div>
-                            Inbox de <span className="text-primary underline decoration-primary/30 underline-offset-4">Mensajes</span>
+                            <div className={cn(
+                                "flex-1 h-px ml-4",
+                                settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" : "bg-gradient-to-r from-white/20 via-white/5 to-transparent"
+                            )} />
                         </CardTitle>
-                        <CardDescription className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-500 mt-2 ml-1">Comunicaciones de la congregación</CardDescription>
+                        <CardDescription className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mt-3 ml-1">comunicaciones de la congregación</CardDescription>
                     </div>
                 </div>
             </CardHeader>
             <CardContent className="relative z-10">
                 <div className="grid grid-cols-1 gap-5 max-h-[600px] overflow-y-auto pr-3 custom-scrollbar">
                     {messages.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-20 text-slate-600">
-                            <div className="w-20 h-20 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center justify-center mb-6">
-                                <Mail className="h-8 w-8 opacity-20" />
+                        <div className="flex flex-col items-center justify-center py-24 text-white/20">
+                            <div className={cn(
+                                "w-20 h-20 flex items-center justify-center mb-8 border transition-all",
+                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-[2rem] border-white/5" : "bg-white/[0.02] border-white/5 rounded-none"
+                            )}>
+                                <Mail className={cn("h-10 w-10 opacity-5", settings.adminTheme === 'primitivo' ? "text-white" : "")} />
                             </div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em] italic text-center">Bandeja de entrada vacía</p>
+                            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-center">bandeja de entrada vacía</p>
                         </div>
                     ) : (
                         messages.map(msg => (
                             <motion.div 
                                 key={msg.id} 
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
                                 className={cn(
-                                    "p-5 rounded-[2.5rem] border transition-all duration-500 flex flex-col gap-4 relative group overflow-hidden backdrop-blur-xl shadow-xl",
+                                    "p-6 border transition-all duration-500 flex flex-col gap-6 relative group overflow-hidden backdrop-blur-xl",
+                                    settings.adminTheme === 'primitivo' ? "shadow-none rounded-3xl" : "shadow-2xl rounded-none",
                                     msg.isRead
-                                        ? "bg-white/[0.01] border-white/5 opacity-70 hover:opacity-100"
-                                        : "bg-white/[0.03] border-primary/20 ring-1 ring-primary/10 shadow-[0_0_30px_rgba(var(--primary-rgb),0.05)]"
+                                        ? "bg-white/[0.01] border-white/5 opacity-50 hover:opacity-100"
+                                        : (settings.adminTheme === 'primitivo' ? "bg-black/40 border-amber-400/20 ring-1 ring-amber-400/10 shadow-none" : "bg-white/[0.05] border-white/10 ring-1 ring-white/5 shadow-2xl")
                                 )}
                             >
                                 <div className="flex justify-between items-start">
-                                    <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-5">
                                         <div className={cn(
-                                            "w-12 h-12 rounded-2xl flex items-center justify-center text-sm font-black transition-all duration-500 shadow-inner",
-                                            msg.isRead ? "bg-slate-800 text-slate-500 border border-white/5" : "bg-gradient-to-br from-primary to-primary-foreground/50 text-black shadow-lg shadow-primary/20 border border-white/20"
+                                            "w-12 h-12 flex items-center justify-center text-sm font-black transition-all duration-500",
+                                            settings.adminTheme === 'primitivo' ? "rounded-2xl" : "rounded-none",
+                                            msg.isRead 
+                                                ? (settings.adminTheme === 'primitivo' ? "bg-black/60 text-white/30 border border-white/5" : "bg-slate-800 text-slate-500 border border-white/5")
+                                                : (settings.adminTheme === 'primitivo' ? "bg-amber-400/10 text-amber-400 border border-amber-400/30 shadow-[0_0_15px_rgba(251,191,36,0.1)]" : "bg-white text-black shadow-2xl shadow-white/10 border border-white/20")
                                         )}>
                                             {msg.senderName?.charAt(0)}
                                         </div>
                                         <div>
-                                            <h4 className="font-black text-white text-base flex items-center gap-2 italic tracking-tight">
+                                            <h4 className={cn(
+                                                "font-black text-white text-base flex items-center gap-3 tracking-tighter",
+                                                !msg.isRead && settings.adminTheme === 'primitivo' && "text-amber-400"
+                                            )}>
                                                 {msg.senderName}
-                                                {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(var(--primary-rgb),1)]" />}
+                                                {!msg.isRead && <span className={cn(
+                                                    "w-2 h-2 animate-pulse",
+                                                    settings.adminTheme === 'primitivo' ? "bg-amber-400 rounded-full shadow-[0_0_8px_rgba(251,191,36,0.5)]" : "bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+                                                )} />}
                                             </h4>
-                                            <div className="flex items-center gap-2 opacity-60">
-                                                <Calendar className="w-2.5 h-2.5 ml-0.5" />
-                                                <span className="text-[8px] text-slate-400 uppercase font-black tracking-widest leading-none">{new Date(msg.createdAt).toLocaleString()}</span>
+                                            <div className="flex items-center gap-2 opacity-40">
+                                                <Clock className="w-3 h-3" />
+                                                <span className="text-[9px] text-white uppercase font-black tracking-widest leading-none">
+                                                    {format(new Date(msg.createdAt), 'dd MMM, HH:mm', { locale: es }).toLowerCase()}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -109,7 +144,10 @@ const MessagesPanel = ({
                                                 variant="ghost"
                                                 size="icon"
                                                 onClick={() => onMarkRead(msg.id)}
-                                                className="h-10 w-10 text-slate-500 hover:text-primary rounded-2xl bg-white/[0.02] border border-white/5 hover:border-primary/30 transition-all active:scale-90"
+                                                className={cn(
+                                                    "h-10 w-10 transition-all active:scale-95 border",
+                                                    settings.adminTheme === 'primitivo' ? "rounded-xl bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white" : "rounded-none bg-white/[0.02] border-white/5 text-white/50 hover:text-white hover:border-white/30"
+                                                )}
                                                 title="Marcar leído"
                                             >
                                                 <CheckCircle className="h-5 w-5" />
@@ -120,8 +158,11 @@ const MessagesPanel = ({
                                             size="icon"
                                             onClick={() => setReplyingTo(replyingTo === msg.id ? null : msg.id)}
                                             className={cn(
-                                                "h-10 w-10 rounded-2xl bg-white/[0.02] border border-white/5 transition-all active:scale-90",
-                                                replyingTo === msg.id ? "text-primary border-primary/30 bg-primary/10" : "text-slate-500 hover:text-white"
+                                                "h-10 w-10 transition-all active:scale-95 border",
+                                                settings.adminTheme === 'primitivo' ? "rounded-xl" : "rounded-none",
+                                                replyingTo === msg.id 
+                                                    ? (settings.adminTheme === 'primitivo' ? "text-white border-white/20 bg-white/10" : "text-white border-white/30 bg-white/10")
+                                                    : (settings.adminTheme === 'primitivo' ? "text-white/30 hover:text-white bg-white/5 border-white/5" : "text-white/50 hover:text-white bg-white/[0.02] border-white/5")
                                             )}
                                             title="Responder"
                                         >
@@ -130,27 +171,42 @@ const MessagesPanel = ({
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-900/60 p-5 rounded-[1.8rem] border border-white/5 shadow-inner">
-                                    <p className="text-[13px] text-slate-300 leading-relaxed font-outfit">{msg.content}</p>
+                                <div className={cn(
+                                    "p-6 border transition-all",
+                                    settings.adminTheme === 'primitivo' ? "bg-[#0a0a0a]/40 rounded-2xl border-white/5 shadow-none" : "bg-slate-900/40 rounded-none border-white/5 shadow-inner"
+                                )}>
+                                    <p className="text-[14px] text-white/80 leading-relaxed font-light ">{msg.content}</p>
                                 </div>
 
                                 {replyingTo === msg.id && (
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: 'auto' }}
-                                        className="mt-2 space-y-4 p-5 bg-[#0a0a0a]/80 rounded-[2rem] border border-primary/20 shadow-2xl relative overflow-hidden"
+                                        className={cn(
+                                            "mt-4 space-y-6 p-6 border relative overflow-hidden",
+                                            settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-2xl border-white/10 shadow-none" : "bg-black/60 rounded-none border-white/10 shadow-2xl"
+                                        )}
                                     >
-                                        <div className="absolute top-0 left-0 w-1 h-full bg-primary/50" />
+                                        <div className={cn("absolute top-0 left-0 w-[2px] h-full", settings.adminTheme === 'primitivo' ? "bg-white/20" : "bg-white/30")} />
                                         <textarea
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
-                                            placeholder={`Escribe tu respuesta a ${msg.senderName.split(' ')[0]}...`}
-                                            className="w-full h-32 bg-black/40 border border-white/10 rounded-2xl p-4 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:border-primary/50 transition-all resize-none font-sans"
+                                            placeholder={`escribe tu respuesta a ${msg.senderName.split(' ')[0].toLowerCase()}...`}
+                                            className={cn(
+                                                "w-full h-32 bg-black/40 p-5 text-sm text-white placeholder:text-white/20 focus:outline-none transition-all resize-none font-light",
+                                                settings.adminTheme === 'primitivo' ? "rounded-xl border border-white/5 focus:border-white/20" : "rounded-none border border-white/10 focus:border-white/30"
+                                            )}
                                         />
                                         <div className="flex justify-end gap-3">
-                                            <Button size="sm" variant="ghost" className="h-10 text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-white" onClick={() => setReplyingTo(null)}>Cancelar</Button>
-                                            <Button size="sm" className="h-10 bg-primary hover:bg-primary/80 text-black text-[10px] font-black uppercase tracking-widest px-8 rounded-xl shadow-xl shadow-primary/20 transition-all hover:translate-y-[-1px] active:translate-y-0" onClick={() => handleSendReply(msg.senderId)}>
-                                                <Send className="w-3.5 h-3.5 mr-2" /> Enviar Respuesta
+                                            <Button size="sm" variant="ghost" className={cn(
+                                                "h-11 text-[9px] font-black uppercase tracking-[0.2em] hover:text-white transition-all",
+                                                settings.adminTheme === 'primitivo' ? "rounded-xl text-white/20" : "rounded-none text-white/40"
+                                            )} onClick={() => setReplyingTo(null)}>cancelar</Button>
+                                            <Button size="sm" className={cn(
+                                                "h-11 text-[10px] font-black uppercase tracking-[0.3em] px-10 transition-all hover:translate-y-[-2px] active:translate-y-0 shadow-none",
+                                                settings.adminTheme === 'primitivo' ? "bg-[#121523] text-white border border-white/10 hover:bg-slate-800 rounded-xl" : "bg-white text-black hover:bg-slate-200 rounded-none shadow-white/10 shadow-2xl"
+                                            )} onClick={() => handleSendReply(msg.senderId)}>
+                                                <Send className="w-4 h-4 mr-3" /> enviar respuesta
                                             </Button>
                                         </div>
                                     </motion.div>
@@ -244,7 +300,7 @@ const CustomSelect = ({
                                     )
                                 ))
                             ) : (
-                                <div className="py-8 text-center text-xs text-muted-foreground italic">
+                                <div className="py-8 text-center text-xs text-muted-foreground ">
                                     No se encontraron resultados
                                 </div>
                             )}
@@ -306,7 +362,7 @@ const MiniCountdown = () => {
     if (!settings.showCountdown || !timeLeft) {
         return (
             <div className="flex flex-col items-center">
-                <div className="text-xl font-black text-slate-400 dark:text-slate-500 uppercase italic">Desactivado</div>
+                <div className="text-xl font-black text-slate-400 dark:text-slate-500 uppercase ">Desactivado</div>
                 <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Activar en Configuración</div>
             </div>
         );
@@ -337,8 +393,8 @@ const MiniCountdown = () => {
     );
 };
 
-const WeeklyAttendanceChart = () => {
-    const { loadDetailedWeeklyStats, members } = useAppStore();
+const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
+    const { loadDetailedWeeklyStats, members, authSession } = useAppStore();
     const [weekStart, setWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
     const [stats, setStats] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -359,57 +415,57 @@ const WeeklyAttendanceChart = () => {
             setLoading(false);
         };
         fetchStats();
-    }, [formattedDays, loadDetailedWeeklyStats]);
+    }, [formattedDays, loadDetailedWeeklyStats, authSession]);
 
     const changeWeek = (direction: number) => {
         setWeekStart(prev => addDays(prev, direction * 7));
     };
 
     return (
-        <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm col-span-1 xl:col-span-12">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none" />
+        <Card className="glass-card bg-slate-900/40 border-none relative overflow-hidden group shadow-sm h-full">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-none blur-3xl -mr-32 -mt-32 pointer-events-none" />
             <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-10">
                 <div>
-                    <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                        <Activity className="w-3 h-3 text-primary" />
-                        Distribución Semanal de Asistencia
+                    <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
+                        <Activity className="w-3 h-3 text-foreground" />
+                        distribución semanal de asistencia
                     </CardTitle>
-                    <CardDescription className="text-[9px] uppercase font-bold text-slate-400 mt-1">
-                        Semana del {format(weekDays[0], 'd MMM', { locale: es })} al {format(weekDays[6], 'd MMM', { locale: es })}
+                    <CardDescription className="text-[9px] uppercase font-bold text-muted-foreground mt-1">
+                        semana del {format(weekDays[0], 'd MMM', { locale: es })} al {format(weekDays[6], 'd MMM', { locale: es })}
                     </CardDescription>
                 </div>
                 <div className="flex gap-2">
                     <Button 
                         variant="outline" 
                         size="icon" 
-                        className="h-7 w-7 rounded-lg border-white/5 bg-white/5 hover:bg-white/10"
+                        className="h-7 w-7 rounded-none border-white/10 bg-white/5 hover:bg-white/10"
                         onClick={() => changeWeek(-1)}
                     >
-                        <ChevronLeft className="h-3 w-3" />
+                        <ChevronLeft className="h-3 w-3 text-white" />
                     </Button>
                     <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="h-7 text-[8px] font-black uppercase tracking-widest hover:bg-white/10"
+                        className="h-7 text-[8px] font-black uppercase tracking-widest hover:bg-white/10 text-white"
                         onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 0 }))}
                     >
-                        HOY
+                        hoy
                     </Button>
                     <Button 
                         variant="outline" 
                         size="icon" 
-                        className="h-7 w-7 rounded-lg border-white/5 bg-white/5 hover:bg-white/10"
+                        className="h-7 w-7 rounded-none border-white/10 bg-white/5 hover:bg-white/10"
                         onClick={() => changeWeek(1)}
                         disabled={weekStart >= startOfWeek(new Date(), { weekStartsOn: 0 })}
                     >
-                        <ChevronRight className="h-3 w-3" />
+                        <ChevronRight className="h-3 w-3 text-white" />
                     </Button>
                 </div>
             </CardHeader>
             <CardContent className="pt-6 relative z-10">
                 <div className="h-64 flex items-end justify-between gap-4 px-8 pb-10 relative">
                     {/* Y-axis Labels */}
-                    <div className="absolute left-0 top-0 bottom-10 flex flex-col justify-between text-[8px] font-black text-slate-600 pr-2 pointer-events-none select-none">
+                    <div className="absolute left-0 top-0 bottom-10 flex flex-col justify-between text-[8px] font-black text-white/40 pr-2 pointer-events-none select-none">
                         <span>100%</span>
                         <span>75%</span>
                         <span>50%</span>
@@ -418,16 +474,16 @@ const WeeklyAttendanceChart = () => {
                     </div>
 
                     {/* Grid Lines */}
-                    <div className="absolute left-8 right-8 top-0 bottom-10 flex flex-col justify-between pointer-events-none opacity-20">
-                        <div className="w-full h-px bg-slate-500" />
-                        <div className="w-full h-px bg-slate-500 border-dashed" />
-                        <div className="w-full h-px bg-slate-500" />
-                        <div className="w-full h-px bg-slate-500 border-dashed" />
+                    <div className="absolute left-8 right-8 top-0 bottom-10 flex flex-col justify-between pointer-events-none opacity-5">
+                        <div className="w-full h-px bg-white" />
+                        <div className="w-full h-px bg-white border-dashed" />
+                        <div className="w-full h-px bg-white" />
+                        <div className="w-full h-px bg-white border-dashed" />
                     </div>
 
                     {loading ? (
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <Sparkles className="w-6 h-6 text-primary animate-pulse" />
+                            <Sparkles className="w-6 h-6 text-white animate-pulse" />
                         </div>
                     ) : stats.map((day, idx) => {
                         const total = day.totalMembers || 1;
@@ -437,47 +493,61 @@ const WeeklyAttendanceChart = () => {
                         
                         return (
                             <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full relative group">
-                                <div className="flex-1 w-full bg-slate-900/40 rounded-t-2xl overflow-hidden relative flex flex-col justify-end border border-white/[0.03] backdrop-blur-md transition-all duration-300 group-hover:border-primary/20 shadow-inner">
+                                <div className="flex-1 w-3 bg-white/[0.03] rounded-t-full overflow-hidden relative flex flex-col justify-end border-b border-white/20 backdrop-blur-md transition-all duration-300 group-hover:bg-white/[0.05] h-full mx-auto">
                                     {/* Evening Segment */}
                                     <motion.div 
                                         initial={{ height: 0 }}
                                         animate={{ height: `${pEvening}%` }}
-                                        className="w-full bg-gradient-to-t from-orange-600 to-orange-400 relative z-30 group-hover:from-orange-500 group-hover:to-orange-300 transition-all duration-500"
+                                        className={cn(
+                                            "w-full relative z-30 transition-all duration-500 rounded-t-full",
+                                            idx % 2 === 0 
+                                                ? (settings.adminTheme === 'primitivo' ? "bg-gradient-to-t from-amber-700 to-amber-500 shadow-none" : "bg-gradient-to-t from-orange-600 to-orange-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]") 
+                                                : "bg-[#525568]"
+                                        )}
                                         style={{ 
-                                            boxShadow: pEvening > 0 ? "0 -4px 15px rgba(249,115,22,0.4)" : "none",
-                                            borderTop: '1.5px solid rgba(255,255,255,0.3)'
+                                            borderTop: '1px solid rgba(255,255,255,0.1)'
                                         }}
                                     >
-                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 px-2 py-1 rounded text-[8px] font-black uppercase tracking-widest whitespace-nowrap z-50 border border-orange-500/30 backdrop-blur-md">
-                                            {day.sessions['evening']} Pers.
+                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 px-2 py-1 rounded-none text-[8px] font-black uppercase tracking-widest whitespace-nowrap z-50 border border-white/10 backdrop-blur-md text-white">
+                                            {day.sessions['evening']} pers.
                                         </div>
                                     </motion.div>
+
                                     {/* 9 AM Segment */}
                                     <motion.div 
                                         initial={{ height: 0 }}
                                         animate={{ height: `${p9am}%` }}
-                                        className="w-full bg-gradient-to-t from-indigo-600 to-indigo-400 relative z-20 group-hover:from-indigo-500 group-hover:to-indigo-300 transition-all duration-500"
+                                        className={cn(
+                                            "w-full relative z-20 transition-all duration-500 rounded-none",
+                                            idx % 2 === 0 
+                                                ? (settings.adminTheme === 'primitivo' ? "bg-gradient-to-t from-amber-500/60 to-amber-400/40 shadow-none" : "bg-gradient-to-t from-indigo-700 to-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.2)]") 
+                                                : "bg-[#525568]/80"
+                                        )}
                                         style={{ 
-                                            boxShadow: p9am > 0 ? "0 -4px 15px rgba(79,70,229,0.4)" : "none",
-                                            borderTop: '1.5px solid rgba(255,255,255,0.3)'
+                                            borderTop: '1px solid rgba(255,255,255,0.1)'
                                         }}
                                     />
+
                                     {/* 5 AM Segment */}
                                     <motion.div 
                                         initial={{ height: 0 }}
                                         animate={{ height: `${p5am}%` }}
-                                        className="w-full bg-gradient-to-t from-emerald-600 to-emerald-400 relative z-10 group-hover:from-emerald-500 group-hover:to-emerald-300 transition-all duration-500"
-                                        style={{ 
-                                            boxShadow: p5am > 0 ? "0 -4px 15px rgba(16,185,129,0.4)" : "none",
-                                            borderTop: '1.5px solid rgba(255,255,255,0.3)'
-                                        }}
+                                        className={cn(
+                                            "w-full relative z-10 transition-all duration-500 rounded-none",
+                                            idx % 2 === 0 
+                                                ? (settings.adminTheme === 'primitivo' ? "bg-gradient-to-t from-amber-800 to-amber-600" : "bg-gradient-to-t from-emerald-800 to-emerald-600")
+                                                : "bg-[#525568]/60"
+                                        )}
+                                    />
+
+                                    {/* Dot Indicator Above Day */}
+                                    <div 
+                                        className="absolute left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full z-40 transition-all duration-500" 
+                                        style={{ bottom: `calc(${pEvening + p9am + p5am}% + 10px)` }}
                                     />
                                 </div>
-                                <div className="text-[10px] font-black uppercase text-slate-500 mt-3 italic tracking-tight group-hover:text-primary transition-colors">
-                                    {format(weekDays[idx], 'EEE', { locale: es })}
-                                </div>
-                                <div className="text-[8px] font-black text-slate-600 uppercase tracking-tighter opacity-50">
-                                    {format(weekDays[idx], 'dd/MM', { locale: es })}
+                                <div className="text-[10px] font-black uppercase text-white/50 mt-10 tracking-tight group-hover:text-white transition-colors">
+                                    {format(weekDays[idx], 'EEE', { locale: es }).toLowerCase()}
                                 </div>
                             </div>
                         );
@@ -486,16 +556,16 @@ const WeeklyAttendanceChart = () => {
 
                 <div className="mt-4 flex flex-wrap justify-center gap-8 border-t border-white/5 pt-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Oración 5 AM</span>
+                        <div className={cn("w-2 h-2 rounded-none", settings.adminTheme === 'primitivo' ? "bg-amber-400" : "bg-emerald-500")} />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-white/60">oración 5 am</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.4)]" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Doctrina 9 AM</span>
+                        <div className={cn("w-2 h-2 rounded-none", settings.adminTheme === 'primitivo' ? "bg-amber-400/60" : "bg-indigo-500")} />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-white/60">doctrina 9 am</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.4)]" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Culto de Tarde</span>
+                        <div className={cn("w-2 h-2 rounded-none", settings.adminTheme === 'primitivo' ? "bg-amber-600" : "bg-orange-500")} />
+                        <span className="text-[9px] font-black uppercase tracking-widest text-white/60">culto de tarde</span>
                     </div>
                 </div>
             </CardContent>
@@ -530,7 +600,7 @@ const GOOGLE_FONTS = [
     { id: 'dm-serif-display', name: 'DM Serif Display', category: 'Bold Editorial' }
 ];
 
-function AdminDashboardContent() {
+function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean }) {
     const {
         theme, setTheme,
         monthlySchedule, currentDate,
@@ -577,10 +647,36 @@ function AdminDashboardContent() {
         showNotification,
         notification,
         hideNotification,
-        subscribeToProfiles
+        subscribeToProfiles,
+        loadMonthlyIntelligenceStats
     } = useAppStore();
 
+    const shouldHideLayout = hideLayout || settings.adminTheme === 'luna';
+
     const [mounted, setMounted] = useState(false);
+    const [monthlyStats, setMonthlyStats] = useState<{ label: string, value: number }[]>([]);
+    
+    useEffect(() => {
+        const loadStats = async () => {
+            const stats = await loadMonthlyIntelligenceStats();
+            setMonthlyStats(stats);
+        };
+        
+        // Cargar estadísticas si está montado y tenemos sesión (o si es localhost sin sesión)
+        if (mounted) {
+            loadStats();
+        }
+    }, [mounted, loadMonthlyIntelligenceStats, authSession]);
+
+    const displayStats = monthlyStats.length > 0 ? monthlyStats : [
+        { label: 'ENE', value: 0 },
+        { label: 'FEB', value: 0 },
+        { label: 'MAR', value: 0 },
+        { label: 'ABR', value: 0 },
+        { label: 'MAY', value: 0 },
+        { label: 'JUN', value: 0 },
+    ];
+
     const [imageToEdit, setImageToEdit] = useState<string | null>(null);
     const [editingImageTarget, setEditingImageTarget] = useState<{ type: 'minister' | 'member', id?: string } | null>(null);
 
@@ -599,6 +695,37 @@ function AdminDashboardContent() {
 
     const queryTab = searchParams.get('tab') || 'dashboard';
     const [activeTab, setActiveTab] = useState(queryTab);
+    const [demoMode, setDemoMode] = useState(false);
+    const [demoFluctuation, setDemoFluctuation] = useState(0);
+    const [recentCheckins, setRecentCheckins] = useState<{name: string, time: string}[]>([]);
+
+    useEffect(() => {
+        if (!demoMode) {
+            setRecentCheckins([]);
+            setDemoFluctuation(0);
+            return;
+        }
+
+        const names = ['Abraham Diaz', 'Eliab Aguilar', 'Jehuel Zuniga', 'Primitivo G.', 'Moises S.', 'Daniel R.', 'Isaac M.'];
+        
+        const interval = setInterval(() => {
+            // Fluctuate percentage slightly
+            setDemoFluctuation(prev => {
+                const change = Math.random() > 0.5 ? 1 : -1;
+                const next = prev + change;
+                return Math.abs(next) > 3 ? prev : next;
+            });
+
+            // Add a new checkin every few seconds
+            if (Math.random() > 0.7) {
+                const name = names[Math.floor(Math.random() * names.length)];
+                const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                setRecentCheckins(prev => [{name, time}, ...prev].slice(0, 3));
+            }
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [demoMode]);
 
     // Sync state with query param
     useEffect(() => {
@@ -628,6 +755,13 @@ function AdminDashboardContent() {
 
     useEffect(() => {
         setMounted(true);
+
+        // Ensure we start with TODAY's date for real-time data accuracy
+        const todayStr = getLocalDateString(new Date());
+        if (currentDate !== todayStr) {
+            setCurrentDate(todayStr);
+        }
+
         loadDayScheduleFromCloud(currentDate);
         loadAllSchedulesFromCloud();
         loadThemeFromCloud();
@@ -888,7 +1022,7 @@ function AdminDashboardContent() {
 
     // --- Pre-calculate Statistics ---
     const todayRecords = attendanceRecords[currentDate] || [];
-    const attendedCount = todayRecords.filter(r => r.present).length;
+    const attendedCount = demoMode ? (Math.round(members.length * 0.74) + demoFluctuation) : todayRecords.filter(r => r.present).length;
     const totalMembersCount = members.filter(m => m.status === 'Activo').length;
     const attendancePercentage = totalMembersCount > 0 ? Math.round((attendedCount / totalMembersCount) * 100) : 0;
     const pendingCount = totalMembersCount - attendedCount;
@@ -927,6 +1061,44 @@ function AdminDashboardContent() {
 
     const monthStats = getMonthProgress();
 
+    // --- Real Data Calculation for Societies (Monthly Intelligence) ---
+    const calculateSocietyStats = () => {
+        const groups = [
+            { id: 'var', label: 'var', variants: ['varon', 'varón', 'caballero', 'hombres'] },
+            { id: 'muj', label: 'muj', variants: ['mujer', 'mujeres', 'dama', 'damas'] },
+            { id: 'juv', label: 'juv', variants: ['joven', 'jovenes', 'jóvenes'] },
+            { id: 'cor', label: 'cor', variants: ['coro', 'voces'] },
+            { id: 'niñ', label: 'niñ', variants: ['niño', 'niña', 'niños', 'niñas', 'infantil'] },
+            { id: 'cas', label: 'cas', variants: ['casado', 'casada', 'casados', 'casadas'] },
+        ];
+
+        return groups.map(group => {
+            const groupMembers = members.filter(m => {
+                const mGroup = (m.member_group || '').toLowerCase();
+                const mCat = (m.category || '').toLowerCase();
+                return group.variants.some(v => mGroup.includes(v) || mCat.includes(v));
+            });
+
+            const activeGroupMembers = groupMembers.filter(m => m.status === 'Activo');
+            const groupAttended = activeGroupMembers.filter(m => 
+                todayRecords.some(r => r.member_id === m.id && r.present)
+            ).length;
+
+            const percentage = activeGroupMembers.length > 0 
+                ? Math.round((groupAttended / activeGroupMembers.length) * 100) 
+                : 0;
+
+            return {
+                label: group.label,
+                value: percentage,
+                count: groupAttended,
+                total: activeGroupMembers.length
+            };
+        });
+    };
+
+    const societyStats = calculateSocietyStats();
+
     if (!mounted) return null;
 
     // 🔒 PROTECCIÓN: Solo administradores autenticados (o bypass en local)
@@ -949,10 +1121,10 @@ function AdminDashboardContent() {
                     <Card className="glass-card border-white/5 shadow-2xl overflow-hidden backdrop-blur-2xl">
                         <div className="h-2 w-full bg-gradient-to-r from-red-600 via-orange-500 to-red-600 animate-pulse" />
                         <CardHeader className="text-center pt-10 pb-6">
-                            <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-red-500/20 shadow-lg shadow-red-500/5">
+                            <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
                                 <Lock className="w-10 h-10 text-red-500" />
                             </div>
-                            <CardTitle className="text-3xl font-black uppercase tracking-tighter italic text-foreground mb-2">
+                            <CardTitle className="text-3xl font-black uppercase tracking-tighter text-foreground mb-2">
                                 Acceso <span className="text-red-500">Restringido</span>
                             </CardTitle>
                             <CardDescription className="text-slate-400 font-medium px-4">
@@ -964,7 +1136,7 @@ function AdminDashboardContent() {
                                 <div className="space-y-4">
                                     <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 text-center">Debes iniciar sesión con tu cuenta autorizada</p>
                                     <Link href="/login" className="block">
-                                        <Button className="w-full h-14 bg-primary text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all gap-2 group shadow-xl shadow-primary/20">
+                                        <Button className="w-full h-14 bg-primary text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all gap-2 group">
                                             Ir al Login <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                         </Button>
                                     </Link>
@@ -974,7 +1146,7 @@ function AdminDashboardContent() {
                                     <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-center">
                                         <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-1">Usuario Activo</p>
                                         <p className="text-sm font-bold text-foreground">{authSession.user.email}</p>
-                                        <p className="text-[9px] text-red-400 font-black uppercase mt-2 italic">Sin permisos de administrador</p>
+                                        <p className="text-[9px] text-red-400 font-black uppercase mt-2 ">Sin permisos de administrador</p>
                                     </div>
                                     <Link href="/" className="block">
                                         <Button variant="outline" className="w-full h-12 border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all">
@@ -993,169 +1165,169 @@ function AdminDashboardContent() {
         );
     }
 
-    if (settings.adminTheme === 'tactile') {
-        return <TactileAdmin propTab={activeTab} />;
-    }
+
 
     return (
         <div className="p-4 md:p-8 space-y-8 pb-32 md:pb-8">
-            <div className="flex justify-between items-start pt-4">
-                <div className="space-y-1">
-                    <h1 className="text-5xl font-black tracking-tighter text-foreground">Panel <span className="text-primary italic">General</span></h1>
-                    <p className="text-slate-400 font-medium tracking-tight">Gestión administrativa y métricas en tiempo real</p>
+            {!shouldHideLayout && (
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-12 sticky top-0 z-50 transition-all duration-300">
+
+                {/* Left: Branding + Date Control */}
+                <div className="flex flex-col md:flex-row items-center gap-8 w-full lg:w-auto">
+                    <div className="flex flex-col">
+                        <h1 className={cn(
+                            "text-2xl font-black tracking-tighter leading-none text-foreground selection:bg-foreground selection:text-background",
+                            settings.adminTheme === 'primitivo' ? "admin-header-title uppercase italic" : ""
+                        )}>
+                            {settings.adminTheme === 'primitivo' ? (
+                                <>Bienvenido, <span className="text-primary">{currentUser?.name.split(' ')[0] || 'Admin'}</span></>
+                            ) : (
+                                <>panel <span className="text-muted-foreground not-italic font-[300]">general</span></>
+                            )}
+                        </h1>
+                        <p className={cn(
+                            "text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground mt-1",
+                            settings.adminTheme === 'primitivo' ? "admin-header-subtitle" : "opacity-60"
+                        )}>
+                            {settings.adminTheme === 'primitivo' ? (
+                                <>PANEL DE CONTROL DIGITAL - <span className="logo-lldm">LLDM</span> <span className="logo-rodeo">RODEO</span></>
+                            ) : (
+                                <>estación de mando táctica</>
+                            )}
+                        </p>
+                    </div>
+
                 </div>
-                <div className="flex items-center gap-4">
-                    {/* Language and Theme Selectors - Moved here */}
-                    <div className="flex items-center gap-4 bg-foreground/[0.03] p-1.5 px-3 rounded-2xl border border-border/10 shadow-xl backdrop-blur-md">
-                        <div className="flex items-center gap-4 px-2">
+
+                {/* Right: System Tools Group */}
+                <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 w-full lg:w-auto">
+                    {/* Tool Group 1: Settings */}
+                    <div className={cn(
+                        "flex items-center gap-3 h-11 transition-all",
+                        settings.adminTheme === 'primitivo' 
+                             ? "bg-transparent border-none shadow-none p-0" 
+                             : "bg-white/[0.03] p-1.5 px-4 border border-white/5 shadow-2xl backdrop-blur-md"
+                    )}>
+                        <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2">
                                 <Languages className="w-3.5 h-3.5 text-primary/70" />
                                 <select
                                     value={settings.language}
                                     onChange={(e) => saveSettingsToCloud({ language: e.target.value as any })}
-                                    className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-muted-foreground appearance-none cursor-pointer outline-none hover:text-primary transition-colors"
+                                    className="bg-transparent border-none text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground appearance-none cursor-pointer outline-none hover:text-foreground transition-colors"
                                 >
                                     <option value="es" className="bg-background">ES</option>
                                     <option value="en" className="bg-background">EN</option>
                                 </select>
                             </div>
-                            <div className="w-px h-4 bg-border/20" />
+                            <div className="w-[1px] h-4 bg-border/20" />
                             <div className="flex items-center gap-2">
                                 {settings.themeMode === 'light' ? <Sun className="w-3.5 h-3.5 text-amber-500" /> : <Moon className="w-3.5 h-3.5 text-primary" />}
                                 <select
                                     value={settings.themeMode}
                                     onChange={(e) => saveSettingsToCloud({ themeMode: e.target.value as any })}
-                                    className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-slate-400 appearance-none cursor-pointer outline-none hover:text-primary transition-colors"
+                                    className="bg-transparent border-none text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground appearance-none cursor-pointer outline-none hover:text-foreground transition-colors"
                                 >
-                                    <option value="light" className="bg-[#020617]">Modo Claro</option>
-                                    <option value="dark" className="bg-[#020617]">Modo Oscuro</option>
-                                    <option value="system" className="bg-[#020617]">Sistema</option>
+                                    <option value="light" className="bg-background">claro</option>
+                                    <option value="dark" className="bg-background">oscuro</option>
+                                    <option value="system" className="bg-background">auto</option>
                                 </select>
                             </div>
-                            <div className="w-px h-4 bg-border/20" />
+                            <div className="w-[1px] h-4 bg-border/20" />
                             <button
                                 onClick={() => saveSettingsToCloud({ adminTheme: 'tactile' })}
-                                className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-colors pr-2"
+                                className="text-muted-foreground hover:text-primary transition-colors pl-1"
+                                title="Cambiar a Tema Táctil"
                             >
                                 <Sparkles className="w-3.5 h-3.5" />
                             </button>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3 bg-foreground/[0.03] backdrop-blur-xl p-2 px-4 rounded-2xl border border-border/10 shadow-2xl">
-                        <div className="relative">
-                            <Bell className="w-5 h-5 text-muted-foreground" />
-                            <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full animate-ping" />
-                        </div>
+                    {/* Tool Group 2: Notifications */}
+                    <div className={cn(
+                        "flex items-center justify-center h-11 w-11 relative cursor-pointer hover:bg-foreground/5 transition-all text-muted-foreground hover:text-foreground",
+                        settings.adminTheme === 'primitivo' 
+                            ? "bg-transparent border-none shadow-none" 
+                            : "bg-white/[0.03] border border-white/5"
+                    )}>
+                        <Bell className="w-4 h-4" />
+                        <div className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-primary rounded-full transition-all" />
+                    </div>
 
-                        <div className="w-px h-6 bg-border/20 mx-2" />
-
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => signOut()}
-                            className="h-10 w-10 text-rose-500 hover:text-white hover:bg-rose-500 rounded-xl transition-all"
-                            title="Cerrar Sesión"
-                        >
-                            <LogOut className="w-5 h-5" />
+                    {/* Tool Group 3: Whiteboard */}
+                    <Link href="/display" target="_blank">
+                        <Button className="gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-none px-6 h-11 font-black uppercase text-[10px] tracking-wider transition-all">
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            pizarra
                         </Button>
-                    </div>
-                </div>
-            </div>
+                    </Link>
 
-            <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-1 bg-foreground/[0.03] p-1 px-2 rounded-2xl border border-border/10 backdrop-blur-md">
+                    {/* Tool Group 4: Logout */}
                     <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => navigateDay(-1)}
-                        className="h-9 w-9 hover:bg-white/5 rounded-xl text-slate-400 hover:text-foreground transition-colors"
+                        onClick={() => signOut()}
+                        className="h-11 w-11 bg-rose-500/10 text-rose-500 hover:text-white hover:bg-rose-500 rounded-none border border-rose-500/20 transition-all"
+                        title="Finalizar Sesión"
                     >
-                        <ChevronLeft className="h-5 w-5" />
-                    </Button>
-                    <div className="px-6 py-1 text-xs font-black uppercase tracking-[0.2em] border-x border-white/5 min-w-[160px] text-center text-slate-300">
-                        {new Date(currentDate + 'T12:00:00').toLocaleDateString(settings.language === 'es' ? 'es-MX' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
-                    </div>
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => navigateDay(1)}
-                        className="h-9 w-9 hover:bg-white/5 rounded-xl text-slate-400 hover:text-foreground transition-colors"
-                    >
-                        <ChevronRight className="h-5 w-5" />
+                        <LogOut className="w-4 h-4" />
                     </Button>
                 </div>
-
-                <Link href="/display" target="_blank">
-                    <Button className="gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 rounded-2xl px-6 h-11 font-black uppercase text-xs tracking-widest">
-                        <ExternalLink className="h-4 w-4" />
-                        Abrir Pizarra
-                    </Button>
-                </Link>
             </div>
+            )}
 
             {/* Countdown and Stats Section */}
             <div className="space-y-8">
 
-                {/* Stats Cards Section - Always Visible */}
+                {/* Stats Cards Section - TOP HORIZONTAL ROW */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+                    className="grid gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-6 items-stretch"
                 >
-                    {/* Integrated Weekly Chart - MOVED TO TOP */}
-                    <WeeklyAttendanceChart />
-
-                    {/* Monthly Performance Intelligence Dashboard - PRIMARY FOCUS */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 xl:col-span-3 relative overflow-hidden group shadow-2xl">
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none" />
+                    {/* 1. Monthly Performance Intelligence Dashboard */}
+                    <Card className={cn(
+                        "glass-card border-none relative overflow-hidden group h-full rounded-none lg:col-span-2",
+                        settings.adminTheme === 'primitivo' ? "bg-transparent shadow-none" : "bg-slate-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                    )}>
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-none blur-[100px] -mr-32 -mt-32 pointer-events-none" />
                         <CardHeader className="pb-2 flex flex-row items-center justify-between">
                             <div>
-                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400 flex items-center gap-2">
-                                    <Activity className="w-4 h-4" />
-                                    Inteligencia Mensual (30 Días)
+                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-4 w-full">
+                                    <div className="flex items-center gap-2">
+                                        <Activity className="w-4 h-4" />
+                                        <span className="whitespace-nowrap">inteligencia mensual</span>
+                                    </div>
+                                    <div className="flex-1 h-px bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" />
                                 </CardTitle>
-                                <CardDescription className="text-[8px] font-bold uppercase text-slate-500 mt-1">Rendimiento por Sociedad vs Objetivos</CardDescription>
-                            </div>
-                            <div className="flex items-center gap-2 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                                <TrendingUp className="w-3 h-3 text-emerald-500" />
-                                <span className="text-[10px] font-black text-emerald-500 italic">+12.4% vs Mes Pasado</span>
+                                <CardDescription className="text-[8px] font-bold uppercase text-muted-foreground mt-1">rendimiento vs objetivos</CardDescription>
                             </div>
                         </CardHeader>
-                        <CardContent className="pt-6 pb-4">
-                            <div className="h-40 flex items-end justify-between gap-4 px-2 relative">
-                                {[
-                                    { label: 'Varones', value: 88, color: 'emerald' },
-                                    { label: 'Mujeres', value: 92, color: 'emerald' },
-                                    { label: 'H. Juvenil', value: 68, color: 'amber' },
-                                    { label: 'Coro', value: 85, color: 'emerald' },
-                                    { label: 'Niñez', value: 54, color: 'orange' },
-                                    { label: 'Casados', value: 76, color: 'amber' },
-                                ].map((soc, idx) => {
-                                    const colorGrad = soc.value >= 80 ? "from-emerald-600 to-emerald-400" : 
-                                                     soc.value >= 60 ? "from-amber-600 to-amber-400" : 
-                                                     "from-orange-600 to-orange-400";
-                                    const glowColor = soc.value >= 80 ? "rgba(16,185,129,0.5)" : 
-                                                     soc.value >= 60 ? "rgba(245,158,11,0.5)" : 
-                                                     "rgba(249,115,22,0.5)";
+                        <CardContent className="pt-10 pb-8">
+                            <div className="h-44 flex items-end justify-between gap-2 px-1 relative">
+                                {displayStats.map((soc, idx) => {
+                                    const label = soc.label;
+                                    const colorGrad = soc.value >= 80 
+                                        ? (settings.adminTheme === 'primitivo' ? "from-amber-600 to-amber-400" : "from-emerald-600 to-emerald-400") 
+                                        : soc.value >= 60 
+                                            ? (settings.adminTheme === 'primitivo' ? "from-amber-500 to-amber-300" : "from-indigo-600 to-indigo-400")
+                                            : (settings.adminTheme === 'primitivo' ? "from-amber-400/80 to-amber-400/40" : "from-orange-600 to-orange-400");
                                     
                                     return (
-                                        <div key={idx} className="flex-1 flex flex-col items-center gap-3 group/valla relative">
+                                        <div key={idx} className="flex-1 flex flex-col items-center gap-2 group/valla relative h-full">
                                             <div className="w-full relative flex flex-col items-center justify-end h-full">
-                                                <motion.div 
-                                                    initial={{ height: 0 }}
-                                                    animate={{ height: `${soc.value}%` }}
-                                                    className={cn("w-full rounded-t-2xl bg-gradient-to-t relative z-10 transition-all duration-700 group-hover/valla:scale-x-110", colorGrad)}
-                                                    style={{ 
-                                                        boxShadow: `0 0 40px ${glowColor.replace('0.5', '0.3')}`, 
-                                                        borderTop: '2px solid rgba(255,255,255,0.4)' 
-                                                    }}
-                                                />
-                                                <div className="absolute inset-x-0 bottom-0 top-0 bg-white/[0.02] opacity-0 group-hover/valla:opacity-100 transition-opacity rounded-t-2xl pointer-events-none border-x border-t border-white/5" />
+                                                <div className="flex-1 w-3 bg-white/[0.03] rounded-t-full overflow-hidden relative flex flex-col justify-end border-b border-white/20 backdrop-blur-md transition-all duration-300 group-hover/valla:bg-white/[0.05] h-full mx-auto">
+                                                    <motion.div 
+                                                        initial={{ height: 0 }}
+                                                        animate={{ height: `${soc.value}%` }}
+                                                        className={cn("w-full rounded-none bg-gradient-to-t relative z-10 transition-all duration-700", colorGrad)}
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className="text-center relative z-10">
-                                                <div className="text-[13px] font-black italic text-foreground tracking-tighter tabular-nums drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">{soc.value}%</div>
-                                                <span className="text-[7.5px] font-black uppercase tracking-[0.15em] text-slate-500 truncate block w-12 group-hover/valla:text-primary transition-colors">{soc.label}</span>
+                                            <div className="text-center relative z-10 mt-10">
+                                                <div className="text-[10px] font-black text-foreground tracking-tighter tabular-nums mb-1">{soc.value}%</div>
+                                                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground block">{label}</span>
                                             </div>
                                         </div>
                                     );
@@ -1164,131 +1336,278 @@ function AdminDashboardContent() {
                         </CardContent>
                     </Card>
 
-                    {/* Daily Attendance Donut Chart */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                                    Asistencia en Vivo
-                                </div>
-                                <Activity className="w-3 h-3 text-primary opacity-50" />
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="pt-4 pb-4">
-                            <div className="flex items-center gap-4">
-                                <div className="relative w-24 h-24 shrink-0 group/donut transition-transform duration-500 hover:scale-110">
-                                    <svg className="w-full h-full -rotate-90 drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" viewBox="0 0 100 100">
-                                        {/* Dynamic Gradient Definition */}
+                    {/* 2. Integrated Weekly Chart */}
+                    <div className="h-full lg:col-span-2">
+                        <WeeklyAttendanceChart settings={settings} />
+                    </div>
+
+                    {/* 3. Daily Attendance Donut Chart - SQUARE PIECE (CONSTRAINED) */}
+                    <div className="lg:col-span-1">
+                        <Card className={cn(
+                            "glass-card border-none relative overflow-hidden group w-full aspect-square flex flex-col justify-between",
+                            settings.adminTheme === 'primitivo' ? "bg-muted/30 rounded-[2.5rem]" : "bg-slate-900/60 rounded-none shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                        )}>
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-4 w-full">
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative flex items-center justify-center">
+                                            <div className={cn("absolute w-3 h-3 rounded-full animate-ping opacity-20", demoMode ? "bg-amber-500" : "bg-white")} />
+                                            <div className={cn("w-1.5 h-1.5 rounded-none z-10", demoMode ? "bg-amber-500 shadow-[0_0_8px_#f59e0b]" : "bg-white shadow-[0_0_8px_white]")} />
+                                        </div>
+                                        <span className="whitespace-nowrap">asistencia en vivo {demoMode && <span className="text-[7px] text-amber-500 ml-1 opacity-70">(simulado)</span>}</span>
+                                    </div>
+                                    <div className="flex-1 h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
+                                    <button 
+                                        onClick={() => setDemoMode(!demoMode)}
+                                        className={cn("p-1.5 rounded-none transition-all", demoMode ? "text-amber-500 bg-amber-500/10" : "text-white/30 hover:text-white hover:bg-white/5")}
+                                        title={demoMode ? "Desactivar Simulación" : "Activar Simulación de Datos"}
+                                    >
+                                        <Activity className="w-3 h-3" />
+                                    </button>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col items-center justify-center flex-1 py-0 px-2 overflow-hidden">
+                                <div className="relative w-full aspect-square max-w-[130px] group/donut transition-transform duration-700 hover:scale-105">
+                                    <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                                         <defs>
-                                            <linearGradient id="lunaDonutGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                <stop offset="0%" stopColor="var(--primary)" />
-                                                <stop offset="100%" stopColor="hsl(var(--primary-container))" />
+                                            <linearGradient id="liveAttendanceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stopColor={settings.adminTheme === 'primitivo' ? "#fbbf24" : "#1e3a8a"} />
+                                                <stop offset="100%" stopColor={settings.adminTheme === 'primitivo' ? "#fef3c7" : "#60a5fa"} />
                                             </linearGradient>
+                                            <filter id="liveAttendanceGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                                <feGaussianBlur stdDeviation="3.5" result="blur" />
+                                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                            </filter>
                                         </defs>
                                         
-                                        {/* Background Track */}
+                                        {/* Background Track - Brighter Soft Gray */}
                                         <circle 
-                                            cx="50" cy="50" r="42" 
+                                            cx="50" cy="50" r="40" 
                                             fill="transparent" 
-                                            stroke="rgba(255,255,255,0.03)" 
+                                            stroke="rgba(255,255,255,0.25)" 
                                             strokeWidth="8" 
                                         />
-                                        
-                                        {/* Progress Arc */}
+
+                                        {/* Physical Housing (Softened) */}
                                         <motion.circle
-                                            cx="50" cy="50" r="42" 
+                                            cx="50" cy="50" r="40" 
                                             fill="transparent" 
-                                            stroke="url(#lunaDonutGradient)" 
+                                            stroke="rgba(255,255,255,0.05)" 
                                             strokeWidth="10"
-                                            strokeDasharray="263.89"
-                                            initial={{ strokeDashoffset: 263.89 }}
-                                            animate={{ strokeDashoffset: 263.89 - (263.89 * attendancePercentage / 100) }}
+                                            strokeDasharray="251.3"
+                                            initial={{ strokeDashoffset: 251.3 }}
+                                            animate={{ strokeDashoffset: 251.3 - (251.3 * Math.max(0.5, attendancePercentage) / 100) }}
                                             transition={{ duration: 2, ease: "circOut" }}
                                             strokeLinecap="round"
-                                            className="drop-shadow-[0_0_12px_rgba(var(--primary-rgb),0.4)]"
                                         />
-                                    </svg>
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <span className="text-2xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent leading-none">
-                                            {attendancePercentage}%
-                                        </span>
-                                        <span className="text-[7px] font-black uppercase text-primary/50 tracking-tighter mt-0.5">ESTADO</span>
-                                    </div>
-                                </div>
-                                <div className="min-w-0 pr-2">
-                                    <div className="text-3xl font-black italic text-foreground leading-none mb-1 tabular-nums">{attendedCount}</div>
-                                    <p className="text-[9px] font-black uppercase text-slate-500 tracking-[0.2em] opacity-60">Hermanos</p>
-                                    <div className="flex items-center gap-1.5 mt-2 bg-primary/10 rounded-full px-2 py-0.5 border border-primary/20 w-fit">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
-                                        <span className="text-[7px] font-black text-primary uppercase tracking-widest leading-none">VIVO</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
 
-                    {/* Member Growth Mountain Chart */}
-                    <Card className="glass-card bg-slate-900/40 border-white/5 relative overflow-hidden group shadow-sm">
+                                        {/* Main Progress Arc - Neon Core */}
+                                        <motion.circle
+                                            cx="50" cy="50" r="40" 
+                                            fill="transparent" 
+                                            stroke="url(#liveAttendanceGrad)" 
+                                            strokeWidth="6"
+                                            strokeDasharray="251.3"
+                                            initial={{ strokeDashoffset: 251.3 }}
+                                            animate={{ 
+                                                strokeDashoffset: 251.3 - (251.3 * Math.max(0.5, attendancePercentage) / 100)
+                                            }}
+                                            transition={{ 
+                                                duration: 2, ease: "circOut"
+                                            }}
+                                            strokeLinecap="round"
+                                            filter="url(#liveAttendanceGlow)"
+                                        />
+
+                                        {/* Sharp Outer Edge Border */}
+                                        <motion.circle
+                                            cx="50" cy="50" r="40" 
+                                            fill="transparent" 
+                                            stroke="rgba(255,255,255,0.4)" 
+                                            strokeWidth="10"
+                                            strokeDasharray="251.3"
+                                            initial={{ strokeDashoffset: 251.3 }}
+                                            animate={{ 
+                                                strokeDashoffset: 251.3 - (251.3 * Math.max(0.5, attendancePercentage) / 100)
+                                            }}
+                                            transition={{ duration: 2, ease: "circOut" }}
+                                            strokeLinecap="round"
+                                            className="opacity-20"
+                                        />
+                                        
+                                        {/* Inner Glass Highlight */}
+                                        <motion.circle
+                                            cx="50" cy="50" r="40" 
+                                            fill="transparent" 
+                                            stroke="rgba(255,255,255,0.2)" 
+                                            strokeWidth="1"
+                                            strokeDasharray="251.3"
+                                            initial={{ strokeDashoffset: 251.3 }}
+                                            animate={{ 
+                                                strokeDashoffset: 251.3 - (251.3 * Math.max(0.5, attendancePercentage) / 100)
+                                            }}
+                                            transition={{ duration: 2, ease: "circOut" }}
+                                            strokeLinecap="round"
+                                        />
+
+                                    </svg>
+                                    
+                                    {/* Radar Scan - New Premium Element */}
+                                    <motion.div
+                                        className="absolute inset-0 pointer-events-none"
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        <div className="absolute top-1/2 left-[50%] w-[40%] h-[1px] bg-gradient-to-r from-amber-500/20 to-transparent origin-left" />
+                                    </motion.div>
+
+                                    {/* Recent Activity Log (Demo/Live) */}
+                                    <AnimatePresence>
+                                        {recentCheckins.length > 0 && (
+                                            <div className="absolute bottom-2 left-0 right-0 px-2 space-y-1 z-50">
+                                                {recentCheckins.map((checkin, i) => (
+                                                    <motion.div 
+                                                        key={`${checkin.name}-${checkin.time}`}
+                                                        initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                        exit={{ opacity: 0, scale: 0.5 }}
+                                                        className="bg-black/80 backdrop-blur-md border border-amber-500/20 px-2 py-0.5 flex items-center justify-between pointer-events-none"
+                                                    >
+                                                        <span className="text-[6px] font-black text-amber-500 uppercase truncate max-w-[60px]">{checkin.name}</span>
+                                                        <span className="text-[5px] font-bold text-white/40 tabular-nums">{checkin.time}</span>
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </AnimatePresence>
+
+                                    {/* Center Percentage Display */}
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center pt-2">
+                                        <motion.div 
+                                            initial={{ opacity: 0, scale: 0.5 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            className="text-3xl font-black text-white leading-none tracking-tighter"
+                                        >
+                                            {attendancePercentage}%
+                                        </motion.div>
+                                        <span className="text-[7px] font-black uppercase tracking-[0.3em] text-white/40 mt-1">estado</span>
+                                    </div>
+                                </div>
+                            </CardContent>
+                            <div className="px-6 pb-4 w-full">
+                                <div className="flex items-center justify-between border-t border-white/5 pt-3">
+                                    <div className="flex flex-col gap-2">
+                                        <div>
+                                            <div className="text-lg font-black text-white leading-none mb-0.5 tabular-nums">{attendedCount}</div>
+                                            <p className="text-[6px] font-black uppercase text-white/30 tracking-widest">hermanos</p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <div 
+                                                className="w-5 h-2 rounded-full" 
+                                                style={{ 
+                                                    background: settings.adminTheme === 'primitivo' 
+                                                        ? 'linear-gradient(90deg, #d97706 0%, #fbbf24 100%)' 
+                                                        : 'linear-gradient(90deg, #1e3a8a 0%, #60a5fa 100%)' 
+                                                }}
+                                            />
+                                            <span className={cn(
+                                                "text-[9px] font-black tracking-tighter tabular-nums",
+                                                settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-blue-400"
+                                            )}>
+                                                {100 - attendancePercentage}% faltante
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="bg-white/5 px-1.5 py-0.5 border border-white/10 flex items-center gap-1">
+                                        <div className="w-1 h-1 bg-white animate-pulse" />
+                                        <span className="text-[5px] font-black text-white uppercase tracking-widest">vivo</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    </div>
+
+                    {/* 4. Membership Member Card - NARROW PIECE */}
+                    <Card className={cn(
+                        "card glass-card border-none relative overflow-hidden group h-full rounded-none lg:col-span-1 flex flex-col justify-between",
+                        settings.adminTheme === 'primitivo' ? "bg-[#101420] shadow-none rounded-[1.5rem]" : "bg-slate-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                    )}>
                         <CardHeader className="pb-2">
-                            <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 flex items-center gap-2">
-                                <TrendingUp className="w-3 h-3 text-secondary" />
-                                Membresía
-                            </CardTitle>
+                        <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-4 w-full">
+                            <div className="flex items-center gap-2">
+                                <Users className="w-3 h-3 text-white" />
+                                <span className="whitespace-nowrap">membresía total</span>
+                            </div>
+                            <div className="flex-1 h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
+                        </CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-4 pb-4">
-                            <div className="text-4xl font-black italic mb-1">{totalMembersCount}</div>
-                            <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Activos</span>
+                        <CardContent className="flex flex-col items-center justify-center flex-1 py-4">
+                            <div className="text-5xl font-black tracking-tighter text-white mb-2">{totalMembersCount}</div>
+                            <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 border border-white/10">
+                                <div className="w-1 h-1 bg-white animate-pulse" />
+                                <span className="text-[7px] font-black text-white/50 uppercase tracking-widest">hermanos activos</span>
                             </div>
                         </CardContent>
+                        <div className="px-4 pb-6 w-full">
+                            <div className="flex flex-col gap-3 border-t border-white/5 pt-4">
+                                <div className="flex justify-between items-center">
+                                    <p className="text-[7px] font-black uppercase text-muted-foreground tracking-widest">crecimiento</p>
+                                    <p className="text-[10px] font-black text-white">+4%</p>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <p className="text-[7px] font-black uppercase text-white/30 tracking-widest">objetivo</p>
+                                    <p className="text-[10px] font-black text-white">500</p>
+                                </div>
+                            </div>
+                        </div>
                     </Card>
                 </motion.div>
 
             </div>
 
-            {/* Tab Navigation */}
-            <div className="flex gap-1.5 p-1.5 bg-slate-900/40 border border-white/5 rounded-[2rem] overflow-x-auto no-scrollbar underline-none backdrop-blur-xl sticky top-4 z-40 shadow-2xl">
+            {/* Tab Navigation - PRIMITIVO PILL STYLE */}
+            {!shouldHideLayout && (
+            <div className={cn(
+                "flex overflow-x-auto no-scrollbar transition-all duration-500",
+                settings.adminTheme === 'primitivo'
+                    ? "primitivo-nav-bar sticky top-4 z-40 mb-8"
+                    : "gap-0.5 p-0 bg-slate-900/60 border-none rounded-none backdrop-blur-xl sticky top-4 z-40 mb-8"
+            )}>
                 {[
-                    { id: 'dashboard', label: 'Resumen', icon: LayoutDashboard, color: 'text-primary', glow: 'shadow-primary/20' },
-                    { id: 'horarios', label: 'Horarios', icon: CalendarDays, color: 'text-emerald-400', glow: 'shadow-emerald-500/20' },
-                    { id: 'contenido', label: 'Diseño y Visual', icon: Sparkles, color: 'text-amber-400', glow: 'shadow-amber-500/20' },
-                    { id: 'coros', label: 'Coros y Uniformes', icon: Shirt, color: 'text-secondary', glow: 'shadow-purple-500/20' },
-                    { id: 'configuracion', label: 'Configuración', icon: Settings, color: 'text-slate-300', glow: 'shadow-slate-400/20' },
-                    { id: 'miembros', label: 'Miembros', icon: Users, color: 'text-emerald-400', glow: 'shadow-emerald-400/20' },
-                    { id: 'perfil', label: 'Mi Perfil', icon: User, color: 'text-amber-400', glow: 'shadow-amber-400/20' },
+                    { id: 'dashboard', label: 'resumen', icon: LayoutDashboard, color: 'text-primary' },
+                    { id: 'horarios', label: 'horarios', icon: CalendarDays, color: settings.adminTheme === 'primitivo' ? 'text-amber-400' : 'text-emerald-400' },
+                    { id: 'contenido', label: 'diseño y visual', icon: Sparkles, color: 'text-amber-400' },
+                    { id: 'coros', label: 'coros y uniformes', icon: Shirt, color: 'text-secondary' },
+                    { id: 'configuracion', label: 'configuración', icon: Settings, color: 'text-slate-300' },
+                    { id: 'miembros', label: 'miembros', icon: Users, color: settings.adminTheme === 'primitivo' ? 'text-amber-400' : 'text-emerald-400' },
+                    { id: 'perfil', label: 'mi perfil', icon: User, color: 'text-amber-400' },
                 ].map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
                         className={cn(
-                            "group relative flex items-center gap-2.5 px-6 py-3.5 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap outline-none",
-                            activeTab === tab.id ? "text-white" : "text-slate-500 hover:text-slate-300"
+                            "group relative flex items-center transition-all duration-300 whitespace-nowrap outline-none",
+                            settings.adminTheme === 'primitivo'
+                                ? cn("primitivo-nav-item", activeTab === tab.id && "active")
+                                : cn(
+                                    "px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border-r border-white/5 last:border-r-0",
+                                    activeTab === tab.id ? "text-white bg-white/5" : "text-slate-500 hover:text-slate-300 hover:bg-white/[0.02]"
+                                )
                         )}
                     >
-                        {activeTab === tab.id && (
-                            <motion.div 
-                                layoutId="activeTabPill" 
-                                className={cn(
-                                    "absolute inset-0 bg-white/10 rounded-2xl border border-white/10 shadow-xl z-0",
-                                    tab.glow
-                                )}
-                                transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                            >
-                                <div className={cn("absolute inset-x-4 bottom-0 h-[2px] rounded-full blur-[1px]", tab.color.replace('text-', 'bg-'))} />
-                            </motion.div>
-                        )}
                         <tab.icon className={cn(
-                            "relative z-10 w-4 h-4 transition-all duration-500", 
-                            activeTab === tab.id ? cn(tab.color, "scale-110 rotate-3 drop-shadow-[0_0_8px_currentColor]") : "text-slate-600 grayscale group-hover:grayscale-0"
+                            "relative z-10 w-3.5 h-3.5 transition-all duration-500", 
+                            activeTab === tab.id 
+                                ? tab.color 
+                                : "text-slate-500 grayscale group-hover:grayscale-0"
                         )} />
-                        <span className="relative z-10 italic">
+                        <span className="relative z-10 ">
                             {tab.label}
                         </span>
                     </button>
                 ))}
             </div>
+            )}
 
             {
                 activeTab === 'dashboard' && (
@@ -1302,48 +1621,121 @@ function AdminDashboardContent() {
                                         await sendCloudMessage({ senderId: currentUser?.id || '', receiverId: recipientId, content, subject: 'Respuesta de Administración' });
                                         showNotification('Respuesta enviada');
                                     }}
+                                    settings={settings}
                                 />
                             </div>
                             <div id="analytics-overview" className="space-y-6">
-                                <div className="p-10 rounded-[3rem] bg-emerald-500/[0.03] border border-emerald-500/10 space-y-8 relative overflow-hidden group/metrics backdrop-blur-xl shadow-2xl">
-                                    <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-700 group-hover/metrics:bg-emerald-500/10" />
+                                <Card className={cn(
+                                    "p-8 relative overflow-hidden group/metrics",
+                                    settings.adminTheme === 'primitivo'
+                                        ? "primitivo-card"
+                                        : "card bg-emerald-500/[0.03] border border-emerald-500/10 rounded-[1.5rem]"
+                                )}>
+                                    <div className={cn(
+                                        "absolute top-0 right-0 w-64 h-64 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-700",
+                                        settings.adminTheme === 'primitivo' ? "bg-amber-500/5 group-hover/metrics:bg-amber-500/10" : "bg-emerald-500/5 group-hover/metrics:bg-emerald-500/10"
+                                    )} />
                                     <div className="flex items-center justify-between relative z-10">
                                         <div className="space-y-1">
-                                            <h3 className="text-2xl font-black uppercase text-emerald-500 italic flex items-center gap-3 tracking-tighter drop-shadow-sm">
-                                                <TrendingUp className="w-6 h-6" /> Crecimiento <span className="text-white">Relativo</span>
-                                            </h3>
-                                            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 ml-1 opacity-70">Métricas de impacto en tiempo real</p>
+                                            <div className="flex items-center gap-4 w-full">
+                                                <h3 className={cn(
+                                                    "text-2xl font-black uppercase flex items-center gap-3 tracking-tighter drop-shadow-sm whitespace-nowrap",
+                                                    settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-500"
+                                                )}>
+                                                    <TrendingUp className="w-6 h-6" /> Crecimiento <span className="text-foreground">Relativo</span>
+                                                </h3>
+                                                <div className={cn(
+                                                    "flex-1 h-px ml-2",
+                                                    settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-amber-400/30 via-amber-400/5 to-transparent" : "bg-gradient-to-r from-emerald-500/30 via-emerald-500/5 to-transparent"
+                                                )} />
+                                            </div>
+                                            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground ml-1">Métricas de impacto en tiempo real</p>
                                         </div>
-                                        <div className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0a]/80 rounded-xl border border-emerald-500/20 shadow-lg">
-                                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,1)]" />
-                                            <span className="text-[10px] font-black text-emerald-500 tracking-widest italic">MONITOREANDO</span>
+                                        <div className={cn(
+                                            "flex items-center gap-2 px-4 py-2 rounded-xl border shadow-none",
+                                            settings.adminTheme === 'primitivo' ? "bg-transparent border-amber-400/20" : "bg-[#0a0a0a]/80 border-emerald-500/20 shadow-lg"
+                                        )}>
+                                            <div className={cn(
+                                                "w-2 h-2 rounded-full animate-pulse",
+                                                settings.adminTheme === 'primitivo' ? "bg-amber-400 text-amber-500" : "bg-emerald-500 text-emerald-500"
+                                            )} />
+                                            <span className={cn(
+                                                "text-[10px] font-black tracking-widest",
+                                                settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-500"
+                                            )}>MONITOREANDO</span>
                                         </div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-6 relative z-10">
-                                        <div className="p-6 rounded-[2rem] bg-slate-900/60 border border-white/5 group-hover/metrics:border-emerald-500/20 transition-all duration-500 shadow-inner">
-                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2 leading-none">Membresía Activa</p>
-                                            <div className="text-4xl font-black italic text-white flex items-baseline gap-2 tabular-nums">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                                        <div className={cn(
+                                            "p-6 transition-all duration-500",
+                                            settings.adminTheme === 'primitivo' ? "primitivo-card-dark" : "card bg-slate-900/60 border-white/5 group-hover/metrics:border-emerald-500/20 rounded-[1rem]"
+                                        )}>
+                                            <p className={cn(
+                                                "text-[9px] font-black uppercase tracking-[0.2em] mb-2 leading-none",
+                                                settings.adminTheme === 'primitivo' ? "text-amber-400/60" : "text-slate-500"
+                                            )}>Membresía Activa</p>
+                                            <div className={cn(
+                                                "text-4xl font-black flex items-baseline gap-2 tabular-nums",
+                                                settings.adminTheme === 'primitivo' ? "text-foreground" : "text-white"
+                                            )}>
                                                 {members.length}
-                                                <span className="text-xs text-emerald-500 font-black not-italic drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]">↑</span>
+                                                <span className={cn(
+                                                    "text-xs font-black not-italic",
+                                                    settings.adminTheme === 'primitivo' 
+                                                        ? "text-amber-400 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" 
+                                                        : "text-emerald-500 drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]"
+                                                )}>↑</span>
                                             </div>
                                         </div>
-                                        <div className="p-6 rounded-[2rem] bg-slate-900/60 border border-white/5 group-hover/metrics:border-emerald-500/20 transition-all duration-500 shadow-inner">
-                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-2 leading-none">Total Niñez</p>
-                                            <div className="text-4xl font-black italic text-white tabular-nums">
+                                        <div className={cn(
+                                            "card p-6 rounded-[1rem] border transition-all duration-500 shadow-none",
+                                            settings.adminTheme === 'primitivo' ? "bg-black/40 border-white/5 group-hover/metrics:border-amber-400/30" : "bg-slate-900/60 border-white/5 group-hover/metrics:border-emerald-500/20 shadow-inner"
+                                        )}>
+                                            <p className={cn(
+                                                "text-[9px] font-black uppercase tracking-[0.2em] mb-2 leading-none",
+                                                settings.adminTheme === 'primitivo' ? "text-amber-400/60" : "text-slate-500"
+                                            )}>Total Niñez</p>
+                                            <div className={cn(
+                                                "text-4xl font-black tabular-nums",
+                                                settings.adminTheme === 'primitivo' ? "text-foreground" : "text-white"
+                                            )}>
                                                 {members.filter(m => m.category === 'Niño').length}
+                                            </div>
+                                        </div>
+                                        <div className={cn(
+                                            "card p-6 rounded-[1rem] border transition-all duration-500 shadow-none",
+                                            settings.adminTheme === 'primitivo' ? "bg-black/40 border-white/5 group-hover/metrics:border-amber-400/30" : "bg-slate-900/60 border-white/5 group-hover/metrics:border-emerald-500/20 shadow-inner"
+                                        )}>
+                                            <p className={cn(
+                                                "text-[9px] font-black uppercase tracking-[0.2em] mb-2 leading-none",
+                                                settings.adminTheme === 'primitivo' ? "text-amber-400/60" : "text-slate-500"
+                                            )}>Total Jóvenes</p>
+                                            <div className={cn(
+                                                "text-4xl font-black tabular-nums",
+                                                settings.adminTheme === 'primitivo' ? "text-foreground" : "text-white"
+                                            )}>
+                                                {members.filter(m => (m.member_group?.toLowerCase() || '').includes('joven')).length}
                                             </div>
                                         </div>
                                     </div>
                                     <Button
                                         onClick={() => setActiveTab('miembros')}
-                                        className="w-full bg-[#0a0a0a]/80 hover:bg-emerald-500 text-slate-400 hover:text-black border border-white/5 hover:border-emerald-500/50 rounded-2xl py-7 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 shadow-xl group/btn"
+                                        className={cn(
+                                            "w-full rounded-2xl py-7 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 shadow-none group/btn border",
+                                            settings.adminTheme === 'primitivo' 
+                                                ? "bg-slate-800 text-white border-none hover:bg-amber-400 hover:text-black" 
+                                                : "bg-[#0a0a0a]/80 text-slate-400 border-white/5 hover:bg-emerald-500 hover:text-black hover:border-emerald-500/50 shadow-xl"
+                                        )}
                                     >
                                         <div className="flex items-center gap-2 group-hover/btn:scale-110 transition-transform">
                                             GESTIONAR BASE DE DATOS <ArrowRight className="w-4 h-4 ml-1" />
                                         </div>
                                     </Button>
-                                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
-                                </div>
+                                    <div className={cn(
+                                        "absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400/20 to-transparent",
+                                        settings.adminTheme !== 'primitivo' && "hidden"
+                                    )} />
+                                </Card>
                             </div>
                         </div>
                     </motion.div>
@@ -1362,7 +1754,25 @@ function AdminDashboardContent() {
                                 <div className="flex justify-between items-center">
                                     <CardTitle className="text-xl font-black uppercase flex items-center gap-2">
                                         <Calendar className="h-5 w-5 text-primary" />
-                                        Programación: <span className="text-primary italic">{format(parseISO(currentDate), "PPPP", { locale: es })}</span>
+                                        Programación: <div className="relative group inline-block cursor-pointer">
+                                            <span className="text-primary hover:text-primary/80 transition-colors">
+                                                {(() => {
+                                                    try {
+                                                        return format(parseISO(currentDate), "PPPP", { locale: es });
+                                                    } catch (e) {
+                                                        return currentDate;
+                                                    }
+                                                })()}
+                                            </span>
+                                            <input 
+                                                type="date" 
+                                                className="absolute inset-0 opacity-0 cursor-pointer w-full" 
+                                                value={currentDate}
+                                                onChange={(e) => {
+                                                    if (e.target.value) setCurrentDate(e.target.value);
+                                                }}
+                                            />
+                                        </div>
                                     </CardTitle>
                                     <div className="flex items-center gap-4">
                                         <Button
@@ -1717,7 +2127,7 @@ function AdminDashboardContent() {
                         {/* 1. SECCIÓN: IDENTIDAD DE MARCA (LOGOS) */}
                         <Card className="glass-card border-t-4 border-t-blue-500">
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
+                                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
                                     <LayoutDashboard className="h-5 w-5 text-blue-500" /> Identidad Visual
                                 </CardTitle>
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
@@ -1736,7 +2146,7 @@ function AdminDashboardContent() {
                                         }}
                                         className={cn(
                                             "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
-                                            (settings.churchLogoUrl === '') ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)]" : "border-white/5 bg-foreground/5 hover:border-white/10"
+                                            (settings.churchLogoUrl === '') ? "border-primary bg-primary/10" : "border-white/5 bg-foreground/5 hover:border-white/10"
                                         )}
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-b from-slate-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -1773,7 +2183,7 @@ function AdminDashboardContent() {
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 )}
-                                                <motion.button
+                                                <motion.div
                                                     whileHover={{ y: -5 }}
                                                     onClick={() => {
                                                         if (slotUrl) {
@@ -1784,8 +2194,8 @@ function AdminDashboardContent() {
                                                         }
                                                     }}
                                                     className={cn(
-                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full",
-                                                        isActive ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)] border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
+                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full cursor-pointer",
+                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
                                                     )}
                                                 >
                                                     {slotUrl ? (
@@ -1797,6 +2207,7 @@ function AdminDashboardContent() {
                                                                 Logo Principal
                                                             </span>
                                                             <button
+                                                                type="button"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
@@ -1812,7 +2223,7 @@ function AdminDashboardContent() {
                                                             <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Subir Logo 1</span>
                                                         </div>
                                                     )}
-                                                </motion.button>
+                                                </motion.div>
                                                 <input
                                                     type="file"
                                                     id={`custom-logo-upload-${slotIndex}`}
@@ -1849,7 +2260,7 @@ function AdminDashboardContent() {
                                                         <Trash2 className="w-4 h-4" />
                                                     </button>
                                                 )}
-                                                <motion.button
+                                                <motion.div
                                                     whileHover={{ y: -5 }}
                                                     onClick={() => {
                                                         if (slotUrl) {
@@ -1860,8 +2271,8 @@ function AdminDashboardContent() {
                                                         }
                                                     }}
                                                     className={cn(
-                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full",
-                                                        isActive ? "border-primary bg-primary/10 shadow-[0_10px_40px_rgba(var(--primary-rgb),0.2)] border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
+                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full cursor-pointer",
+                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
                                                     )}
                                                 >
                                                     {slotUrl ? (
@@ -1873,6 +2284,7 @@ function AdminDashboardContent() {
                                                                 Logo {slotIndex}
                                                             </span>
                                                             <button
+                                                                type="button"
                                                                 onClick={(e) => {
                                                                     e.stopPropagation();
                                                                     document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
@@ -1888,7 +2300,7 @@ function AdminDashboardContent() {
                                                             <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Subir Logo {slotIndex}</span>
                                                         </div>
                                                     )}
-                                                </motion.button>
+                                                </motion.div>
                                                 <input
                                                     type="file"
                                                     id={`custom-logo-upload-${slotIndex}`}
@@ -1907,7 +2319,7 @@ function AdminDashboardContent() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <Card className="glass-card border-t-4 border-t-purple-500">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
+                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
                                         <Monitor className="h-5 w-5 text-purple-500" /> Fondo de Proyección
                                     </CardTitle>
                                     <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Logo de fondo para la pantalla gigante</CardDescription>
@@ -1930,7 +2342,7 @@ function AdminDashboardContent() {
                                                 }}
                                                 className={cn(
                                                     "flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all relative group overflow-hidden",
-                                                    settings.displayBgMode === bg.mode ? "border-primary bg-primary/10 shadow-lg" : "border-white/5 bg-foreground/5"
+                                                    settings.displayBgMode === bg.mode ? "border-primary bg-primary/10" : "border-white/5 bg-foreground/5"
                                                 )}
                                             >
                                                 {bg.mode === 'custom' && settings.displayCustomBgUrl && settings.displayBgMode === 'custom' ? (
@@ -1995,7 +2407,7 @@ function AdminDashboardContent() {
 
                             <Card className="glass-card border-t-4 border-t-amber-500">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
+                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
                                         <Type className="h-5 w-5 text-amber-500" /> Tipografía Global
                                     </CardTitle>
                                     <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Fuente del sistema (Google Fonts)</CardDescription>
@@ -2003,12 +2415,15 @@ function AdminDashboardContent() {
                                 <CardContent className="space-y-6">
                                     <div className="space-y-6">
                                         <div className="relative group">
-                                            <div className="flex items-center gap-3 p-4 bg-foreground/5 border-2 border-border/10 rounded-3xl transition-all focus-within:border-amber-500/50 focus-within:bg-foreground/[0.08]">
-                                                <Search className="w-5 h-5 text-slate-500" />
+                                            {/* Outer Glow on Focus */}
+                                            <div className="absolute -inset-1 bg-amber-500/0 group-focus-within:bg-amber-500/10 rounded-[2rem] blur-xl transition-all duration-500" />
+                                            
+                                            <div className="relative bg-black/60 border border-white/30 rounded-2xl overflow-hidden focus-within:border-amber-500/60 focus-within:bg-black/80 transition-all duration-300 backdrop-blur-md flex items-center px-4">
+                                                <Search className="w-4 h-4 text-slate-400 group-focus-within:text-amber-400 transition-colors" />
                                                 <input 
                                                     type="text"
                                                     placeholder="Buscar fuente de Google..."
-                                                    className="bg-transparent border-none outline-none flex-1 font-black uppercase text-[10px] tracking-widest text-foreground"
+                                                    className="bg-transparent border-none outline-none flex-1 h-14 font-black uppercase text-[10px] tracking-[0.2em] text-white placeholder:text-slate-600 pl-4"
                                                     value={fontSearch}
                                                     onChange={(e) => {
                                                         setFontSearch(e.target.value);
@@ -2067,12 +2482,12 @@ function AdminDashboardContent() {
                                                             </div>
                                                         </div>
                                                         <div className="flex items-center gap-4">
-                                                            <span className="text-xs opacity-50 font-medium italic hidden md:block" style={{ fontFamily: `"${font.name}", sans-serif` }}>
+                                                            <span className="text-xs opacity-50 font-medium hidden md:block" style={{ fontFamily: `"${font.name}", sans-serif` }}>
                                                                 The quick brown fox jumps over the lazy dog
                                                             </span>
                                                             <div className={cn(
                                                                 "w-2 h-2 rounded-full transition-all",
-                                                                isSelected ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)] scale-125" : "bg-white/10"
+                                                                isSelected ? "bg-amber-500 scale-125" : "bg-white/10"
                                                             )} />
                                                         </div>
                                                     </button>
@@ -2103,9 +2518,9 @@ function AdminDashboardContent() {
                                                             }}
                                                             className={cn(
                                                                 "px-3 py-2 rounded-xl text-[8px] font-black uppercase tracking-tighter transition-all",
-                                                                settings.fontWeight === w.weight ? "bg-amber-500 text-black shadow-lg" : "bg-white/5 text-slate-500 hover:bg-white/10"
+                                                                settings.fontWeight === w.weight ? "bg-amber-500 text-black" : "bg-white/5 text-slate-500 hover:bg-white/10"
                                                             )}
-                                                            style={{ fontWeight: Number(w.weight) }}
+                                                            style={{ fontWeight: w.weight }}
                                                         >
                                                             {w.label}
                                                         </button>
@@ -2115,7 +2530,7 @@ function AdminDashboardContent() {
                                             <div className="p-4 bg-black/20 rounded-2xl border border-white/5 min-h-[60px] flex items-center justify-center">
                                                 <p className="text-center text-sm" style={{ 
                                                     fontFamily: settings.fontMain ? `"${settings.fontMain}", sans-serif` : 'inherit',
-                                                    fontWeight: Number(settings.fontWeight || '400')
+                                                    fontWeight: settings.fontWeight || '400'
                                                 }}>
                                                     Previsualización: El Señor es mi fortaleza y mi escudo.
                                                 </p>
@@ -2125,10 +2540,10 @@ function AdminDashboardContent() {
                                 </CardContent>
                             </Card>
 
-                            <Card className="glass-card border-t-4 border-t-emerald-500">
+                            <Card className={cn("glass-card border-t-4", settings.adminTheme === 'primitivo' ? "border-t-primary" : "border-t-emerald-500")}>
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
-                                        <Sparkles className="h-5 w-5 text-emerald-500" /> Partículas y Efectos
+                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
+                                        <Sparkles className={cn("h-5 w-5", settings.adminTheme === 'primitivo' ? "text-primary" : "text-emerald-500")} /> Partículas y Efectos
                                     </CardTitle>
                                     <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Dinámica visual del display</CardDescription>
                                 </CardHeader>
@@ -2164,7 +2579,7 @@ function AdminDashboardContent() {
                                         >
                                             <motion.div
                                                 animate={{ x: calendarStyles.showGlassEffect ? 24 : 0 }}
-                                                className="w-4 h-4 bg-white rounded-full shadow-lg"
+                                                className="w-4 h-4 bg-white rounded-full"
                                             />
                                         </div>
                                     </div>
@@ -2175,7 +2590,7 @@ function AdminDashboardContent() {
                         {/* 4. SECCIÓN: COLORES Y TIPOGRAFÍA */}
                         <Card className="glass-card border-t-4 border-t-pink-500">
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase italic tracking-tighter">
+                                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
                                     <Sun className="h-5 w-5 text-pink-500" /> Colores y Tipografía Global
                                 </CardTitle>
                                 <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Paleta cromática y fuentes de toda la plataforma</CardDescription>
@@ -2186,7 +2601,7 @@ function AdminDashboardContent() {
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Color de Marca (Sistema y Display)</label>
                                         <div className="flex items-center gap-4 p-4 bg-foreground/5 rounded-2xl border border-white/5">
                                             <div
-                                                className="w-14 h-14 rounded-xl border-2 border-white/20 shadow-lg"
+                                                className="w-14 h-14 rounded-xl border-2 border-white/20"
                                                 style={{ backgroundColor: settings.primaryColor }}
                                             />
                                             <div className="flex-1 flex gap-2">
@@ -2246,7 +2661,7 @@ function AdminDashboardContent() {
                                                         className={cn(
                                                             "flex flex-col p-3 rounded-xl border-2 transition-all text-left",
                                                             calendarStyles.fontSetIndex === idx || (calendarStyles.fontSetIndex === undefined && idx === 0)
-                                                                ? "bg-primary/20 border-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]"
+                                                                ? "bg-primary/20 border-primary"
                                                                 : "bg-foreground/5 border-white/5 opacity-60 hover:opacity-100"
                                                         )}
                                                     >
@@ -2288,7 +2703,7 @@ function AdminDashboardContent() {
                                                         className={cn(
                                                             "flex flex-col items-start p-3 rounded-xl border-2 transition-all text-left gap-1",
                                                             (settings.neonForgeVariant || 'lime') === v.id
-                                                                ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)]"
+                                                                ? "border-primary bg-primary/10"
                                                                 : "border-white/5 bg-foreground/5 opacity-60 hover:opacity-100"
                                                         )}
                                                     >
@@ -2338,7 +2753,7 @@ function AdminDashboardContent() {
                                                         className={cn(
                                                             "flex flex-col items-start p-3 rounded-xl border-2 transition-all text-left gap-1",
                                                             (settings.aquaVariant || 'teal') === v.id
-                                                                ? "border-primary bg-primary/10 shadow-[0_0_20px_rgba(var(--primary-rgb),0.15)]"
+                                                                ? "border-primary bg-primary/10"
                                                                 : "border-white/5 bg-foreground/5 opacity-60 hover:opacity-100"
                                                         )}
                                                     >
@@ -2383,11 +2798,11 @@ function AdminDashboardContent() {
                                                         className={cn(
                                                             "flex flex-col items-start p-4 rounded-2xl border-2 transition-all text-left gap-1",
                                                             (settings.iglesiaVariant || 'light') === v.id
-                                                                ? "border-red-500 bg-red-500/10 shadow-[0_0_20px_rgba(234,42,51,0.15)]"
+                                                                ? "border-red-500 bg-red-500/10"
                                                                 : "border-white/5 bg-foreground/5 opacity-60 hover:opacity-100"
                                                         )}
                                                     >
-                                                        <div className="w-8 h-8 rounded-xl mb-1 flex items-center justify-center shadow-lg" style={{ background: v.id === 'light' ? '#F8F9FA' : '#1A1B1E' }}>
+                                                        <div className="w-8 h-8 rounded-xl mb-1 flex items-center justify-center" style={{ background: v.id === 'light' ? '#F8F9FA' : '#1A1B1E' }}>
                                                             <div className="w-1.5 h-4 bg-red-500 rounded-full" />
                                                         </div>
                                                         <span className="text-[12px] font-black uppercase tracking-wide text-foreground">{v.label}</span>
@@ -2444,7 +2859,7 @@ function AdminDashboardContent() {
                         <div className="flex justify-center pt-8">
                             <Button
                                 size="lg"
-                                className="h-16 px-16 bg-primary text-black font-black uppercase tracking-[0.2em] rounded-2xl shadow-[0_20px_40px_rgba(var(--primary-rgb),0.3)] hover:scale-105 active:scale-95 transition-all gap-4"
+                                className="h-16 px-16 bg-primary text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-105 active:scale-95 transition-all gap-4"
                                 onClick={async () => {
                                     setIsSaving(true);
                                     try {
@@ -2491,7 +2906,7 @@ function AdminDashboardContent() {
                                             <div key={u.id} className="p-3 rounded-xl bg-foreground/5 border border-border/40 flex justify-between items-center group">
                                                 <div>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-sm font-bold text-foreground uppercase italic tracking-tighter">{u.name}</span>
+                                                        <span className="text-sm font-bold text-foreground uppercase tracking-tighter">{u.name}</span>
                                                         <span className={cn(
                                                             "text-[8px] font-black px-1.5 py-0.5 rounded uppercase",
                                                             u.category === 'Adulto' ? "bg-secondary/20 text-secondary" : "bg-cyan-500/20 text-cyan-400"
@@ -2567,7 +2982,13 @@ function AdminDashboardContent() {
                                     </div>
                                     <div className="flex items-center gap-2 px-3 py-1 bg-foreground/5 rounded-lg border border-white/5">
                                         <Calendar className="w-3.5 h-3.5 text-cyan-500 opacity-50" />
-                                        <span className="text-xs font-bold text-foreground uppercase italic">{format(parseISO(currentDate), "PPP", { locale: es })}</span>
+                                        <span className="text-xs font-bold text-foreground uppercase ">{(() => {
+                                            try {
+                                                return format(parseISO(currentDate), "PPP", { locale: es });
+                                            } catch (e) {
+                                                return currentDate;
+                                            }
+                                        })()}</span>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="space-y-6">
@@ -2690,12 +3111,15 @@ function AdminDashboardContent() {
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">
                                     <Settings className="h-5 w-5 text-primary" />
-                                    <CardTitle className="text-xl font-black uppercase italic tracking-tighter">
+                                    <CardTitle className="text-xl font-black uppercase tracking-tighter">
                                         Ajustes de Interfaz y Perfil
                                     </CardTitle>
                                 </div>
                                 <Button
-                                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest gap-2 h-9 text-[10px]"
+                                    className={cn(
+                                        "text-white font-black uppercase tracking-widest gap-2 h-9 text-[10px]",
+                                        settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500" : "bg-emerald-600 hover:bg-emerald-500"
+                                    )}
                                     onClick={async () => {
                                         setIsSaving(true);
                                         await saveSettingsToCloud(settings);
@@ -2768,7 +3192,7 @@ function AdminDashboardContent() {
                                             <select
                                                 value={settings.themeMode}
                                                 onChange={(e) => setSettings({ themeMode: e.target.value as any })}
-                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none shadow-xl focus:border-primary/50"
+                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-primary/50"
                                             >
                                                 <option value="light" className="bg-[#020617] text-white">Modo Claro (Fondo Blanco)</option>
                                                 <option value="dark" className="bg-[#020617] text-white">Modo Oscuro (Fondo Galaxia)</option>
@@ -2779,12 +3203,39 @@ function AdminDashboardContent() {
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    {/* Plantilla del Panel Admin */}
+                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-amber-500/5 border border-amber-500/10 flex flex-col justify-center relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                                            <LayoutDashboard className="w-32 h-32 text-amber-500" />
+                                        </div>
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 ml-1 flex items-center gap-2">
+                                            <LayoutDashboard className="w-3.5 h-3.5" /> Plantilla del Panel Administrador
+                                        </h4>
+                                        <div className="relative z-10">
+                                            <Contrast className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-500" />
+                                            <select
+                                                value={settings.adminTheme || 'classic'}
+                                                onChange={(e) => {
+                                                    const newValue = e.target.value as any;
+                                                    setSettings({ adminTheme: newValue });
+                                                    saveSettingsToCloud({ adminTheme: newValue });
+                                                }}
+                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-amber-500/50"
+                                            >
+                                                <option value="primitivo" className="bg-[#020617] text-white">Plantilla Primitiva (Producción Cloud)</option>
+                                                <option value="classic" className="bg-[#020617] text-white">Plantilla Clásica (Tactile Local)</option>
+                                                <option value="luna" className="bg-[#020617] text-white">Plantilla Luna Premium (Industrial)</option>
+                                            </select>
+                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                                                <ChevronRight className="w-5 h-5 text-slate-500 rotate-90" />
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-
-
                                 {/* Ministro Responsable */}
-                                <div className="p-10 rounded-[2.5rem] bg-slate-900/40 border border-white/10 relative overflow-hidden group shadow-[0_30px_60px_rgba(0,0,0,0.5)]">
+                                <div className="p-10 rounded-[2.5rem] bg-slate-900/40 border border-white/10 relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
                                     <div className="flex flex-col lg:flex-row gap-16 relative z-10">
@@ -2792,7 +3243,7 @@ function AdminDashboardContent() {
                                         <div className="lg:w-80 flex flex-col items-center">
                                             <div className="relative group/avatar">
                                                 <div className="w-56 h-56 rounded-full border-4 border-primary/20 p-2 relative">
-                                                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-primary/50 shadow-[0_0_50px_rgba(var(--primary-rgb),0.3)] bg-slate-800">
+                                                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-primary/50 bg-slate-800">
                                                         <img
                                                             src={minister.avatar}
                                                             className="w-full h-full object-cover transition-transform duration-700 group-hover/avatar:scale-110"
@@ -2818,7 +3269,7 @@ function AdminDashboardContent() {
                                                             whileHover={{ scale: 1.1 }}
                                                             whileTap={{ scale: 0.9 }}
                                                             onClick={() => document.getElementById('minister-photo-upload')?.click()}
-                                                            className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center shadow-2xl border border-white/20 hover:bg-primary/90 transition-all z-20"
+                                                            className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center border border-white/20 hover:bg-primary/90 transition-all z-20"
                                                             title="Cambiar Foto"
                                                         >
                                                             <Camera className="w-6 h-6" />
@@ -2826,24 +3277,24 @@ function AdminDashboardContent() {
                                                     </div>
 
                                                 </div>
-                                                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary px-8 py-2.5 rounded-full shadow-[0_10px_30px_rgba(var(--primary-rgb),0.5)] border border-white/20 whitespace-nowrap">
-                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white italic">Ministro Responsable</span>
+                                                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary px-8 py-2.5 rounded-full border border-white/20 whitespace-nowrap">
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white ">Ministro Responsable</span>
                                                 </div>
                                             </div>
 
                                             <div className="mt-14 text-center space-y-3">
-                                                <h4 className="text-3xl font-black uppercase text-foreground italic drop-shadow-md tracking-tighter">{minister.name || 'Sin Nombre'}</h4>
+                                                <h4 className="text-3xl font-black uppercase text-foreground tracking-tighter">{minister.name || 'Sin Nombre'}</h4>
                                                 <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] bg-primary/10 px-4 py-1.5 rounded-full inline-block">Responsable</p>
                                             </div>
 
                                             <div className="mt-10 w-full p-6 rounded-[2rem] bg-foreground/5 border border-white/5 backdrop-blur-md flex justify-around">
                                                 <div className="text-center">
-                                                    <div className="text-xl font-black text-foreground italic">100%</div>
+                                                    <div className="text-xl font-black text-foreground ">100%</div>
                                                     <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-1">Fidelidad</div>
                                                 </div>
                                                 <div className="w-px h-10 bg-white/10" />
                                                 <div className="text-center">
-                                                    <div className="text-xl font-black text-primary italic">Activo</div>
+                                                    <div className="text-xl font-black text-primary ">Activo</div>
                                                     <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-1">Estado</div>
                                                 </div>
                                             </div>
@@ -2853,11 +3304,11 @@ function AdminDashboardContent() {
                                         <div className="flex-1 space-y-10">
                                             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="p-3.5 bg-primary/20 rounded-2xl border border-primary/30 shadow-lg">
+                                                    <div className="p-3.5 bg-primary/20 rounded-2xl border border-primary/30">
                                                         <User className="w-6 h-6 text-primary" />
                                                     </div>
                                                     <div>
-                                                        <h3 className="text-2xl font-black uppercase text-foreground italic tracking-tight">Detalles del Ministro</h3>
+                                                        <h3 className="text-2xl font-black uppercase text-foreground tracking-tight">Detalles del Ministro</h3>
                                                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Información oficial para visualización pública</p>
                                                     </div>
                                                 </div>
@@ -2874,7 +3325,10 @@ function AdminDashboardContent() {
                                                         </Button>
                                                     </div>
                                                     <Button
-                                                        className="bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest gap-2 h-12 px-10 rounded-2xl shadow-[0_15px_30px_rgba(16,185,129,0.3)] transition-all hover:translate-y-[-2px] active:translate-y-[1px]"
+                                                        className={cn(
+                                                            "text-white font-black uppercase tracking-widest gap-2 h-12 px-10 rounded-2xl transition-all hover:translate-y-[-2px] active:translate-y-[1px]",
+                                                            settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500 shadow-none" : "bg-emerald-600 hover:bg-emerald-500 shadow-[0_15px_30px_rgba(16,185,129,0.3)]"
+                                                        )}
                                                         onClick={async () => {
                                                             setIsSaving(true);
                                                             await saveSettingsToCloud({
@@ -2950,7 +3404,7 @@ function AdminDashboardContent() {
                             <CardHeader>
                                 <div className="flex items-center gap-2">
                                     <Monitor className="h-5 w-5 text-cyan-500" />
-                                    <CardTitle className="text-xl font-black uppercase italic tracking-tighter">
+                                    <CardTitle className="text-xl font-black uppercase tracking-tighter">
                                         Optimización de Pantalla (TV)
                                     </CardTitle>
                                 </div>
@@ -2979,7 +3433,7 @@ function AdminDashboardContent() {
                                             </Button>
                                         ))}
                                     </div>
-                                    <p className="text-xs text-slate-500 italic">
+                                    <p className="text-xs text-slate-500 ">
                                         * Si el contenido se ve cortado en los bordes de la TV, baje la escala al 80% o 70%.
                                     </p>
                                 </div>
@@ -3046,7 +3500,7 @@ function AdminDashboardContent() {
                                         >
                                             <ChevronDown className="w-6 h-6" />
                                         </Button>
-                                        <p className="text-xs text-slate-500 italic mt-2">
+                                        <p className="text-xs text-slate-500 mt-2">
                                             Use las flechas para mover el contenido. Los cambios se aplican en tiempo real en la TV.
                                         </p>
                                     </div>
@@ -3065,33 +3519,49 @@ function AdminDashboardContent() {
                         className="space-y-8"
                     >
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            <Card className="glass-card bg-slate-900/40 border-white/5 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-xl relative overflow-hidden">
-                                <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <Users className="w-10 h-10 text-primary mb-3 drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]" />
+                            <Card className={cn(
+                                "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/5 shadow-xl"
+                            )}>
+                                <div className="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <Users className="w-10 h-10 text-amber-400 mb-3" />
                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1 leading-none">Membresía Total</p>
-                                <h3 className="text-5xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent drop-shadow-sm tabular-nums">{members.length}</h3>
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
+                                <h3 className="text-5xl font-black bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent tabular-nums">{members.length}</h3>
+                                <div className={cn("absolute bottom-0 left-0 right-0 h-[1.5px] opacity-80", settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-transparent via-amber-400/20 to-transparent" : "bg-gradient-to-r from-transparent via-primary to-transparent")} />
                             </Card>
-                            <Card className="glass-card bg-slate-900/40 border-white/5 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-xl relative overflow-hidden">
+                            <Card className={cn(
+                                "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
+                            )}>
                                 <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <User className="w-10 h-10 text-blue-400 mb-3 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
+                                <div className="w-10 h-10 flex items-center justify-center mb-3">
+                                    <User className="w-10 h-10 text-blue-400" />
+                                </div>
                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1 leading-none">Varones Adultos</p>
-                                <h3 className="text-5xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent drop-shadow-sm tabular-nums">{members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length}</h3>
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
+                                <h3 className="text-5xl font-black bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent tabular-nums">{members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length}</h3>
+                                <div className={cn("absolute bottom-0 left-0 right-0 h-[1.5px] opacity-80", settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-transparent via-blue-400/20 to-transparent" : "bg-gradient-to-r from-transparent via-blue-500 to-transparent")} />
                             </Card>
-                            <Card className="glass-card bg-slate-900/40 border-white/5 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-xl relative overflow-hidden">
+                            <Card className={cn(
+                                "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
+                            )}>
                                 <div className="absolute inset-0 bg-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                <User className="w-10 h-10 text-pink-400 mb-3 drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
+                                <div className="w-10 h-10 flex items-center justify-center mb-3">
+                                    <User className="w-10 h-10 text-pink-400" />
+                                </div>
                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1 leading-none">Hermanas Adultas</p>
-                                <h3 className="text-5xl font-black italic bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent drop-shadow-sm tabular-nums">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</h3>
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent opacity-50" />
+                                <h3 className="text-5xl font-black bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent tabular-nums">{members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length}</h3>
+                                <div className={cn("absolute bottom-0 left-0 right-0 h-[1.5px] opacity-80", settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-transparent via-pink-400/20 to-transparent" : "bg-gradient-to-r from-transparent via-pink-500 to-transparent")} />
                             </Card>
-                            <Card className="glass-card bg-amber-500/5 border-amber-500/10 p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 shadow-2xl relative overflow-hidden">
+                            <Card className={cn(
+                                "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card p-6 shadow-2xl bg-slate-900/40 border-white/40"
+                            )}>
                                 <div className="absolute inset-0 bg-amber-500/10 animate-pulse opacity-30" />
-                                <ShieldAlert className="w-10 h-10 text-amber-500 mb-3 animate-pulse drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]" />
+                                <ShieldAlert className="w-10 h-10 text-amber-500 mb-3 animate-pulse" />
                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-amber-500 mb-1 leading-none">Auditoría Pendiente</p>
-                                <h3 className="text-5xl font-black italic text-amber-500 drop-shadow-lg tabular-nums">{members.filter(m => m.status === 'Pendiente').length}</h3>
-                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent shadow-[0_0_15px_rgba(245,158,11,0.8)]" />
+                                <h3 className="text-5xl font-black text-amber-500 tabular-nums">{members.filter(m => m.status === 'Pendiente').length}</h3>
+                                <div className={cn("absolute bottom-0 left-0 right-0 h-[1.5px] shadow-[0_0_15px_rgba(251,191,36,0.2)]", settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-transparent via-amber-400/20 to-transparent" : "bg-gradient-to-r from-transparent via-amber-500 to-transparent")} />
                             </Card>
                         </div>
 
@@ -3100,7 +3570,10 @@ function AdminDashboardContent() {
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="p-10 rounded-[3rem] bg-gradient-to-br from-amber-500/10 via-[#0a0a0a] to-amber-500/[0.03] border border-amber-500/20 space-y-8 relative overflow-hidden shadow-[0_0_50px_rgba(245,158,11,0.05)] backdrop-blur-3xl group/audit"
+                                className={cn(
+                                    "p-10 rounded-[3rem] bg-gradient-to-br from-amber-500/10 via-[#0a0a0a] to-amber-500/[0.03] border border-amber-500/20 space-y-8 relative overflow-hidden backdrop-blur-3xl group/audit",
+                                    settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-[0_0_50px_rgba(245,158,11,0.05)]"
+                                )}
                             >
                                 <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12 group-hover/audit:rotate-0 transition-transform duration-700">
                                     <ShieldAlert className="w-48 h-48 text-amber-500" />
@@ -3110,43 +3583,84 @@ function AdminDashboardContent() {
                                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
                                     <div className="space-y-2 text-center md:text-left">
                                         <div className="flex items-center justify-center md:justify-start gap-4">
-                                            <div className="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.4)]">
+                                            <div className={cn(
+                                                "w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center",
+                                                settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-[0_0_20px_rgba(245,158,11,0.4)]"
+                                            )}>
                                                 <ShieldAlert className="w-6 h-6 text-black" />
                                             </div>
-                                            <h3 className="text-3xl font-black italic uppercase tracking-tighter text-amber-500 drop-shadow-sm">
+                                            <h3 className="text-3xl font-black uppercase tracking-tighter text-amber-500">
                                                Auditoría de <span className="text-white">Seguridad</span>
                                             </h3>
                                         </div>
                                         <p className="text-xs text-slate-400 font-black uppercase tracking-[0.25em] ml-1">Protocolo de aprobación de nuevos perfiles</p>
                                     </div>
-                                    <div className="bg-amber-500/10 px-8 py-3 rounded-2xl border border-amber-500/30 backdrop-blur-md shadow-xl">
-                                        <span className="text-lg font-black text-amber-500 italic tabular-nums tracking-tighter">{members.filter(m => m.status === 'Pendiente').length} SOLICITUDES ACTIVAS</span>
+                                    <div className={cn(
+                                        "bg-amber-500/10 px-8 py-3 rounded-2xl border border-amber-500/30 backdrop-blur-md",
+                                        settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-xl"
+                                    )}>
+                                        <span className="text-lg font-black text-amber-500 tabular-nums tracking-tighter">{members.filter(m => m.status === 'Pendiente').length} SOLICITUDES ACTIVAS</span>
                                     </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
                                     {members.filter(m => m.status === 'Pendiente').map((pending) => (
-                                        <Card key={pending.id} className="glass-card bg-[#0a0a0a]/80 border-white/5 p-6 space-y-6 hover:border-amber-500/40 transition-all duration-500 group/member relative overflow-hidden shadow-2xl">
+                                        <Card key={pending.id} className={cn(
+                                            "space-y-6 transition-all duration-500 group/member relative overflow-hidden",
+                                            settings.adminTheme === 'primitivo' 
+                                                ? "bg-amber-500/[0.03] border border-amber-500/20 hover:border-amber-500/40 rounded-[2rem] p-5 shadow-none" 
+                                                : "glass-card bg-[#0a0a0a]/80 border border-white/5 p-6 rounded-[2rem] shadow-2xl hover:border-amber-500/40"
+                                        )}>
                                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-0 group-hover/member:opacity-100 transition-opacity" />
                                             <div className="flex items-center gap-5">
                                                 <div className="relative w-16 h-16 shrink-0">
                                                     <div className="absolute inset-0 bg-amber-500/20 rounded-[1.5rem] blur-xl opacity-0 group-hover/member:opacity-100 transition-opacity" />
-                                                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden border-2 border-white/10 group-hover/member:border-amber-500/50 transition-all bg-slate-900 shadow-xl">
+                                                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden border-2 border-white/10 group-hover/member:border-amber-500/50 transition-all bg-slate-900">
                                                         {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover transition-transform group-hover/member:scale-110" /> : <User className="w-full h-full p-4 text-amber-500/40" />}
                                                     </div>
+                                                    {pending.is_pre_registered && (
+                                                        <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-[9px] font-black px-2 py-0.5 rounded-[6px] border border-[#0b101e] text-black rotate-[5deg] group-hover:rotate-0 transition-transform z-20 tracking-[0.1em]">
+                                                            PRE.
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-lg font-black text-white truncate uppercase italic tracking-tighter leading-none mb-1">{pending.name}</p>
+                                                    <p className="text-lg font-black text-white truncate uppercase tracking-tighter leading-none mb-1">{pending.name}</p>
                                                     <p className="text-[9px] text-slate-500 truncate font-black uppercase tracking-widest flex items-center gap-1.5 leading-none">
                                                         <Mail className="w-2.5 h-2.5" />
                                                         {pending.email}
                                                     </p>
+                                                    <div className="flex items-center gap-2 mt-2">
+                                                        <span className={cn(
+                                                            "px-2.5 py-0.5 rounded-[4px] text-[9px] font-black tracking-widest uppercase shadow-none border-0 transition-all",
+                                                            pending.role === 'Administrador' || pending.role === 'Ministro a Cargo' 
+                                                                ? "bg-amber-900 text-amber-500" 
+                                                                : (settings.adminTheme === 'primitivo' 
+                                                                    ? "bg-emerald-900 text-emerald-400" 
+                                                                    : "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400")
+                                                        )}>
+                                                            {pending.role || 'MIEMBRO'}
+                                                        </span>
+                                                        {pending.member_group && (
+                                                            <span className={cn(
+                                                                "border-0 uppercase px-2.5 py-0.5 rounded-[4px] text-[9px] font-black tracking-widest",
+                                                                settings.adminTheme === 'primitivo' 
+                                                                    ? "bg-slate-800 text-slate-400" 
+                                                                    : "bg-[#2A4364]/10 border-[#2A4364]/20 text-[#2A4364]"
+                                                            )}>
+                                                                {pending.member_group}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="flex flex-col gap-4">
                                                 <div className="flex gap-3">
                                                     <Button 
-                                                        className="flex-1 h-12 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg shadow-emerald-500/10 transition-all hover:translate-y-[-1px] active:translate-y-0"
+                                                        className={cn(
+                                                            "flex-1 h-12 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all hover:translate-y-[-1px] active:translate-y-0",
+                                                            settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500 shadow-none" : "bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/10"
+                                                        )}
                                                         disabled={isSaving}
                                                         onClick={async () => {
                                                             setIsSaving(true);
@@ -3174,7 +3688,7 @@ function AdminDashboardContent() {
                                                     </Button>
                                                 </div>
                                                 <div className="pt-4 border-t border-white/5 space-y-3">
-                                                    <p className="text-[7px] font-black uppercase text-slate-400 tracking-[0.2em] text-center opacity-70 italic">Vincular con Registro Manual:</p>
+                                                    <p className="text-[7px] font-black uppercase text-slate-400 tracking-[0.2em] text-center opacity-70 ">Vincular con Registro Manual:</p>
                                                     <select 
                                                         className="w-full bg-[#111]/80 border border-white/10 rounded-2xl px-4 py-3 text-[10px] font-black uppercase text-amber-500 outline-none focus:border-amber-500/50 appearance-none cursor-pointer transition-all hover:bg-[#151515]"
                                                         onChange={async (e) => {
@@ -3205,16 +3719,19 @@ function AdminDashboardContent() {
                                 </div>
                             </motion.div>
                         )}
-                        <Card id="miembros" className="glass-card border-t-4 border-t-emerald-500">
+                        <Card id="miembros" className={cn("glass-card border-t-4", settings.adminTheme === 'primitivo' ? "border-t-primary" : "border-t-emerald-500")}>
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <Users className="h-5 w-5 text-emerald-500" />
+                                    <Users className={cn("h-5 w-5", settings.adminTheme === 'primitivo' ? "text-primary" : "text-emerald-500")} />
                                     <CardTitle className="text-xl font-black uppercase">
                                         Gestión de Miembros ({members.length})
                                     </CardTitle>
                                 </div>
                                 <Button
-                                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest gap-2 h-9 text-[10px]"
+                                    className={cn(
+                                        "text-white font-black uppercase tracking-widest gap-2 h-9 text-[10px]",
+                                        settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500" : "bg-emerald-600 hover:bg-emerald-500"
+                                    )}
                                     onClick={() => setShowAddMember(!showAddMember)}
                                 >
                                     <UserPlus className="w-3.5 h-3.5" /> {showAddMember ? 'Cancelar' : 'Pre-Registrar Miembro'}
@@ -3227,15 +3744,27 @@ function AdminDashboardContent() {
                                         initial={{ opacity: 0, height: 0, scale: 0.95 }}
                                         animate={{ opacity: 1, height: 'auto', scale: 1 }}
                                         exit={{ opacity: 0, height: 0, scale: 0.95 }}
-                                        className="p-8 rounded-[2.5rem] bg-emerald-500/[0.03] border border-emerald-500/20 space-y-8 relative overflow-hidden mb-8 shadow-2xl shadow-emerald-500/5"
+                                        className={cn(
+                                            "p-8 rounded-[2.5rem] space-y-8 relative overflow-hidden mb-8 shadow-2xl",
+                                            settings.adminTheme === 'primitivo' ? "bg-amber-400/[0.03] border border-amber-400/20 shadow-amber-400/5" : "bg-emerald-500/[0.03] border border-emerald-500/20 shadow-emerald-500/5"
+                                        )}
                                     >
                                         {/* Background Glow */}
-                                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-emerald-500/10 blur-[80px] pointer-events-none" />
+                                        <div className={cn(
+                                            "absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 blur-[80px] pointer-events-none",
+                                            settings.adminTheme === 'primitivo' ? "bg-amber-400/10" : "bg-emerald-500/10"
+                                        )} />
 
                                         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                             <div className="space-y-1">
-                                                <h4 className="text-xl font-black uppercase text-emerald-400 flex items-center gap-3 italic tracking-tight">
-                                                    <div className="p-2 bg-emerald-500/20 rounded-xl border border-emerald-500/30">
+                                                <h4 className={cn(
+                                                    "text-xl font-black uppercase flex items-center gap-3 tracking-tight",
+                                                    settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-400"
+                                                )}>
+                                                    <div className={cn(
+                                                        "p-2 rounded-xl border",
+                                                        settings.adminTheme === 'primitivo' ? "bg-amber-400/20 border-amber-400/30" : "bg-emerald-500/20 border-emerald-500/30"
+                                                    )}>
                                                         <UserPlus className="w-5 h-5" />
                                                     </div>
                                                     Pre-Registrar Nuevo Miembro
@@ -3256,7 +3785,10 @@ function AdminDashboardContent() {
                                                     Descartar
                                                 </Button>
                                                 <Button
-                                                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-[0.15em] gap-3 h-12 px-8 rounded-2xl shadow-[0_15px_30px_rgba(16,185,129,0.3)] transition-all hover:translate-y-[-2px] active:translate-y-[1px]"
+                                                    className={cn(
+                                                        "text-white font-black uppercase tracking-[0.15em] gap-3 h-12 px-8 rounded-2xl transition-all hover:translate-y-[-2px] active:translate-y-[1px]",
+                                                        settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500 shadow-none" : "bg-emerald-600 hover:bg-emerald-500 shadow-[0_15px_30px_rgba(16,185,129,0.3)]"
+                                                    )}
                                                     disabled={!newMember.name || isSaving}
                                                     onClick={async () => {
                                                         setIsSaving(true);
@@ -3283,7 +3815,8 @@ function AdminDashboardContent() {
                                                     onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
                                                     placeholder="Ej: María López"
                                                     className={cn(
-                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all outline-none",
+                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black transition-all outline-none",
+                                                        settings.adminTheme === 'primitivo' ? "focus:border-amber-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]",
                                                         similarMembers.length > 0 && "border-amber-500/50 bg-amber-500/5"
                                                     )}
                                                 />
@@ -3320,7 +3853,8 @@ function AdminDashboardContent() {
                                                     onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
                                                     placeholder="ejemplo@gmail.com"
                                                     className={cn(
-                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all outline-none",
+                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black transition-all outline-none",
+                                                        settings.adminTheme === 'primitivo' ? "focus:border-amber-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]",
                                                         similarMembers.some(m => m.email?.toLowerCase().trim() === newMember.email.toLowerCase().trim()) && "border-red-500/50 bg-red-500/5"
                                                     )}
                                                     type="email"
@@ -3334,7 +3868,10 @@ function AdminDashboardContent() {
                                                     value={newMember.phone || ''}
                                                     onChange={(e) => setNewMember({ ...newMember, phone: e.target.value })}
                                                     placeholder="+1 (555) 000-0000"
-                                                    className="bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all outline-none"
+                                                    className={cn(
+                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black transition-all outline-none",
+                                                        settings.adminTheme === 'primitivo' ? "focus:border-amber-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
+                                                    )}
                                                 />
                                             </div>
 
@@ -3346,11 +3883,16 @@ function AdminDashboardContent() {
                                                     <select
                                                         value={newMember.role}
                                                         onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
-                                                        className="w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all"
+                                                        className={cn(
+                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
+                                                            settings.adminTheme === 'primitivo' ? "focus:border-amber-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
+                                                        )}
                                                     >
                                                         <option value="Miembro" className="bg-background">MIEMBRO</option>
                                                         <option value="Ministro a Cargo" className="bg-background">MINISTRO A CARGO</option>
                                                         <option value="Administrador" className="bg-background">ADMINISTRADOR</option>
+                                                        <option value="Encargado de Jóvenes" className="bg-background">ENCARGADO DE JÓVENES</option>
+                                                        <option value="Encargada de Jóvenes" className="bg-background">ENCARGADA DE JÓVENES</option>
                                                         <option value="Dirigente Coro Adultos" className="bg-background">DIRIGENTE CORO ADULTOS</option>
                                                         <option value="Dirigente Coro Niños" className="bg-background">DIRIGENTE CORO NIÑOS</option>
                                                         <option value="Responsable de Asistencia" className="bg-background">RESPONSABLE ASIST.</option>
@@ -3367,7 +3909,10 @@ function AdminDashboardContent() {
                                                     <select
                                                         value={newMember.category}
                                                         onChange={(e) => setNewMember({ ...newMember, category: e.target.value })}
-                                                        className="w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all"
+                                                        className={cn(
+                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
+                                                            settings.adminTheme === 'primitivo' ? "focus:border-amber-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
+                                                        )}
                                                     >
                                                         <option value="Varon" className="bg-background">VARÓN</option>
                                                         <option value="Hermana" className="bg-background">HERMANA</option>
@@ -3385,7 +3930,10 @@ function AdminDashboardContent() {
                                                     <select
                                                         value={newMember.member_group}
                                                         onChange={(e) => setNewMember({ ...newMember, member_group: e.target.value })}
-                                                        className="w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none focus:border-emerald-500/50 focus:bg-foreground/[0.05] transition-all"
+                                                        className={cn(
+                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
+                                                            settings.adminTheme === 'primitivo' ? "focus:border-amber-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
+                                                        )}
                                                     >
                                                         <option value="" className="bg-background">SIN GRUPO</option>
                                                         <option value="Casados" className="bg-background">CASADOS</option>
@@ -3407,14 +3955,32 @@ function AdminDashboardContent() {
                                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-6 pl-2">Filtrar por Grupo</p>
                                         
                                         {/* Search Filter Box */}
-                                        <div className="relative mb-6 px-2">
-                                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
-                                            <Input 
-                                                value={memberSearch}
-                                                onChange={(e) => setMemberSearch(e.target.value)}
-                                                placeholder="Buscar por nombre o email..."
-                                                className="bg-foreground/[0.03] border-white/5 pl-9 h-11 text-[10px] uppercase font-bold tracking-widest rounded-xl focus:border-emerald-500/30"
-                                            />
+                                        <div className="relative mb-8 px-2">
+                                            <div className="relative group">
+                                                {/* Outer Glow on Focus */}
+                                                <div className={cn(
+                                                    "absolute -inset-0.5 rounded-2xl blur-md transition-all duration-500",
+                                                    settings.adminTheme === 'primitivo' ? "bg-amber-500/0 group-focus-within:bg-amber-500/15" : "bg-emerald-500/0 group-focus-within:bg-emerald-500/15"
+                                                )} />
+                                                
+                                                <div className={cn(
+                                                    "relative border overflow-hidden transition-all duration-300 backdrop-blur-md",
+                                                    settings.adminTheme === 'primitivo'
+                                                        ? "bg-[#0A0D14] border-white/10 rounded-2xl focus-within:border-amber-500/30 focus-within:bg-[#101420] shadow-sm shadow-black"
+                                                        : "bg-black/40 border-white/30 rounded-full focus-within:border-emerald-500/60 focus-within:bg-black/80 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+                                                )}>
+                                                    <Search className={cn(
+                                                        "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors",
+                                                        settings.adminTheme === 'primitivo' ? "text-[#2dd4bf]/60 group-focus-within:text-[#2dd4bf]" : "text-slate-400 group-focus-within:text-emerald-400"
+                                                    )} />
+                                                    <Input 
+                                                        value={memberSearch}
+                                                        onChange={(e) => setMemberSearch(e.target.value)}
+                                                        placeholder="BUSCAR POR NOMBRE O EMAIL"
+                                                        className="bg-transparent border-none pl-11 h-11 text-[9px] uppercase font-black tracking-widest text-white placeholder:text-slate-500 focus-visible:ring-0 focus-visible:outline-none"
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
 
                                         {[
@@ -3431,24 +3997,31 @@ function AdminDashboardContent() {
                                                 className={cn(
                                                     "w-full flex items-center justify-between p-3 rounded-2xl transition-all duration-300 relative group overflow-hidden border",
                                                     memberFilter === group.id
-                                                        ? `bg-${group.color}-500/10 border-${group.color}-500/30 text-${group.color}-400 shadow-[0_4px_20px_rgba(0,0,0,0.2)]`
-                                                        : "bg-foreground/[0.02] border-border/10 text-muted-foreground hover:bg-foreground/[0.04] hover:border-border/30"
+                                                        ? (settings.adminTheme === 'primitivo' 
+                                                            ? "bg-amber-400 border-amber-400 text-black font-black shadow-none scale-[1.02] z-20" 
+                                                            : "bg-primary border-primary text-primary-foreground font-black shadow-lg shadow-primary/20 scale-[1.05] z-30")
+                                                        : (settings.adminTheme === 'primitivo'
+                                                            ? "bg-[#101420] border-white/5 text-slate-400 hover:text-white hover:border-white/10"
+                                                            : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white")
                                                 )}
                                             >
                                                 <div className="flex items-center gap-3 z-10">
                                                     <div className={cn(
-                                                        "p-2 rounded-xl border transition-all",
+                                                        "p-2 rounded-lg border transition-all",
                                                         memberFilter === group.id
-                                                            ? `bg-${group.color}-500/20 border-${group.color}-500/30 shadow-lg`
+                                                            ? (settings.adminTheme === 'primitivo' ? "bg-black/20 border-black/10" : `bg-${group.color}-500/20 border-${group.color}-500/30 shadow-lg`)
                                                             : "bg-foreground/5 border-border/10 group-hover:bg-foreground/10"
                                                     )}>
                                                         <group.icon className="w-4 h-4" />
                                                     </div>
-                                                    <span className="text-[11px] font-black uppercase tracking-widest italic">{group.label}</span>
+                                                    <span className="text-[11px] font-black uppercase tracking-widest ">{group.label}</span>
                                                 </div>
 
                                                 {/* Badge Count */}
-                                                <span className="text-[9px] font-bold opacity-30 px-2 italic z-10">
+                                                <span className={cn(
+                                                    "text-[10px] font-black px-2 z-10",
+                                                    memberFilter === group.id && settings.adminTheme === 'primitivo' ? "text-black/80" : "opacity-30"
+                                                )}>
                                                     {group.id === 'all'
                                                         ? members.length
                                                         : members.filter(m =>
@@ -3477,7 +4050,7 @@ function AdminDashboardContent() {
                                                 <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto border border-white/5 opacity-50">
                                                     <Users className="w-10 h-10 text-slate-500" />
                                                 </div>
-                                                <p className="text-xs text-slate-500 italic uppercase tracking-widest font-black">No hay miembros registrados</p>
+                                                <p className="text-xs text-slate-500 uppercase tracking-widest font-black">No hay miembros registrados</p>
                                             </div>
                                         ) : (
                                             [
@@ -3492,13 +4065,13 @@ function AdminDashboardContent() {
                                                         ? (!m.member_group || !['Casados', 'Solos y Solas', 'Jóvenes', 'Niños'].includes(m.member_group))
                                                         : m.member_group === group.id;
 
-                                                    const searchNorm = normalizeText(memberSearch);
+                                                    const searchNorm = normalizeText(memberSearch || '');
                                                     const nameNorm = normalizeText(m.name || '');
                                                     const emailNorm = normalizeText(m.email || '');
                                                     const matchesSearch = !memberSearch || nameNorm.includes(searchNorm) || emailNorm.includes(searchNorm);
 
                                                     return matchesGroup && matchesSearch;
-                                                }).sort((a, b) => a.name.localeCompare(b.name));
+                                                }).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
                                                 if (groupMembers.length === 0) return null;
 
@@ -3506,17 +4079,23 @@ function AdminDashboardContent() {
                                                     <div key={group.id} className="col-span-full grid grid-cols-1 xl:grid-cols-2 gap-4 mb-4 last:mb-0">
                                                         <div className="col-span-full flex flex-col gap-1 mt-6 first:mt-2 mb-4">
                                                             <div className="flex items-center gap-4 px-4 overflow-hidden">
-                                                                <div className="p-2.5 rounded-2xl bg-foreground/[0.03] border border-white/5 shadow-2xl">
-                                                                    <group.icon className="w-4 h-4 text-emerald-500" />
+                                                                 <div className={cn(
+                                                                    "p-2.5 rounded-2xl border transition-all",
+                                                                    settings.adminTheme === 'primitivo' ? "bg-amber-500/10 border-amber-500/20 shadow-none" : "bg-foreground/[0.03] border-white/5 shadow-2xl"
+                                                                )}>
+                                                                    <group.icon className={cn("w-4 h-4", settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-500")} />
                                                                 </div>
                                                                 <div className="flex flex-col">
-                                                                    <h3 className="text-sm font-black uppercase italic tracking-[0.2em] text-foreground flex items-center gap-2">
+                                                                    <h3 className="text-sm font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
                                                                         {group.label}
                                                                         <span className="text-[10px] font-bold text-slate-500 not-italic tracking-normal">({groupMembers.length})</span>
                                                                     </h3>
-                                                                    <p className="text-[9px] font-medium text-slate-500 uppercase tracking-widest opacity-60 italic">Gestión de integrantes por grupo</p>
+                                                                    <p className="text-[10px] font-bold text-slate-500/60 uppercase tracking-widest leading-none">Gestión de integrantes por grupo</p>
                                                                 </div>
-                                                                <div className="flex-1 h-px bg-gradient-to-r from-emerald-500/30 via-emerald-500/5 to-transparent ml-2" />
+                                                                <div className={cn(
+                                                                    "flex-1 h-[1px] ml-4 opacity-30",
+                                                                    settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-amber-400/20 to-transparent" : "bg-gradient-to-r from-emerald-500/20 to-transparent"
+                                                                )} />
                                                             </div>
                                                         </div>
                                                         {groupMembers.map((m) => (
@@ -3524,76 +4103,116 @@ function AdminDashboardContent() {
                                                                 layout
                                                                 key={m.id}
                                                                 whileHover={{ y: -4, scale: 1.01 }}
-                                                                className={cn(
-                                                                    "p-5 rounded-[2rem] border transition-all duration-300 group relative overflow-hidden",
-                                                                    m.is_pre_registered
-                                                                        ? "bg-amber-500/[0.03] border-amber-500/20 hover:border-amber-500/40"
-                                                                        : "bg-foreground/[0.02] border-border/10 hover:border-primary/30 hover:bg-primary/[0.02] shadow-xl"
+                                                                 className={cn(
+                                                                    "p-5 border transition-all duration-300 group relative overflow-hidden",
+                                                                    settings.adminTheme === 'primitivo' 
+                                                                        ? "bg-[#101420] border-white/5 hover:border-white/10 rounded-2xl shadow-none" 
+                                                                        : (m.is_pre_registered 
+                                                                            ? "bg-amber-500/[0.03] border-amber-500/20 hover:border-amber-500/40 rounded-[1.5rem] shadow-none"
+                                                                            : "bg-foreground/[0.02] border-border/10 hover:border-primary/30 hover:bg-primary/[0.02] rounded-[1.5rem] shadow-xl")
                                                                 )}
                                                             >
-                                                                {/* Background Accent */}
+                                                                {/* Background Accent / Glow (Aurora) */}
                                                                 <div className={cn(
-                                                                    "absolute top-0 right-0 w-32 h-32 blur-[60px] opacity-10 pointer-events-none -translate-y-1/2 translate-x-1/2",
+                                                                    "absolute top-0 right-0 w-48 h-48 blur-[80px] opacity-[0.1] pointer-events-none -translate-y-1/2 translate-x-1/2 transition-all duration-700 group-hover:opacity-20 group-hover:scale-110",
                                                                     m.role === 'Administrador' ? "bg-red-500" :
-                                                                        m.role === 'Ministro a Cargo' ? "bg-primary" : "bg-emerald-500"
+                                                                        m.role === 'Ministro a Cargo' ? "bg-amber-400" : (settings.adminTheme === 'primitivo' ? "bg-[#2dd4bf]" : "bg-emerald-500")
                                                                 )} />
 
                                                                 <div className="flex items-start gap-5 relative z-10">
                                                                     {/* Avatar Area */}
                                                                     <div className="relative shrink-0">
                                                                         <div className={cn(
-                                                                            "w-16 h-16 rounded-2xl overflow-hidden border-2 p-1 relative z-10",
-                                                                            m.role === 'Administrador' ? "border-red-500/30 bg-red-500/5 shadow-[0_0_20px_rgba(239,68,68,0.2)]" :
-                                                                                m.role === 'Ministro a Cargo' ? "border-primary/30 bg-primary/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)]" :
-                                                                                    "border-emerald-500/30 bg-emerald-500/5 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                                                                            "rounded-2xl overflow-hidden relative z-10 transition-all duration-500 group-hover:scale-110",
+                                                                            settings.adminTheme === "primitivo" ? "w-16 h-16 border-[3px] border-emerald-500 p-0" : "w-20 h-20 border p-1",
+                                                                            m.role === 'Administrador' ? cn("border-red-500/30 bg-red-500/5 shadow-none") :
+                                                                                m.role === 'Ministro a Cargo' ? cn("border-amber-400/30 bg-amber-400/10 shadow-none") :
+                                                                                    (settings.adminTheme === 'primitivo' 
+                                                                                        ? "border-emerald-500/30 bg-emerald-500/5 transition-all duration-700" 
+                                                                                        : "border-emerald-500/30 bg-emerald-500/5 transition-all duration-700")
                                                                         )}>
                                                                             {m.avatar ? (
                                                                                 <div className="relative w-full h-full group/avatar">
-                                                                                    <img src={m.avatar} alt={m.name} className="w-full h-full object-cover rounded-xl" />
+                                                                                    <img src={m.avatar} alt={m.name} className="w-full h-full object-cover" />
+                                                                                    
+                                                                                    {/* Safe Line Overlay */}
+                                                                                    <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none z-20" />
+                                                                                    
+                                                                                    {/* Rule of Thirds Grid (Subtle) */}
+                                                                                    <div className="absolute inset-0 opacity-0 group-hover/avatar:opacity-20 transition-opacity z-20 pointer-events-none">
+                                                                                        <div className="absolute top-1/3 left-0 right-0 h-px bg-white" />
+                                                                                        <div className="absolute top-2/3 left-0 right-0 h-px bg-white" />
+                                                                                        <div className="absolute left-1/3 top-0 bottom-0 w-px bg-white" />
+                                                                                        <div className="absolute left-2/3 top-0 bottom-0 w-px bg-white" />
+                                                                                    </div>
+
                                                                                     <button
                                                                                         onClick={() => {
                                                                                             setEditingImageTarget({ type: 'member', id: m.id });
                                                                                             setImageToEdit(m.avatar!);
                                                                                         }}
-                                                                                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity rounded-xl"
+                                                                                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity rounded-2xl z-30"
                                                                                         title="Ajustar foto"
                                                                                     >
-                                                                                        <Move className="w-5 h-5 text-white" />
+                                                                                        <Move className="w-6 h-6 text-white" />
                                                                                     </button>
                                                                                 </div>
                                                                             ) : (
-                                                                                <div className="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center">
+                                                                                <div className="w-full h-full bg-slate-900 rounded-2xl flex items-center justify-center relative">
                                                                                     <User className={cn(
-                                                                                        "w-8 h-8",
+                                                                                        "w-10 h-10",
                                                                                         m.role === 'Administrador' ? "text-red-400" :
-                                                                                            m.role === 'Ministro a Cargo' ? "text-primary" : "text-emerald-400"
+                                                                                            m.role === 'Ministro a Cargo' ? "text-[#f5bb24]" : (settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-400")
                                                                                     )} />
+                                                                                    {/* Safe Line even for empty avatar */}
+                                                                                    <div className="absolute inset-0 border border-white/5 rounded-2xl pointer-events-none" />
                                                                                 </div>
                                                                             )}
                                                                         </div>
-                                                                        {m.is_pre_registered && (
-                                                                            <div className="absolute -top-1 -right-1 bg-amber-500 text-[8px] font-black px-1.5 py-0.5 rounded-full z-20 shadow-lg border border-amber-400/50 text-white animate-pulse">
-                                                                                PRE
+                                                                        {m.role === 'Administrador' && (
+                                                                            <div className={cn(
+                                                                                "absolute -top-2 -left-2 w-8 h-8 bg-[#EFB722] rounded-full border-2 border-[#101420] flex items-center justify-center -rotate-[12deg] group-hover:rotate-0 transition-transform z-20",
+                                                                                "shadow-none"
+                                                                            )}>
+                                                                                <Crown className="w-4 h-4 text-black" />
                                                                             </div>
                                                                         )}
+                                                                        {m.is_pre_registered && (
+                                                                            <div className={cn(
+                                                                                "absolute z-20 transition-transform group-hover:scale-110",
+                                                                                settings.adminTheme === 'primitivo'
+                                                                                    ? "-top-1.5 -right-1.5 text-[9px] font-black px-1.5 py-0.5 rounded-[4px] z-50 flex items-center justify-center leading-none tracking-[0.1em]"
+                                                                                    : "-top-1.5 -right-1.5 bg-amber-500 text-[10px] font-black w-11 h-6 flex items-center justify-center rounded-full border-2 border-[#101420] text-black shadow-none"
+                                                                            )} style={settings.adminTheme === 'primitivo' ? { backgroundColor: '#EA580C', color: '#FFFFFF' } : {}}>
+                                                                                 PRE.
+                                                                             </div>
+                                                                         )}
                                                                     </div>
 
                                                                     {/* Info Area */}
                                                                     <div className="flex-1 min-w-0">
                                                                         <div className="flex items-start justify-between">
                                                                             <div>
-                                                                                <h4 className="font-black text-lg italic text-foreground tracking-tight truncate max-w-[150px]">{m.name}</h4>
-                                                                                <div className="flex items-center gap-2 mt-1">
+                                                                                <h4 className={cn(
+                                                                                    "font-black text-xl tracking-tight truncate max-w-[200px]",
+                                                                                    settings.adminTheme === 'primitivo' ? "text-white" : "text-foreground"
+                                                                                )}>{m.name}</h4>
+                                                                                <div className="flex flex-wrap items-center gap-1.5 mt-2">
                                                                                     <span className={cn(
-                                                                                        "text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border",
-                                                                                        m.role === 'Administrador' ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                                                                                            m.role === 'Ministro a Cargo' ? "bg-primary/10 text-primary border-primary/20" :
-                                                                                                "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                                                                                        "transition-all uppercase",
+                                                                                        settings.adminTheme === 'primitivo' 
+                                                                                            ? "text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-[4px] " + (m.role === 'Administrador' || m.role === 'Ministro a Cargo' ? "bg-amber-900 text-amber-500" : "bg-emerald-900 text-emerald-400")
+                                                                                            : "px-2.5 py-1 rounded-[6px] text-[10px] font-bold tracking-[0.5px] " + (m.role === 'Administrador' || m.role === 'Ministro a Cargo' ? "bg-[#EFB722] text-black" : ((m.role?.includes('Encargado') || m.status === 'Activo') ? "bg-[#10775F]/10 border-[#10775F]/20 text-[#10775F]" : "bg-slate-400/10 border-slate-400/20 text-slate-400"))
                                                                                     )}>
-                                                                                        {m.role}
+                                                                                        {m.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : m.role}
                                                                                     </span>
                                                                                     {m.member_group && (
-                                                                                        <span className="text-[9px] font-black uppercase tracking-widest bg-foreground/5 text-muted-foreground/60 px-2 py-0.5 rounded-lg border border-border/10 italic">
+                                                                                        <span className={cn(
+                                                                                            "uppercase",
+                                                                                            settings.adminTheme === 'primitivo'
+                                                                                                ? "text-[10px] font-bold tracking-wider px-2 py-0.5 rounded-[4px] bg-slate-800 text-slate-300"
+                                                                                                : "px-2.5 py-1 rounded-[6px] text-[10px] font-bold tracking-[0.5px] bg-[#2A4364]/10 text-[#2A4364]"
+                                                                                        )}>
                                                                                             {m.member_group}
                                                                                         </span>
                                                                                     )}
@@ -3601,11 +4220,11 @@ function AdminDashboardContent() {
                                                                             </div>
 
                                                                             {editingMemberId === m.id ? (
-                                                                                <div className="flex items-center gap-2 animate-in fade-in zoom-in duration-300">
+                                                                                <div className="flex items-center gap-3 animate-in fade-in zoom-in duration-300">
                                                                                     <select
                                                                                         value={editingRole}
                                                                                         onChange={(e) => setEditingRole(e.target.value)}
-                                                                                        className="bg-transparent text-[9px] font-black text-foreground outline-none px-2 cursor-pointer"
+                                                                                        className="bg-transparent text-[9px] font-black text-foreground outline-none px-2 cursor-pointer border-b border-white/5 pb-0.5"
                                                                                     >
                                                                                         <option value="Miembro" className="bg-[#0f172a]">MIEMBRO</option>
                                                                                         <option value="Ministro a Cargo" className="bg-[#0f172a]">MINISTRO A CARGO</option>
@@ -3614,35 +4233,47 @@ function AdminDashboardContent() {
                                                                                         <option value="Dirigente Coro Niños" className="bg-[#0f172a]">DIRIGENTE CORO NIÑOS</option>
                                                                                         <option value="Responsable de Asistencia" className="bg-[#0f172a]">RESPONSABLE ASIST.</option>
                                                                                     </select>
-                                                                                    <motion.button
-                                                                                        whileHover={{ scale: 1.1 }}
-                                                                                        whileTap={{ scale: 0.9 }}
-                                                                                        onClick={async () => {
-                                                                                            await updateProfileInCloud(m.id, { role: editingRole as any });
-                                                                                            await loadMembersFromCloud();
-                                                                                            setEditingMemberId(null);
-                                                                                        }}
-                                                                                        className="p-1.5 bg-emerald-500 text-white rounded-lg shadow-lg"
-                                                                                    >
-                                                                                        <Save className="w-3 h-3" />
-                                                                                    </motion.button>
-                                                                                    <button onClick={() => setEditingMemberId(null)} className="p-1.5 text-slate-400"><X className="w-3 h-3" /></button>
+                                                                                    <div className="flex items-center gap-1.5">
+                                                                                        <button 
+                                                                                            onClick={() => setEditingMemberId(null)} 
+                                                                                            className="p-2 text-slate-500 hover:text-white transition-colors rounded-xl bg-transparent hover:bg-white/5"
+                                                                                            title="Cancelar"
+                                                                                        >
+                                                                                            <X className="w-4 h-4" />
+                                                                                        </button>
+                                                                                        <motion.button
+                                                                                            whileHover={{ scale: 1.1 }}
+                                                                                            whileTap={{ scale: 0.9 }}
+                                                                                            onClick={async () => {
+                                                                                                await updateProfileInCloud(m.id, { role: editingRole as any });
+                                                                                                await loadMembersFromCloud();
+                                                                                                setEditingMemberId(null);
+                                                                                            }}
+                                                                                            className={cn(
+                                                                                                "p-2 text-white rounded-xl transition-colors",
+                                                                                                settings.adminTheme === 'primitivo' ? "bg-amber-500 hover:bg-amber-400 shadow-none" : "bg-emerald-500 hover:bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                                                                                            )}
+                                                                                            title="Guardar Cambios"
+                                                                                        >
+                                                                                            <Save className="w-4 h-4" />
+                                                                                        </motion.button>
+                                                                                    </div>
                                                                                 </div>
                                                                             ) : (
                                                                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
                                                                                     <motion.button
-                                                                                        whileHover={{ scale: 1.1, backgroundColor: 'rgba(var(--primary-rgb), 0.2)' }}
+                                                                                        whileHover={{ scale: 1.1, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
                                                                                         whileTap={{ scale: 0.9 }}
                                                                                         onClick={() => {
                                                                                             setEditingMemberId(m.id);
                                                                                             setEditingRole(m.role);
                                                                                         }}
-                                                                                        className="p-2 rounded-xl bg-foreground/5 text-muted-foreground hover:text-primary transition-colors border border-border/10"
+                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/5"
                                                                                     >
                                                                                         <Edit2 className="w-3.5 h-3.5" />
                                                                                     </motion.button>
                                                                                     <motion.button
-                                                                                        whileHover={{ scale: 1.1, backgroundColor: 'rgba(239, 68, 68, 0.2)' }}
+                                                                                        whileHover={{ scale: 1.1, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
                                                                                         whileTap={{ scale: 0.9 }}
                                                                                         onClick={async () => {
                                                                                             if (confirm(`¿Eliminar a ${m.name}? Esta acción no se puede deshacer.`)) {
@@ -3650,7 +4281,7 @@ function AdminDashboardContent() {
                                                                                                 await loadMembersFromCloud();
                                                                                             }
                                                                                         }}
-                                                                                        className="p-2 rounded-xl bg-foreground/5 text-muted-foreground hover:text-red-500 transition-colors border border-border/10"
+                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-red-500 transition-colors border border-white/5"
                                                                                     >
                                                                                         <Trash2 className="w-3.5 h-3.5" />
                                                                                     </motion.button>
@@ -3690,7 +4321,7 @@ function AdminDashboardContent() {
                         <Card className="glass-card border-t-4 border-t-amber-500 overflow-hidden">
                             <CardHeader className="relative">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 blur-3xl pointer-events-none" />
-                                <CardTitle className="text-3xl font-black uppercase italic tracking-tighter flex items-center gap-4">
+                                <CardTitle className="text-3xl font-black uppercase tracking-tighter flex items-center gap-4">
                                     <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center border border-amber-500/30">
                                         <User className="w-6 h-6 text-amber-500" />
                                     </div>
@@ -3703,7 +4334,7 @@ function AdminDashboardContent() {
                                     {/* Avatar Column */}
                                     <div className="flex flex-col items-center gap-6 shrink-0 w-full md:w-auto">
                                         <div className="relative group">
-                                            <div className="w-48 h-48 rounded-[3rem] overflow-hidden border-4 border-amber-500/20 p-2 bg-slate-900 shadow-2xl transition-all duration-500 group-hover:border-amber-500/40">
+                                            <div className="w-48 h-48 rounded-[3rem] overflow-hidden border-4 border-amber-500/50 p-2 bg-slate-900 shadow-2xl transition-all duration-500 group-hover:border-amber-500/80">
                                                 <img 
                                                     src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
                                                     alt="Admin Avatar" 
@@ -3735,7 +4366,7 @@ function AdminDashboardContent() {
                                                 }}
                                             />
                                         </div>
-                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest italic opacity-40">Resolución recomendada: 500x500px</p>
+                                        <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest opacity-40">Resolución recomendada: 500x500px</p>
                                     </div>
 
                                     {/* Fields Column */}
@@ -3765,7 +4396,7 @@ function AdminDashboardContent() {
                                                 value={currentUser?.favorite_verse || (currentUser as any)?.favoriteVerse || ''} 
                                                 onChange={(e) => currentUser && setCurrentUser({ ...currentUser, favorite_verse: e.target.value })}
                                                 placeholder="Ej: Salmos 23:1 - Jehová es mi pastor..."
-                                                className="bg-white/5 border-white/10 h-14 rounded-2xl font-medium focus:border-amber-500/50 transition-all italic"
+                                                className="bg-white/5 border-white/10 h-14 rounded-2xl font-medium focus:border-amber-500/50 transition-all "
                                             />
                                         </div>
 
@@ -3812,7 +4443,7 @@ function AdminDashboardContent() {
                             </div>
                             <div>
                                 <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400">Estado de la cuenta</h4>
-                                <p className="text-xs text-slate-400 font-medium">Logeado como <strong>{currentUser.email}</strong> • Privilegios: <strong>{currentUser.role}</strong></p>
+                                <p className="text-xs text-slate-400 font-medium">Logeado como <strong>{currentUser?.email}</strong> • Privilegios: <strong>{currentUser?.role}</strong></p>
                             </div>
                         </div>
                     </motion.div>

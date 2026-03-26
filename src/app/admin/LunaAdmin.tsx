@@ -1,437 +1,308 @@
+'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { 
-    Users, 
-    Calendar, 
-    TrendingUp, 
-    ChevronLeft, 
-    ChevronRight, 
-    ChevronDown,
-    Activity,
-    Search,
-    UserPlus,
-    Layout,
-    BarChart3,
-    Settings as SettingsIcon,
-    Bell,
-    Monitor,
-    Shield,
-    Database,
-    Clock,
-    LogOut,
-    Palette,
-    UserSearch,
-    User,
-    CheckCircle2,
-    XCircle,
-    MoreHorizontal,
-    Eye,
-    Terminal
+    Terminal, Bell, Monitor, LogOut, Users, Clock, Palette, 
+    Settings as SettingsIcon, User, Layout, Music2, Activity,
+    Shield, ChevronLeft, ChevronRight, Target, Camera,
+    ChevronDown, MoreHorizontal, Search, User as UserIcon,
+    UserSearch
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import LunaDonut from '@/components/ui/LunaDonut';
 
-// Componente Donut Premium al estilo Luna
-// Componente Donut Premium al estilo Luna (Refinado según imagen)
-const LunaDonut = ({ value, color, colorEnd, label }: { value: number; color?: string; colorEnd?: string; label: string }) => {
-    const radius = 42;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (value / 100) * circumference;
+interface LunaAdminProps {
+    children?: React.ReactNode;
+    propTab?: string;
+}
+
+const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+    const [currentTime, setCurrentTime] = useState(new Date());
+    const [sidebarOpen, setSidebarOpen] = useState(true);
     
-    return (
-        <div className="relative flex flex-col items-center justify-between h-full py-4 group font-[family-name:var(--font-saira)]">
-            {/* Title from Reference (Top) */}
-            <h4 className="text-[13px] font-[300] text-white tracking-wider mb-8 ">{label}</h4>
-
-            <div className="relative flex items-center justify-center">
-                <svg className="w-48 h-48 transform -rotate-90 scale-100 transition-transform duration-700 overflow-visible">
-                    <defs>
-                        <linearGradient id={`grad-${label}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor={color || '#cc9900'} />
-                            <stop offset="100%" stopColor={colorEnd || '#b45309'} />
-                        </linearGradient>
-                        <filter id={`glow-${label}`} x="-60%" y="-60%" width="220%" height="220%">
-                            <feGaussianBlur stdDeviation="3" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                        </filter>
-                    </defs>
-                    
-                    {/* Track */}
-                    <circle cx="96" cy="96" r={radius} stroke="#525469" strokeWidth="6" fill="transparent" />
-                    
-                    {/* Background definition border */}
-                    <circle
-                        cx="96" cy="96" r={radius} stroke="rgba(0,0,0,0.4)" strokeWidth="10"
-                        strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" fill="transparent"
-                    />
-
-                    {/* Active Progress */}
-                    <circle
-                        cx="96" cy="96" r={radius} stroke={`url(#grad-${label})`} strokeWidth="6"
-                        strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
-                        fill="transparent" filter={`url(#glow-${label})`} className="transition-all duration-[1s] ease-in-out"
-                    />
-                </svg>
-                <div className="absolute flex flex-col items-center justify-center">
-                    <span className="text-4xl font-[300] tracking-tighter text-white">{value}%</span>
-                </div>
-            </div>
-
-            {/* Legend from Reference (Bottom) */}
-            <div className="flex items-center justify-center gap-12 w-full mt-10">
-                <div className="flex items-center gap-2">
-                    <div className="w-5 h-1.5 rounded-full" style={{ background: color || '#cc9900' }} />
-                    <span className="text-[11px] font-[300] text-white">{value.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <div className="w-5 h-1.5 rounded-full bg-[#525469]" />
-                    <span className="text-[11px] font-[300] text-white">{((100-value)/100 * 1500).toFixed(0)}</span>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const LunaAdmin = () => {
-    const [activeTab, setActiveTab] = useState('dashboard');
-    const [hoveredMonth, setHoveredMonth] = useState<number | null>(7);
-    const [stats, setStats] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    
+    // CORE STORE DATA
     const { 
-        members, 
         settings, 
-        setSettings, 
-        saveSettingsToCloud, 
-        signOut, 
-        loadDetailedWeeklyStats,
-        currentDate,
-        attendanceRecords
+        members = [], 
+        setSettings,
+        saveSettingsToCloud,
+        currentUser
     } = useAppStore();
 
-    // Cargar estadísticas de la semana actual
-    useEffect(() => {
-        const fetchStats = async () => {
-            setLoading(true);
-            const days = Array.from({ length: 7 }, (_, i) => {
-                const date = new Date();
-                date.setDate(date.getDate() - (6 - i));
-                return date.toISOString().split('T')[0];
-            });
-            
-            try {
-                const data = await loadDetailedWeeklyStats(days);
-                setStats(data || []);
-            } catch (err) {
-                console.error("Error cargando stats:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchStats();
-    }, [loadDetailedWeeklyStats]);
+    // DERIVED STATS
+    const activeMembersCount = members?.filter(m => m.status === 'Activo').length || 0;
+    const totalMembersCount = members?.length || 0;
+    const attendancePercentage = totalMembersCount > 0 ? (activeMembersCount / totalMembersCount) * 100 : 0;
 
-    // Métricas calculadas en tiempo real
-    const totalMembersCount = members.length;
-    const activeMembersCount = members.filter(m => m.status === 'Activo').length;
-    const todayRecords = attendanceRecords?.[currentDate] || [];
-    const presentTodayCount = todayRecords.filter(r => r.present).length;
-    const attendancePercentage = activeMembersCount > 0 
-        ? Math.round((presentTodayCount / activeMembersCount) * 100) 
-        : 0;
+    // NAVIGATION SYNC
+    const activeTab = searchParams.get('tab') || 'dashboard';
 
-    // Rango de semana para el encabezado
-    const weekRange = (() => {
-        if (!stats.length) return "...";
-        try {
-            const start = new Date(stats[0].date);
-            const end = new Date(stats[stats.length - 1].date);
-            return `semana del ${format(start, 'd MMM', { locale: es })} al ${format(end, 'd MMM', { locale: es })}`.toLowerCase();
-        } catch (e) {
-            return "semana actual";
-        }
-    })();
-    
-    // Datos simulados para la tendencia neón (0-100%)
-    const trendData = [
-        { label: 'ENE', value: 45 },
-        { label: 'FEB', value: 38 },
-        { label: 'MAR', value: 55 },
-        { label: 'ABR', value: 48 },
-        { label: 'MAY', value: 65 },
-        { label: 'JUN', value: 72 },
-        { label: 'JUL', value: 88 },
-        { label: 'AGO', value: 80 }
-    ];
-
-    // Calcula la posición Y en la gráfica (invirtiendo la escala de 0-100 a 100-0)
-    const getY = (val: number) => 100 - (val * 0.85 + 10);
-    // Calcula la posición X basada en el índice (20 a 380)
-    const getX = (i: number) => 20 + (i * 360 / (trendData.length - 1));
-
-    const pathData = `M 20,${getY(trendData[0].value)} ` + 
-        trendData.map((d, i) => {
-            if (i === 0) return '';
-            const prevX = getX(i - 1);
-            const prevY = getY(trendData[i - 1].value);
-            const currX = getX(i);
-            const currY = getY(d.value);
-            return `C ${prevX + 40},${prevY} ${currX - 40},${currY} ${currX},${currY}`;
-        }).join(' ');
-
-    const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-        const svg = e.currentTarget;
-        const rect = svg.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const width = rect.width;
-        
-        // Mapear el clic al índice más cercano
-        const normalizedX = (x / width) * 440 - 20; // Ajuste por el viewBox expandido si lo hubiera, o escala 400
-        const index = Math.min(Math.max(Math.round(((normalizedX - 20) / 360) * (trendData.length - 1)), 0), trendData.length - 1);
-        setHoveredMonth(index);
+    const handleTabChange = (tabId: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('tab', tabId);
+        router.push(`${pathname}?${params.toString()}`);
     };
 
-    const tabs = [
-        { id: 'dashboard', label: 'Dashboard', icon: Layout },
-        { id: 'miembros', label: 'Miembros', icon: Users },
-        { id: 'reportes', label: 'Reportes', icon: BarChart3 },
-        { id: 'configuracion', label: 'Configuración', icon: SettingsIcon },
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    // NAVIGATION ITEMS
+    const navItems = [
+        { id: 'dashboard', icon: Layout, label: 'dashboard', color: 'bg-emerald-500' },
+        { id: 'miembros', icon: Users, label: 'miembros', color: 'bg-blue-500' },
+        { id: 'horarios', icon: Clock, label: 'horarios', color: 'bg-amber-500' },
+        { id: 'contenido', icon: Monitor, label: 'contenido', color: 'bg-purple-500' },
+        { id: 'coros', icon: Music2, label: 'coros', color: 'bg-pink-500' },
+        { id: 'configuracion', icon: SettingsIcon, label: 'configuracion', color: 'bg-slate-500' },
+        { id: 'perfil', icon: User, label: 'perfil', color: 'bg-white' },
+    ];
+
+    const monthlyStats = [
+        { label: 'ENE', val: 85 }, { label: 'FEB', val: 78 }, { label: 'MAR', val: 92 },
+        { label: 'ABR', val: 88 }, { label: 'MAY', val: 82 }, { label: 'JUN', val: 95 },
+        { label: 'JUL', val: 89 }, { label: 'AGO', val: 84 }, { label: 'SEP', val: 91 },
+        { label: 'OCT', val: 87 }, { label: 'NOV', val: 85 }, { label: 'DIC', val: 93 }
     ];
 
     return (
-        <div className="flex h-screen text-white overflow-hidden font-[family-name:var(--font-saira)] font-[300] selection:bg-primary/30"
-             style={{ background: 'linear-gradient(225deg, #626c87 0%, #2b3043 100%)' }}>
-            {/* Minimalist Industrial Sidebar */}
+        <div className="min-h-screen bg-[#0a0b10] text-white flex font-inter admin-theme-luna overflow-hidden">
+            {/* SIDEBAR - KINETIC SHELL */}
             <aside 
-                className="w-80 border-r border-white/5 flex flex-col relative z-20"
-                style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
+                className={cn(
+                    "relative border-r border-white/5 bg-[#0d0e14] transition-all duration-700 ease-in-out group z-50 flex flex-col",
+                    sidebarOpen ? "w-80" : "w-24"
+                )}
             >
-                <div className="p-12 mb-10">
-                    <div className="flex items-center gap-6 group cursor-pointer">
-                        <div className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center shadow-2xl group-hover:border-white transition-all rounded-none">
-                            <Terminal className="text-white w-6 h-6 group-hover:scale-110 transition-transform" />
-                        </div>
-                        <div className="flex flex-col">
-                            {/* Logo/Branding labels removed for extreme minimalism */}
-                        </div>
+                {/* BRAND LOGO */}
+                <div className="h-24 flex items-center px-8 border-b border-white/5 relative overflow-hidden">
+                    <div className="w-8 h-8 bg-emerald-500 rounded-none transform rotate-45 flex-shrink-0" />
+                    <div className={cn(
+                        "ml-6 transition-all duration-500 whitespace-nowrap",
+                        sidebarOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10 pointer-events-none"
+                    )}>
+                        <h1 className="text-xl font-[300] tracking-[0.2em] ">LUNA</h1>
+                        <p className="text-[8px] font-[300] tracking-[0.5em] text-white/30 ">OBSERVATORY</p>
                     </div>
                 </div>
 
-                <nav className="flex-1 px-8 space-y-4 overflow-y-auto no-scrollbar">
-                    {[
-                        { id: 'dashboard', label: 'resumen', icon: Layout },
-                        { id: 'horarios', label: 'horarios', icon: Clock },
-                        { id: 'diseño', label: 'diseño y visual', icon: Palette },
-                        { id: 'coros', label: 'coros y uniformes', icon: Users },
-                        { id: 'configuracion', label: 'configuración', icon: SettingsIcon },
-                        { id: 'miembros', label: 'miembros', icon: UserSearch },
-                        { id: 'perfil', label: 'mi perfil', icon: User },
-                    ].map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => setActiveTab(item.id as any)}
-                            className={cn(
-                                "w-full flex items-center gap-6 px-4 py-4 transition-all duration-500 group relative rounded-none",
-                                activeTab === item.id ? "bg-white/5 text-white" : "text-white hover:text-white"
-                            )}
-                        >
-                            {activeTab === item.id && <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white shadow-[0_0_6px_white]" />}
-                            <item.icon className={cn("w-5 h-5 transition-transform group-hover:scale-110 text-white")} />
-                            <span className={cn("text-[11px] font-[300] tracking-[0.4em] transition-all text-white", activeTab === item.id ? "font-[300]" : "")}>{item.label}</span>
-                        </button>
-                    ))}
-                    
-                    <div className="pt-16 pb-6">
-                        <div className="h-[1px] w-full bg-white/5" />
-                    </div>
-
-                    <p className="px-4 text-[9px] font-[300] text-white tracking-[0.4em] mb-6">execution roles</p>
-                    {['minister', 'coro', 'monitor'].map((role) => (
-                        <button key={role} className="w-full flex items-center gap-6 px-4 py-3 text-white hover:text-white transition-all group rounded-none">
-                            <Eye className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-                            <span className="text-[10px] font-[300] tracking-[0.3em] font-[300] text-white">{role}</span>
-                        </button>
-                    ))}
+                {/* NAV CORE */}
+                <nav className="flex-1 py-12 px-6 space-y-3">
+                    {navItems.map((item) => {
+                        const active = activeTab === item.id;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => handleTabChange(item.id)}
+                                className={cn(
+                                    "w-full flex items-center h-14 transition-all duration-300 relative group/item rounded-none",
+                                    active ? "bg-white/[0.03]" : "hover:bg-white/[0.01]"
+                                )}
+                            >
+                                {active && (
+                                    <motion.div 
+                                        layoutId="activePill"
+                                        className="absolute left-0 w-1 h-6 bg-emerald-500" 
+                                    />
+                                )}
+                                <div className={cn(
+                                    "flex items-center justify-center transition-all duration-500",
+                                    sidebarOpen ? "px-6" : "w-full"
+                                )}>
+                                    <item.icon className={cn(
+                                        "w-4 h-4 transition-colors duration-500",
+                                        active ? "text-emerald-400" : "text-white/20 group-hover/item:text-white/60"
+                                    )} />
+                                    {sidebarOpen && (
+                                        <span className={cn(
+                                            "ml-6 text-[10px] font-[300] tracking-[0.2em] uppercase transition-colors",
+                                            active ? "text-white" : "text-white/30 group-hover/item:text-white/60"
+                                        )}>
+                                            {item.label}
+                                        </span>
+                                    )}
+                                </div>
+                            </button>
+                        );
+                    })}
                 </nav>
 
-                <div className="p-12 border-t border-white/5">
-                    <button onClick={() => signOut()} className="w-full flex items-center gap-6 px-6 py-5 bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all group relative overflow-hidden rounded-full">
-                        <LogOut className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-                        <span className="text-[11px] font-[300] tracking-[0.3em] text-white">system exit</span>
+                {/* STATUS FOOTER */}
+                <div className="p-8 border-t border-white/5 space-y-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
+                        {sidebarOpen && <span className="text-[8px] font-[300] tracking-[0.4em] text-white/20 ">SYSTEM LIVE</span>}
+                    </div>
+                    <button 
+                        onClick={() => setSidebarOpen(!sidebarOpen)}
+                        className="w-full h-12 border border-white/5 flex items-center justify-center hover:bg-white/[0.02] transition-all"
+                    >
+                        <Terminal className="w-3 h-3 text-white/20" />
                     </button>
                 </div>
             </aside>
 
-            {/* Main Content Area */}
-            <main className="flex-1 overflow-y-auto bg-transparent custom-scrollbar p-12 lg:p-20 relative">
-                <div className="max-w-7xl mx-auto space-y-20">
-                    <header className="flex justify-between items-start mb-24 gap-12">
-                        <div className="space-y-6">
-                            {/* Header cleared for pure data focus */}
+            {/* MAIN STAGE */}
+            <main className="flex-1 overflow-y-auto bg-[#0a0b10] relative">
+                {/* HEADER - TACTICAL OVERLAY */}
+                <div className="h-24 px-12 lg:px-16 border-b border-white/5 flex items-center justify-between sticky top-0 bg-[#0a0b10]/80 backdrop-blur-xl z-40">
+                    <div className="flex items-center gap-12">
+                        <div className="space-y-1">
+                            <h2 className="text-[10px] font-[300] tracking-[0.5em] text-white/30 uppercase ">{activeTab}</h2>
+                            <div className="flex items-center gap-3">
+                                <div className="w-1 h-1 rounded-full bg-emerald-500" />
+                                <span className="text-[9px] font-[300] tracking-widest text-white/60 tabular-nums">
+                                    {format(currentTime, 'HH:mm:ss')}
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-6 relative group">
-                            {/* Empty for future elements */}
+                    </div>
+
+                    <div className="flex items-center gap-8">
+                        <div className="hidden lg:flex items-center gap-6 pr-8 border-r border-white/5">
+                            <button
+                                onClick={() => saveSettingsToCloud({ adminTheme: 'primitivo' })}
+                                className="text-[9px] font-[300] tracking-[0.4em] text-[#fbbf24] border border-[#fbbf24]/20 bg-[#fbbf24]/5 px-4 py-2 hover:bg-[#fbbf24]/10 transition-all uppercase"
+                            >
+                                ACTIVAR PRIMITIVO
+                            </button>
+                            <div className="text-right">
+                                <p className="text-[8px] font-[300] tracking-widest text-white/20 ">CONEXIÓN</p>
+                                <p className="text-[10px] font-[300] tracking-widest text-emerald-400 ">ESTABLE</p>
+                            </div>
+                            <Activity className="w-4 h-4 text-emerald-500/40" />
                         </div>
-                    </header>
+                        <button className="relative w-10 h-10 flex items-center justify-center border border-white/5 hover:bg-white/5 transition-all">
+                            <Bell className="w-4 h-4 text-white/30" />
+                            <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-emerald-500" />
+                        </button>
+                        <div className="w-10 h-10 bg-white/5 border border-white/10 flex items-center justify-center grayscale">
+                            <User className="w-4 h-4 text-white/20" />
+                        </div>
+                    </div>
+                </div>
 
-                    {activeTab === 'dashboard' && (
-                        <div className="space-y-12">
-                            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-                                {/* BOX 1: Weekly Distribution */}
-                                <div 
-                                    className="p-10 shadow-[0_32px_64px_rgba(0,0,0,0.6)] relative overflow-hidden group rounded-none border-none flex flex-col justify-between min-h-[420px]"
-                                    style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                                >
-                                    <h3 className="text-[11px] font-[300] tracking-[0.8em] text-white mb-12">asistencia semanal</h3>
-                                    
-                                    <div className="h-64 flex items-end justify-between gap-3 relative z-10 px-2">
-                                        {stats.map((day, i) => {
-                                            const total = (day.morning || 0) + (day.intermediate || 0) + (day.evening || 0) || 1;
-                                            return (
-                                                <div key={i} className="flex-1 flex flex-col items-center gap-3 h-full group/bar">
-                                                    <div className="flex-1 w-3 mx-auto bg-white/[0.02] relative overflow-hidden flex flex-col justify-end gap-1.5 rounded-full">
-                                                        <div 
-                                                            className="w-full bg-[#f59e0b] shadow-[0_0_6px_rgba(245,158,11,0.2)] transition-all duration-1000 rounded-full" 
-                                                            style={{ height: `${(day.evening / total) * day.percentage}%` }} 
-                                                        />
-                                                        <div 
-                                                            className="w-full bg-[#6366f1] shadow-[0_0_8px_rgba(99,102,241,0.2)] transition-all duration-1000 rounded-full" 
-                                                            style={{ height: `${(day.intermediate / total) * day.percentage}%` }} 
-                                                        />
-                                                        <div 
-                                                            className="w-full bg-[#10b981] shadow-[0_0_6px_rgba(16,185,129,0.2)] transition-all duration-1000 rounded-full" 
-                                                            style={{ height: `${(day.morning / total) * day.percentage}%` }} 
-                                                        />
-                                                    </div>
-                                                    <span className="text-[10px] font-[300] text-white tracking-widest group-hover/bar:text-white transition-colors lowercase">{['lu','ma','mi','ju','vi','sa','do'][i]}</span>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-
-                                {/* BOX 2: Yearly Attendance */}
-                                <div 
-                                    className="p-10 shadow-[0_32px_64px_rgba(0,0,0,0.8)] relative overflow-hidden rounded-none border-none flex flex-col justify-between min-h-[420px]"
-                                    style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                                >
-                                    <h3 className="text-[11px] font-[300] tracking-[0.8em] text-white mb-12">asistencia anual</h3>
-                                    <div className="h-64 relative flex gap-4">
-                                        <div className="flex flex-col justify-between items-end h-[100%] pb-10 pt-1 text-[8px] font-[300] text-white/50 tracking-widest lowercase">
-                                            <span>100</span>
-                                            <span>50</span>
-                                            <span>0</span>
+                {/* CONTENT AREA */}
+                <div className="w-full px-6 lg:px-10 py-10 space-y-10">
+                    {activeTab === 'dashboard' ? (
+                        <div className="space-y-10 animate-in fade-in duration-1000">
+                            {/* KPI ROW */}
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+                                {[
+                                    { icon: Users, val: activeMembersCount, lbl: 'miembros activos', sub: `de ${totalMembersCount}`, acc: '#ffffff' },
+                                    { icon: Activity, val: '84.2%', lbl: 'fidelidad anual', sub: '+2.1% mes anterior', acc: '#10b981' },
+                                    { icon: Shield, val: '99.9%', lbl: 'uptime sistema', sub: 'nodo central: ok', acc: '#3b82f6' },
+                                    { icon: Target, val: '312', lbl: 'proyección', sub: 'clases activas', acc: '#f59e0b' },
+                                ].map((kpi, i) => (
+                                    <div key={i} className="p-8 border border-white/[0.04] bg-[#0d0e14] group hover:border-white/10 transition-all duration-500">
+                                        <div className="flex justify-between items-start mb-6">
+                                            <kpi.icon className="w-4 h-4 text-white/20 group-hover:text-white transition-colors duration-500" />
+                                            <div className="w-1 h-1 bg-white/10" />
                                         </div>
-                                        <div className="flex-1 relative h-full">
-                                            <svg viewBox="0 0 400 100" className="w-full h-full overflow-visible">
-                                                <defs>
-                                                    <filter id="neonPathGlow" x="-20%" y="-20%" width="140%" height="140%">
-                                                        <feGaussianBlur stdDeviation="2.5" result="blur" />
-                                                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                                                    </filter>
-                                                    <linearGradient id="neon-grad-line" x1="0%" y1="0%" x2="100%" y2="0%">
-                                                        <stop offset="0%" stopColor="#f59e0b" />
-                                                        <stop offset="100%" stopColor="#b45309" />
-                                                    </linearGradient>
-                                                </defs>
-                                                {[0, 2, 4].map(i => (
-                                                    <line key={i} x1="0" y1={i * 25} x2="400" y2={i * 25} stroke="rgba(255,255,255,0.03)" strokeWidth="1" />
-                                                ))}
-                                                <path 
-                                                    d="M 0,80 C 20,70 40,85 60,60 C 80,40 100,20 120,45 C 140,70 160,95 180,60 C 200,20 220,10 240,40 C 260,70 280,110 300,70 C 320,30 340,10 360,50 C 380,90 400,60 420,40"
-                                                    fill="none"
-                                                    stroke="url(#neon-grad-line)"
-                                                    strokeWidth="5"
-                                                    strokeLinecap="round"
-                                                    filter="url(#neonPathGlow)"
-                                                    style={{ vectorEffect: 'non-scaling-stroke' }}
-                                                />
-                                            </svg>
-                                            <div className="flex justify-between w-full mt-10 px-1">
-                                                {['en','ma','my','jl','se','no'].map(month => (
-                                                    <div key={month} className="flex flex-col items-center gap-2">
-                                                        <div className="w-1 h-1 rounded-full bg-white" />
-                                                        <span className="text-[8px] font-[300] text-white tracking-widest lowercase">{month}</span>
-                                                    </div>
-                                                ))}
+                                        <div className="space-y-1">
+                                            <div className="text-2xl font-[300] tracking-tight tabular-nums ">{kpi.val}</div>
+                                            <div className="text-[8px] font-[300] tracking-[0.3em] uppercase text-white/20 ">{kpi.lbl}</div>
+                                        </div>
+                                        <div className="mt-6 pt-6 border-t border-white/[0.04] text-[8px] font-[300] tracking-widest text-emerald-400/40 uppercase">
+                                            {kpi.sub}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* MAIN CONSOLE */}
+                            <div className="p-10 border border-white/[0.04] bg-[#0d0e14]">
+                                <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+                                    <div className="lg:col-span-3 space-y-10">
+                                        <div className="flex justify-between items-end">
+                                            <div className="space-y-2">
+                                                <h3 className="text-xl font-[300] tracking-[0.2em] ">TENDENCIA SEMANAL</h3>
+                                                <p className="text-[8px] font-[300] tracking-[0.5em] text-white/20 ">MÉTRICAS DE ASISTENCIA GLOBAL</p>
+                                            </div>
+                                            <div className="flex gap-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-1.5 h-1.5 bg-emerald-500" />
+                                                    <span className="text-[8px] tracking-widest text-white/30 ">ACTUAL</span>
+                                                </div>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-1.5 h-1.5 border border-white/20" />
+                                                    <span className="text-[8px] tracking-widest text-white/30 ">PROMEDIO</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* CHART AREA */}
+                                        <div className="h-64 flex items-end gap-2 relative">
+                                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                                                {[0, 1, 2, 3].map(i => <div key={i} className="w-full h-px bg-white/[0.02]" />)}
+                                            </div>
+                                            <div className="flex-1 flex items-end justify-between px-4 mt-8 h-full relative group">
+                                                <svg className="w-full h-full absolute inset-0 overflow-visible">
+                                                    <defs>
+                                                        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                            <stop offset="0%" stopColor="#10b981" stopOpacity="0.4" />
+                                                            <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                                                        </linearGradient>
+                                                    </defs>
+                                                    {monthlyStats && (
+                                                        <>
+                                                            <polyline 
+                                                                fill="url(#lineGrad)" 
+                                                                points={monthlyStats.map((s, i) => `${(i / (monthlyStats.length-1)) * 100}%,${100 - s.val}%`).join(' ') + ` 100,100 0,100`}
+                                                                className="transition-all duration-1000"
+                                                                style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+                                                            />
+                                                            <polyline 
+                                                                fill="none" 
+                                                                stroke="#10b981" 
+                                                                strokeWidth="1.5" 
+                                                                strokeLinecap="round" 
+                                                                points={monthlyStats.map((s, i) => `${(i / (monthlyStats.length-1)) * 100}%,${100 - s.val}%`).join(' ')}
+                                                                className="transition-all duration-1000"
+                                                            />
+                                                            <polyline 
+                                                                fill="none" 
+                                                                stroke="#ffffff" 
+                                                                strokeWidth="1" 
+                                                                strokeLinecap="round" 
+                                                                strokeDasharray="4 4" 
+                                                                style={{ opacity: 0.2 }} 
+                                                            />
+                                                        </>
+                                                    )}
+                                                </svg>
+                                                <div className="flex justify-between w-full mt-10">
+                                                    {monthlyStats.map(s => <span key={s.label} className="text-[8px] font-[300] text-white/20 tracking-widest ">{s.label}</span>)}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* BOX 3: Node Registry */}
-                                <div 
-                                    className="p-10 shadow-[0_32px_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[420px] rounded-none border-none"
-                                    style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                                >
-                                    <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">node registry</h4>
-                                    <div className="text-[100px] font-[300] tracking-tighter text-white leading-none -ml-2 my-auto">{activeMembersCount}</div>
-                                    <div className="flex items-center gap-4 text-[10px] font-[300] tracking-[0.4em] text-white/50 lowercase">
-                                        <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_#10b981] animate-pulse" />
-                                        <span>identity: verified</span>
-                                    </div>
-                                </div>
-
-                                {/* BOX 4: Active Density */}
-                                <div 
-                                    className="p-10 shadow-[0_32_64px_rgba(0,0,0,0.6)] flex flex-col justify-between min-h-[420px] rounded-none border-none"
-                                    style={{ background: 'linear-gradient(225deg, #2b2e41 0%, #1b1d2c 100%)' }}
-                                >
-                                    <h4 className="text-[11px] font-[300] tracking-[0.8em] text-white">active density</h4>
-                                    <div className="flex items-center justify-center scale-110 my-auto">
-                                        <LunaDonut value={attendancePercentage} color="#cc9900" colorEnd="#ffff00" label="current" />
-                                    </div>
-                                    <div className="flex justify-between items-end pt-8 text-[10px] font-[300] tracking-widest text-white/50 lowercase">
-                                        <span>registered</span>
-                                        <span className="text-2xl font-[300] text-white ">{presentTodayCount}</span>
+                                    {/* DENSITY DONUT */}
+                                    <div className="lg:pl-4 flex flex-col justify-between">
+                                        <LunaDonut value={attendancePercentage} color="#34d399" colorEnd="#10b981" label="densidad" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    )}
-
-                    {activeTab === 'configuracion' && (
-                        <div className="max-w-4xl py-12 space-y-20">
-                            <div className="space-y-4">
-                                <h3 className="text-7xl font-[300] italic tracking-tighter leading-none text-white">system <span className="text-white font-[300]">preferences</span></h3>
-                                <p className="text-[11px] font-[300] text-white tracking-[0.8em]">core architecture control</p>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                                <div className="space-y-12 p-12 bg-[#161821] border border-white/[0.03] shadow-2xl">
-                                    <div className="flex items-center gap-6">
-                                        <Monitor className="text-white w-6 h-6" />
-                                        <h4 className="text-[12px] font-[300]  tracking-[0.4em]">visual interface</h4>
-                                    </div>
-                                    <div className="flex justify-between items-center border-b border-white/5 pb-8">
-                                        <span className="text-[11px] font-[300]  tracking-[0.2em] text-white">global font weight</span>
-                                        <select 
-                                            value={settings.fontWeight || 'font-thin'}
-                                            onChange={(e) => {
-                                                const val = e.target.value;
-                                                setSettings({ fontWeight: val });
-                                                saveSettingsToCloud({ fontWeight: val });
-                                            }}
-                                            className="bg-black/50 border border-white/10 text-[11px] font-[300] px-6 py-3  outline-none focus:border-primary transition-all text-white cursor-pointer"
-                                        >
-                                            <option value="font-thin">EXTRA LIGHT [LUNA]</option>
-                                            <option value="font-[300]">LIGHT</option>
-                                            <option value="font-normal">REGULAR</option>
-                                            <option value="font-[300]">BOLD</option>
-                                        </select>
-                                    </div>
-                                    <p className="text-[10px] text-white italic tracking-widest leading-relaxed">
-                                        Adjusting the font weight affects the clarity of data visualization on high-resolution displays. Luna Premium is optimized for Extra Light.
-                                    </p>
-                                </div>
-                            </div>
+                    ) : (
+                        <div className="animate-in fade-in slide-in-from-bottom-5 duration-700">
+                            {children}
                         </div>
                     )}
-                    </div>
-                </main>
-            </div>
+                </div>
+            </main>
+        </div>
     );
 };
 

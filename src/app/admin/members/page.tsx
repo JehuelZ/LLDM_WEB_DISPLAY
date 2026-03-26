@@ -43,75 +43,127 @@ const StatDoughnut = ({
     label,
     value,
     total,
-    color = "primary",
-    size = 120
+    size = 120,
+    gradientId = "blue"
 }: {
     percent: number;
     label: string;
     value: number | string;
     total: number | string;
-    color?: 'primary' | 'secondary' | 'accent' | 'emerald' | 'amber' | 'cyan';
     size?: number;
+    gradientId?: 'blue' | 'purple' | 'orange' | 'emerald';
 }) => {
     const radius = 40;
     const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference - (percent / 100) * circumference;
+    const safePercent = Math.max(0.5, percent); // Ensure a dot is visible at 0%
+    const strokeDashoffset = circumference - (safePercent / 100) * circumference;
 
-    const colorMap = {
-        primary: "stroke-blue-500",
-        secondary: "stroke-purple-500",
-        accent: "stroke-pink-500",
-        emerald: "stroke-emerald-500",
-        amber: "stroke-amber-500",
-        cyan: "stroke-cyan-500"
+    const gradients = {
+        blue: { start: '#1e3a8a', end: '#60a5fa', glow: 'rgba(59,130,246,0.5)' },
+        purple: { start: '#581c87', end: '#a855f7', glow: 'rgba(168,85,247,0.5)' },
+        orange: { start: '#92400e', end: '#fbbf24', glow: 'rgba(245,158,11,0.5)' },
+        emerald: { start: '#064e3b', end: '#10b981', glow: 'rgba(16,185,129,0.5)' }
     };
 
-    const glowMap = {
-        primary: "drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]",
-        secondary: "drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]",
-        accent: "drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]",
-        emerald: "drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]",
-        amber: "drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]",
-        cyan: "drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]"
-    };
+    const currentGrad = gradients[gradientId];
 
     return (
-        <div className="flex flex-col items-center gap-2 group transition-transform duration-300 hover:scale-105">
+        <div className="flex flex-col items-center gap-2 group transition-transform duration-300 hover:scale-105 font-[family-name:var(--font-poppins)]">
             <div className="relative" style={{ width: size, height: size }}>
-                <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
-                    {/* Background Track */}
+                <svg className="w-full h-full -rotate-90 transform overflow-visible" viewBox="0 0 100 100">
+                    <defs>
+                        <linearGradient id={`grad-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor={currentGrad.start} />
+                            <stop offset="100%" stopColor={currentGrad.end} />
+                        </linearGradient>
+                        <filter id={`glow-${gradientId}`} x="-30%" y="-30%" width="160%" height="160%">
+                            <feGaussianBlur stdDeviation="2.5" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    
+                    {/* Background Track - The Official Gray #525568 */}
                     <circle
                         cx="50"
                         cy="50"
                         r={radius}
                         fill="transparent"
-                        stroke="currentColor"
-                        strokeWidth="8"
-                        className="text-foreground/5"
+                        stroke="currentColor" 
+                        strokeWidth="10"
+                        className="text-muted/20"
                     />
-                    {/* Progress Circle */}
+
+                    {/* Physical Housing (Dark Border around color) */}
                     <circle
                         cx="50"
                         cy="50"
                         r={radius}
                         fill="transparent"
                         stroke="currentColor"
+                        strokeWidth="12"
+                        className="text-black/80 dark:text-[#0a0c10]"
+                        strokeDasharray={circumference}
+                        style={{ strokeDashoffset }}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
+                    />
+
+                    {/* Progress Circle (Neon Core) */}
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke={`url(#grad-${gradientId})`}
                         strokeWidth="8"
                         strokeDasharray={circumference}
                         style={{ strokeDashoffset }}
                         strokeLinecap="round"
-                        className={cn("transition-all duration-1000 ease-out", colorMap[color], glowMap[color])}
+                        filter={`url(#glow-${gradientId})`}
+                        className="transition-all duration-1000 ease-out"
+                    />
+
+                    {/* Sharp Outer Edge Border */}
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke="rgba(255,255,255,0.4)"
+                        strokeWidth="12"
+                        strokeDasharray={circumference}
+                        style={{ strokeDashoffset }}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out opacity-20"
+                    />
+                    
+                    {/* Inner highlight Fillet */}
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke="rgba(255,255,255,0.2)"
+                        strokeWidth="1"
+                        strokeDasharray={circumference}
+                        style={{ strokeDashoffset }}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
                     />
                 </svg>
                 {/* Center Text */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center -rotate-0">
-                    <span className="text-xl font-black text-foreground">{percent}%</span>
-                    <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-tighter">{value}/{total}</span>
+                    <span className="text-xl font-light text-foreground tracking-tighter">{percent}%</span>
+                    {(value !== "" || total !== "") && (
+                        <span className="text-[9px] uppercase font-light text-muted-foreground tracking-tighter">{value}/{total}</span>
+                    )}
                 </div>
             </div>
-            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-primary transition-colors">
-                {label}
-            </span>
+            {label && (
+                <span className="text-[10px] font-light uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors">
+                    {label.toLowerCase()}
+                </span>
+            )}
         </div>
     );
 };
@@ -126,6 +178,7 @@ export default function MembersPage() {
         updateProfileInCloud, uploadAvatar,
         addMemberToCloud,
         showNotification,
+        settings,
         isLoading: isStoreLoading
     } = useAppStore();
     const [searchTerm, setSearchTerm] = useState('');
@@ -228,118 +281,164 @@ export default function MembersPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 className="text-3xl font-black tracking-tight text-foreground uppercase italic flex items-center gap-3">
-                        <Users className="h-8 w-8 text-primary" />
-                        Gestión de Miembros
-                    </h2>
-                    <p className="text-muted-foreground font-medium">Administre y organice la iglesia de LLDM RODEO</p>
+                    <h1 className="text-4xl md:text-5xl font-black text-foreground tracking-tighter uppercase drop-shadow-sm flex items-center gap-4">
+                        <Users className="h-10 w-10 text-primary" />
+                        gestión de <span className="underline underline-offset-8 decoration-primary/30">miembros</span>
+                    </h1>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground mt-4 ml-1 opacity-70">administración de la congregación</p>
                 </div>
                 <Button
-                    className="neon-button gap-2 scale-105 transition-transform hover:scale-110 active:scale-95"
+                    className={cn(
+                        "gap-2 scale-105 transition-all hover:scale-110 active:scale-95 rounded-none font-[family-name:var(--font-poppins)] tracking-widest text-[11px] font-black uppercase",
+                        settings.adminTheme === 'primitivo' 
+                            ? "bg-primary text-white border-none hover:bg-primary/90" 
+                            : "bg-white/5 border border-white/10 text-white hover:bg-white/10 shadow-lg"
+                    )}
                     onClick={() => setMemberModal({ mode: 'new', data: { ...BLANK_MEMBER, id: Math.random().toString(36).substr(2, 9) } })}
                 >
                     <UserPlus className="h-4 w-4" />
-                    Nuevo Miembro
+                    nuevo miembro
                 </Button>
             </div>
 
             {/* Admin Overview Stats */}
             <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
-                <Card className="glass-card bg-primary/5 border-primary/20 p-6 flex items-center justify-between group overflow-hidden relative">
+                <Card className={cn(
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
+                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none shadow-2xl"
+                )}>
                     <div className="relative z-10">
-                        <p className="text-xs font-bold uppercase tracking-widest text-primary/80 mb-1">Asistencia Global</p>
-                        <h3 className="text-3xl font-black text-foreground italic">{globalAttendance}%</h3>
-                        <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1 font-bold">
-                            <TrendingUp className="h-3 w-3 text-emerald-500" /> +2% VS MES PASADO
+                        <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">membresía global</p>
+                        <h3 className="text-4xl font-light text-foreground tracking-tighter">{globalAttendance}%</h3>
+                        <p className="text-[9px] text-muted-foreground/80 mt-2 flex items-center gap-1 font-light tracking-[0.1em]">
+                            <TrendingUp className="h-3 w-3 text-blue-500/50" /> +2% VS MES PASADO
                         </p>
                     </div>
                     <div className="w-20 h-20 relative z-10">
-                        <StatDoughnut percent={globalAttendance} label="" value="" total="" size={80} color="primary" />
+                        <StatDoughnut percent={globalAttendance} label="" value="" total="" size={80} gradientId="blue" />
                     </div>
-                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors" />
+                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-colors" />
                 </Card>
 
-                <Card className="glass-card bg-secondary/5 border-secondary/20 p-6 flex items-center justify-between group overflow-hidden relative">
+                <Card className={cn(
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
+                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none"
+                )}>
                     <div className="relative z-10">
-                        <p className="text-xs font-bold uppercase tracking-widest text-secondary/80 mb-1">Participación</p>
-                        <h3 className="text-3xl font-black text-foreground italic">{globalParticipation}%</h3>
-                        <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1 font-bold lowercase">
-                            RESPONSABLES DE ORACIÓN
+                        <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">participación</p>
+                        <h3 className="text-4xl font-light text-foreground tracking-tighter">{globalParticipation}%</h3>
+                        <p className="text-[9px] text-muted-foreground/80 mt-2 flex items-center gap-1 font-light tracking-[0.1em] py-0 my-0">
+                            responsables de oración
                         </p>
                     </div>
                     <div className="w-20 h-20 relative z-10">
-                        <StatDoughnut percent={globalParticipation} label="" value="" total="" size={80} color="secondary" />
+                        <StatDoughnut percent={globalParticipation} label="" value="" total="" size={80} gradientId="purple" />
                     </div>
-                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-secondary/10 rounded-full blur-3xl group-hover:bg-secondary/20 transition-colors" />
+                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-purple-500/5 rounded-full blur-3xl group-hover:bg-purple-500/10 transition-colors" />
                 </Card>
 
-                <Card className="glass-card bg-accent/5 border-accent/20 p-6 flex items-center justify-between group overflow-hidden relative">
+                <Card className={cn(
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
+                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none"
+                )}>
                     <div className="relative z-10">
-                        <p className="text-xs font-bold uppercase tracking-widest text-accent/80 mb-1">Crecimiento</p>
-                        <h3 className="text-3xl font-black text-foreground italic">+{members.length > 5 ? 12 : members.length}</h3>
-                        <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1 font-bold">
-                            MIEMBROS REGISTRADOS
-                        </p>
-                    </div>
-                    <div className="w-20 h-20 flex items-center justify-center relative z-10">
-                        <TrendingUp className="h-10 w-10 text-accent drop-shadow-[0_0_8px_rgba(236,72,153,0.5)]" />
-                    </div>
-                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors" />
-                </Card>
-
-                <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-6 flex items-center justify-between group overflow-hidden relative">
-                    <div className="relative z-10">
-                        <p className="text-xs font-bold uppercase tracking-widest text-emerald-500 mb-1">Puntualidad</p>
-                        <h3 className="text-3xl font-black text-foreground italic">94%</h3>
-                        <p className="text-[10px] text-muted-foreground mt-2 flex items-center gap-1 font-bold uppercase">
-                            PROMEDIO GENERAL
+                        <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">crecimiento</p>
+                        <h3 className="text-4xl font-light text-foreground tracking-tighter">+{members.length > 5 ? 12 : members.length}</h3>
+                        <p className="text-[9px] text-muted-foreground/80 mt-2 flex items-center gap-1 font-light tracking-[0.1em] py-0 my-0">
+                            miembros registrados
                         </p>
                     </div>
                     <div className="w-20 h-20 relative z-10">
-                        <StatDoughnut percent={94} label="" value="" total="" size={80} color="emerald" />
+                        <StatDoughnut 
+                            percent={Math.min(100, Math.round((members.length / 500) * 100))} 
+                            label="" 
+                            value={members.length} 
+                            total={500} 
+                            size={80} 
+                            gradientId="orange"
+                        />
                     </div>
-                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors" />
+                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-orange-500/5 rounded-full blur-3xl group-hover:bg-orange-500/10 transition-colors" />
+                </Card>
+
+                <Card className={cn(
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
+                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none shadow-2xl"
+                )}>
+                    <div className="relative z-10">
+                        <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">puntualidad</p>
+                        <h3 className="text-4xl font-light text-foreground tracking-tighter">94%</h3>
+                        <p className="text-[9px] text-muted-foreground/80 mt-2 flex items-center gap-1 font-light tracking-[0.1em] py-0 my-0">
+                            promedio general
+                        </p>
+                    </div>
+                    <div className="w-20 h-20 relative z-10">
+                        <StatDoughnut percent={94} label="" value="" total="" size={80} gradientId="emerald" />
+                    </div>
+                    <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-colors" />
                 </Card>
             </div>
 
             {/* Members Tabs */}
-            <div className="flex flex-wrap items-center gap-2 bg-foreground/5 p-1 rounded-2xl border border-border/20 w-fit backdrop-blur-xl">
+            <div className={cn(
+                "flex flex-wrap items-center gap-1 transition-all duration-300",
+                settings.adminTheme === 'primitivo' ? "primitivo-nav-bar" : "bg-slate-900/40 border-white/5 admin-member-filters-bar p-1 rounded-none border w-fit backdrop-blur-xl"
+            )}>
                 {[
-                    { id: 'todos', label: 'Todos', icon: Users, color: 'bg-slate-500' },
-                    { id: 'ninos', label: 'Niños', icon: Baby, color: 'bg-cyan-400' },
-                    { id: 'jovenes', label: 'Jóvenes', icon: Music, color: 'bg-orange-500' },
-                    { id: 'casados', label: 'Casados', icon: Users, color: 'bg-amber-400' },
-                    { id: 'solas', label: 'Solas', icon: Users, color: 'bg-indigo-400' },
-                    { id: 'varones', label: 'Varones', icon: Users, color: 'bg-primary' },
-                    { id: 'hermanas', label: 'Hermanas', icon: Star, color: 'bg-rose-500' },
+                    { id: 'todos', label: 'todos', icon: Users },
+                    { id: 'ninos', label: 'niños', icon: Baby },
+                    { id: 'jovenes', label: 'jóvenes', icon: Music },
+                    { id: 'casados', label: 'casados', icon: Users },
+                    { id: 'solas', label: 'solas', icon: Users },
+                    { id: 'varones', label: 'varones', icon: Users },
+                    { id: 'hermanas', label: 'hermanas', icon: Star },
                 ].map(tab => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as any)}
                         className={cn(
-                            "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                            activeTab === tab.id
-                                ? tab.color + " text-black shadow-lg"
-                                : "text-slate-400 hover:text-white hover:bg-white/5"
+                            "transition-all flex items-center gap-3",
+                            settings.adminTheme === 'primitivo'
+                                ? cn("primitivo-nav-item", activeTab === tab.id && "active")
+                                : cn(
+                                    "px-6 py-3 rounded-none text-[10px] uppercase tracking-[0.3em] font-[family-name:var(--font-poppins)]",
+                                    activeTab === tab.id
+                                        ? "bg-white/10 text-white border-b-2 border-white/50"
+                                        : "text-white/30 hover:text-white hover:bg-white/5 font-light"
+                                )
                         )}
                     >
-                        <tab.icon className="w-3.5 h-3.5" /> {tab.label}
+                        <tab.icon className="w-3.5 h-3.5" /> {tab.label.toLowerCase()}
                     </button>
                 ))}
             </div>
 
             {/* Members List */}
-            <Card className="glass-card border-none bg-foreground/5 backdrop-blur-xl">
+            <Card className={cn(
+                "border-none",
+                settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card bg-foreground/5 backdrop-blur-xl"
+            )}>
                 <CardHeader className="border-b border-border/20 pb-6">
                     <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-                        <div className="relative w-full md:w-96">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                placeholder="Buscar por nombre o correo..."
-                                className="pl-10 bg-foreground/5 border-border/40 text-foreground focus:ring-primary/50"
-                                value={searchTerm || ''}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
+                        <div className="relative w-full md:w-96 group">
+                            {/* Outer Glow on Focus */}
+                            <div className="absolute -inset-0.5 bg-emerald-500/0 group-focus-within:bg-emerald-500/15 rounded-2xl blur-md transition-all duration-500" />
+                            
+                            <div className={cn(
+                                "relative border rounded-2xl overflow-hidden focus-within:border-emerald-500/60 transition-all duration-300 backdrop-blur-md",
+                                settings.adminTheme === 'primitivo' ? "bg-background/80 border-border/40" : "bg-black/60 border-white/30 focus-within:bg-black/80"
+                            )}>
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-emerald-400 transition-colors" />
+                                <Input
+                                    placeholder="buscar por nombre o correo..."
+                                    className={cn(
+                                        "bg-transparent border-none pl-11 h-12 text-[10px] uppercase font-bold tracking-widest focus-visible:ring-0 focus-visible:outline-none w-full",
+                                        settings.adminTheme === 'primitivo' ? "text-foreground placeholder:text-slate-500" : "text-white placeholder:text-slate-500"
+                                    )}
+                                    value={searchTerm || ''}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                />
+                            </div>
                         </div>
                         <div className="flex gap-2 w-full md:w-auto">
                             <Button 
@@ -363,23 +462,36 @@ export default function MembersPage() {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="border-b border-border/20">
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground w-10"></th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Miembro</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Rol</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Estado</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Asistencia</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Última Actividad</th>
-                                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Acciones</th>
+                                <tr className="border-b border-border/10">
+                                    <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground w-10"></th>
+                                    <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground font-[family-name:var(--font-poppins)]">
+                                        <span className={cn("px-3 py-1.5 rounded-md border", settings.adminTheme === 'primitivo' ? "bg-muted border-border/10" : "bg-white/5 border-white/5")}>miembro</span>
+                                    </th>
+                                    <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground font-[family-name:var(--font-poppins)]">
+                                        <span className={cn("px-3 py-1.5 rounded-md border", settings.adminTheme === 'primitivo' ? "bg-muted border-border/10" : "bg-white/5 border-white/5")}>rol</span>
+                                    </th>
+                                    <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground font-[family-name:var(--font-poppins)]">
+                                        <span className={cn("px-3 py-1.5 rounded-md border", settings.adminTheme === 'primitivo' ? "bg-muted border-border/10" : "bg-white/5 border-white/5")}>estado</span>
+                                    </th>
+                                    <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground font-[family-name:var(--font-poppins)]">
+                                        <span className={cn("px-3 py-1.5 rounded-md border", settings.adminTheme === 'primitivo' ? "bg-muted border-border/10" : "bg-white/5 border-white/5")}>asistencia</span>
+                                    </th>
+                                    <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground font-[family-name:var(--font-poppins)]">
+                                        <span className={cn("px-3 py-1.5 rounded-md border", settings.adminTheme === 'primitivo' ? "bg-muted border-border/10" : "bg-white/5 border-white/5")}>actividad</span>
+                                    </th>
+                                    <th className="px-6 py-6 text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground font-[family-name:var(--font-poppins)]">
+                                        <span className={cn("px-3 py-1.5 rounded-md border", settings.adminTheme === 'primitivo' ? "bg-muted border-border/10" : "bg-white/5 border-white/5")}>acciones</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-border/20">
-                                {filteredMembers.map((member: Member) => (
+                                {filteredMembers.map((member: Member, index: number) => (
                                     <Fragment key={member.id}>
                                         <tr
                                             key={member.id}
                                             className={cn(
-                                                "group hover:bg-foreground/[0.02] transition-colors cursor-pointer",
+                                                "member-row group transition-colors cursor-pointer",
+                                                index % 2 === 0 ? "row-even" : "row-odd",
                                                 expandedMember === member.id && "bg-foreground/[0.03]"
                                             )}
                                             onClick={() => setExpandedMember(expandedMember === member.id ? null : member.id)}
@@ -389,47 +501,52 @@ export default function MembersPage() {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="h-10 w-10 rounded-full border border-border/40 flex items-center justify-center overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/20">
-                                                        {member.avatar ? (
-                                                            <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
-                                                        ) : (
-                                                            <span className="text-primary font-bold">{member.name.charAt(0)}</span>
+                                                    <div className="relative">
+                                                        <div className={cn(
+                                                            "h-10 w-10 rounded-full border-[3px] flex items-center justify-center overflow-hidden bg-emerald-500/5",
+                                                            settings.adminTheme === 'primitivo' ? "border-emerald-500/40 shadow-none" : "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.35)]"
+                                                        )}>
+                                                            {member.avatar ? (
+                                                                <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+                                                            ) : (
+                                                                <span className="text-primary font-bold">{member.name.charAt(0)}</span>
+                                                            )}
+                                                        </div>
+                                                        {member.is_pre_registered && (
+                                                            <div className="absolute -top-1.5 -right-1.5 text-[9px] font-black px-1.5 py-0.5 rounded-[4px] z-50 flex items-center justify-center leading-none tracking-[0.1em]" style={{ backgroundColor: '#EA580C', color: '#FFFFFF' }}>
+                                                                PRE.
+                                                            </div>
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <div className="flex items-center gap-2">
-                                                            <div className="font-bold text-foreground group-hover:text-primary transition-colors">{member.name}</div>
-                                                            {member.is_pre_registered && (
-                                                                <span className="text-[7px] font-black px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/10 uppercase">Pre-Registrado</span>
-                                                            )}
-                                                        </div>
-                                                        <div className="flex gap-2 items-center">
-                                                            <span className="text-[10px] text-muted-foreground uppercase font-black">{member.gender}</span>
-                                                            <span className="text-[8px] text-muted-foreground/30">•</span>
-                                                            <span className="text-[10px] text-primary/70 uppercase font-bold">{member.member_group}</span>
+                                                        <div className="font-black text-foreground group-hover:text-primary transition-colors text-sm tracking-tight">{member.name}</div>
+                                                        <div className="flex gap-2 items-center mt-1">
+                                                            <span className="admin-badge-primitivo">{member.gender === 'Brother' || member.gender === 'Male' ? 'VARON' : 'HERMANA'}</span>
+                                                            <span className="admin-badge-primitivo">{member.member_group}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span className={cn(
-                                                    "px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border",
-                                                    member.role === 'Administrador' ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                                                        member.role === 'Ministro a Cargo' ? "bg-primary/10 text-primary border-primary/20" :
-                                                            "bg-slate-500/10 text-slate-400 border-slate-500/20"
+                                                    "transition-all uppercase",
+                                                    "text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-[4px] ",
+                                                    settings.adminTheme === 'primitivo'
+                                                        ? (member.role === 'Administrador' || member.role === 'Ministro a Cargo' ? "bg-amber-500/10 text-amber-600" : "bg-emerald-500/10 text-emerald-600")
+                                                        : (member.role === 'Administrador' || member.role === 'Ministro a Cargo' ? "bg-amber-900 text-amber-500" : "bg-emerald-900 text-emerald-400")
                                                 )}>
-                                                    {member.role}
+                                                    {member.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : member.role}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-1.5">
                                                     {member.status === 'Activo' ? (
-                                                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse outline outline-2 outline-emerald-500/20" />
                                                     ) : (
-                                                        <XCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-slate-500/40" />
                                                     )}
                                                     <span className={cn(
-                                                        "text-xs font-bold uppercase tracking-tight",
+                                                        "text-[10px] font-bold uppercase tracking-[0.5px] font-[family-name:var(--font-poppins)]",
                                                         member.status === 'Activo' ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"
                                                     )}>
                                                         {member.status}
@@ -440,7 +557,7 @@ export default function MembersPage() {
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-12 h-1 bg-foreground/10 rounded-full overflow-hidden">
                                                         <div
-                                                            className="h-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
+                                                            className={cn("h-full bg-primary", settings.adminTheme === 'primitivo' ? "" : "shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]")}
                                                             style={{ width: `${((member.stats?.attendance?.attended || 0) / (member.stats?.attendance?.total || 1)) * 100}%` }}
                                                         />
                                                     </div>
@@ -476,7 +593,10 @@ export default function MembersPage() {
                                                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                                                         <div className="col-span-1 border-r border-border/20 pr-8 space-y-6">
                                                             <div className="relative group/avatar w-24 h-24 mx-auto md:mx-0">
-                                                                <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.3)] bg-card">
+                                                                <div className={cn(
+                                                                    "w-24 h-24 rounded-2xl overflow-hidden border-2 bg-emerald-500/5",
+                                                                    settings.adminTheme === 'primitivo' ? "border-emerald-500/20 shadow-none" : "border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
+                                                                )}>
                                                                     {member.avatar ? (
                                                                         <img src={member.avatar} className="w-full h-full object-cover" />
                                                                     ) : (
@@ -486,19 +606,25 @@ export default function MembersPage() {
                                                                     )}
                                                                 </div>
                                                                 <button 
-                                                                    className="absolute -bottom-2 -right-2 p-2 bg-primary text-black rounded-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity shadow-lg hover:scale-110 active:scale-95 transition-all"
+                                                                    className={cn(
+                                                                        "absolute -bottom-2 -right-2 p-2 bg-primary text-black rounded-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:scale-110 active:scale-95 transition-all",
+                                                                        settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-lg"
+                                                                    )}
                                                                     onClick={() => showNotification(`Actividad reciente de ${member.name} sincronizada`, 'success')}
                                                                 >
                                                                     <Activity className="w-4 h-4" />
                                                                 </button>
                                                             </div>
                                                             <div className="space-y-4">
-                                                                <h4 className="text-sm font-black uppercase tracking-widest text-primary italic">Perfil del Miembro</h4>
+                                                                <h4 className="inline-block px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20 mb-4">Perfil del Miembro</h4>
                                                                 <div className="space-y-2">
                                                                     <div className="flex items-center gap-2 text-xs text-muted-foreground"><Mail className="h-3 w-3" /> {member.email}</div>
                                                                     <div className="flex items-center gap-2 text-xs text-muted-foreground"><Phone className="h-3 w-3" /> {member.phone}</div>
                                                                     {member.parentName && <div className="flex items-center gap-2 text-xs text-cyan-400 font-bold"><Baby className="h-3 w-3 " /> Hijo de {member.parentName}</div>}
-                                                                    <div className="flex items-center gap-2 text-xs text-muted-foreground uppercase font-bold text-[10px] tracking-widest mt-4">Puesto: {member.role}</div>
+                                                                    <div className="flex items-center gap-2 text-xs text-muted-foreground uppercase font-bold text-[10px] tracking-widest mt-4">
+                                                                        <span className="admin-badge-primitivo">Puesto:</span> 
+                                                                        <span className="bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20">{member.role}</span>
+                                                                    </div>
                                                                 </div>
                                                                 <Button
                                                                     variant="outline"
@@ -517,28 +643,28 @@ export default function MembersPage() {
                                                                     label="Asistencia Mes"
                                                                     value={member.stats?.attendance?.attended || 0}
                                                                     total={member.stats?.attendance?.total || 0}
-                                                                    color="cyan"
+                                                                    gradientId="blue"
                                                                 />
                                                                 <StatDoughnut
                                                                     percent={Math.round(((member.stats?.participation?.led || 0) / (member.stats?.participation?.total || 1)) * 100)}
                                                                     label="Responsable Oración"
                                                                     value={member.stats?.participation?.led || 0}
                                                                     total={member.stats?.participation?.total || 0}
-                                                                    color="secondary"
+                                                                    gradientId="purple"
                                                                 />
                                                                 <StatDoughnut
                                                                     percent={member.stats?.punctuality || 0}
                                                                     label="Puntualidad"
                                                                     value={member.stats?.punctuality || 0}
                                                                     total={100}
-                                                                    color="amber"
+                                                                    gradientId="orange"
                                                                 />
                                                             </div>
 
                                                             {/* Privileges Assignment Section */}
                                                             <div className="pt-8 border-t border-border/20">
-                                                                <h4 className="text-sm font-black uppercase tracking-widest text-foreground mb-6 flex items-center gap-2 italic">
-                                                                    <Flame className="w-5 h-5 text-emerald-500" />
+                                                                <h4 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-black uppercase tracking-widest mb-6">
+                                                                    <Flame className="w-4 h-4 text-emerald-500" />
                                                                     Asignación de Roles y Privilegios
                                                                 </h4>
                                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -563,7 +689,7 @@ export default function MembersPage() {
                                                                                 className={cn(
                                                                                     "h-auto py-4 px-6 flex flex-col items-center gap-3 rounded-2xl border transition-all duration-300",
                                                                                     isActive
-                                                                                        ? "bg-foreground/10 border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
+                                                                                        ? "bg-foreground/10 border-white/20"
                                                                                         : "bg-transparent border-border/20 opacity-40 hover:opacity-100 hover:bg-foreground/5"
                                                                                 )}
                                                                                 onClick={async () => {
@@ -602,7 +728,7 @@ export default function MembersPage() {
                         {filteredMembers.length === 0 && (
                             <div className="p-12 text-center">
                                 <Users className="h-12 w-12 text-slate-600 mx-auto mb-4 opacity-20" />
-                                <p className="text-slate-500 italic">No se encontraron miembros con ese nombre.</p>
+                                <p className="text-slate-500 ">No se encontraron miembros con ese nombre.</p>
                             </div>
                         )}
                     </div>
@@ -612,16 +738,16 @@ export default function MembersPage() {
             {/* Member Modal (New/Edit) */}
             {memberModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-                    <Card className="w-full max-w-4xl glass-card bg-card border-border/40 overflow-hidden shadow-2xl">
-                        <CardHeader className="border-b border-border/20 bg-foreground/5 flex flex-row items-center justify-between py-6">
+                    <Card className="w-full max-w-4xl glass-card bg-slate-900 border-white/10 overflow-hidden rounded-none">
+                        <CardHeader className="border-b border-white/5 bg-white/5 flex flex-row items-center justify-between py-8">
                             <div>
-                                <CardTitle className="text-2xl font-black uppercase text-white italic">
-                                    {memberModal.mode === 'new' ? 'Registrar Nuevo Miembro' : 'Editar Perfil del Miembro'}
+                                <CardTitle className="text-3xl font-light text-white font-[family-name:var(--font-poppins)] tracking-tighter">
+                                    {memberModal.mode === 'new' ? 'registrar nuevo miembro' : 'editar perfil del miembro'}
                                 </CardTitle>
-                                <CardDescription className="text-primary font-bold tracking-widest uppercase text-[10px]">Administración LLDM RODEO</CardDescription>
+                                <CardDescription className="text-white/30 font-light tracking-[0.5em] uppercase text-[9px] mt-2">administración lldm rodeo</CardDescription>
                             </div>
-                            <Button variant="ghost" size="icon" className="rounded-full hover:bg-foreground/10" onClick={() => setMemberModal(null)}>
-                                <X className="h-5 w-5" />
+                            <Button variant="ghost" size="icon" className="rounded-none hover:bg-white/5" onClick={() => setMemberModal(null)}>
+                                <X className="h-5 w-5 text-white/50" />
                             </Button>
                         </CardHeader>
                         <CardContent className="p-8">
@@ -630,7 +756,7 @@ export default function MembersPage() {
                                 <div className="lg:col-span-2 space-y-6">
                                     <div className="flex items-center gap-6 mb-8 p-4 bg-foreground/5 rounded-2xl border border-border/40">
                                         <div className="relative group cursor-pointer" onClick={() => (document.getElementById('member-avatar-upload') as HTMLInputElement)?.click()}>
-                                            <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.2)] bg-card">
+                                            <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 bg-card">
                                                 {memberModal.data.avatar ? (
                                                     <img src={memberModal.data.avatar} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                                                 ) : (
@@ -660,7 +786,7 @@ export default function MembersPage() {
                                             />
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-black uppercase tracking-widest text-primary italic">Imagen de Perfil</h4>
+                                            <h4 className="text-sm font-black uppercase tracking-widest text-primary ">Imagen de Perfil</h4>
                                             <p className="text-[10px] text-slate-500 uppercase font-bold mt-1">Click en la imagen para subir una nueva foto</p>
                                             <Button
                                                 variant="ghost"
@@ -672,7 +798,7 @@ export default function MembersPage() {
                                             </Button>
                                         </div>
                                     </div>
-                                    <h4 className="text-sm font-black uppercase tracking-widest text-primary italic border-b border-primary/20 pb-2">Datos de Identidad</h4>
+                                    <h4 className="text-sm font-black uppercase tracking-widest text-primary border-b border-primary/20 pb-2">Datos de Identidad</h4>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Nombre Completo</label>
@@ -757,7 +883,7 @@ export default function MembersPage() {
 
                                 {/* Privileges Section Column */}
                                 <div className="space-y-6 border-l border-border/20 pl-8">
-                                    <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500 italic border-b border-emerald-500/20 pb-2">Privilegios</h4>
+                                    <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500 border-b border-emerald-500/20 pb-2">Privilegios</h4>
                                     <div className="space-y-3">
                                         {[
                                             { id: 'monitor', label: 'Responsable de Asistencia', icon: ClipboardCheck, adultOnly: true },
@@ -783,20 +909,20 @@ export default function MembersPage() {
                                                         setMemberModal({ ...memberModal, data: { ...memberModal.data, privileges: newPrivs } });
                                                     }}
                                                     className={cn(
-                                                        "w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left",
+                                                        "w-full flex items-center gap-4 p-4 rounded-none border transition-all text-left font-[family-name:var(--font-poppins)]",
                                                         hasPriv
-                                                            ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-                                                            : "bg-foreground/5 border-border/20 text-slate-500 hover:border-white/20"
+                                                            ? "bg-white/10 border-white/20 text-white"
+                                                            : "bg-white/[0.02] border-white/5 text-white/20 hover:border-white/20"
                                                     )}
                                                 >
-                                                    <priv.icon className="w-4 h-4" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">{priv.label}</span>
-                                                    {hasPriv && <CheckCircle2 className="w-3 h-3 ml-auto" />}
+                                                    <priv.icon className={cn("w-4 h-4", hasPriv ? "text-white" : "text-white/20")} />
+                                                    <span className="text-[10px] font-light uppercase tracking-[0.3em]">{priv.label.toLowerCase()}</span>
+                                                    {hasPriv && <CheckCircle2 className="w-3 h-3 ml-auto text-white/50" />}
                                                 </button>
                                             );
                                         })}
                                     </div>
-                                    <p className="text-[9px] text-slate-600 uppercase font-medium leading-relaxed italic">
+                                    <p className="text-[9px] text-slate-600 uppercase font-medium leading-relaxed ">
                                         Asigne los puestos que el miembro desempeñará en la iglesia.
                                     </p>
                                 </div>
@@ -811,7 +937,10 @@ export default function MembersPage() {
                                     Cancelar
                                 </Button>
                                 <Button
-                                    className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest gap-3 py-7 text-sm shadow-[0_0_25px_rgba(16,185,129,0.4)] border border-emerald-400/30 transition-all duration-300 group/save"
+                                    className={cn(
+                                        "flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest gap-3 py-7 text-sm border border-emerald-400/30 transition-all duration-300 group/save",
+                                        settings.adminTheme === 'primitivo' ? "bg-amber-500 hover:bg-amber-400 text-black border-none shadow-none" : "shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                                    )}
                                     disabled={isSaving}
                                     onClick={async () => {
                                         setIsSaving(true);

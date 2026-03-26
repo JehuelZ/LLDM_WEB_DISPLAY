@@ -1,0 +1,34 @@
+/* 
+  Classic (Tactile Local) Admin Theme
+  This file contains the "Tactile" rules from the local development.
+  Scoped to .admin-theme-classic to allow theme switcher.
+*/
+
+.admin-theme-classic {
+    font-family: var(--font-saira), var(--font-outfit), sans-serif;
+    color: #ffffff;
+}
+
+/* Enforce Classic (Saira) over everything but the sidebar */
+.admin-theme-classic *:not(.admin-sidebar-v2):not(.admin-sidebar-v2 *) {
+    font-family: var(--font-saira), sans-serif;
+}
+
+.admin-theme-classic .admin-sidebar-v2 {
+    background: rgba(255, 255, 255, 0.05); /* Slightly brighter for tactile look */
+}
+
+/* Indicators and Pills */
+.admin-theme-classic .bg-tactile-orange-pill {
+    background-color: #f59e0b !important;
+}
+
+.admin-theme-classic .active-indicator-orange {
+    background-color: #f59e0b;
+}
+
+/* Allow borders and normal radius in classic */
+.admin-theme-classic .glass-card {
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 1.5rem !important;
+}

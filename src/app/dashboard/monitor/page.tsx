@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3, TrendingUp, Heart, Music } from 'lucide-react';
+import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3, TrendingUp, Heart, Music, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -76,19 +76,18 @@ export default function AttendanceDashboard() {
         fetchWeekly();
     }, []);
 
-    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
-
     useEffect(() => {
         // Al cambiar de fecha o sesión, limpiamos el estado optimista
         // y cargamos los datos reales desde la nube de inmediato.
         const refresh = async () => {
+            if (!mounted) return;
             setIsRefreshing(true);
             setOptimisticAttendance({});
             await loadAttendanceFromCloud(selectedDate);
             setIsRefreshing(false);
         };
         refresh();
-    }, [selectedDate, currentSession]);
+    }, [selectedDate, currentSession, mounted]);
 
     // Escuchamos cambios en los registros globales para sincronizar el estado local
     useEffect(() => {
@@ -97,9 +96,9 @@ export default function AttendanceDashboard() {
         }
     }, [attendanceRecords, selectedDate]);
 
-    const adultUniform = uniforms.find(u => u.id === uniformSchedule[selectedDate]);
-    const kidsAssignment = kidsAssignments[selectedDate];
-    const kidsUniform = uniforms.find(u => u.id === kidsAssignment?.uniformId);
+    const adultUniform = useMemo(() => uniforms.find(u => u.id === uniformSchedule[selectedDate]), [uniforms, uniformSchedule, selectedDate]);
+    const kidsAssignment = useMemo(() => kidsAssignments[selectedDate], [kidsAssignments, selectedDate]);
+    const kidsUniform = useMemo(() => uniforms.find(u => u.id === kidsAssignment?.uniformId), [uniforms, kidsAssignment]);
 
     // Filtered attendance for current session
     const currentSessionAttendance = useMemo(() => {
@@ -298,10 +297,22 @@ export default function AttendanceDashboard() {
             };
         };
 
-        const checkIsYoung = (m: any) => ['jovenes', 'jóvenes'].some(v => m.member_group?.toLowerCase().includes(v));
-        const checkIsMarried = (m: any) => ['casados', 'casadas'].some(v => m.member_group?.toLowerCase().includes(v));
-        const checkIsSingle = (m: any) => ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'].some(v => m.member_group?.toLowerCase().includes(v));
-        const checkIsKid = (m: any) => m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => m.member_group?.toLowerCase().includes(v));
+        const checkIsYoung = (m: any) => {
+            const group = m.member_group?.toLowerCase() || '';
+            return ['jovenes', 'jóvenes'].some(v => group.includes(v));
+        };
+        const checkIsMarried = (m: any) => {
+            const group = m.member_group?.toLowerCase() || '';
+            return ['casados', 'casadas'].some(v => group.includes(v));
+        };
+        const checkIsSingle = (m: any) => {
+            const group = m.member_group?.toLowerCase() || '';
+            return ['solos y solas', 'solos', 'solas', 'soltero', 'solteros', 'soltera', 'solteras'].some(v => group.includes(v));
+        };
+        const checkIsKid = (m: any) => {
+            const group = m.member_group?.toLowerCase() || '';
+            return m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
+        };
 
         return {
             varones: getGroupCount(m => m.gender === 'Varon' && !checkIsKid(m) && !checkIsYoung(m)),
@@ -319,36 +330,6 @@ export default function AttendanceDashboard() {
         };
     }, [members, selectedDate]);
 
-
-
-    if (!currentUser.id) return null;
-
-    // Security check: Only Admins or Attendance Managers can see this
-    const canAccess = currentUser.role === 'Administrador' ||
-        currentUser.role === 'Responsable de Asistencia' ||
-        currentUser.privileges?.includes('monitor') ||
-        (typeof window !== 'undefined' && window.location.hostname === 'localhost');
-
-    if (!canAccess) {
-        return (
-            <div className="min-h-screen bg-background flex items-center justify-center p-4">
-                <Card className="glass-card max-w-md w-full p-8 text-center border-rose-500/20 bg-rose-500/5">
-                    <AlertCircle className="h-16 w-16 text-rose-500 mx-auto mb-6" />
-                    <h2 className="text-2xl font-black uppercase italic text-rose-500 mb-2">Acceso Restringido</h2>
-                    <p className="text-slate-400 text-sm leading-relaxed mb-8">
-                        Lo sentimos, no tienes los permisos necesarios para acceder al Panel de Asistencia Global.
-                        Este módulo es exclusivo para el <span className="text-emerald-500 font-bold">Responsable de Asistencia</span>.
-                    </p>
-                    <Link href="/">
-                        <Button className="w-full bg-foreground text-background font-black uppercase tracking-widest h-12 rounded-xl">
-                            Volver a mi Dashboard
-                        </Button>
-                    </Link>
-                </Card>
-            </div>
-        );
-    }
-
     const availableSessions = useMemo(() => {
         const d = new Date(selectedDate + 'T12:00:00');
         const dayOfWeek = d.getDay(); // 0 = Domingo, 4 = Jueves
@@ -361,6 +342,42 @@ export default function AttendanceDashboard() {
             { id: 'evening', label: isSunday ? '6:00 PM' : (isThursday ? '6:30 PM' : '7:00 PM') }
         ];
     }, [selectedDate]);
+
+    // Safety checks moved after ALL hooks
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+    if (!currentUser.id) return null;
+
+    // Security check: Only Admins or Attendance Managers can see this
+    const roleLower = (currentUser.role || '').toLowerCase();
+    const canAccess = currentUser.role === 'Administrador' ||
+        currentUser.role === 'Responsable de Asistencia' ||
+        roleLower.includes('responsable') ||
+        roleLower.includes('monitor') ||
+        currentUser.privileges?.includes('monitor') ||
+        currentUser.privileges?.includes('admin') ||
+        currentUser.email === 'keren@lldmrodeo.org' ||
+        currentUser.email === 'jairojehuel@gmail.com' ||
+        (typeof window !== 'undefined' && window.location.hostname === 'localhost');
+
+    if (!canAccess) {
+        return (
+            <div className="min-h-screen bg-background flex items-center justify-center p-4">
+                <Card className="glass-card max-w-md w-full p-8 text-center border-rose-500/20 bg-rose-500/5">
+                    <AlertCircle className="h-16 w-16 text-rose-500 mx-auto mb-6" />
+                    <h2 className="text-2xl font-black uppercase italic text-rose-500 mb-2">Acceso Restringido</h2>
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-8">
+                        Lo sentimos, no tienes los permisos necesarios para acceder al Panel de Asistencia Global.
+                        Este módulo es exclusivo para el <span className="text-emerald-500 font-bold">Responsable de Asistencia</span>.
+                    </p>
+                    <Link href="/">
+                        <Button variant="primitivo" className="w-full h-12">
+                            Volver a mi Dashboard
+                        </Button>
+                    </Link>
+                </Card>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
@@ -385,22 +402,22 @@ export default function AttendanceDashboard() {
                 <div className="flex flex-wrap items-center gap-2 border-b border-white/5 pb-4 mb-4">
                     <Button
                         onClick={() => setViewMode('asistencia')}
-                        variant={viewMode === 'asistencia' ? "default" : "ghost"}
-                        className={cn("rounded-xl h-10 font-black uppercase text-[10px] tracking-widest transition-all", viewMode === 'asistencia' ? "bg-emerald-500 text-black shadow-lg shadow-emerald-500/20" : "text-slate-400 hover:text-white")}
+                        variant={viewMode === 'asistencia' ? "primitivo" : "outline"}
+                        className={cn("h-10 px-6", viewMode !== 'asistencia' && "opacity-50 hover:opacity-100")}
                     >
                         <ClipboardCheck className="w-4 h-4 mr-2" /> Control Diario
                     </Button>
                     <Button
                         onClick={() => setViewMode('reportes')}
-                        variant={viewMode === 'reportes' ? "default" : "ghost"}
-                        className={cn("rounded-xl h-10 font-black uppercase text-[10px] tracking-widest transition-all", viewMode === 'reportes' ? "bg-primary text-black shadow-lg shadow-primary/20" : "text-slate-400 hover:text-white")}
+                        variant={viewMode === 'reportes' ? "primitivo" : "outline"}
+                        className={cn("h-10 px-6", viewMode !== 'reportes' && "opacity-50 hover:opacity-100")}
                     >
                         <FileText className="w-4 h-4 mr-2" /> Reportes PDF
                     </Button>
                     <Button
                         onClick={() => setViewMode('mensajes')}
-                        variant={viewMode === 'mensajes' ? "default" : "ghost"}
-                        className={cn("rounded-xl h-10 font-black uppercase text-[10px] tracking-widest transition-all", viewMode === 'mensajes' ? "bg-amber-500 text-black shadow-lg shadow-amber-500/20" : "text-slate-400 hover:text-white")}
+                        variant={viewMode === 'mensajes' ? "primitivo" : "outline"}
+                        className={cn("h-10 px-6", viewMode !== 'mensajes' && "opacity-50 hover:opacity-100")}
                     >
                         <MessageSquare className="w-4 h-4 mr-2" /> Mensajes
                     </Button>
@@ -414,11 +431,78 @@ export default function AttendanceDashboard() {
                         <div className="flex items-center justify-between px-1">
                             <div className="flex items-center gap-2">
                                 <Calendar className="h-3.5 w-3.5 text-emerald-500" />
-                                <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em] italic">Panel de Estadísticas Reales</span>
+                                <span className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] italic">Panel de Estadísticas Reales</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1.5 px-3 py-1 bg-black/40 border border-emerald-500/20 rounded-full">
+                                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Live Sync Active</span>
+                                </div>
                             </div>
                         </div>
 
                         <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
+                            {/* Live Attendance Donut Mirror (from Admin Dashboard) */}
+                            <Card className="glass-card bg-black/60 border-amber-500/10 p-4 md:p-6 relative overflow-hidden group">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative">
+                                            <div className="absolute inset-0 bg-amber-400/20 rounded-full animate-ping" />
+                                            <Activity className="h-4 w-4 text-amber-500 relative z-10" />
+                                        </div>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-500">Live Presence</span>
+                                    </div>
+                                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">{currentSession}</span>
+                                </div>
+
+                                <div className="flex flex-col items-center justify-center py-2 relative">
+                                    {/* Rotating Radar Effect */}
+                                    <motion.div 
+                                        className="absolute w-28 h-28 md:w-36 md:h-36 rounded-full border border-amber-500/5 pointer-events-none"
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                                    >
+                                        <div className="absolute top-1/2 left-[50%] w-[50%] h-[1px] bg-gradient-to-r from-amber-500/30 to-transparent origin-left" />
+                                    </motion.div>
+
+                                    <div className="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
+                                        <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                                            <defs>
+                                                <linearGradient id="monitorLiveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                    <stop offset="0%" stopColor="#fbbf24" />
+                                                    <stop offset="100%" stopColor="#fef3c7" />
+                                                </linearGradient>
+                                                <filter id="monitorLiveGlow">
+                                                    <feGaussianBlur stdDeviation="3" result="blur" />
+                                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                                </filter>
+                                            </defs>
+                                            <circle cx="50" cy="50" r="40" className="stroke-white/5 fill-none stroke-[6]" />
+                                            <motion.circle
+                                                cx="50" cy="50" r="40"
+                                                fill="transparent"
+                                                stroke="url(#monitorLiveGrad)"
+                                                strokeWidth="8"
+                                                style={{
+                                                    strokeDasharray: '251.2',
+                                                    strokeDashoffset: (251.2 - (251.2 * (presentCount / (members.length || 1)))).toString()
+                                                }}
+                                                className="transition-all duration-1000 ease-out"
+                                                filter="url(#monitorLiveGlow)"
+                                                strokeLinecap="round"
+                                            />
+                                        </svg>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center pt-1">
+                                            <span className="text-xl md:text-3xl font-black italic tracking-tighter text-foreground">{Math.round((presentCount / (members.length || 1)) * 100)}%</span>
+                                            <span className="text-[8px] font-bold text-muted-foreground uppercase">En Templo</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mt-4 flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                                    <span>{presentCount} Presentes</span>
+                                    <span className="text-amber-500">{members.length - presentCount} Faltan</span>
+                                </div>
+                            </Card>
                             {/* Session Summary Stats (Replaces Selector) */}
                             <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-4 md:p-6 relative overflow-hidden group">
                                 <div className="flex items-center gap-3 mb-6">
@@ -432,7 +516,7 @@ export default function AttendanceDashboard() {
                                         { label: 'Tarde', count: stats.sessionEvening, color: 'text-amber-400' }
                                     ].map((s) => (
                                         <div key={s.label} className="flex justify-between items-center border-b border-white/5 pb-2 last:border-none">
-                                            <span className="text-[10px] font-black uppercase tracking-tight text-slate-400">{s.label}</span>
+                                            <span className="text-[10px] font-black uppercase tracking-tight text-muted-foreground">{s.label}</span>
                                             <span className={cn("text-lg font-black italic", s.color)}>{s.count}</span>
                                         </div>
                                     ))}
@@ -479,14 +563,14 @@ export default function AttendanceDashboard() {
                                                         animate={{ height: `${Math.max(height, 5)}%` }}
                                                         className={cn("w-full transition-all duration-1000", bar.color)}
                                                     />
-                                                    <span className="absolute top-1 left-0 w-full text-center text-[8px] font-black text-white mix-blend-difference">{bar.count}</span>
+                                                    <span className="absolute top-1 left-0 w-full text-center text-[8px] font-black text-foreground mix-blend-difference">{bar.count}</span>
                                                 </div>
-                                                <span className="text-[8px] font-black text-slate-500 uppercase tracking-tighter truncate w-full text-center">{bar.label}</span>
+                                                <span className="text-[8px] font-black text-muted-foreground uppercase tracking-tighter truncate w-full text-center">{bar.label}</span>
                                             </div>
                                         );
                                     })}
                                 </div>
-                                <p className="text-[8px] text-center text-slate-600 font-bold uppercase tracking-widest mt-auto italic">Comparativa de Reuniones</p>
+                                <p className="text-[8px] text-center text-muted-foreground font-bold uppercase tracking-widest mt-auto italic">Comparativa de Reuniones</p>
                             </Card>
 
                             {/* NEW: Morning Mountain Chart */}
@@ -497,7 +581,7 @@ export default function AttendanceDashboard() {
                                 </div>
 
                                 <div className="flex-1 relative h-20 min-h-[80px] mt-2">
-                                    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="w-full h-full drop-shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                                    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="w-full h-full">
                                         <defs>
                                             <linearGradient id="morningGradient" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="0%" stopColor="rgb(34,211,238)" stopOpacity="0.4" />
@@ -530,11 +614,11 @@ export default function AttendanceDashboard() {
 
                                 <div className="grid grid-cols-2 gap-3 mt-4 relative z-10">
                                     <div className="flex flex-col">
-                                        <span className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Pico 5 AM</span>
+                                        <span className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Pico 5 AM</span>
                                         <span className="text-sm font-black text-cyan-400 italic">+{stats.session5am}</span>
                                     </div>
                                     <div className="flex flex-col text-right">
-                                        <span className="text-[7px] font-black text-slate-500 uppercase tracking-widest">Pico 9 AM</span>
+                                        <span className="text-[7px] font-black text-muted-foreground uppercase tracking-widest">Pico 9 AM</span>
                                         <span className="text-sm font-black text-emerald-400 italic">+{stats.session9am}</span>
                                     </div>
                                 </div>
@@ -569,13 +653,13 @@ export default function AttendanceDashboard() {
                                                 </svg>
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                                                     <span className="text-xl md:text-2xl font-black text-foreground">{percentage}%</span>
-                                                    <span className="text-[8px] uppercase font-bold text-slate-500">Max Alcance</span>
+                                                    <span className="text-[8px] uppercase font-bold text-muted-foreground">Max Alcance</span>
                                                 </div>
                                             </div>
 
                                             <div className="flex gap-4 text-[10px] font-bold uppercase tracking-tighter">
                                                 <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> {maxAttendance} Max</div>
-                                                <div className="flex items-center gap-1.5 text-slate-500"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total} Total</div>
+                                                <div className="flex items-center gap-1.5 text-muted-foreground"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total} Total</div>
                                             </div>
                                         </>
                                     );
@@ -622,7 +706,7 @@ export default function AttendanceDashboard() {
                                         <BarChart3 className="h-4 w-4 text-emerald-500" />
                                         <h3 className="text-lg md:text-xl font-black uppercase italic tracking-tighter text-foreground">Tendencia de Asistencia Real</h3>
                                     </div>
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Últimos 7 días • Basado en el total de la membresía ({storeMembers.length})</p>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Últimos 7 días • Basado en el total de la membresía ({storeMembers.length})</p>
                                 </div>
                                 <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest">
                                     <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-emerald-500/80"></div> Asistencia</div>
@@ -637,7 +721,7 @@ export default function AttendanceDashboard() {
                                         <div key={day.date} className="group relative flex flex-col items-center h-full w-full">
                                             {/* Tooltip on hover */}
                                             <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
-                                                <div className="bg-black/90 text-white text-[9px] px-2 py-1 rounded-md border border-white/10 whitespace-nowrap font-black">
+                                                <div className="bg-black/90 text-foreground text-[9px] px-2 py-1 rounded-md border border-white/10 whitespace-nowrap font-black">
                                                     {day.attended} Hermanos ({Math.round(day.percentage)}%)
                                                 </div>
                                             </div>
@@ -652,11 +736,11 @@ export default function AttendanceDashboard() {
                                                     className={cn(
                                                         "w-full transition-all duration-500 relative",
                                                         isToday
-                                                            ? "bg-gradient-to-t from-emerald-600 to-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                                                            ? "bg-gradient-to-t from-emerald-600 to-emerald-400"
                                                             : "bg-gradient-to-t from-slate-700 to-slate-500 opacity-60 group-hover:opacity-100"
                                                     )}
                                                 >
-                                                    <div className="absolute top-2 left-0 w-full text-center text-[8px] md:text-[10px] font-black text-white mix-blend-overlay">
+                                                    <div className="absolute top-2 left-0 w-full text-center text-[8px] md:text-[10px] font-black text-foreground mix-blend-overlay">
                                                         {day.attended}
                                                     </div>
                                                 </motion.div>
@@ -665,7 +749,7 @@ export default function AttendanceDashboard() {
                                             {/* Date Label */}
                                             <span className={cn(
                                                 "text-[8px] md:text-[10px] font-bold mt-3 uppercase tracking-tighter truncate w-full text-center",
-                                                isToday ? "text-emerald-500" : "text-slate-500"
+                                                isToday ? "text-emerald-500" : "text-muted-foreground"
                                             )}>
                                                 {format(parseISO(day.date), 'eee dd', { locale: es })}
                                             </span>
@@ -694,7 +778,8 @@ export default function AttendanceDashboard() {
 
                             <Button
                                 onClick={handleFinalize}
-                                className="w-full lg:flex-1 bg-emerald-600 text-foreground hover:bg-emerald-500 glow-emerald border-none font-black uppercase tracking-widest px-8 h-12 rounded-2xl text-[10px] md:text-xs shrink-0"
+                                variant="primitivo"
+                                className="w-full lg:flex-1 px-8 h-12 text-[10px] md:text-xs shrink-0"
                             >
                                 <Save className="h-4 w-4 mr-2" /> Finalizar Asistencia
                             </Button>
@@ -702,60 +787,44 @@ export default function AttendanceDashboard() {
 
                         {/* View Tabs */}
                         <div className="flex p-1.5 md:p-1 bg-foreground/5 rounded-2xl md:rounded-3xl border border-border/40 w-full md:w-fit mx-auto md:mx-0 backdrop-blur-xl overflow-x-auto no-scrollbar scroll-smooth snap-x">
-                            <button
+                            <Button
                                 onClick={() => setActiveTab('varones')}
+                                variant={activeTab === 'varones' ? "primitivo" : "outline"}
                                 className={cn(
-                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                                    activeTab === 'varones' ? "bg-primary text-black shadow-lg shadow-primary/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
+                                    "flex-1 md:flex-none px-6 md:px-8 h-12 transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                                    activeTab !== 'varones' && "opacity-50 hover:opacity-100"
                                 )}
                             >
                                 <Users className="w-4 h-4" /> Varones <span className="opacity-50 font-bold ml-1">({stats.varones.attended}/{stats.varones.total})</span>
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => setActiveTab('hermanas')}
+                                variant={activeTab === 'hermanas' ? "primitivo" : "outline"}
                                 className={cn(
-                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                                    activeTab === 'hermanas' ? "bg-rose-500 text-black shadow-lg shadow-rose-500/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
+                                    "flex-1 md:flex-none px-6 md:px-8 h-12 transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                                    activeTab !== 'hermanas' && "opacity-50 hover:opacity-100"
                                 )}
                             >
                                 <Star className="w-4 h-4" /> Hermanas <span className="opacity-50 font-bold ml-1">({stats.hermanas.attended}/{stats.hermanas.total})</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('casados')}
-                                className={cn(
-                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                                    activeTab === 'casados' ? "bg-amber-400 text-black shadow-lg shadow-amber-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
-                                )}
-                            >
-                                <Heart className="w-4 h-4" /> Casados <span className="opacity-50 font-bold ml-1">({stats.casados.attended}/{stats.casados.total})</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('jovenes')}
-                                className={cn(
-                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                                    activeTab === 'jovenes' ? "bg-orange-500 text-black shadow-lg shadow-orange-500/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
-                                )}
-                            >
-                                <Music className="w-4 h-4" /> Jóvenes <span className="opacity-50 font-bold ml-1">({stats.jovenes.attended}/{stats.jovenes.total})</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('solas')}
-                                className={cn(
-                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                                    activeTab === 'solas' ? "bg-indigo-400 text-black shadow-lg shadow-indigo-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
-                                )}
-                            >
-                                <UserCircle className="w-4 h-4" /> Solas <span className="opacity-50 font-bold ml-1">({stats.solas.attended}/{stats.solas.total})</span>
-                            </button>
-                            <button
-                                onClick={() => setActiveTab('ninos')}
-                                className={cn(
-                                    "flex-1 md:flex-none px-6 md:px-8 py-3.5 md:py-3 rounded-xl md:rounded-2xl text-[10px] md:text-[11px] font-black uppercase tracking-widest transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
-                                    activeTab === 'ninos' ? "bg-cyan-400 text-black shadow-lg shadow-cyan-400/20 scale-[1.02]" : "text-slate-500 hover:text-foreground hover:bg-white/5"
-                                )}
-                            >
-                                <Baby className="w-4 h-4" /> Niños <span className="opacity-50 font-bold ml-1">({stats.ninos.attended}/{stats.ninos.total})</span>
-                            </button>
+                            </Button>
+                            {[
+                                { id: 'casados', icon: Heart, label: 'Casados', stats: stats.casados },
+                                { id: 'jovenes', icon: Music, label: 'Jóvenes', stats: stats.jovenes },
+                                { id: 'solas', icon: UserCircle, label: 'Solas', stats: stats.solas },
+                                { id: 'ninos', icon: Baby, label: 'Niños', stats: stats.ninos }
+                            ].map((tab) => (
+                                <Button
+                                    key={tab.id}
+                                    onClick={() => setActiveTab(tab.id as any)}
+                                    variant={activeTab === tab.id ? "primitivo" : "outline"}
+                                    className={cn(
+                                        "flex-1 md:flex-none px-6 md:px-8 h-12 transition-all duration-500 flex items-center justify-center gap-2 md:gap-3 whitespace-nowrap snap-center",
+                                        activeTab !== tab.id && "opacity-50 hover:opacity-100"
+                                    )}
+                                >
+                                    <tab.icon className="w-4 h-4" /> {tab.label} <span className="opacity-50 font-bold ml-1">({tab.stats.attended}/{tab.stats.total})</span>
+                                </Button>
+                            ))}
                         </div>
 
                         {/* Member Check-in List */}
@@ -770,10 +839,10 @@ export default function AttendanceDashboard() {
                                         {activeTab === 'solas' && <span className="text-indigo-400">Lista de Solas</span>}
                                         {activeTab === 'ninos' && <span className="text-cyan-400">Lista de Niños</span>}
                                     </CardTitle>
-                                    <CardDescription className="uppercase text-[9px] md:text-[10px] font-bold tracking-widest text-slate-500 mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
+                                    <CardDescription className="uppercase text-[9px] md:text-[10px] font-bold tracking-widest text-muted-foreground mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
                                 </div>
                                 <div className="relative w-full sm:w-80">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                     <Input
                                         placeholder="Buscar por nombre..."
                                         className="pl-12 bg-foreground/5 border-border/40 text-sm h-11 md:h-12 rounded-2xl focus:ring-primary/50 transition-all"
@@ -804,7 +873,7 @@ export default function AttendanceDashboard() {
                                                     <p className={cn(
                                                         "font-black uppercase tracking-tight transition-colors text-sm md:text-lg truncate text-foreground/90"
                                                     )}>{member.name}</p>
-                                                    <span className="text-[9px] md:text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-none block mt-0.5">{member.category}</span>
+                                                    <span className="text-[9px] md:text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none block mt-0.5">{member.category}</span>
                                                 </div>
                                             </div>
 
@@ -831,8 +900,8 @@ export default function AttendanceDashboard() {
                                                                     "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 font-black text-[10px] sm:text-xs",
                                                                     isProcessing && "animate-pulse opacity-50 cursor-wait",
                                                                     isPresent
-                                                                        ? "bg-emerald-500 border-emerald-400 text-black shadow-[0_0_15px_rgba(16,185,129,0.4)] scale-110"
-                                                                        : "bg-foreground/5 border-border/20 text-slate-500 hover:border-emerald-500/50"
+                                                                        ? "bg-emerald-500 border-emerald-400 text-black scale-110"
+                                                                        : "bg-foreground/5 border-border/20 text-muted-foreground hover:border-emerald-500/50"
                                                                 )}
                                                             >
                                                                 {isProcessing ? (
@@ -843,7 +912,7 @@ export default function AttendanceDashboard() {
                                                             </button>
                                                             <span className={cn(
                                                                 "text-[7px] uppercase font-black tracking-tighter",
-                                                                isPresent ? "text-emerald-500" : "text-slate-600"
+                                                                isPresent ? "text-emerald-500" : "text-muted-foreground"
                                                             )}>
                                                                 {sessLabel}
                                                             </span>
@@ -862,10 +931,10 @@ export default function AttendanceDashboard() {
                 {/* Security Check Modal */}
                 {securityChild && (
                     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-                        <Card className="w-full max-w-lg glass-card bg-[#0f172a] border-border/40 overflow-hidden shadow-2xl">
+                        <Card className="w-full max-w-lg glass-card bg-[#0f172a] border-border/40 overflow-hidden">
                             <CardHeader className="border-b border-border/20 bg-cyan-400/5 py-6">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-16 h-16 rounded-2xl border-2 border-cyan-400/30 overflow-hidden shadow-lg">
+                                    <div className="w-16 h-16 rounded-2xl border-2 border-cyan-400/30 overflow-hidden">
                                         <img src={securityChild.avatar} className="w-full h-full object-cover" />
                                     </div>
                                     <div>
@@ -885,9 +954,9 @@ export default function AttendanceDashboard() {
                                         <h4 className="text-sm font-black uppercase tracking-widest italic">Entrada al Templo / Corito</h4>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Entregado por (Padre/Madre/Tutor)</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Entregado por (Padre/Madre/Tutor)</label>
                                         <div className="relative">
-                                            <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                            <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                             <Input
                                                 placeholder="Nombre de quien entrega..."
                                                 className="pl-10 bg-foreground/5 border-border/40 focus:ring-emerald-500/50"
@@ -915,9 +984,9 @@ export default function AttendanceDashboard() {
                                         <h4 className="text-sm font-black uppercase tracking-widest italic">Salida / Entrega Final</h4>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Recogido por (Autorizado)</label>
+                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Recogido por (Autorizado)</label>
                                         <div className="relative">
-                                            <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                            <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                             <Input
                                                 placeholder="Nombre de quien recoge..."
                                                 className="pl-10 bg-foreground/5 border-border/40 focus:ring-amber-500/50"

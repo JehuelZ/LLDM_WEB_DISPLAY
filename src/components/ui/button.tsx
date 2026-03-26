@@ -20,6 +20,7 @@ const buttonVariants = cva(
                 link: "text-primary underline-offset-4 hover:underline",
                 glass: "glass-panel hover:bg-white/10 text-white border-white/10 shadow-lg backdrop-blur-md",
                 neon: "bg-transparent border border-primary text-primary shadow-[0_0_10px_rgba(251,191,36,0.5)] hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(251,191,36,0.7)] transition-all duration-300",
+                primitivo: "btn-primitivo",
             },
             size: {
                 default: "h-10 px-4 py-2",

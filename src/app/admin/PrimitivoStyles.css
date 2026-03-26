@@ -1,0 +1,679 @@
+/* 
+  Primitivo Admin Theme - THE SACRED MIRROR
+  Source: Mirror Audit from lldmrodeo.org/admin
+  
+  RULE OF THE PROJECT: 
+  "The Sidebars are independent worlds within the theme. 
+  Modifying a global setting must never affect the sidebar 
+  architecture or its core colors. It is a world within another world."
+*/
+
+:root {
+  /* DARK THEME (DEFAULT) */
+  --primitivo-bg: #020617; /* Slate 950 */
+  --primitivo-sidebar-bg: #0b101e; /* Exact Photoshop Color */
+  --primitivo-sidebar-border: rgba(255, 255, 255, 0.08);
+  --primitivo-sidebar-text: #94a3b8;
+  --primitivo-sidebar-hover: rgba(255, 255, 255, 0.05);
+  --primitivo-pill-active: #171c2a; 
+  --primitivo-accent-amber: #fbbf24; /* Production Amber-400 */
+  --primitivo-card-bg: #101420;
+  --primitivo-card-border: rgba(255, 255, 255, 0.06);
+  --primitivo-nav-bg: #121523;
+  --primitivo-nav-border: rgba(255, 255, 255, 0.05);
+  --primitivo-text-main: #f8fafc;
+  --primitivo-text-muted: #94a3b8;
+  --primitivo-active-bg: #14b8a6; /* Teal 500 (Softer than 600) */
+  --primitivo-active-text: #000000;
+  --primitivo-glow: rgba(59, 130, 246, 0.03); /* Reduced glow */
+  --primitivo-card-shadow: none;
+  --primitivo-nav-shadow: none;
+  --primitivo-card-dark: #1e293b; /* Soft Slate 800 for inverse elements */
+  
+  /* BUTTON STANDARD */
+  --primitivo-btn-green: #008e5b;
+  --primitivo-btn-green-hover: #007a4d;
+  --primitivo-btn-green-glow: rgba(0, 142, 91, 0.4);
+}
+
+/* LIGHT THEME OVERRIDES */
+.light-theme .admin-theme-primitivo,
+.light-theme.admin-theme-primitivo {
+  --primitivo-bg: #f8fafc; /* Slate 50 */
+  --primitivo-sidebar-bg: #f1f5f9; /* Slate 100 */
+  --primitivo-sidebar-border: rgba(15, 23, 42, 0.1);
+  --primitivo-sidebar-text: #475569; /* Slate 600 */
+  --primitivo-sidebar-hover: rgba(15, 23, 42, 0.05);
+  --primitivo-pill-active: #e2e8f0;
+  --primitivo-accent-amber: #d97706; /* Darker Amber-600 */
+  --primitivo-card-bg: #ffffff;
+  --primitivo-card-border: rgba(15, 23, 42, 0.08);
+  --primitivo-nav-bg: #f1f5f9;
+  --primitivo-nav-border: rgba(15, 23, 42, 0.05);
+  --primitivo-text-main: #0f172a; /* Slate 900 */
+  --primitivo-text-muted: #475569; /* Slate 600 */
+  --primitivo-active-bg: #0d9488;
+  --primitivo-active-text: #ffffff;
+  --primitivo-glow: rgba(59, 130, 246, 0.02); /* Minimal glow */
+  --primitivo-card-shadow: none;
+  --primitivo-nav-shadow: none;
+  --primitivo-card-dark: rgba(30, 41, 59, 0.65); /* Even softer Slate 800 for Light Mode Inverse */
+  
+  /* BUTTON STANDARD (LIGHT) */
+  --primitivo-btn-green: #007a4d;
+  --primitivo-btn-green-hover: #008e5b;
+  --primitivo-btn-green-glow: rgba(0, 122, 77, 0.2);
+}
+
+/* PRIMITIVO BUTTON UTILITIES */
+.btn-primitivo {
+    background-color: var(--primitivo-btn-green) !important;
+    color: white !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    font-style: italic !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 14px 0 var(--primitivo-btn-green-glow) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.75rem 1.5rem !important;
+    white-space: nowrap !important;
+    max-width: 280px !important; /* Prevent "too long" buttons */
+    overflow: hidden !important;
+}
+
+.btn-primitivo:hover {
+    background-color: var(--primitivo-btn-green-hover) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px 0 var(--primitivo-btn-green-glow) !important;
+}
+
+.btn-primitivo:active {
+    transform: translateY(0px) !important;
+}
+
+/* GLOBAL CANVAS - Blue Glow Frame */
+.admin-theme-primitivo,
+body.admin-theme-primitivo {
+    background-color: var(--primitivo-bg) !important;
+    background: var(--primitivo-bg) !important;
+    color: var(--primitivo-text-main) !important;
+    font-family: var(--font-barlow), 'Inter', system-ui, sans-serif !important;
+}
+
+/* GLOBAL TITLES - FORCE UPPERCASE AND HEAVY WEIGHT */
+.admin-theme-primitivo h1, 
+.admin-theme-primitivo h2, 
+.admin-theme-primitivo h3, 
+.admin-theme-primitivo h4,
+.admin-theme-primitivo .card-title,
+.admin-theme-primitivo [class*="text-"][class*="font-black"],
+.admin-theme-primitivo [class*="text-"][class*="font-extrabold"] {
+    text-transform: uppercase !important;
+    font-weight: 900 !important;
+    letter-spacing: -0.5px !important;
+}
+
+/* LOGO MIRROR - Exact Production Styles */
+.admin-theme-primitivo .admin-sidebar-logo-text {
+    font-size: 19px !important;
+    font-weight: 900 !important;
+    letter-spacing: -1.2px !important;
+    text-transform: uppercase !important;
+    font-style: italic !important;
+    line-height: 1 !important;
+    gap: 2px !important;
+    display: flex !important;
+}
+
+.admin-theme-primitivo .logo-lldm {
+    color: var(--primitivo-text-main) !important;
+}
+
+.admin-theme-primitivo .logo-rodeo {
+    color: var(--primitivo-accent-amber) !important; /* Exact Amber-400 from Production */
+}
+
+/* THE BLUE GLOW - Mirror effect around the content area */
+.admin-theme-primitivo .flex-1 {
+    box-shadow: inset 0 0 100px var(--primitivo-glow) !important;
+}
+
+/* SIDEBAR - HIGH ISOLATION (Root of the world) */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo {
+    background: var(--primitivo-sidebar-bg) !important;
+    backdrop-filter: blur(24px) !important;
+    border-right: 1px solid var(--primitivo-sidebar-border) !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transition: all 300ms ease-in-out !important;
+}
+
+/* NAVIGATION PILLS - The Mirrors */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a {
+    margin: 4px 12px !important;
+    padding: 10px 16px !important;
+    border-radius: 12px !important; 
+    background: transparent !important; /* Default transparent */
+    color: var(--primitivo-sidebar-text) !important; /* Slate-400 */
+    border: 1px solid transparent !important;
+    font-size: 13px !important;
+    text-transform: none !important; /* Mixed case as in production */
+    transition: all 200ms ease !important;
+    opacity: 1 !important;
+}
+
+/* Icons in Sidebar */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a svg {
+    color: var(--primitivo-sidebar-text) !important;
+    transition: all 200ms ease !important;
+}
+
+/* HIDE THE OLD VERTICAL LINE (Local only artifact) */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo .active-indicator-orange {
+    display: none !important;
+}
+
+/* ACTIVE STATE - Full Pill Highlight Mirror (#fbbf24 at 10% opacity) */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a.bg-tactile-orange-pill,
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#f59e0b]"] {
+    background: rgba(251, 191, 36, 0.1) !important;
+    color: var(--primitivo-accent-amber) !important; /* Amber-400 */
+    border: 1px solid rgba(251, 191, 36, 0.2) !important;
+    font-weight: 700 !important;
+    box-shadow: none !important;
+}
+
+/* Active Icon */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a.bg-tactile-orange-pill svg,
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#f59e0b]"] svg {
+    color: var(--primitivo-accent-amber) !important;
+}
+
+/* Hover effects */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a:not(.bg-tactile-orange-pill) {
+    color: var(--primitivo-text-muted) !important;
+}
+
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a:not(.bg-tactile-orange-pill) svg {
+    color: var(--primitivo-text-muted) !important;
+}
+
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a:hover:not(.bg-tactile-orange-pill) {
+    background: var(--primitivo-sidebar-hover) !important;
+    color: var(--primitivo-text-main) !important; /* Slate-50 */
+}
+
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a:hover svg {
+    color: var(--primitivo-text-main) !important;
+}
+
+/* GROUP LABELS - Management/Primary */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo .text-white\/30,
+#admin-sidebar-master.admin-sidebar-isolation-primitivo .text-white\/40,
+#admin-sidebar-master.admin-sidebar-isolation-primitivo .text-white\/20,
+#admin-sidebar-master.admin-sidebar-isolation-primitivo .text-white\/50,
+.admin-theme-primitivo .text-white\/40,
+.admin-theme-primitivo .text-white\/30,
+.admin-theme-primitivo .text-white\/20,
+.admin-theme-primitivo .text-white\/50 {
+    color: var(--primitivo-text-muted) !important;
+    opacity: 1 !important;
+}
+
+#admin-sidebar-master.admin-sidebar-isolation-primitivo svg {
+    opacity: 1 !important;
+}
+
+#admin-sidebar-master.admin-sidebar-isolation-primitivo .text-white\/30 {
+    text-transform: uppercase !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.25em !important;
+    padding-left: 1.5rem !important;
+    margin-top: 2rem !important;
+}
+
+/* Special fix for the Settings link */
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#535468]"] {
+    background: rgba(251, 191, 36, 0.1) !important;
+    color: var(--primitivo-accent-amber) !important;
+}
+
+/* CARD TITLES COLORING */
+.admin-theme-primitivo .card-title {
+    color: var(--primitivo-accent-amber) !important; /* Default Amber for main titles */
+}
+
+.admin-theme-primitivo .card-description,
+.admin-theme-primitivo .text-muted-foreground {
+    color: var(--primitivo-text-muted) !important; /* Slate-400 for secondary info */
+}
+
+/* THE GLASS BOXES - Mirroring Production Cloud (Vercel) */
+.admin-theme-primitivo .card,
+.admin-theme-primitivo .glass-card {
+    background: var(--primitivo-card-bg) !important; /* Deep steel navy background - User defined favorite */
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid var(--primitivo-card-border) !important;
+    box-shadow: var(--primitivo-card-shadow) !important;
+    border-radius: 1.25rem !important; /* Slightly tighter for precision feel */
+    overflow: hidden;
+    color: var(--primitivo-text-main) !important;
+    transition: transform 300ms ease, box-shadow 300ms ease !important;
+}
+
+.admin-theme-primitivo .card:hover,
+.admin-theme-primitivo .glass-card:hover {
+    box-shadow: none !important;
+    transform: translateY(-2px) !important;
+}
+
+.admin-theme-primitivo .primitivo-card-dark {
+    background-color: var(--primitivo-card-dark) !important;
+    color: #ffffff !important; /* Always white text on dark cards */
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    border-radius: 1.25rem !important;
+    overflow: hidden;
+    transition: all 300ms ease !important;
+}
+
+.admin-theme-primitivo .primitivo-card-dark:hover {
+    background-color: #1e293b !important; /* Slate 800 */
+}
+
+.admin-theme-primitivo .primitivo-nav-bar {
+    background: var(--primitivo-nav-bg) !important;
+    background-color: var(--primitivo-nav-bg) !important;
+    border: 1px solid var(--primitivo-nav-border) !important;
+    padding: 6px !important;
+    border-radius: 9999px !important; /* Full pill for horizontal menus */
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    width: fit-content !important;
+    box-shadow: var(--primitivo-nav-shadow) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+}
+
+.admin-theme-primitivo .primitivo-nav-item {
+    background: transparent !important;
+    border: none !important;
+    color: var(--primitivo-text-muted) !important;
+    border-radius: 9999px !important;
+    padding: 10px 24px !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.15em !important;
+    transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.admin-theme-primitivo .primitivo-nav-item:hover {
+    color: var(--primitivo-text-main) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.light-theme .admin-theme-primitivo .primitivo-nav-item:hover {
+    background: rgba(15, 23, 42, 0.05) !important;
+}
+
+.admin-theme-primitivo .primitivo-nav-item.active,
+.admin-theme-primitivo .primitivo-nav-item[data-state="active"],
+.admin-theme-primitivo .primitivo-nav-item.active-pill {
+    background-color: var(--primitivo-active-bg) !important;
+    color: var(--primitivo-active-text) !important;
+    box-shadow: none !important;
+    font-weight: 900 !important;
+}
+
+.admin-theme-primitivo .primitivo-nav-item svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.8;
+}
+
+/* Dashboard Content Tab Bar */
+/* Removed boxy legacy rule for bg-slate-900/60 */
+
+
+/* THE BLUE GLOW - Mirror effect around the content area */
+.admin-theme-primitivo main,
+.admin-theme-primitivo .flex-1.p-8 {
+    box-shadow: inset 0 0 100px var(--primitivo-glow) !important;
+    background: radial-gradient(circle at top right, var(--primitivo-glow), transparent 40%),
+                radial-gradient(circle at bottom left, var(--primitivo-glow), transparent 40%) !important;
+}
+
+/* HEADER MIRROR */
+.admin-theme-primitivo .admin-header-title {
+    font-family: var(--font-barlow) !important;
+    font-size: 32px !important;
+    font-weight: 900 !important;
+    letter-spacing: -1.5px !important;
+    text-transform: uppercase !important;
+    font-style: italic !important;
+    color: var(--primitivo-text-main) !important; /* Slate 50 */
+}
+
+.admin-theme-primitivo .admin-header-subtitle {
+    font-family: var(--font-barlow) !important;
+    font-weight: 500 !important;
+    letter-spacing: 1.5px !important;
+    font-size: 11px !important;
+    color: var(--primitivo-text-muted) !important; /* Slate 400 */
+    opacity: 1 !important;
+}
+
+.admin-theme-primitivo .admin-header-subtitle .logo-lldm {
+    color: var(--primitivo-text-main) !important; 
+    font-weight: 900 !important;
+}
+
+.admin-theme-primitivo .admin-header-subtitle .logo-rodeo {
+    color: var(--primitivo-accent-amber) !important; 
+    font-weight: 900 !important;
+}
+
+/* SIDEBAR USER SECTION - Fix light mode */
+.admin-theme-primitivo #admin-sidebar-master .border-t.border-white\/5 .text-white {
+    color: var(--primitivo-text-main) !important;
+}
+
+.admin-theme-primitivo #admin-sidebar-master .border-t.border-white\/5 .text-white\/40 {
+    color: var(--primitivo-text-muted) !important;
+}
+
+/* GLOBAL NAVIGATION STANDARD (Based on Horizontal Menu) */
+.admin-theme-primitivo .flex.flex-wrap.items-center.gap-1.bg-slate-900\/40,
+.admin-theme-primitivo .flex.items-center.gap-2.p-1.bg-white\/5,
+.admin-theme-primitivo .admin-member-filters-bar,
+.admin-theme-primitivo [role="tablist"] {
+    background: var(--primitivo-nav-bg) !important;
+    background-color: var(--primitivo-nav-bg) !important;
+    border: 1px solid var(--primitivo-nav-border) !important; /* Border visible as requested earlier */
+    padding: 6px !important;
+    border-radius: 1rem !important;
+    width: fit-content !important;
+    display: flex !important;
+    gap: 4px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Tab/Menu Buttons Standard */
+.admin-theme-primitivo [role="tab"],
+.admin-theme-primitivo .admin-member-filters-bar button,
+.admin-theme-primitivo .flex.items-center.gap-2.p-1.bg-white\/5 button {
+    background: transparent !important;
+    border: none !important;
+    color: var(--primitivo-text-muted) !important;
+    border-radius: 0.75rem !important;
+    padding: 10px 20px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ACTIVE STATE FOR ALL NAVIGATION - THE CAPSULE */
+.admin-theme-primitivo [data-state="active"],
+.admin-theme-primitivo .admin-member-filters-bar button[class*="bg-white/10"],
+.admin-theme-primitivo .admin-member-filters-bar button[class*="bg-slate-500"],
+.admin-theme-primitivo .bg-white\/10 {
+    background-color: var(--primitivo-active-bg) !important; /* Teal/Cyan Primitivo Active Color */
+    color: var(--primitivo-active-text) !important; /* Black text for bold contrast */
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* MEMBER FILTERS HORIZONTAL BAR - Restoring Dark Solid Rounding */
+.admin-theme-primitivo .admin-member-filters-bar {
+    background: var(--primitivo-nav-bg) !important; /* Solid Dark Navy - No Transparency */
+    background-color: var(--primitivo-nav-bg) !important;
+    border: 1px solid var(--primitivo-nav-border) !important;
+    padding: 6px !important;
+    border-radius: 1rem !important; /* Reduced from 2rem */
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    margin-bottom: 24px !important;
+    width: fit-content !important;
+    box-shadow: none !important;
+}
+
+.admin-theme-primitivo .admin-member-filters-bar button {
+    background: transparent !important;
+    border: none !important;
+    color: var(--primitivo-text-muted) !important;
+    border-radius: 0.75rem !important; /* Reduced from 1.5rem */
+    padding: 8px 18px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    transition: all 250ms ease !important;
+}
+
+/* INTERCALATED ROWS (ZEBRA STRIPING) - Dashboard & Tables */
+.admin-theme-primitivo .tactile-glass-panel.group:nth-child(even),
+.admin-theme-primitivo .member-row.row-even {
+    background: rgba(100, 116, 139, 0.03) !important; /* Subtle tint for alternate rows */
+}
+
+.admin-theme-primitivo .tactile-glass-panel.group,
+.admin-theme-primitivo .member-row.row-odd {
+    background: var(--primitivo-card-bg) !important; /* Base Dark Navy */
+}
+
+.admin-theme-primitivo .tactile-glass-panel.group:hover,
+.admin-theme-primitivo .member-row:hover {
+    background: var(--primitivo-sidebar-hover) !important;
+}
+
+/* ACTIVE STATE FOR HORIZONTAL FILTERS - ONLY THE ACTIVE PILL */
+.admin-theme-primitivo .admin-member-filters-bar button[class*="bg-white/10"],
+.admin-theme-primitivo .admin-member-filters-bar button[class*="bg-slate-500"],
+.admin-theme-primitivo .admin-member-filters-bar button.bg-slate-500 {
+    background-color: var(--primitivo-active-bg) !important; /* Specific Active Color Matching Primitivo */
+    color: var(--primitivo-active-text) !important; /* BLACK TEXT for active */
+    box-shadow: 0 4px 15px rgba(13, 148, 136, 0.4) !important;
+    border-bottom: none !important;
+}
+
+/* 
+   ROLE BADGES AND STATUS - 100% ONLINE MIRROR (Specific Scoping) 
+   Removed legacy overrides to allow Tailwind classes (pill capsules) to dominate.
+*/
+
+/* Specific Profile and Table Badges - Removing overrides so Tailwind dominates */
+
+
+/* Ensure Avatar Initials are NEVER boxed */
+.admin-theme-primitivo .rounded-full span.text-primary {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Force Uppercase on Member Groups and Gender - Theme Consistency */
+.admin-theme-primitivo .text-\[10px\].text-muted-foreground,
+.admin-theme-primitivo .text-\[10px\].text-primary\/70,
+.admin-theme-primitivo .text-\[10px\].font-bold.uppercase,
+.admin-theme-primitivo .member-info-sub span {
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+}
+
+/* ATTENDANCE PROGRESS BARS - Vibrant Mirroring */
+.admin-theme-primitivo .w-12.h-1.bg-foreground\/10 {
+    background-color: var(--primitivo-sidebar-hover) !important; /* Lighter track for dark theme */
+}
+
+.admin-theme-primitivo .w-12.h-1 .bg-primary {
+    background-color: #3b82f6 !important; /* Azure Blue for Attendance */
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* MEMBER SEARCH INPUT - Full Online Mirror (Dashboard & Pages) */
+.admin-theme-primitivo input[placeholder*="buscar"],
+.admin-theme-primitivo .relative input[class*="backdrop-blur"],
+.admin-theme-primitivo .relative input[class*="bg-black/40"],
+.admin-theme-primitivo .relative input[class*="bg-white/5"] {
+    background-color: var(--primitivo-nav-bg) !important;
+    background: var(--primitivo-nav-bg) !important;
+    border: 1px solid var(--primitivo-nav-border) !important;
+    border-radius: 9999px !important; /* Full pill shape */
+    height: 44px !important;
+    color: var(--primitivo-text-main) !important;
+    padding-left: 36px !important; /* space for icon */
+    
+    /* Primitivo Typography Standard */
+    text-transform: uppercase !important;
+    font-size: 10px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.15em !important;
+    font-family: var(--font-poppins), sans-serif !important;
+}
+
+.admin-theme-primitivo .relative input[placeholder*="buscar"]::placeholder {
+    color: var(--primitivo-text-muted) !important;
+    opacity: 0.5;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+}
+
+/* Ensure search icon is positioned correctly */
+.admin-theme-primitivo .relative svg[class*="text-muted-foreground"],
+.admin-theme-primitivo .relative svg[class*="text-white/40"] {
+    left: 12px !important;
+    width: 14px !important;
+    height: 14px !important;
+    color: var(--primitivo-text-muted) !important;
+    opacity: 0.7 !important;
+}
+
+/* MEMBERS TABLE HEADERS - Force Caps */
+.admin-theme-primitivo table thead th {
+    text-transform: uppercase !important;
+    letter-spacing: 0.3em !important;
+    font-size: 9px !important;
+    color: var(--primitivo-text-muted) !important;
+}
+
+.admin-theme-primitivo .admin-header-title {
+    color: var(--primitivo-text-main) !important;
+}
+
+.admin-theme-primitivo h1,
+.admin-theme-primitivo h2 {
+    color: var(--primitivo-text-main) !important;
+}
+
+/* Detailed Profile Card Photo - Square with Softly Rounded Corners */
+.admin-theme-primitivo .w-32.h-32,
+.admin-theme-primitivo .w-24.h-24 {
+    border-radius: 12px !important; /* Softly rounded square */
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* List View Avatars - Always Circular with Thin Border */
+.admin-theme-primitivo .h-10.w-10.rounded-full,
+.admin-theme-primitivo img[class*="w-10"],
+.admin-theme-primitivo img[class*="w-14"] {
+    border-radius: 9999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    padding: 2px !important;
+    background: transparent !important;
+}
+
+/* Member List Profiles with Green Border */
+.admin-theme-primitivo .w-16.h-16.border-2 {
+    border-color: #10b981 !important; /* Esmerealda/Verde */
+    box-shadow: none !important;
+    background: rgba(16, 185, 129, 0.05) !important;
+}
+
+.admin-theme-primitivo img[class*="w-16"] {
+    border-radius: 12px !important; /* Soft square as requested earlier */
+    border: none !important;
+    padding: 2px !important;
+    background: transparent !important;
+}
+
+/* PERSONAL PROFILE PHOTO (MI PERFIL) - Square/Sharp Corners Mirroring Online */
+.admin-theme-primitivo .w-48.h-48,
+.admin-theme-primitivo .w-48.h-48 img,
+.admin-theme-primitivo .w-48.h-48 .bg-primary\/10 {
+    border-radius: 0 !important; /* PERFECT SQUARE */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 0 !important; /* Flush look */
+}
+
+/* Personal/Minister Profile with Green Border */
+.admin-theme-primitivo .w-48.h-48.border-4,
+.admin-theme-primitivo .w-48.h-48.border-8 {
+    border-color: #10b981 !important;
+    border-width: 2px !important;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.3) !important;
+    background: rgba(16, 185, 129, 0.05) !important;
+}
+
+/* Edit Camera Button on Profile */
+.admin-theme-primitivo .bg-primary.rounded-xl.hover\:scale-110 {
+    background: #fbbf24 !important;
+    color: #000000 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: none !important;
+}
+
+/* THEME-WIDE COLOR DEFAULTS - ALLOW TAILWIND OVERRIDES */
+.admin-theme-primitivo .text-primary {
+    color: var(--primitivo-accent-amber);
+}
+
+.admin-theme-primitivo .bg-primary {
+    background-color: var(--primitivo-accent-amber);
+}
+
+.admin-theme-primitivo .border-primary {
+    border-color: var(--primitivo-accent-amber);
+}
+
+.admin-theme-primitivo .admin-badge-primitivo {
+    background-color: var(--primitivo-nav-bg) !important;
+    color: var(--primitivo-text-muted) !important;
+    border: 1px solid var(--primitivo-nav-border) !important;
+    text-transform: uppercase !important;
+    font-size: 9px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.1em !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+
+.admin-theme-primitivo main,.shadow-primary\/20 {
+    box-shadow: none !important;
+}
+
+/* Ensure horizontal menus always use the Primitivo palette even if classes overlap */
+.admin-theme-primitivo .admin-member-filters-bar {
+    background-color: #121523 !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.admin-theme-primitivo .admin-member-filters-bar button:hover {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+}

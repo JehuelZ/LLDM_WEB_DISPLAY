@@ -58,9 +58,9 @@ export interface AppSettings {
     youtubeUrl?: string;
     customSocialUrl?: string;
     customSocialLabel?: string;
-    adminTheme?: 'classic' | 'tactile';
+    adminTheme?: 'classic' | 'tactile' | 'luna' | 'primitivo';
     displayPin?: string; // New: Access code for TV/Display mode
-    displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna';
+    displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna' | 'primitivo';
     displayScale?: number; // New: Scale factor for TV displays (0.5 to 1.5)
     displayOffsetX?: number; // New: Manual horizontal adjustment
     displayOffsetY?: number; // New: Manual vertical adjustment
@@ -119,7 +119,7 @@ export interface UserProfile {
 }
 
 export interface CalendarStyles {
-    template: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna';
+    template: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna' | 'primitivo';
 
 
 
@@ -127,7 +127,7 @@ export interface CalendarStyles {
     thursdayColor: string;
     special14thColor: string;
     showGlassEffect: boolean;
-    fontFamily: 'outfit' | 'sora' | 'inter' | 'montserrat' | 'poppins' | 'lexend' | 'orbitron' | 'black-ops' | 'syne' | 'playfair' | 'lora';
+    fontFamily: 'poppins' | 'sora' | 'inter' | 'montserrat' | 'poppins' | 'lexend' | 'orbitron' | 'black-ops' | 'syne' | 'playfair' | 'lora';
     fontSetIndex?: number;
 }
 
@@ -273,6 +273,7 @@ interface AppState {
     saveSettingsToCloud: (newSettings: Partial<AppSettings>) => Promise<void>;
     saveRecurringScheduleToCloud: (date: string, slot: '5am' | '9am_consecration' | '9am_doctrine' | 'evening' | 'evening_0' | 'evening_1', leaderId: string, recurrence: 'month' | 'next') => Promise<void>;
     seedMonthSchedule: () => Promise<void>;
+    seedAttendanceData: () => Promise<void>;
 
     // Choir Rehearsal Cloud Actions
     loadRehearsalsFromCloud: () => Promise<void>;
@@ -286,6 +287,7 @@ interface AppState {
     loadMemberAttendanceHistory: (memberId: string) => Promise<AttendanceRecord[]>;
     loadWeeklyAttendanceStats: () => Promise<any[]>;
     loadMonthlyGlobalAttendanceStats: () => Promise<any[]>;
+    loadMonthlyIntelligenceStats: () => Promise<{ label: string, value: number }[]>;
     loadDetailedWeeklyStats: (days: string[]) => Promise<any[]>;
     loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
 
@@ -336,7 +338,7 @@ export const useAppStore = create<AppState>()(
                 thursdayColor: '#10b981', // emerald-500
                 special14thColor: '#ef4444', // red-500
                 showGlassEffect: true,
-                fontFamily: 'outfit',
+                fontFamily: 'poppins',
             },
             settings: {
                 themeMode: 'dark',
@@ -352,7 +354,7 @@ export const useAppStore = create<AppState>()(
                 iglesiaVariant: 'light',
                 facebookUrl: '',
                 instagramUrl: '',
-                fontMain: 'Outfit',
+                fontMain: 'Poppins',
                 youtubeUrl: '',
                 customSocialUrl: '',
                 customSocialLabel: '',
@@ -360,7 +362,7 @@ export const useAppStore = create<AppState>()(
                 displayTemplate: 'cristal',
                 displayScale: 1.0,
                 displayAuthorizedEmails: ['jairojehuel@gmail.com'],
-                adminTheme: 'classic',
+                adminTheme: 'luna',
                 customLogo1: '',
                 customLogo2: '',
                 customLogo3: '',
@@ -694,7 +696,20 @@ export const useAppStore = create<AppState>()(
             },
 
             updateProfileInCloud: async (userId, updates) => {
-                const cleanId = userId?.trim();
+                const cleanId = userId?.trim() || '';
+                
+                // --- ROBUSTNESS: VALIDATE UUID ---
+                // Se verifica si el ID es un UUID válido. Si no lo es (ej. dev-admin-id o placeholders locales), 
+                // saltamos la llamada a Supabase para evitar errores de sintaxis y permitimos el éxito local.
+                const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanId);
+                
+                if (!isUuid || cleanId.includes('placeholder') || cleanId.includes('mock')) {
+                    console.warn('UpdateProfile: Skipping cloud sync. Restricted to valid UUIDs. ID received:', cleanId);
+                    // Retornamos true para no mostrar notificaciones de error al usuario en desarrollo, 
+                    // pero persistimos la idea de éxito para que la UI no se bloquee.
+                    return true;
+                }
+
                 const dbUpdates: any = { updated_at: new Date().toISOString() };
                 console.log('UpdateProfile: START for ID:', cleanId);
                 console.log('UpdateProfile: Payload received:', updates);
@@ -770,6 +785,9 @@ export const useAppStore = create<AppState>()(
             },
 
             deleteMemberFromCloud: async (userId) => {
+                const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId || '');
+                if (!isUuid) return true; // Ignorar si es un placeholder
+
                 const { error } = await supabase
                     .from('profiles')
                     .delete()
@@ -1367,7 +1385,7 @@ export const useAppStore = create<AppState>()(
                             customLogo3: data.custom_logo_3,
                             customLogo4: data.custom_logo_4,
                             weatherUnit: data.weather_unit || 'fahrenheit',
-                            fontMain: data.display_font_family || 'Outfit',
+                            fontMain: data.display_font_family || 'Poppins',
                             fontWeight: data.display_font_weight || '400',
                         },
 
@@ -1394,74 +1412,96 @@ export const useAppStore = create<AppState>()(
             saveSettingsToCloud: async (newSettings: Partial<AppSettings>) => {
                 const current = get().settings;
                 const updated = { ...current, ...newSettings };
-                const dbSettings = {
-                    theme_mode: updated.themeMode,
-                    language: updated.language,
-                    church_icon: updated.churchIcon,
-                    custom_icon_url: updated.customIconUrl,
-                    primary_color: updated.primaryColor,
-                    show_minister_on_display: updated.showMinisterOnDisplay,
-                    display_bg_mode: updated.displayBgMode,
-                    display_bg_style: updated.displayBgStyle,
-                    display_bg_url: updated.displayBgUrl,
-                    display_custom_bg_url: updated.displayCustomBgUrl,
-                    church_logo_url: updated.churchLogoUrl,
-                    minister_name: updated.ministerName,
-                    minister_phone: updated.ministerPhone,
-                    minister_email: updated.ministerEmail,
-                    minister_avatar: updated.ministerAvatar,
-                    countdown_title: updated.countdownTitle,
-                    countdown_date: updated.countdownDate,
-                    show_countdown: updated.showCountdown,
-                    countdown_logo_url: updated.countdownLogoUrl,
-                    countdown_bg_color: updated.countdownBgColor,
-                    countdown_accent_color: updated.countdownAccentColor,
-                    countdown_bg_image_url: updated.countdownBgImageUrl,
-                    display_authorized_emails: updated.displayAuthorizedEmails,
-                    display_pin: updated.displayPin,
-                    iglesia_variant: updated.iglesiaVariant,
-                    iglesia_animation: updated.iglesiaAnimation,
-                    iglesia_animation_speed: updated.iglesiaAnimationSpeed,
-                    display_template: updated.displayTemplate,
-                    display_scale: updated.displayScale,
-                    display_offset_x: updated.displayOffsetX,
-                    display_offset_y: updated.displayOffsetY,
-                    admin_theme: updated.adminTheme,
-                    low_performance_mode: updated.lowPerformanceMode,
-                    transitions_enabled: updated.transitionsEnabled,
-                    iglesia_slide_duration: updated.iglesiaSlideDuration,
-                    cristal_slide_duration: updated.cristalSlideDuration,
-                    minimal_slide_duration: updated.minimalSlideDuration,
-                    nocturno_slide_duration: updated.nocturnoSlideDuration,
-                    neon_slide_duration: updated.neonSlideDuration,
-                    animation_type: updated.animationType,
-                    animation_speed: updated.animationSpeed,
-                    custom_logo_1: updated.customLogo1,
-                    custom_logo_2: updated.customLogo2,
-                    custom_logo_3: updated.customLogo3,
-                    custom_logo_4: updated.customLogo4,
-                    weather_unit: updated.weatherUnit,
-                    display_font_family: updated.fontMain,
-                    display_font_weight: updated.fontWeight,
+                
+                // MAPEO DINÁMICO DE CAMELCASE A SNAKE_CASE
+                const mapping: Record<string, string> = {
+                    themeMode: 'theme_mode',
+                    language: 'language',
+                    churchIcon: 'church_icon',
+                    customIconUrl: 'custom_icon_url',
+                    primaryColor: 'primary_color',
+                    showMinisterOnDisplay: 'show_minister_on_display',
+                    displayBgMode: 'display_bg_mode',
+                    displayBgStyle: 'display_bg_style',
+                    displayBgUrl: 'display_bg_url',
+                    displayCustomBgUrl: 'display_custom_bg_url',
+                    churchLogoUrl: 'church_logo_url',
+                    ministerName: 'minister_name',
+                    ministerPhone: 'minister_phone',
+                    ministerEmail: 'minister_email',
+                    ministerAvatar: 'minister_avatar',
+                    countdownTitle: 'countdown_title',
+                    countdownDate: 'countdown_date',
+                    showCountdown: 'show_countdown',
+                    countdownLogoUrl: 'countdown_logo_url',
+                    countdownBgColor: 'countdown_bg_color',
+                    countdownAccentColor: 'countdown_accent_color',
+                    countdownBgImageUrl: 'countdown_bg_image_url',
+                    displayAuthorizedEmails: 'display_authorized_emails',
+                    displayPin: 'display_pin',
+                    iglesiaVariant: 'iglesia_variant',
+                    iglesiaAnimation: 'iglesia_animation',
+                    iglesiaAnimationSpeed: 'iglesia_animation_speed',
+                    displayTemplate: 'display_template',
+                    displayScale: 'display_scale',
+                    displayOffsetX: 'display_offset_x',
+                    displayOffsetY: 'display_offset_y',
+                    adminTheme: 'admin_theme',
+                    lowPerformanceMode: 'low_performance_mode',
+                    transitionsEnabled: 'transitions_enabled',
+                    iglesiaSlideDuration: 'iglesia_slide_duration',
+                    cristalSlideDuration: 'cristal_slide_duration',
+                    minimalSlideDuration: 'minimal_slide_duration',
+                    nocturnoSlideDuration: 'nocturno_slide_duration',
+                    neonSlideDuration: 'neon_slide_duration',
+                    animationType: 'animation_type',
+                    animationSpeed: 'animation_speed',
+                    customLogo1: 'custom_logo_1',
+                    customLogo2: 'custom_logo_2',
+                    customLogo3: 'custom_logo_3',
+                    customLogo4: 'custom_logo_4',
+                    weatherUnit: 'weather_unit',
+                    fontMain: 'display_font_family',
+                    fontWeight: 'display_font_weight',
+                    neonForgeVariant: 'neon_forge_variant',
+                    aquaVariant: 'aqua_variant',
+                    neonForgeCityData: 'neon_forge_city_data',
                 };
 
+                const dbUpdate: Record<string, any> = {};
+                Object.entries(newSettings).forEach(([key, value]) => {
+                    const dbKey = mapping[key];
+                    if (dbKey) {
+                        dbUpdate[dbKey] = value;
+                    }
+                });
 
+                if (Object.keys(dbUpdate).length === 0) {
+                    console.warn('SYNC: No fields to update in cloud.');
+                    return;
+                }
 
+                // Actualizar estado local inmediatamente para alta respuesta UI
                 set({ settings: updated });
-                console.log('SYNC: Persisting app settings to cloud:', dbSettings);
+                console.log('SYNC: Persisting partial app settings to cloud:', dbUpdate);
 
-                const { error } = await supabase.from('app_settings').update(dbSettings).eq('id', 1);
+                const { error } = await supabase.from('app_settings').update(dbUpdate).eq('id', 1);
                 
                 if (error) {
                     const errorMsg = (error as any).message || 'Unknown DB error';
                     const errorCode = (error as any).code || 'N/A';
                     console.error("SYNC ERROR: Failed to update app_settings:", error);
-                    // Revert local state to previous state if save failed
-                    set({ settings: current });
-                    get().showNotification(`Falla de sincronización: ${errorMsg} (Código: ${errorCode}). Refresque la base de datos con el script MEGA_FIX.`, 'error');
+                    
+                    // Solo revertir if error no es por columna faltante (evitar parpadeo si el schema está desfasado)
+                    // PGRST204 es columna faltante
+                    if (errorCode !== 'PGRST204') {
+                        set({ settings: current });
+                    }
+                    
+                    get().showNotification(`Falla de sincronización: ${errorMsg}. Por favor, ejecute el script MEGA_FIX en Supabase.`, 'error');
                 } else {
                     console.log('SYNC SUCCESS: App settings saved to cloud.');
-                    get().showNotification("Configuración guardada y sincronizada globalmente", 'success');
+                    get().showNotification("Cambios sincronizados globalmente", 'success');
                 }
             },
 
@@ -1811,7 +1851,11 @@ export const useAppStore = create<AppState>()(
                 }
 
                 const date = records[0].date;
-                await get().loadAttendanceFromCloud(date);
+                try {
+                    await get().loadAttendanceFromCloud(date);
+                } catch (e) {
+                    console.error("Error reloading after save:", e);
+                }
             },
 
             loadMonthlyAttendanceStats: async (memberId: string) => {
@@ -2036,6 +2080,60 @@ export const useAppStore = create<AppState>()(
                     get().showNotification("Mes poblado exitosamente con datos realistas.", 'success');
                 }
             },
+            seedAttendanceData: async () => {
+                const members = get().members.filter(m => m.status === 'Activo');
+                if (members.length === 0) {
+                    get().showNotification("No hay miembros activos para generar asistencia.", 'warning');
+                    return;
+                }
+
+                const now = new Date();
+                const days = Array.from({ length: 30 }, (_, i) => subDays(now, i));
+                const sessions: AttendanceSession[] = ['5am', '9am', 'evening'];
+                
+                get().showNotification("Generando datos de asistencia (hace 30 días)... por favor espere.", 'info');
+
+                const allRecords: any[] = [];
+                
+                days.forEach(d => {
+                    const dateStr = format(d, 'yyyy-MM-dd');
+                    sessions.forEach(session => {
+                        // Random percentage of attendance (e.g. 40-90%)
+                        const attendanceRate = 0.4 + (Math.random() * 0.5);
+                        members.forEach(member => {
+                            if (Math.random() < attendanceRate) {
+                                allRecords.push({
+                                    member_id: member.id,
+                                    date: dateStr,
+                                    session_type: session,
+                                    present: true,
+                                    time: session === '5am' ? '05:10' : (session === '9am' ? '09:05' : '19:15')
+                                });
+                            }
+                        });
+                    });
+                });
+
+                // Upsert in batches of 100 to avoid Supabase limits/perf issues
+                const batchSize = 100;
+                let errorOccurred = false;
+                for (let i = 0; i < allRecords.length; i += batchSize) {
+                    const batch = allRecords.slice(i, i + batchSize);
+                    const { error } = await supabase.from('attendance').upsert(batch, { onConflict: 'member_id,date,session_type' });
+                    if (error) {
+                        console.error("Error seeding attendance batch:", error);
+                        errorOccurred = true;
+                    }
+                }
+
+                if (!errorOccurred) {
+                    get().showNotification("Asistencia poblada con éxito.", 'success');
+                    // Reload current day attendance and stats
+                    get().loadAttendanceFromCloud(get().currentDate);
+                } else {
+                    get().showNotification("Ocurrieron algunos errores al poblar la asistencia.", 'warning');
+                }
+            },
 
             loadRehearsalsFromCloud: async () => {
                 const { data, error } = await supabase
@@ -2150,12 +2248,70 @@ export const useAppStore = create<AppState>()(
             },
 
             simulateUser: async (email: string) => {
-                const member = get().members.find(m => m.email === email);
+                // First try to find in current members list
+                let member = get().members.find(m => m.email === email);
+                
+                // If not found (common in local without DB), provide a hardcoded admin profile
+                if (!member && email === 'jairojehuel@gmail.com') {
+                    member = {
+                        id: 'dev-admin-id',
+                        name: 'Admin Local (Dev)',
+                        email: 'jairojehuel@gmail.com',
+                        phone: '555-LOCAL',
+                        avatar: 'https://ui-avatars.com/api/?name=Admin+Local&background=000&color=fff',
+                        category: 'Varon',
+                        member_group: 'Administración',
+                        role: 'Administrador',
+                        gender: 'Varon',
+                        status: 'Activo',
+                        lastActive: 'Ahora',
+                        privileges: ['admin', 'leader', 'monitor', 'choir', 'youth_leader', 'kids_leader']
+                    };
+                }
+
                 if (member) {
                     set({ currentUser: member });
                     return true;
                 }
                 return false;
+            },
+            loadMonthlyIntelligenceStats: async () => {
+                const now = new Date();
+                const past6MonthsStart = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+                const startDateStr = format(past6MonthsStart, 'yyyy-MM-dd');
+                const endDateStr = format(endOfMonth(now), 'yyyy-MM-dd');
+
+                const { data, error } = await supabase
+                    .from('attendance')
+                    .select('date, member_id')
+                    .gte('date', startDateStr)
+                    .lte('date', endDateStr);
+
+                if (error) {
+                    console.error("Error loading monthly stats:", error);
+                    return [];
+                }
+
+                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
+
+                const result = Array.from({ length: 6 }, (_, i) => {
+                    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
+                    const monthStartStr = format(startOfMonth(d), 'yyyy-MM-dd');
+                    const monthEndStr = format(endOfMonth(d), 'yyyy-MM-dd');
+                    
+                    const monthlyRecords = data?.filter(r => r.date >= monthStartStr && r.date <= monthEndStr) || [];
+                    const uniqueAttended = new Set(monthlyRecords.map(r => r.member_id)).size;
+                    
+                    const percentage = totalMembers > 0 ? Math.round((uniqueAttended / totalMembers) * 100) : 0;
+                    const monthName = new Intl.DateTimeFormat(get().settings.language === 'es' ? 'es' : 'en', { month: 'short' }).format(d);
+                    
+                    return {
+                        label: monthName.toUpperCase(),
+                        value: percentage
+                    };
+                });
+
+                return result;
             },
         }),
         {

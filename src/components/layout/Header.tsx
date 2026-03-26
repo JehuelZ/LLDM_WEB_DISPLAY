@@ -27,21 +27,32 @@ export function Header() {
     }, [authSession, subscribeToMessages, loadCloudMessages]);
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-border bg-background/50 backdrop-blur-xl">
+        <header className={cn(
+            "sticky top-0 z-50 w-full transition-all duration-500",
+            settings.adminTheme === 'primitivo' 
+                ? "border-b border-white/5 bg-black/40 backdrop-blur-2xl px-2" 
+                : "border-b border-border bg-background/50 backdrop-blur-xl"
+        )}>
             <div className="container flex h-16 items-center justify-between px-4">
                 <Link href="/" className="flex items-center space-x-3 group">
                     <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                         <img
                             src={logoUrl}
-                            className="w-full h-full object-contain"
+                            className={cn(
+                                "w-full h-full object-contain transition-all duration-700",
+                                settings.adminTheme === 'primitivo' && "saturate-[1.5] brightness-125"
+                            )}
                             style={{ 
                                 filter: 'brightness(0) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%) drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))'
                             }}
                             alt="Logo"
                         />
                     </div>
-                    <span className="font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground">
-                        LLDM <span className="text-primary italic">RODEO</span>
+                    <span className={cn(
+                        "font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground",
+                        settings.adminTheme === 'primitivo' && "tracking-[-0.05em]"
+                    )}>
+                        LLDM <span className="text-emerald-500 italic">RODEO</span>
                     </span>
                 </Link>
 

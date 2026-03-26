@@ -100,7 +100,7 @@ const StatDoughnut = ({
             fill="transparent" 
             stroke="currentColor" 
             strokeWidth={strokeWidth - 2} 
-            className="text-foreground/10" 
+            className="text-foreground/25" 
           />
           
           {/* 
@@ -334,11 +334,11 @@ export default function Home() {
             </div>
           </div>
           <div className="space-y-4">
-            <h1 className="text-4xl font-black italic uppercase text-white tracking-tighter leading-tight">
+            <h1 className="text-4xl font-black italic uppercase text-foreground tracking-tighter leading-tight">
               Registro <span className="text-amber-500">Pendiente</span>
             </h1>
             <p className="text-slate-400 text-sm leading-relaxed px-4">
-              Hola <span className="text-white font-bold">{currentUser.name}</span>, tu cuenta está en revisión.
+              Hola <span className="text-foreground font-bold">{currentUser.name}</span>, tu cuenta está en revisión.
             </p>
             <button
               onClick={() => useAppStore.getState().signOut()}
@@ -366,7 +366,7 @@ export default function Home() {
             <X className="w-12 h-12 text-red-500" />
           </div>
           <div className="space-y-4">
-            <h2 className="text-3xl font-black uppercase text-white italic tracking-tighter">Acceso <span className="text-red-500">Denegado</span></h2>
+            <h2 className="text-3xl font-black uppercase text-foreground italic tracking-tighter">Acceso <span className="text-red-500">Denegado</span></h2>
             <p className="text-slate-400 text-sm italic">Tu cuenta ha sido desactivada.</p>
             <button
               onClick={() => useAppStore.getState().signOut()}
@@ -399,7 +399,7 @@ export default function Home() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-3xl font-black uppercase text-white tracking-tighter italic">Acceso <span className="text-rose-500">Restringido</span></h2>
+            <h2 className="text-3xl font-black uppercase text-foreground tracking-tighter italic">Acceso <span className="text-rose-500">Restringido</span></h2>
             <p className="text-slate-400 text-sm leading-relaxed">
               Lo sentimos, tu cuenta no figura en la <span className="text-white font-bold">lista oficial de miembros</span> autorizados de LLDM Rodeo.
             </p>
@@ -413,7 +413,8 @@ export default function Home() {
 
           <div className="flex flex-col gap-3">
              <Button 
-                className="w-full h-14 bg-rose-600 hover:bg-rose-500 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-2xl shadow-rose-900/40 transition-all hover:translate-y-[-2px]"
+                variant="primitivo"
+                className="w-full h-14"
                 onClick={async () => {
                    await useAppStore.getState().signOut();
                    window.location.href = '/';
@@ -438,46 +439,50 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+    <div className="min-h-screen text-foreground transition-colors duration-500">
       <Header />
       <main className="container mx-auto p-4 md:p-8 space-y-6 md:space-y-8 pb-32 md:pb-8 animate-in fade-in duration-700">
-        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start">
-          {/* Welcome and Basic Info */}
+        {/* Upgraded Welcome Header */}
+        <div className="flex flex-col lg:flex-row gap-8 items-center justify-between mb-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex-1 space-y-2 w-full text-center md:text-left"
+            className="flex-1 space-y-4 w-full text-center lg:text-left"
           >
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter text-foreground uppercase italic px-2">
-              Bienvenido, <span className="text-primary">{currentUser.name.split(' ')[0]}</span>
+             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full mb-2">
+                <div className="w-1.5 h-1.5 bg-primary rounded-full animate-ping" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Portal Cristiano v3.0</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter text-foreground uppercase italic leading-none">
+              Bienvenido, <span className="text-primary lg:not-italic">{currentUser.name.split(' ')[0]}</span>
             </h1>
-            <p className="text-muted-foreground font-medium tracking-widest uppercase text-[10px] md:text-xs">
-              Panel de Control Digital - LLDM RODEO
+            <p className="text-slate-400 font-bold tracking-[0.2em] uppercase text-xs md:text-sm opacity-80">
+              PANEL DE CONTROL ESPIRITUAL <span className="mx-2 text-primary">/</span> LLDM RODEO
             </p>
           </motion.div>
 
-          {/* Profile Quick Card / Actions */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="w-full lg:w-auto flex justify-center md:justify-end"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full lg:w-auto"
           >
-            <div className="flex items-center gap-3 md:gap-4 bg-foreground/5 p-3 md:p-4 rounded-3xl border border-border/40 backdrop-blur-xl w-full max-w-sm md:max-w-none">
+            <div className="flex items-center gap-6 bg-black/40 p-5 rounded-[2.5rem] border border-white/5 backdrop-blur-3xl shadow-2xl relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-2xl -mr-16 -mt-16 group-hover:bg-primary/20 transition-all pointer-events-none" />
               <div
                 className="relative group cursor-pointer"
                 onClick={handlePhotoClick}
               >
-                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(59,130,246,0.2)] bg-foreground/5 flex items-center justify-center">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-[1.8rem] overflow-hidden border-2 border-primary/30 shadow-[0_0_20px_rgba(59,130,246,0.3)] bg-white/5 flex items-center justify-center">
                   {currentUser.avatar ? (
-                    <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    <img src={currentUser.avatar} alt="Profile" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   ) : (
-                    <span className="text-xl md:text-2xl font-black text-primary uppercase italic">
+                    <span className="text-2xl font-black text-primary uppercase italic">
                       {currentUser.name.charAt(0)}
                     </span>
                   )}
                 </div>
-                <div className="absolute inset-0 bg-background/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
-                  <Camera className="w-4 h-4 md:w-5 md:h-5 text-foreground" />
+                <div className="absolute inset-0 bg-primary/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-[1.8rem] backdrop-blur-sm">
+                  <Camera className="w-5 h-5 text-white" />
                 </div>
                 <input
                   type="file"
@@ -487,18 +492,20 @@ export default function Home() {
                   onChange={handlePhotoChange}
                 />
               </div>
-              <div className="flex-1">
-                <p className="text-sm font-black text-foreground truncate max-w-[120px] md:max-w-none">{currentUser.name}</p>
-                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">
-                  {currentUser.category === 'Niño' ? 'Pequeño Gigante' : 'Miembro Activo'}
-                </p>
+              <div className="flex flex-col gap-1">
+                <p className="text-xl font-black text-foreground italic tracking-tighter leading-none">{currentUser.name}</p>
+                <div className="flex items-center gap-2 mt-1">
+                    <span className="px-2 py-0.5 rounded-lg bg-primary text-black text-[9px] font-black uppercase tracking-widest shadow-lg">
+                        {currentUser.category === 'Niño' ? 'PEQUEÑO GIGANTE' : 'MIEMBRO ACTIVO'}
+                    </span>
+                </div>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "rounded-xl hover:bg-foreground/10 h-10 w-10 md:h-12 md:w-12",
-                  isEditing && "bg-primary/20 text-primary hover:bg-primary/30"
+                  "rounded-2xl hover:bg-white/10 h-12 w-12 border border-white/5 shadow-xl ml-4",
+                  isEditing && "bg-primary text-black hover:bg-primary/80"
                 )}
                 onClick={isEditing ? handleSave : () => setIsEditing(true)}
                 disabled={isSaving}
@@ -506,9 +513,9 @@ export default function Home() {
                 {isSaving ? (
                   <div className="h-4 w-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                 ) : isEditing ? (
-                  <Save className="w-4 h-4" />
+                  <Save className="w-5 h-5" />
                 ) : (
-                  <Edit2 className="w-4 h-4 text-slate-500" />
+                  <Edit2 className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
                 )}
               </Button>
             </div>
@@ -569,7 +576,11 @@ export default function Home() {
                 </div>
                 <div className="flex justify-end gap-2 pt-2">
                   <Button variant="ghost" onClick={() => setIsEditing(false)}>Cancelar</Button>
-                  <Button className="bg-primary text-black hover:bg-primary/80 font-bold px-8 gap-2" onClick={handleSave}>
+                  <Button 
+                    variant="primitivo"
+                    className="px-8 gap-2" 
+                    onClick={handleSave}
+                  >
                     <Save className="w-4 h-4" /> Guardar Cambios
                   </Button>
                 </div>
@@ -585,23 +596,28 @@ export default function Home() {
           className="grid grid-cols-1 lg:grid-cols-12 gap-6"
         >
           {/* Main Spiritual Stats */}
-          <Card className="glass-card border-none bg-foreground/5 lg:col-span-8 overflow-hidden relative group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none group-hover:bg-primary/20 transition-all duration-500" />
-            <CardHeader className="pb-2">
-              <CardTitle className="text-xl font-black uppercase text-foreground italic flex items-center gap-3">
-                <TrendingUp className="h-6 w-6 text-primary" />
-                Mi Desempeño Espiritual
-              </CardTitle>
-              <CardDescription className="text-[9px] uppercase font-bold tracking-widest text-slate-500">Resumen de fidelidad y puntualidad este mes</CardDescription>
+          <Card className="glass-card border-none bg-black/40 lg:col-span-8 overflow-hidden relative group rounded-[2.5rem] shadow-2xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none group-hover:bg-primary/10 transition-all duration-700" />
+            <CardHeader className="pb-6 p-8 border-b border-white/5">
+              <div className="flex flex-col gap-1">
+                <CardTitle className="text-2xl font-black uppercase text-foreground italic flex items-center gap-4">
+                    <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20">
+                        <TrendingUp className="h-6 w-6 text-primary" />
+                    </div>
+                    Mi Desempeño Espiritual
+                </CardTitle>
+                <CardDescription className="text-[10px] uppercase font-black tracking-[0.25em] text-muted-foreground mt-2">Resumen de fidelidad y puntualidad • Periodo Vigente</CardDescription>
+              </div>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 py-4 text-center">
+            <CardContent className="p-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-12 py-6 text-center">
                 <StatDoughnut
                   percent={personalStats ? Math.round((personalStats.attended / (personalStats.total || 1)) * 100) : 0}
                   label="Asistencia"
                   value={personalStats?.attended || 0}
                   total={personalStats?.total || 30}
                   color="emerald"
+                  size={140}
                 />
                 <StatDoughnut
                   percent={personalStats ? Math.round((personalStats.bySession?.['5am'] / (personalStats.total / 3 || 10)) * 100) : 0}
@@ -609,14 +625,16 @@ export default function Home() {
                   value={personalStats?.bySession?.['5am'] || 0}
                   total={10}
                   color="cyan"
+                  size={140}
                 />
-                <div className="hidden sm:block">
+                <div className="hidden md:block">
                     <StatDoughnut
                     percent={currentUser.stats?.punctuality || 95}
                     label="Puntualidad"
                     value={currentUser.stats?.punctuality || 95}
                     total={100}
                     color="amber"
+                    size={140}
                     />
                 </div>
               </div>
@@ -624,44 +642,45 @@ export default function Home() {
           </Card>
 
           {/* Personal Journey Chart (Area Chart) */}
-          <Card className="glass-card border-none bg-foreground/5 lg:col-span-4 overflow-hidden group">
-            <CardHeader className="pb-2">
-                <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
-                    <Star className="w-3 h-3" />
+          <Card className="glass-card border-none bg-black/40 lg:col-span-4 overflow-hidden group rounded-[2.5rem] shadow-2xl relative">
+             <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.05),transparent)] pointer-events-none" />
+            <CardHeader className="pb-4 p-8">
+                <CardTitle className="text-[11px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-3">
+                    <Star className="w-4 h-4 animate-pulse" />
                     Mi Progreso
                 </CardTitle>
             </CardHeader>
-            <CardContent className="h-[120px] flex items-end px-2 pb-2">
-                <div className="w-full h-full relative group">
+            <CardContent className="h-[180px] flex items-end px-4 pb-8">
+                <div className="w-full h-full relative">
                     <svg className="w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
                         <defs>
-                            <linearGradient id="personalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.3" />
-                                <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
+                            <linearGradient id="personalGradMain" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
+                                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
                             </linearGradient>
                         </defs>
                         <motion.path 
                             d="M 0 40 Q 10 35 20 20 Q 30 5 40 15 Q 50 30 60 10 Q 70 5 80 25 Q 90 35 100 15 V 40 H 0"
-                            fill="url(#personalGrad)"
+                            fill="url(#personalGradMain)"
                             initial={{ pathLength: 0, opacity: 0 }}
                             animate={{ pathLength: 1, opacity: 1 }}
-                            transition={{ duration: 2 }}
+                            transition={{ duration: 2.5, ease: "circOut" }}
                         />
                         <motion.path 
                             d="M 0 40 Q 10 35 20 20 Q 30 5 40 15 Q 50 30 60 10 Q 70 5 80 25 Q 90 35 100 15"
                             fill="none"
-                            stroke="var(--primary)"
-                            strokeWidth="2"
+                            stroke="#3b82f6"
+                            strokeWidth="3"
                             strokeLinecap="round"
                             initial={{ pathLength: 0 }}
                             animate={{ pathLength: 1 }}
-                            transition={{ duration: 2 }}
-                            className="drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.5)]"
+                            transition={{ duration: 2.5, ease: "circOut" }}
+                            className="drop-shadow-[0_0_12px_rgba(59,130,246,0.8)]"
                         />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                        <span className="text-2xl font-black text-foreground italic">+12%</span>
-                        <span className="text-[8px] font-bold text-emerald-400 uppercase">Mejora semanal</span>
+                        <span className="text-4xl font-black text-foreground italic tracking-tighter transition-transform group-hover:scale-110 duration-500">+12%</span>
+                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mt-1">Mejora Semanal</span>
                     </div>
                 </div>
             </CardContent>
@@ -682,7 +701,7 @@ export default function Home() {
                   <Settings className="mr-2 h-5 w-5" />
                   Mis Responsabilidades
                 </CardTitle>
-                <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">Privilegios Asignados</CardDescription>
+                <CardDescription className="text-[9px] uppercase font-black tracking-widest text-muted-foreground mt-1 px-4">Historial de asistencia personal</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -831,7 +850,7 @@ export default function Home() {
                   <p className="text-sm text-muted-foreground">
                     {theme.description}
                   </p>
-                  <Button variant="outline" size="sm" className="w-full mt-2">
+                  <Button variant="primitivo" size="sm" className="w-full mt-2">
                     Ver Documento PDF
                   </Button>
                 </div>
@@ -931,7 +950,8 @@ export default function Home() {
                     />
                   </div>
                   <Button
-                    className="w-full h-12 rounded-2xl bg-primary text-black font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50"
+                    variant="primitivo"
+                    className="w-full h-12 rounded-2xl"
                     onClick={handleSendMessage}
                     disabled={isSendingMsg || !msgContent.trim()}
                   >
@@ -1002,7 +1022,7 @@ export default function Home() {
           className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           <Link href="/calendar" className="block w-full group">
-            <Button variant="outline" className="h-32 w-full flex flex-col gap-3 rounded-3xl border-border/40 bg-foreground/5 hover:bg-primary hover:text-black hover:border-primary transition-all duration-500 overflow-hidden relative">
+            <Button variant="primitivo" className="h-32 w-full flex flex-col gap-3 rounded-3xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <Calendar className="h-20 w-20" />
               </div>
@@ -1015,7 +1035,7 @@ export default function Home() {
           </Link>
 
           <Link href="/directory" className="block w-full group">
-            <Button variant="outline" className="h-32 w-full flex flex-col gap-3 rounded-3xl border-border/40 bg-foreground/5 hover:bg-emerald-500 hover:text-black hover:border-emerald-500 transition-all duration-500 overflow-hidden relative">
+            <Button variant="primitivo" className="h-32 w-full flex flex-col gap-3 rounded-3xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <User className="h-20 w-20" />
               </div>
