@@ -562,7 +562,7 @@ export const TactilePieChart = ({ data, title }: { data: { label: string, value:
                                     style={{ 
                                         rotate: `${(currentCumulativeOffset / circumference) * 360}deg`,
                                         transformOrigin: 'center',
-                                        filter: d.color === '#10b981' ? 'url(#pieGlow)' : 'none'
+                                        filter: 'url(#pieGlow)'
                                     }}
                                 />
                             </g>
