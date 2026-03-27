@@ -15,13 +15,14 @@ interface ChartDataPoint {
 }
 
 interface ChartProps {
-    data: ChartDataPoint[];
+    data: any[];
     color?: string;
     isSmooth?: boolean;
     showHighlight?: boolean;
+    totalMembers?: number; // Nueva prop para escala real
 }
 
-export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, showHighlight = true }: ChartProps) => {
+export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, showHighlight = true, totalMembers = 100 }: ChartProps) => {
     if (!data || data.length === 0) return <div className="h-full w-full flex items-center justify-center text-[10px] font-black text-white/20">SIN DATOS</div>;
 
     const width = 440;
@@ -54,24 +55,29 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
     const linePath = isSmooth ? getCurvePath(points) : points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
     
     const highlightIndex = Math.min(points.length - 1, 24); 
-    const highlightPoint = points[highlightIndex];
-
-    const gradientId = `line-gradient-${color.replace('#', '')}`;
+    const highlightPoint = points[highlightIndex];    const gradientId = `line-gradient-${color.replace('#', '')}`;
+    const filterId = `serpent-glow-${color.replace('#', '')}`;
 
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                 <defs>
                     <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor={color} stopOpacity="0.5" />
-                        <stop offset="30%" stopColor={color} stopOpacity="0.9" />
-                        <stop offset="70%" stopColor={color} stopOpacity="1" />
-                        <stop offset="100%" stopColor={color} stopOpacity="0.7" />
+                        <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+                        <stop offset="30%" stopColor={color} stopOpacity="0.8" />
+                        <stop offset="75%" stopColor="#ffffff" stopOpacity="0.95" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0.6" />
                     </linearGradient>
 
-                    <filter id="serpentGlow" x="-20%" y="-20%" width="140%" height="140%">
-                        <feGaussianBlur stdDeviation="7" result="blur" />
-                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    <filter id={filterId} x="-100%" y="-100%" width="300%" height="300%">
+                        <feGaussianBlur stdDeviation="15" result="blur" />
+                        <feComponentTransfer in="blur" result="brightBlur">
+                            <feFuncA type="linear" slope="3" />
+                        </feComponentTransfer>
+                        <feMerge>
+                            <feMergeNode in="brightBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
                     </filter>
                     
                     <linearGradient id="verticalLineGradient" x1="0" y1="0" x2="0" y2="1">
@@ -95,22 +101,63 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     )
                 ))}
 
-                {/* Serpent Line with Ultimate Glow and Expansion */}
+                {/* Y-Axis Labels (Absolute Member Count) */}
+                {[0, 0.5, 1].map(multiplier => {
+                    const absVal = Math.round(totalMembers * multiplier);
+                    return (
+                        <text 
+                            key={multiplier} 
+                            x={12} 
+                            y={height - paddingY - (multiplier) * (height - paddingY * 2) + 3} 
+                            className="fill-white/10 text-[9px] font-black uppercase tracking-widest"
+                        >
+                            {absVal}
+                        </text>
+                    );
+                })}
+
+                {/* Triple Glow Engine: Base Aura */}
                 <motion.path 
                     initial={{ pathLength: 0, opacity: 0 }} 
-                    animate={{ pathLength: 1, opacity: 1 }} 
+                    animate={{ pathLength: 1, opacity: 0.6 }} 
+                    transition={{ duration: 4, ease: "easeInOut" }} 
+                    d={linePath} 
+                    fill="none" 
+                    stroke={color} 
+                    strokeWidth="20" 
+                    strokeLinecap="round" 
+                    filter={`url(#${filterId})`}
+                    className="blur-[25px] opacity-30"
+                />
+
+                {/* Triple Glow Engine: Secondary Halo */}
+                <motion.path 
+                    initial={{ pathLength: 0, opacity: 0 }} 
+                    animate={{ pathLength: 1, opacity: 0.8 }} 
                     transition={{ duration: 3.5, ease: "easeInOut" }} 
                     d={linePath} 
                     fill="none" 
-                    stroke={`url(#${gradientId})`} 
-                    strokeWidth="7" 
+                    stroke={color} 
+                    strokeWidth="12" 
                     strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    filter="url(#serpentGlow)"
-                    className="drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                    filter={`url(#${filterId})`}
                 />
 
-                {/* Labels Insets so they don't jump out of narrow padding */}
+                {/* Triple Glow Engine: Main Serpent Stroke with Gradient */}
+                <motion.path 
+                    initial={{ pathLength: 0, opacity: 0 }} 
+                    animate={{ pathLength: 1, opacity: 1 }} 
+                    transition={{ duration: 3, ease: "easeInOut" }} 
+                    d={linePath} 
+                    fill="none" 
+                    stroke={`url(#${gradientId})`} 
+                    strokeWidth="8" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className="drop-shadow-[0_0_50px_rgba(255,255,255,0.4)]"
+                />
+
+                {/* Bottom Day Labels */}
                 {points.map((p, i) => (
                     (i === 0 || i === 4 || i === 9 || i === 14 || i === 19 || i === 24 || i === points.length - 1) && (
                         <text 
