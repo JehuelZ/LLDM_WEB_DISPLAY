@@ -27,11 +27,16 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
     const hasData = data && data.length > 0 && data.some(d => (d.attended || d.value || 0) > 0);
 
     // Generate beautiful demo data if no real data exists
-    const demoData = Array.from({ length: 31 }, (_, i) => ({
-        label: (i + 1).toString(),
-        value: 40 + Math.sin(i * 0.5) * 20 + Math.random() * 10,
-        total: 100
-    }));
+    const demoData = Array.from({ length: 31 }, (_, i) => {
+        const d = new Date();
+        d.setDate(i + 1);
+        return {
+            label: (i + 1).toString(),
+            date: format(d, 'yyyy-MM-dd'),
+            value: 40 + Math.sin(i * 0.5) * 20 + Math.random() * 10,
+            total: 100
+        };
+    });
 
     const activeData = hasData ? data : demoData;
     
@@ -69,8 +74,8 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
     
     // Find index for today to set as default
     const todayIndex = React.useMemo(() => {
-        const today = new Date().getDate().toString();
-        const idx = activeData.findIndex(d => d.label === today);
+        const todayStr = format(new Date(), 'yyyy-MM-dd');
+        const idx = activeData.findIndex(d => d.date === todayStr);
         return idx >= 0 ? idx : activeData.length - 1;
     }, [activeData]);
     
@@ -161,20 +166,28 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     </linearGradient>
                 </defs>
 
-                {/* Vertical Grid Lines & Dots */}
-                {points.map((p, i) => (
-                    (i === 0 || i % 5 === 0 || i === points.length - 1) && (
-                        <g key={i}>
+                {/* Strategic Visual Rulings (Filtered to avoid saturation) */}
+                {points.map((p, i) => {
+                    const isStep = i === 0 || i === points.length - 1 || i % 5 === 0;
+                    const isShortRange = points.length <= 7;
+                    
+                    if (!isShortRange && !isStep) return (
+                        <circle key={`dot-${i}`} cx={p.x} cy={p.y} r="1" fill="white" fillOpacity="0.1" />
+                    );
+
+                    return (
+                        <g key={`ruling-${i}`}>
                             <line 
-                                x1={p.x} y1={p.y + 25} x2={p.x} y2={height - 40} 
-                                stroke="url(#verticalLineGradient)" 
+                                x1={p.x} y1={20} x2={p.x} y2={height - 40} 
+                                stroke="white" 
                                 strokeWidth="0.8" 
-                                strokeDasharray="3 3"
+                                strokeOpacity="0.04" 
+                                strokeDasharray="2 4"
                             />
-                            <circle cx={p.x} cy={height - 35} r="1.5" fill="white" fillOpacity="0.1" />
+                            <circle cx={p.x} cy={p.y} r="1.5" fill="white" fillOpacity="0.3" />
                         </g>
-                    )
-                ))}
+                    );
+                })}
 
                 {/* Y-Axis Labels (Absolute Member Count) */}
                 {[0, 0.5, 1].map(multiplier => {
@@ -218,20 +231,28 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     className={`drop-shadow-[0_0_18px_${color}cc]`}
                 />
 
-                {/* Bottom Day Labels */}
-                {points.map((p, i) => (
-                    (i === 0 || i === 4 || i === 9 || i === 14 || i === 19 || i === 24 || i === points.length - 1) && (
+                {/* Bottom Day Labels - Adaptive Frequency */}
+                {points.map((p, i) => {
+                    const isStep = i === 0 || i === points.length - 1 || i % 5 === 0;
+                    const isShortRange = points.length <= 7;
+                    
+                    if (!isShortRange && !isStep) return null;
+
+                    return (
                         <text 
                             key={i} 
                             x={Math.max(12, Math.min(width - 12, p.x))} // Inset labels so they fit
                             y={height - 15} 
                             textAnchor="middle" 
-                            className="fill-white/15 text-[10px] font-black uppercase tracking-[0.1em]"
+                            className={cn(
+                                "fill-white/15 font-black uppercase tracking-[0.05em]",
+                                points.length > 15 ? "text-[7px]" : "text-[9px]"
+                            )}
                         >
                             {p.label}
                         </text>
-                    )
-                ))}
+                    );
+                })}
 
                 {/* Premium Floating Tooltip (Interactive Scrubbing) */}
                 {showHighlight && highlightPoint && (
