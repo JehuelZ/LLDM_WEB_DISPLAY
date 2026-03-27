@@ -574,7 +574,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [mounted, setMounted] = useState(false);
     const [monthlyStats, setMonthlyStats] = useState<{ label: string, value: number }[]>([]);
     
-    const [intelligenceRange, setIntelligenceRange] = useState<'month' | 30 | 15 | 7>('month');
+    const [intelligenceRange, setIntelligenceRange] = useState<'month' | 30 | 15 | 7>(7);
     
     useEffect(() => {
         const loadStats = async () => {
