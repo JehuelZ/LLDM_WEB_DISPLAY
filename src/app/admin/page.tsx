@@ -472,7 +472,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                     />
                 </div>
 
-                <div className="mt-4 flex flex-wrap justify-center gap-8 border-t border-white/5 pt-4">
+                <div className="mt-4 flex flex-wrap justify-center gap-8 pt-4">
                     <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-none bg-[#3b82f6]" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-white/60">oración 5 am</span>

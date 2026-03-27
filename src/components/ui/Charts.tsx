@@ -269,13 +269,6 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                     ))}
                 </defs>
 
-                {/* Base Floor Line */}
-                <line 
-                    x1={paddingLeft - 10} y1={height - paddingY} 
-                    x2={width - paddingRight} y2={height - paddingY} 
-                    stroke="white" strokeWidth="1" strokeOpacity="0.05"
-                />
-
                 {/* Y-Axis Labels */}
                 {[0, 0.5, 1].map(multiplier => {
                     const absVal = Math.round(totalMembers * multiplier);
