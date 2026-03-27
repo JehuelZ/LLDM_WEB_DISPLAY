@@ -63,10 +63,9 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                 <defs>
                     <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor={color} stopOpacity="0.2" />
-                        <stop offset="30%" stopColor={color} stopOpacity="0.8" />
-                        <stop offset="75%" stopColor="#ffffff" stopOpacity="0.95" />
-                        <stop offset="100%" stopColor={color} stopOpacity="0.6" />
+                        <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+                        <stop offset="50%" stopColor={color} stopOpacity="1" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0.7" />
                     </linearGradient>
 
                     <filter id={filterId} x="-100%" y="-100%" width="300%" height="300%">
@@ -116,34 +115,20 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     );
                 })}
 
-                {/* Triple Glow Engine: Base Aura */}
+                {/* Triple Glow Engine: Base Aura (Match Donut Intensity) */}
                 <motion.path 
                     initial={{ pathLength: 0, opacity: 0 }} 
-                    animate={{ pathLength: 1, opacity: 0.6 }} 
+                    animate={{ pathLength: 1, opacity: 0.5 }} 
                     transition={{ duration: 4, ease: "easeInOut" }} 
                     d={linePath} 
                     fill="none" 
                     stroke={color} 
-                    strokeWidth="20" 
+                    strokeWidth="15" 
                     strokeLinecap="round" 
-                    filter={`url(#${filterId})`}
-                    className="blur-[25px] opacity-30"
+                    className={`blur-[15px] drop-shadow-[0_0_20px_${color}]`}
                 />
 
-                {/* Triple Glow Engine: Secondary Halo */}
-                <motion.path 
-                    initial={{ pathLength: 0, opacity: 0 }} 
-                    animate={{ pathLength: 1, opacity: 0.8 }} 
-                    transition={{ duration: 3.5, ease: "easeInOut" }} 
-                    d={linePath} 
-                    fill="none" 
-                    stroke={color} 
-                    strokeWidth="12" 
-                    strokeLinecap="round" 
-                    filter={`url(#${filterId})`}
-                />
-
-                {/* Triple Glow Engine: Main Serpent Stroke with Gradient */}
+                {/* Main Serpent Line with Vibrant Glow */}
                 <motion.path 
                     initial={{ pathLength: 0, opacity: 0 }} 
                     animate={{ pathLength: 1, opacity: 1 }} 
@@ -154,7 +139,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     strokeWidth="8" 
                     strokeLinecap="round" 
                     strokeLinejoin="round" 
-                    className="drop-shadow-[0_0_50px_rgba(255,255,255,0.4)]"
+                    className={`drop-shadow-[0_0_18px_${color}cc]`}
                 />
 
                 {/* Bottom Day Labels */}
