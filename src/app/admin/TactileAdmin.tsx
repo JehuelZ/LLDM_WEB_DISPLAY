@@ -71,7 +71,7 @@ const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = 
                 onChange={onChange}
                 placeholder={placeholder}
                 className={cn(
-                    "w-full bg-black/40 border border-white/5 rounded-2xl h-12 text-sm font-bold px-4 transition-all outline-none focus:border-primary/50 focus:bg-black/60",
+                    "w-full bg-black/40 border border-white/5 rounded-xl h-12 text-sm font-bold px-4 transition-all outline-none focus:border-primary/50 focus:bg-black/60",
                     Icon && "pl-12"
                 )}
             />
@@ -101,7 +101,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                     type="button"
                     onClick={() => !disabled && setIsOpen(!isOpen)}
                     className={cn(
-                        "w-full bg-black/40 border border-white/5 rounded-2xl h-12 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
+                        "w-full bg-black/40 border border-white/5 rounded-xl h-12 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
                         isOpen && "border-primary/50 bg-black/60",
                         Icon && "pl-12"
                     )}
@@ -127,7 +127,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute left-0 right-0 top-full mt-2 bg-[#1a1c20]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[350px]"
+                                className="absolute left-0 right-0 top-full mt-2 bg-[#1a1c20]/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[350px]"
                             >
                                 {searchable && (
                                     <div className="p-2 border-b border-white/5 sticky top-0 bg-transparent z-10">
@@ -308,7 +308,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                     type="button"
                     onClick={() => !disabled && setIsOpen(!isOpen)}
                     className={cn(
-                        "w-full bg-black/40 border border-white/5 rounded-2xl h-16 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
+                        "w-full bg-black/40 border border-white/5 rounded-xl h-11 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
                         isOpen && "border-primary/50 bg-black/60",
                         Icon && "pl-12"
                     )}
@@ -337,7 +337,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute left-0 right-0 top-full mt-2 bg-[#1a1c20]/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[450px]"
+                                className="absolute left-0 right-0 top-full mt-2 bg-[#1a1c20]/95 backdrop-blur-2xl border border-white/10 rounded-xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[450px]"
                             >
                                 <div className="p-3 border-b border-white/10 sticky top-0 bg-transparent z-10 backdrop-blur-md">
                                     <div className="relative">
@@ -1062,7 +1062,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                 <div className="flex-1 flex flex-col">
                     {/* Global Primitivo Header (Horizontal Nav + Utils) */}
                     <div className="px-8 pt-6 pb-2 flex flex-col gap-4">
-                        <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                        <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                             {tabs.filter(t => !['mensajes', 'perfil'].includes(t.id)).map(tab => (
                                 <button
                                     key={tab.id}
@@ -1205,7 +1205,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                     <div className="flex-1 p-8 tactile-scroll">
                         {/* Secondary Horizontal Navigation Bar (Primitivo Tab Style) */}
                         <div className="mb-8">
-                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
+                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl">
                                 {[
                                     { id: 'dashboard', label: 'RESUMEN', icon: LayoutDashboard },
                                     { id: 'horarios', label: 'HORARIOS', icon: CalendarDays },
@@ -1268,7 +1268,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     <h4 className="font-bold text-lg text-foreground group-hover:text-primary transition-colors">Asistencia de Hoy</h4>
                                                     <p className="text-muted-foreground text-sm">Registro de asistencia en curso</p>
                                                 </div>
-                                                <TactileBadge className="bg-emerald-500/10 border-emerald-500/20 text-emerald-400">
+                                                <TactileBadge className="bg-primary/10 border-emerald-500/20 text-emerald-400">
                                                     Normal
                                                 </TactileBadge>
 
@@ -1330,7 +1330,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     </p>
                                                     <TactileBadge className={cn(
                                                         "gap-1.5",
-                                                        attendanceTrend.isPos ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" : "bg-orange-500/10 border-orange-500/20 text-orange-500"
+                                                        attendanceTrend.isPos ? "bg-primary/10 border-emerald-500/20 text-emerald-500" : "bg-orange-500/10 border-orange-500/20 text-orange-500"
                                                     )}>
                                                         {attendanceTrend.isPos ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                                                         <span>{attendanceTrend.isPos ? '+' : '-'}{attendanceTrend.value}%</span>
@@ -1373,7 +1373,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                             </div>
 
                                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                                                <div className="bg-white/[0.03] p-4 rounded-2xl border border-white/5 flex items-center justify-between">
+                                                <div className="bg-white/[0.03] p-4 rounded-xl border border-white/5 flex items-center justify-between">
                                                     <div>
                                                         <TactileBadge className="mb-2 bg-primary/10 border-primary/20 text-primary">
                                                             Membresía Activa
@@ -1381,14 +1381,14 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         <div className="text-2xl font-black ">{members.filter(m => m.status === 'Activo').length}</div>
                                                     </div>
 
-                                                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                                                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                                                         <Users className="w-5 h-5 text-emerald-500" />
                                                     </div>
                                                 </div>
                                                 <div
                                                     onClick={() => setActiveTab('miembros')}
                                                     className={cn(
-                                                        "p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all hover:scale-[1.02]",
+                                                        "p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all hover:scale-[1.02]",
                                                         members.filter(m => m.status === 'Pendiente').length > 0
                                                             ? "bg-amber-500/10 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
                                                             : "bg-white/[0.03] border-white/5 opacity-50"
@@ -1423,7 +1423,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 />
                                                 <div className="space-y-1">
                                                     <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">Tipo</label>
-                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                         {['orthodoxy', 'apostolic_letter'].map(type => (
                                                             <button
                                                                 key={type}
@@ -1509,7 +1509,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                         </div>
 
                                         <div className="flex flex-wrap justify-center gap-3">
-                                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                 {(['5am', '9am', 'evening'] as const).map(session => (
                                                     <button
                                                         key={session}
@@ -1538,7 +1538,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
 
                                     {/* Horizontal Filter Bar & Search for Attendance Groups */}
                                     <div className="flex flex-col md:flex-row items-center gap-6">
-                                        <div className="admin-member-filters-bar flex-1 flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                        <div className="admin-member-filters-bar flex-1 flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                             {[
                                                 { id: 'all', label: 'TODOS', count: members.length },
                                                 { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
@@ -1561,7 +1561,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 </button>
                                             ))}
                                         </div>
-                                        <div className="relative w-full md:w-64 bg-[#121523] border border-white/5 rounded-2xl p-1 shadow-inner group">
+                                        <div className="relative w-full md:w-64 bg-[#121523] border border-white/5 rounded-xl p-1 shadow-inner group">
                                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
                                             <input
                                                 type="text"
@@ -1697,7 +1697,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         <div className="relative shrink-0 cursor-pointer hover:scale-110 transition-transform z-10"
                                                              onClick={(e) => { e.stopPropagation(); handleViewHistory(member); }}>
                                                             <div className={cn(
-                                                                "w-12 h-12 rounded-2xl border-2 overflow-hidden transition-all duration-500",
+                                                                "w-12 h-12 rounded-xl border-2 overflow-hidden transition-all duration-500",
                                                                 isPresent ? "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "border-white/10"
                                                             )}>
                                                                 {member.avatar ? (
@@ -2150,7 +2150,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                             { label: 'HERMANAS ADULTAS', value: members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length, color: 'text-pink-400', border: 'border-l-pink-500' },
                                             { label: 'NIÑOS / NIÑAS', value: members.filter(m => m.category === 'Niño').length, color: 'text-orange-400', border: 'border-l-orange-500' },
                                         ].map((stat, i) => (
-                                            <div key={i} className={cn("bg-[#121523] p-4 rounded-2xl border border-white/5", stat.border && `border-l-2 ${stat.border}`)}>
+                                            <div key={i} className={cn("bg-[#121523] p-4 rounded-xl border border-white/5", stat.border && `border-l-2 ${stat.border}`)}>
                                                 <TactileBadge className="mb-2 bg-white/5 border-white/10 opacity-60">
                                                     {stat.label}
                                                 </TactileBadge>
@@ -2172,7 +2172,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                             </div>
                                             <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center border border-amber-500/30">
+                                                    <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center border border-amber-500/30">
                                                         <ShieldAlert className="w-6 h-6 text-amber-500" />
                                                     </div>
                                                     <div>
@@ -2190,7 +2190,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 {members.filter(m => m.status === 'Pendiente').map((pending) => (
                                                     <div key={pending.id} className="bg-[#0b101e] border border-white/5 p-5 rounded-[1.75rem] space-y-4 hover:border-amber-500/40 transition-all duration-300 group/audit-card relative overflow-hidden flex flex-col justify-between">
                                                         <div className="flex items-center gap-4">
-                                                            <div className="relative w-14 h-14 shrink-0">
+                                                            <div className="relative w-14 h-11 shrink-0">
                                                                 <div className="absolute inset-0 bg-amber-500/20 rounded-xl blur-lg opacity-0 group-hover/audit-card:opacity-100 transition-opacity" />
                                                                 <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/10 group-hover/audit-card:border-amber-500/50 transition-all bg-[#121523]">
                                                                     {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-full h-full p-3 text-amber-500/40" />}
@@ -2207,7 +2207,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         </div>
                                                         <div className="flex gap-2 pt-2">
                                                             <button 
-                                                                className="flex-1 h-9 bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-black uppercase tracking-widest rounded-xl shadow-lg transition-all"
+                                                                className="flex-1 h-9 bg-emerald-600 hover:bg-primary text-white text-[9px] font-black uppercase tracking-widest rounded-xl shadow-lg transition-all"
                                                                 disabled={isSaving}
                                                                 onClick={async () => {
                                                                     const { updateProfileInCloud, loadMembersFromCloud } = useAppStore.getState();
@@ -2245,7 +2245,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                         <div className="w-full md:w-auto flex items-center gap-6">
                                             <h2 className="text-4xl font-black tracking-tighter shrink-0">MIEMBROS <span className="text-muted-foreground/40">LOCALES</span></h2>
 
-                                            <div className="relative w-full max-w-md bg-[#121523] border border-white/10 rounded-2xl p-1 shadow-2xl backdrop-blur-xl group">
+                                            <div className="relative w-full max-w-md bg-[#121523] border border-white/10 rounded-xl p-1 shadow-2xl backdrop-blur-xl group">
                                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-amber-400 transition-colors" />
                                                 <input
                                                     type="text"
@@ -2258,7 +2258,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                         </div>
                                         <button
                                             onClick={() => setShowAddMember(true)}
-                                            className="w-full md:w-auto bg-[#576983] text-black h-11 px-8 rounded-2xl text-[10px] font-black tracking-widest hover:scale-[1.02] transition-transform active:scale-95 shadow-xl shadow-black/40"
+                                            className="w-full md:w-auto bg-[#576983] text-black h-11 px-8 rounded-xl text-[10px] font-black tracking-widest hover:scale-[1.02] transition-transform active:scale-95 shadow-xl shadow-black/40"
                                         >
                                             AGREGAR MIEMBRO
                                         </button>
@@ -2270,7 +2270,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                     </div>
 
                                     {/* Primitivo Horizontal Filter Bar (Standard Style) */}
-                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                         {[
                                             { id: 'all', label: 'TODOS LOS MIEMBROS', count: members.length },
                                             { id: 'Administración', label: 'SIERVOS DE DIOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
@@ -2322,8 +2322,8 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         
                                                         <div className="relative shrink-0 z-10">
                                                             <div className={cn(
-                                                                "w-20 h-20 rounded-2xl border transition-all duration-500 group-hover:scale-105 bg-[#121523] p-1 shadow-none overflow-hidden",
-                                                                member.status === 'Activo' ? "border-emerald-500/30 bg-emerald-500/5" : "border-white/10"
+                                                                "w-20 h-20 rounded-xl border transition-all duration-500 group-hover:scale-105 bg-[#121523] p-1 shadow-none overflow-hidden",
+                                                                member.status === 'Activo' ? "border-emerald-500/30 bg-primary/5" : "border-white/10"
                                                             )}>
                                                                 <img 
                                                                     src={member.avatar || `https://ui-avatars.com/api/?name=${member.name}&background=random`} 
@@ -2350,7 +2350,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                                         "px-2.5 py-0.5 shadow-none border trans",
                                                                         (member.role === 'Administrador' || member.role === 'Ministro a Cargo')
                                                                             ? "bg-amber-500/10 border-amber-500/20 text-amber-500" 
-                                                                            : ((member.role?.includes('Encargado') || member.role?.includes('Responsable') || member.status === 'Activo') ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-slate-400/10 border-slate-400/20 text-slate-400")
+                                                                            : ((member.role?.includes('Encargado') || member.role?.includes('Responsable') || member.status === 'Activo') ? "bg-primary/10 border-emerald-500/30 text-emerald-400" : "bg-slate-400/10 border-slate-400/20 text-slate-400")
                                                                     )}>
                                                                         {member.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : member.role}
                                                                     </TactileBadge>
@@ -2443,7 +2443,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                                 key={color}
                                                                 onClick={() => saveSettingsToCloud({ primaryColor: color })}
                                                                 className={cn(
-                                                                    "aspect-square rounded-2xl border-4 transition-all scale-90 hover:scale-100 shadow-lg",
+                                                                    "aspect-square rounded-xl border-4 transition-all scale-90 hover:scale-100 shadow-lg",
                                                                     settings.primaryColor === color ? "border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-100" : "border-transparent"
                                                                 )}
                                                                 style={{ backgroundColor: color }}
@@ -2465,7 +2465,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
 
                                                 <div className="space-y-4 pt-2">
                                                     <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
-                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                         {[
                                                             { label: 'THIN', weight: '300' },
                                                             { label: 'NORM', weight: '400' },
@@ -2499,7 +2499,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         <span>OPTIMIZACIÓN DE TV (OVERSCAN / ESCALA)</span>
                                                         <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
                                                     </label>
-                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                         {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
                                                             <button
                                                                 key={sc}
@@ -2612,7 +2612,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                                 </div>
                                                             ) : (
                                                                 <>
-                                                                    <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                                                    <div className="w-16 h-11 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                                                         <Upload className="w-6 h-6 text-tactile-text-sub" />
                                                                     </div>
                                                                     <div className="text-center">
@@ -2650,7 +2650,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
                                                     <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE PUNTOS / ANIMACIÓN</label>
-                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                         <button
                                                             onClick={() => saveSettingsToCloud({ displayBgStyle: 'static' })}
                                                             className={cn(
@@ -2684,7 +2684,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 await saveSettingsToCloud(settings);
                                                 setIsSaving(false);
                                             }}
-                                            className="tactile-btn tactile-btn-orange w-full h-14 justify-center text-sm font-black tracking-widest gap-3"
+                                            className="tactile-btn tactile-btn-orange w-full h-11 justify-center text-sm font-black tracking-widest gap-3"
                                         >
                                             <Save className="w-5 h-5" /> GUARDAR PREFERENCIAS
                                         </button>
@@ -2804,7 +2804,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">EMAILS AUTORIZADOS</label>
                                                     <div className="space-y-3">
                                                         {(settings.displayAuthorizedEmails || []).map((email, idx) => (
-                                                            <div key={idx} className="flex items-center gap-3 bg-black/40 p-3 rounded-2xl border border-white/5">
+                                                            <div key={idx} className="flex items-center gap-3 bg-black/40 p-3 rounded-xl border border-white/5">
                                                                 <Mail className="w-4 h-4 text-primary" />
                                                                 <span className="flex-1 text-xs font-bold">{email}</span>
                                                                 <button
@@ -2822,7 +2822,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                             <input
                                                                 type="email"
                                                                 placeholder="nuevo@correo.com"
-                                                                className="flex-1 bg-black/40 border border-white/5 rounded-2xl h-12 text-sm font-bold px-4 outline-none focus:border-primary/50"
+                                                                className="flex-1 bg-black/40 border border-white/5 rounded-xl h-12 text-sm font-bold px-4 outline-none focus:border-primary/50"
                                                                 onKeyDown={(e: any) => {
                                                                     if (e.key === 'Enter' && e.target.value) {
                                                                         const newList = [...(settings.displayAuthorizedEmails || []), e.target.value];
@@ -2853,7 +2853,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
 
                                         <TactileGlassCard title="ENTORNO DE PRUEBAS">
                                             <div className="space-y-4">
-                                                <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl">
+                                                <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
                                                     <p className="text-[10px] font-bold text-orange-200 capitalize leading-relaxed">
                                                         PARA VERIFICAR LOS ROLES, PUEDE CREAR CUENTAS DE PRUEBA CON EMAILS PREDEFINIDOS.
                                                     </p>
@@ -2871,7 +2871,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
 
                                                 <div className="mt-8 space-y-4">
                                                     <h4 className="text-[10px] font-black capitalize tracking-widest text-tactile-text-sub ml-2">SIMULADOR DE ROLES</h4>
-                                                    <div className="overflow-hidden rounded-2xl border border-white/5">
+                                                    <div className="overflow-hidden rounded-xl border border-white/5">
                                                         <table className="w-full text-left text-[10px] border-collapse">
                                                             <thead className="bg-white/5 capitalize tracking-widest font-black text-tactile-text-sub">
                                                                 <tr>
@@ -2951,7 +2951,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         )}>
                                                             <div className="flex justify-between items-start mb-4">
                                                                 <div className="flex items-center gap-4">
-                                                                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary text-sm font-black capitalize shadow-inner">
+                                                                    <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary text-sm font-black capitalize shadow-inner">
                                                                         {msg.senderName?.charAt(0) || 'U'}
                                                                     </div>
                                                                     <div>
@@ -2966,7 +2966,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                                     {!msg.isRead && (
                                                                         <button
                                                                             onClick={() => markMessageAsRead(msg.id)}
-                                                                            className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                                                                            className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-emerald-400 hover:bg-primary/20 transition-all"
                                                                             title="Marcar como leído"
                                                                         >
                                                                             <CheckCircle className="w-5 h-5" />
@@ -2982,7 +2982,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                                 </div>
                                                             </div>
 
-                                                            <div className="bg-black/40 p-5 rounded-2xl border border-white/5 shadow-inner mb-4">
+                                                            <div className="bg-black/40 p-5 rounded-xl border border-white/5 shadow-inner mb-4">
                                                                 <p className="text-sm font-medium text-tactile-text-sub leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                                                             </div>
 
@@ -2999,7 +2999,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                                                 value={replyText}
                                                                                 onChange={(e) => setReplyText(e.target.value)}
                                                                                 placeholder={`Escribe tu respuesta para ${msg.senderName}...`}
-                                                                                className="w-full h-32 bg-black/60 border border-primary/20 rounded-2xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none shadow-inner"
+                                                                                className="w-full h-32 bg-black/60 border border-primary/20 rounded-xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none shadow-inner"
                                                                             />
                                                                             <div className="flex justify-end gap-3">
                                                                                 <button
@@ -3057,9 +3057,9 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 onClick={() => document.getElementById('admin-avatar-upload')?.click()}
                                             >
                                                 {currentUser.avatar ? (
-                                                    <img src={currentUser.avatar} className="w-full h-full object-cover rounded-2xl group-hover:scale-110 transition-transform duration-700" alt="Avatar" />
+                                                    <img src={currentUser.avatar} className="w-full h-full object-cover rounded-xl group-hover:scale-110 transition-transform duration-700" alt="Avatar" />
                                                 ) : (
-                                                    <div className="w-full h-full bg-primary/10 flex items-center justify-center rounded-2xl">
+                                                    <div className="w-full h-full bg-primary/10 flex items-center justify-center rounded-xl">
                                                         <User className="w-20 h-20 text-primary opacity-20" />
                                                     </div>
                                                 )}
@@ -3091,8 +3091,8 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
 
                                             <div className="mt-8 text-center">
                                                 <h3 className="text-2xl font-black capitalize tracking-tighter">{currentUser?.name || 'Admin'}</h3>
-                                                <div className="flex items-center gap-2 justify-center mt-2 px-6 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
-                                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                                                <div className="flex items-center gap-2 justify-center mt-2 px-6 py-2 bg-primary/10 border border-emerald-500/20 rounded-full">
+                                                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
                                                     <span className="text-[10px] font-black capitalize tracking-[0.2em] text-emerald-500">Super Administrador</span>
                                                 </div>
                                             </div>
@@ -3144,7 +3144,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         }
                                                         setIsSaving(false);
                                                     }}
-                                                    className="tactile-btn tactile-btn-orange w-full h-14 justify-center text-sm font-black tracking-widest gap-3 shadow-lg shadow-orange-500/20 active:scale-95 transition-all"
+                                                    className="tactile-btn tactile-btn-orange w-full h-11 justify-center text-sm font-black tracking-widest gap-3 shadow-lg shadow-orange-500/20 active:scale-95 transition-all"
                                                 >
                                                     {isSaving ? (
                                                         <RefreshCw className="w-5 h-5 animate-spin" />
@@ -3157,7 +3157,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                         </TactileGlassCard>
 
                                         <TactileGlassCard title="NIVEL DE PRIVILEGIOS">
-                                            <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-2xl relative overflow-hidden group">
+                                            <div className="flex items-center justify-between p-4 bg-primary/5 border border-primary/20 rounded-xl relative overflow-hidden group">
                                                 <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-10 transition-opacity">
                                                     <Flame className="w-24 h-24" />
                                                 </div>
@@ -3226,7 +3226,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 <div className="space-y-2">
                                                     <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">RESUMEN / DESCRIPCIÓN</label>
                                                     <textarea
-                                                        className="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all"
+                                                        className="w-full bg-black/40 border border-white/5 rounded-xl p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all"
                                                         value={theme.description || ''}
                                                         onChange={(e) => useAppStore.getState().setTheme({ ...theme, description: e.target.value })}
                                                         placeholder="Breve resumen del tema..."
@@ -3236,7 +3236,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO VISUAL (URL)</label>
                                                     <div className="flex gap-2">
                                                         <input
-                                                            className="flex-1 bg-black/40 border border-white/5 rounded-2xl h-12 px-4 text-xs font-bold outline-none"
+                                                            className="flex-1 bg-black/40 border border-white/5 rounded-xl h-12 px-4 text-xs font-bold outline-none"
                                                             value={theme.fileUrl || ''}
                                                             onChange={(e) => useAppStore.getState().setTheme({ ...theme, fileUrl: e.target.value })}
                                                             placeholder="https://..."
@@ -3293,7 +3293,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                         </TactileGlassCard>
 
                                         <TactileGlassCard title="EVENTO MEMORABLE (COUNTDOWN)">
-                                            <div className="flex items-center justify-between p-4 bg-black/20 rounded-2xl">
+                                            <div className="flex items-center justify-between p-4 bg-black/20 rounded-xl">
                                                 <div className="space-y-1">
                                                     <h4 className="font-bold text-sm">Contador Regresivo</h4>
                                                     <p className="text-[10px] text-tactile-text-sub capitalize tracking-widest font-black">Activar en el Display</p>
@@ -3340,7 +3340,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                         <TactileGlassCard title="ENSAYOS DE CORO">
                                             <div className="space-y-4">
                                                 {rehearsals.map(reh => (
-                                                    <div key={reh.id} className="flex items-center gap-4 p-4 bg-black/20 rounded-2xl border border-white/5 group">
+                                                    <div key={reh.id} className="flex items-center gap-4 p-4 bg-black/20 rounded-xl border border-white/5 group">
                                                         <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black  text-xs">
                                                             {['D', 'L', 'M', 'X', 'J', 'V', 'S'][reh.dayOfWeek]}
                                                         </div>
@@ -3391,7 +3391,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                         const uniformId = uniformSchedule[date];
                                                         const uniform = uniforms.find(u => u.id === uniformId);
                                                         return (
-                                                            <div key={date} className="flex items-center justify-between p-4 bg-black/20 rounded-2xl border border-white/5 relative group/row">
+                                                            <div key={date} className="flex items-center justify-between p-4 bg-black/20 rounded-xl border border-white/5 relative group/row">
                                                                 <div className="flex flex-col">
                                                                     <span className="text-[9px] font-black text-tactile-text-sub capitalize font-black tracking-widest mb-1 truncate">
                                                                         {format(parseISO(date), "EEEE d 'de' MMMM", { locale: es })}
@@ -3503,7 +3503,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     (settings.churchLogoUrl === '') ? "bg-primary/20 border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/40 border-white/5 hover:bg-white/5"
                                                 )}
                                             >
-                                                <div className="w-16 h-16 flex items-center justify-center p-2 rounded-2xl bg-white/5 border border-white/10 text-slate-500">
+                                                <div className="w-16 h-11 flex items-center justify-center p-2 rounded-xl bg-white/5 border border-white/10 text-slate-500">
                                                     <XCircle className="w-10 h-10" />
                                                 </div>
                                                 <span className={cn("text-[10px] font-black capitalize tracking-widest", (settings.churchLogoUrl === '') ? "text-primary" : "text-tactile-text-sub")}>
@@ -3548,7 +3548,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                             >
                                                                 {slotUrl ? (
                                                                     <>
-                                                                        <div className="w-20 h-20 flex items-center justify-center p-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10">
+                                                                        <div className="w-20 h-20 flex items-center justify-center p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
                                                                             <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
                                                                         </div>
                                                                         <span className={cn("text-[10px] font-black capitalize tracking-widest", isActive ? "text-primary" : "text-tactile-text-sub")}>
@@ -3993,12 +3993,12 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     value={newMemberData.bio || ''}
                                                     onChange={(e) => setNewMemberData({ ...newMemberData, bio: e.target.value })}
                                                     placeholder="Biografía o notas sobre el miembro..."
-                                                    className="w-full h-24 bg-black/40 border border-white/5 rounded-2xl p-4 text-xs font-bold outline-none focus:border-primary/50 transition-all resize-none"
+                                                    className="w-full h-24 bg-black/40 border border-white/5 rounded-xl p-4 text-xs font-bold outline-none focus:border-primary/50 transition-all resize-none"
                                                 />
                                             </div>
                                             <div className="col-span-2 space-y-4">
                                                 <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PRIVILEGIOS / ACCESOS</label>
-                                                <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl">
+                                                <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl">
                                                     {[
                                                         { id: 'admin', label: 'ADMIN' },
                                                         { id: 'monitor', label: 'PASE LISTA' },
@@ -4036,7 +4036,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     setShowAddMember(false);
                                                     setEditingMember(null);
                                                 }}
-                                                className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black capitalize tracking-widest"
+                                                className="tactile-btn tactile-btn-glass flex-1 justify-center h-11 font-black capitalize tracking-widest"
                                             >
                                                 Cancelar
                                             </button>
@@ -4087,7 +4087,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 }}
                                                 disabled={isSaving}
                                                 className={cn(
-                                                    "tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black capitalize tracking-widest shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]",
+                                                    "tactile-btn tactile-btn-orange flex-1 justify-center h-11 font-black capitalize tracking-widest shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]",
                                                     isSaving && "opacity-50 cursor-not-allowed"
                                                 )}
                                             >
@@ -4150,7 +4150,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                     <div className="p-8 border-t border-white/5 flex gap-4">
                                         <button
                                             onClick={() => setShowRehearsalModal(false)}
-                                            className="tactile-btn tactile-btn-glass flex-1 justify-center h-14 font-black"
+                                            className="tactile-btn tactile-btn-glass flex-1 justify-center h-11 font-black"
                                         >
                                             CANCELAR
                                         </button>
@@ -4161,7 +4161,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 setShowRehearsalModal(false);
                                                 setIsSaving(false);
                                             }}
-                                            className="tactile-btn tactile-btn-orange flex-1 justify-center h-14 font-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
+                                            className="tactile-btn tactile-btn-orange flex-1 justify-center h-11 font-black shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
                                         >
                                             {isSaving ? 'GUARDANDO...' : 'GUARDAR ENSAYO'}
                                         </button>
@@ -4258,7 +4258,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                             });
 
                                                             return Object.entries(byDate).slice(0, 14).map(([date, records]) => (
-                                                                <div key={date} className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-colors">
+                                                                <div key={date} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-colors">
                                                                     <div className="flex flex-col">
                                                                         <span className="text-[10px] font-black capitalize  text-white/80">{format(parseISO(date), "EEEE, d 'de' MMMM", { locale: es })}</span>
                                                                         <div className="flex gap-1 mt-1">
@@ -4292,7 +4292,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
 
                                         <button 
                                             onClick={() => setSelectedMemberForHistory(null)}
-                                            className="w-full h-14 rounded-2xl bg-white/5 border border-white/10 text-[10px] font-black capitalize tracking-[0.2em] hover:bg-white/10 transition-all active:scale-[0.98]"
+                                            className="w-full h-11 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black capitalize tracking-[0.2em] hover:bg-white/10 transition-all active:scale-[0.98]"
                                         >
                                             CERRAR DETALLE
                                         </button>
