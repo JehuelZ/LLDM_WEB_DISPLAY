@@ -473,36 +473,37 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
     useEffect(() => {
         if (mounted) {
-        loadMonthlyGlobalAttendanceStats().then(stats => {
-            if (stats.length >= 30) {
-                const currentMonth = stats.slice(-15).reduce((acc, s) => acc + s.percentage, 0) / 15;
-                const prevMonth = stats.slice(-30, -15).reduce((acc, s) => acc + s.percentage, 0) / 15;
-                const diff = currentMonth - prevMonth;
-                setAttendanceTrend({
-                    value: Math.abs(Math.round(diff * 10) / 10),
-                    isPos: diff >= 0
-                });
-            }
-        });
+            loadMonthlyGlobalAttendanceStats().then(stats => {
+                if (stats.length >= 30) {
+                    const currentMonth = stats.slice(-15).reduce((acc, s) => acc + s.percentage, 0) / 15;
+                    const prevMonth = stats.slice(-30, -15).reduce((acc, s) => acc + s.percentage, 0) / 15;
+                    const diff = currentMonth - prevMonth;
+                    setAttendanceTrend({
+                        value: Math.abs(Math.round(diff * 10) / 10),
+                        isPos: diff >= 0
+                    });
+                }
+            });
 
-        loadWeeklyAttendanceStats().then(setWeeklyStats);
-        // Sync initial tab from URL on mount
-        const params = new URLSearchParams(window.location.search);
-        const queryTab = params.get('tab');
-        if (queryTab) {
-            const aliasMap: Record<string, string> = {
-                'configuracion': 'ajustes',
-                'temas': 'contenido',
-                'mensajes': 'dashboard',
-                'ajustes': 'ajustes'
-            };
-            const finalTab = aliasMap[queryTab] || queryTab;
-            const validTabIds = tabs.map(t => t.id);
-            if (validTabIds.includes(finalTab)) {
-                setActiveTab(finalTab);
+            loadWeeklyAttendanceStats().then(setWeeklyStats);
+            // Sync initial tab from URL on mount
+            const params = new URLSearchParams(window.location.search);
+            const queryTab = params.get('tab');
+            if (queryTab) {
+                const aliasMap: Record<string, string> = {
+                    'configuracion': 'ajustes',
+                    'temas': 'contenido',
+                    'mensajes': 'dashboard',
+                    'ajustes': 'ajustes'
+                };
+                const finalTab = aliasMap[queryTab] || queryTab;
+                const validTabIds = tabs.map(t => t.id);
+                if (validTabIds.includes(finalTab)) {
+                    setActiveTab(finalTab);
+                }
             }
         }
-    }, []);
+    }, [mounted, loadMonthlyGlobalAttendanceStats, loadWeeklyAttendanceStats]);
 
     useEffect(() => {
         const handleLocationChange = () => {
