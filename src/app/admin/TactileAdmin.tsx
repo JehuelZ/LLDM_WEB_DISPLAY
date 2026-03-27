@@ -459,7 +459,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
     const [activeTab, setActiveTab] = useState('dashboard');
     const [monthlyIntelligence, setMonthlyIntelligence] = useState<{ label: string, value: number }[]>([]);
     const [attendanceTrend, setAttendanceTrend] = useState({ value: 0, isPos: true });
-    const [intelligenceRange, setIntelligenceRange] = useState<15 | 30>(30);
+    const [intelligenceRange, setIntelligenceRange] = useState<7 | 15 | 30>(30);
 
     useEffect(() => {
         setMounted(true);
@@ -1298,10 +1298,10 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                             className="w-full"
                                             extra={
                                                 <div className="flex bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-md">
-                                                    {[15, 30].map(r => (
+                                                    {[7, 15, 30].map(r => (
                                                         <button
                                                             key={r}
-                                                            onClick={() => setIntelligenceRange(r as 15 | 30)}
+                                                            onClick={() => setIntelligenceRange(r as 7 | 15 | 30)}
                                                             className={cn(
                                                                 "px-4 py-1.5 rounded-full text-[9px] font-black transition-all duration-300 tracking-widest",
                                                                 intelligenceRange === r 
