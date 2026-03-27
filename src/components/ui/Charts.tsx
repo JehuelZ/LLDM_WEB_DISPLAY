@@ -66,6 +66,13 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 
     const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
     
+    // Find index for today to set as default
+    const todayIndex = React.useMemo(() => {
+        const today = new Date().getDate().toString();
+        const idx = activeData.findIndex(d => d.label === today);
+        return idx >= 0 ? idx : activeData.length - 1;
+    }, [activeData]);
+    
     const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const svgX = ((e.clientX - rect.left) / rect.width) * width;
@@ -88,8 +95,8 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 
     const linePath = isSmooth ? getCurvePath(points) : points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
     
-    // Use last point as default if not hovering
-    const displayIdx = hoverIdx !== null ? hoverIdx : points.length - 1;
+    // Use today's index as default if not hovering
+    const displayIdx = hoverIdx !== null ? hoverIdx : todayIndex;
     const highlightPoint = points[displayIdx];
 
     const gradientId = `line-gradient-${color.replace('#', '')}`;
