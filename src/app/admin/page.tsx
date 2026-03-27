@@ -1464,14 +1464,33 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         </CardTitle>
                         </CardHeader>
                         <CardContent className="flex flex-col items-center justify-center flex-1 py-0 px-2 overflow-hidden">
-                            <TactilePieChart 
-                                title="MEMBRESÍA"
-                                data={[
-                                    { label: 'Activos', value: members.filter(m => m.status === 'Activo').length, color: '#10b981' },
-                                    { label: 'Pendientes', value: members.filter(m => m.status === 'Pendiente').length, color: '#f59e0b' },
-                                    { label: 'Otros', value: members.length - members.filter(m => ['Activo', 'Pendiente'].includes(m.status || '')).length, color: '#64748b' },
-                                ]}
-                            />
+                            <div className="w-full mt-4">
+                                                <TactilePieChart 
+                                                    title="Membresía"
+                                                    data={[
+                                                        { 
+                                                            label: 'Casados', 
+                                                            value: members.filter(m => (m.member_group || '').includes('Casado')).length, 
+                                                            color: '#10b981' 
+                                                        },
+                                                        { 
+                                                            label: 'Jóvenes', 
+                                                            value: members.filter(m => (m.member_group || '') === 'Jovenes').length, 
+                                                            color: '#fbbf24' 
+                                                        },
+                                                        { 
+                                                            label: 'Solos', 
+                                                            value: members.filter(m => (m.member_group || '') === 'Solos y Solas').length, 
+                                                            color: '#8b5cf6' 
+                                                        },
+                                                        { 
+                                                            label: 'Niños', 
+                                                            value: members.filter(m => (m.category === 'Niño' || (m.member_group || '').startsWith('Niño'))).length, 
+                                                            color: '#0ea5e9' 
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
                         </CardContent>
                         <div className="px-6 pb-6 w-full">
                             <div className="flex items-center justify-between border-t border-white/5 pt-4">
