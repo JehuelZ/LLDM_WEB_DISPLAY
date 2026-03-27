@@ -24,64 +24,140 @@ interface ChartProps {
 export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, showHighlight = true }: ChartProps) => {
     if (!data || data.length === 0) return <div className="h-full w-full flex items-center justify-center text-[10px] font-black text-white/20">SIN DATOS</div>;
 
-    const width = 400;
-    const height = 150;
-    const padding = 20;
+    const width = 440;
+    const height = 290;
+    const paddingX = 2; // Máxima expansión horizontal
+    const paddingY = 65; 
     
     const points = data.map((d, i) => ({
-        x: (i / (data.length - 1 || 1)) * (width - padding * 2) + padding,
-        y: height - (((d.attended || d.value || 0) / (d.total || 100)) * (height - padding * 2)) - padding,
+        x: (i / (data.length - 1 || 1)) * (width - paddingX * 2) + paddingX,
+        y: height - (((d.attended || d.value || 0) / (d.total || 100)) * (height - paddingY * 2)) - paddingY,
         val: d.attended || d.value || 0,
-        label: d.date || d.label
+        label: d.label
     }));
 
     const getCurvePath = (pts: any[]) => {
         if (pts.length < 2) return "";
         let path = `M ${pts[0].x} ${pts[0].y}`;
+        const tension = 0.5;
+        
         for (let i = 0; i < pts.length - 1; i++) {
-            const p0 = pts[Math.max(i - 1, 0)];
             const p1 = pts[i];
             const p2 = pts[i + 1];
-            const p3 = pts[Math.min(i + 2, pts.length - 1)];
-            const cp1x = p1.x + (p2.x - p0.x) / 6;
-            const cp1y = p1.y + (p2.y - p0.y) / 6;
-            const cp2x = p2.x - (p3.x - p1.x) / 6;
-            const cp2y = p2.y - (p3.y - p1.y) / 6;
-            path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+            const cp1x = p1.x + (p2.x - p1.x) * tension;
+            const cp2x = p2.x - (p2.x - p1.x) * tension;
+            path += ` C ${cp1x} ${p1.y}, ${cp2x} ${p2.y}, ${p2.x} ${p2.y}`;
         }
         return path;
     };
 
     const linePath = isSmooth ? getCurvePath(points) : points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
-    const areaPath = `${linePath} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`;
-    const highlightPoint = points[points.length - 1];
+    
+    const highlightIndex = Math.min(points.length - 1, 24); 
+    const highlightPoint = points[highlightIndex];
+
+    const gradientId = `line-gradient-${color.replace('#', '')}`;
 
     return (
-        <div className="relative w-full h-full group">
+        <div className="relative w-full h-full group select-none overflow-visible">
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                 <defs>
-                    <linearGradient id={`${color.replace('#', '')}areaGradient`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={color} stopOpacity="0.2" />
-                        <stop offset="100%" stopColor={color} stopOpacity="0" />
+                    <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor={color} stopOpacity="0.5" />
+                        <stop offset="30%" stopColor={color} stopOpacity="0.9" />
+                        <stop offset="70%" stopColor={color} stopOpacity="1" />
+                        <stop offset="100%" stopColor={color} stopOpacity="0.7" />
+                    </linearGradient>
+
+                    <filter id="serpentGlow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="7" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                    
+                    <linearGradient id="verticalLineGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="white" stopOpacity="0.04" />
+                        <stop offset="100%" stopColor="white" stopOpacity="0" />
                     </linearGradient>
                 </defs>
-                {[0, 0.25, 0.5, 0.75, 1].map(v => (
-                    <g key={v}>
-                        <line x1={padding} y1={padding + (height - padding * 2) * v} x2={width - padding} y2={padding + (height - padding * 2) * v} stroke="currentColor" className="text-white/5" strokeWidth="1" />
-                        <text x={padding - 5} y={padding + (height - padding * 2) * v + 3} textAnchor="end" className="fill-white/10 text-[6px] font-black">{Math.round((1-v) * 100)}%</text>
-                    </g>
+
+                {/* Vertical Grid Lines & Dots */}
+                {points.map((p, i) => (
+                    (i === 0 || i % 5 === 0 || i === points.length - 1) && (
+                        <g key={i}>
+                            <line 
+                                x1={p.x} y1={p.y + 25} x2={p.x} y2={height - 40} 
+                                stroke="url(#verticalLineGradient)" 
+                                strokeWidth="0.8" 
+                                strokeDasharray="3 3"
+                            />
+                            <circle cx={p.x} cy={height - 35} r="1.5" fill="white" fillOpacity="0.1" />
+                        </g>
+                    )
                 ))}
-                <motion.path initial={{ opacity: 0 }} animate={{ opacity: 1 }} d={areaPath} fill={`url(#${color.replace('#', '')}areaGradient)`} className="pointer-events-none" />
-                <motion.path initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2, ease: "easeInOut" }} d={linePath} fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]" />
+
+                {/* Serpent Line with Ultimate Glow and Expansion */}
+                <motion.path 
+                    initial={{ pathLength: 0, opacity: 0 }} 
+                    animate={{ pathLength: 1, opacity: 1 }} 
+                    transition={{ duration: 3.5, ease: "easeInOut" }} 
+                    d={linePath} 
+                    fill="none" 
+                    stroke={`url(#${gradientId})`} 
+                    strokeWidth="7" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    filter="url(#serpentGlow)"
+                    className="drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                />
+
+                {/* Labels Insets so they don't jump out of narrow padding */}
+                {points.map((p, i) => (
+                    (i === 0 || i === 4 || i === 9 || i === 14 || i === 19 || i === 24 || i === points.length - 1) && (
+                        <text 
+                            key={i} 
+                            x={Math.max(12, Math.min(width - 12, p.x))} // Inset labels so they fit
+                            y={height - 15} 
+                            textAnchor="middle" 
+                            className="fill-white/15 text-[10px] font-black uppercase tracking-[0.1em]"
+                        >
+                            {p.label}
+                        </text>
+                    )
+                ))}
+
+                {/* Premium Floating Tooltip */}
                 {showHighlight && highlightPoint && (
-                    <g className="filter drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
-                        <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 2 }} cx={highlightPoint.x} cy={highlightPoint.y} r="6" fill="#fff" stroke={color} strokeWidth="3" />
-                        <foreignObject x={highlightPoint.x - 30} y={highlightPoint.y - 45} width="60" height="30">
-                            <div className="flex flex-col items-center justify-center">
-                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.2 }} className="px-2 py-0.5 bg-white text-[10px] font-black text-black rounded-md shadow-lg">{Math.round(highlightPoint.val)}%</motion.div>
-                                <div className="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white" />
+                    <g>
+                        <motion.foreignObject 
+                            initial={{ opacity: 0, scale: 0.6 }} 
+                            animate={{ opacity: 1, scale: 1 }} 
+                            transition={{ delay: 2.8, duration: 0.7, type: 'spring' }}
+                            x={Math.max(5, Math.min(width - 75, highlightPoint.x - 35))} 
+                            y={Math.max(5, highlightPoint.y - 90)} 
+                            width="75" 
+                            height="75"
+                        >
+                            <div className="flex flex-col items-center">
+                                <div className="px-3 py-2 bg-white text-[16px] font-black text-slate-950 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,1)] flex items-center gap-2 translate-y-2">
+                                    {Math.round(highlightPoint.val)}%
+                                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse ring-4 ring-emerald-500/30" />
+                                </div>
+                                <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-white relative z-10" />
                             </div>
-                        </foreignObject>
+                        </motion.foreignObject>
+
+                        <motion.circle 
+                            initial={{ scale: 0 }} 
+                            animate={{ scale: 1 }} 
+                            transition={{ delay: 2.5, type: "spring", stiffness: 200 }}
+                            cx={highlightPoint.x} 
+                            cy={highlightPoint.y} 
+                            r="10" 
+                            fill="white" 
+                            stroke={color} 
+                            strokeWidth="6"
+                            className="drop-shadow-[0_0_25px_white]"
+                        />
                     </g>
                 )}
             </svg>

@@ -280,7 +280,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
                                         </div>
 
                                         {/* UPGRADED CHART AREA */}
-                                        <div className="h-64 relative">
+                                        <div className="h-80 relative">
                                             <TactileAreaChart 
                                                 data={monthlyStats.map(s => ({ label: s.label, value: s.val }))} 
                                                 color="#10b981" 

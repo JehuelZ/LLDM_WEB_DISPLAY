@@ -2277,9 +2277,10 @@ export const useAppStore = create<AppState>()(
             },
             loadMonthlyIntelligenceStats: async () => {
                 const now = new Date();
-                const past6MonthsStart = new Date(now.getFullYear(), now.getMonth() - 5, 1);
-                const startDateStr = format(past6MonthsStart, 'yyyy-MM-dd');
-                const endDateStr = format(endOfMonth(now), 'yyyy-MM-dd');
+                const monthStart = startOfMonth(now);
+                const monthEnd = endOfMonth(now);
+                const startDateStr = format(monthStart, 'yyyy-MM-dd');
+                const endDateStr = format(monthEnd, 'yyyy-MM-dd');
 
                 const { data, error } = await supabase
                     .from('attendance')
@@ -2293,21 +2294,20 @@ export const useAppStore = create<AppState>()(
                 }
 
                 const totalMembers = get().members.filter(m => m.status === 'Activo').length;
+                const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
-                const result = Array.from({ length: 6 }, (_, i) => {
-                    const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
-                    const monthStartStr = format(startOfMonth(d), 'yyyy-MM-dd');
-                    const monthEndStr = format(endOfMonth(d), 'yyyy-MM-dd');
-                    
-                    const monthlyRecords = data?.filter(r => r.date >= monthStartStr && r.date <= monthEndStr) || [];
-                    const uniqueAttended = new Set(monthlyRecords.map(r => r.member_id)).size;
+                const result = daysInMonth.map((day) => {
+                    const dateStr = format(day, 'yyyy-MM-dd');
+                    const dayRecords = data?.filter(r => r.date === dateStr) || [];
+                    const uniqueAttended = new Set(dayRecords.map(r => r.member_id)).size;
                     
                     const percentage = totalMembers > 0 ? Math.round((uniqueAttended / totalMembers) * 100) : 0;
-                    const monthName = new Intl.DateTimeFormat(get().settings.language === 'es' ? 'es' : 'en', { month: 'short' }).format(d);
                     
                     return {
-                        label: monthName.toUpperCase(),
-                        value: percentage
+                        date: dateStr,
+                        label: format(day, 'd'), // Solo el número del día
+                        value: percentage,
+                        total: 100
                     };
                 });
 

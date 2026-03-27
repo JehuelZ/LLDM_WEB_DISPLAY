@@ -1303,7 +1303,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 <div className="flex flex-col items-center py-4 relative overflow-hidden group">
                                                     
                                                     {/* Premium Statistics Spline Chart */}
-                                                    <div className="w-full h-48 px-2 relative mt-4">
+                                                    <div className="w-full h-80 relative mt-4">
                                                         <TactileAreaChart 
                                                             data={monthlyIntelligence} 
                                                             color="#f59e0b" 

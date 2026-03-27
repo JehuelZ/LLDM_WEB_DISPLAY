@@ -1220,8 +1220,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 <CardDescription className="text-[8px] font-bold uppercase text-muted-foreground mt-1">rendimiento vs objetivos</CardDescription>
                             </div>
                         </CardHeader>
-                        <CardContent className="pt-10 pb-8">
-                             <div className="h-44 relative">
+                        <CardContent className="p-0 mt-10">
+                             <div className="h-82 relative">
                                  <TactileAreaChart 
                                      data={displayStats} 
                                      color={settings.adminTheme === 'primitivo' ? "#f59e0b" : "#10b981"} 
