@@ -474,15 +474,15 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
 
                 <div className="mt-4 flex flex-wrap justify-center gap-8 pt-4">
                     <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-none bg-[#3b82f6]" />
+                        <div className="w-6 h-1.5 rounded-full bg-[#3b82f6] shadow-[0_0_12px_#3b82f6aa]" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-white/60">oración 5 am</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className={cn("w-2 h-2 rounded-none bg-[#f43f5e]")} />
+                        <div className="w-6 h-1.5 rounded-full bg-[#f43f5e] shadow-[0_0_12px_#f43f5eaa]" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-white/60">doctrina 9 am</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className={cn("w-2 h-2 rounded-none bg-[#f59e0b]")} />
+                        <div className="w-6 h-1.5 rounded-full bg-[#f59e0b] shadow-[0_0_12px_#f59e0baa]" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-white/60">culto de tarde</span>
                     </div>
                 </div>
