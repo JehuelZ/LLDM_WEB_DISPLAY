@@ -286,6 +286,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
                                                 color="#10b981" 
                                                 isSmooth={true} 
                                                 showHighlight={true} 
+                                                totalMembers={activeMembersCount}
                                             />
                                         </div>
                                     </div>

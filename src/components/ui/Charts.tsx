@@ -235,15 +235,16 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
 
     const width = 450;
     const height = 220;
-    const paddingLeft = 50; 
-    const paddingRight = 20;
-    const paddingY = 45;
+    const paddingX = 40; // Symmetric padding for perfect centering
+    const paddingBottom = 45;
+    const paddingTop = 45;
     
-    const chartWidth = width - paddingLeft - paddingRight;
-    const groupSlotWidth = chartWidth / activeData.length;
+    const chartAreaWidth = width - (paddingX * 2);
+    const numSlots = 7;
+    const slotWidth = chartAreaWidth / numSlots;
     
     const barWidth = 8;
-    const barSpacing = 3;
+    const barSpacing = 4;
     const totalGroupWidth = (barWidth * 3) + (barSpacing * 2);
 
     const sessionConfig = [
@@ -251,6 +252,8 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
         { key: '9am' as const, color: '#f43f5e' },
         { key: 'evening' as const, color: '#f59e0b' }
     ];
+
+    const fixedLabels = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
 
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
@@ -264,83 +267,97 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                     {sessionConfig.map(s => (
                         <linearGradient key={s.color} id={`barGrad-${s.color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor={s.color} stopOpacity="1" />
-                            <stop offset="100%" stopColor={s.color} stopOpacity="0.3" />
+                            <stop offset="100%" stopColor={s.color} stopOpacity="0.2" />
                         </linearGradient>
                     ))}
                 </defs>
 
-                {/* Y-Axis Labels */}
+                {/* Y-Axis Labels - Absolute Position (Internal) */}
                 {[0, 0.5, 1].map(multiplier => {
                     const absVal = Math.round(totalMembers * multiplier);
+                    const y = height - paddingBottom - (multiplier * (height - paddingTop - paddingBottom));
                     return (
-                        <text 
-                            key={multiplier} 
-                            x={10} 
-                            y={height - paddingY - (multiplier) * (height - paddingY * 2) + 3} 
-                            className="fill-white/10 text-[9px] font-black uppercase tracking-[0.2em]"
-                        >
-                            {absVal}
-                        </text>
+                        <g key={multiplier}>
+                            {/* Subtle Grid Line */}
+                            <line 
+                                x1={paddingX} y1={y} 
+                                x2={width - paddingX} y2={y} 
+                                stroke="white" strokeWidth="1" strokeOpacity="0.03"
+                                strokeDasharray="2 4"
+                            />
+                            <text 
+                                x={paddingX - 10} 
+                                y={y + 3} 
+                                textAnchor="end"
+                                className="fill-white/10 text-[8px] font-black uppercase tracking-widest"
+                            >
+                                {absVal}
+                            </text>
+                        </g>
                     );
                 })}
 
-                {activeData.map((d, i) => {
-                    // Calculate center point for this day's slot
-                    const slotCenterX = paddingLeft + (i * groupSlotWidth) + (groupSlotWidth / 2);
+                {/* Grid Slots */}
+                {Array.from({ length: 7 }).map((_, i) => {
+                    const slotCenterX = paddingX + (i * slotWidth) + (slotWidth / 2);
                     const groupStartX = slotCenterX - (totalGroupWidth / 2);
                     
-                    // Improved day label logic
-                    let dayLabel = d.label || '';
-                    if (d.date) {
-                        const dateObj = parseISO(d.date);
-                        dayLabel = format(dateObj, 'EEEEEE', { locale: es }).toUpperCase();
+                    const dayData = activeData[i] || { sessions: { '5am': 0, '9am': 0, 'evening': 0 }, label: fixedLabels[i] };
+                    let displayLabel = dayData.label || fixedLabels[i];
+                    if (dayData.date) {
+                        displayLabel = format(parseISO(dayData.date), 'EEEEEE', { locale: es }).toUpperCase();
                     }
 
                     return (
                         <g key={i}>
                             {sessionConfig.map((s, j) => {
-                                const val = d.sessions ? d.sessions[s.key] : 0;
+                                const val = dayData.sessions ? (dayData.sessions[s.key] || 0) : 0;
+                                if (val <= 0) return null; // REMOVE GHOST BARS
+
                                 const ratio = Math.min(1, val / (totalMembers || 100));
-                                const h = ratio > 0 ? Math.max(12, ratio * (height - paddingY * 2)) : 6;
+                                const h = Math.max(8, ratio * (height - paddingTop - paddingBottom));
                                 const x = groupStartX + j * (barWidth + barSpacing);
-                                const y = height - h - paddingY;
+                                const y = height - paddingBottom - h;
                                 const gradId = `barGrad-${s.color.replace('#', '')}`;
 
                                 return (
                                     <g key={s.key} className="group/bar">
-                                        {/* Glow Layer */}
-                                        {ratio > 0.05 && (
-                                            <motion.rect
-                                                initial={{ height: 0, y: height - paddingY }}
-                                                animate={{ height: h, y: y }}
-                                                transition={{ duration: 1, delay: (i * 0.1) + (j * 0.05), ease: "circOut" }}
-                                                x={x - 3} y={y - 3} width={barWidth + 6} height={h + 6}
-                                                fill={s.color}
-                                                rx={(barWidth + 6) / 2}
-                                                className="blur-[8px] opacity-20"
-                                            />
-                                        )}
-
                                         {/* Main Pill */}
                                         <motion.rect
-                                            initial={{ height: 0, y: height - paddingY }}
+                                            initial={{ height: 0, y: height - paddingBottom }}
                                             animate={{ height: h, y: y }}
-                                            transition={{ duration: 0.8, delay: (i * 0.1) + (j * 0.05), ease: "circOut" }}
-                                            x={x} y={y} width={barWidth} height={h}
+                                            transition={{ duration: 0.6, delay: (i * 0.04) + (j * 0.02), ease: "circOut" }}
+                                            x={x} width={barWidth}
                                             fill={`url(#${gradId})`}
                                             rx={barWidth / 2}
+                                            style={{ 
+                                                filter: val > 0 ? `drop-shadow(0 0 8px ${s.color}66)` : 'none'
+                                            }}
                                             className={cn(
-                                                "transition-all duration-300",
-                                                ratio > 0.05 ? `drop-shadow-[0_0_10px_${s.color}66]` : "opacity-10"
+                                                "transition-all duration-300 transition-opacity",
+                                                val <= 0 && "opacity-0"
                                             )}
                                         />
+                                        
+                                        {/* Glow Layer (Mirror bar base exactly) */}
+                                        {val > 0 && (
+                                            <motion.rect
+                                                initial={{ height: 0, y: height - paddingBottom, opacity: 0 }}
+                                                animate={{ height: h, y: y, opacity: 0.15 }}
+                                                transition={{ duration: 0.6, delay: (i * 0.04) + (j * 0.02), ease: "circOut" }}
+                                                x={x - 4} width={barWidth + 8}
+                                                fill={s.color}
+                                                rx={(barWidth + 8) / 2}
+                                                className="blur-[10px] pointer-events-none"
+                                            />
+                                        )}
                                         
                                         {/* Hover Count */}
                                         <text 
                                             x={x + barWidth / 2} 
-                                            y={y - 8} 
+                                            y={y - 10} 
                                             textAnchor="middle" 
-                                            className="fill-white font-black text-[8px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
+                                            className="fill-white font-black text-[9px] opacity-0 group-hover/bar:opacity-100 transition-opacity pointer-events-none tabular-nums drop-shadow-lg"
                                         >
                                             {Math.round(val)}
                                         </text>
@@ -348,14 +365,14 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                 );
                             })}
 
-                            {/* Centered Day Label - Positioned relative to slot center */}
+                            {/* Center Day Label */}
                             <text 
                                 x={slotCenterX} 
-                                y={height - 20} 
+                                y={height - 15} 
                                 textAnchor="middle" 
                                 className="fill-white/30 text-[9px] font-black uppercase tracking-widest"
                             >
-                                {dayLabel}
+                                {displayLabel}
                             </text>
                         </g>
                     );
