@@ -19,6 +19,9 @@ import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { cn, compressImage, getLocalDateString } from '@/lib/utils'
 import { ImageEditor } from '@/components/ImageEditor'
+import LunaDonut from '@/components/ui/LunaDonut';
+import { TactileAreaChart, TactileBarChart } from '@/components/ui/Charts';
+import PremiumCalendar from '@/components/ui/PremiumCalendar';
 import './tactile-admin.css'
 
 // Internal components to replicate functionality with tactile style
@@ -36,7 +39,6 @@ const TactileBadge = ({ children, className }: { children: React.ReactNode, clas
         {children}
     </div>
 )
-
 
 const TactileGlassCard = ({ children, title, className, subtitle }: { children: React.ReactNode, title?: string, className?: string, subtitle?: string }) => (
     <div className={cn("tactile-glass-panel", className)}>
@@ -432,6 +434,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         showNotification
     } = useAppStore()
 
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
     if (!currentUser) return null;
 
     const isSun = parseISO(currentDate).getDay() === 0;
@@ -448,10 +452,26 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
     const [mounted, setMounted] = useState(false);
     const [activeTab, setActiveTab] = useState('dashboard');
     const [monthlyIntelligence, setMonthlyIntelligence] = useState<{ label: string, value: number }[]>([]);
+    const [attendanceTrend, setAttendanceTrend] = useState({ value: 0, isPos: true });
 
     useEffect(() => {
         setMounted(true);
         loadMonthlyIntelligenceStats().then(setMonthlyIntelligence);
+
+        // Calculate dynamic trend for better Intelligence
+        loadMonthlyGlobalAttendanceStats().then(stats => {
+            if (stats.length >= 30) {
+                const currentMonth = stats.slice(-15).reduce((acc, s) => acc + s.percentage, 0) / 15;
+                const prevMonth = stats.slice(-30, -15).reduce((acc, s) => acc + s.percentage, 0) / 15;
+                const diff = currentMonth - prevMonth;
+                setAttendanceTrend({
+                    value: Math.abs(Math.round(diff * 10) / 10),
+                    isPos: diff >= 0
+                });
+            }
+        });
+
+        loadWeeklyAttendanceStats().then(setWeeklyStats);
         // Sync initial tab from URL on mount
         const params = new URLSearchParams(window.location.search);
         const queryTab = params.get('tab');
@@ -737,9 +757,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
             try {
                 const compressed = await compressImage(file, 800, 800);
                 console.log(`Uploading file ${file.name} to slot ${slot}...`, { type: file.type, size: file.size });
-                
+
                 const publicUrl = await uploadAvatar(`custom-logo-${slot}`, compressed);
-                
+
                 if (publicUrl) {
                     const settingKey = `customLogo${slot}` as any;
                     await saveSettingsToCloud({
@@ -763,7 +783,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
     const memberOptions = React.useMemo(() => {
         const base = [{ value: '', label: 'Seleccionar...' }];
-        
+
         const categories = [
             { id: 'casados', label: 'CASADOS / CASADAS', variants: ['casados', 'casadas'] },
             { id: 'jovenes', label: 'JÓVENES', variants: ['jovenes', 'jóvenes'] },
@@ -777,10 +797,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         // Ministro primero si existe
         if (ministerMember) {
             groupedItems.push({ value: 'header-minister', label: 'MINISTERIO', isHeader: true });
-            groupedItems.push({ 
-                value: ministerMember.id, 
+            groupedItems.push({
+                value: ministerMember.id,
                 label: `⭐ EL MINISTRO (${ministerMember.name})`,
-                avatar: ministerMember.avatar 
+                avatar: ministerMember.avatar
             });
             assignedMemberIds.add(ministerMember.id);
         }
@@ -796,10 +816,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                 groupedItems.push({ value: `header-${cat.id}`, label: cat.label, isHeader: true });
                 groupMembers.forEach(m => {
                     if (m.id !== ministerMember?.id) {
-                        groupedItems.push({ 
-                            value: m.id, 
+                        groupedItems.push({
+                            value: m.id,
                             label: m.name,
-                            avatar: m.avatar 
+                            avatar: m.avatar
                         });
                         assignedMemberIds.add(m.id);
                     }
@@ -815,10 +835,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
         if (remainingMembers.length > 0) {
             groupedItems.push({ value: 'header-other', label: 'OTROS / SIN GRUPO', isHeader: true });
             remainingMembers.forEach(m => {
-                groupedItems.push({ 
-                    value: m.id, 
+                groupedItems.push({
+                    value: m.id,
                     label: m.name,
-                    avatar: m.avatar 
+                    avatar: m.avatar
                 });
             });
         }
@@ -833,20 +853,20 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
             <div className="tactile-main-container">
                 {/* Actual Side Menu */}
-                <aside 
+                <aside
                     className={cn(
                         "relative z-30 flex flex-col bg-white/[0.02] border-r border-white/5 transition-all duration-500 ease-in-out h-full admin-sidebar-v2",
                         isSidebarCollapsed ? "w-14" : "w-56"
                     )}
                 >
                     {/* Floating Toggle Button (Alair Style - Orange Version) */}
-                    <button 
+                    <button
                         onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
                         className="absolute -right-3.5 top-20 w-7 h-7 bg-[#f59e0b] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)] z-50 text-white hover:scale-110 transition-transform border-none active:scale-95"
                     >
                         {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
                     </button>
-                    <div 
+                    <div
                         onClick={() => setActiveTab('dashboard')}
                         className={cn(
                             "flex items-center transition-all duration-300 group cursor-pointer overflow-hidden",
@@ -855,17 +875,17 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                     >
                         <div className="relative shrink-0">
                             <div className="w-10 h-10 bg-[#f59e0b]/10 rounded-xl flex items-center justify-center border border-[#f59e0b]/20 shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-transform group-hover:scale-110">
-                                <img 
-                                    src={settings.churchLogoUrl || "/flama-oficial.svg"} 
+                                <img
+                                    src={settings.churchLogoUrl || "/flama-oficial.svg"}
                                     className="w-6 h-6 object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-all"
                                     alt="Logo"
                                 />
                             </div>
                             <div className="absolute inset-0 rounded-xl border border-white/20 ring-1 ring-white/5" />
                         </div>
-                        
+
                         {!isSidebarCollapsed && (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 className="flex flex-col"
@@ -914,11 +934,11 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     }}
                                     className={cn(
                                         "transition-all duration-300 group relative flex items-center outline-none mb-1 w-full",
-                                        isSidebarCollapsed 
-                                            ? "h-11 justify-center" 
+                                        isSidebarCollapsed
+                                            ? "h-11 justify-center"
                                             : "px-3 py-2.5 gap-3 rounded-lg mx-1 w-auto",
-                                        isActive 
-                                            ? "bg-tactile-orange-pill text-white font-bold" 
+                                        isActive
+                                            ? "bg-tactile-orange-pill text-white font-bold"
                                             : "text-white/40 hover:text-white hover:bg-white/[0.02]"
                                     )}
                                 >
@@ -933,7 +953,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     )}>
                                         <tab.icon className="w-5 h-5" />
                                     </div>
-                                    
+
                                     {!isSidebarCollapsed && (
                                         <span className="text-[12px] font-semibold capitalize tracking-wide whitespace-nowrap">
                                             {tab.label}
@@ -955,7 +975,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                         {/* Theme Switcher (Alair Style) */}
                         {!isSidebarCollapsed && (
                             <div className="flex bg-white/5 rounded-xl p-1">
-                                <button 
+                                <button
                                     onClick={() => saveSettingsToCloud({ themeMode: 'light' })}
                                     className={cn(
                                         "flex-1 flex items-center justify-center gap-2 h-9 text-[12px] font-semibold rounded-lg transition-all",
@@ -965,7 +985,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     <Sun className="w-3.5 h-3.5" />
                                     <span>Light</span>
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => saveSettingsToCloud({ themeMode: 'dark' })}
                                     className={cn(
                                         "flex-1 flex items-center justify-center gap-2 h-9 text-[12px] font-semibold rounded-lg transition-all",
@@ -978,7 +998,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                             </div>
                         )}
                         {isSidebarCollapsed && (
-                            <button 
+                            <button
                                 onClick={() => saveSettingsToCloud({ themeMode: settings.themeMode === 'light' ? 'dark' : 'light' })}
                                 className="w-10 h-10 mx-auto flex items-center justify-center bg-white/5 rounded-xl text-white/40 hover:text-white transition-all"
                             >
@@ -990,8 +1010,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                         {!isSidebarCollapsed && (
                             <div className="flex items-center gap-3 p-1.5 bg-white/5 rounded-lg group border border-transparent hover:border-white/5 transition-all">
                                 <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/10 shadow-lg">
-                                    <img 
-                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
+                                    <img
+                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`}
                                         alt={currentUser?.name}
                                         className="w-full h-full object-cover"
                                     />
@@ -1000,7 +1020,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     <p className="text-[12px] font-semibold text-foreground truncate leading-none mb-1">{currentUser?.name || 'Admin'}</p>
                                     <p className="text-[11px] text-muted-foreground truncate leading-none">{currentUser?.email || 'admin@lldmrodeo.org'}</p>
                                 </div>
-                                <button 
+                                <button
                                     onClick={() => signOut()}
                                     className="p-1 text-white/20 hover:text-primary transition-colors"
                                     title="Sign Out"
@@ -1012,8 +1032,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                         {isSidebarCollapsed && (
                             <div className="flex flex-col items-center gap-2">
                                 <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10">
-                                    <img 
-                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
+                                    <img
+                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`}
                                         alt="User"
                                         className="w-full h-full object-cover"
                                     />
@@ -1034,15 +1054,15 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     onClick={() => setActiveTab(tab.id)}
                                     className={cn(
                                         "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                        activeTab === tab.id 
-                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                        activeTab === tab.id
+                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
                                             : "text-white/40 hover:text-white hover:bg-white/5"
                                     )}
                                 >
                                     {tab.label}
                                 </button>
                             ))}
-                            
+
                             <div className="flex-1 min-w-[20px]" />
 
                             <div className="flex items-center gap-2 pr-1">
@@ -1080,9 +1100,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                 >
                                     SALIR
                                 </button>
-                                
+
                                 <div className="w-px h-6 bg-white/10 mx-2" />
-                                
+
                                 <button
                                     onClick={() => setActiveTab('perfil')}
                                     className={cn(
@@ -1091,10 +1111,10 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                     )}
                                 >
                                     <div className="w-7 h-7 rounded-lg overflow-hidden border border-primary/30">
-                                        <img 
-                                            src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
-                                            alt="" 
-                                            className="w-full h-full object-cover" 
+                                        <img
+                                            src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`}
+                                            alt=""
+                                            className="w-full h-full object-cover"
                                         />
                                     </div>
                                     <span className={cn(
@@ -1190,8 +1210,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         }}
                                         className={cn(
                                             "flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                            activeTab === tab.id 
-                                                ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                            activeTab === tab.id
+                                                ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
                                                 : "text-white/40 hover:text-white hover:bg-white/5"
                                         )}
                                     >
@@ -1264,88 +1284,89 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             <button className="tactile-btn tactile-btn-glass text-xs px-8">Historial</button>
                                         </div>
                                     </div>
-                                                         {/* Right Column - Intelligence */}
+                                    {/* Right Column - Intelligence */}
                                     <div className="col-span-1 md:col-span-4 space-y-8">
                                         <TactileGlassCard title="INTELIGENCIA MENSUAL" className="w-full">
                                             <div className="space-y-6">
                                                 <div className="flex items-center justify-between">
                                                     <p className="text-[10px] font-black capitalize text-primary tracking-[0.2em]">Rendimiento 30 Días</p>
-                                                    <TactileBadge className="bg-emerald-500/10 border-emerald-500/20 text-emerald-500 gap-1.5">
-                                                        <TrendingUp className="w-3 h-3" />
-                                                        <span>+12.4%</span>
+                                                    <TactileBadge className={cn(
+                                                        "gap-1.5",
+                                                        attendanceTrend.isPos ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" : "bg-orange-500/10 border-orange-500/20 text-orange-500"
+                                                    )}>
+                                                        {attendanceTrend.isPos ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                                                        <span>{attendanceTrend.isPos ? '+' : '-'}{attendanceTrend.value}%</span>
                                                     </TactileBadge>
 
                                                 </div>
 
-                                                {/* Societies Chart */}
-                                                <div className="h-48 flex items-end justify-between gap-3 px-1 relative">
-                                                    {(monthlyIntelligence.length > 0 ? monthlyIntelligence : [
-                                                        { label: 'Ene', value: 88 },
-                                                        { label: 'Feb', value: 92 },
-                                                        { label: 'Mar', value: 68 },
-                                                        { label: 'Abr', value: 85 },
-                                                        { label: 'May', value: 54 },
-                                                        { label: 'Jun', value: 76 },
-                                                    ]).map((soc, idx) => {
-                                                        const colorGrad = soc.value >= 80 ? "from-emerald-500/60 to-emerald-400/20" : 
-                                                                         soc.value >= 60 ? "from-primary/60 to-primary/20" : 
-                                                                         "from-orange-500/60 to-orange-400/20";
-                                                        return (
-                                                            <div key={idx} className="flex-1 flex flex-col items-center gap-3 group relative h-full justify-end">
-                                                                <motion.div 
-                                                                    initial={{ height: 0 }}
-                                                                    animate={{ height: `${soc.value}%` }}
-                                                                    className={cn("w-full rounded-t-xl bg-gradient-to-t border-t border-white/20", colorGrad)}
-                                                                />
-                                                                <div className="text-center space-y-1.5">
-                                                                    <TactileBadge className="px-1.5 py-0.5 border-none bg-white/5">
-                                                                        <span className="text-white/90">{soc.value}%</span>
-                                                                    </TactileBadge>
-                                                                    <div className="text-[7px] font-black capitalize text-tactile-text-sub truncate w-10 mx-auto">{soc.label}</div>
-                                                                </div>
+                                                <div className="flex flex-col items-center py-4 relative overflow-hidden group">
+                                                    
+                                                    {/* Premium Statistics Spline Chart */}
+                                                    <div className="w-full h-48 px-2 relative mt-4">
+                                                        <TactileAreaChart 
+                                                            data={monthlyIntelligence} 
+                                                            color="#f59e0b" 
+                                                            isSmooth={true} 
+                                                            showHighlight={true}
+                                                        />
+                                                    </div>
 
+                                                    <div className="grid grid-cols-2 gap-8 w-full px-8 pb-4 border-t border-white/5 pt-6 mt-4">
+                                                        <div className="text-center">
+                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PROMEDIO MES</p>
+                                                            <div className="text-xl font-black text-primary italic">
+                                                                {monthlyIntelligence.length > 0 
+                                                                    ? Math.round(monthlyIntelligence.reduce((acc, m) => acc + m.value, 0) / monthlyIntelligence.length) 
+                                                                    : 0}%
                                                             </div>
-                                                        );
-                                                    })}
-                                                </div>
-
-                                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                                                    <div className="bg-white/[0.03] p-4 rounded-2xl border border-white/5 flex items-center justify-between">
-                                                        <div>
-                                                            <TactileBadge className="mb-2 bg-primary/10 border-primary/20 text-primary">
-                                                                Membresía Activa
-                                                            </TactileBadge>
-                                                            <div className="text-2xl font-black ">{members.filter(m => m.status === 'Activo').length}</div>
                                                         </div>
-
-                                                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                                                            <Users className="w-5 h-5 text-emerald-500" />
+                                                        <div className="text-center">
+                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PICO MÁXIMO</p>
+                                                            <div className="text-xl font-black text-emerald-500 italic">
+                                                                {monthlyIntelligence.length > 0 ? Math.max(...monthlyIntelligence.map(m => m.value)) : 0}%
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div 
-                                                        onClick={() => setActiveTab('miembros')}
-                                                        className={cn(
-                                                            "p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all hover:scale-[1.02]",
-                                                            members.filter(m => m.status === 'Pendiente').length > 0
-                                                                ? "bg-amber-500/10 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
-                                                                : "bg-white/[0.03] border-white/5 opacity-50"
-                                                        )}
-                                                    >
-                                                        <div>
-                                                            <TactileBadge className="mb-2 bg-amber-500/10 border-amber-500/20 text-amber-500">
-                                                                Auditoría Pendiente
-                                                            </TactileBadge>
-                                                            <div className={cn("text-2xl font-black", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white")}>
-                                                                {members.filter(m => m.status === 'Pendiente').length}
-                                                            </div>
-                                                        </div>
+                                                </div>
+                                            </div>
 
-                                                        <div className={cn(
-                                                            "w-10 h-10 rounded-full flex items-center justify-center",
-                                                            members.filter(m => m.status === 'Pendiente').length > 0 ? "bg-amber-500/20" : "bg-white/5"
-                                                        )}>
-                                                            <ShieldAlert className={cn("w-5 h-5", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white/20")} />
+                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                                                <div className="bg-white/[0.03] p-4 rounded-2xl border border-white/5 flex items-center justify-between">
+                                                    <div>
+                                                        <TactileBadge className="mb-2 bg-primary/10 border-primary/20 text-primary">
+                                                            Membresía Activa
+                                                        </TactileBadge>
+                                                        <div className="text-2xl font-black ">{members.filter(m => m.status === 'Activo').length}</div>
+                                                    </div>
+
+                                                    <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                                                        <Users className="w-5 h-5 text-emerald-500" />
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    onClick={() => setActiveTab('miembros')}
+                                                    className={cn(
+                                                        "p-4 rounded-2xl border flex items-center justify-between cursor-pointer transition-all hover:scale-[1.02]",
+                                                        members.filter(m => m.status === 'Pendiente').length > 0
+                                                            ? "bg-amber-500/10 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                                                            : "bg-white/[0.03] border-white/5 opacity-50"
+                                                    )}
+                                                >
+                                                    <div>
+                                                        <TactileBadge className="mb-2 bg-amber-500/10 border-amber-500/20 text-amber-500">
+                                                            Auditoría Pendiente
+                                                        </TactileBadge>
+                                                        <div className={cn("text-2xl font-black", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white")}>
+                                                            {members.filter(m => m.status === 'Pendiente').length}
                                                         </div>
+                                                    </div>
+
+                                                    <div className={cn(
+                                                        "w-10 h-10 rounded-full flex items-center justify-center",
+                                                        members.filter(m => m.status === 'Pendiente').length > 0 ? "bg-amber-500/20" : "bg-white/5"
+                                                    )}>
+                                                        <ShieldAlert className={cn("w-5 h-5", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white/20")} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -1361,22 +1382,22 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 />
                                                 <div className="space-y-1">
                                                     <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">Tipo</label>
-                                                <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
-                                                    {['orthodoxy', 'apostolic_letter'].map(type => (
-                                                        <button 
-                                                            key={type}
-                                                            onClick={() => useAppStore.getState().setTheme({ ...theme, type: type as any })}
-                                                            className={cn(
-                                                                "flex-1 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                                                theme.type === type 
-                                                                    ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
-                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
-                                                            )}
-                                                        >
-                                                            {type === 'orthodoxy' ? 'Ortodoxia' : 'Carta de Apostolado'}
-                                                        </button>
-                                                    ))}
-                                                </div>
+                                                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-2xl shadow-2xl overflow-hidden">
+                                                        {['orthodoxy', 'apostolic_letter'].map(type => (
+                                                            <button
+                                                                key={type}
+                                                                onClick={() => useAppStore.getState().setTheme({ ...theme, type: type as any })}
+                                                                className={cn(
+                                                                    "flex-1 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                                                    theme.type === type
+                                                                        ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
+                                                                        : "text-white/40 hover:text-white hover:bg-white/5"
+                                                                )}
+                                                            >
+                                                                {type === 'orthodoxy' ? 'Ortodoxia' : 'Carta de Apostolado'}
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                                 <button
                                                     onClick={async () => {
@@ -1454,8 +1475,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                         onClick={() => setCurrentAttendanceSession(session)}
                                                         className={cn(
                                                             "px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                                            currentAttendanceSession === session 
-                                                                ? "bg-[#576983] text-black transform scale-[1.02]" 
+                                                            currentAttendanceSession === session
+                                                                ? "bg-[#576983] text-black transform scale-[1.02]"
                                                                 : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                                                         )}
                                                     >
@@ -1490,8 +1511,8 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     onClick={() => setMemberFilter(group.id)}
                                                     className={cn(
                                                         "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                                        memberFilter === group.id 
-                                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
+                                                        memberFilter === group.id
+                                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
                                                             : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                                                     )}
                                                 >
@@ -1509,86 +1530,75 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                 className="w-full bg-transparent h-9 pl-10 pr-4 text-[10px] font-black tracking-[0.15em] text-foreground outline-none placeholder:text-muted-foreground/30"
                                             />
                                         </div>
-                                    </div>
-
-                                    {/* Weekly Quick Graph (Miniature) */}
-                                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                                        <TactileGlassCard title="Rendimiento Semanal" className="md:col-span-3">
-                                            <div className="h-48 flex items-end gap-2 px-2 pb-2">
-                                                {weeklyStats.length > 0 ? weeklyStats.map((stat, i) => (
-                                                    <div key={i} className="flex-1 flex flex-col items-center gap-3 group">
-                                                        <div className="w-full relative">
-                                                            <motion.div 
-                                                                initial={{ height: 0 }}
-                                                                animate={{ height: `${(stat.attended / (members.length || 1)) * 100}%` }}
-                                                                className="w-full bg-gradient-to-t from-primary/20 to-primary rounded-t-xl group-hover:from-primary/40 group-hover:to-primary group-hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all duration-500"
-                                                                style={{ minHeight: stat.attended > 0 ? '4px' : '0' }}
-                                                            />
-                                                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/80 text-[10px] font-black px-2 py-1 rounded border border-primary/30">
-                                                                {stat.attended}
-                                                            </div>
+                                        {/* Weekly Quick Graph - Upgraded to Pill Bar Chart */}
+                                        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                                            <TactileGlassCard className="md:col-span-3">
+                                                <div className="flex flex-col h-full">
+                                                    <div className="mb-6">
+                                                        <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-1">Total de Asistencias</p>
+                                                        <div className="text-3xl font-black text-foreground tabular-nums">
+                                                            {weeklyStats.reduce((acc, s) => acc + s.attended, 0).toLocaleString()}
                                                         </div>
-                                                        <span className="text-[9px] font-black text-muted-foreground/30 capitalize tracking-widest">{format(parseISO(stat.date), 'EEE', { locale: es })}</span>
                                                     </div>
-                                                )) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-muted-foreground/40 tracking-widest capitalize ">
-                                                        Cargando estadísticas...
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </TactileGlassCard>
-
-                                        <TactileGlassCard title="Sesión Actual" className="md:col-span-1">
-                                            <div className="flex flex-col items-center justify-center h-48 gap-4 py-4">
-                                                {(() => {
-                                                    const date = currentDate;
-                                                    const session = currentAttendanceSession;
-                                                    const count = (attendanceRecords[date] || []).filter(r => r.session_type === session && r.present).length;
-                                                    const percent = Math.round((count / (members.length || 1)) * 100);
-                                                    const displayPercent = Math.max(percent, 0.5);
                                                     
-                                                    return (
-                                                        <>
-                                                            <div className="relative w-32 h-32">
-                                                                <div className="absolute inset-2 rounded-full border border-white/5 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-                                                                <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(245,158,11,0.1)]" viewBox="0 0 100 100">
-                                                                    <defs>
-                                                                        <linearGradient id="globalProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                                            <stop offset="0%" stopColor="#cc9900" />
-                                                                            <stop offset="100%" stopColor="#f59e0b" />
-                                                                        </linearGradient>
-                                                                    </defs>
-                                                                    <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
-                                                                    <motion.circle 
-                                                                        cx="50" cy="50" r="44" fill="none" stroke="url(#globalProgressGrad)" strokeWidth="10" strokeDasharray="276.46" 
-                                                                        initial={{ strokeDashoffset: 276.46 }}
-                                                                        animate={{ strokeDashoffset: 276.46 - (276.46 * displayPercent / 100) }}
-                                                                        transition={{ duration: 1.5, ease: "backOut" }}
-                                                                        className="drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]" strokeLinecap="round"
-                                                                    />
-                                                                </svg>
-                                                                <div className="absolute inset-0 flex flex-col items-center justify-center rotate-0 z-10">
-                                                                    <span className="text-3xl font-black  text-foreground drop-shadow-md">{percent}%</span>
-                                                                    <div className="flex items-center gap-1 mt-1 px-2 py-0.5 bg-white/5 rounded-full border border-white/10">
-                                                                        <span className="text-[8px] font-black text-muted-foreground/70">{count}</span>
-                                                                        <span className="text-[7px] font-bold text-muted-foreground/30">/</span>
-                                                                        <span className="text-[8px] font-black text-muted-foreground/70">{members.length}</span>
+                                                    <div className="flex-1 min-h-[150px] relative">
+                                                        <TactileBarChart data={weeklyStats} />
+                                                    </div>
+                                                </div>
+                                            </TactileGlassCard>
+
+                                            <TactileGlassCard title="Sesión Actual" className="md:col-span-1">
+                                                <div className="flex flex-col items-center justify-center h-48 gap-4 py-4">
+                                                    {(() => {
+                                                        const date = currentDate;
+                                                        const session = currentAttendanceSession;
+                                                        const count = (attendanceRecords[date] || []).filter(r => r.session_type === session && r.present).length;
+                                                        const percent = Math.round((count / (members.length || 1)) * 100);
+                                                        const displayPercent = Math.max(percent, 0.5);
+
+                                                        return (
+                                                            <>
+                                                                <div className="relative w-32 h-32">
+                                                                    <div className="absolute inset-2 rounded-full border border-white/5 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+                                                                    <svg className="w-full h-full -rotate-90 filter drop-shadow-[0_0_15px_rgba(245,158,11,0.1)]" viewBox="0 0 100 100">
+                                                                        <defs>
+                                                                            <linearGradient id="globalProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                                                <stop offset="0%" stopColor="#cc9900" />
+                                                                                <stop offset="100%" stopColor="#f59e0b" />
+                                                                            </linearGradient>
+                                                                        </defs>
+                                                                        <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
+                                                                        <motion.circle
+                                                                            cx="50" cy="50" r="44" fill="none" stroke="url(#globalProgressGrad)" strokeWidth="10" strokeDasharray="276.46"
+                                                                            initial={{ strokeDashoffset: 276.46 }}
+                                                                            animate={{ strokeDashoffset: 276.46 - (276.46 * displayPercent / 100) }}
+                                                                            transition={{ duration: 1.5, ease: "backOut" }}
+                                                                            className="drop-shadow-[0_0_12px_rgba(245,158,11,0.6)]" strokeLinecap="round"
+                                                                        />
+                                                                    </svg>
+                                                                    <div className="absolute inset-0 flex flex-col items-center justify-center rotate-0 z-10">
+                                                                        <span className="text-3xl font-black  text-foreground drop-shadow-md">{percent}%</span>
+                                                                        <div className="flex items-center gap-1 mt-1 px-2 py-0.5 bg-white/5 rounded-full border border-white/10">
+                                                                            <span className="text-[8px] font-black text-muted-foreground/70">{count}</span>
+                                                                            <span className="text-[7px] font-bold text-muted-foreground/30">/</span>
+                                                                            <span className="text-[8px] font-black text-muted-foreground/70">{members.length}</span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                            <div className="flex flex-col items-center gap-1 mt-4">
-                                                                <p className="text-[10px] font-black capitalize text-primary tracking-[0.3em] ">Asistencia en Vivo</p>
-                                                                <div className="flex gap-1">
-                                                                    <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                                                    <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                                                    <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                                <div className="flex flex-col items-center gap-1 mt-4">
+                                                                    <p className="text-[10px] font-black capitalize text-primary tracking-[0.3em] ">Asistencia en Vivo</p>
+                                                                    <div className="flex gap-1">
+                                                                        <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                                        <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                                        <motion.div animate={{ opacity:[0.4, 1, 0.4] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} className="w-1.5 h-1.5 rounded-full bg-primary" />
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </>
-                                                    );
-                                                })()}
-                                            </div>
-                                        </TactileGlassCard>
+                                                            </>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            </TactileGlassCard>
+                                        </div>
                                     </div>
 
                                     {/* Member List Grid */}
@@ -1731,19 +1741,38 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     <div className="flex items-center gap-3">
                                                         <div className="relative group">
                                                             <button
-                                                                className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50"
+                                                                onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                                                                className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50 relative z-20"
                                                             >
                                                                 <CalendarClock className="w-3.5 h-3.5 mr-2 text-primary" />
-                                                                CAMBIAR FECHA
+                                                                {isCalendarOpen ? 'CERRAR CALENDARIO' : 'CAMBIAR FECHA'}
                                                             </button>
-                                                            <input 
-                                                                type="date" 
-                                                                className="absolute inset-0 opacity-0 cursor-pointer w-full z-10" 
-                                                                value={currentDate}
-                                                                onChange={(e) => {
-                                                                    if (e.target.value) setCurrentDate(e.target.value);
-                                                                }}
-                                                            />
+                                                            
+                                                            <AnimatePresence>
+                                                                {isCalendarOpen && (
+                                                                    <div className="fixed inset-0 sm:absolute sm:top-full sm:right-0 sm:inset-auto mt-0 sm:mt-4 z-[100] flex items-center justify-center sm:block p-4 sm:p-0 w-full sm:w-[340px]">
+                                                                        <motion.div
+                                                                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                                                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                                            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                                                                            className="shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full max-w-[340px] sm:max-w-none"
+                                                                        >
+                                                                            <PremiumCalendar 
+                                                                                selectedDate={currentDate}
+                                                                                onDateSelect={(date) => {
+                                                                                    setCurrentDate(date);
+                                                                                    setIsCalendarOpen(false);
+                                                                                }}
+                                                                                theme="primitivo"
+                                                                            />
+                                                                        </motion.div>
+                                                                        <div 
+                                                                            className="fixed inset-0 bg-black/80 backdrop-blur-md sm:bg-transparent sm:backdrop-blur-none z-[-1]" 
+                                                                            onClick={() => setIsCalendarOpen(false)}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </AnimatePresence>
                                                         </div>
                                                         <button
                                                             onClick={() => {

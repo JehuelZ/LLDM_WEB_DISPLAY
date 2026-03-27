@@ -2,20 +2,22 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { 
     Terminal, Bell, Monitor, LogOut, Users, Clock, Palette, 
     Settings as SettingsIcon, User, Layout, Music2, Activity,
     Shield, ChevronLeft, ChevronRight, Target, Camera,
     ChevronDown, MoreHorizontal, Search, User as UserIcon,
-    UserSearch
+    UserSearch, CalendarDays
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import LunaDonut from '@/components/ui/LunaDonut';
+import { TactileAreaChart, TactileBarChart } from '@/components/ui/Charts';
+import PremiumCalendar from '@/components/ui/PremiumCalendar';
 
 interface LunaAdminProps {
     children?: React.ReactNode;
@@ -35,8 +37,12 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
         members = [], 
         setSettings,
         saveSettingsToCloud,
-        currentUser
+        currentUser,
+        currentDate,
+        setCurrentDate
     } = useAppStore();
+
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
     // DERIVED STATS
     const activeMembersCount = members?.filter(m => m.status === 'Activo').length || 0;
@@ -161,9 +167,41 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
                             <h2 className="text-[10px] font-[300] tracking-[0.5em] text-white/30 uppercase ">{activeTab}</h2>
                             <div className="flex items-center gap-3">
                                 <div className="w-1 h-1 rounded-full bg-emerald-500" />
-                                <span className="text-[9px] font-[300] tracking-widest text-white/60 tabular-nums">
-                                    {format(currentTime, 'HH:mm:ss')}
-                                </span>
+                                <div className="relative">
+                                    <button 
+                                        onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                                        className="text-[9px] font-[300] tracking-widest text-white/60 tabular-nums hover:text-emerald-400 transition-colors uppercase flex items-center gap-2"
+                                    >
+                                        <CalendarDays className="w-3 h-3" />
+                                        {format(parseISO(currentDate), "ddd d MMM", { locale: es })} • {format(currentTime, 'HH:mm:ss')}
+                                    </button>
+                                    
+                                    <AnimatePresence>
+                                        {isCalendarOpen && (
+                                            <div className="fixed inset-0 sm:absolute sm:top-full sm:left-0 sm:inset-auto mt-0 sm:mt-4 z-[100] flex items-center justify-center sm:block p-4 sm:p-0 w-full sm:w-[340px]">
+                                                <motion.div
+                                                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                                                    className="shadow-[0_20px_50px_rgba(0,0,0,0.8)] w-full max-w-[340px] sm:max-w-none"
+                                                >
+                                                    <PremiumCalendar 
+                                                        selectedDate={currentDate}
+                                                        onDateSelect={(date) => {
+                                                            setCurrentDate(date);
+                                                            setIsCalendarOpen(false);
+                                                        }}
+                                                        theme="luna"
+                                                    />
+                                                </motion.div>
+                                                <div 
+                                                    className="fixed inset-0 bg-black/90 backdrop-blur-xl sm:bg-transparent sm:backdrop-blur-none z-[-1]" 
+                                                    onClick={() => setIsCalendarOpen(false)}
+                                                />
+                                            </div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -204,7 +242,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
                                     { icon: Shield, val: '99.9%', lbl: 'uptime sistema', sub: 'nodo central: ok', acc: '#3b82f6' },
                                     { icon: Target, val: '312', lbl: 'proyección', sub: 'clases activas', acc: '#f59e0b' },
                                 ].map((kpi, i) => (
-                                    <div key={i} className="p-8 border border-white/[0.04] bg-[#0d0e14] group hover:border-white/10 transition-all duration-500">
+                                    <div key={i} className="p-8 border border-white/[0.04] bg-white/[0.02] group hover:border-white/10 transition-all duration-500">
                                         <div className="flex justify-between items-start mb-6">
                                             <kpi.icon className="w-4 h-4 text-white/20 group-hover:text-white transition-colors duration-500" />
                                             <div className="w-1 h-1 bg-white/10" />
@@ -221,7 +259,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
                             </div>
 
                             {/* MAIN CONSOLE */}
-                            <div className="p-10 border border-white/[0.04] bg-[#0d0e14]">
+                            <div className="p-10 border border-white/[0.04] bg-white/[0.02] backdrop-blur-sm">
                                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
                                     <div className="lg:col-span-3 space-y-10">
                                         <div className="flex justify-between items-end">
@@ -241,50 +279,14 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
                                             </div>
                                         </div>
 
-                                        {/* CHART AREA */}
-                                        <div className="h-64 flex items-end gap-2 relative">
-                                            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-                                                {[0, 1, 2, 3].map(i => <div key={i} className="w-full h-px bg-white/[0.02]" />)}
-                                            </div>
-                                            <div className="flex-1 flex items-end justify-between px-4 mt-8 h-full relative group">
-                                                <svg className="w-full h-full absolute inset-0 overflow-visible">
-                                                    <defs>
-                                                        <linearGradient id="lineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                            <stop offset="0%" stopColor="#10b981" stopOpacity="0.4" />
-                                                            <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
-                                                        </linearGradient>
-                                                    </defs>
-                                                    {monthlyStats && (
-                                                        <>
-                                                            <polyline 
-                                                                fill="url(#lineGrad)" 
-                                                                points={monthlyStats.map((s, i) => `${(i / (monthlyStats.length-1)) * 100}%,${100 - s.val}%`).join(' ') + ` 100,100 0,100`}
-                                                                className="transition-all duration-1000"
-                                                                style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
-                                                            />
-                                                            <polyline 
-                                                                fill="none" 
-                                                                stroke="#10b981" 
-                                                                strokeWidth="1.5" 
-                                                                strokeLinecap="round" 
-                                                                points={monthlyStats.map((s, i) => `${(i / (monthlyStats.length-1)) * 100}%,${100 - s.val}%`).join(' ')}
-                                                                className="transition-all duration-1000"
-                                                            />
-                                                            <polyline 
-                                                                fill="none" 
-                                                                stroke="#ffffff" 
-                                                                strokeWidth="1" 
-                                                                strokeLinecap="round" 
-                                                                strokeDasharray="4 4" 
-                                                                style={{ opacity: 0.2 }} 
-                                                            />
-                                                        </>
-                                                    )}
-                                                </svg>
-                                                <div className="flex justify-between w-full mt-10">
-                                                    {monthlyStats.map(s => <span key={s.label} className="text-[8px] font-[300] text-white/20 tracking-widest ">{s.label}</span>)}
-                                                </div>
-                                            </div>
+                                        {/* UPGRADED CHART AREA */}
+                                        <div className="h-64 relative">
+                                            <TactileAreaChart 
+                                                data={monthlyStats.map(s => ({ label: s.label, value: s.val }))} 
+                                                color="#10b981" 
+                                                isSmooth={true} 
+                                                showHighlight={true} 
+                                            />
                                         </div>
                                     </div>
 

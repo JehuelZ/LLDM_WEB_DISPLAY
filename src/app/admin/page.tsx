@@ -27,6 +27,8 @@ import { CountdownCard } from '@/components/CountdownCard';
 import { ALL_THEMES } from '@/themes';
 import TactileAdmin from './TactileAdmin';
 import LunaAdmin from './LunaAdmin';
+import { TactileAreaChart, TactileBarChart } from '@/components/ui/Charts';
+import PremiumCalendar from '@/components/ui/PremiumCalendar';
 
 const MessagesPanel = ({
     messages,
@@ -422,7 +424,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
     };
 
     return (
-        <Card className="glass-card bg-slate-900/40 border-none relative overflow-hidden group shadow-sm h-full">
+        <Card className="glass-card border-none relative overflow-hidden group shadow-sm h-full">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-none blur-3xl -mr-32 -mt-32 pointer-events-none" />
             <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-10">
                 <div>
@@ -463,108 +465,21 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                 </div>
             </CardHeader>
             <CardContent className="pt-6 relative z-10">
-                <div className="h-64 flex items-end justify-between gap-4 px-8 pb-10 relative">
-                    {/* Y-axis Labels */}
-                    <div className="absolute left-0 top-0 bottom-10 flex flex-col justify-between text-[8px] font-black text-white/40 pr-2 pointer-events-none select-none">
-                        <span>100%</span>
-                        <span>75%</span>
-                        <span>50%</span>
-                        <span>25%</span>
-                        <span>0%</span>
-                    </div>
-
-                    {/* Grid Lines */}
-                    <div className="absolute left-8 right-8 top-0 bottom-10 flex flex-col justify-between pointer-events-none opacity-5">
-                        <div className="w-full h-px bg-white" />
-                        <div className="w-full h-px bg-white border-dashed" />
-                        <div className="w-full h-px bg-white" />
-                        <div className="w-full h-px bg-white border-dashed" />
-                    </div>
-
-                    {loading ? (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                            <Sparkles className="w-6 h-6 text-white animate-pulse" />
-                        </div>
-                    ) : stats.map((day, idx) => {
-                        const total = day.totalMembers || 1;
-                        const p5am = (day.sessions['5am'] / total) * 100;
-                        const p9am = (day.sessions['9am'] / total) * 100;
-                        const pEvening = (day.sessions['evening'] / total) * 100;
-                        
-                        return (
-                            <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full relative group">
-                                <div className="flex-1 w-3 bg-white/[0.03] rounded-t-full overflow-hidden relative flex flex-col justify-end border-b border-white/20 backdrop-blur-md transition-all duration-300 group-hover:bg-white/[0.05] h-full mx-auto">
-                                    {/* Evening Segment */}
-                                    <motion.div 
-                                        initial={{ height: 0 }}
-                                        animate={{ height: `${pEvening}%` }}
-                                        className={cn(
-                                            "w-full relative z-30 transition-all duration-500 rounded-t-full",
-                                            idx % 2 === 0 
-                                                ? (settings.adminTheme === 'primitivo' ? "bg-gradient-to-t from-amber-700 to-amber-500 shadow-none" : "bg-gradient-to-t from-orange-600 to-orange-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]") 
-                                                : "bg-[#525568]"
-                                        )}
-                                        style={{ 
-                                            borderTop: '1px solid rgba(255,255,255,0.1)'
-                                        }}
-                                    >
-                                        <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-black/90 px-2 py-1 rounded-none text-[8px] font-black uppercase tracking-widest whitespace-nowrap z-50 border border-white/10 backdrop-blur-md text-white">
-                                            {day.sessions['evening']} pers.
-                                        </div>
-                                    </motion.div>
-
-                                    {/* 9 AM Segment */}
-                                    <motion.div 
-                                        initial={{ height: 0 }}
-                                        animate={{ height: `${p9am}%` }}
-                                        className={cn(
-                                            "w-full relative z-20 transition-all duration-500 rounded-none",
-                                            idx % 2 === 0 
-                                                ? (settings.adminTheme === 'primitivo' ? "bg-gradient-to-t from-amber-500/60 to-amber-400/40 shadow-none" : "bg-gradient-to-t from-indigo-700 to-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.2)]") 
-                                                : "bg-[#525568]/80"
-                                        )}
-                                        style={{ 
-                                            borderTop: '1px solid rgba(255,255,255,0.1)'
-                                        }}
-                                    />
-
-                                    {/* 5 AM Segment */}
-                                    <motion.div 
-                                        initial={{ height: 0 }}
-                                        animate={{ height: `${p5am}%` }}
-                                        className={cn(
-                                            "w-full relative z-10 transition-all duration-500 rounded-none",
-                                            idx % 2 === 0 
-                                                ? (settings.adminTheme === 'primitivo' ? "bg-gradient-to-t from-amber-800 to-amber-600" : "bg-gradient-to-t from-emerald-800 to-emerald-600")
-                                                : "bg-[#525568]/60"
-                                        )}
-                                    />
-
-                                    {/* Dot Indicator Above Day */}
-                                    <div 
-                                        className="absolute left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full z-40 transition-all duration-500" 
-                                        style={{ bottom: `calc(${pEvening + p9am + p5am}% + 10px)` }}
-                                    />
-                                </div>
-                                <div className="text-[10px] font-black uppercase text-white/50 mt-10 tracking-tight group-hover:text-white transition-colors">
-                                    {format(weekDays[idx], 'EEE', { locale: es }).toLowerCase()}
-                                </div>
-                            </div>
-                        );
-                    })}
+                <div className="h-64 relative">
+                    <TactileBarChart data={stats.map(s => ({ label: s.day, value: s.percentage }))} />
                 </div>
 
                 <div className="mt-4 flex flex-wrap justify-center gap-8 border-t border-white/5 pt-4">
                     <div className="flex items-center gap-2">
-                        <div className={cn("w-2 h-2 rounded-none", settings.adminTheme === 'primitivo' ? "bg-amber-400" : "bg-emerald-500")} />
+                        <div className="w-2 h-2 rounded-none bg-[#3b82f6]" />
                         <span className="text-[9px] font-black uppercase tracking-widest text-white/60">oración 5 am</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className={cn("w-2 h-2 rounded-none", settings.adminTheme === 'primitivo' ? "bg-amber-400/60" : "bg-indigo-500")} />
+                        <div className={cn("w-2 h-2 rounded-none bg-[#f43f5e]")} />
                         <span className="text-[9px] font-black uppercase tracking-widest text-white/60">doctrina 9 am</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <div className={cn("w-2 h-2 rounded-none", settings.adminTheme === 'primitivo' ? "bg-amber-600" : "bg-orange-500")} />
+                        <div className={cn("w-2 h-2 rounded-none bg-[#f59e0b]")} />
                         <span className="text-[9px] font-black uppercase tracking-widest text-white/60">culto de tarde</span>
                     </div>
                 </div>
@@ -683,6 +598,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [newUniform, setNewUniform] = useState({ name: '', category: 'Adulto' as 'Adulto' | 'Niño' });
     const [isSaving, setIsSaving] = useState(false);
     const [showAddMember, setShowAddMember] = useState(false);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [newMember, setNewMember] = useState({
         name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: ''
     });
@@ -1288,8 +1204,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                 >
                     {/* 1. Monthly Performance Intelligence Dashboard */}
                     <Card className={cn(
-                        "glass-card border-none relative overflow-hidden group h-full rounded-none lg:col-span-2",
-                        settings.adminTheme === 'primitivo' ? "bg-transparent shadow-none" : "bg-slate-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                        "glass-card border-none relative overflow-hidden group h-full rounded-none lg:col-span-2 shadow-[0_20px_50px_rgba(0,0,0,0.3)]",
+                        settings.adminTheme === 'primitivo' && "bg-transparent shadow-none"
                     )}>
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-none blur-[100px] -mr-32 -mt-32 pointer-events-none" />
                         <CardHeader className="pb-2 flex flex-row items-center justify-between">
@@ -1305,34 +1221,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </div>
                         </CardHeader>
                         <CardContent className="pt-10 pb-8">
-                            <div className="h-44 flex items-end justify-between gap-2 px-1 relative">
-                                {displayStats.map((soc, idx) => {
-                                    const label = soc.label;
-                                    const colorGrad = soc.value >= 80 
-                                        ? (settings.adminTheme === 'primitivo' ? "from-amber-600 to-amber-400" : "from-emerald-600 to-emerald-400") 
-                                        : soc.value >= 60 
-                                            ? (settings.adminTheme === 'primitivo' ? "from-amber-500 to-amber-300" : "from-indigo-600 to-indigo-400")
-                                            : (settings.adminTheme === 'primitivo' ? "from-amber-400/80 to-amber-400/40" : "from-orange-600 to-orange-400");
-                                    
-                                    return (
-                                        <div key={idx} className="flex-1 flex flex-col items-center gap-2 group/valla relative h-full">
-                                            <div className="w-full relative flex flex-col items-center justify-end h-full">
-                                                <div className="flex-1 w-3 bg-white/[0.03] rounded-t-full overflow-hidden relative flex flex-col justify-end border-b border-white/20 backdrop-blur-md transition-all duration-300 group-hover/valla:bg-white/[0.05] h-full mx-auto">
-                                                    <motion.div 
-                                                        initial={{ height: 0 }}
-                                                        animate={{ height: `${soc.value}%` }}
-                                                        className={cn("w-full rounded-none bg-gradient-to-t relative z-10 transition-all duration-700", colorGrad)}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="text-center relative z-10 mt-10">
-                                                <div className="text-[10px] font-black text-foreground tracking-tighter tabular-nums mb-1">{soc.value}%</div>
-                                                <span className="text-[7px] font-black uppercase tracking-[0.2em] text-muted-foreground block">{label}</span>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                             <div className="h-44 relative">
+                                 <TactileAreaChart 
+                                     data={displayStats} 
+                                     color={settings.adminTheme === 'primitivo' ? "#f59e0b" : "#10b981"} 
+                                     isSmooth={true} 
+                                     showHighlight={true} 
+                                 />
+                             </div>
                         </CardContent>
                     </Card>
 
@@ -1344,8 +1240,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                     {/* 3. Daily Attendance Donut Chart - SQUARE PIECE (CONSTRAINED) */}
                     <div className="lg:col-span-1">
                         <Card className={cn(
-                            "glass-card border-none relative overflow-hidden group w-full aspect-square flex flex-col justify-between",
-                            settings.adminTheme === 'primitivo' ? "bg-muted/30 rounded-[2.5rem]" : "bg-slate-900/60 rounded-none shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                            "glass-card border-none relative overflow-hidden group w-full aspect-square flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)]",
+                            settings.adminTheme === 'primitivo' ? "bg-muted/30 rounded-[2.5rem]" : "rounded-none"
                         )}>
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-4 w-full">
@@ -1754,8 +1650,11 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 <div className="flex justify-between items-center">
                                     <CardTitle className="text-xl font-black uppercase flex items-center gap-2">
                                         <Calendar className="h-5 w-5 text-primary" />
-                                        Programación: <div className="relative group inline-block cursor-pointer">
-                                            <span className="text-primary hover:text-primary/80 transition-colors">
+                                        Programación: <div className="relative inline-block">
+                                            <button 
+                                                onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                                                className="text-primary hover:text-primary/80 transition-colors cursor-pointer border-b border-dashed border-primary/30"
+                                            >
                                                 {(() => {
                                                     try {
                                                         return format(parseISO(currentDate), "PPPP", { locale: es });
@@ -1763,15 +1662,33 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         return currentDate;
                                                     }
                                                 })()}
-                                            </span>
-                                            <input 
-                                                type="date" 
-                                                className="absolute inset-0 opacity-0 cursor-pointer w-full" 
-                                                value={currentDate}
-                                                onChange={(e) => {
-                                                    if (e.target.value) setCurrentDate(e.target.value);
-                                                }}
-                                            />
+                                            </button>
+                                            
+                                            <AnimatePresence>
+                                                {isCalendarOpen && (
+                                                    <div className="fixed inset-0 sm:absolute sm:top-full sm:left-0 sm:inset-auto mt-0 sm:mt-4 z-[100] flex items-center justify-center sm:block p-4 sm:p-0 w-full sm:w-[340px]">
+                                                        <motion.div
+                                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                            className="shadow-3xl w-full max-w-[340px] sm:max-w-none"
+                                                        >
+                                                            <PremiumCalendar 
+                                                                selectedDate={currentDate}
+                                                                onDateSelect={(date) => {
+                                                                    setCurrentDate(date);
+                                                                    setIsCalendarOpen(false);
+                                                                }}
+                                                                theme="classic"
+                                                            />
+                                                        </motion.div>
+                                                        <div 
+                                                            className="fixed inset-0 bg-black/60 backdrop-blur-sm sm:bg-transparent sm:backdrop-blur-none z-[-1]" 
+                                                            onClick={() => setIsCalendarOpen(false)}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </AnimatePresence>
                                         </div>
                                     </CardTitle>
                                     <div className="flex items-center gap-4">
