@@ -1919,7 +1919,7 @@ export const useAppStore = create<AppState>()(
 
                 if (error) return [];
 
-                const totalMembers = get().members.length;
+                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
 
                 return days.map(d => {
                     const dailyRecords = data?.filter(r => r.date === d) || [];
@@ -1945,7 +1945,7 @@ export const useAppStore = create<AppState>()(
 
                 if (error) return [];
 
-                const totalMembers = get().members.length;
+                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
 
                 return days.map(d => {
                     const dailyRecords = data?.filter(r => r.date === d) || [];
