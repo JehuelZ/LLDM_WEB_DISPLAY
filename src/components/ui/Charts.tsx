@@ -23,15 +23,27 @@ interface ChartProps {
 }
 
 export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, showHighlight = true, totalMembers = 100 }: ChartProps) => {
-    if (!data || data.length === 0) return <div className="h-full w-full flex items-center justify-center text-[10px] font-black text-white/20">SIN DATOS</div>;
+    // Determine if we have real data
+    const hasData = data && data.length > 0 && data.some(d => (d.attended || d.value || 0) > 0);
+
+    // Generate beautiful demo data if no real data exists
+    const demoData = Array.from({ length: 31 }, (_, i) => ({
+        label: (i + 1).toString(),
+        value: 40 + Math.sin(i * 0.5) * 20 + Math.random() * 10,
+        total: 100
+    }));
+
+    const activeData = hasData ? data : demoData;
+    
+    if (!activeData || activeData.length === 0) return <div className="h-full w-full flex items-center justify-center text-[10px] font-black text-white/20">SIN DATOS</div>;
 
     const width = 440;
     const height = 290;
-    const paddingX = 2; // Máxima expansión horizontal
+    const paddingX = 2; 
     const paddingY = 65; 
     
-    const points = data.map((d, i) => ({
-        x: (i / (data.length - 1 || 1)) * (width - paddingX * 2) + paddingX,
+    const points = activeData.map((d, i) => ({
+        x: (i / (activeData.length - 1 || 1)) * (width - paddingX * 2) + paddingX,
         y: height - (((d.attended || d.value || 0) / (d.total || 100)) * (height - paddingY * 2)) - paddingY,
         val: d.attended || d.value || 0,
         label: d.label
@@ -60,6 +72,11 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
+             {!hasData && (
+                <div className="absolute top-10 right-10 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30 text-[8px] font-black text-amber-500 uppercase tracking-widest animate-pulse">
+                    VISTA PREVIA (SIN DATOS)
+                </div>
+            )}
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                 <defs>
                     <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
@@ -198,17 +215,29 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 };
 
 export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], totalMembers?: number }) => {
-    if (!data || data.length === 0) return <div className="h-full w-full flex items-center justify-center text-[10px] font-black text-white/20">SIN DATOS</div>;
+    // Check if we have real data (at least one non-zero value)
+    const hasData = data && data.length > 0 && data.some(d => (d.attended || d.value || 0) > 0);
+    
+    // Demo data for preview if real data is missing
+    const demoData = [
+        { label: 'LU', value: 35, total: 100 },
+        { label: 'MA', value: 20, total: 100 },
+        { label: 'MI', value: 45, total: 100 },
+        { label: 'JU', value: 65, total: 100 },
+        { label: 'VI', value: 30, total: 100 },
+        { label: 'SA', value: 85, total: 100 },
+        { label: 'DO', value: 50, total: 100 },
+    ];
+
+    const activeData = hasData ? data : demoData;
 
     const width = 450;
     const height = 220;
-    const paddingX = 60; // Extra room for Y-axis
+    const paddingX = 60; 
     const paddingY = 40;
     const barWidth = 12;
-    const gap = (width - paddingX - 20) / (data.length || 7);
+    const gap = (width - paddingX - 20) / (activeData.length || 7);
     
-    // Vibrant colors from reference image
-    // Blue, Pink, Orange, and Muted Gray
     const getBarColor = (index: number) => {
         const colors = ['#3b82f6', '#4b5563', '#4b5563', '#f43f5e', '#4b5563', '#f59e0b', '#4b5563'];
         return colors[index % colors.length];
@@ -216,6 +245,11 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
 
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
+            {!hasData && (
+                <div className="absolute top-2 right-10 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30 text-[8px] font-black text-amber-500 uppercase tracking-widest animate-pulse">
+                    VISTA PREVIA (SIN DATOS)
+                </div>
+            )}
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                 <defs>
                     {['#3b82f6', '#f43f5e', '#f59e0b', '#4b5563'].map(c => (
@@ -226,7 +260,7 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                     ))}
                 </defs>
 
-                {/* Y-Axis Labels (Absolute Member Count) */}
+                {/* Y-Axis Labels */}
                 {[0, 0.5, 1].map(multiplier => {
                     const absVal = Math.round(totalMembers * multiplier);
                     return (
@@ -241,11 +275,12 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                     );
                 })}
 
-                {data.map((d, i) => {
+                {activeData.map((d, i) => {
                     const val = d.attended || d.value || 0;
                     const total = d.total || 100;
                     const ratio = Math.min(1, val / total);
-                    const h = Math.max(8, ratio * (height - paddingY * 2)); // Min height for "pill" look
+                    // At least 10px height if we have data, or 4px cap if truly zero
+                    const h = ratio > 0 ? Math.max(20, ratio * (height - paddingY * 2)) : 8; 
                     const x = paddingX + i * gap + (gap - barWidth) / 2;
                     const y = height - h - paddingY;
                     
@@ -253,14 +288,12 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                     const isMuted = color === '#4b5563';
                     const gradId = `barGrad-${color.replace('#', '')}`;
 
-                    // Label logic: LU, MA, MI, JU, VI, SA, DO
                     const days = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
-                    const label = d.date ? format(parseISO(d.date), 'EEEEEE', { locale: es }).toUpperCase() : (days[i % 7]);
+                    const label = d.date ? format(parseISO(d.date), 'EEEEEE', { locale: es }).toUpperCase() : (activeData.length === 7 ? days[i % 7] : (d.label || '').substring(0, 2).toUpperCase());
 
                     return (
                         <g key={i} className="group/bar">
-                            {/* Inner Glow / Shadow for vibrant bars */}
-                            {!isMuted && (
+                            {!isMuted && ratio > 0 && (
                                 <motion.rect
                                     initial={{ height: 0, y: height - paddingY }}
                                     animate={{ height: h, y: y }}
@@ -272,7 +305,6 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                 />
                             )}
 
-                            {/* Main Pill Bar */}
                             <motion.rect
                                 initial={{ height: 0, y: height - paddingY }}
                                 animate={{ height: h, y: y }}
@@ -286,17 +318,17 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                 )}
                             />
 
-                            {/* Tooltip on Hover */}
-                            <text 
-                                x={x + barWidth / 2} 
-                                y={y - 10} 
-                                textAnchor="middle" 
-                                className="fill-white font-black text-[10px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
-                            >
-                                {Math.round((val/total)*100)}%
-                            </text>
+                            {ratio > 0 && (
+                                <text 
+                                    x={x + barWidth / 2} 
+                                    y={y - 10} 
+                                    textAnchor="middle" 
+                                    className="fill-white font-black text-[10px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
+                                >
+                                    {Math.round((val/total)*100)}%
+                                </text>
+                            )}
 
-                            {/* X-Axis Label */}
                             <text 
                                 x={x + barWidth / 2} 
                                 y={height - 15} 
