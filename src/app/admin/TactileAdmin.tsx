@@ -40,17 +40,23 @@ const TactileBadge = ({ children, className }: { children: React.ReactNode, clas
     </div>
 )
 
-const TactileGlassCard = ({ children, title, className, subtitle }: { children: React.ReactNode, title?: string, className?: string, subtitle?: string }) => (
-    <div className={cn("tactile-glass-panel", className)}>
-        {title && (
-            <div className="mb-6">
-                <h3 className="text-[10px] font-black capitalize tracking-[0.2em] text-tactile-text-sub mb-1">{title}</h3>
-                {subtitle && <p className="text-[9px] font-bold text-tactile-text-sub/60 capitalize tracking-widest">{subtitle}</p>}
-            </div>
-        )}
-        {children}
+const TactileGlassCard = ({ children, title, className, subtitle, extra }: { children: React.ReactNode, title?: string, className?: string, subtitle?: string, extra?: React.ReactNode }) => (
+    <div className={cn("relative group/card bg-white/[0.02] border border-white/5 rounded-[3rem] p-8 backdrop-blur-3xl overflow-hidden", className)}>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none group-hover/card:bg-primary/10 transition-colors duration-700" />
+        <div className="relative z-10">
+            {title && (
+                <div className="mb-8 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">{title}</h3>
+                        {subtitle && <p className="text-[8px] font-bold text-white/20 mt-1 uppercase tracking-[0.2em]">{subtitle}</p>}
+                    </div>
+                    {extra}
+                </div>
+            )}
+            {children}
+        </div>
     </div>
-)
+);
 
 // Tactile Input Components
 const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = "text", disabled }: any) => (
@@ -453,6 +459,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
     const [activeTab, setActiveTab] = useState('dashboard');
     const [monthlyIntelligence, setMonthlyIntelligence] = useState<{ label: string, value: number }[]>([]);
     const [attendanceTrend, setAttendanceTrend] = useState({ value: 0, isPos: true });
+    const [intelligenceRange, setIntelligenceRange] = useState<15 | 30>(30);
 
     useEffect(() => {
         setMounted(true);
@@ -1286,10 +1293,31 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                     </div>
                                     {/* Right Column - Intelligence */}
                                     <div className="col-span-1 md:col-span-4 space-y-8">
-                                        <TactileGlassCard title="INTELIGENCIA MENSUAL" className="w-full">
+                                        <TactileGlassCard 
+                                            title="INTELIGENCIA MENSUAL" 
+                                            className="w-full"
+                                            extra={
+                                                <div className="flex bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-md">
+                                                    {[15, 30].map(r => (
+                                                        <button
+                                                            key={r}
+                                                            onClick={() => setIntelligenceRange(r as 15 | 30)}
+                                                            className={cn(
+                                                                "px-4 py-1.5 rounded-full text-[9px] font-black transition-all duration-300 tracking-widest",
+                                                                intelligenceRange === r 
+                                                                    ? "bg-primary text-black shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-105" 
+                                                                    : "text-white/30 hover:text-white/60"
+                                                            )}
+                                                        >
+                                                            {r}D
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            }
+                                        >
                                             <div className="space-y-6">
                                                 <div className="flex items-center justify-between">
-                                                    <p className="text-[10px] font-black capitalize text-primary tracking-[0.2em]">Rendimiento 30 Días</p>
+                                                    <p className="text-[10px] font-black capitalize text-primary tracking-[0.2em]">Rendimiento {intelligenceRange} Días</p>
                                                     <TactileBadge className={cn(
                                                         "gap-1.5",
                                                         attendanceTrend.isPos ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" : "bg-orange-500/10 border-orange-500/20 text-orange-500"
@@ -1305,7 +1333,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     {/* Premium Statistics Spline Chart */}
                                                     <div className="w-full h-80 relative mt-4">
                                                         <TactileAreaChart 
-                                                            data={monthlyIntelligence} 
+                                                            data={monthlyIntelligence.slice(-intelligenceRange)} 
                                                             color="#f59e0b" 
                                                             isSmooth={true} 
                                                             showHighlight={true}
@@ -1315,17 +1343,23 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
 
                                                     <div className="grid grid-cols-2 gap-8 w-full px-8 pb-4 border-t border-white/5 pt-6 mt-4">
                                                         <div className="text-center">
-                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PROMEDIO MES</p>
+                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PROMEDIO {intelligenceRange}D</p>
                                                             <div className="text-xl font-black text-primary italic">
-                                                                {monthlyIntelligence.length > 0 
-                                                                    ? Math.round(monthlyIntelligence.reduce((acc, m) => acc + m.value, 0) / monthlyIntelligence.length) 
-                                                                    : 0}%
+                                                                {(() => {
+                                                                    const sliced = monthlyIntelligence.slice(-intelligenceRange);
+                                                                    return sliced.length > 0 
+                                                                        ? Math.round(sliced.reduce((acc, m) => acc + m.value, 0) / sliced.length) 
+                                                                        : 0;
+                                                                })()}%
                                                             </div>
                                                         </div>
                                                         <div className="text-center">
                                                             <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PICO MÁXIMO</p>
                                                             <div className="text-xl font-black text-emerald-500 italic">
-                                                                {monthlyIntelligence.length > 0 ? Math.max(...monthlyIntelligence.map(m => m.value)) : 0}%
+                                                                {(() => {
+                                                                    const sliced = monthlyIntelligence.slice(-intelligenceRange);
+                                                                    return sliced.length > 0 ? Math.max(...sliced.map(m => m.value)) : 0;
+                                                                })()}%
                                                             </div>
                                                         </div>
                                                     </div>
