@@ -287,7 +287,7 @@ interface AppState {
     loadMemberAttendanceHistory: (memberId: string) => Promise<AttendanceRecord[]>;
     loadWeeklyAttendanceStats: () => Promise<any[]>;
     loadMonthlyGlobalAttendanceStats: () => Promise<any[]>;
-    loadMonthlyIntelligenceStats: () => Promise<{ label: string, value: number }[]>;
+    loadMonthlyIntelligenceStats: (days?: number | 'month') => Promise<{ label: string, value: number, date?: string }[]>;
     loadDetailedWeeklyStats: (days: string[]) => Promise<any[]>;
     loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
 
@@ -2282,12 +2282,20 @@ export const useAppStore = create<AppState>()(
                 }
                 return false;
             },
-            loadMonthlyIntelligenceStats: async () => {
+            loadMonthlyIntelligenceStats: async (range?: number | 'month') => {
                 const now = new Date();
-                const monthStart = startOfMonth(now);
-                const monthEnd = endOfMonth(now);
-                const startDateStr = format(monthStart, 'yyyy-MM-dd');
-                const endDateStr = format(monthEnd, 'yyyy-MM-dd');
+                
+                let startDate, endDate;
+                if (!range || range === 'month') {
+                    startDate = startOfMonth(now);
+                    endDate = endOfMonth(now);
+                } else {
+                    startDate = subDays(now, range - 1);
+                    endDate = now;
+                }
+
+                const startDateStr = format(startDate, 'yyyy-MM-dd');
+                const endDateStr = format(endDate, 'yyyy-MM-dd');
 
                 const { data, error } = await supabase
                     .from('attendance')
@@ -2301,9 +2309,9 @@ export const useAppStore = create<AppState>()(
                 }
 
                 const totalMembers = get().members.filter(m => m.status === 'Activo').length;
-                const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+                const daysInInterval = eachDayOfInterval({ start: startDate, end: endDate });
 
-                const result = daysInMonth.map((day) => {
+                return daysInInterval.map((day) => {
                     const dateStr = format(day, 'yyyy-MM-dd');
                     const dayRecords = data?.filter(r => r.date === dateStr) || [];
                     const uniqueAttended = new Set(dayRecords.map(r => r.member_id)).size;
@@ -2312,13 +2320,11 @@ export const useAppStore = create<AppState>()(
                     
                     return {
                         date: dateStr,
-                        label: format(day, 'd'), // Solo el número del día
+                        label: format(day, range === 7 ? 'eee d' : 'd'), // Letras si son pocos días
                         value: percentage,
                         total: 100
                     };
                 });
-
-                return result;
             },
         }),
         {

@@ -459,13 +459,20 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [monthlyIntelligence, setMonthlyIntelligence] = useState<{ label: string, value: number }[]>([]);
     const [attendanceTrend, setAttendanceTrend] = useState({ value: 0, isPos: true });
-    const [intelligenceRange, setIntelligenceRange] = useState<7 | 15 | 30>(30);
+    const [intelligenceRange, setIntelligenceRange] = useState<7 | 15 | 30 | 'month'>('month');
 
     useEffect(() => {
         setMounted(true);
-        loadMonthlyIntelligenceStats().then(setMonthlyIntelligence);
+    }, []);
 
-        // Calculate dynamic trend for better Intelligence
+    useEffect(() => {
+        if (mounted) {
+            loadMonthlyIntelligenceStats(intelligenceRange).then(setMonthlyIntelligence);
+        }
+    }, [mounted, intelligenceRange, loadMonthlyIntelligenceStats]);
+
+    useEffect(() => {
+        if (mounted) {
         loadMonthlyGlobalAttendanceStats().then(stats => {
             if (stats.length >= 30) {
                 const currentMonth = stats.slice(-15).reduce((acc, s) => acc + s.percentage, 0) / 15;
@@ -1298,18 +1305,18 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                             className="w-full"
                                             extra={
                                                 <div className="flex bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-md">
-                                                    {[7, 15, 30].map(r => (
+                                                    {['month', 30, 15, 7].map(r => (
                                                         <button
                                                             key={r}
-                                                            onClick={() => setIntelligenceRange(r as 7 | 15 | 30)}
+                                                            onClick={() => setIntelligenceRange(r as any)}
                                                             className={cn(
-                                                                "px-4 py-1.5 rounded-full text-[9px] font-black transition-all duration-300 tracking-widest",
+                                                                "px-3 py-1.5 rounded-full text-[9px] font-black transition-all duration-300 tracking-widest uppercase",
                                                                 intelligenceRange === r 
                                                                     ? "bg-primary text-black shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-105" 
                                                                     : "text-white/30 hover:text-white/60"
                                                             )}
                                                         >
-                                                            {r}D
+                                                            {r === 'month' ? 'MES' : `${r}D`}
                                                         </button>
                                                     ))}
                                                 </div>
@@ -1317,7 +1324,9 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                         >
                                             <div className="space-y-6">
                                                 <div className="flex items-center justify-between">
-                                                    <p className="text-[10px] font-black capitalize text-primary tracking-[0.2em]">Rendimiento {intelligenceRange} Días</p>
+                                                    <p className="text-[10px] font-black capitalize text-primary tracking-[0.2em]">
+                                                        {intelligenceRange === 'month' ? 'Rendimiento Este Mes' : `Rendimiento Últimos ${intelligenceRange} Días`}
+                                                    </p>
                                                     <TactileBadge className={cn(
                                                         "gap-1.5",
                                                         attendanceTrend.isPos ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" : "bg-orange-500/10 border-orange-500/20 text-orange-500"
@@ -1333,7 +1342,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     {/* Premium Statistics Spline Chart */}
                                                     <div className="w-full h-80 relative mt-4">
                                                         <TactileAreaChart 
-                                                            data={monthlyIntelligence.slice(-intelligenceRange)} 
+                                                            data={monthlyIntelligence} 
                                                             color="#f59e0b" 
                                                             isSmooth={true} 
                                                             showHighlight={true}
@@ -1343,23 +1352,19 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
 
                                                     <div className="grid grid-cols-2 gap-8 w-full px-8 pb-4 border-t border-white/5 pt-6 mt-4">
                                                         <div className="text-center">
-                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PROMEDIO {intelligenceRange}D</p>
+                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">
+                                                                PROMEDIO {intelligenceRange === 'month' ? 'MES' : `${intelligenceRange}D`}
+                                                            </p>
                                                             <div className="text-xl font-black text-primary italic">
-                                                                {(() => {
-                                                                    const sliced = monthlyIntelligence.slice(-intelligenceRange);
-                                                                    return sliced.length > 0 
-                                                                        ? Math.round(sliced.reduce((acc, m) => acc + m.value, 0) / sliced.length) 
-                                                                        : 0;
-                                                                })()}%
+                                                                {monthlyIntelligence.length > 0 
+                                                                    ? Math.round(monthlyIntelligence.reduce((acc, m) => acc + m.value, 0) / monthlyIntelligence.length) 
+                                                                    : 0}%
                                                             </div>
                                                         </div>
                                                         <div className="text-center">
                                                             <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PICO MÁXIMO</p>
                                                             <div className="text-xl font-black text-emerald-500 italic">
-                                                                {(() => {
-                                                                    const sliced = monthlyIntelligence.slice(-intelligenceRange);
-                                                                    return sliced.length > 0 ? Math.max(...sliced.map(m => m.value)) : 0;
-                                                                })()}%
+                                                                {monthlyIntelligence.length > 0 ? Math.max(...monthlyIntelligence.map(m => m.value)) : 0}%
                                                             </div>
                                                         </div>
                                                     </div>
