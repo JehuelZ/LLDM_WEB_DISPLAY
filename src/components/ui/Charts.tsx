@@ -215,19 +215,20 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 };
 
 export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], totalMembers?: number }) => {
-    // Check if we have real data (at least one non-zero value)
-    const hasData = data && data.length > 0 && data.some(d => (d.attended || d.value || 0) > 0);
+    // Check if we have real data (at least one non-zero value in any session)
+    const hasData = data && data.length > 0 && data.some(d => 
+        d.sessions && (d.sessions['5am'] > 0 || d.sessions['9am'] > 0 || d.sessions['evening'] > 0)
+    );
     
-    // Demo data for preview if real data is missing
-    const demoData = [
-        { label: 'LU', value: 35, total: 100 },
-        { label: 'MA', value: 20, total: 100 },
-        { label: 'MI', value: 45, total: 100 },
-        { label: 'JU', value: 65, total: 100 },
-        { label: 'VI', value: 30, total: 100 },
-        { label: 'SA', value: 85, total: 100 },
-        { label: 'DO', value: 50, total: 100 },
-    ];
+    // Triple session demo data if real data is missing
+    const demoData = Array.from({ length: 7 }, (_, i) => ({
+        label: ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'][i],
+        sessions: {
+            '5am': 20 + Math.random() * 20,
+            '9am': 10 + Math.random() * 40,
+            'evening': 30 + Math.random() * 50
+        }
+    }));
 
     const activeData = hasData ? data : demoData;
 
@@ -235,13 +236,18 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
     const height = 220;
     const paddingX = 60; 
     const paddingY = 40;
-    const barWidth = 12;
-    const gap = (width - paddingX - 20) / (activeData.length || 7);
     
-    const getBarColor = (index: number) => {
-        const colors = ['#3b82f6', '#4b5563', '#4b5563', '#f43f5e', '#4b5563', '#f59e0b', '#4b5563'];
-        return colors[index % colors.length];
-    };
+    // Group configuration
+    const groupGap = (width - paddingX - 25) / (activeData.length || 7);
+    const barWidth = 8;
+    const barSpacing = 3;
+    const totalGroupWidth = (barWidth * 3) + (barSpacing * 2);
+
+    const sessionConfig = [
+        { key: '5am' as const, color: '#3b82f6', label: '5am' },
+        { key: '9am' as const, color: '#f43f5e', label: '9am' },
+        { key: 'evening' as const, color: '#f59e0b', label: '7pm' }
+    ];
 
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
@@ -252,10 +258,10 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
             )}
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                 <defs>
-                    {['#3b82f6', '#f43f5e', '#f59e0b', '#4b5563'].map(c => (
-                        <linearGradient key={c} id={`barGrad-${c.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stopColor={c} stopOpacity="1" />
-                            <stop offset="100%" stopColor={c} stopOpacity={c === '#4b5563' ? "0.3" : "0.5"} />
+                    {sessionConfig.map(s => (
+                        <linearGradient key={s.color} id={`barGrad-${s.color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={s.color} stopOpacity="1" />
+                            <stop offset="100%" stopColor={s.color} stopOpacity="0.5" />
                         </linearGradient>
                     ))}
                 </defs>
@@ -276,67 +282,70 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                 })}
 
                 {activeData.map((d, i) => {
-                    const val = d.attended || d.value || 0;
-                    const total = d.total || 100;
-                    const ratio = Math.min(1, val / total);
-                    // At least 10px height if we have data, or 4px cap if truly zero
-                    const h = ratio > 0 ? Math.max(20, ratio * (height - paddingY * 2)) : 8; 
-                    const x = paddingX + i * gap + (gap - barWidth) / 2;
-                    const y = height - h - paddingY;
+                    const groupX = paddingX + i * groupGap + (groupGap - totalGroupWidth) / 2;
                     
-                    const color = getBarColor(i);
-                    const isMuted = color === '#4b5563';
-                    const gradId = `barGrad-${color.replace('#', '')}`;
-
-                    const days = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
-                    const label = d.date ? format(parseISO(d.date), 'EEEEEE', { locale: es }).toUpperCase() : (activeData.length === 7 ? days[i % 7] : (d.label || '').substring(0, 2).toUpperCase());
+                    const dayLabels = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
+                    const label = d.date ? format(parseISO(d.date), 'EEEEEE', { locale: es }).toUpperCase() : (activeData.length === 7 ? dayLabels[i % 7] : (d.label || '').substring(0, 2).toUpperCase());
 
                     return (
-                        <g key={i} className="group/bar">
-                            {!isMuted && ratio > 0 && (
-                                <motion.rect
-                                    initial={{ height: 0, y: height - paddingY }}
-                                    animate={{ height: h, y: y }}
-                                    transition={{ duration: 1.2, delay: i * 0.08, ease: [0.33, 1, 0.68, 1] }}
-                                    x={x - 4} y={y - 4} width={barWidth + 8} height={h + 8}
-                                    fill={color}
-                                    rx={(barWidth + 8) / 2}
-                                    className="blur-[10px] opacity-25"
-                                />
-                            )}
+                        <g key={i}>
+                            {sessionConfig.map((s, j) => {
+                                const val = d.sessions ? d.sessions[s.key] : 0;
+                                const ratio = Math.min(1, val / (totalMembers || 100));
+                                // At least 4px base if ratio is small/zero, or taller if data exists
+                                const h = ratio > 0 ? Math.max(12, ratio * (height - paddingY * 2)) : 6;
+                                const x = groupX + j * (barWidth + barSpacing);
+                                const y = height - h - paddingY;
+                                const gradId = `barGrad-${s.color.replace('#', '')}`;
 
-                            <motion.rect
-                                initial={{ height: 0, y: height - paddingY }}
-                                animate={{ height: h, y: y }}
-                                transition={{ duration: 0.8, delay: i * 0.08, ease: "circOut" }}
-                                x={x} y={y} width={barWidth} height={h}
-                                fill={`url(#${gradId})`}
-                                rx={barWidth / 2}
-                                className={cn(
-                                    "transition-all duration-300",
-                                    isMuted ? "opacity-20" : `drop-shadow-[0_0_12px_${color}88]`
-                                )}
-                            />
+                                return (
+                                    <g key={s.key} className="group/bar">
+                                        {/* Glow Layer */}
+                                        {ratio > 0.05 && (
+                                            <motion.rect
+                                                initial={{ height: 0, y: height - paddingY }}
+                                                animate={{ height: h, y: y }}
+                                                transition={{ duration: 1, delay: (i * 0.1) + (j * 0.05), ease: "circOut" }}
+                                                x={x - 3} y={y - 3} width={barWidth + 6} height={h + 6}
+                                                fill={s.color}
+                                                rx={(barWidth + 6) / 2}
+                                                className="blur-[8px] opacity-20"
+                                            />
+                                        )}
 
-                            {ratio > 0 && (
-                                <text 
-                                    x={x + barWidth / 2} 
-                                    y={y - 10} 
-                                    textAnchor="middle" 
-                                    className="fill-white font-black text-[10px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
-                                >
-                                    {Math.round((val/total)*100)}%
-                                </text>
-                            )}
+                                        {/* Main Pill */}
+                                        <motion.rect
+                                            initial={{ height: 0, y: height - paddingY }}
+                                            animate={{ height: h, y: y }}
+                                            transition={{ duration: 0.8, delay: (i * 0.1) + (j * 0.05), ease: "circOut" }}
+                                            x={x} y={y} width={barWidth} height={h}
+                                            fill={`url(#${gradId})`}
+                                            rx={barWidth / 2}
+                                            className={cn(
+                                                "transition-all duration-300",
+                                                ratio > 0.05 ? `drop-shadow-[0_0_10px_${s.color}66]` : "opacity-20"
+                                            )}
+                                        />
+                                        
+                                        {/* Group Hover Tooltip (Total) */}
+                                        <text 
+                                            x={x + barWidth / 2} 
+                                            y={y - 8} 
+                                            textAnchor="middle" 
+                                            className="fill-white font-black text-[9px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
+                                        >
+                                            {Math.round(val)}
+                                        </text>
+                                    </g>
+                                );
+                            })}
 
+                            {/* Centered Day Label under the group */}
                             <text 
-                                x={x + barWidth / 2} 
+                                x={groupX + totalGroupWidth / 2} 
                                 y={height - 15} 
                                 textAnchor="middle" 
-                                className={cn(
-                                    "text-[10px] font-black uppercase tracking-wider transition-colors",
-                                    isMuted ? "fill-white/10" : "fill-white/40"
-                                )}
+                                className="fill-white/30 text-[10px] font-black uppercase tracking-wider"
                             >
                                 {label}
                             </text>

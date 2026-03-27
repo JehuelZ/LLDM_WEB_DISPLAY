@@ -466,7 +466,10 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
             </CardHeader>
             <CardContent className="pt-6 relative z-10">
                 <div className="h-64 relative">
-                    <TactileBarChart data={stats.map(s => ({ label: s.day, value: s.percentage }))} />
+                    <TactileBarChart 
+                        data={stats} 
+                        totalMembers={members.filter(m => m.status === 'Activo').length} 
+                    />
                 </div>
 
                 <div className="mt-4 flex flex-wrap justify-center gap-8 border-t border-white/5 pt-4">
@@ -1227,6 +1230,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                      color={settings.adminTheme === 'primitivo' ? "#f59e0b" : "#10b981"} 
                                      isSmooth={true} 
                                      showHighlight={true} 
+                                     totalMembers={members.filter(m => m.status === 'Activo').length}
                                  />
                              </div>
                         </CardContent>

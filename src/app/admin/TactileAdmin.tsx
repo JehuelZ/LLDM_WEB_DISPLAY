@@ -1309,6 +1309,7 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                             color="#f59e0b" 
                                                             isSmooth={true} 
                                                             showHighlight={true}
+                                                            totalMembers={members.filter(m => m.status === 'Activo').length}
                                                         />
                                                     </div>
 
@@ -1537,12 +1538,15 @@ export default function TactileAdmin({ propTab }: { propTab?: string }) {
                                                     <div className="mb-6">
                                                         <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-1">Total de Asistencias</p>
                                                         <div className="text-3xl font-black text-foreground tabular-nums">
-                                                            {weeklyStats.reduce((acc, s) => acc + s.attended, 0).toLocaleString()}
+                                                            {weeklyStats.reduce((acc, s) => {
+                                                                const dayTotal = s.sessions ? Object.values(s.sessions).reduce((a: any, b: any) => a + b, 0) : 0;
+                                                                return acc + (dayTotal as number);
+                                                            }, 0).toLocaleString()}
                                                         </div>
                                                     </div>
                                                     
                                                     <div className="flex-1 min-h-[150px] relative">
-                                                        <TactileBarChart data={weeklyStats} />
+                                                        <TactileBarChart data={weeklyStats} totalMembers={members.filter(m => m.status === 'Activo').length} />
                                                     </div>
                                                 </div>
                                             </TactileGlassCard>

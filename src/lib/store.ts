@@ -1913,7 +1913,7 @@ export const useAppStore = create<AppState>()(
 
                 const { data, error } = await supabase
                     .from('attendance')
-                    .select('date, member_id')
+                    .select('date, session_type, member_id')
                     .gte('date', days[0])
                     .lte('date', days[6]);
 
@@ -1923,12 +1923,19 @@ export const useAppStore = create<AppState>()(
 
                 return days.map(d => {
                     const dailyRecords = data?.filter(r => r.date === d) || [];
-                    const uniqueAttended = new Set(dailyRecords.map(r => r.member_id)).size;
+                    
+                    const getCount = (session: string) => new Set(
+                        dailyRecords.filter(r => r.session_type === session).map(r => r.member_id)
+                    ).size;
+
                     return {
                         date: d,
-                        attended: uniqueAttended,
-                        total: totalMembers,
-                        percentage: totalMembers > 0 ? (uniqueAttended / totalMembers) * 100 : 0
+                        totalMembers,
+                        sessions: {
+                            '5am': getCount('5am'),
+                            '9am': getCount('9am'),
+                            'evening': getCount('evening')
+                        }
                     };
                 });
             },
