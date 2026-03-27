@@ -27,7 +27,7 @@ import { CountdownCard } from '@/components/CountdownCard';
 import { ALL_THEMES } from '@/themes';
 import TactileAdmin from './TactileAdmin';
 import LunaAdmin from './LunaAdmin';
-import { TactileAreaChart, TactileBarChart } from '@/components/ui/Charts';
+import { TactileAreaChart, TactileBarChart, TactilePieChart } from '@/components/ui/Charts';
 import PremiumCalendar from '@/components/ui/PremiumCalendar';
 
 const MessagesPanel = ({
@@ -1449,7 +1449,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         </Card>
                     </div>
 
-                    {/* 4. Membership Member Card - NARROW PIECE */}
+                    {/* 4. Membership Intelligence Card - CONSOLIDATED PIE CHART */}
                     <Card className={cn(
                         "card glass-card border-none relative overflow-hidden group h-full rounded-none lg:col-span-1 flex flex-col justify-between",
                         settings.adminTheme === 'primitivo' ? "bg-[#101420] shadow-none rounded-[1.5rem]" : "bg-slate-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
@@ -1458,27 +1458,30 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-4 w-full">
                             <div className="flex items-center gap-2">
                                 <Users className="w-3 h-3 text-white" />
-                                <span className="whitespace-nowrap">membresía total</span>
+                                <span className="whitespace-nowrap">inteligencia de membresía</span>
                             </div>
                             <div className="flex-1 h-px bg-gradient-to-r from-white/10 via-white/5 to-transparent" />
                         </CardTitle>
                         </CardHeader>
-                        <CardContent className="flex flex-col items-center justify-center flex-1 py-4">
-                            <div className="text-5xl font-black tracking-tighter text-white mb-2">{totalMembersCount}</div>
-                            <div className="flex items-center gap-1.5 bg-white/5 px-2 py-0.5 border border-white/10">
-                                <div className="w-1 h-1 bg-white animate-pulse" />
-                                <span className="text-[7px] font-black text-white/50 uppercase tracking-widest">hermanos activos</span>
-                            </div>
+                        <CardContent className="flex flex-col items-center justify-center flex-1 py-0 px-2 overflow-hidden">
+                            <TactilePieChart 
+                                title="MEMBRESÍA"
+                                data={[
+                                    { label: 'Activos', value: members.filter(m => m.status === 'Activo').length, color: '#10b981' },
+                                    { label: 'Pendientes', value: members.filter(m => m.status === 'Pendiente').length, color: '#f59e0b' },
+                                    { label: 'Otros', value: members.length - members.filter(m => ['Activo', 'Pendiente'].includes(m.status || '')).length, color: '#64748b' },
+                                ]}
+                            />
                         </CardContent>
-                        <div className="px-4 pb-6 w-full">
-                            <div className="flex flex-col gap-3 border-t border-white/5 pt-4">
-                                <div className="flex justify-between items-center">
-                                    <p className="text-[7px] font-black uppercase text-muted-foreground tracking-widest">crecimiento</p>
-                                    <p className="text-[10px] font-black text-white">+4%</p>
+                        <div className="px-6 pb-6 w-full">
+                            <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                                <div>
+                                    <p className="text-[7px] font-black uppercase text-muted-foreground tracking-widest leading-none mb-1">crecimiento</p>
+                                    <div className="text-xl font-black text-emerald-500 tabular-nums tracking-tighter italic">+4.2%</div>
                                 </div>
-                                <div className="flex justify-between items-center">
-                                    <p className="text-[7px] font-black uppercase text-white/30 tracking-widest">objetivo</p>
-                                    <p className="text-[10px] font-black text-white">500</p>
+                                <div className="text-right">
+                                    <p className="text-[7px] font-black uppercase text-white/20 tracking-widest leading-none mb-1">registrados</p>
+                                    <div className="text-xl font-black text-white tabular-nums tracking-tighter italic">{members.length}</div>
                                 </div>
                             </div>
                         </div>
@@ -1547,117 +1550,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 />
                             </div>
                             <div id="analytics-overview" className="space-y-6">
-                                <Card className={cn(
-                                    "p-8 relative overflow-hidden group/metrics",
-                                    settings.adminTheme === 'primitivo'
-                                        ? "primitivo-card"
-                                        : "card bg-emerald-500/[0.03] border border-emerald-500/10 rounded-[1.5rem]"
-                                )}>
-                                    <div className={cn(
-                                        "absolute top-0 right-0 w-64 h-64 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-700",
-                                        settings.adminTheme === 'primitivo' ? "bg-amber-500/5 group-hover/metrics:bg-amber-500/10" : "bg-emerald-500/5 group-hover/metrics:bg-emerald-500/10"
-                                    )} />
-                                    <div className="flex items-center justify-between relative z-10">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center gap-4 w-full">
-                                                <h3 className={cn(
-                                                    "text-2xl font-black uppercase flex items-center gap-3 tracking-tighter drop-shadow-sm whitespace-nowrap",
-                                                    settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-500"
-                                                )}>
-                                                    <TrendingUp className="w-6 h-6" /> Crecimiento <span className="text-foreground">Relativo</span>
-                                                </h3>
-                                                <div className={cn(
-                                                    "flex-1 h-px ml-2",
-                                                    settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-amber-400/30 via-amber-400/5 to-transparent" : "bg-gradient-to-r from-emerald-500/30 via-emerald-500/5 to-transparent"
-                                                )} />
-                                            </div>
-                                            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground ml-1">Métricas de impacto en tiempo real</p>
-                                        </div>
-                                        <div className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl border shadow-none",
-                                            settings.adminTheme === 'primitivo' ? "bg-transparent border-amber-400/20" : "bg-[#0a0a0a]/80 border-emerald-500/20 shadow-lg"
-                                        )}>
-                                            <div className={cn(
-                                                "w-2 h-2 rounded-full animate-pulse",
-                                                settings.adminTheme === 'primitivo' ? "bg-amber-400 text-amber-500" : "bg-emerald-500 text-emerald-500"
-                                            )} />
-                                            <span className={cn(
-                                                "text-[10px] font-black tracking-widest",
-                                                settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-500"
-                                            )}>MONITOREANDO</span>
-                                        </div>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-                                        <div className={cn(
-                                            "p-6 transition-all duration-500",
-                                            settings.adminTheme === 'primitivo' ? "primitivo-card-dark" : "card bg-slate-900/60 border-white/5 group-hover/metrics:border-emerald-500/20 rounded-[1rem]"
-                                        )}>
-                                            <p className={cn(
-                                                "text-[9px] font-black uppercase tracking-[0.2em] mb-2 leading-none",
-                                                settings.adminTheme === 'primitivo' ? "text-amber-400/60" : "text-slate-500"
-                                            )}>Membresía Activa</p>
-                                            <div className={cn(
-                                                "text-4xl font-black flex items-baseline gap-2 tabular-nums",
-                                                settings.adminTheme === 'primitivo' ? "text-foreground" : "text-white"
-                                            )}>
-                                                {members.length}
-                                                <span className={cn(
-                                                    "text-xs font-black not-italic",
-                                                    settings.adminTheme === 'primitivo' 
-                                                        ? "text-amber-400 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" 
-                                                        : "text-emerald-500 drop-shadow-[0_0_5px_rgba(16,185,129,0.5)]"
-                                                )}>↑</span>
-                                            </div>
-                                        </div>
-                                        <div className={cn(
-                                            "card p-6 rounded-[1rem] border transition-all duration-500 shadow-none",
-                                            settings.adminTheme === 'primitivo' ? "bg-black/40 border-white/5 group-hover/metrics:border-amber-400/30" : "bg-slate-900/60 border-white/5 group-hover/metrics:border-emerald-500/20 shadow-inner"
-                                        )}>
-                                            <p className={cn(
-                                                "text-[9px] font-black uppercase tracking-[0.2em] mb-2 leading-none",
-                                                settings.adminTheme === 'primitivo' ? "text-amber-400/60" : "text-slate-500"
-                                            )}>Total Niñez</p>
-                                            <div className={cn(
-                                                "text-4xl font-black tabular-nums",
-                                                settings.adminTheme === 'primitivo' ? "text-foreground" : "text-white"
-                                            )}>
-                                                {members.filter(m => m.category === 'Niño').length}
-                                            </div>
-                                        </div>
-                                        <div className={cn(
-                                            "card p-6 rounded-[1rem] border transition-all duration-500 shadow-none",
-                                            settings.adminTheme === 'primitivo' ? "bg-black/40 border-white/5 group-hover/metrics:border-amber-400/30" : "bg-slate-900/60 border-white/5 group-hover/metrics:border-emerald-500/20 shadow-inner"
-                                        )}>
-                                            <p className={cn(
-                                                "text-[9px] font-black uppercase tracking-[0.2em] mb-2 leading-none",
-                                                settings.adminTheme === 'primitivo' ? "text-amber-400/60" : "text-slate-500"
-                                            )}>Total Jóvenes</p>
-                                            <div className={cn(
-                                                "text-4xl font-black tabular-nums",
-                                                settings.adminTheme === 'primitivo' ? "text-foreground" : "text-white"
-                                            )}>
-                                                {members.filter(m => (m.member_group?.toLowerCase() || '').includes('joven')).length}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <Button
-                                        onClick={() => setActiveTab('miembros')}
-                                        className={cn(
-                                            "w-full rounded-2xl py-7 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-500 shadow-none group/btn border",
-                                            settings.adminTheme === 'primitivo' 
-                                                ? "bg-slate-800 text-white border-none hover:bg-amber-400 hover:text-black" 
-                                                : "bg-[#0a0a0a]/80 text-slate-400 border-white/5 hover:bg-emerald-500 hover:text-black hover:border-emerald-500/50 shadow-xl"
-                                        )}
-                                    >
-                                        <div className="flex items-center gap-2 group-hover/btn:scale-110 transition-transform">
-                                            GESTIONAR BASE DE DATOS <ArrowRight className="w-4 h-4 ml-1" />
-                                        </div>
-                                    </Button>
-                                    <div className={cn(
-                                        "absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-amber-400/20 to-transparent",
-                                        settings.adminTheme !== 'primitivo' && "hidden"
-                                    )} />
-                                </Card>
+                                {/* Consolidated into Membership Intelligence */}
                             </div>
                         </div>
                     </motion.div>

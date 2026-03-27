@@ -472,3 +472,125 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
         </div>
     );
 };
+
+export const TactilePieChart = ({ data, title }: { data: { label: string, value: number, color: string }[], title: string }) => {
+    const total = data.reduce((acc, d) => acc + d.value, 0);
+    const size = 180;
+    const center = size / 2;
+    const radius = 70;
+    const strokeWidth = 14;
+    const circumference = 2 * Math.PI * radius;
+
+    let cumulativeOffset = 0;
+
+    return (
+        <div className="flex flex-col items-center justify-center w-full py-2">
+            <div className="relative" style={{ width: size, height: size }}>
+                <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90 overflow-visible">
+                    <defs>
+                        <filter id="pieGlow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#10b981" />
+                            <stop offset="100%" stopColor="#34d399" />
+                        </linearGradient>
+                        <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#f59e0b" />
+                            <stop offset="100%" stopColor="#fbbf24" />
+                        </linearGradient>
+                    </defs>
+
+                    {/* Background Ring */}
+                    <circle
+                        cx={center}
+                        cy={center}
+                        r={radius}
+                        fill="none"
+                        stroke="rgba(255,255,255,0.03)"
+                        strokeWidth={strokeWidth}
+                    />
+
+                    {data.map((d, i) => {
+                        const percentage = total > 0 ? (d.value / total) * 100 : 0;
+                        if (percentage === 0) return null;
+                        
+                        const offset = circumference - (percentage / 100) * circumference;
+                        const currentCumulativeOffset = cumulativeOffset;
+                        cumulativeOffset += (percentage / 100) * circumference;
+
+                        // Map colors to gradients if available
+                        const strokeColor = d.color === '#10b981' ? 'url(#emeraldGrad)' : 
+                                            d.color === '#f59e0b' ? 'url(#amberGrad)' : d.color;
+
+                        return (
+                            <g key={i}>
+                                {/* Outer Glow Layer (only for positive values) */}
+                                <motion.circle
+                                    cx={center}
+                                    cy={center}
+                                    r={radius}
+                                    fill="none"
+                                    stroke={d.color}
+                                    strokeWidth={strokeWidth + 2}
+                                    strokeDasharray={circumference}
+                                    initial={{ strokeDashoffset: circumference }}
+                                    animate={{ strokeDashoffset: offset }}
+                                    transition={{ duration: 1.5, delay: i * 0.2, ease: "circOut" }}
+                                    strokeLinecap="round"
+                                    style={{ 
+                                        rotate: `${(currentCumulativeOffset / circumference) * 360}deg`,
+                                        transformOrigin: 'center',
+                                        filter: 'blur(8px)',
+                                        opacity: 0.3
+                                    }}
+                                />
+                                {/* Main Segment Layer */}
+                                <motion.circle
+                                    cx={center}
+                                    cy={center}
+                                    r={radius}
+                                    fill="none"
+                                    stroke={strokeColor}
+                                    strokeWidth={strokeWidth}
+                                    strokeDasharray={circumference}
+                                    initial={{ strokeDashoffset: circumference }}
+                                    animate={{ strokeDashoffset: offset }}
+                                    transition={{ duration: 1.5, delay: i * 0.2, ease: "circOut" }}
+                                    strokeLinecap="round"
+                                    style={{ 
+                                        rotate: `${(currentCumulativeOffset / circumference) * 360}deg`,
+                                        transformOrigin: 'center',
+                                        filter: d.color === '#10b981' ? 'url(#pieGlow)' : 'none'
+                                    }}
+                                />
+                            </g>
+                        );
+                    })}
+                </svg>
+
+                {/* Center Content */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    <div className="text-3xl font-black italic text-white tracking-tighter">{total}</div>
+                    <div className="text-[8px] font-black uppercase text-white/30 tracking-[0.2em]">{title}</div>
+                </div>
+            </div>
+
+            {/* Legend */}
+            <div className="grid grid-cols-2 gap-x-8 gap-y-2 mt-6 w-full px-4">
+                {data.map((d, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color, boxShadow: `0 0 10px ${d.color}` }} />
+                        <div className="flex flex-col">
+                            <span className="text-[8px] font-black uppercase text-white/40 tracking-wider whitespace-nowrap">{d.label}</span>
+                            <span className="text-xs font-bold text-white tabular-nums">
+                                {d.value} <span className="text-[9px] opacity-40">({total > 0 ? Math.round((d.value/total)*100) : 0}%)</span>
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};

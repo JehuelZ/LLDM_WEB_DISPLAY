@@ -20,7 +20,7 @@ import { es } from 'date-fns/locale'
 import { cn, compressImage, getLocalDateString } from '@/lib/utils'
 import { ImageEditor } from '@/components/ImageEditor'
 import LunaDonut from '@/components/ui/LunaDonut';
-import { TactileAreaChart, TactileBarChart } from '@/components/ui/Charts';
+import { TactileAreaChart, TactileBarChart, TactilePieChart } from '@/components/ui/Charts';
 import PremiumCalendar from '@/components/ui/PremiumCalendar';
 import './tactile-admin.css'
 
@@ -1372,44 +1372,15 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 </div>
                                             </div>
 
-                                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                                                <div className="bg-white/[0.03] p-4 rounded-xl border border-white/5 flex items-center justify-between">
-                                                    <div>
-                                                        <TactileBadge className="mb-2 bg-primary/10 border-primary/20 text-primary">
-                                                            Membresía Activa
-                                                        </TactileBadge>
-                                                        <div className="text-2xl font-black ">{members.filter(m => m.status === 'Activo').length}</div>
-                                                    </div>
-
-                                                    <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                                                        <Users className="w-5 h-5 text-emerald-500" />
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    onClick={() => setActiveTab('miembros')}
-                                                    className={cn(
-                                                        "p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all hover:scale-[1.02]",
-                                                        members.filter(m => m.status === 'Pendiente').length > 0
-                                                            ? "bg-amber-500/10 border-amber-500/30 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
-                                                            : "bg-white/[0.03] border-white/5 opacity-50"
-                                                    )}
-                                                >
-                                                    <div>
-                                                        <TactileBadge className="mb-2 bg-amber-500/10 border-amber-500/20 text-amber-500">
-                                                            Auditoría Pendiente
-                                                        </TactileBadge>
-                                                        <div className={cn("text-2xl font-black", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white")}>
-                                                            {members.filter(m => m.status === 'Pendiente').length}
-                                                        </div>
-                                                    </div>
-
-                                                    <div className={cn(
-                                                        "w-10 h-10 rounded-full flex items-center justify-center",
-                                                        members.filter(m => m.status === 'Pendiente').length > 0 ? "bg-amber-500/20" : "bg-white/5"
-                                                    )}>
-                                                        <ShieldAlert className={cn("w-5 h-5", members.filter(m => m.status === 'Pendiente').length > 0 ? "text-amber-500" : "text-white/20")} />
-                                                    </div>
-                                                </div>
+                                            <div className="w-full mt-4">
+                                                <TactilePieChart 
+                                                    title="Membresía"
+                                                    data={[
+                                                        { label: 'Activos', value: members.filter(m => m.status === 'Activo').length, color: '#10b981' },
+                                                        { label: 'Pendientes', value: members.filter(m => m.status === 'Pendiente').length, color: '#f59e0b' },
+                                                        { label: 'Inactivos', value: members.filter(m => m.status === 'Inactivo').length, color: '#64748b' },
+                                                    ]}
+                                                />
                                             </div>
                                         </TactileGlassCard>
 
