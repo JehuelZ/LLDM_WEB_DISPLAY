@@ -574,9 +574,11 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [mounted, setMounted] = useState(false);
     const [monthlyStats, setMonthlyStats] = useState<{ label: string, value: number }[]>([]);
     
+    const [intelligenceRange, setIntelligenceRange] = useState<'month' | 30 | 15 | 7>('month');
+    
     useEffect(() => {
         const loadStats = async () => {
-            const stats = await loadMonthlyIntelligenceStats();
+            const stats = await loadMonthlyIntelligenceStats(intelligenceRange);
             setMonthlyStats(stats);
         };
         
@@ -584,7 +586,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
         if (mounted) {
             loadStats();
         }
-    }, [mounted, loadMonthlyIntelligenceStats, authSession]);
+    }, [mounted, loadMonthlyIntelligenceStats, authSession, intelligenceRange]);
 
     const displayStats = monthlyStats.length > 0 ? monthlyStats : [
         { label: 'ENE', value: 0 },
@@ -1211,8 +1213,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         settings.adminTheme === 'primitivo' && "bg-transparent shadow-none"
                     )}>
                         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-none blur-[100px] -mr-32 -mt-32 pointer-events-none" />
-                        <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                            <div>
+                        <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-20">
+                            <div className="flex-1">
                                 <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-4 w-full">
                                     <div className="flex items-center gap-2">
                                         <Activity className="w-4 h-4" />
@@ -1220,7 +1222,27 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
                                     <div className="flex-1 h-px bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" />
                                 </CardTitle>
-                                <CardDescription className="text-[8px] font-bold uppercase text-muted-foreground mt-1">rendimiento vs objetivos</CardDescription>
+                                <CardDescription className="text-[8px] font-bold uppercase text-muted-foreground mt-1">
+                                    {intelligenceRange === 'month' ? 'Rendimiento Este Mes' : `Rendimiento Últimos ${intelligenceRange} Días`}
+                                </CardDescription>
+                            </div>
+
+                            {/* Dynamic Range Selector */}
+                            <div className="flex bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-md ml-4">
+                                {['month', 30, 15, 7].map(r => (
+                                    <button
+                                        key={r}
+                                        onClick={() => setIntelligenceRange(r as any)}
+                                        className={cn(
+                                            "px-3 py-1.5 rounded-full text-[9px] font-black transition-all duration-300 tracking-widest uppercase whitespace-nowrap",
+                                            intelligenceRange === r 
+                                                ? "bg-primary text-black shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] scale-105" 
+                                                : "text-white/30 hover:text-white/60"
+                                        )}
+                                    >
+                                        {r === 'month' ? 'MES' : `${r}D`}
+                                    </button>
+                                ))}
                             </div>
                         </CardHeader>
                         <CardContent className="p-0 mt-10">
