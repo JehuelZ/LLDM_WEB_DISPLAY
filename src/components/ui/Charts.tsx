@@ -44,7 +44,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 
     const width = 440;
     const height = 290;
-    const paddingX = 2; 
+    const paddingX = 5; 
     const paddingY = 65; 
     
     const points = activeData.map((d, i) => ({
@@ -164,6 +164,11 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                         <stop offset="0%" stopColor="white" stopOpacity="0.04" />
                         <stop offset="100%" stopColor="white" stopOpacity="0" />
                     </linearGradient>
+
+                    <filter id="highlightDotGlow" x="-200%" y="-200%" width="500%" height="500%">
+                        <feGaussianBlur stdDeviation="6" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
                 </defs>
 
                 {/* Strategic Visual Rulings (Filtered to avoid saturation) */}
@@ -195,7 +200,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     return (
                         <text 
                             key={multiplier} 
-                            x={12} 
+                            x={paddingX + 2} // Align slightly off-edge
                             y={height - paddingY - (multiplier) * (height - paddingY * 2) + 3} 
                             className="fill-white/10 text-[9px] font-black uppercase tracking-widest"
                         >
@@ -241,7 +246,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     return (
                         <text 
                             key={i} 
-                            x={Math.max(12, Math.min(width - 12, p.x))} // Inset labels so they fit
+                            x={Math.max(paddingX, Math.min(width - paddingX, p.x))} // Use full width padding
                             y={height - 15} 
                             textAnchor="middle" 
                             className={cn(
@@ -268,9 +273,10 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                             width="75" 
                             height="75"
+                            style={{ overflow: 'visible', background: 'transparent' }}
                         >
-                            <div className="flex flex-col items-center">
-                                <div className="px-3 py-2 bg-white text-[16px] font-black text-slate-950 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,1)] flex items-center gap-2 translate-y-2">
+                            <div className="flex flex-col items-center bg-transparent">
+                                <div className="px-3 py-2 bg-white text-[16px] font-black text-slate-950 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,1)] flex items-center gap-2 translate-y-2 border border-black/5">
                                     {Math.round(highlightPoint.val)}%
                                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse ring-4 ring-emerald-500/30" />
                                 </div>
@@ -286,11 +292,11 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                                 cy: highlightPoint.y
                             }} 
                             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                            r="10" 
+                            r="8" 
                             fill="white" 
                             stroke={color} 
-                            strokeWidth="6"
-                            className="drop-shadow-[0_0_25px_white]"
+                            strokeWidth="4"
+                            filter="url(#highlightDotGlow)"
                         />
                     </g>
                 )}
@@ -320,7 +326,7 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
 
     const width = 450;
     const height = 220;
-    const paddingX = 40; // Symmetric padding for perfect centering
+    const paddingX = 10; // Maximizar espacio lateral
     const paddingBottom = 45;
     const paddingTop = 45;
     
