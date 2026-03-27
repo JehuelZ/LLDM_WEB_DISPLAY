@@ -197,38 +197,116 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
     );
 };
 
-export const TactileBarChart = ({ data }: { data: ChartDataPoint[] }) => {
+export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], totalMembers?: number }) => {
     if (!data || data.length === 0) return <div className="h-full w-full flex items-center justify-center text-[10px] font-black text-white/20">SIN DATOS</div>;
 
-    const width = 400;
-    const height = 150;
-    const padding = 20;
-    const barWidth = 14;
-    const gap = (width - padding * 2) / (data.length || 1);
-    const colors = ['#3b82f6', '#4b5563', '#4b5563', '#f43f5e', '#4b5563', '#f59e0b', '#4b5563'];
+    const width = 450;
+    const height = 220;
+    const paddingX = 60; // Extra room for Y-axis
+    const paddingY = 40;
+    const barWidth = 12;
+    const gap = (width - paddingX - 20) / (data.length || 7);
+    
+    // Vibrant colors from reference image
+    // Blue, Pink, Orange, and Muted Gray
+    const getBarColor = (index: number) => {
+        const colors = ['#3b82f6', '#4b5563', '#4b5563', '#f43f5e', '#4b5563', '#f59e0b', '#4b5563'];
+        return colors[index % colors.length];
+    };
 
     return (
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full group select-none overflow-visible">
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                <defs>
+                    {['#3b82f6', '#f43f5e', '#f59e0b', '#4b5563'].map(c => (
+                        <linearGradient key={c} id={`barGrad-${c.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor={c} stopOpacity="1" />
+                            <stop offset="100%" stopColor={c} stopOpacity={c === '#4b5563' ? "0.3" : "0.5"} />
+                        </linearGradient>
+                    ))}
+                </defs>
+
+                {/* Y-Axis Labels (Absolute Member Count) */}
+                {[0, 0.5, 1].map(multiplier => {
+                    const absVal = Math.round(totalMembers * multiplier);
+                    return (
+                        <text 
+                            key={multiplier} 
+                            x={15} 
+                            y={height - paddingY - (multiplier) * (height - paddingY * 2) + 3} 
+                            className="fill-white/10 text-[10px] font-black uppercase tracking-[0.2em]"
+                        >
+                            {absVal}
+                        </text>
+                    );
+                })}
+
                 {data.map((d, i) => {
-                    const h = ((d.attended || d.value || 0) / (d.total || 100)) * (height - padding * 2);
-                    const x = padding + i * gap + (gap - barWidth) / 2;
-                    const y = height - h - padding;
-                    const color = colors[i % colors.length];
+                    const val = d.attended || d.value || 0;
+                    const total = d.total || 100;
+                    const ratio = Math.min(1, val / total);
+                    const h = Math.max(8, ratio * (height - paddingY * 2)); // Min height for "pill" look
+                    const x = paddingX + i * gap + (gap - barWidth) / 2;
+                    const y = height - h - paddingY;
+                    
+                    const color = getBarColor(i);
                     const isMuted = color === '#4b5563';
+                    const gradId = `barGrad-${color.replace('#', '')}`;
+
+                    // Label logic: LU, MA, MI, JU, VI, SA, DO
+                    const days = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
+                    const label = d.date ? format(parseISO(d.date), 'EEEEEE', { locale: es }).toUpperCase() : (days[i % 7]);
+
                     return (
                         <g key={i} className="group/bar">
+                            {/* Inner Glow / Shadow for vibrant bars */}
+                            {!isMuted && (
+                                <motion.rect
+                                    initial={{ height: 0, y: height - paddingY }}
+                                    animate={{ height: h, y: y }}
+                                    transition={{ duration: 1.2, delay: i * 0.08, ease: [0.33, 1, 0.68, 1] }}
+                                    x={x - 4} y={y - 4} width={barWidth + 8} height={h + 8}
+                                    fill={color}
+                                    rx={(barWidth + 8) / 2}
+                                    className="blur-[10px] opacity-25"
+                                />
+                            )}
+
+                            {/* Main Pill Bar */}
                             <motion.rect
-                                initial={{ height: 0, y: height - padding }}
-                                animate={{ height: Math.max(h, 4), y: Math.min(y, height - padding - 4) }}
-                                transition={{ duration: 1, delay: i * 0.05, ease: "circOut" }}
-                                x={x} y={y} width={barWidth} height={Math.max(h, 4)}
-                                fill={color}
+                                initial={{ height: 0, y: height - paddingY }}
+                                animate={{ height: h, y: y }}
+                                transition={{ duration: 0.8, delay: i * 0.08, ease: "circOut" }}
+                                x={x} y={y} width={barWidth} height={h}
+                                fill={`url(#${gradId})`}
                                 rx={barWidth / 2}
-                                className={cn("transition-all duration-300", isMuted ? "opacity-20 group-hover/bar:opacity-40" : "drop-shadow-[0_0_12px_rgba(0,0,0,0.3)] group-hover/bar:brightness-125")}
+                                className={cn(
+                                    "transition-all duration-300",
+                                    isMuted ? "opacity-20" : `drop-shadow-[0_0_12px_${color}88]`
+                                )}
                             />
-                            <text x={x + barWidth / 2} y={height - 2} textAnchor="middle" className="text-[8px] font-black fill-white/10 uppercase tracking-tighter">
-                                {d.date ? format(parseISO(d.date), 'EE', { locale: es }).substring(0, 2) : (d.label || '')}
+
+                            {/* Tooltip on Hover */}
+                            <text 
+                                x={x + barWidth / 2} 
+                                y={y - 10} 
+                                textAnchor="middle" 
+                                className="fill-white font-black text-[10px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
+                            >
+                                {Math.round((val/total)*100)}%
+                            </text>
+
+                            {/* X-Axis Label */}
+                            <text 
+                                x={x + barWidth / 2} 
+                                y={height - 15} 
+                                textAnchor="middle" 
+                                className={cn(
+                                    "text-[10px] font-black uppercase tracking-wider transition-colors",
+                                    isMuted ? "fill-white/10" : "fill-white/40"
+                                )}
+                            >
+                                {label}
                             </text>
                         </g>
                     );
