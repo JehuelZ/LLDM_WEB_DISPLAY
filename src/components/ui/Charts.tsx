@@ -65,6 +65,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
     };
 
     const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
+    const [isDragging, setIsDragging] = React.useState(false);
     
     // Find index for today to set as default
     const todayIndex = React.useMemo(() => {
@@ -73,9 +74,9 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
         return idx >= 0 ? idx : activeData.length - 1;
     }, [activeData]);
     
-    const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const svgX = ((e.clientX - rect.left) / rect.width) * width;
+    const handleInteraction = (clientX: number, target: SVGSVGElement) => {
+        const rect = target.getBoundingClientRect();
+        const svgX = ((clientX - rect.left) / rect.width) * width;
         
         let nearestIdx = 0;
         let minDist = Infinity;
@@ -93,9 +94,19 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
         }
     };
 
+    const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+        if (!isDragging) return;
+        handleInteraction(e.clientX, e.currentTarget);
+    };
+
+    const handleMouseDown = (e: React.MouseEvent<SVGSVGElement>) => {
+        setIsDragging(true);
+        handleInteraction(e.clientX, e.currentTarget);
+    };
+
     const linePath = isSmooth ? getCurvePath(points) : points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
     
-    // Use today's index as default if not hovering
+    // Use today's index as default if not hovering or dragging
     const displayIdx = hoverIdx !== null ? hoverIdx : todayIndex;
     const highlightPoint = points[displayIdx];
 
@@ -111,9 +122,20 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
             )}
             <svg 
                 viewBox={`0 0 ${width} ${height}`} 
-                className="w-full h-full overflow-visible touch-none"
+                className="w-full h-full overflow-visible touch-none cursor-crosshair"
                 onMouseMove={handleMouseMove}
-                onMouseLeave={() => setHoverIdx(null)}
+                onMouseDown={handleMouseDown}
+                onMouseUp={() => setIsDragging(false)}
+                onMouseLeave={() => setIsDragging(false)}
+                onTouchStart={(e) => {
+                    setIsDragging(true);
+                    handleInteraction(e.touches[0].clientX, e.currentTarget);
+                }}
+                onTouchMove={(e) => {
+                    if (!isDragging) return;
+                    handleInteraction(e.touches[0].clientX, e.currentTarget);
+                }}
+                onTouchEnd={() => setIsDragging(false)}
             >
                 <defs>
                     <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
