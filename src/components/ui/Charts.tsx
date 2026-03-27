@@ -64,10 +64,35 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
         return path;
     };
 
+    const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
+    
+    const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const svgX = ((e.clientX - rect.left) / rect.width) * width;
+        
+        let nearestIdx = 0;
+        let minDist = Infinity;
+        
+        points.forEach((p, i) => {
+            const dist = Math.abs(p.x - svgX);
+            if (dist < minDist) {
+                minDist = dist;
+                nearestIdx = i;
+            }
+        });
+        
+        if (nearestIdx !== hoverIdx) {
+            setHoverIdx(nearestIdx);
+        }
+    };
+
     const linePath = isSmooth ? getCurvePath(points) : points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
     
-    const highlightIndex = Math.min(points.length - 1, 24); 
-    const highlightPoint = points[highlightIndex];    const gradientId = `line-gradient-${color.replace('#', '')}`;
+    // Use last point as default if not hovering
+    const displayIdx = hoverIdx !== null ? hoverIdx : points.length - 1;
+    const highlightPoint = points[displayIdx];
+
+    const gradientId = `line-gradient-${color.replace('#', '')}`;
     const filterId = `serpent-glow-${color.replace('#', '')}`;
 
     return (
@@ -77,7 +102,12 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     VISTA PREVIA (SIN DATOS)
                 </div>
             )}
-            <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+            <svg 
+                viewBox={`0 0 ${width} ${height}`} 
+                className="w-full h-full overflow-visible touch-none"
+                onMouseMove={handleMouseMove}
+                onMouseLeave={() => setHoverIdx(null)}
+            >
                 <defs>
                     <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
                         <stop offset="0%" stopColor={color} stopOpacity="0.3" />
@@ -174,15 +204,18 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     )
                 ))}
 
-                {/* Premium Floating Tooltip */}
+                {/* Premium Floating Tooltip (Interactive Scrubbing) */}
                 {showHighlight && highlightPoint && (
-                    <g>
+                    <g className="pointer-events-none">
                         <motion.foreignObject 
                             initial={{ opacity: 0, scale: 0.6 }} 
-                            animate={{ opacity: 1, scale: 1 }} 
-                            transition={{ delay: 2.8, duration: 0.7, type: 'spring' }}
-                            x={Math.max(5, Math.min(width - 75, highlightPoint.x - 35))} 
-                            y={Math.max(5, highlightPoint.y - 90)} 
+                            animate={{ 
+                                opacity: 1, 
+                                scale: 1,
+                                x: Math.max(5, Math.min(width - 75, highlightPoint.x - 35)),
+                                y: Math.max(5, highlightPoint.y - 85)
+                            }} 
+                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                             width="75" 
                             height="75"
                         >
@@ -197,10 +230,12 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 
                         <motion.circle 
                             initial={{ scale: 0 }} 
-                            animate={{ scale: 1 }} 
-                            transition={{ delay: 2.5, type: "spring", stiffness: 200 }}
-                            cx={highlightPoint.x} 
-                            cy={highlightPoint.y} 
+                            animate={{ 
+                                scale: 1,
+                                cx: highlightPoint.x,
+                                cy: highlightPoint.y
+                            }} 
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
                             r="10" 
                             fill="white" 
                             stroke={color} 
