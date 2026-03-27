@@ -2143,20 +2143,33 @@ export const useAppStore = create<AppState>()(
             },
 
             loadRehearsalsFromCloud: async () => {
-                const { data, error } = await supabase
-                    .from('choir_rehearsals')
-                    .select('*')
-                    .order('day_of_week', { ascending: true });
+                try {
+                    const { data, error } = await supabase
+                        .from('choir_rehearsals')
+                        .select('*')
+                        .order('day_of_week', { ascending: true });
 
-                if (data) {
-                    const mapped = data.map((r: any) => ({
-                        id: r.id,
-                        dayOfWeek: r.day_of_week,
-                        time: r.time,
-                        location: r.location,
-                        notes: r.notes
-                    }));
-                    set({ rehearsals: mapped });
+                    if (error) {
+                        // PGRST116 is 'no rows returned', 42P01 is 'table does not exist'
+                        if (error.code === 'PGRST116' || error.code === '42P01') {
+                            set({ rehearsals: [] });
+                            return;
+                        }
+                        throw error;
+                    }
+
+                    if (data) {
+                        const mapped = data.map((r: any) => ({
+                            id: r.id,
+                            dayOfWeek: r.day_of_week,
+                            time: r.time,
+                            location: r.location,
+                            notes: r.notes
+                        }));
+                        set({ rehearsals: mapped });
+                    }
+                } catch (err) {
+                    set({ rehearsals: [] });
                 }
             },
 

@@ -167,6 +167,8 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
             {/* Global Premium Notification Toast - Re-designed: Square Glassmorphism */}
             <AnimatePresence>
+            {/* Global Premium Notification Toast - Re-designed: "Papel Cebolla" (Onion Skin) Glassmorphism */}
+            <AnimatePresence>
                 {notification && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9, x: '-50%', y: '-60%' }}
@@ -174,75 +176,82 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                         exit={{ opacity: 0, scale: 0.9, x: '-50%', y: '-60%' }}
                         className={cn(
                             "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999]",
-                            "flex flex-col items-center text-center p-8 rounded-[2.5rem]",
-                            "border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)]",
-                            "backdrop-blur-[64px] bg-black/40 min-w-[320px] max-w-[420px] overflow-hidden",
-                            notification.type === 'success' && "border-amber-400/20 shadow-amber-400/5",
-                            notification.type === 'error' && "border-red-500/20 shadow-red-500/5"
+                            "flex flex-col items-center text-center p-10 rounded-[2.5rem]",
+                            "border border-white/20 shadow-[0_60px_120px_-20px_rgba(0,0,0,0.6)]",
+                            "backdrop-blur-[80px] bg-white/15 min-w-[340px] max-w-[450px] overflow-hidden",
+                            notification.type === 'success' && "border-emerald-500/30",
+                            notification.type === 'error' && "border-red-500/30",
+                            notification.type === 'warning' && "border-amber-400/30"
                         )}
                     >
                         {/* Interactive Shine Effect */}
-                        <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-to-tr from-white/[0.03] to-transparent pointer-events-none rotate-12" />
+                        <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-to-tr from-white/[0.08] to-transparent pointer-events-none rotate-12" />
 
                         {/* Dynamic Logo/Icon Section */}
-                        <div className="relative mb-6">
+                        <div className="relative mb-8">
                             <div className={cn(
-                                "w-24 h-24 rounded-3xl flex items-center justify-center relative overflow-hidden bg-white/[0.03] border border-white/5",
-                                notification.type === 'success' ? "shadow-[0_0_40px_rgba(251,191,36,0.1)]" : "shadow-[0_0_40px_rgba(239,68,68,0.1)]"
+                                "w-28 h-28 rounded-[2rem] flex items-center justify-center relative overflow-hidden bg-white/20 border border-white/30 backdrop-blur-md",
+                                notification.type === 'success' ? "shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)]" : "shadow-[0_20px_40px_-10px_rgba(239,68,68,0.3)]"
                              )}>
                                 <img 
                                     src={(settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/lldm_flama_3.svg" : settings.churchLogoUrl} 
                                     className={cn(
-                                        "w-14 h-14 object-contain brightness-0 invert opacity-60",
-                                        notification.type === 'success' && "sepia-[1] saturate-[10000%] hue-rotate-[0deg] transition-all"
+                                        "w-16 h-16 object-contain transition-all",
+                                        (settings.churchLogoUrl === '' || !settings.churchLogoUrl) && "brightness-0 invert opacity-80"
                                     )}
                                     alt="Logo"
                                 />
                                 {/* Internal Glow */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
                             </div>
                             
                             {/* Small Status Badge */}
                             <div className={cn(
-                                "absolute -bottom-1 -right-1 w-9 h-9 rounded-full border-4 border-[#0a0a0a] flex items-center justify-center shadow-lg",
-                                notification.type === 'success' ? "bg-amber-400 text-black" : "bg-red-500 text-white"
+                                "absolute -bottom-1 -right-1 w-10 h-10 rounded-full border-4 border-[#fff]/10 backdrop-blur-xl flex items-center justify-center shadow-2xl",
+                                notification.type === 'success' ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
                             )}>
-                                {notification.type === 'success' ? <CheckCircle className="w-5 h-5" strokeWidth={3} /> : <XCircle className="w-5 h-5" />}
+                                {notification.type === 'success' ? <CheckCircle className="w-6 h-6" strokeWidth={3} /> : <XCircle className="w-6 h-6" />}
                             </div>
                         </div>
 
                         {/* Text Content */}
-                        <div className="space-y-3 relative z-10">
+                        <div className="space-y-4 relative z-10 mb-2">
                             <p className={cn(
-                                "text-[10px] font-black uppercase tracking-[0.4em] opacity-40 mb-1",
-                                notification.type === 'success' ? "text-amber-400" : "text-red-400"
+                                "text-[10px] font-black uppercase tracking-[0.5em] mb-1",
+                                notification.type === 'success' ? "text-emerald-500" : "text-red-500"
                             )}>
-                                {notification.type === 'success' ? 'SISTEMA LLDM' : 'ALTA PRIORIDAD'}
+                                {notification.type === 'success' ? 'LLDM RODEO / SISTEMAS' : 'ALTA PRIORIDAD'}
                             </p>
-                            <h2 className="text-xl font-black italic tracking-tight text-white brightness-125 leading-tight">
+                            <h2 className="text-3xl font-black italic tracking-tighter text-white drop-shadow-sm leading-tight">
                                 {notification.message.replace(/^[✅⚠️❌]\s*/, '')}
                             </h2>
-                            <p className="text-[9px] font-bold text-white/30 tracking-widest uppercase pb-2">
-                                Operación finalizada satisfactoriamente
+                            <div className="w-12 h-1 bg-white/10 mx-auto rounded-full" />
+                            <p className="text-[10px] font-bold text-white/50 tracking-widest uppercase">
+                                Realizado con éxito por la administración
                             </p>
                         </div>
 
-                        {/* Close Button / Understanding link */}
+                        {/* Centered Theme Button - Standardized: Small height, Full width */}
                         <button 
                             onClick={hideNotification} 
-                            className="mt-6 w-full py-3.5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/5 text-[9px] font-black uppercase tracking-[0.2em] text-white/40 transition-all hover:text-white group relative overflow-hidden"
+                            className={cn(
+                                "mt-8 w-full h-11 rounded-xl flex items-center justify-center gap-3",
+                                "bg-primary hover:brightness-110 active:scale-95 transition-all group relative overflow-hidden",
+                                "text-[10px] font-black uppercase tracking-[0.3em] text-primary-foreground shadow-[0_10px_20px_-5px_rgba(var(--primary-rgb),0.3)]"
+                            )}
                         >
-                            <span className="relative z-10 group-hover:scale-105 transition-transform inline-block">ENTENDIDO</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                            <span className="relative z-10">CONTINUAR</span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                         </button>
 
                         {/* Background subtle glow center */}
                         <div className={cn(
-                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-48 h-48 blur-[100px] opacity-20",
-                            notification.type === 'success' ? "bg-amber-400" : "bg-red-500"
+                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-64 h-64 blur-[120px] opacity-10",
+                            notification.type === 'success' ? "bg-emerald-500" : "bg-red-500"
                         )} />
                     </motion.div>
                 )}
+            </AnimatePresence>
             </AnimatePresence>
         </div>
     );
