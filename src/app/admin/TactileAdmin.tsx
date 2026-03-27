@@ -459,7 +459,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
     const [activeTab, setActiveTab] = useState('dashboard');
     const [monthlyIntelligence, setMonthlyIntelligence] = useState<{ label: string, value: number }[]>([]);
     const [attendanceTrend, setAttendanceTrend] = useState({ value: 0, isPos: true });
-    const [intelligenceRange, setIntelligenceRange] = useState<7 | 15 | 30 | 'month'>('month');
+    const [intelligenceRange, setIntelligenceRange] = useState<7 | 15 | 30 | 'month'>(7);
 
     useEffect(() => {
         setMounted(true);
