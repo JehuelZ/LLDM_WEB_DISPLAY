@@ -220,40 +220,43 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
         d.sessions && (d.sessions['5am'] > 0 || d.sessions['9am'] > 0 || d.sessions['evening'] > 0)
     );
     
-    // Triple session demo data if real data is missing
-    const demoData = Array.from({ length: 7 }, (_, i) => ({
-        label: ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'][i],
-        sessions: {
-            '5am': 20 + Math.random() * 20,
-            '9am': 10 + Math.random() * 40,
-            'evening': 30 + Math.random() * 50
-        }
-    }));
+    // Triple session demo data if real data is missing (Fixed days LU-DO)
+    const demoData = [
+        { label: 'LU', sessions: { '5am': 25, '9am': 15, 'evening': 45 } },
+        { label: 'MA', sessions: { '5am': 30, '9am': 40, 'evening': 55 } },
+        { label: 'MI', sessions: { '5am': 20, '9am': 10, 'evening': 35 } },
+        { label: 'JU', sessions: { '5am': 45, '9am': 60, 'evening': 70 } },
+        { label: 'VI', sessions: { '5am': 35, '9am': 25, 'evening': 50 } },
+        { label: 'SA', sessions: { '5am': 10, '9am': 15, 'evening': 40 } },
+        { label: 'DO', sessions: { '5am': 60, '9am': 85, 'evening': 95 } },
+    ];
 
     const activeData = hasData ? data : demoData;
 
     const width = 450;
     const height = 220;
-    const paddingX = 60; 
-    const paddingY = 40;
+    const paddingLeft = 50; 
+    const paddingRight = 20;
+    const paddingY = 45;
     
-    // Group configuration
-    const groupGap = (width - paddingX - 25) / (activeData.length || 7);
+    const chartWidth = width - paddingLeft - paddingRight;
+    const groupSlotWidth = chartWidth / activeData.length;
+    
     const barWidth = 8;
     const barSpacing = 3;
     const totalGroupWidth = (barWidth * 3) + (barSpacing * 2);
 
     const sessionConfig = [
-        { key: '5am' as const, color: '#3b82f6', label: '5am' },
-        { key: '9am' as const, color: '#f43f5e', label: '9am' },
-        { key: 'evening' as const, color: '#f59e0b', label: '7pm' }
+        { key: '5am' as const, color: '#3b82f6' },
+        { key: '9am' as const, color: '#f43f5e' },
+        { key: 'evening' as const, color: '#f59e0b' }
     ];
 
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
             {!hasData && (
                 <div className="absolute top-2 right-10 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30 text-[8px] font-black text-amber-500 uppercase tracking-widest animate-pulse">
-                    VISTA PREVIA (SIN DATOS)
+                    VISTA PREVIA
                 </div>
             )}
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
@@ -261,10 +264,17 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                     {sessionConfig.map(s => (
                         <linearGradient key={s.color} id={`barGrad-${s.color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor={s.color} stopOpacity="1" />
-                            <stop offset="100%" stopColor={s.color} stopOpacity="0.5" />
+                            <stop offset="100%" stopColor={s.color} stopOpacity="0.3" />
                         </linearGradient>
                     ))}
                 </defs>
+
+                {/* Base Floor Line */}
+                <line 
+                    x1={paddingLeft - 10} y1={height - paddingY} 
+                    x2={width - paddingRight} y2={height - paddingY} 
+                    stroke="white" strokeWidth="1" strokeOpacity="0.05"
+                />
 
                 {/* Y-Axis Labels */}
                 {[0, 0.5, 1].map(multiplier => {
@@ -272,9 +282,9 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                     return (
                         <text 
                             key={multiplier} 
-                            x={15} 
+                            x={10} 
                             y={height - paddingY - (multiplier) * (height - paddingY * 2) + 3} 
-                            className="fill-white/10 text-[10px] font-black uppercase tracking-[0.2em]"
+                            className="fill-white/10 text-[9px] font-black uppercase tracking-[0.2em]"
                         >
                             {absVal}
                         </text>
@@ -282,19 +292,24 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                 })}
 
                 {activeData.map((d, i) => {
-                    const groupX = paddingX + i * groupGap + (groupGap - totalGroupWidth) / 2;
+                    // Calculate center point for this day's slot
+                    const slotCenterX = paddingLeft + (i * groupSlotWidth) + (groupSlotWidth / 2);
+                    const groupStartX = slotCenterX - (totalGroupWidth / 2);
                     
-                    const dayLabels = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
-                    const label = d.date ? format(parseISO(d.date), 'EEEEEE', { locale: es }).toUpperCase() : (activeData.length === 7 ? dayLabels[i % 7] : (d.label || '').substring(0, 2).toUpperCase());
+                    // Improved day label logic
+                    let dayLabel = d.label || '';
+                    if (d.date) {
+                        const dateObj = parseISO(d.date);
+                        dayLabel = format(dateObj, 'EEEEEE', { locale: es }).toUpperCase();
+                    }
 
                     return (
                         <g key={i}>
                             {sessionConfig.map((s, j) => {
                                 const val = d.sessions ? d.sessions[s.key] : 0;
                                 const ratio = Math.min(1, val / (totalMembers || 100));
-                                // At least 4px base if ratio is small/zero, or taller if data exists
                                 const h = ratio > 0 ? Math.max(12, ratio * (height - paddingY * 2)) : 6;
-                                const x = groupX + j * (barWidth + barSpacing);
+                                const x = groupStartX + j * (barWidth + barSpacing);
                                 const y = height - h - paddingY;
                                 const gradId = `barGrad-${s.color.replace('#', '')}`;
 
@@ -323,16 +338,16 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                             rx={barWidth / 2}
                                             className={cn(
                                                 "transition-all duration-300",
-                                                ratio > 0.05 ? `drop-shadow-[0_0_10px_${s.color}66]` : "opacity-20"
+                                                ratio > 0.05 ? `drop-shadow-[0_0_10px_${s.color}66]` : "opacity-10"
                                             )}
                                         />
                                         
-                                        {/* Group Hover Tooltip (Total) */}
+                                        {/* Hover Count */}
                                         <text 
                                             x={x + barWidth / 2} 
                                             y={y - 8} 
                                             textAnchor="middle" 
-                                            className="fill-white font-black text-[9px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
+                                            className="fill-white font-black text-[8px] opacity-0 group-hover/bar:opacity-100 transition-opacity"
                                         >
                                             {Math.round(val)}
                                         </text>
@@ -340,14 +355,14 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                 );
                             })}
 
-                            {/* Centered Day Label under the group */}
+                            {/* Centered Day Label - Positioned relative to slot center */}
                             <text 
-                                x={groupX + totalGroupWidth / 2} 
-                                y={height - 15} 
+                                x={slotCenterX} 
+                                y={height - 20} 
                                 textAnchor="middle" 
-                                className="fill-white/30 text-[10px] font-black uppercase tracking-wider"
+                                className="fill-white/30 text-[9px] font-black uppercase tracking-widest"
                             >
-                                {label}
+                                {dayLabel}
                             </text>
                         </g>
                     );
