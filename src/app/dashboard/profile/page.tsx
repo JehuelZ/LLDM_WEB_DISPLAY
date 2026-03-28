@@ -64,6 +64,8 @@ export default function ProfilePage() {
     const [showSuccess, setShowSuccess] = useState(false);
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
     const [replyText, setReplyText] = useState('');
+    const [isWritingNew, setIsWritingNew] = useState(false);
+    const [newMsgText, setNewMsgText] = useState('');
 
     useEffect(() => {
         if (currentUser) {
@@ -583,12 +585,74 @@ export default function ProfilePage() {
                                         <div className="flex items-center gap-3">
                                             <div className="flex items-center gap-2 px-4 py-2 bg-foreground/5 rounded-full border border-border/10">
                                                 <Search className="w-3 h-3 text-muted-foreground" />
-                                                <input type="text" placeholder="Buscar mensajes..." className="bg-transparent border-none outline-none text-[10px] font-bold uppercase tracking-widest w-32" />
+                                                <input type="text" placeholder="Buscar..." className="bg-transparent border-none outline-none text-[10px] font-bold uppercase tracking-widest w-24" />
                                             </div>
+                                            <Button 
+                                                onClick={() => setIsWritingNew(!isWritingNew)}
+                                                className={cn(
+                                                    "h-10 rounded-full text-[9px] font-black uppercase tracking-widest px-6 shadow-lg transition-all",
+                                                    isWritingNew ? "bg-slate-500/20 text-slate-300" : "bg-primary text-black hover:scale-105 shadow-primary/20"
+                                                )}
+                                            >
+                                                <MessageCircle className="w-3.5 h-3.5 mr-2" />
+                                                {isWritingNew ? 'Cerrar' : 'Nuevo Mensaje'}
+                                            </Button>
                                         </div>
                                     </div>
 
                                     <div className="space-y-4">
+                                        <AnimatePresence>
+                                            {isWritingNew && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, height: 0 }}
+                                                    animate={{ opacity: 1, height: 'auto' }}
+                                                    exit={{ opacity: 0, height: 0 }}
+                                                    className="overflow-hidden mb-6"
+                                                >
+                                                    <Card className="glass-card bg-primary/5 border-primary/20 overflow-hidden">
+                                                        <div className="p-6 space-y-4">
+                                                            <div className="flex items-center justify-between">
+                                                                <h4 className="text-xs font-black uppercase tracking-widest text-primary flex items-center">
+                                                                    <Send className="w-3 h-3 mr-2" /> Mensaje Directo al Administrador
+                                                                </h4>
+                                                                <span className="text-[9px] font-black bg-white/5 px-2 py-0.5 rounded border border-white/10 text-muted-foreground uppercase">Para: Administración</span>
+                                                            </div>
+                                                            <textarea
+                                                                value={newMsgText}
+                                                                onChange={(e) => setNewMsgText(e.target.value)}
+                                                                placeholder="Describe tu consulta, problema o solicitud aquí..."
+                                                                className="w-full h-32 bg-background/60 border border-primary/20 rounded-2xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none"
+                                                            />
+                                                            <div className="flex justify-end gap-3">
+                                                                <Button 
+                                                                    onClick={async () => {
+                                                                        if (!newMsgText.trim()) return;
+                                                                        try {
+                                                                            await sendCloudMessage({
+                                                                                senderId: currentUser.id,
+                                                                                senderName: currentUser.name,
+                                                                                content: newMsgText,
+                                                                                targetRole: 'Administrador',
+                                                                                isRead: false,
+                                                                                subject: 'Contacto desde Perfil'
+                                                                            });
+                                                                            setNewMsgText('');
+                                                                            setIsWritingNew(false);
+                                                                            showNotification('Mensaje enviado al administrador.', 'success');
+                                                                        } catch (e) {
+                                                                            showNotification('Error al enviar mensaje.', 'error');
+                                                                        }
+                                                                    }}
+                                                                    className="bg-primary text-black text-[10px] font-black uppercase tracking-widest px-8 rounded-xl h-12 shadow-lg shadow-primary/10 hover:scale-105 active:scale-95"
+                                                                >
+                                                                    ENVIAR AHORA
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </Card>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
                                         {messages.filter(m => m.receiverId === currentUser?.id || (m.targetRole && hasPrivilege(m.targetRole.toLowerCase()))).length === 0 ? (
                                             <Card className="glass-card bg-foreground/5 border-none p-20 flex flex-col items-center justify-center text-center opacity-40">
                                                 <MessageSquare className="w-16 h-16 mb-4 text-muted-foreground" />
