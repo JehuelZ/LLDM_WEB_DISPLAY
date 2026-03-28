@@ -7,6 +7,8 @@
 .admin-theme-luna {
     font-family: var(--font-poppins), sans-serif !important;
     font-weight: 300;
+    background-color: #050505 !important;
+    min-height: 100vh;
 }
 
 /* Poppins Enforcement for all elements within Luna */
