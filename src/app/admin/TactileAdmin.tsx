@@ -2770,7 +2770,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                             {msg.senderName || 'Usuario'}
                                                                             {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
                                                                         </h4>
-                                                                        <span className="text-[10px] text-muted-foreground capitalize font-bold tracking-widest">{format(parseISO(msg.createdAt), "d MMM, h:mm a")}</span>
+                                                                        <span className="text-[10px] text-muted-foreground capitalize font-bold tracking-widest">{msg.createdAt ? format(parseISO(msg.createdAt), "d MMM, h:mm a") : 'Ahora'}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex gap-2">
