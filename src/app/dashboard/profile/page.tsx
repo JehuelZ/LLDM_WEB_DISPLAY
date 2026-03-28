@@ -31,7 +31,7 @@ import {
     ChevronRight,
     MessageCircle
 } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAppStore } from '@/lib/store';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
@@ -47,6 +47,7 @@ export default function ProfilePage() {
         subscribeToMessages, showNotification
     } = useAppStore();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => setMounted(true), []);
@@ -75,13 +76,32 @@ export default function ProfilePage() {
         }
     }, [currentUser]);
 
-    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+    useEffect(() => {
+        if (currentUser && currentUser.status === 'Pendiente') {
+            setActiveTab('mensajes');
+        }
+    }, [currentUser]);
+
+    const isPending = currentUser?.status === 'Pendiente';
+    
+    // Auto-select tab from query param
+    useEffect(() => {
+        const queryTab = searchParams.get('tab');
+        if (queryTab) {
+            setActiveTab(queryTab);
+        }
+    }, [searchParams]);
+
+    // Simplified robust privilege check
+    const hasPrivilege = (priv: string) => {
+        return Array.isArray(currentUser?.privileges) && (currentUser.privileges as string[]).includes(priv);
+    };
 
     const roleActions = useMemo(() => {
         const actions: any[] = [];
-        if (!currentUser) return actions;
+        if (!currentUser || isPending) return actions;
         
-        if (currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia' || currentUser.privileges?.includes('monitor') || currentUser.privileges?.includes('admin')) {
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Responsable de Asistencia' || hasPrivilege('monitor') || hasPrivilege('admin')) {
             actions.push({
                 title: 'Pasar Asistencia',
                 description: 'Control de ingreso oficial y conteo de miembros.',
@@ -92,7 +112,7 @@ export default function ProfilePage() {
                 borderColor: 'border-emerald-500/20'
             });
         }
-        if (currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || currentUser.privileges?.includes('choir') || currentUser.privileges?.includes('admin')) {
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Dirigente Coro Adultos' || hasPrivilege('choir') || hasPrivilege('admin')) {
             actions.push({
                 title: 'Gestionar Coro',
                 description: 'Programación de ensayos, uniformes y anuncios de coro.',
@@ -103,7 +123,7 @@ export default function ProfilePage() {
                 borderColor: 'border-secondary/20'
             });
         }
-        if (currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.privileges?.includes('admin')) {
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || hasPrivilege('admin')) {
             actions.push({
                 title: 'Panel de Ministro',
                 description: 'Visión general de estadísticas y programación semanal.',
@@ -114,7 +134,7 @@ export default function ProfilePage() {
                 borderColor: 'border-primary/20'
             });
         }
-        if (currentUser.role === 'Administrador' || currentUser.role === 'Encargado de Jóvenes' || currentUser.privileges?.includes('youth_leader') || currentUser.privileges?.includes('admin')) {
+        if (currentUser.role === 'Administrador' || currentUser.role === 'Encargado de Jóvenes' || hasPrivilege('youth_leader') || hasPrivilege('admin')) {
             actions.push({
                 title: 'Gestión de Jóvenes',
                 description: 'Supervisión de actividades y participación juvenil.',
@@ -126,14 +146,17 @@ export default function ProfilePage() {
             });
         }
         return actions;
-    }, [currentUser.role, currentUser.privileges]);
-
+    }, [currentUser?.role, currentUser?.privileges]);
 
     useEffect(() => {
         loadCloudMessages();
         const unsub = subscribeToMessages();
         return () => unsub();
     }, [loadCloudMessages, subscribeToMessages]);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+
+    // We allow pending users to see the profile so they can access messaging
 
     const handleAvatarClick = () => {
         const input = document.createElement('input');
@@ -259,7 +282,17 @@ export default function ProfilePage() {
                 <div className="flex bg-foreground/5 p-1.5 rounded-[2rem] border border-border/10 backdrop-blur-md self-start w-fit">
                     {[
                         { id: 'perfil', label: 'Mi Perfil', icon: User },
-                        { id: 'mensajes', label: 'Bandeja', icon: Mail, count: messages.filter(m => !m.isRead && (m.receiverId === currentUser?.id || (m.targetRole && currentUser?.privileges?.includes(m.targetRole.toLowerCase() as any)))).length },
+                        { 
+                            id: 'mensajes', 
+                            label: 'Bandeja', 
+                            icon: Mail, 
+                            count: messages.filter(m => 
+                                !m.isRead && (
+                                    m.receiverId === currentUser?.id || 
+                                    (m.targetRole && hasPrivilege(m.targetRole.toLowerCase()))
+                                )
+                            ).length 
+                        },
                         { id: 'stats', label: 'Estadísticas', icon: Activity }
                     ].map(tab => (
                         <button
@@ -371,7 +404,7 @@ export default function ProfilePage() {
                                         <div className="flex-1">
                                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Privilegios</p>
                                             <div className="flex flex-wrap gap-1 mt-1">
-                                                {currentUser.privileges?.length > 0 ? currentUser.privileges.map((p, i) => (
+                                                {Array.isArray(currentUser.privileges) && currentUser.privileges.length > 0 ? currentUser.privileges.map((p, i) => (
                                                     <span key={i} className="text-[8px] font-black uppercase text-orange-400/70 border border-orange-400/20 px-1.5 py-0.5 rounded italic">
                                                         {p}
                                                     </span>
@@ -556,7 +589,7 @@ export default function ProfilePage() {
                                     </div>
 
                                     <div className="space-y-4">
-                                        {messages.filter(m => m.receiverId === currentUser?.id || (m.targetRole && currentUser?.privileges?.includes(m.targetRole.toLowerCase() as any))).length === 0 ? (
+                                        {messages.filter(m => m.receiverId === currentUser?.id || (m.targetRole && hasPrivilege(m.targetRole.toLowerCase()))).length === 0 ? (
                                             <Card className="glass-card bg-foreground/5 border-none p-20 flex flex-col items-center justify-center text-center opacity-40">
                                                 <MessageSquare className="w-16 h-16 mb-4 text-muted-foreground" />
                                                 <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">No tienes mensajes en este momento</p>
@@ -564,7 +597,7 @@ export default function ProfilePage() {
                                         ) : (
                                             <div className="grid gap-4">
                                                 {messages
-                                                    .filter(m => m.receiverId === currentUser?.id || (m.targetRole && currentUser?.privileges?.includes(m.targetRole.toLowerCase() as any)))
+                                                    .filter(m => m.receiverId === currentUser?.id || (m.targetRole && hasPrivilege(m.targetRole.toLowerCase())))
                                                     .map(msg => (
                                                         <motion.div
                                                             key={msg.id}

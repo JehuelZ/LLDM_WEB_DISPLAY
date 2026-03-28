@@ -502,7 +502,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                 const aliasMap: Record<string, string> = {
                     'configuracion': 'ajustes',
                     'temas': 'contenido',
-                    'mensajes': 'dashboard',
+                    'mensajes': 'mensajes',
                     'ajustes': 'ajustes'
                 };
                 const finalTab = aliasMap[queryTab] || queryTab;
@@ -526,7 +526,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
             const aliasMap: Record<string, string> = {
                 'configuracion': 'ajustes',
                 'temas': 'contenido',
-                'mensajes': 'dashboard',
+                'mensajes': 'mensajes',
                 'ajustes': 'ajustes'
             };
 
