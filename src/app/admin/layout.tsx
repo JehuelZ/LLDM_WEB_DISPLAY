@@ -228,7 +228,7 @@ function AdminLayoutContent({
 
 
     return (
-        <div className={cn("min-h-screen bg-background text-foreground flex transition-colors duration-500 overflow-hidden", themeClass)}>
+        <div className={cn("min-h-screen bg-background text-foreground flex overflow-hidden", themeClass)}>
             {/* Sidebar */}
             <aside 
                 id="admin-sidebar-master"
