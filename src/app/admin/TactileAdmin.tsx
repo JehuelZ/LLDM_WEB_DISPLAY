@@ -542,9 +542,17 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
             }
         };
 
+        // Map aliases for propTab too
+        const aliasMap: Record<string, string> = {
+            'configuracion': 'ajustes',
+            'temas': 'contenido',
+            'ajustes': 'ajustes'
+        };
+        const mappedPropTab = (propTab && aliasMap[propTab as keyof typeof aliasMap]) || propTab;
+
         // Sync with prop if it changes (provided by parent page.tsx)
-        if (propTab && propTab !== activeTab) {
-            setActiveTab(propTab);
+        if (mappedPropTab && mappedPropTab !== activeTab) {
+            setActiveTab(mappedPropTab);
         }
 
         // Listen for standard popstate and custom hashchange events
@@ -2087,7 +2095,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                 </motion.div>
                             )}
 
-                            {activeTab === 'configuracion' && (
+                            {activeTab === 'ajustes' && (
                                 <motion.div
                                     key="configuracion"
                                     initial={{ opacity: 0, scale: 0.95 }}
