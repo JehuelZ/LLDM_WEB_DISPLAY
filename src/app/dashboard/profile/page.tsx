@@ -32,15 +32,17 @@ import {
     MessageCircle
 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { format, parseISO } from 'date-fns';
 import { useAppStore } from '@/lib/store';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ImageEditor } from '@/components/ImageEditor';
+import { Suspense } from 'react';
 import { cn } from '@/lib/utils';
 
-export default function ProfilePage() {
+function ProfileContent() {
     const {
         currentUser, updateProfileInCloud, uploadAvatar, setCurrentUser,
         messages, loadCloudMessages, markMessageAsRead, sendCloudMessage,
@@ -678,13 +680,13 @@ export default function ProfilePage() {
                                                                             {msg.senderName?.charAt(0) || 'U'}
                                                                         </div>
                                                                         <div>
-                                                                            <h4 className="font-black text-foreground text-lg italic flex items-center gap-2 lowercase first-letter:uppercase">
+                                                <h4 className="font-black text-foreground text-lg italic flex items-center gap-2 lowercase first-letter:uppercase">
                                                                                 {msg.senderName || 'Remitente'}
                                                                                 {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
                                                                             </h4>
                                                                             <div className="flex items-center gap-3 mt-0.5">
-                                                                                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest flex items-center gap-1">
-                                                                                    <Clock className="w-3 h-3" /> {msg.createdAt ? new Date(msg.createdAt).toLocaleString() : ''}
+                                                                                <span className="text-[10px] text-muted-foreground capitalize font-bold tracking-widest flex items-center gap-1">
+                                                                                    <Clock className="w-3 h-3" /> {msg.createdAt ? format(typeof msg.createdAt === 'string' ? parseISO(msg.createdAt) : msg.createdAt, "d MMM, h:mm a") : 'Ahora'}
                                                                                 </span>
                                                                                 {msg.targetRole && (
                                                                                     <span className="text-[9px] px-2 py-0.5 bg-secondary/10 text-secondary border border-secondary/20 rounded font-black uppercase tracking-widest">
@@ -834,5 +836,15 @@ export default function ProfilePage() {
                 )}
             </AnimatePresence>
         </div>
+    );
+}
+
+export default function ProfilePage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>}>
+            <ProfileContent />
+        </Suspense>
     );
 }
