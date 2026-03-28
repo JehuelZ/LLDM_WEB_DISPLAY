@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore, UserProfile, AttendanceRecord } from '@/lib/store'
+import { DailySchedule, ServiceType } from '@/lib/types'
 import {
     LayoutDashboard, CalendarDays, Sparkles, Megaphone,
     Shirt, Settings, Users, UserPlus, CalendarClock,
@@ -424,7 +425,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
         calendarStyles, setCalendarStyles,
         members, currentDate, setCurrentDate,
         monthlySchedule, setScheduleForDay,
-        saveSettingsToCloud, loadSettingsFromCloud,
+        loadSettingsFromCloud, saveSettingsToCloud,
         loadMembersFromCloud, loadDayScheduleFromCloud,
         saveScheduleDayToCloud, saveRecurringScheduleToCloud,
         seedMonthSchedule, announcements, saveAnnouncementToCloud,
@@ -449,30 +450,67 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
         showNotification
     } = useAppStore()
 
+    const [activeTab, setActiveTab] = useState(propTab || 'dashboard')
+    const [mounted, setMounted] = useState(false)
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('')
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
-
-    if (!currentUser) return null;
-
-    const isSun = parseISO(currentDate).getDay() === 0;
-
-    const currentDaySchedule = monthlySchedule[currentDate] || {
-        slots: {
-            '5am': { leaderId: '', time: '05:00 AM', endTime: '05:30 AM', language: 'es' },
-            '9am': { consecrationLeaderId: '', doctrineLeaderId: '', time: '09:00 AM', endTime: '10:00 AM', language: 'es' },
-            '12pm': { leaderId: '', time: '12:00 PM', endTime: '01:00 PM', language: 'es' },
-            'evening': { leaderIds: [], time: '07:00 PM', endTime: '08:00 PM', type: 'regular', language: 'es' }
-        }
-    };
-
-    const [mounted, setMounted] = useState(false);
-    const [activeTab, setActiveTab] = useState('dashboard');
+    
     const [monthlyIntelligence, setMonthlyIntelligence] = useState<{ label: string, value: number }[]>([]);
     const [attendanceTrend, setAttendanceTrend] = useState({ value: 0, isPos: true });
     const [intelligenceRange, setIntelligenceRange] = useState<7 | 15 | 30 | 'month'>(7);
+    const [weeklyStats, setWeeklyStats] = useState<any[]>([]);
+    const [monthlyGlobalStats, setMonthlyGlobalStats] = useState<any[]>([])
+
+    const tabs = [
+        { id: 'dashboard', label: 'RESUMEN', icon: LayoutDashboard },
+        { id: 'asistencia', label: 'ASISTENCIA', icon: ClipboardCheck },
+        { id: 'horarios', label: 'HORARIOS', icon: CalendarDays },
+        { id: 'miembros', label: 'MIEMBROS', icon: Users },
+        { id: 'coros', label: 'COROS Y UNIFORMES', icon: Music2 },
+        { id: 'contenido', label: 'TEMA SEMANAL', icon: Sparkles },
+        { id: 'estilos', label: 'DISEÑO Y VISUAL', icon: Palette },
+        { id: 'ajustes', label: 'CONFIGURACIÓN', icon: Settings },
+        { id: 'mensajes', label: 'MENSAJES', icon: MessageSquare },
+        { id: 'diagnostico', label: 'DIAGNÓSTICO', icon: ShieldAlert },
+        { id: 'perfil', label: 'MI PERFIL', icon: User },
+    ]
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    const isSun = currentDate ? parseISO(currentDate).getDay() === 0 : false;
+
+    const currentDaySchedule: DailySchedule = (currentDate && monthlySchedule[currentDate]) || {
+        id: 'fallback',
+        date: currentDate || '',
+        slots: {
+            '5am': { leaderId: '', time: '05:00 AM', endTime: '05:30 AM', language: 'es' },
+            '9am': { 
+                consecrationLeaderId: '', 
+                doctrineLeaderId: '', 
+                time: '09:00 AM', 
+                endTime: '10:00 AM', 
+                language: 'es',
+                sundayType: 'local',
+                topic: ''
+            },
+            '12pm': { leaderId: '', time: '12:00 PM', endTime: '01:00 PM', language: 'es' },
+            'evening': { 
+                leaderIds: [], 
+                time: '07:00 PM', 
+                endTime: '08:00 PM', 
+                type: 'regular', 
+                language: 'es',
+                doctrineLeaderId: '',
+                topic: ''
+            }
+        }
+    };
+
+    if (!mounted || !currentUser) return null;
 
     useEffect(() => {
         if (mounted) {
@@ -567,23 +605,6 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
         };
     }, [activeTab, propTab]);
 
-    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
-    const [isSaving, setIsSaving] = useState(false)
-    const [searchTerm, setSearchTerm] = useState('')
-
-    const tabs = [
-        { id: 'dashboard', label: 'RESUMEN', icon: LayoutDashboard },
-        { id: 'asistencia', label: 'ASISTENCIA', icon: ClipboardCheck },
-        { id: 'horarios', label: 'HORARIOS', icon: CalendarDays },
-        { id: 'miembros', label: 'MIEMBROS', icon: Users },
-        { id: 'coros', label: 'COROS Y UNIFORMES', icon: Music2 },
-        { id: 'contenido', label: 'TEMA SEMANAL', icon: Sparkles },
-        { id: 'estilos', label: 'DISEÑO Y VISUAL', icon: Palette },
-        { id: 'ajustes', label: 'CONFIGURACIÓN', icon: Settings },
-        { id: 'mensajes', label: 'MENSAJES', icon: MessageSquare },
-        { id: 'diagnostico', label: 'DIAGNÓSTICO', icon: ShieldAlert },
-        { id: 'perfil', label: 'MI PERFIL', icon: User },
-    ]
     const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', priority: 0, expiresAt: '' })
     const [editingAnnId, setEditingAnnId] = useState<string | null>(null)
     const [memberFilter, setMemberFilter] = useState('all')
@@ -659,8 +680,6 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
     }, []);
     const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({})
     const [processingToggles, setProcessingToggles] = useState<Record<string, boolean>>({})
-    const [weeklyStats, setWeeklyStats] = useState<any[]>([])
-    const [monthlyGlobalStats, setMonthlyGlobalStats] = useState<any[]>([])
 
     const [newRehearsal, setNewRehearsal] = useState({ dayOfWeek: 1, time: '06:00 PM', location: 'Templo' })
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: 'member' | 'minister' } | null>(null)

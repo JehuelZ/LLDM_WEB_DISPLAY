@@ -274,12 +274,6 @@ function AdminLayoutContent({
                     )}>{t.principal}</div>
 
                     <Link href="/admin?tab=dashboard"
-                        onClick={() => {
-                            setTimeout(() => {
-                                window.dispatchEvent(new Event('popstate'));
-                                window.dispatchEvent(new Event('tab-change'));
-                            }, 50);
-                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             (pathname === '/admin' && currentTab === 'dashboard') 
@@ -295,12 +289,6 @@ function AdminLayoutContent({
                     </Link>
 
                     <Link href="/admin?tab=horarios"
-                        onClick={() => {
-                            setTimeout(() => {
-                                window.dispatchEvent(new Event('popstate'));
-                                window.dispatchEvent(new Event('tab-change'));
-                            }, 50);
-                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'horarios' 
@@ -316,12 +304,6 @@ function AdminLayoutContent({
                     </Link>
 
                     <Link href="/admin?tab=contenido"
-                        onClick={() => {
-                            setTimeout(() => {
-                                window.dispatchEvent(new Event('popstate'));
-                                window.dispatchEvent(new Event('tab-change'));
-                            }, 50);
-                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             (currentTab === 'contenido' || currentTab === 'temas') 
@@ -437,13 +419,7 @@ function AdminLayoutContent({
 
                     <div className={cn("mt-auto pt-6 px-4 space-y-4", collapsed && "px-0")}>
                         <Link href="/admin?tab=configuracion"
-                            onClick={() => {
-                                setTimeout(() => {
-                                    window.dispatchEvent(new Event('popstate'));
-                                    window.dispatchEvent(new Event('tab-change'));
-                                }, 50);
-                            }}
-                            className={cn(
+                                className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                                 currentTab === 'configuracion' 
                                     ? "bg-tactile-orange-pill text-white font-semibold rounded-full" 
