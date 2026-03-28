@@ -318,6 +318,21 @@ function AdminLayoutContent({
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.temas}</span>}
                     </Link>
 
+                    <Link href="/admin?tab=asistencia"
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'asistencia' 
+                                ? "bg-tactile-orange-pill text-white font-bold rounded-full" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'asistencia' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <ClipboardCheck className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'asistencia' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Asistencia</span>}
+                    </Link>
+
                     <div className={cn(
                         "px-4 py-6 text-[11px] font-bold lowercase tracking-[0.2em]",
                         settings.adminTheme === 'primitivo' ? "text-muted-foreground" : "text-white/30",
@@ -364,6 +379,36 @@ function AdminLayoutContent({
                         {pathname === '/admin/cloud' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
                         <Cloud className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/cloud' ? "text-tactile-orange" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.admin_cloud}</span>}
+                    </Link>
+
+                    <Link href="/admin?tab=coros"
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'coros' 
+                                ? "bg-tactile-orange-pill text-white font-bold rounded-full" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'coros' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <Music className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'coros' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Coros</span>}
+                    </Link>
+
+                    <Link href="/admin?tab=mensajes"
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'mensajes' 
+                                ? "bg-tactile-orange-pill text-white font-bold rounded-full" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'mensajes' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
+                        <Bell className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'mensajes' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Mensajes</span>}
                     </Link>
 
                     <div className={cn(
