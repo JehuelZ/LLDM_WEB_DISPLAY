@@ -310,17 +310,23 @@ export default function ProfilePage() {
 
                                 <div className="flex items-center gap-4">
                                     <div
-                                        className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-primary/30 cursor-pointer group/avatar"
+                                        className="relative w-16 h-16 rounded-2xl overflow-hidden border-2 border-primary/30 cursor-pointer group/avatar bg-foreground/5 flex items-center justify-center"
                                         onClick={handleAvatarClick}
                                     >
-                                        <img src={currentUser.avatar} className="w-full h-full object-cover transition-transform group-hover/avatar:scale-110" alt="" />
+                                        {currentUser.avatar ? (
+                                            <img src={currentUser.avatar} className="w-full h-full object-cover transition-transform group-hover/avatar:scale-110" alt="" />
+                                        ) : (
+                                            <span className="text-xl font-black text-primary uppercase italic">
+                                                {(currentUser?.name || '?').charAt(0)}
+                                            </span>
+                                        )}
                                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
                                             <Camera className="w-4 h-4 text-white" />
                                         </div>
                                     </div>
                                     <div className="flex-1">
-                                        <p className="text-lg font-black text-foreground leading-tight uppercase truncate">{currentUser.name}</p>
-                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{currentUser.role}</p>
+                                        <p className="text-lg font-black text-foreground leading-tight uppercase truncate">{currentUser?.name || 'Usuario'}</p>
+                                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{currentUser?.role || 'Miembro'}</p>
                                     </div>
                                 </div>
 

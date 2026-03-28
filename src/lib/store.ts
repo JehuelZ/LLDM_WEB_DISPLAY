@@ -762,9 +762,33 @@ export const useAppStore = create<AppState>()(
                     }
 
                     get().showNotification("Cambios guardados exitosamente", 'success');
+                    
+                    // --- SYNC LOCAL STATE ---
+                    // Actualizamos el estado local del currentUser si el ID coincide, 
+                    // para que los cambios se reflejen inmediatamente sin recargar.
+                    const currentLocalUser = get().currentUser;
+                    if (currentLocalUser && currentLocalUser.id === cleanId && updatedData && updatedData[0]) {
+                        const p = updatedData[0];
+                        set({
+                            currentUser: {
+                                ...currentLocalUser,
+                                name: p.name || currentLocalUser.name,
+                                email: p.email || currentLocalUser.email,
+                                phone: p.phone || currentLocalUser.phone,
+                                avatar: p.avatar_url || currentLocalUser.avatar,
+                                category: p.category || currentLocalUser.category,
+                                member_group: p.member_group || currentLocalUser.member_group,
+                                role: p.role || currentLocalUser.role,
+                                gender: p.gender || currentLocalUser.gender,
+                                status: p.status || currentLocalUser.status,
+                                privileges: p.roles || currentLocalUser.privileges,
+                                bio: p.bio || currentLocalUser.bio,
+                                favorite_verse: p.favorite_verse || currentLocalUser.favorite_verse
+                            }
+                        });
+                    }
 
                     // NOTIFICAR AL USUARIO SI HA SIDO ACTIVADO (solo si hay email y es distinto de lo anterior)
-                    // (Simplificado para evitar ruido, pero manteniendo la lógica si es relevante)
                     if (updates.status === 'Activo' && updates.email) {
                         try {
                             await supabase.from('messages').insert({
