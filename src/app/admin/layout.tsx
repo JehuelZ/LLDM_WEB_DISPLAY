@@ -5,7 +5,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
     LayoutDashboard,
     Calendar,
@@ -32,15 +32,22 @@ import {
     ArrowRight,
     Sun,
     Moon,
-    Contrast
+    Contrast,
+    RefreshCw,
+    CalendarDays,
+    ExternalLink
 } from "lucide-react";
 import { cn } from '@/lib/utils';
+import { format, parseISO } from 'date-fns';
+import { es } from 'date-fns/locale';
 import { useAppStore } from '@/lib/store';
 import './LunaStyles.css';
 import './ClassicStyles.css';
 import './PrimitivoStyles.css';
 import LunaAdmin from './LunaAdmin';
 import TactileAdmin from './TactileAdmin';
+import AdminClockWeather from '@/components/admin/AdminClockWeather';
+import PremiumCalendar from '@/components/ui/PremiumCalendar';
 
 const ICON_MAP: Record<string, any> = {
     church: Church,
@@ -89,12 +96,13 @@ function AdminLayoutContent({
 }: {
     children: React.ReactNode
 }) {
-    const { settings, setSettings, currentUser, isLoading, authSession, saveSettingsToCloud } = useAppStore();
+    const { settings, setSettings, currentUser, isLoading, authSession, saveSettingsToCloud, currentDate, setCurrentDate } = useAppStore();
     const router = useRouter();
     const t = TRANSLATIONS[settings.language as keyof typeof TRANSLATIONS] || TRANSLATIONS.es;
     const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
+    const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const searchParams = useSearchParams();
     const currentTab = searchParams.get('tab') || 'dashboard';
 
@@ -211,32 +219,10 @@ function AdminLayoutContent({
     // Force flama-oficial for branding regardless of settings, unless a real custom icon is intentionally set
     const logoUrl = settings.churchLogoUrl || "/flama-oficial.svg";
 
-    // --- LUNA THEME REDIRECT ---
-    // If Admin Theme is Luna, we delegate everything to LunaAdmin component
-    // this ensures 100% independence as requested, while keeping the children accessible
-    if ((settings.adminTheme as any) === 'luna') {
-        return (
-            <div className="admin-theme-luna min-h-screen">
-                <LunaAdmin propTab={currentTab}>
-                    {children}
-                </LunaAdmin>
-            </div>
-        );
-    }
 
-    // --- TACTILE THEME REDIRECT ---
-    // If Admin Theme is Tactile, we delegate to TactileAdmin
-    if ((settings.adminTheme as any) === 'tactile') {
-        return (
-            <div className="admin-theme-tactile min-h-screen">
-                <TactileAdmin propTab={currentTab}>
-                    {children}
-                </TactileAdmin>
-            </div>
-        );
-    }
 
     const themeClass = (settings.adminTheme as any) === 'primitivo' ? 'admin-theme-primitivo' : 
+                      (settings.adminTheme as any) === 'tactile' ? 'admin-theme-tactile' :
                       (settings.adminTheme as any) === 'luna' ? 'admin-theme-luna' : 
                       'admin-theme-classic';
 
@@ -247,7 +233,7 @@ function AdminLayoutContent({
             <aside 
                 id="admin-sidebar-master"
                 className={cn(
-                "relative h-screen flex flex-col transition-all duration-300 z-40 admin-sidebar-v2 overflow-visible",
+                "relative h-screen flex flex-col transition-all duration-300 z-50 admin-sidebar-v2 overflow-visible border-r border-border/10",
                 collapsed ? "w-24" : "w-64",
                 themeClass === 'admin-theme-primitivo' 
                     ? "admin-sidebar-isolation-primitivo" 
@@ -255,7 +241,7 @@ function AdminLayoutContent({
             )}>
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="absolute -right-3.5 top-20 w-7 h-7 bg-[#f59e0b] rounded-full flex items-center justify-center z-50 text-white hover:scale-110 transition-transform border-none active:scale-95"
+                    className="absolute -right-3.5 top-20 w-7 h-7 bg-[#f59e0b] rounded-full flex items-center justify-center z-[60] text-white hover:scale-110 transition-transform border-none active:scale-95 shadow-lg"
                     title={collapsed ? "Expandir" : "Contraer"}
                 >
                     {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -546,10 +532,126 @@ function AdminLayoutContent({
 
             </aside>
 
-            {/* Main Content */}
-            <main className="flex-1 overflow-y-auto">
-                {children}
-            </main>
+            <div className="flex-1 flex flex-col min-w-0 bg-background relative transition-all duration-300">
+                <header className={cn(
+                    "h-20 px-8 flex items-center justify-between z-30 shrink-0",
+                    themeClass === 'admin-theme-primitivo' ? "bg-[#0a0a0a]/50 backdrop-blur-xl border-b border-white/5" : "bg-white/5 border-b border-white/5"
+                )}>
+                    {/* Identity + Breadcrumb (Pizarra) */}
+                    <div className="flex items-center gap-6">
+                        <div className="flex flex-col">
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/80 leading-none">
+                                Bienvenido, <span className="text-foreground">{currentUser?.name.split(' ')[0] || 'Admin'}</span>
+                            </h2>
+                            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mt-1.5 opacity-60">
+                                Panel de Control Digital - LLDM Rodeo
+                            </p>
+                        </div>
+                        
+                        <div className="w-[1px] h-8 bg-white/5 mx-2" />
+
+                        <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground opacity-40 leading-none">Pizarra</span>
+                            <span className="text-[12px] font-black uppercase tracking-tighter text-foreground mt-1.5">
+                                {currentTab === 'dashboard' ? 'Principal' : currentTab}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Global Widgets & Tools */}
+                    <div className="flex items-center gap-6">
+                        <div className="w-[1px] h-8 bg-white/5" />
+                        
+                        {/* Clock/Weather */}
+                        <AdminClockWeather compact showLocation={false} className="border-none bg-transparent shadow-none px-0" />
+                        
+                        <div className="w-[1px] h-8 bg-white/5" />
+
+                        {/* Quick Tools */}
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => (document.getElementById('global-sync-btn') as HTMLElement)?.click()}
+                                className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-primary/20 hover:border-primary/30 transition-all text-white/40 hover:text-primary group"
+                                title="Sincronizar Datos"
+                            >
+                                <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" />
+                            </button>
+
+                            {/* Global Calendar */}
+                            <div className="relative">
+                                <button 
+                                    onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                                    className="h-10 px-4 rounded-xl bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-white/60 tabular-nums hover:text-primary transition-colors flex items-center gap-2"
+                                >
+                                    <CalendarDays className="w-3 h-3" />
+                                    {format(parseISO(currentDate), "ddd d MMM", { locale: es })}
+                                </button>
+                                
+                                <AnimatePresence>
+                                    {isCalendarOpen && (
+                                        <div className="fixed top-24 right-8 z-[100] w-[340px]">
+                                            <motion.div
+                                                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                                                className="shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+                                            >
+                                                <PremiumCalendar 
+                                                    selectedDate={currentDate}
+                                                    onDateSelect={(date) => {
+                                                        setCurrentDate(date);
+                                                        setIsCalendarOpen(false);
+                                                    }}
+                                                    theme={settings.adminTheme === 'luna' ? 'luna' : 'primitivo'}
+                                                />
+                                            </motion.div>
+                                            <div 
+                                                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[-1]" 
+                                                onClick={() => setIsCalendarOpen(false)}
+                                            />
+                                        </div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            <Link href="/display" target="_blank">
+                                <button className="h-10 px-6 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
+                                    <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                    <span>Pizarra</span>
+                                </button>
+                            </Link>
+                        </div>
+                        
+                        <div className="w-[1px] h-8 bg-white/5" />
+
+                        {/* User Profile Mini */}
+                        <div className="flex items-center gap-3">
+                            <div className="flex flex-col items-end">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-primary leading-none opacity-60">ADMINISTRADOR</span>
+                                <span className="text-xs font-bold text-foreground mt-1">{currentUser?.name?.split(' ')[0]}</span>
+                            </div>
+                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-1">
+                                <img src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name}&background=random`} className="w-full h-full object-cover rounded-lg" alt="Admin" />
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                {/* Content Area - Minimized Padding */}
+                <div className="flex-1 p-4 md:p-6 lg:p-8 relative z-10 overflow-y-auto">
+                    {(settings.adminTheme as any) === 'luna' ? (
+                        <LunaAdmin propTab={currentTab} isSubpage={pathname !== '/admin'}>
+                            {children}
+                        </LunaAdmin>
+                    ) : (settings.adminTheme as any) === 'tactile' ? (
+                        <TactileAdmin propTab={currentTab} isSubpage={pathname !== '/admin'}>
+                            {children}
+                        </TactileAdmin>
+                    ) : (
+                        children
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

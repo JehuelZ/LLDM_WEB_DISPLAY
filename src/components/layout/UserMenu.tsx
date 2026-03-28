@@ -24,6 +24,8 @@ export function UserMenu() {
     const menuRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
+    if (!currentUser) return null;
+
     // Close menu when clicking outside
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -119,7 +121,7 @@ export function UserMenu() {
                         />
                     ) : (
                         <span className="text-[10px] font-black text-primary uppercase italic">
-                            {currentUser.name.charAt(0)}
+                            {(currentUser?.name || '?').charAt(0)}
                         </span>
                     )}
                     <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -127,8 +129,8 @@ export function UserMenu() {
                     </div>
                 </div>
                 <div className="hidden lg:block text-left">
-                    <p className="text-[10px] font-black uppercase text-foreground leading-none">{currentUser.name}</p>
-                    <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{currentUser.role}</p>
+                    <p className="text-[10px] font-black uppercase text-foreground leading-none">{currentUser?.name || 'Usuario'}</p>
+                    <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">{currentUser?.role}</p>
                 </div>
                 <ChevronDown className={cn("w-3 h-3 text-muted-foreground transition-transform duration-300", isOpen && "rotate-180")} />
             </button>
@@ -146,11 +148,11 @@ export function UserMenu() {
                         <div className="p-5 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 border-b border-border/10">
                             <div className="flex items-center gap-4">
                                 <div className="w-14 h-14 rounded-2xl overflow-hidden border border-primary/60 shadow-inner bg-foreground/5 flex items-center justify-center">
-                                    {currentUser.avatar ? (
+                                    {currentUser?.avatar ? (
                                         <img src={currentUser.avatar} className="w-full h-full object-cover" alt="" />
                                     ) : (
                                         <span className="text-xl font-black text-primary uppercase italic">
-                                            {currentUser.name.charAt(0)}
+                                            {(currentUser?.name || '?').charAt(0)}
                                         </span>
                                     )}
                                 </div>

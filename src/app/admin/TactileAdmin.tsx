@@ -18,10 +18,13 @@ import {
 import { format, parseISO, addDays } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { cn, compressImage, getLocalDateString } from '@/lib/utils'
-import { ImageEditor } from '@/components/ImageEditor'
+import { ImageEditor } from '@/components/ImageEditor';
+import AdminClockWeather from '@/components/admin/AdminClockWeather';
+import { Button } from "@/components/ui/button";
 import LunaDonut from '@/components/ui/LunaDonut';
 import { TactileAreaChart, TactileBarChart, TactilePieChart } from '@/components/ui/Charts';
 import PremiumCalendar from '@/components/ui/PremiumCalendar';
+import { DatabaseDiagnostic } from '@/components/admin/DatabaseDiagnostic';
 import './tactile-admin.css'
 
 // Internal components to replicate functionality with tactile style
@@ -409,7 +412,13 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
     );
 };
 
-export default function TactileAdmin({ propTab, children }: { propTab?: string, children?: React.ReactNode }) {
+interface TactileAdminProps {
+    children?: React.ReactNode;
+    propTab?: string;
+    isSubpage?: boolean;
+}
+
+export default function TactileAdmin({ children, propTab, isSubpage }: TactileAdminProps) {
     const {
         settings, setSettings,
         calendarStyles, setCalendarStyles,
@@ -564,6 +573,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
         { id: 'estilos', label: 'DISEÑO Y VISUAL', icon: Palette },
         { id: 'ajustes', label: 'CONFIGURACIÓN', icon: Settings },
         { id: 'mensajes', label: 'MENSAJES', icon: MessageSquare },
+        { id: 'diagnostico', label: 'DIAGNÓSTICO', icon: ShieldAlert },
         { id: 'perfil', label: 'MI PERFIL', icon: User },
     ]
     const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', priority: 0, expiresAt: '' })
@@ -587,6 +597,39 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
     const [selectedMemberForHistory, setSelectedMemberForHistory] = useState<UserProfile | null>(null)
     const [memberHistory, setMemberHistory] = useState<AttendanceRecord[]>([])
     const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+
+    // Sincronizar datos del formulario cuando se selecciona un miembro para editar
+    useEffect(() => {
+        if (editingMember) {
+            setNewMemberData({
+                name: editingMember.name || '',
+                email: editingMember.email || '',
+                phone: editingMember.phone || '',
+                role: editingMember.role || 'Miembro',
+                gender: editingMember.gender || 'Varon',
+                category: editingMember.category || 'Varon',
+                member_group: editingMember.member_group || 'Casados',
+                status: editingMember.status || 'Activo',
+                avatar: editingMember.avatar,
+                bio: editingMember.bio || '',
+                privileges: editingMember.privileges || []
+            });
+        } else {
+            setNewMemberData({
+                name: '',
+                email: '',
+                phone: '',
+                role: 'Miembro',
+                gender: 'Varon',
+                category: 'Varon',
+                member_group: 'Casados',
+                status: 'Activo',
+                avatar: undefined,
+                bio: '',
+                privileges: []
+            });
+        }
+    }, [editingMember]);
 
     const [showRehearsalModal, setShowRehearsalModal] = useState(false)
     const [editingRehearsal, setEditingRehearsal] = useState<any>(null)
@@ -867,378 +910,25 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
             <div className="base-glow" />
 
             <div className="tactile-main-container">
-                {/* Actual Side Menu */}
-                <aside
-                    className={cn(
-                        "relative z-30 flex flex-col bg-white/[0.02] border-r border-white/5 transition-all duration-500 ease-in-out h-full admin-sidebar-v2",
-                        isSidebarCollapsed ? "w-14" : "w-56"
-                    )}
-                >
-                    {/* Floating Toggle Button (Alair Style - Orange Version) */}
-                    <button
-                        onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-                        className="absolute -right-3.5 top-20 w-7 h-7 bg-[#f59e0b] rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)] z-50 text-white hover:scale-110 transition-transform border-none active:scale-95"
-                    >
-                        {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-                    </button>
-                    <div
-                        onClick={() => setActiveTab('dashboard')}
-                        className={cn(
-                            "flex items-center transition-all duration-300 group cursor-pointer overflow-hidden",
-                            isSidebarCollapsed ? "p-3 justify-center" : "p-4 justify-start gap-3"
-                        )}
-                    >
-                        <div className="relative shrink-0">
-                            <div className="w-10 h-10 bg-[#f59e0b]/10 rounded-xl flex items-center justify-center border border-[#f59e0b]/20 shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-transform group-hover:scale-110">
-                                <img
-                                    src={settings.churchLogoUrl || "/flama-oficial.svg"}
-                                    className="w-6 h-6 object-contain brightness-0 invert opacity-80 group-hover:opacity-100 transition-all"
-                                    alt="Logo"
-                                />
-                            </div>
-                            <div className="absolute inset-0 rounded-xl border border-white/20 ring-1 ring-white/5" />
-                        </div>
-
-                        {!isSidebarCollapsed && (
-                            <motion.div
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className="flex flex-col"
-                            >
-                                <h1 className="text-xl font-bold tracking-tighter leading-none text-foreground whitespace-nowrap">
-                                    Rodeo <span className="text-[#f59e0b]">Admin</span>
-                                </h1>
-
-                            </motion.div>
-                        )}
-                    </div>
-
-                    {/* Search Bar (Alair Style) */}
-                    {!isSidebarCollapsed && (
-                        <div className="px-3 mb-4">
-                            <div className="relative group">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/40 group-focus-within:text-[#f59e0b] transition-colors" />
-                                <input
-                                    type="text"
-                                    placeholder="Buscar..."
-                                    className="w-full bg-white/5 border border-white/5 rounded-lg h-9 pl-9 pr-3 text-[12px] font-semibold outline-none focus:bg-white/10 transition-all text-foreground placeholder:text-muted-foreground/30"
-                                />
-                            </div>
-                        </div>
-                    )}
-                    {isSidebarCollapsed && (
-                        <div className="flex justify-center mb-4">
-                            <div className="w-10 h-10 flex items-center justify-center text-white/20 hover:text-white transition-colors cursor-pointer">
-                                <Search className="w-5 h-5" />
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Navigation Items */}
-                    <nav className="flex-1 px-3 space-y-2 overflow-y-auto no-scrollbar py-4">
-                        {tabs.map((tab) => {
-                            const isActive = activeTab === tab.id;
-                            return (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => {
-                                        setActiveTab(tab.id);
-                                        const url = new URL(window.location.href);
-                                        url.searchParams.set('tab', tab.id);
-                                        window.history.pushState({}, '', url.toString());
-                                    }}
-                                    className={cn(
-                                        "transition-all duration-300 group relative flex items-center outline-none mb-1 w-full",
-                                        isSidebarCollapsed
-                                            ? "h-11 justify-center"
-                                            : "px-3 py-2.5 gap-3 rounded-lg mx-1 w-auto",
-                                        isActive
-                                            ? "bg-tactile-orange-pill text-white font-bold"
-                                            : "text-white/40 hover:text-white hover:bg-white/[0.02]"
-                                    )}
-                                >
-                                    {/* Active Indicator Bar (Orange/Primary) */}
-                                    {isActive && (
-                                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-[#f59e0b] rounded-r-full shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
-                                    )}
-
-                                    <div className={cn(
-                                        "transition-transform group-hover:scale-110 shrink-0",
-                                        isActive ? "text-primary" : "text-white/40 group-hover:text-white"
-                                    )}>
-                                        <tab.icon className="w-5 h-5" />
-                                    </div>
-
-                                    {!isSidebarCollapsed && (
-                                        <span className="text-[12px] font-semibold capitalize tracking-wide whitespace-nowrap">
-                                            {tab.label}
-                                        </span>
-                                    )}
-
-                                    {/* Tooltip on Collapsed Mode */}
-                                    {isSidebarCollapsed && (
-                                        <div className="absolute left-full ml-4 px-3 py-1 bg-black/80 border border-white/10 rounded-lg text-[12px] font-semibold text-white opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 transition-all pointer-events-none whitespace-nowrap z-50">
-                                            {tab.label}
-                                        </div>
-                                    )}
-                                </button>
-                            );
-                        })}
-                    </nav>
-
-                    <div className="p-4 space-y-4 border-t border-white/5">
-                        {/* Theme Switcher (Alair Style) */}
-                        {!isSidebarCollapsed && (
-                            <div className="flex bg-white/5 rounded-xl p-1">
-                                <button
-                                    onClick={() => saveSettingsToCloud({ themeMode: 'light' })}
-                                    className={cn(
-                                        "flex-1 flex items-center justify-center gap-2 h-9 text-[12px] font-semibold rounded-lg transition-all",
-                                        settings.themeMode === 'light' ? "bg-white/10 text-white shadow-sm" : "text-white/30 hover:text-white"
-                                    )}
-                                >
-                                    <Sun className="w-3.5 h-3.5" />
-                                    <span>Light</span>
-                                </button>
-                                <button
-                                    onClick={() => saveSettingsToCloud({ themeMode: 'dark' })}
-                                    className={cn(
-                                        "flex-1 flex items-center justify-center gap-2 h-9 text-[12px] font-semibold rounded-lg transition-all",
-                                        settings.themeMode === 'dark' ? "bg-white/10 text-white shadow-sm" : "text-white/30 hover:text-white"
-                                    )}
-                                >
-                                    <Moon className="w-3.5 h-3.5" />
-                                    <span>Dark</span>
-                                </button>
-                            </div>
-                        )}
-                        {isSidebarCollapsed && (
-                            <button
-                                onClick={() => saveSettingsToCloud({ themeMode: settings.themeMode === 'light' ? 'dark' : 'light' })}
-                                className="w-10 h-10 mx-auto flex items-center justify-center bg-white/5 rounded-xl text-white/40 hover:text-white transition-all"
-                            >
-                                {settings.themeMode === 'light' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                            </button>
-                        )}
-
-                        {/* User Profile Footer (Alair Style) */}
-                        {!isSidebarCollapsed && (
-                            <div className="flex items-center gap-3 p-1.5 bg-white/5 rounded-lg group border border-transparent hover:border-white/5 transition-all">
-                                <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-white/10 shadow-lg">
-                                    <img
-                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`}
-                                        alt={currentUser?.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                                <div className="flex-1 min-w-0 text-left">
-                                    <p className="text-[12px] font-semibold text-foreground truncate leading-none mb-1">{currentUser?.name || 'Admin'}</p>
-                                    <p className="text-[11px] text-muted-foreground truncate leading-none">{currentUser?.email || 'admin@lldmrodeo.org'}</p>
-                                </div>
-                                <button
-                                    onClick={() => signOut()}
-                                    className="p-1 text-white/20 hover:text-primary transition-colors"
-                                    title="Sign Out"
-                                >
-                                    <LogOut className="w-3.5 h-3.5" />
-                                </button>
-                            </div>
-                        )}
-                        {isSidebarCollapsed && (
-                            <div className="flex flex-col items-center gap-2">
-                                <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10">
-                                    <img
-                                        src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`}
-                                        alt="User"
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </aside>
-
                 {/* Content Area */}
                 <div className="flex-1 flex flex-col">
-                    {/* Global Primitivo Header (Horizontal Nav + Utils) */}
-                    <div className="px-8 pt-6 pb-2 flex flex-col gap-4">
-                        <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
-                            {tabs.filter(t => !['mensajes', 'perfil'].includes(t.id)).map(tab => (
-                                <button
-                                    key={tab.id}
-                                    onClick={() => setActiveTab(tab.id)}
-                                    className={cn(
-                                        "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                        activeTab === tab.id
-                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
-                                            : "text-white/40 hover:text-white hover:bg-white/5"
-                                    )}
-                                >
-                                    {tab.label}
-                                </button>
-                            ))}
-
-                            <div className="flex-1 min-w-[20px]" />
-
-                            <div className="flex items-center gap-2 pr-1">
-                                <button
-                                    onClick={() => (document.getElementById('global-sync-btn') as HTMLElement)?.click()}
-                                    className="w-10 h-10 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center hover:bg-primary/20 hover:border-primary/30 transition-all text-white/40 hover:text-primary group"
-                                    title="Sincronizar Datos"
-                                >
-                                    <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" />
-                                </button>
-                                <button
-                                    onClick={() => window.open('/display', '_blank')}
-                                    className="tactile-btn tactile-btn-glass text-[9px] font-black tracking-widest h-10 border-white/5 group"
-                                >
-                                    <ExternalLink className="w-3.5 h-3.5 group-hover:scale-110 transition-transform text-primary" />
-                                    PROYECTAR
-                                </button>
-                                <button
-                                    onClick={() => saveSettingsToCloud({ adminTheme: 'primitivo' })}
-                                    className="tactile-btn tactile-btn-glass text-[9px] font-black tracking-widest h-10 border-[#fbbf24]/20 bg-[#fbbf24]/10 text-[#fbbf24] hover:bg-[#fbbf24]/20 transition-all"
-                                    title="Activar Espejo Primitivo"
-                                >
-                                    PRIMITIVO
-                                </button>
-                                <button
-                                    onClick={() => saveSettingsToCloud({ adminTheme: 'classic' })}
-                                    className="tactile-btn tactile-btn-glass text-[9px] font-black tracking-widest h-10 border-white/5"
-                                    title="Volver a la UI Clásica"
-                                >
-                                    CLASSIC
-                                </button>
-                                <button
-                                    onClick={() => signOut()}
-                                    className="tactile-btn tactile-btn-orange text-[9px] font-black tracking-widest h-10 px-4"
-                                >
-                                    SALIR
-                                </button>
-
-                                <div className="w-px h-6 bg-white/10 mx-2" />
-
-                                <button
-                                    onClick={() => setActiveTab('perfil')}
-                                    className={cn(
-                                        "flex items-center gap-3 px-3 py-1.5 rounded-xl transition-all",
-                                        activeTab === 'perfil' ? "bg-[#576983]/20 border border-[#576983]/30" : "bg-white/5 border border-white/5 hover:bg-white/10"
-                                    )}
-                                >
-                                    <div className="w-7 h-7 rounded-lg overflow-hidden border border-primary/30">
-                                        <img
-                                            src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`}
-                                            alt=""
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </div>
-                                    <span className={cn(
-                                        "text-[9px] font-black uppercase tracking-widest hidden lg:inline",
-                                        activeTab === 'perfil' ? "text-white" : "text-white/40"
-                                    )}>
-                                        {currentUser?.name || 'ADMIN'}
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Global Date & Status Header */}
-                    <div className="px-8 pt-4 pb-2 flex flex-col md:flex-row items-center justify-between gap-6">
-
-                        <div className="flex items-center gap-4">
-                            {/* Service Status Indicator */}
-                            {(() => {
-                                const now = new Date();
-                                const isToday = currentDate === getLocalDateString(now);
-                                const isSun = parseISO(currentDate).getDay() === 0;
-                                const hrs = now.getHours();
-                                const mins = now.getMinutes();
-                                const curMin = hrs * 60 + mins;
-
-                                // Sunday School Detection (10:00 AM - 12:00 PM)
-                                const isDominical = isSun && curMin >= 600 && curMin <= 720;
-                                const is5am = curMin >= 300 && curMin <= 345;
-                                const is9am = !isSun && curMin >= 540 && curMin <= 600;
-                                const is7pm = curMin >= 1140 && curMin <= 1230;
-
-                                if (isToday) {
-                                    if (isDominical) return (
-                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-orange-500/20 border border-orange-500/40 shadow-[0_0_20px_rgba(249,115,22,0.2)] animate-pulse">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-orange-500 shadow-[0_0_10px_#f97316]" />
-                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-orange-500">Dominical en Curso</span>
-                                        </div>
-                                    );
-                                    if (is5am) return (
-                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/20 border border-primary/40 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] animate-pulse">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
-                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-primary">5:00 AM en Curso</span>
-                                        </div>
-                                    );
-                                    if (is9am) return (
-                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/20 border border-primary/40 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] animate-pulse">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
-                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-primary">9:00 AM en Curso</span>
-                                        </div>
-                                    );
-                                    if (is7pm) return (
-                                        <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-primary/20 border border-primary/40 shadow-[0_0_20px_rgba(var(--primary-rgb),0.2)] animate-pulse">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" />
-                                            <span className="text-[11px] font-black capitalize tracking-[0.2em] text-primary">7:00 PM en Curso</span>
-                                        </div>
-                                    );
-                                }
-
-                                return null;
-                            })()}
-
-                            {isSaving && (
-                                <div className="flex items-center gap-3 px-5 py-2 rounded-full bg-primary/10 border border-primary/20">
-                                    <RefreshCw className="w-3.5 h-3.5 text-primary animate-spin" />
-                                    <span className="text-[10px] font-black capitalize tracking-widest text-primary">Sincronizando...</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
 
                     {/* Main Workspace */}
                     <div className="flex-1 p-8 tactile-scroll">
-                        {/* Secondary Horizontal Navigation Bar (Primitivo Tab Style) */}
-                        <div className="mb-8">
-                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl">
-                                {[
-                                    { id: 'dashboard', label: 'RESUMEN', icon: LayoutDashboard },
-                                    { id: 'horarios', label: 'HORARIOS', icon: CalendarDays },
-                                    { id: 'estilos', label: 'DISEÑO Y VISUAL', icon: Palette },
-                                    { id: 'coros', label: 'COROS Y UNIFORMES', icon: Music2 },
-                                    { id: 'ajustes', label: 'CONFIGURACIÓN', icon: Settings },
-                                    { id: 'miembros', label: 'MIEMBROS', icon: Users },
-                                    { id: 'perfil', label: 'MI PERFIL', icon: User }
-                                ].map(tab => (
-                                    <button
-                                        key={tab.id}
-                                        onClick={() => {
-                                            setActiveTab(tab.id);
-                                            const url = new URL(window.location.href);
-                                            url.searchParams.set('tab', tab.id);
-                                            window.history.pushState({}, '', url.toString());
-                                        }}
-                                        className={cn(
-                                            "flex items-center gap-2.5 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                            activeTab === tab.id
-                                                ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
-                                                : "text-white/40 hover:text-white hover:bg-white/5"
-                                        )}
-                                    >
-                                        <tab.icon className={cn("w-4 h-4", activeTab === tab.id ? "text-primary" : "text-muted-foreground group-hover:text-foreground")} />
-                                        <span>{tab.label}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
+
 
                         <AnimatePresence mode="wait">
-                            {activeTab === 'dashboard' && (
+                            {isSubpage ? (
+                                <motion.div
+                                    key="subpage"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    className="w-full h-full"
+                                >
+                                    {children}
+                                </motion.div>
+                            ) : activeTab === 'dashboard' && (
                                 <motion.div
                                     key="dashboard"
                                     initial={{ opacity: 0, scale: 0.95 }}
@@ -1541,7 +1231,7 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                     className={cn(
                                                         "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                         memberFilter === group.id
-                                                            ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
+                                                            ? "bg-[#576983] text-black transform scale-[1.02]"
                                                             : "text-muted-foreground hover:text-foreground hover:bg-white/5"
                                                     )}
                                                 >
@@ -2177,13 +1867,14 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
                                                 {members.filter(m => m.status === 'Pendiente').map((pending) => (
                                                     <div key={pending.id} className="bg-[#0b101e] border border-white/5 p-5 rounded-[1.75rem] space-y-4 hover:border-amber-500/40 transition-all duration-300 group/audit-card relative overflow-hidden flex flex-col justify-between">
+                                                        <div className="absolute top-0 right-0 w-32 h-32 blur-[60px] bg-amber-400/10 opacity-0 group-hover/audit-card:opacity-100 transition-opacity duration-700 pointer-events-none" />
                                                         <div className="flex items-center gap-4">
                                                             <div className="relative w-14 h-11 shrink-0">
                                                                 <div className="absolute inset-0 bg-amber-500/20 rounded-xl blur-lg opacity-0 group-hover/audit-card:opacity-100 transition-opacity" />
                                                                 <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/10 group-hover/audit-card:border-amber-500/50 transition-all bg-[#121523]">
                                                                     {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-full h-full p-3 text-amber-500/40" />}
                                                                 </div>
-                                                                <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover:rotate-0 transition-transform z-20">PRE</div>
+                                                                <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover/audit-card:rotate-0 transition-transform z-20">PRE</div>
                                                             </div>
                                                             <div className="flex-1 min-w-0">
                                                                 <p className="text-sm font-black text-white truncate uppercase tracking-tight leading-none mb-1">{pending.name}</p>
@@ -2778,7 +2469,139 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                             </div>
                                         </TactileGlassCard>
 
+                                        <TactileGlassCard title="SISTEMA VISUAL DEL DISPLAY (PIZARRA)">
+                                            <div className="space-y-8">
+                                                {/* Theme Selector Grid */}
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    {[
+                                                        { id: 'iglesia', label: 'Cátedra Oficial', icon: Church, desc: 'Diseño institucional tradicional y limpio.' },
+                                                        { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Modernismo con efectos de vidrio y desenfoque.' },
+                                                        { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia absoluta en colores sólidos y simplicidad.' },
+                                                        { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Colores profundos con resplandores suaves.' },
+                                                        { id: 'neon', label: 'Neon Forge', icon: Flame, desc: 'Futurista, vibrante y de alto impacto visual.' },
+                                                        { id: 'luna', label: 'Luna Premium', icon: Sunrise, desc: 'Diseño industrial con tipografía robusta.' },
+                                                        { id: 'primitivo', label: 'Primitivo Legacy', icon: BookOpen, desc: 'El diseño clásico original de la plataforma.' },
+                                                    ].map((theme) => {
+                                                        const isActive = (settings.displayTemplate || 'nocturno') === theme.id;
+                                                        return (
+                                                            <button
+                                                                key={theme.id}
+                                                                onClick={() => setSettings({ displayTemplate: theme.id as any })}
+                                                                className={cn(
+                                                                    "group relative p-4 rounded-2xl border transition-all duration-500 text-left overflow-hidden",
+                                                                    isActive 
+                                                                        ? "bg-primary/10 border-primary shadow-[0_0_25px_rgba(var(--primary-rgb),0.15)] ring-1 ring-primary/30" 
+                                                                        : "bg-black/20 border-white/5 hover:border-white/20 hover:bg-white/[0.03]"
+                                                                )}
+                                                            >
+                                                                {/* Accent Glow */}
+                                                                {isActive && (
+                                                                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/20 blur-[40px] -mr-12 -mt-12 pointer-events-none" />
+                                                                )}
+                                                                
+                                                                <div className="flex items-start gap-4 relative z-10">
+                                                                    <div className={cn(
+                                                                        "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500",
+                                                                        isActive ? "bg-primary text-white scale-110 shadow-lg" : "bg-white/5 text-tactile-text-sub group-hover:text-white"
+                                                                    )}>
+                                                                        <theme.icon className="w-5 h-5" />
+                                                                    </div>
+                                                                    <div className="flex-1 space-y-1">
+                                                                        <div className="flex items-center justify-between">
+                                                                            <h5 className={cn(
+                                                                                "text-[11px] font-black uppercase tracking-wider transition-colors",
+                                                                                isActive ? "text-primary" : "text-white"
+                                                                            )}>{theme.label}</h5>
+                                                                            {isActive && (
+                                                                                <span className="text-[7px] font-black bg-primary text-white px-1.5 py-0.5 rounded-full tracking-tighter">ACTIVO</span>
+                                                                            )}
+                                                                        </div>
+                                                                        <p className="text-[9px] font-medium text-tactile-text-sub/70 leading-relaxed">{theme.desc}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+
+                                                {/* Theme Specific Settings */}
+                                                <div className="p-6 rounded-2xl bg-black/40 border border-white/5 space-y-6">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-primary ml-1">AJUSTES DE REPRODUCCIÓN</h4>
+                                                        <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/5">
+                                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                                            <span className="text-[8px] font-black text-white/50 uppercase">Sincronizado</span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                        <div className="space-y-3">
+                                                            <label className="text-[9px] font-black uppercase tracking-widest text-tactile-text-sub/60 ml-1">Efectos de Transición</label>
+                                                            <div className="relative">
+                                                                <select
+                                                                    value={settings.transitionsEnabled !== false ? 'true' : 'false'}
+                                                                    onChange={(e) => setSettings({ transitionsEnabled: e.target.value === 'true' })}
+                                                                    className="w-full h-12 bg-black/40 border border-white/10 rounded-xl px-5 text-xs font-black uppercase tracking-widest text-white appearance-none cursor-pointer hover:bg-black/60 transition-all outline-none focus:border-primary/50"
+                                                                >
+                                                                    <option value="true">Animaciones Activas</option>
+                                                                    <option value="false">Sin Transiciones</option>
+                                                                </select>
+                                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                                                                    <ChevronDown className="w-4 h-4" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="space-y-3">
+                                                            <label className="text-[9px] font-black uppercase tracking-widest text-tactile-text-sub/60 ml-1">
+                                                                Duración ({(settings.displayTemplate || 'nocturno').toUpperCase()})
+                                                            </label>
+                                                            <div className="relative">
+                                                                <select
+                                                                    value={(() => {
+                                                                        const themeId = settings.displayTemplate || 'nocturno';
+                                                                        const key = `${themeId}SlideDuration` as keyof typeof settings;
+                                                                        return (settings[key] as number) || 12;
+                                                                    })()}
+                                                                    onChange={(e) => {
+                                                                        const themeId = settings.displayTemplate || 'nocturno';
+                                                                        const key = `${themeId}SlideDuration` as any;
+                                                                        setSettings({ [key]: parseInt(e.target.value) });
+                                                                    }}
+                                                                    className="w-full h-12 bg-black/40 border border-white/10 rounded-xl px-5 text-xs font-black uppercase tracking-widest text-white appearance-none cursor-pointer hover:bg-black/60 transition-all outline-none focus:border-primary/50"
+                                                                >
+                                                                    <option value="5">Rápido (5s)</option>
+                                                                    <option value="12">Normal (12s)</option>
+                                                                    <option value="20">Lento (20s)</option>
+                                                                    <option value="30">Muy Lento (30s)</option>
+                                                                    <option value="60">Estático (60s)</option>
+                                                                </select>
+                                                                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none opacity-40">
+                                                                    <ChevronDown className="w-4 h-4" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="pt-2">
+                                                        <Button
+                                                            className="w-full h-12 bg-primary/20 hover:bg-primary/30 border border-primary/30 text-primary font-black uppercase tracking-widest gap-3 rounded-xl transition-all active:scale-[0.98]"
+                                                            onClick={async () => {
+                                                                setIsSaving(true);
+                                                                await saveSettingsToCloud(settings);
+                                                                setIsSaving(false);
+                                                            }}
+                                                            disabled={isSaving}
+                                                        >
+                                                            <Save className="w-4 h-4" /> {isSaving ? 'Aplicando...' : 'Aplicar a Pizarra en Vivo'}
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </TactileGlassCard>
+
                                         <TactileGlassCard title="SEGURIDAD DEL DISPLAY">
+
                                             <div className="space-y-8">
                                                 <TactileInput
                                                     label="CÓDIGO PIN DE ACCESO"
@@ -3023,6 +2846,17 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                             </div>
                                         )}
                                     </div>
+                                </motion.div>
+                            )}
+
+                            {activeTab === 'diagnostico' && (
+                                <motion.div
+                                    key="diagnostico"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                >
+                                    <DatabaseDiagnostic />
                                 </motion.div>
                             )}
 
@@ -3957,11 +3791,22 @@ export default function TactileAdmin({ propTab, children }: { propTab?: string, 
                                                 label="ROL EN EL SISTEMA"
                                                 value={newMemberData.role || 'Miembro'}
                                                 onChange={(val: any) => {
-                                                    const newPrivileges = [...(newMemberData.privileges || [])];
-                                                    if (val === 'Responsable de Asistencia' && !newPrivileges.includes('monitor')) newPrivileges.push('monitor');
-                                                    if (val === 'Dirigente Coro Adultos' && !newPrivileges.includes('choir')) newPrivileges.push('choir');
-                                                    if (val === 'Administrador' && !newPrivileges.includes('admin')) newPrivileges.push('admin');
-                                                    if (val === 'Encargado de Jóvenes' && !newPrivileges.includes('youth_leader')) newPrivileges.push('youth_leader');
+                                                    let newPrivileges = [...(newMemberData.privileges || [])];
+                                                    
+                                                    // Auto-purgar privilegios incompatibles si se cambia a un rol específico
+                                                    if (val === 'Administrador') {
+                                                        if (!newPrivileges.includes('admin')) newPrivileges.push('admin', 'monitor');
+                                                    } else if (val === 'Responsable de Asistencia') {
+                                                        if (!newPrivileges.includes('monitor')) newPrivileges.push('monitor');
+                                                    } else if (val === 'Dirigente Coro Adultos') {
+                                                        if (!newPrivileges.includes('choir')) newPrivileges.push('choir');
+                                                    } else if (val === 'Encargado de Jóvenes') {
+                                                        if (!newPrivileges.includes('youth_leader')) newPrivileges.push('youth_leader');
+                                                    } else if (val === 'Miembro') {
+                                                        // Si se baja a miembro, mantenemos privilegios que manualmente se hayan puesto,
+                                                        // pero si el admin quiere limpiar todo lo hará en la sección de privilegios abajo.
+                                                    }
+                                                    
                                                     setNewMemberData({ ...newMemberData, role: val, privileges: [...new Set(newPrivileges)] as any });
                                                 }}
                                                 options={[

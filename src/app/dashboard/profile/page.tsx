@@ -580,8 +580,8 @@ export default function ProfilePage() {
                                                                                 {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
                                                                             </h4>
                                                                             <div className="flex items-center gap-3 mt-0.5">
-                                                                                <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest flex items-center gap-1">
-                                                                                    <Clock className="w-3 h-3" /> {new Date(msg.createdAt).toLocaleString()}
+                                                                                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest flex items-center gap-1">
+                                                                                    <Clock className="w-3 h-3" /> {msg.createdAt ? new Date(msg.createdAt).toLocaleString() : ''}
                                                                                 </span>
                                                                                 {msg.targetRole && (
                                                                                     <span className="text-[9px] px-2 py-0.5 bg-secondary/10 text-secondary border border-secondary/20 rounded font-black uppercase tracking-widest">
