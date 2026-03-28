@@ -1970,13 +1970,18 @@ export const useAppStore = create<AppState>()(
 
                 return days.map(d => {
                     const dailyRecords = data?.filter(r => r.date === d) || [];
-                    
+
                     const getCount = (session: string) => new Set(
                         dailyRecords.filter(r => r.session_type === session).map(r => r.member_id)
                     ).size;
 
+                    const attended = new Set(dailyRecords.map(r => r.member_id)).size;
+                    const percentage = totalMembers > 0 ? (attended / totalMembers) * 100 : 0;
+
                     return {
                         date: d,
+                        attended,
+                        percentage,
                         totalMembers,
                         sessions: {
                             '5am': getCount('5am'),
