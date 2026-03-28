@@ -47,7 +47,7 @@ export function UserMenu() {
         {
             label: 'Mensajes',
             icon: Bell,
-            href: currentUser.role === 'Administrador' ? '/admin#mensajes' : '/#mensajes',
+            href: currentUser.role === 'Administrador' ? '/admin?tab=mensajes' : '/dashboard/profile?tab=mensajes',
             description: 'Buzón de notificaciones'
         },
         {
