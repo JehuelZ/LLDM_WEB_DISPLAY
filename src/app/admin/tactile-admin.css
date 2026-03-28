@@ -12,16 +12,16 @@
 }
 
 .tactile-admin-root {
-    min-height: 100vh;
-    background-color: var(--tactile-bg);
+    width: 100%;
+    min-height: auto;
+    background-color: transparent;
     color: var(--tactile-text);
     font-family: var(--font-poppins), sans-serif;
-    overflow: hidden;
     position: relative;
 }
 
 .base-glow {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -36,10 +36,11 @@
     position: relative;
     z-index: 1;
     display: flex;
-    margin: 20px;
-    height: calc(100vh - 40px);
+    flex-direction: column;
+    width: 100%;
+    min-height: 500px;
     background: rgba(0, 0, 0, 0.2);
-    border-radius: 40px;
+    border-radius: 32px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.5);

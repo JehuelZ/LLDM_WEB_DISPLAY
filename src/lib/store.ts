@@ -256,6 +256,9 @@ interface AppState {
     addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
+    mergeProfiles: (pendingId: string, memberEmail: string, existingMemberId: string) => Promise<boolean>;
+    findProfileRaw: (search: string) => Promise<UserProfile[]>;
+    repairProfileStatus: (userId: string, newStatus: string) => Promise<boolean>;
 
     subscribeToProfiles: () => () => void;
     // New Cloud Actions
@@ -638,15 +641,16 @@ export const useAppStore = create<AppState>()(
 
             loadMembersFromCloud: async () => {
                 set({ isLoading: true });
-                console.log('LoadMembers: Fetching from profiles...');
+                console.log('LoadMembers: Fetching all profiles from Supabase (bypassing any local filters)...');
                 try {
                     const { data, error } = await supabase
                         .from('profiles')
                         .select('*');
 
                     if (error) {
-                        console.error('LoadMembers: Supabase Error:', error);
+                        console.error('LoadMembers ERROR:', error.message, error.hint);
                         set({ isLoading: false });
+                        get().showNotification(`Error cargando miembros: ${error.message}`, 'error');
                         return;
                     }
 
@@ -786,17 +790,59 @@ export const useAppStore = create<AppState>()(
 
             deleteMemberFromCloud: async (userId) => {
                 const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(userId || '');
-                if (!isUuid) return true; // Ignorar si es un placeholder
-
-                const { error } = await supabase
-                    .from('profiles')
-                    .delete()
-                    .eq('id', userId);
-
+                const { error } = await supabase.from('profiles').delete().eq('id', userId);
                 if (error) {
-                    console.error('Error deleting member:', error);
+                    console.error("Error deleting member:", error);
                     return false;
                 }
+                await get().loadMembersFromCloud();
+                return true;
+            },
+
+            findProfileRaw: async (search: string) => {
+                console.log(`Diagnostic: Finding profile raw for "${search}"`);
+                const isEmail = search.includes('@');
+                const query = supabase.from('profiles').select('*');
+                
+                if (isEmail) {
+                    query.ilike('email', search.trim());
+                } else {
+                    query.ilike('name', `%${search.trim()}%`);
+                }
+
+                const { data, error } = await query;
+
+                if (error) {
+                    console.error("Diagnostic Error:", error);
+                    return [];
+                }
+                
+                return (data || []).map((p: any) => ({
+                    id: p.id,
+                    name: p.name,
+                    email: p.email,
+                    status: p.status,
+                    role: p.role,
+                    createdAt: p.created_at,
+                    avatar: p.avatar_url,
+                    category: p.category,
+                    member_group: p.member_group,
+                    gender: p.gender
+                })) as UserProfile[];
+            },
+
+            repairProfileStatus: async (userId, newStatus) => {
+                console.log(`Diagnostic: Repairing status for ${userId} to ${newStatus}`);
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({ status: newStatus })
+                    .eq('id', userId);
+                
+                if (error) {
+                    console.error("Repair Error:", error);
+                    return false;
+                }
+                await get().loadMembersFromCloud();
                 return true;
             },
 
@@ -1572,7 +1618,8 @@ export const useAppStore = create<AppState>()(
 
                 if (!get().currentUser) return;
                 const currentUser = get().currentUser!;
-                const isChoirMember = currentUser.privileges?.includes('choir') || currentUser.role.includes('Coro');
+                const roleString = currentUser.role || '';
+                const isChoirMember = (currentUser.privileges?.includes('choir')) || roleString.includes('Coro');
                 const choirQuery = isChoirMember ? `,target_role.eq.'Coro'` : '';
 
                 const { data, error } = await supabase

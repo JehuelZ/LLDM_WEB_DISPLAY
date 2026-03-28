@@ -71,7 +71,10 @@ export function MonitorReport() {
     const totalMembers = members.length;
     const adutsVaronesCount = members.filter(m => m.gender === 'Varon' && m.category !== 'Niño').length;
     const ninosCount = members.filter(m => m.category === 'Niño').length;
-    const corosCount = members.filter(m => m.privileges?.includes('choir') || m.role.includes('Coro')).length;
+    const corosCount = members.filter(m => {
+        const role = m.role || '';
+        return m.privileges?.includes('choir') || role.includes('Coro');
+    }).length;
 
     // Calcular porcentajes reales
     const calcP = (part: number) => totalMembers ? Math.round((part / totalMembers) * 100) : 0;

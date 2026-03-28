@@ -69,7 +69,9 @@ export function MonitorMessages() {
                                                         {msg.senderName || 'Usuario'}
                                                         {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
                                                     </h4>
-                                                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest">{new Date(msg.createdAt).toLocaleString()}</span>
+                                                    <span className="text-[10px] text-slate-400 uppercase font-bold tracking-widest">
+                                                        {msg.createdAt ? new Date(msg.createdAt).toLocaleString() : ''}
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="flex gap-2">

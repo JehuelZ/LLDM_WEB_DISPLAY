@@ -13,7 +13,8 @@ import {
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target, Contrast,
-    Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert
+    Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert,
+    Sunrise, BookOpen
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
@@ -1090,113 +1091,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
     return (
         <div className="p-4 md:p-8 space-y-8 pb-32 md:pb-8">
-            {!shouldHideLayout && (
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6 mb-12 sticky top-0 z-50 transition-all duration-300">
 
-                {/* Left: Branding + Date Control */}
-                <div className="flex flex-col md:flex-row items-center gap-8 w-full lg:w-auto">
-                    <div className="flex flex-col">
-                        <h1 className={cn(
-                            "text-2xl font-black tracking-tighter leading-none text-foreground selection:bg-foreground selection:text-background",
-                            settings.adminTheme === 'primitivo' ? "admin-header-title uppercase italic" : ""
-                        )}>
-                            {settings.adminTheme === 'primitivo' ? (
-                                <>Bienvenido, <span className="text-primary">{currentUser?.name.split(' ')[0] || 'Admin'}</span></>
-                            ) : (
-                                <>panel <span className="text-muted-foreground not-italic font-[300]">general</span></>
-                            )}
-                        </h1>
-                        <p className={cn(
-                            "text-[8px] font-black uppercase tracking-[0.4em] text-muted-foreground mt-1",
-                            settings.adminTheme === 'primitivo' ? "admin-header-subtitle" : "opacity-60"
-                        )}>
-                            {settings.adminTheme === 'primitivo' ? (
-                                <>PANEL DE CONTROL DIGITAL - <span className="logo-lldm">LLDM</span> <span className="logo-rodeo">RODEO</span></>
-                            ) : (
-                                <>estación de mando táctica</>
-                            )}
-                        </p>
-                    </div>
-
-                </div>
-
-                {/* Right: System Tools Group */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-end gap-3 w-full lg:w-auto">
-                    {/* Tool Group 1: Settings */}
-                    <div className={cn(
-                        "flex items-center gap-3 h-11 transition-all",
-                        settings.adminTheme === 'primitivo' 
-                             ? "bg-transparent border-none shadow-none p-0" 
-                             : "bg-white/[0.03] p-1.5 px-4 border border-white/5 shadow-2xl backdrop-blur-md"
-                    )}>
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-2">
-                                <Languages className="w-3.5 h-3.5 text-primary/70" />
-                                <select
-                                    value={settings.language}
-                                    onChange={(e) => saveSettingsToCloud({ language: e.target.value as any })}
-                                    className="bg-transparent border-none text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground appearance-none cursor-pointer outline-none hover:text-foreground transition-colors"
-                                >
-                                    <option value="es" className="bg-background">ES</option>
-                                    <option value="en" className="bg-background">EN</option>
-                                </select>
-                            </div>
-                            <div className="w-[1px] h-4 bg-border/20" />
-                            <div className="flex items-center gap-2">
-                                {settings.themeMode === 'light' ? <Sun className="w-3.5 h-3.5 text-amber-500" /> : <Moon className="w-3.5 h-3.5 text-primary" />}
-                                <select
-                                    value={settings.themeMode}
-                                    onChange={(e) => saveSettingsToCloud({ themeMode: e.target.value as any })}
-                                    className="bg-transparent border-none text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground appearance-none cursor-pointer outline-none hover:text-foreground transition-colors"
-                                >
-                                    <option value="light" className="bg-background">claro</option>
-                                    <option value="dark" className="bg-background">oscuro</option>
-                                    <option value="system" className="bg-background">auto</option>
-                                </select>
-                            </div>
-                            <div className="w-[1px] h-4 bg-border/20" />
-                            <button
-                                onClick={() => saveSettingsToCloud({ adminTheme: 'tactile' })}
-                                className="text-muted-foreground hover:text-primary transition-colors pl-1"
-                                title="Cambiar a Tema Táctil"
-                            >
-                                <Sparkles className="w-3.5 h-3.5" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Tool Group 2: Notifications */}
-                    <div className={cn(
-                        "flex items-center justify-center h-11 w-11 relative cursor-pointer hover:bg-foreground/5 transition-all text-muted-foreground hover:text-foreground",
-                        settings.adminTheme === 'primitivo' 
-                            ? "bg-transparent border-none shadow-none" 
-                            : "bg-white/[0.03] border border-white/5"
-                    )}>
-                        <Bell className="w-4 h-4" />
-                        <div className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-primary rounded-full transition-all" />
-                    </div>
-
-                    {/* Tool Group 3: Whiteboard */}
-                    <Link href="/display" target="_blank">
-                        <Button className="gap-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-none px-6 h-11 font-black uppercase text-[10px] tracking-wider transition-all">
-                            <ExternalLink className="h-3.5 w-3.5" />
-                            pizarra
-                        </Button>
-                    </Link>
-
-                    {/* Tool Group 4: Logout */}
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => signOut()}
-                        className="h-11 w-11 bg-rose-500/10 text-rose-500 hover:text-white hover:bg-rose-500 rounded-none border border-rose-500/20 transition-all"
-                        title="Finalizar Sesión"
-                    >
-                        <LogOut className="w-4 h-4" />
-                    </Button>
-                </div>
-            </div>
-            )}
 
             {/* Countdown and Stats Section */}
             <div className="space-y-8">
@@ -1227,23 +1122,6 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </CardDescription>
                             </div>
 
-                            {/* Dynamic Range Selector */}
-                            <div className="flex bg-white/5 p-1 rounded-full border border-white/5 backdrop-blur-md ml-4">
-                                {['month', 30, 15, 7].map(r => (
-                                    <button
-                                        key={r}
-                                        onClick={() => setIntelligenceRange(r as any)}
-                                        className={cn(
-                                            "px-3 py-1.5 rounded-full text-[9px] font-black transition-all duration-300 tracking-widest uppercase whitespace-nowrap",
-                                            intelligenceRange === r 
-                                                ? "bg-primary text-black shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] scale-105" 
-                                                : "text-white/30 hover:text-white/60"
-                                        )}
-                                    >
-                                        {r === 'month' ? 'MES' : `${r}D`}
-                                    </button>
-                                ))}
-                            </div>
                         </CardHeader>
                         <CardContent className="p-0 mt-10">
                              <div className="h-82 relative">
@@ -1506,52 +1384,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         </div>
                     </Card>
                 </motion.div>
-
             </div>
 
-            {/* Tab Navigation - PRIMITIVO PILL STYLE */}
-            {!shouldHideLayout && (
-            <div className={cn(
-                "flex overflow-x-auto no-scrollbar transition-all duration-500",
-                settings.adminTheme === 'primitivo'
-                    ? "primitivo-nav-bar sticky top-4 z-40 mb-8"
-                    : "gap-0.5 p-0 bg-slate-900/60 border-none rounded-none backdrop-blur-xl sticky top-4 z-40 mb-8"
-            )}>
-                {[
-                    { id: 'dashboard', label: 'resumen', icon: LayoutDashboard, color: 'text-primary' },
-                    { id: 'horarios', label: 'horarios', icon: CalendarDays, color: settings.adminTheme === 'primitivo' ? 'text-amber-400' : 'text-emerald-400' },
-                    { id: 'contenido', label: 'diseño y visual', icon: Sparkles, color: 'text-amber-400' },
-                    { id: 'coros', label: 'coros y uniformes', icon: Shirt, color: 'text-secondary' },
-                    { id: 'configuracion', label: 'configuración', icon: Settings, color: 'text-slate-300' },
-                    { id: 'miembros', label: 'miembros', icon: Users, color: settings.adminTheme === 'primitivo' ? 'text-amber-400' : 'text-emerald-400' },
-                    { id: 'perfil', label: 'mi perfil', icon: User, color: 'text-amber-400' },
-                ].map((tab) => (
-                    <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={cn(
-                            "group relative flex items-center transition-all duration-300 whitespace-nowrap outline-none",
-                            settings.adminTheme === 'primitivo'
-                                ? cn("primitivo-nav-item", activeTab === tab.id && "active")
-                                : cn(
-                                    "px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest border-r border-white/5 last:border-r-0",
-                                    activeTab === tab.id ? "text-white bg-white/5" : "text-slate-500 hover:text-slate-300 hover:bg-white/[0.02]"
-                                )
-                        )}
-                    >
-                        <tab.icon className={cn(
-                            "relative z-10 w-3.5 h-3.5 transition-all duration-500", 
-                            activeTab === tab.id 
-                                ? tab.color 
-                                : "text-slate-500 grayscale group-hover:grayscale-0"
-                        )} />
-                        <span className="relative z-10 ">
-                            {tab.label}
-                        </span>
-                    </button>
-                ))}
-            </div>
-            )}
 
             {
                 activeTab === 'dashboard' && (
@@ -2988,7 +2822,46 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             <CardContent className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+                                    {/* Plantilla del Display (Pizarra) */}
+                                    <div className="col-span-full space-y-4 p-8 rounded-[2.5rem] bg-emerald-500/5 border border-emerald-500/10 flex flex-col justify-center relative overflow-hidden group">
+                                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                                            <Monitor className="w-32 h-32 text-emerald-500" />
+                                        </div>
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 ml-1 flex items-center gap-2">
+                                            <Monitor className="w-3.5 h-3.5" /> Selección de Tema para el Display (Pizarra)
+                                        </h4>
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 relative z-10 mt-2">
+                                            {[
+                                                { id: 'iglesia', label: 'Oficial', icon: Church },
+                                                { id: 'cristal', label: 'Cristal', icon: Sparkles },
+                                                { id: 'minimal', label: 'Minimal', icon: Type },
+                                                { id: 'nocturno', label: 'Nocturno', icon: Moon },
+                                                { id: 'neon', label: 'Neon', icon: Flame },
+                                                { id: 'luna', label: 'Luna', icon: Sunrise },
+                                                { id: 'primitivo', label: 'Legacy', icon: BookOpen },
+                                            ].map((theme) => {
+                                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id;
+                                                return (
+                                                    <button
+                                                        key={theme.id}
+                                                        onClick={() => setSettings({ displayTemplate: theme.id as any })}
+                                                        className={cn(
+                                                            "flex flex-col items-center justify-center p-4 rounded-3xl border transition-all duration-300 gap-3 group/theme",
+                                                            isActive 
+                                                                ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.1)]" 
+                                                                : "bg-slate-900/40 border-white/5 text-slate-500 hover:border-white/20 hover:text-slate-300"
+                                                        )}
+                                                    >
+                                                        <theme.icon className={cn("w-6 h-6 transition-transform duration-500 group-hover/theme:scale-110", isActive ? "text-emerald-400" : "")} />
+                                                        <span className="text-[9px] font-black uppercase tracking-wider">{theme.label}</span>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
                                     {/* Transitions & Duration Setting */}
+
                                     <div className="space-y-4 p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 flex flex-col justify-center relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Sparkles className="w-32 h-32 text-indigo-500" />
