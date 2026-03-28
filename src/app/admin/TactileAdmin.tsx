@@ -50,8 +50,8 @@ const TactileGlassCard = ({ children, title, className, subtitle, extra }: { chi
             {title && (
                 <div className="mb-8 flex items-center justify-between">
                     <div>
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">{title}</h3>
-                        {subtitle && <p className="text-[8px] font-bold text-white/20 mt-1 uppercase tracking-[0.2em]">{subtitle}</p>}
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/40">{title}</h3>
+                        {subtitle && <p className="text-[8px] font-bold text-foreground/20 mt-1 uppercase tracking-[0.2em]">{subtitle}</p>}
                     </div>
                     {extra}
                 </div>
@@ -64,9 +64,9 @@ const TactileGlassCard = ({ children, title, className, subtitle, extra }: { chi
 // Tactile Input Components
 const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = "text", disabled }: any) => (
     <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
-        {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+        {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">{label}</label>}
         <div className="relative group">
-            {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-focus-within:text-primary transition-colors" />}
+            {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-primary transition-colors" />}
             <input
                 type={type}
                 value={value}
@@ -98,7 +98,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
 
     return (
         <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
-            {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+            {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">{label}</label>}
             <div className="relative group">
                 <button
                     type="button"
@@ -109,11 +109,11 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                         Icon && "pl-12"
                     )}
                 >
-                    {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-hover:text-primary transition-colors" />}
+                    {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />}
                     <span className="truncate flex-1">
                         {selectedOption ? selectedOption.label : 'Seleccionar...'}
                     </span>
-                    <ChevronDown className={cn("w-4 h-4 text-tactile-text-sub transition-transform shrink-0", isOpen && "rotate-180")} />
+                    <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform shrink-0", isOpen && "rotate-180")} />
                 </button>
 
                 <AnimatePresence>
@@ -135,7 +135,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                                 {searchable && (
                                     <div className="p-2 border-b border-white/5 sticky top-0 bg-transparent z-10">
                                         <div className="relative">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-tactile-text-sub" />
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                                             <input
                                                 autoFocus
                                                 type="text"
@@ -163,7 +163,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                                                     type="button"
                                                     className={cn(
                                                         "w-full px-4 py-2.5 text-xs font-bold text-left rounded-xl transition-all flex items-center gap-3 group/opt",
-                                                        value === opt.value ? "bg-primary/10 text-primary" : "text-white/70 hover:bg-white/5 hover:text-white"
+                                                        value === opt.value ? "bg-primary/10 text-primary" : "text-foreground/70 hover:bg-white/5 hover:text-foreground"
                                                     )}
                                                     onClick={() => {
                                                         onChange(opt.value);
@@ -177,7 +177,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                                                                 <img src={opt.avatar} className="w-full h-full object-cover" alt="" />
                                                             </div>
                                                         ) : (
-                                                            !opt.isHeader && <div className="w-6 h-6 rounded-full bg-white/5 border border-white/5 shrink-0 flex items-center justify-center text-[8px] text-white/40">{opt.label?.charAt(0)}</div>
+                                                            !opt.isHeader && <div className="w-6 h-6 rounded-full bg-white/5 border border-white/5 shrink-0 flex items-center justify-center text-[8px] text-foreground/40">{opt.label?.charAt(0)}</div>
                                                         )}
                                                         <span className="truncate">{opt.label}</span>
                                                     </div>
@@ -186,7 +186,7 @@ const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, 
                                             )
                                         ))
                                     ) : (
-                                        <div className="py-8 text-center text-[10px] font-black capitalize tracking-widest text-tactile-text-sub ">
+                                        <div className="py-8 text-center text-[10px] font-black capitalize tracking-widest text-muted-foreground ">
                                             Sin resultados
                                         </div>
                                     )}
@@ -305,7 +305,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
 
     return (
         <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
-            {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">{label}</label>}
+            {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">{label}</label>}
             <div className="relative group">
                 <button
                     type="button"
@@ -316,14 +316,14 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                         Icon && "pl-12"
                     )}
                 >
-                    {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-tactile-text-sub group-hover:text-primary transition-colors" />}
+                    {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />}
                     <div className="flex flex-col flex-1 truncate">
                         <span className="text-[8px] opacity-40 capitalize tracking-widest font-black mb-0.5">Tipografía Activa</span>
                         <span className="truncate text-xl lg:text-2xl leading-tight" style={{ fontFamily: selectedOption?.value || 'inherit' }}>
                             {selectedOption ? selectedOption.label : 'Seleccionar Fuente...'}
                         </span>
                     </div>
-                    <ChevronDown className={cn("w-4 h-4 text-tactile-text-sub transition-transform shrink-0", isOpen && "rotate-180")} />
+                    <ChevronDown className={cn("w-4 h-4 text-muted-foreground transition-transform shrink-0", isOpen && "rotate-180")} />
                 </button>
 
                 <AnimatePresence>
@@ -344,7 +344,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                             >
                                 <div className="p-3 border-b border-white/10 sticky top-0 bg-transparent z-10 backdrop-blur-md">
                                     <div className="relative">
-                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-tactile-text-sub" />
+                                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                                         <input
                                             autoFocus
                                             type="text"
@@ -375,7 +375,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                                                     }}
                                                     className={cn(
                                                         "w-full px-4 py-4 text-left rounded-xl transition-all flex items-center justify-between group/opt",
-                                                        (value === opt.value || activeIndex === i) ? "bg-primary/20 text-white" : "text-white/60 hover:bg-white/5 hover:text-white"
+                                                        (value === opt.value || activeIndex === i) ? "bg-primary/20 text-foreground" : "text-foreground/60 hover:bg-white/5 hover:text-foreground"
                                                     )}
                                                     onClick={() => {
                                                         onChange(opt.value);
@@ -398,7 +398,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
                                             )
                                         ))
                                     ) : (
-                                        <div className="p-12 text-center text-tactile-text-sub font-black capitalize tracking-widest text-[10px]">
+                                        <div className="p-12 text-center text-muted-foreground font-black capitalize tracking-widest text-[10px]">
                                             Sin resultados
                                         </div>
                                     )}
@@ -1004,7 +1004,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 "px-3 py-1.5 rounded-full text-[9px] font-black transition-all duration-300 tracking-widest uppercase",
                                                                 intelligenceRange === r 
                                                                     ? "bg-primary text-black shadow-[0_0_15px_rgba(59,130,246,0.5)] scale-105" 
-                                                                    : "text-white/30 hover:text-white/60"
+                                                                    : "text-foreground/30 hover:text-foreground/60"
                                                             )}
                                                         >
                                                             {r === 'month' ? 'MES' : `${r}D`}
@@ -1043,7 +1043,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
 
                                                     <div className="grid grid-cols-2 gap-8 w-full px-8 pb-4 border-t border-white/5 pt-6 mt-4">
                                                         <div className="text-center">
-                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">
+                                                            <p className="text-[8px] font-black text-foreground/20 uppercase tracking-[0.2em] mb-1">
                                                                 PROMEDIO {intelligenceRange === 'month' ? 'MES' : `${intelligenceRange}D`}
                                                             </p>
                                                             <div className="text-xl font-black text-primary italic">
@@ -1053,7 +1053,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                             </div>
                                                         </div>
                                                         <div className="text-center">
-                                                            <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-1">PICO MÁXIMO</p>
+                                                            <p className="text-[8px] font-black text-foreground/20 uppercase tracking-[0.2em] mb-1">PICO MÁXIMO</p>
                                                             <div className="text-xl font-black text-emerald-500 italic">
                                                                 {monthlyIntelligence.length > 0 ? Math.max(...monthlyIntelligence.map(m => m.value)) : 0}%
                                                             </div>
@@ -1100,7 +1100,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     icon={Sparkles}
                                                 />
                                                 <div className="space-y-1">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">Tipo</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">Tipo</label>
                                                     <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                         {['orthodoxy', 'apostolic_letter'].map(type => (
                                                             <button
@@ -1110,7 +1110,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                     "flex-1 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                                     theme.type === type
                                                                         ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
-                                                                        : "text-white/40 hover:text-white hover:bg-white/5"
+                                                                        : "text-foreground/40 hover:text-foreground hover:bg-white/5"
                                                                 )}
                                                             >
                                                                 {type === 'orthodoxy' ? 'Ortodoxia' : 'Carta de Apostolado'}
@@ -1254,7 +1254,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                             <TactileGlassCard className="md:col-span-3">
                                                 <div className="flex flex-col h-full">
                                                     <div className="mb-6">
-                                                        <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] mb-1">Total de Asistencias</p>
+                                                        <p className="text-[10px] font-black text-foreground/40 uppercase tracking-[0.3em] mb-1">Total de Asistencias</p>
                                                         <div className="text-3xl font-black text-foreground tabular-nums">
                                                             {weeklyStats.reduce((acc, s) => {
                                                                 const dayTotal = s.sessions ? Object.values(s.sessions).reduce((a: any, b: any) => a + b, 0) : 0;
@@ -1289,7 +1289,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                                 <stop offset="100%" stopColor="#f59e0b" />
                                                                             </linearGradient>
                                                                         </defs>
-                                                                        <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="6" className="text-white/5" />
+                                                                        <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="6" className="text-foreground/5" />
                                                                         <motion.circle
                                                                             cx="50" cy="50" r="44" fill="none" stroke="url(#globalProgressGrad)" strokeWidth="10" strokeDasharray="276.46"
                                                                             initial={{ strokeDashoffset: 276.46 }}
@@ -1855,7 +1855,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     </div>
                                                     <div>
                                                         <h3 className="text-2xl font-black tracking-tighter text-amber-500 uppercase">AUDITORÍA DE SEGURIDAD</h3>
-                                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/30 mt-1">PROTOCOLO DE APROBACIÓN DE NUEVOS PERFILES</p>
+                                                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/30 mt-1">PROTOCOLO DE APROBACIÓN DE NUEVOS PERFILES</p>
                                                     </div>
                                                 </div>
                                                 <TactileBadge className="bg-amber-500/10 border-amber-500/30 text-amber-500 px-6 py-2">
@@ -1877,8 +1877,8 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover/audit-card:rotate-0 transition-transform z-20">PRE</div>
                                                             </div>
                                                             <div className="flex-1 min-w-0">
-                                                                <p className="text-sm font-black text-white truncate uppercase tracking-tight leading-none mb-1">{pending.name}</p>
-                                                                <p className="text-[8px] text-white/20 truncate font-black uppercase tracking-widest flex items-center gap-1.5 leading-none">
+                                                                <p className="text-sm font-black text-foreground truncate uppercase tracking-tight leading-none mb-1">{pending.name}</p>
+                                                                <p className="text-[8px] text-foreground/20 truncate font-black uppercase tracking-widest flex items-center gap-1.5 leading-none">
                                                                     <Mail className="w-2.5 h-2.5" />
                                                                     {pending.email}
                                                                 </p>
@@ -1886,7 +1886,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                         </div>
                                                         <div className="flex gap-2 pt-2">
                                                             <button 
-                                                                className="flex-1 h-9 bg-emerald-600 hover:bg-primary text-white text-[9px] font-black uppercase tracking-widest rounded-xl shadow-lg transition-all"
+                                                                className="flex-1 h-9 bg-emerald-600 hover:bg-primary text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl shadow-lg transition-all"
                                                                 disabled={isSaving}
                                                                 onClick={async () => {
                                                                     const { updateProfileInCloud, loadMembersFromCloud } = useAppStore.getState();
@@ -1899,7 +1899,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 APROBAR
                                                             </button>
                                                             <button 
-                                                                className="px-4 h-9 bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-white text-[8px] font-black uppercase tracking-widest rounded-xl transition-all"
+                                                                className="px-4 h-9 bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-foreground text-[8px] font-black uppercase tracking-widest rounded-xl transition-all"
                                                                 onClick={async () => {
                                                                     if (confirm(`¿ELIMINAR SOLICITUD DE ${pending.name.toUpperCase()}?`)) {
                                                                         const { deleteMemberFromCloud, loadMembersFromCloud } = useAppStore.getState();
@@ -1925,13 +1925,13 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                             <h2 className="text-4xl font-black tracking-tighter shrink-0">MIEMBROS <span className="text-muted-foreground/40">LOCALES</span></h2>
 
                                             <div className="relative w-full max-w-md bg-[#121523] border border-white/10 rounded-xl p-1 shadow-2xl backdrop-blur-xl group">
-                                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 group-focus-within:text-amber-400 transition-colors" />
+                                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 group-focus-within:text-amber-400 transition-colors" />
                                                 <input
                                                     type="text"
                                                     placeholder="BUSCAR HERMANA O HERMANO..."
                                                     value={searchTerm}
                                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                                    className="w-full bg-transparent h-10 pl-12 pr-6 text-[10px] font-black tracking-[0.15em] text-white outline-none placeholder:text-white/20"
+                                                    className="w-full bg-transparent h-10 pl-12 pr-6 text-[10px] font-black tracking-[0.15em] text-foreground outline-none placeholder:text-foreground/20"
                                                 />
                                             </div>
                                         </div>
@@ -1944,8 +1944,8 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                     </div>
 
                                     <div className="flex items-center gap-2 mb-2 ml-1">
-                                        <Filter className="w-3 h-3 text-white/20" />
-                                        <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em] mb-0.5">FILTRAR POR GRUPO</span>
+                                        <Filter className="w-3 h-3 text-foreground/20" />
+                                        <span className="text-[10px] font-black text-foreground/20 uppercase tracking-[0.2em] mb-0.5">FILTRAR POR GRUPO</span>
                                     </div>
 
                                     {/* Primitivo Horizontal Filter Bar (Standard Style) */}
@@ -1965,7 +1965,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                     memberFilter === group.id 
                                                         ? "bg-amber-400 text-black shadow-none scale-[1.02]" 
-                                                        : "text-white/40 hover:text-white hover:bg-white/5"
+                                                        : "text-foreground/40 hover:text-foreground hover:bg-white/5"
                                                 )}
                                             >
                                                 {group.label} <span className="opacity-40 text-[8px] ml-1">{group.count}</span>
@@ -2046,7 +2046,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                         <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-20">
                                                             <button 
                                                                 onClick={() => { setEditingMember(member); setShowAddMember(true); }}
-                                                                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all border border-white/5"
+                                                                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-foreground/40 hover:text-foreground transition-all border border-white/5"
                                                             >
                                                                 <Edit2 className="w-3.5 h-3.5" />
                                                             </button>
@@ -2060,7 +2060,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                     await loadMembersFromCloud();
                                                                     setIsSaving(false);
                                                                 }}
-                                                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 text-white/40 hover:bg-red-500/20 hover:text-red-500 transition-all"
+                                                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 text-foreground/40 hover:bg-red-500/20 hover:text-red-500 transition-all"
                                                                 title={member.status === 'Activo' ? 'Desactivar' : 'Activar'}
                                                             >
                                                                 <Power className="w-3.5 h-3.5" />
@@ -2074,7 +2074,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                         deleteMemberFromCloud(member.id);
                                                                     }
                                                                 }}
-                                                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 text-white/40 hover:bg-red-600 hover:text-white transition-all"
+                                                                className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/5 text-foreground/40 hover:bg-red-600 hover:text-foreground transition-all"
                                                                 title="Eliminar"
                                                             >
                                                                 <Trash2 className="w-3.5 h-3.5" />
@@ -2087,16 +2087,16 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                 </motion.div>
                             )}
 
-                            {activeTab === 'ajustes' && (
+                            {activeTab === 'configuracion' && (
                                 <motion.div
-                                    key="ajustes"
+                                    key="configuracion"
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12">
-                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8">Preferencias del <span className="text-tactile-text-sub">Sistema</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8">Preferencias del <span className="text-muted-foreground">Sistema</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-6 space-y-8">
@@ -2115,7 +2115,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 />
 
                                                 <div className="space-y-4">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">COLOR PRIMARIO</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">COLOR PRIMARIO</label>
                                                     <div className="grid grid-cols-5 gap-3">
                                                         {['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'].map(color => (
                                                             <button
@@ -2143,7 +2143,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 />
 
                                                 <div className="space-y-4 pt-2">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">PESO Y GROSOR</label>
                                                     <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                         {[
                                                             { label: 'THIN', weight: '300' },
@@ -2162,7 +2162,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                     "flex-1 px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-300",
                                                                     (settings.fontWeight || '400') === w.weight 
                                                                         ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
-                                                                        : "text-white/40 hover:text-white hover:bg-white/5"
+                                                                        : "text-foreground/40 hover:text-foreground hover:bg-white/5"
                                                                 )}
                                                             >
                                                                 {w.label}
@@ -2174,7 +2174,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
 
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2 flex justify-between">
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2 flex justify-between">
                                                         <span>OPTIMIZACIÓN DE TV (OVERSCAN / ESCALA)</span>
                                                         <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
                                                     </label>
@@ -2190,20 +2190,20 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                     "flex-1 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                                     (settings.displayScale || 1.0) === sc 
                                                                         ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
-                                                                        : "text-white/40 hover:text-white hover:bg-white/5"
+                                                                        : "text-foreground/40 hover:text-foreground hover:bg-white/5"
                                                                 )}
                                                             >
                                                                 {Math.round(sc * 100)}%
                                                             </button>
                                                         ))}
                                                     </div>
-                                                    <p className="text-[8px] text-tactile-text-sub ml-2  leading-relaxed">
+                                                    <p className="text-[8px] text-muted-foreground ml-2  leading-relaxed">
                                                         * Si el contenido se ve cortado en los bordes de la TV, baje la escala al 90%, 80% o 70%.
                                                     </p>
                                                 </div>
 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">
                                                         AJUSTE MANUAL DE POSICIÓN (CENTRAR)
                                                     </label>
                                                     <div className="flex flex-col items-center gap-2">
@@ -2286,17 +2286,17 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 <div className="relative w-full h-full">
                                                                     <img src={settings.displayCustomBgUrl} className="w-full h-full object-cover" alt="Custom background" />
                                                                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                                        <Upload className="w-8 h-8 text-white" />
+                                                                        <Upload className="w-8 h-8 text-foreground" />
                                                                     </div>
                                                                 </div>
                                                             ) : (
                                                                 <>
                                                                     <div className="w-16 h-11 rounded-xl bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                                                                        <Upload className="w-6 h-6 text-tactile-text-sub" />
+                                                                        <Upload className="w-6 h-6 text-muted-foreground" />
                                                                     </div>
                                                                     <div className="text-center">
                                                                         <p className="text-[10px] font-black capitalize tracking-widest">Subir Fondo Personalizado</p>
-                                                                        <p className="text-[8px] text-tactile-text-sub mt-2">Formatos aceptados: SVG, JPG, PNG, WEBP</p>
+                                                                        <p className="text-[8px] text-muted-foreground mt-2">Formatos aceptados: SVG, JPG, PNG, WEBP</p>
                                                                     </div>
                                                                 </>
                                                             )}
@@ -2328,7 +2328,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 )}
                                                 
                                                 <div className="py-4 border-t border-white/5 space-y-4">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE PUNTOS / ANIMACIÓN</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">ESTILO DE PUNTOS / ANIMACIÓN</label>
                                                     <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl overflow-hidden">
                                                         <button
                                                             onClick={() => saveSettingsToCloud({ displayBgStyle: 'static' })}
@@ -2336,7 +2336,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 "flex-1 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                                 settings.displayBgStyle === 'static' 
                                                                     ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
-                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
+                                                                    : "text-foreground/40 hover:text-foreground hover:bg-white/5"
                                                             )}
                                                         >
                                                             ESTÁTICO
@@ -2347,7 +2347,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 "flex-1 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                                 settings.displayBgStyle === 'dynamic' 
                                                                     ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]" 
-                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
+                                                                    : "text-foreground/40 hover:text-foreground hover:bg-white/5"
                                                             )}
                                                         >
                                                             DINÁMICO
@@ -2379,7 +2379,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     >
                                                         <img src={settings.ministerAvatar || `https://ui-avatars.com/api/?name=${settings.ministerName || 'Ministro'}&background=random`} className="w-full h-full object-cover rounded-full" alt="Ministro" />
                                                         <div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            <Camera className="w-8 h-8 text-white" />
+                                                            <Camera className="w-8 h-8 text-foreground" />
                                                         </div>
                                                     </div>
                                                     <button
@@ -2502,7 +2502,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 <div className="flex items-start gap-4 relative z-10">
                                                                     <div className={cn(
                                                                         "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500",
-                                                                        isActive ? "bg-primary text-white scale-110 shadow-lg" : "bg-white/5 text-tactile-text-sub group-hover:text-white"
+                                                                        isActive ? "bg-primary text-foreground scale-110 shadow-lg" : "bg-white/5 text-muted-foreground group-hover:text-foreground"
                                                                     )}>
                                                                         <theme.icon className="w-5 h-5" />
                                                                     </div>
@@ -2510,13 +2510,13 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                         <div className="flex items-center justify-between">
                                                                             <h5 className={cn(
                                                                                 "text-[11px] font-black uppercase tracking-wider transition-colors",
-                                                                                isActive ? "text-primary" : "text-white"
+                                                                                isActive ? "text-primary" : "text-foreground"
                                                                             )}>{theme.label}</h5>
                                                                             {isActive && (
-                                                                                <span className="text-[7px] font-black bg-primary text-white px-1.5 py-0.5 rounded-full tracking-tighter">ACTIVO</span>
+                                                                                <span className="text-[7px] font-black bg-primary text-foreground px-1.5 py-0.5 rounded-full tracking-tighter">ACTIVO</span>
                                                                             )}
                                                                         </div>
-                                                                        <p className="text-[9px] font-medium text-tactile-text-sub/70 leading-relaxed">{theme.desc}</p>
+                                                                        <p className="text-[9px] font-medium text-muted-foreground/70 leading-relaxed">{theme.desc}</p>
                                                                     </div>
                                                                 </div>
                                                             </button>
@@ -2530,18 +2530,18 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                         <h4 className="text-[9px] font-black uppercase tracking-[0.2em] text-primary ml-1">AJUSTES DE REPRODUCCIÓN</h4>
                                                         <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/5">
                                                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                                            <span className="text-[8px] font-black text-white/50 uppercase">Sincronizado</span>
+                                                            <span className="text-[8px] font-black text-foreground/50 uppercase">Sincronizado</span>
                                                         </div>
                                                     </div>
 
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                         <div className="space-y-3">
-                                                            <label className="text-[9px] font-black uppercase tracking-widest text-tactile-text-sub/60 ml-1">Efectos de Transición</label>
+                                                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">Efectos de Transición</label>
                                                             <div className="relative">
                                                                 <select
                                                                     value={settings.transitionsEnabled !== false ? 'true' : 'false'}
                                                                     onChange={(e) => setSettings({ transitionsEnabled: e.target.value === 'true' })}
-                                                                    className="w-full h-12 bg-black/40 border border-white/10 rounded-xl px-5 text-xs font-black uppercase tracking-widest text-white appearance-none cursor-pointer hover:bg-black/60 transition-all outline-none focus:border-primary/50"
+                                                                    className="w-full h-12 bg-black/40 border border-white/10 rounded-xl px-5 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-black/60 transition-all outline-none focus:border-primary/50"
                                                                 >
                                                                     <option value="true">Animaciones Activas</option>
                                                                     <option value="false">Sin Transiciones</option>
@@ -2553,7 +2553,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                         </div>
 
                                                         <div className="space-y-3">
-                                                            <label className="text-[9px] font-black uppercase tracking-widest text-tactile-text-sub/60 ml-1">
+                                                            <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/60 ml-1">
                                                                 Duración ({(settings.displayTemplate || 'nocturno').toUpperCase()})
                                                             </label>
                                                             <div className="relative">
@@ -2568,7 +2568,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                         const key = `${themeId}SlideDuration` as any;
                                                                         setSettings({ [key]: parseInt(e.target.value) });
                                                                     }}
-                                                                    className="w-full h-12 bg-black/40 border border-white/10 rounded-xl px-5 text-xs font-black uppercase tracking-widest text-white appearance-none cursor-pointer hover:bg-black/60 transition-all outline-none focus:border-primary/50"
+                                                                    className="w-full h-12 bg-black/40 border border-white/10 rounded-xl px-5 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-black/60 transition-all outline-none focus:border-primary/50"
                                                                 >
                                                                     <option value="5">Rápido (5s)</option>
                                                                     <option value="12">Normal (12s)</option>
@@ -2612,7 +2612,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 />
 
                                                 <div className="space-y-4">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">EMAILS AUTORIZADOS</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">EMAILS AUTORIZADOS</label>
                                                     <div className="space-y-3">
                                                         {(settings.displayAuthorizedEmails || []).map((email, idx) => (
                                                             <div key={idx} className="flex items-center gap-3 bg-black/40 p-3 rounded-xl border border-white/5">
@@ -2657,7 +2657,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                             </button>
                                                         </div>
                                                     </div>
-                                                    <p className="text-[8px] font-bold text-tactile-text-sub/50 capitalize tracking-widest mt-4">Los administradores siempre tienen acceso.</p>
+                                                    <p className="text-[8px] font-bold text-muted-foreground/50 capitalize tracking-widest mt-4">Los administradores siempre tienen acceso.</p>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -2681,10 +2681,10 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 </button>
 
                                                 <div className="mt-8 space-y-4">
-                                                    <h4 className="text-[10px] font-black capitalize tracking-widest text-tactile-text-sub ml-2">SIMULADOR DE ROLES</h4>
+                                                    <h4 className="text-[10px] font-black capitalize tracking-widest text-muted-foreground ml-2">SIMULADOR DE ROLES</h4>
                                                     <div className="overflow-hidden rounded-xl border border-white/5">
                                                         <table className="w-full text-left text-[10px] border-collapse">
-                                                            <thead className="bg-white/5 capitalize tracking-widest font-black text-tactile-text-sub">
+                                                            <thead className="bg-white/5 capitalize tracking-widest font-black text-muted-foreground">
                                                                 <tr>
                                                                     <th className="px-4 py-3">ROL</th>
                                                                     <th className="px-4 py-3">EMAIL</th>
@@ -2716,7 +2716,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                                         showNotification('La cuenta aún no existe. Pulsa "GENERAR CUENTAS" primero.', 'warning');
                                                                                     }
                                                                                 }}
-                                                                                className="bg-primary/10 text-primary hover:bg-primary hover:text-white px-3 py-1 rounded-full font-black capitalize tracking-tighter transition-all"
+                                                                                className="bg-primary/10 text-primary hover:bg-primary hover:text-foreground px-3 py-1 rounded-full font-black capitalize tracking-tighter transition-all"
                                                                             >
                                                                                 ENTRAR
                                                                             </button>
@@ -2726,7 +2726,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <p className="text-[8px] font-bold text-tactile-text-sub/40 capitalize tracking-widest text-center">Esto solo simula la sesión localmente para pruebas rápidas.</p>
+                                                    <p className="text-[8px] font-bold text-muted-foreground/40 capitalize tracking-widest text-center">Esto solo simula la sesión localmente para pruebas rápidas.</p>
                                                 </div>
                                             </div>
                                         </TactileGlassCard>
@@ -2742,7 +2742,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12 px-4">
-                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8 group">Buzón de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mensajes Admin</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8 group">Buzón de <span className="text-primary group-hover:text-muted-foreground transition-colors">Mensajes Admin</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-12 space-y-4">
@@ -2766,11 +2766,11 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                         {msg.senderName?.charAt(0) || 'U'}
                                                                     </div>
                                                                     <div>
-                                                                        <h4 className="font-black text-white text-lg  flex items-center gap-2">
+                                                                        <h4 className="font-black text-foreground text-lg  flex items-center gap-2">
                                                                             {msg.senderName || 'Usuario'}
                                                                             {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
                                                                         </h4>
-                                                                        <span className="text-[10px] text-tactile-text-sub capitalize font-bold tracking-widest">{format(parseISO(msg.createdAt), "d MMM, h:mm a")}</span>
+                                                                        <span className="text-[10px] text-muted-foreground capitalize font-bold tracking-widest">{format(parseISO(msg.createdAt), "d MMM, h:mm a")}</span>
                                                                     </div>
                                                                 </div>
                                                                 <div className="flex gap-2">
@@ -2794,7 +2794,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                             </div>
 
                                                             <div className="bg-black/40 p-5 rounded-xl border border-white/5 shadow-inner mb-4">
-                                                                <p className="text-sm font-medium text-tactile-text-sub leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                                                                <p className="text-sm font-medium text-muted-foreground leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                                                             </div>
 
                                                             <AnimatePresence>
@@ -2815,7 +2815,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                             <div className="flex justify-end gap-3">
                                                                                 <button
                                                                                     onClick={() => setReplyingTo(null)}
-                                                                                    className="px-6 h-12 rounded-xl text-[10px] font-black capitalize tracking-widest text-tactile-text-sub hover:text-white"
+                                                                                    className="px-6 h-12 rounded-xl text-[10px] font-black capitalize tracking-widest text-muted-foreground hover:text-foreground"
                                                                                 >
                                                                                     CANCELAR
                                                                                 </button>
@@ -2869,7 +2869,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12 px-4">
-                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8 group">Configuración de <span className="text-primary group-hover:text-tactile-text-sub transition-colors">Mi Perfil</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8 group">Configuración de <span className="text-primary group-hover:text-muted-foreground transition-colors">Mi Perfil</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-5 flex flex-col items-center">
@@ -2886,8 +2886,8 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     </div>
                                                 )}
                                                 <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <Camera className="w-10 h-10 text-white mb-2" />
-                                                    <span className="text-[10px] font-black capitalize tracking-widest text-white">Cambiar Foto</span>
+                                                    <Camera className="w-10 h-10 text-foreground mb-2" />
+                                                    <span className="text-[10px] font-black capitalize tracking-widest text-foreground">Cambiar Foto</span>
                                                 </div>
                                             </div>
 
@@ -2943,7 +2943,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     icon={Phone}
                                                 />
                                                 <div className="space-y-2">
-                                                    <label className="text-[10px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2 flex items-center gap-2">
+                                                    <label className="text-[10px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2 flex items-center gap-2">
                                                         <FileText className="w-3 h-3" /> Acerca de Mí / Biografía
                                                     </label>
                                                     <textarea
@@ -2989,7 +2989,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     </div>
                                                     <div>
                                                         <p className="text-xs font-black capitalize tracking-widest text-primary">Acceso Maestro</p>
-                                                        <p className="text-[10px] text-tactile-text-sub/70 font-bold capitalize tracking-widest">Control total sobre el sistema y miembros</p>
+                                                        <p className="text-[10px] text-muted-foreground/70 font-bold capitalize tracking-widest">Control total sobre el sistema y miembros</p>
                                                     </div>
                                                 </div>
                                                 <div className="px-4 py-1.5 bg-primary text-black rounded-lg text-[10px] font-black capitalize tracking-tighter shadow-lg shadow-primary/20 relative z-10">
@@ -3046,7 +3046,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">RESUMEN / DESCRIPCIÓN</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">RESUMEN / DESCRIPCIÓN</label>
                                                     <textarea
                                                         className="w-full bg-black/40 border border-white/5 rounded-xl p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all"
                                                         value={theme.description || ''}
@@ -3055,7 +3055,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     />
                                                 </div>
                                                 <div className="space-y-4">
-                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">CONTENIDO VISUAL (URL)</label>
+                                                    <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">CONTENIDO VISUAL (URL)</label>
                                                     <div className="flex gap-2">
                                                         <input
                                                             className="flex-1 bg-black/40 border border-white/5 rounded-xl h-12 px-4 text-xs font-bold outline-none"
@@ -3118,7 +3118,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                             <div className="flex items-center justify-between p-4 bg-black/20 rounded-xl">
                                                 <div className="space-y-1">
                                                     <h4 className="font-bold text-sm">Contador Regresivo</h4>
-                                                    <p className="text-[10px] text-tactile-text-sub capitalize tracking-widest font-black">Activar en el Display</p>
+                                                    <p className="text-[10px] text-muted-foreground capitalize tracking-widest font-black">Activar en el Display</p>
                                                 </div>
                                                 <button
                                                     onClick={() => setSettings({ showCountdown: !settings.showCountdown })}
@@ -3136,7 +3136,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 {theme.fileUrl ? (
                                                     <img src={theme.fileUrl} className="w-full h-full object-cover" />
                                                 ) : (
-                                                    <div className="w-full h-full flex flex-col items-center justify-center text-tactile-text-sub/20">
+                                                    <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground/20">
                                                         <Sparkles className="w-20 h-20 mb-4" />
                                                         <span className="font-black text-xs capitalize tracking-[0.3em]">Sin Contenido</span>
                                                     </div>
@@ -3168,7 +3168,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                         </div>
                                                         <div className="flex-1">
                                                             <h4 className="font-black text-sm capitalize ">{reh.location}</h4>
-                                                            <p className="text-[10px] font-bold text-tactile-text-sub">{reh.time}</p>
+                                                            <p className="text-[10px] font-bold text-muted-foreground">{reh.time}</p>
                                                         </div>
                                                         <button
                                                             onClick={async () => {
@@ -3215,10 +3215,10 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                         return (
                                                             <div key={date} className="flex items-center justify-between p-4 bg-black/20 rounded-xl border border-white/5 relative group/row">
                                                                 <div className="flex flex-col">
-                                                                    <span className="text-[9px] font-black text-tactile-text-sub capitalize font-black tracking-widest mb-1 truncate">
+                                                                    <span className="text-[9px] font-black text-muted-foreground capitalize font-black tracking-widest mb-1 truncate">
                                                                         {format(parseISO(date), "EEEE d 'de' MMMM", { locale: es })}
                                                                     </span>
-                                                                    <span className={cn("font-black  px-4 py-1.5 rounded-xl border border-white/5 bg-black/40 text-xs", uniform ? "text-primary border-primary/20" : "text-white/20")}>
+                                                                    <span className={cn("font-black  px-4 py-1.5 rounded-xl border border-white/5 bg-black/40 text-xs", uniform ? "text-primary border-primary/20" : "text-foreground/20")}>
                                                                         {uniform?.name || 'VESTUARIO NO DEFINIDO'}
                                                                     </span>
                                                                 </div>
@@ -3245,7 +3245,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
 
                                     <div className="col-span-1 md:col-span-12 space-y-6 mt-12">
                                         <div className="flex items-center justify-between mb-4">
-                                            <h3 className="text-xl font-black  capitalize tracking-widest text-white">Avisos del Coro</h3>
+                                            <h3 className="text-xl font-black  capitalize tracking-widest text-foreground">Avisos del Coro</h3>
                                             <button
                                                 onClick={() => { setActiveTab('anuncios'); setNewAnn({ ...newAnn, category: 'choir' }); }}
                                                 className="tactile-btn tactile-btn-glass text-[9px] px-4 font-black"
@@ -3256,7 +3256,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                         <div className="space-y-4">
                                             {announcements.filter(a => a.category === 'choir' || a.title.toLowerCase().includes('coro')).length === 0 ? (
                                                 <div className="p-12 border-2 border-dashed border-white/5 rounded-[2.5rem] text-center bg-black/20">
-                                                    <p className="text-tactile-text-sub font-bold capitalize tracking-widest text-xs">No hay avisos específicos para el coro</p>
+                                                    <p className="text-muted-foreground font-bold capitalize tracking-widest text-xs">No hay avisos específicos para el coro</p>
                                                 </div>
                                             ) : (
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3267,7 +3267,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                             </div>
                                                             <div className="flex-1 min-w-0">
                                                                 <h4 className="font-black text-sm capitalize  truncate">{ann.title}</h4>
-                                                                <p className="text-[11px] text-tactile-text-sub line-clamp-2 mt-1">{ann.content}</p>
+                                                                <p className="text-[11px] text-muted-foreground line-clamp-2 mt-1">{ann.content}</p>
                                                             </div>
                                                             <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 <button
@@ -3310,7 +3310,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                     className="grid grid-cols-1 md:grid-cols-12 gap-8"
                                 >
                                     <div className="col-span-1 md:col-span-12">
-                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8">Temas del <span className="text-tactile-text-sub">Display</span></h2>
+                                        <h2 className="text-4xl font-black  capitalize tracking-tighter mb-8">Temas del <span className="text-muted-foreground">Display</span></h2>
                                     </div>
 
                                     <div className="col-span-1 md:col-span-12">
@@ -3328,7 +3328,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 <div className="w-16 h-11 flex items-center justify-center p-2 rounded-xl bg-white/5 border border-white/10 text-slate-500">
                                                     <XCircle className="w-10 h-10" />
                                                 </div>
-                                                <span className={cn("text-[10px] font-black capitalize tracking-widest", (settings.churchLogoUrl === '') ? "text-primary" : "text-tactile-text-sub")}>
+                                                <span className={cn("text-[10px] font-black capitalize tracking-widest", (settings.churchLogoUrl === '') ? "text-primary" : "text-muted-foreground")}>
                                                     Sin Logotipo
                                                 </span>
                                             </button>
@@ -3373,7 +3373,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                         <div className="w-20 h-20 flex items-center justify-center p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
                                                                             <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
                                                                         </div>
-                                                                        <span className={cn("text-[10px] font-black capitalize tracking-widest", isActive ? "text-primary" : "text-tactile-text-sub")}>
+                                                                        <span className={cn("text-[10px] font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground")}>
                                                                             Logo {slotIndex}
                                                                         </span>
                                                                         <button
@@ -3383,15 +3383,15 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                             }}
                                                                             className="absolute top-4 right-4 p-2 bg-white/10 rounded-full opacity-0 group-hover/slot:opacity-100 transition-opacity hover:bg-primary/20"
                                                                         >
-                                                                            <Upload className="w-3 h-3 text-white" />
+                                                                            <Upload className="w-3 h-3 text-foreground" />
                                                                         </button>
                                                                     </>
                                                                 ) : (
                                                                     <div className="flex flex-col items-center justify-center gap-3 py-4 h-full">
                                                                         <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center border border-white/10 group-hover/slot:border-primary/50 transition-colors">
-                                                                            <Plus className="w-6 h-6 text-white/30 group-hover/slot:text-primary transition-colors" />
+                                                                            <Plus className="w-6 h-6 text-foreground/30 group-hover/slot:text-primary transition-colors" />
                                                                         </div>
-                                                                        <span className="text-[9px] font-black capitalize text-tactile-text-sub/40 tracking-widest">Logo {slotIndex}</span>
+                                                                        <span className="text-[9px] font-black capitalize text-muted-foreground/40 tracking-widest">Logo {slotIndex}</span>
                                                                     </div>
                                                                 )}
                                                             </div>
@@ -3413,7 +3413,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                     </div>
 
                                     <div className="col-span-1 md:col-span-4 space-y-4">
-                                        <h4 className="text-[10px] font-black capitalize tracking-[0.3em] text-tactile-text-sub mb-4 ml-2">Plantillas Disponibles</h4>
+                                        <h4 className="text-[10px] font-black capitalize tracking-[0.3em] text-muted-foreground mb-4 ml-2">Plantillas Disponibles</h4>
                                         {[
                                             { id: 'cristal', label: 'Cristal Forge', icon: Sparkles, desc: 'Neo-Glassmorphism Premium' },
                                             { id: 'neon', label: 'Neon Forge', icon: Radio, desc: 'Retro-Futurista Vibrante' },
@@ -3429,7 +3429,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 }}
                                                 className={cn(
                                                     "w-full flex items-center gap-4 px-6 py-5 rounded-[2rem] transition-all border text-left",
-                                                    calendarStyles.template === themeOpt.id ? "bg-primary/20 border-primary/40 text-primary shadow-lg" : "bg-black/20 border-white/5 text-tactile-text-sub hover:bg-white/5"
+                                                    calendarStyles.template === themeOpt.id ? "bg-primary/20 border-primary/40 text-primary shadow-lg" : "bg-black/20 border-white/5 text-muted-foreground hover:bg-white/5"
                                                 )}
                                             >
                                                 <themeOpt.icon className="w-6 h-6" />
@@ -3457,7 +3457,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     />
 
                                                     <div className="space-y-4 pt-2">
-                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PESO Y GROSOR</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">PESO Y GROSOR</label>
                                                         <div className="grid grid-cols-5 gap-2">
                                                             {[
                                                                 { label: 'THIN', weight: '300' },
@@ -3485,7 +3485,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
 
                                                     <div className="space-y-4">
                                                         <div className="flex items-center justify-between ml-2">
-                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub">TRANSICIONES ANIMADAS</label>
+                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground">TRANSICIONES ANIMADAS</label>
                                                             <button
                                                                 onClick={() => {
                                                                     const newValue = settings.transitionsEnabled === false;
@@ -3503,11 +3503,11 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 )} />
                                                             </button>
                                                         </div>
-                                                        <p className="text-[8px] font-bold text-tactile-text-sub/40 capitalize tracking-widest ml-2">¿ACTUAR CON EFECTOS DE MOVIMIENTO?</p>
+                                                        <p className="text-[8px] font-bold text-muted-foreground/40 capitalize tracking-widest ml-2">¿ACTUAR CON EFECTOS DE MOVIMIENTO?</p>
                                                     </div>
 
                                                     <div className="space-y-4">
-                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">TIEMPO DE CADA SLIDE (SEGUNDOS)</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">TIEMPO DE CADA SLIDE (SEGUNDOS)</label>
                                                         <div className="grid grid-cols-4 gap-2">
                                                             {[5, 12, 20, 30].map((sec) => {
                                                                 const themeId = calendarStyles.template || 'nocturno';
@@ -3537,7 +3537,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
 
                                                     {calendarStyles.template === 'iglesia' && (
                                                         <div className="space-y-4">
-                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">ESTILO DE CÁTEDRA</label>
+                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">ESTILO DE CÁTEDRA</label>
                                                             <div className="flex gap-4">
                                                                 <button
                                                                     onClick={() => setSettings({ iglesiaVariant: 'light' })}
@@ -3564,7 +3564,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     )}
 
                                                     <div className="space-y-4">
-                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">TRANSICIÓN DE PANTALLA</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">TRANSICIÓN DE PANTALLA</label>
                                                         <div className="flex flex-col gap-3">
                                                             {[
                                                                 { id: 'metro', label: 'ESTILO METRO (LÍNEA CONTINUA)', icon: Radio },
@@ -3589,7 +3589,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                         </div>
 
                                                         <div className="mt-6 space-y-4">
-                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">VELOCIDAD DE TRANSICIÓN</label>
+                                                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">VELOCIDAD DE TRANSICIÓN</label>
                                                             <div className="flex gap-2">
                                                                 {[1.2, 2.4, 4.0].map((speed) => (
                                                                     <button
@@ -3614,7 +3614,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
 
 
                                                     <div className="space-y-4">
-                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">EFECTOS ESPECIALES</label>
+                                                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">EFECTOS ESPECIALES</label>
                                                         <div className="flex gap-4">
                                                             <button
                                                                 onClick={() => setCalendarStyles({ showGlassEffect: !calendarStyles.showGlassEffect })}
@@ -3644,7 +3644,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                             <Monitor className="w-10 h-10 text-primary" />
                                                         </div>
                                                         <h4 className="font-black text-sm capitalize ">Vista Previa</h4>
-                                                        <p className="text-[10px] text-tactile-text-sub mt-2 leading-relaxed">El tema se aplicará instantáneamente a todas las pantallas conectadas.</p>
+                                                        <p className="text-[10px] text-muted-foreground mt-2 leading-relaxed">El tema se aplicará instantáneamente a todas las pantallas conectadas.</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -3703,7 +3703,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                     </div>
                                                     <button
                                                         onClick={() => document.getElementById('member-avatar-upload')?.click()}
-                                                        className="absolute bottom-2 right-2 w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg border border-white/20 hover:scale-110 transition-transform"
+                                                        className="absolute bottom-2 right-2 w-10 h-10 bg-primary text-foreground rounded-xl flex items-center justify-center shadow-lg border border-white/20 hover:scale-110 transition-transform"
                                                     >
                                                         <Camera className="w-5 h-5" />
                                                     </button>
@@ -3821,7 +3821,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 icon={Flame}
                                             />
                                             <div className="col-span-2 space-y-2">
-                                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">ACERCA DE / BIOGRAFÍA</label>
+                                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">ACERCA DE / BIOGRAFÍA</label>
                                                 <textarea
                                                     value={newMemberData.bio || ''}
                                                     onChange={(e) => setNewMemberData({ ...newMemberData, bio: e.target.value })}
@@ -3830,7 +3830,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 />
                                             </div>
                                             <div className="col-span-2 space-y-4">
-                                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-tactile-text-sub ml-2">PRIVILEGIOS / ACCESOS</label>
+                                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">PRIVILEGIOS / ACCESOS</label>
                                                 <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[#121523] border border-white/5 rounded-xl shadow-2xl">
                                                     {[
                                                         { id: 'admin', label: 'ADMIN' },
@@ -3853,7 +3853,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                 "px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                                                 (newMemberData.privileges || []).includes(priv.id as any)
                                                                     ? "bg-[#576983] text-black shadow-lg transform scale-[1.02]"
-                                                                    : "text-white/40 hover:text-white hover:bg-white/5"
+                                                                    : "text-foreground/40 hover:text-foreground hover:bg-white/5"
                                                             )}
                                                         >
                                                             {priv.label}
@@ -3943,7 +3943,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                     <div className="p-8 border-b border-white/5 flex items-center justify-between">
                                         <div>
                                             <h3 className="text-2xl font-black  capitalize tracking-tighter">Gestionar <span className="text-primary truncate">Ensayos</span></h3>
-                                            <p className="text-[10px] font-bold text-tactile-text-sub capitalize tracking-widest mt-1">Configuración del Coro</p>
+                                            <p className="text-[10px] font-bold text-muted-foreground capitalize tracking-widest mt-1">Configuración del Coro</p>
                                         </div>
                                         <button onClick={() => setShowRehearsalModal(false)} className="tactile-btn tactile-btn-glass !rounded-full w-10 h-10 p-0 items-center justify-center"><Trash2 className="w-4 h-4" /></button>
                                     </div>
@@ -4024,7 +4024,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                             onClick={() => setSelectedMemberForHistory(null)}
                                             className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center hover:bg-red-500/20 hover:border-red-500/40 transition-all"
                                         >
-                                            <X className="w-5 h-5 text-white" />
+                                            <X className="w-5 h-5 text-foreground" />
                                         </button>
 
                                         <div className="absolute -bottom-12 left-10 flex items-end gap-6">
@@ -4036,12 +4036,12 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 />
                                             </div>
                                             <div className="mb-4">
-                                                <h2 className="text-3xl font-black  capitalize tracking-tighter text-white">{selectedMemberForHistory.name}</h2>
+                                                <h2 className="text-3xl font-black  capitalize tracking-tighter text-foreground">{selectedMemberForHistory.name}</h2>
                                                 <div className="flex items-center gap-2 mt-1">
                                                     <span className="text-[10px] font-black capitalize tracking-widest px-3 py-1 rounded-full bg-primary text-black">
                                                         {selectedMemberForHistory.member_group}
                                                     </span>
-                                                    <span className="text-[10px] font-bold text-white/40 capitalize tracking-widest ">{selectedMemberForHistory.role}</span>
+                                                    <span className="text-[10px] font-bold text-foreground/40 capitalize tracking-widest ">{selectedMemberForHistory.role}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -4053,19 +4053,19 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                             {[
                                                 { label: 'ORACIONES ASISTIDAS', value: memberHistory.filter(r => r.present).length, icon: CheckCircle, color: 'text-emerald-400' },
                                                 { label: 'PUNTUALIDAD', value: `${selectedMemberForHistory.stats?.punctuality || 95}%`, icon: Clock, color: 'text-primary' },
-                                                { label: 'TOTAL REGISTROS', value: memberHistory.length, icon: Calendar, color: 'text-white/40' }
+                                                { label: 'TOTAL REGISTROS', value: memberHistory.length, icon: Calendar, color: 'text-foreground/40' }
                                             ].map((stat, i) => (
                                                 <div key={i} className="bg-white/[0.02] border border-white/5 p-4 rounded-3xl flex flex-col items-center justify-center text-center">
                                                     <stat.icon className={cn("w-5 h-5 mb-2", stat.color)} />
                                                     <div className="text-xl font-black ">{stat.value}</div>
-                                                    <p className="text-[8px] font-black capitalize text-white/30 tracking-widest mt-1">{stat.label}</p>
+                                                    <p className="text-[8px] font-black capitalize text-foreground/30 tracking-widest mt-1">{stat.label}</p>
                                                 </div>
                                             ))}
                                         </div>
 
                                         <div className="space-y-4">
                                             <div className="flex items-center justify-between px-2">
-                                                <h4 className="text-[10px] font-black capitalize tracking-[0.2em] text-white/50">HISTORIAL RECIENTE</h4>
+                                                <h4 className="text-[10px] font-black capitalize tracking-[0.2em] text-foreground/50">HISTORIAL RECIENTE</h4>
                                                 <span className="text-[9px] font-bold text-primary  capitalize tracking-widest">Últimos 30 días</span>
                                             </div>
                                             
@@ -4073,12 +4073,12 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                 {isLoadingHistory ? (
                                                     <div className="flex flex-col items-center justify-center py-12 gap-4">
                                                         <RefreshCw className="w-8 h-8 text-primary animate-spin" />
-                                                        <p className="text-[10px] font-black capitalize tracking-widest text-white/30 ">Cargando historial...</p>
+                                                        <p className="text-[10px] font-black capitalize tracking-widest text-foreground/30 ">Cargando historial...</p>
                                                     </div>
                                                 ) : memberHistory.length === 0 ? (
                                                     <div className="py-12 text-center">
-                                                        <Info className="w-8 h-8 text-white/10 mx-auto mb-4" />
-                                                        <p className="text-[10px] font-black capitalize tracking-widest text-white/20 ">No hay registros previos</p>
+                                                        <Info className="w-8 h-8 text-foreground/10 mx-auto mb-4" />
+                                                        <p className="text-[10px] font-black capitalize tracking-widest text-foreground/20 ">No hay registros previos</p>
                                                     </div>
                                                 ) : (
                                                     <div className="space-y-3">
@@ -4093,7 +4093,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                             return Object.entries(byDate).slice(0, 14).map(([date, records]) => (
                                                                 <div key={date} className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 group hover:bg-white/[0.04] transition-colors">
                                                                     <div className="flex flex-col">
-                                                                        <span className="text-[10px] font-black capitalize  text-white/80">{format(parseISO(date), "EEEE, d 'de' MMMM", { locale: es })}</span>
+                                                                        <span className="text-[10px] font-black capitalize  text-foreground/80">{format(parseISO(date), "EEEE, d 'de' MMMM", { locale: es })}</span>
                                                                         <div className="flex gap-1 mt-1">
                                                                             {['5am', '9am', 'evening'].map(type => {
                                                                                 const rec = records.find(r => r.session_type === type);
@@ -4101,7 +4101,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                                 return (
                                                                                     <div key={type} className={cn(
                                                                                         "px-2 py-0.5 rounded text-[7px] font-black capitalize tracking-tighter transition-all",
-                                                                                        present ? "bg-primary/20 text-primary border border-primary/30" : "bg-white/5 text-white/20 border border-white/5"
+                                                                                        present ? "bg-primary/20 text-primary border border-primary/30" : "bg-white/5 text-foreground/20 border border-white/5"
                                                                                     )}>
                                                                                         {type === '5am' ? '5 AM' : type === '9am' ? '9 AM' : 'TARDE'}
                                                                                     </div>
@@ -4110,7 +4110,7 @@ export default function TactileAdmin({ children, propTab, isSubpage }: TactileAd
                                                                         </div>
                                                                     </div>
                                                                     <div className="flex flex-col items-end">
-                                                                        <span className="text-[8px] font-bold text-white/20 capitalize tracking-widest">{records.some(r => r.present) ? 'ASISTIÓ' : 'FALTA'}</span>
+                                                                        <span className="text-[8px] font-bold text-foreground/20 capitalize tracking-widest">{records.some(r => r.present) ? 'ASISTIÓ' : 'FALTA'}</span>
                                                                         {records.some(r => r.present) && (
                                                                             <span className="text-[9px] font-black text-emerald-400 mt-1 ">✓ Visto</span>
                                                                         )}
