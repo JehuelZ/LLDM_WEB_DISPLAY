@@ -2,7 +2,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Settings, CheckCircle2, TrendingUp, Star, Lock } from 'lucide-react';
+import { Calendar, Clock, BookOpen, User, Bell, ClipboardCheck, Camera, Mail, Phone, Save, Edit2, X, Settings, CheckCircle2, TrendingUp, Star, Lock, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -346,6 +346,31 @@ export default function Home() {
             >
               Cerrar Sesión
             </button>
+          </div>
+
+          {/* Contact Admin - While Pending */}
+          <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500">¿Necesitas ayuda con tu registro?</h3>
+            <div className="bg-white/5 border border-white/5 rounded-3xl p-4 space-y-3">
+              <textarea
+                value={msgContent}
+                onChange={(e) => setMsgContent(e.target.value)}
+                placeholder="Escribe un mensaje al administrador..."
+                className="w-full h-24 bg-transparent border-none text-xs text-white focus:outline-none resize-none font-medium"
+              />
+              <Button
+                variant="primitivo"
+                className="w-full h-11 rounded-2xl gap-2"
+                onClick={handleSendMessage}
+                disabled={isSendingMsg || !msgContent.trim()}
+              >
+                {isSendingMsg ? "Enviando..." : (
+                  <>
+                    <Send className="w-4 h-4" /> ENVIAR MENSAJE
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>
