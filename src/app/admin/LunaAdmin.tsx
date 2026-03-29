@@ -79,9 +79,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
 
     return (
         <div className="w-full admin-theme-luna animate-in fade-in duration-700">
-            {isSubpage ? (
-                children
-            ) : (
+            {activeTab === 'dashboard' && !isSubpage ? (
                 <>
                     {/* KPI ROW */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
@@ -91,7 +89,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
                             { icon: Shield, val: '99.9%', lbl: 'uptime sistema', sub: 'nodo central: ok' },
                             { icon: Target, val: '312', lbl: 'proyección', sub: 'clases activas' },
                         ].map((kpi, i) => (
-                            <div key={i} className="p-8 border border-white/[0.04] bg-white/[0.02] group hover:border-white/10 transition-all duration-500">
+                            <div key={i} className="p-8 border border-white/[0.02] bg-white/[0.02] group hover:border-white/10 transition-all duration-500">
                                 <div className="flex justify-between items-start mb-6">
                                     <kpi.icon className="w-4 h-4 text-white/20 group-hover:text-white transition-colors duration-500" />
                                     <div className="w-1 h-1 bg-white/10" />
@@ -107,7 +105,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
                     {/* MAIN CHARTS AREA */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                         <div className="lg:col-span-2 space-y-10">
-                            <div className="p-10 border border-white/[0.04] bg-white/[0.01]">
+                            <div className="p-10 border border-white/[0.02] bg-white/[0.01]">
                                 <div className="flex justify-between items-center mb-10">
                                     <h3 className="text-[10px] font-[300] tracking-[0.4em] text-white/40 uppercase">flujo de asistencia semanal</h3>
                                 </div>
@@ -120,7 +118,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
                     </div>
 
                         <div className="space-y-10">
-                            <div className="p-10 border border-white/[0.04] bg-white/[0.01]">
+                            <div className="p-10 border border-white/[0.02] bg-white/[0.01]">
                                 <h3 className="text-[10px] font-[300] tracking-[0.4em] text-white/40 uppercase mb-10 text-center">composición de grupo</h3>
                                 <div className="h-[250px] flex items-center justify-center">
                                     <LunaDonut 
@@ -134,6 +132,10 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
                         </div>
                     </div>
                 </>
+            ) : (
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    {children}
+                </div>
             )}
         </div>
     );

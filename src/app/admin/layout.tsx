@@ -40,10 +40,11 @@ import {
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useAppStore } from '@/lib/store';
+import { useAppStore, AppSettings } from '@/lib/store';
 import './LunaStyles.css';
 import './ClassicStyles.css';
 import './PrimitivoStyles.css';
+import './tactile-admin.css';
 import LunaAdmin from './LunaAdmin';
 import TactileAdmin from './TactileAdmin';
 import AdminClockWeather from '@/components/admin/AdminClockWeather';
@@ -109,12 +110,17 @@ function AdminLayoutContent({
     // Handle initial theme loading from localStorage for local dev robustness
     useEffect(() => {
         const savedTheme = localStorage.getItem('admin_theme_choice') as any;
-        if (savedTheme && savedTheme !== settings.adminTheme) {
-            setSettings({ adminTheme: savedTheme });
-            setMounted(true);
-        } else {
-            setMounted(true);
+        const savedMode = localStorage.getItem('admin_mode_choice') as any;
+        
+        const updates: Partial<AppSettings> = {};
+        if (savedTheme && savedTheme !== settings.adminTheme) updates.adminTheme = savedTheme;
+        if (savedMode && savedMode !== settings.themeMode) updates.themeMode = savedMode;
+        
+        if (Object.keys(updates).length > 0) {
+            setSettings(updates);
         }
+        
+        setMounted(true);
     }, []);
 
     // Apply theme class to body for global style control (Phase 2)
@@ -126,21 +132,24 @@ function AdminLayoutContent({
                           settings.adminTheme === 'luna' ? 'admin-theme-luna' : 
                           'admin-theme-classic';
         
-        // Remove old theme classes
-        document.body.classList.remove('admin-theme-primitivo', 'admin-theme-tactile', 'admin-theme-luna', 'admin-theme-classic');
-        // Add new theme class
-        document.body.classList.add(themeClass);
+        const modeClass = settings.themeMode === 'light' ? 'light-mode' : 'dark-mode';
+        
+        // Remove old theme and mode classes
+        document.body.classList.remove('admin-theme-primitivo', 'admin-theme-tactile', 'admin-theme-luna', 'admin-theme-classic', 'light-mode', 'dark-mode');
+        // Add new classes
+        document.body.classList.add(themeClass, modeClass);
         
         // Save to localStorage as fallback
         localStorage.setItem('admin_theme_choice', settings.adminTheme || 'classic');
+        localStorage.setItem('admin_mode_choice', settings.themeMode || 'dark');
 
         return () => {
-            document.body.classList.remove('admin-theme-primitivo', 'admin-theme-tactile', 'admin-theme-luna', 'admin-theme-classic');
+            document.body.classList.remove('admin-theme-primitivo', 'admin-theme-tactile', 'admin-theme-luna', 'admin-theme-classic', 'light-mode', 'dark-mode');
         };
-    }, [settings.adminTheme, mounted]);
+    }, [settings.adminTheme, settings.themeMode, mounted]);
 
 
-    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador') || (mounted && typeof window !== 'undefined' && window.location.hostname === 'localhost');
+    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador');
 
     // Prevent hydration mismatch by returning a consistent loader or null until mounted
     if (!mounted) {
@@ -237,7 +246,9 @@ function AdminLayoutContent({
                 collapsed ? "w-24" : "w-64",
                 themeClass === 'admin-theme-primitivo' 
                     ? "admin-sidebar-isolation-primitivo" 
-                    : "bg-white/[0.02] border-r border-white/5"
+                    : themeClass === 'admin-theme-tactile'
+                        ? "bg-[var(--tactile-panel-bg)] border-r border-[var(--tactile-border)]"
+                        : "bg-white/[0.02] border-r border-white/5"
             )}>
                 <button
                     onClick={() => setCollapsed(!collapsed)}
@@ -246,7 +257,16 @@ function AdminLayoutContent({
                 >
                     {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
                 </button>
-                <div className={cn("p-6 flex items-center transition-all", collapsed ? "justify-center px-2" : "gap-3")}>
+                <Link 
+                    href="/admin?tab=dashboard" 
+                    onClick={() => {
+                        setTimeout(() => {
+                            window.dispatchEvent(new Event('popstate'));
+                            window.dispatchEvent(new Event('tab-change'));
+                        }, 50);
+                    }}
+                    className={cn("p-6 flex items-center transition-all cursor-pointer border-none shadow-none bg-transparent", collapsed ? "justify-center px-2" : "gap-3")}
+                >
                     <div className="w-11 h-11 flex items-center justify-center shrink-0 hover:scale-105 transition-transform">
                         <img 
                             src={logoUrl} 
@@ -262,10 +282,10 @@ function AdminLayoutContent({
                             "text-[14px] font-black tracking-[0.2em] transition-all duration-500 admin-sidebar-logo-text",
                             themeClass === 'admin-theme-primitivo' ? "uppercase italic" : "lowercase"
                         )}>
-                            <span className="logo-lldm">lldm</span> <span className="logo-rodeo">rodeo</span>
+                            <span className="logo-lldm text-[#f59e0b]">lldm</span> <span className="logo-rodeo text-white">rodeo</span>
                         </h1>
                     )}
-                </div>
+                </Link>
 
                 <nav className={cn("flex-1 py-6 flex flex-col items-stretch overflow-y-auto scrollbar-hide", collapsed ? "px-2" : "px-4")}>
                     <div className={cn(
@@ -274,7 +294,14 @@ function AdminLayoutContent({
                         collapsed && "text-center px-0 invisible h-0 py-0"
                     )}>{t.principal}</div>
 
-                    <Link href="/admin?tab=dashboard"
+                    <Link 
+                        href="/admin?tab=dashboard"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             (pathname === '/admin' && currentTab === 'dashboard') 
@@ -289,7 +316,14 @@ function AdminLayoutContent({
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.dashboard}</span>}
                     </Link>
 
-                    <Link href="/admin?tab=horarios"
+                    <Link 
+                        href="/admin?tab=horarios"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'horarios' 
@@ -319,7 +353,14 @@ function AdminLayoutContent({
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.temas}</span>}
                     </Link>
 
-                    <Link href="/admin?tab=asistencia"
+                    <Link 
+                        href="/admin?tab=asistencia"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'asistencia' 
@@ -464,8 +505,15 @@ function AdminLayoutContent({
                     </div>
 
                     <div className={cn("mt-auto pt-6 px-4 space-y-4", collapsed && "px-0")}>
-                        <Link href="/admin?tab=configuracion"
-                                className={cn(
+                        <Link 
+                            href="/admin?tab=configuracion"
+                            onClick={() => {
+                                setTimeout(() => {
+                                    window.dispatchEvent(new Event('popstate'));
+                                    window.dispatchEvent(new Event('tab-change'));
+                                }, 100);
+                            }}
+                            className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                                 currentTab === 'configuracion' 
                                     ? "bg-tactile-orange-pill text-white font-semibold rounded-full" 
@@ -544,8 +592,8 @@ function AdminLayoutContent({
                         </div>
                         {!collapsed && (
                             <div className="overflow-hidden whitespace-nowrap">
-                                <div className="text-[13px] font-semibold text-white leading-none truncate group-hover:text-[#f59e0b] transition-colors shadow-none">{currentUser?.name}</div>
-                                <div className="text-[11px] text-white/30 mt-1.5 uppercase font-bold tracking-[0.15em] truncate shadow-none">{currentUser?.role === 'Administrador' ? 'SISTEMA ADMIN' : currentUser?.role}</div>
+                                <div className="text-[13px] font-semibold text-[var(--tactile-text)] leading-none truncate group-hover:text-[#f59e0b] transition-colors shadow-none">{currentUser?.name}</div>
+                                <div className="text-[11px] text-[var(--tactile-text-sub)] mt-1.5 uppercase font-bold tracking-[0.15em] truncate shadow-none">{currentUser?.role === 'Administrador' ? 'SISTEMA ADMIN' : currentUser?.role}</div>
                             </div>
                         )}
                     </div>
@@ -556,7 +604,7 @@ function AdminLayoutContent({
             <div className="flex-1 flex flex-col min-w-0 bg-background relative transition-all duration-300">
                 <header className={cn(
                     "h-20 px-8 flex items-center justify-between z-30 shrink-0",
-                    themeClass === 'admin-theme-primitivo' ? "bg-[#0a0a0a]/50 backdrop-blur-xl border-b border-white/5" : "bg-white/5 border-b border-white/5"
+                    themeClass === 'admin-theme-primitivo' ? "bg-[#0a0a0a]/50 backdrop-blur-xl border-b border-white/5" : "bg-[var(--tactile-header-bg)] border-b border-[var(--tactile-border)]"
                 )}>
                     {/* Identity + Breadcrumb (Pizarra) */}
                     <div className="flex items-center gap-6">
@@ -604,8 +652,8 @@ function AdminLayoutContent({
                                     onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                                     className="h-10 px-4 rounded-xl bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-white/60 tabular-nums hover:text-primary transition-colors flex items-center gap-2"
                                 >
-                                    <CalendarDays className="w-3 h-3" />
-                                    {format(parseISO(currentDate), "ddd d MMM", { locale: es })}
+                                    <CalendarDays className="w-4 h-4 text-primary" />
+                                    <span>{currentDate ? format(parseISO(currentDate), 'dd MMM yyyy', { locale: es }) : 'CARGANDO...'}</span>
                                 </button>
                                 
                                 <AnimatePresence>
