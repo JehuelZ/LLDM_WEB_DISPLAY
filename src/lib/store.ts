@@ -1,7 +1,7 @@
-
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 import { Announcement, DailySchedule, WeeklyTheme } from './types';
+export type { Announcement, DailySchedule, WeeklyTheme };
 import { MOCK_ANNOUNCEMENTS, MOCK_MONTH_SCHEDULE, MOCK_THEME, MOCK_MEMBERS } from './constants';
 import { supabase } from './supabaseClient';
 import {
@@ -88,6 +88,8 @@ export interface AppSettings {
     weatherUnit?: 'celsius' | 'fahrenheit';
     fontMain?: string;
     fontWeight?: string;
+    calendarStyles?: CalendarStyles;
+    intelligenceRange?: 7 | 15 | 30 | 'month';
 }
 
 export interface UserProfile {
@@ -701,6 +703,14 @@ export const useAppStore = create<AppState>()(
 
             updateProfileInCloud: async (userId, updates) => {
                 const cleanId = userId?.trim() || '';
+                const currentUser = get().currentUser;
+                const isAdmin = currentUser?.role === 'Administrador';
+                const isOwner = currentUser?.id === cleanId;
+
+                if (!isAdmin && !isOwner) {
+                    get().showNotification("No tienes permiso para editar este perfil", "error");
+                    return false;
+                }
                 
                 // --- ROBUSTNESS: VALIDATE UUID ---
                 // Se verifica si el ID es un UUID válido. Si no lo es (ej. dev-admin-id o placeholders locales), 
@@ -1149,6 +1159,12 @@ export const useAppStore = create<AppState>()(
             },
 
             addMemberToCloud: async (member) => {
+                const currentUser = get().currentUser;
+                if (currentUser?.role !== 'Administrador' ) {
+                    get().showNotification("Solo administradores pueden registrar miembros", "error");
+                    return false;
+                }
+
                 const insertData: any = {
                     name: member.name,
                     status: 'Activo', // Si el admin lo crea, está activo por defecto
@@ -1181,6 +1197,12 @@ export const useAppStore = create<AppState>()(
             },
 
             saveAnnouncementToCloud: async (ann) => {
+                const currentUser = get().currentUser;
+                if (currentUser?.role !== 'Administrador' ) {
+                    get().showNotification("No tienes permiso para gestionar anuncios", "error");
+                    return;
+                }
+
                 const dbAnn = {
                     title: ann.title,
                     content: ann.content,
@@ -1205,6 +1227,12 @@ export const useAppStore = create<AppState>()(
             },
 
             saveScheduleDayToCloud: async (date, slots) => {
+                const currentUser = get().currentUser;
+                if (currentUser?.role !== 'Administrador' ) {
+                    get().showNotification("No tienes permiso para modificar horarios", "error");
+                    throw new Error("No autorizado");
+                }
+
                 // 1. Fetch existing record to preserve other fields (topic, uniform_id, etc.)
                 const { data: existing } = await supabase
                     .from('schedule')
@@ -1480,6 +1508,16 @@ export const useAppStore = create<AppState>()(
             },
 
             saveSettingsToCloud: async (newSettings: Partial<AppSettings>) => {
+                const currentUser = get().currentUser;
+                if (currentUser?.role !== 'Administrador' ) {
+                    // Solo permitir si el hostname es localhost para desarrollo, si no, bloquear
+                    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+                    if (!isLocal) {
+                        get().showNotification("Solo administradores pueden cambiar la configuración global", "error");
+                        return;
+                    }
+                }
+
                 const current = get().settings;
                 const updated = { ...current, ...newSettings };
                 
@@ -1886,6 +1924,16 @@ export const useAppStore = create<AppState>()(
 
             saveAttendanceToCloud: async (records) => {
                 if (records.length === 0) return;
+
+                const currentUser = get().currentUser;
+                const isAuthorized = currentUser?.role === 'Administrador' || 
+                                   currentUser?.role === 'Responsable de Asistencia' ||
+                                   currentUser?.privileges?.includes('monitor');
+
+                if (!isAuthorized) {
+                    get().showNotification("No tienes permiso para registrar asistencia", "error");
+                    return;
+                }
 
                 // Dividimos los registros en los que se marcan (UPSERT) y los que se quitan (DELETE)
                 // Para mantener la base de datos limpia, si quitamos una marca simple (sin datos de entrega/entrega), borramos.

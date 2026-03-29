@@ -88,6 +88,22 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className={`${saira.variable} ${outfit.variable} ${sora.variable} ${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable} ${orbitron.variable} ${blackOps.variable} ${notoSans.variable} ${poppins.variable} ${barlow.variable} antialiased`}>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('admin_theme_choice') || 'tactile';
+                  var mode = localStorage.getItem('admin_theme_mode') || 'dark';
+                  var themeClass = 'admin-theme-' + theme;
+                  document.body.classList.add(themeClass);
+                  if (mode === 'light') document.body.classList.add('light-mode');
+                  else document.body.classList.add('dark-mode');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <AppWrapper>
           {children}
         </AppWrapper>

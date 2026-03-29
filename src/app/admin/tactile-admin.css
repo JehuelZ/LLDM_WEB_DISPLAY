@@ -1,7 +1,7 @@
 /* Tactile Admin Theme Styles */
 :root {
     --tactile-bg: #212327;
-    --tactile-panel-bg: rgba(255, 255, 255, 0.03);
+    --tactile-panel-bg: rgba(255, 255, 255, 0.02);
     --tactile-text: #ffffff;
     --tactile-text-sub: #a0a0a0;
     --tactile-accent-orange: #f59e0b;
@@ -9,15 +9,48 @@
     --tactile-neon-pink: #db2777;
     --tactile-neon-purple: #8b5cf6;
     --primary-rgb: 59, 130, 246;
+
+    /* Functional Semantic Tokens (Default Dark) */
+    --tactile-card-bg: rgba(255, 255, 255, 0.02);
+    --tactile-inner-bg: #121523;
+    --tactile-inner-bg-alt: #101420;
+    --tactile-dropdown-bg: rgba(26, 28, 32, 0.95);
+    --tactile-item-hover: rgba(255, 255, 255, 0.05);
+    --tactile-border: rgba(255, 255, 255, 0.03);
+    --tactile-border-strong: rgba(255, 255, 255, 0.05);
+    --tactile-chart-grid: rgba(255, 255, 255, 0.05);
+    --tactile-header-bg: rgba(0, 0, 0, 0.2);
+    --tactile-glow: rgba(0, 0, 0, 0.5);
+}
+
+/* LIGHT MODE - MOCHA STYLE OVERRIDES */
+.admin-theme-tactile.light-mode {
+    --tactile-bg: #F5F0E8; /* Warm Latte */
+    --tactile-panel-bg: rgba(255, 255, 255, 0.4);
+    --tactile-text: #3D2B1F; /* Coffee Bean */
+    --tactile-text-sub: #7D6B5D;
+
+    /* Functional Semantic Tokens (Mocha Light) */
+    --tactile-card-bg: rgba(255, 255, 255, 0.5);
+    --tactile-inner-bg: #EAE2D6;
+    --tactile-inner-bg-alt: #F1EAE0;
+    --tactile-dropdown-bg: rgba(245, 240, 232, 0.98);
+    --tactile-item-hover: rgba(61, 43, 31, 0.05);
+    --tactile-border: rgba(61, 43, 31, 0.1);
+    --tactile-border-strong: rgba(61, 43, 31, 0.15);
+    --tactile-chart-grid: rgba(61, 43, 31, 0.05);
+    --tactile-header-bg: rgba(255, 255, 255, 0.3);
+    --tactile-glow: rgba(61, 43, 31, 0.05);
 }
 
 .tactile-admin-root {
     width: 100%;
-    min-height: auto;
-    background-color: transparent;
+    min-height: 100vh;
+    background-color: var(--tactile-bg);
     color: var(--tactile-text);
     font-family: var(--font-poppins), sans-serif;
     position: relative;
+    transition: background-color 0.5s ease;
 }
 
 .base-glow {
@@ -30,6 +63,11 @@
         radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.05) 0%, transparent 40%);
     pointer-events: none;
     z-index: 0;
+}
+
+.light-mode .base-glow {
+    background: radial-gradient(circle at 10% 20%, rgba(139, 115, 91, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
 }
 
 .tactile-main-container {
@@ -45,6 +83,12 @@
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 50px 100px -20px rgba(0, 0, 0, 0.5);
     overflow: hidden;
+}
+
+.light-mode .tactile-main-container {
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(61, 43, 31, 0.08);
+    box-shadow: 0 40px 80px -20px rgba(61, 43, 31, 0.12);
 }
 
 /* Neo-Glassmorphism Sidebar */
@@ -126,6 +170,12 @@
         inset 0 1px 1px rgba(255, 255, 255, 0.1);
 }
 
+.light-mode .tactile-btn-glass {
+    background: rgba(61, 43, 31, 0.05);
+    border-color: rgba(61, 43, 31, 0.1);
+    color: #5D4037;
+}
+
 .tactile-btn-glass:hover {
     background: rgba(255, 255, 255, 0.08);
     color: white;
@@ -134,12 +184,24 @@
         inset 0 1px 1px rgba(255, 255, 255, 0.2);
 }
 
+.light-mode .tactile-btn-glass:hover {
+    background: rgba(61, 43, 31, 0.1);
+    color: #3D2B1F;
+    box-shadow: 0 8px 15px rgba(61, 43, 31, 0.1);
+}
+
 .tactile-btn-glass.active {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     border-color: rgba(255, 255, 255, 0.2);
     box-shadow: none;
     transform: translateY(1px);
+}
+
+.light-mode .tactile-btn-glass.active {
+    background: #3D2B1F;
+    color: #FDFBF7;
+    border-color: transparent;
 }
 
 .tactile-btn-orange {
@@ -164,6 +226,13 @@
     padding: 30px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2),
         inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.light-mode .tactile-glass-panel {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(61, 43, 31, 0.05);
+    box-shadow: 0 15px 35px rgba(61, 43, 31, 0.06),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.8);
 }
 
 /* Icon Box */

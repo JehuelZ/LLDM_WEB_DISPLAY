@@ -177,19 +177,18 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                     const isShortRange = points.length <= 7;
                     
                     if (!isShortRange && !isStep) return (
-                        <circle key={`dot-${i}`} cx={p.x} cy={p.y} r="1" fill="white" fillOpacity="0.1" />
+                        <circle key={`dot-${i}`} cx={p.x} cy={p.y} r="1" fill="var(--tactile-text-sub)" fillOpacity="0.2" />
                     );
 
                     return (
                         <g key={`ruling-${i}`}>
                             <line 
                                 x1={p.x} y1={20} x2={p.x} y2={height - 40} 
-                                stroke="white" 
+                                stroke="var(--tactile-chart-grid)" 
                                 strokeWidth="0.8" 
-                                strokeOpacity="0.04" 
                                 strokeDasharray="2 4"
                             />
-                            <circle cx={p.x} cy={p.y} r="1.5" fill="white" fillOpacity="0.3" />
+                            <circle cx={p.x} cy={p.y} r="1.5" fill="var(--tactile-text-sub)" fillOpacity="0.4" />
                         </g>
                     );
                 })}
@@ -202,7 +201,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                             key={multiplier} 
                             x={paddingX + 2} // Align slightly off-edge
                             y={height - paddingY - (multiplier) * (height - paddingY * 2) + 3} 
-                            className="fill-white/10 text-[9px] font-black uppercase tracking-widest"
+                            className="fill-[var(--tactile-text-sub)] opacity-40 text-[9px] font-black uppercase tracking-widest"
                         >
                             {absVal}
                         </text>
@@ -250,7 +249,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                             y={height - 15} 
                             textAnchor="middle" 
                             className={cn(
-                                "fill-white/15 font-black uppercase tracking-[0.05em]",
+                                "fill-[var(--tactile-text-sub)] opacity-50 font-black uppercase tracking-[0.05em]",
                                 points.length > 15 ? "text-[7px]" : "text-[9px]"
                             )}
                         >
@@ -373,14 +372,14 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                             <line 
                                 x1={paddingX} y1={y} 
                                 x2={width - paddingX} y2={y} 
-                                stroke="white" strokeWidth="1" strokeOpacity="0.03"
+                                stroke="var(--tactile-chart-grid)" strokeWidth="1"
                                 strokeDasharray="2 4"
                             />
                             <text 
                                 x={paddingX - 10} 
                                 y={y + 3} 
                                 textAnchor="end"
-                                className="fill-white/10 text-[8px] font-black uppercase tracking-widest"
+                                className="fill-[var(--tactile-text-sub)] opacity-40 text-[8px] font-black uppercase tracking-widest"
                             >
                                 {absVal}
                             </text>
@@ -461,7 +460,7 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                 x={slotCenterX} 
                                 y={height - 15} 
                                 textAnchor="middle" 
-                                className="fill-white/30 text-[9px] font-black uppercase tracking-widest"
+                                className="fill-[var(--tactile-text-sub)] opacity-30 text-[9px] font-black uppercase tracking-widest"
                             >
                                 {displayLabel}
                             </text>

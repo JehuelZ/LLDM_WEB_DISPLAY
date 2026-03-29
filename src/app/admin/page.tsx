@@ -56,12 +56,12 @@ const MessagesPanel = ({
         <Card className={cn(
             "card border-none relative overflow-hidden group transition-all duration-500",
             settings.adminTheme === 'primitivo' 
-                ? "bg-[#101420] rounded-[1.5rem] border border-white/5 shadow-none" 
-                : "bg-slate-900/60 rounded-none glass-card shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                ? "bg-[#101420] rounded-[1.5rem] border border-white/[0.03] shadow-none" 
+                : "bg-[var(--tactile-panel-bg)] rounded-none glass-card shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
         )}>
             <div className={cn(
                 "absolute top-0 right-0 w-64 h-64 blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-700",
-                settings.adminTheme === 'primitivo' ? "bg-transparent" : "bg-white/5"
+                settings.adminTheme === 'primitivo' ? "bg-transparent" : "bg-[var(--tactile-item-hover)]"
             )} />
             <CardHeader className="relative z-10 pb-4">
                 <div className="flex items-center justify-between">
@@ -70,15 +70,15 @@ const MessagesPanel = ({
                             <div className="flex items-center gap-3">
                                 <div className={cn(
                                     "w-10 h-10 flex items-center justify-center shadow-none transition-all",
-                                    settings.adminTheme === 'primitivo' ? "bg-white/5 rounded-2xl border border-white/10" : "bg-white/5 rounded-none border border-white/10"
+                                    settings.adminTheme === 'primitivo' ? "bg-white/5 rounded-2xl border border-white/[0.05]" : "bg-[var(--tactile-item-hover)] rounded-none border border-[var(--tactile-border)]"
                                 )}>
-                                    <Mail className={cn("h-4 w-4", settings.adminTheme === 'primitivo' ? "text-white/70" : "text-white")} />
+                                    <Mail className={cn("h-4 w-4", settings.adminTheme === 'primitivo' ? "text-white/70" : "text-foreground")} />
                                 </div>
-                                <span className="whitespace-nowrap text-foreground">inbox de <span className={cn("text-foreground underline underline-offset-8", settings.adminTheme === 'primitivo' ? "decoration-foreground/10" : "decoration-white/30")}>mensajes</span></span>
+                                <span className="whitespace-nowrap text-foreground">inbox de <span className={cn("text-foreground underline underline-offset-8", settings.adminTheme === 'primitivo' ? "decoration-foreground/10" : "decoration-primary/30")}>mensajes</span></span>
                             </div>
                             <div className={cn(
                                 "flex-1 h-px ml-4",
-                                settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" : "bg-gradient-to-r from-white/20 via-white/5 to-transparent"
+                                settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" : "bg-gradient-to-r from-[var(--tactile-border-strong)] via-[var(--tactile-border)] to-transparent"
                             )} />
                         </CardTitle>
                         <CardDescription className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mt-3 ml-1">comunicaciones de la congregación</CardDescription>
@@ -91,9 +91,9 @@ const MessagesPanel = ({
                         <div className="flex flex-col items-center justify-center py-24 text-white/20">
                             <div className={cn(
                                 "w-20 h-20 flex items-center justify-center mb-8 border transition-all",
-                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-[2rem] border-white/5" : "bg-white/[0.02] border-white/5 rounded-none"
+                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-[2rem] border-white/[0.03]" : "bg-[var(--tactile-inner-bg-alt)] border-[var(--tactile-border)] rounded-none"
                             )}>
-                                <Mail className={cn("h-10 w-10 opacity-5", settings.adminTheme === 'primitivo' ? "text-white" : "")} />
+                                <Mail className={cn("h-10 w-10 opacity-5", settings.adminTheme === 'primitivo' ? "text-white" : "text-foreground")} />
                             </div>
                             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-center">bandeja de entrada vacía</p>
                         </div>
@@ -107,8 +107,8 @@ const MessagesPanel = ({
                                     "p-6 border transition-all duration-500 flex flex-col gap-6 relative group overflow-hidden backdrop-blur-xl",
                                     settings.adminTheme === 'primitivo' ? "shadow-none rounded-3xl" : "shadow-2xl rounded-none",
                                     msg.isRead
-                                        ? "bg-white/[0.01] border-white/5 opacity-50 hover:opacity-100"
-                                        : (settings.adminTheme === 'primitivo' ? "bg-black/40 border-amber-400/20 ring-1 ring-amber-400/10 shadow-none" : "bg-white/[0.05] border-white/10 ring-1 ring-white/5 shadow-2xl")
+                                        ? "bg-[var(--tactile-inner-bg)]/50 border-[var(--tactile-border)] opacity-50 hover:opacity-100"
+                                        : (settings.adminTheme === 'primitivo' ? "bg-black/40 border-amber-400/20 ring-1 ring-amber-400/10 shadow-none" : "bg-[var(--tactile-panel-bg)] border-[var(--tactile-border-strong)] ring-1 ring-[var(--tactile-border)] shadow-2xl")
                                 )}
                             >
                                 <div className="flex justify-between items-start">
@@ -117,8 +117,8 @@ const MessagesPanel = ({
                                             "w-12 h-12 flex items-center justify-center text-sm font-black transition-all duration-500",
                                             settings.adminTheme === 'primitivo' ? "rounded-2xl" : "rounded-none",
                                             msg.isRead 
-                                                ? (settings.adminTheme === 'primitivo' ? "bg-black/60 text-white/30 border border-white/5" : "bg-slate-800 text-slate-500 border border-white/5")
-                                                : (settings.adminTheme === 'primitivo' ? "bg-amber-400/10 text-amber-400 border border-amber-400/30 shadow-[0_0_15px_rgba(251,191,36,0.1)]" : "bg-white text-black shadow-2xl shadow-white/10 border border-white/20")
+                                                ? (settings.adminTheme === 'primitivo' ? "bg-black/60 text-white/30 border border-white/[0.03]" : "bg-[var(--tactile-inner-bg-alt)] text-muted-foreground border border-[var(--tactile-border)]")
+                                                : (settings.adminTheme === 'primitivo' ? "bg-amber-400/10 text-amber-400 border border-amber-400/30 shadow-[0_0_15px_rgba(251,191,36,0.1)]" : "bg-foreground text-background shadow-2xl shadow-foreground/10 border border-[var(--tactile-border-strong)]")
                                         )}>
                                             {msg.senderName?.charAt(0)}
                                         </div>
@@ -130,7 +130,7 @@ const MessagesPanel = ({
                                                 {msg.senderName}
                                                 {!msg.isRead && <span className={cn(
                                                     "w-2 h-2 animate-pulse",
-                                                    settings.adminTheme === 'primitivo' ? "bg-amber-400 rounded-full shadow-[0_0_8px_rgba(251,191,36,0.5)]" : "bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+                                                    settings.adminTheme === 'primitivo' ? "bg-amber-400 rounded-full shadow-[0_0_8px_rgba(251,191,36,0.5)]" : "bg-primary rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]"
                                                 )} />}
                                             </h4>
                                             <div className="flex items-center gap-2 opacity-40">
@@ -149,7 +149,7 @@ const MessagesPanel = ({
                                                 onClick={() => onMarkRead(msg.id)}
                                                 className={cn(
                                                     "h-10 w-10 transition-all active:scale-95 border",
-                                                    settings.adminTheme === 'primitivo' ? "rounded-xl bg-white/5 text-white/50 border-white/10 hover:bg-white/10 hover:text-white" : "rounded-none bg-white/[0.02] border-white/5 text-white/50 hover:text-white hover:border-white/30"
+                                                    settings.adminTheme === 'primitivo' ? "rounded-xl bg-white/5 text-white/50 border-white/[0.05] hover:bg-white/10 hover:text-white" : "rounded-none bg-[var(--tactile-item-hover)] border-[var(--tactile-border)] text-muted-foreground hover:text-foreground hover:border-[var(--tactile-border-strong)]"
                                                 )}
                                                 title="Marcar leído"
                                             >
@@ -164,8 +164,8 @@ const MessagesPanel = ({
                                                 "h-10 w-10 transition-all active:scale-95 border",
                                                 settings.adminTheme === 'primitivo' ? "rounded-xl" : "rounded-none",
                                                 replyingTo === msg.id 
-                                                    ? (settings.adminTheme === 'primitivo' ? "text-white border-white/20 bg-white/10" : "text-white border-white/30 bg-white/10")
-                                                    : (settings.adminTheme === 'primitivo' ? "text-white/30 hover:text-white bg-white/5 border-white/5" : "text-white/50 hover:text-white bg-white/[0.02] border-white/5")
+                                                    ? (settings.adminTheme === 'primitivo' ? "text-white border-white/[0.1] bg-white/10" : "text-white border-white/[0.15] bg-white/10")
+                                                    : (settings.adminTheme === 'primitivo' ? "text-white/30 hover:text-white bg-white/5 border-white/[0.03]" : "text-muted-foreground hover:text-foreground bg-[var(--tactile-item-hover)] border-[var(--tactile-border)]")
                                             )}
                                             title="Responder"
                                         >
@@ -176,7 +176,7 @@ const MessagesPanel = ({
 
                                 <div className={cn(
                                     "p-6 border transition-all",
-                                    settings.adminTheme === 'primitivo' ? "bg-[#0a0a0a]/40 rounded-2xl border-white/5 shadow-none" : "bg-slate-900/40 rounded-none border-white/5 shadow-inner"
+                                    settings.adminTheme === 'primitivo' ? "bg-[#0a0a0a]/40 rounded-2xl border-white/[0.03] shadow-none" : "bg-[var(--tactile-inner-bg)] rounded-none border-[var(--tactile-border)] shadow-inner"
                                 )}>
                                     <p className="text-[14px] text-white/80 leading-relaxed font-light ">{msg.content}</p>
                                 </div>
@@ -187,17 +187,17 @@ const MessagesPanel = ({
                                         animate={{ opacity: 1, height: 'auto' }}
                                         className={cn(
                                             "mt-4 space-y-6 p-6 border relative overflow-hidden",
-                                            settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-2xl border-white/10 shadow-none" : "bg-black/60 rounded-none border-white/10 shadow-2xl"
+                                            settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-2xl border-white/[0.05] shadow-none" : "bg-[var(--tactile-bg)]/60 rounded-none border-[var(--tactile-border-strong)] shadow-2xl"
                                         )}
                                     >
-                                        <div className={cn("absolute top-0 left-0 w-[2px] h-full", settings.adminTheme === 'primitivo' ? "bg-white/20" : "bg-white/30")} />
+                                        <div className={cn("absolute top-0 left-0 w-[2px] h-full", settings.adminTheme === 'primitivo' ? "bg-white/20" : "bg-[var(--tactile-border-strong)]")} />
                                         <textarea
                                             value={replyText}
                                             onChange={(e) => setReplyText(e.target.value)}
                                             placeholder={`escribe tu respuesta a ${msg.senderName.split(' ')[0].toLowerCase()}...`}
                                             className={cn(
                                                 "w-full h-32 bg-black/40 p-5 text-sm text-white placeholder:text-white/20 focus:outline-none transition-all resize-none font-light",
-                                                settings.adminTheme === 'primitivo' ? "rounded-xl border border-white/5 focus:border-white/20" : "rounded-none border border-white/10 focus:border-white/30"
+                                                settings.adminTheme === 'primitivo' ? "rounded-xl border border-white/[0.03] focus:border-white/[0.1]" : "rounded-none border border-[var(--tactile-border)] focus:border-primary/50"
                                             )}
                                         />
                                         <div className="flex justify-end gap-3">
@@ -207,7 +207,7 @@ const MessagesPanel = ({
                                             )} onClick={() => setReplyingTo(null)}>cancelar</Button>
                                             <Button size="sm" className={cn(
                                                 "h-11 text-[10px] font-black uppercase tracking-[0.3em] px-10 transition-all hover:translate-y-[-2px] active:translate-y-0 shadow-none",
-                                                settings.adminTheme === 'primitivo' ? "bg-[#121523] text-white border border-white/10 hover:bg-slate-800 rounded-xl" : "bg-white text-black hover:bg-slate-200 rounded-none shadow-white/10 shadow-2xl"
+                                                settings.adminTheme === 'primitivo' ? "bg-[#121523] text-white border border-white/[0.05] hover:bg-slate-800 rounded-xl" : "bg-foreground text-background hover:bg-muted rounded-none shadow-foreground/10 shadow-2xl"
                                             )} onClick={() => handleSendReply(msg.senderId)}>
                                                 <Send className="w-4 h-4 mr-3" /> enviar respuesta
                                             </Button>
@@ -426,7 +426,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
 
     return (
         <Card className="glass-card border-none relative overflow-hidden group shadow-sm h-full">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-none blur-3xl -mr-32 -mt-32 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--tactile-item-hover)] rounded-none blur-3xl -mr-32 -mt-32 pointer-events-none" />
             <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-10">
                 <div>
                     <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-2">
@@ -441,7 +441,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                     <Button 
                         variant="outline" 
                         size="icon" 
-                        className="h-7 w-7 rounded-none border-white/10 bg-white/5 hover:bg-white/10"
+                        className="h-7 w-7 rounded-none border-[var(--tactile-border)] bg-[var(--tactile-item-hover)] hover:bg-[var(--tactile-panel-bg)]/20"
                         onClick={() => changeWeek(-1)}
                     >
                         <ChevronLeft className="h-3 w-3 text-white" />
@@ -449,7 +449,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                     <Button 
                         variant="ghost" 
                         size="sm" 
-                        className="h-7 text-[8px] font-black uppercase tracking-widest hover:bg-white/10 text-white"
+                        className="h-7 text-[8px] font-black uppercase tracking-widest hover:bg-[var(--tactile-item-hover)] text-foreground"
                         onClick={() => setWeekStart(startOfWeek(new Date(), { weekStartsOn: 0 }))}
                     >
                         hoy
@@ -457,7 +457,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                     <Button 
                         variant="outline" 
                         size="icon" 
-                        className="h-7 w-7 rounded-none border-white/10 bg-white/5 hover:bg-white/10"
+                        className="h-7 w-7 rounded-none border-[var(--tactile-border)] bg-[var(--tactile-item-hover)] hover:bg-[var(--tactile-panel-bg)]/20"
                         onClick={() => changeWeek(1)}
                         disabled={weekStart >= startOfWeek(new Date(), { weekStartsOn: 0 })}
                     >
@@ -476,15 +476,15 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                 <div className="mt-4 flex flex-wrap justify-center gap-8 pt-4">
                     <div className="flex items-center gap-2">
                         <div className="w-6 h-1.5 rounded-full bg-[#3b82f6] shadow-[0_0_12px_#3b82f6aa]" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-white/60">oración 5 am</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">oración 5 am</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-6 h-1.5 rounded-full bg-[#f43f5e] shadow-[0_0_12px_#f43f5eaa]" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-white/60">doctrina 9 am</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">doctrina 9 am</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-6 h-1.5 rounded-full bg-[#f59e0b] shadow-[0_0_12px_#f59e0baa]" />
-                        <span className="text-[9px] font-black uppercase tracking-widest text-white/60">culto de tarde</span>
+                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">culto de tarde</span>
                     </div>
                 </div>
             </CardContent>
@@ -1040,7 +1040,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                     animate={{ opacity: 1, scale: 1 }}
                     className="w-full max-w-md z-10"
                 >
-                    <Card className="glass-card border-white/5 shadow-2xl overflow-hidden backdrop-blur-2xl">
+                    <Card className="glass-card border-white/[0.03] shadow-2xl overflow-hidden backdrop-blur-2xl">
                         <div className="h-2 w-full bg-gradient-to-r from-red-600 via-orange-500 to-red-600 animate-pulse" />
                         <CardHeader className="text-center pt-10 pb-6">
                             <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
@@ -1065,13 +1065,13 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-center">
+                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/[0.05] text-center">
                                         <p className="text-[10px] uppercase font-black tracking-widest text-slate-500 mb-1">Usuario Activo</p>
                                         <p className="text-sm font-bold text-foreground">{authSession.user.email}</p>
                                         <p className="text-[9px] text-red-400 font-black uppercase mt-2 ">Sin permisos de administrador</p>
                                     </div>
                                     <Link href="/" className="block">
-                                        <Button variant="outline" className="w-full h-12 border-white/5 bg-white/5 hover:bg-white/10 text-slate-400 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all">
+                                        <Button variant="outline" className="w-full h-12 border-white/[0.03] bg-white/5 hover:bg-white/10 text-slate-400 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all">
                                             Volver al Inicio
                                         </Button>
                                     </Link>
@@ -1094,7 +1094,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
 
             {/* Countdown and Stats Section */}
-            <div className="space-y-8">
+            <div className={cn("space-y-8", activeTab !== "dashboard" && "hidden")}>
 
                 {/* Stats Cards Section - TOP HORIZONTAL ROW */}
                 <motion.div
@@ -1295,7 +1295,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </div>
                             </CardContent>
                             <div className="px-6 pb-4 w-full">
-                                <div className="flex items-center justify-between border-t border-white/5 pt-3">
+                                <div className="flex items-center justify-between border-t border-white/[0.03] pt-3">
                                     <div className="flex flex-col gap-2">
                                         <div>
                                             <div className="text-lg font-black text-white leading-none mb-0.5 tabular-nums">{attendedCount}</div>
@@ -1318,7 +1318,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             </span>
                                         </div>
                                     </div>
-                                    <div className="bg-white/5 px-1.5 py-0.5 border border-white/10 flex items-center gap-1">
+                                    <div className="bg-white/5 px-1.5 py-0.5 border border-white/[0.05] flex items-center gap-1">
                                         <div className="w-1 h-1 bg-white animate-pulse" />
                                         <span className="text-[5px] font-black text-white uppercase tracking-widest">vivo</span>
                                     </div>
@@ -1371,7 +1371,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             </div>
                         </CardContent>
                         <div className="px-6 pb-6 w-full">
-                            <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                            <div className="flex items-center justify-between border-t border-white/[0.03] pt-4">
                                 <div>
                                     <p className="text-[7px] font-black uppercase text-muted-foreground tracking-widest leading-none mb-1">crecimiento</p>
                                     <div className="text-xl font-black text-emerald-500 tabular-nums tracking-tighter italic">+4.2%</div>
@@ -1383,13 +1383,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </div>
                         </div>
                     </Card>
-                </motion.div>
-            </div>
 
-
-            {
-                activeTab === 'dashboard' && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                    <div className={cn("space-y-8", activeTab !== 'dashboard' && "hidden")}>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <div id="mensajes">
                                 <MessagesPanel
@@ -1406,9 +1401,10 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 {/* Consolidated into Membership Intelligence */}
                             </div>
                         </div>
-                    </motion.div>
-                )
-            }
+                    </div>
+                </motion.div>
+            </div>
+
 
             {
                 activeTab === 'horarios' && (
@@ -1491,14 +1487,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             <div className="flex items-center gap-2">
                                                 <input
                                                     type="text"
-                                                    className="bg-transparent border-b border-white/20 px-1 py-0.5 text-2xl text-blue-400 w-28 font-sans focus:outline-none focus:border-blue-400 tracking-normal"
+                                                    className="bg-transparent border-b border-white/[0.1] px-1 py-0.5 text-2xl text-blue-400 w-28 font-sans focus:outline-none focus:border-blue-400 tracking-normal"
                                                     value={currentDaySchedule?.slots['5am']?.time || '05:00 AM'}
                                                     onChange={(e) => updateSlot('5am', { time: e.target.value })}
                                                 />
                                                 <span className="text-xs text-blue-400/50 uppercase">al</span>
                                                 <input
                                                     type="text"
-                                                    className="bg-transparent border-b border-white/20 px-1 py-0.5 text-lg text-blue-400 w-24 font-sans focus:outline-none focus:border-blue-400 tracking-normal placeholder:text-blue-400/30"
+                                                    className="bg-transparent border-b border-white/[0.1] px-1 py-0.5 text-lg text-blue-400 w-24 font-sans focus:outline-none focus:border-blue-400 tracking-normal placeholder:text-blue-400/30"
                                                     value={currentDaySchedule?.slots['5am']?.endTime || '05:30 AM'}
                                                     onChange={(e) => updateSlot('5am', { endTime: e.target.value })}
                                                 />
@@ -1548,14 +1544,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             <div className="flex items-center gap-2 flex-1">
                                                 <input
                                                     type="text"
-                                                    className="bg-transparent border-b border-white/20 px-1 py-0.5 text-2xl text-yellow-400 w-28 font-sans focus:outline-none focus:border-yellow-400 tracking-normal"
+                                                    className="bg-transparent border-b border-white/[0.1] px-1 py-0.5 text-2xl text-yellow-400 w-28 font-sans focus:outline-none focus:border-yellow-400 tracking-normal"
                                                     value={currentDaySchedule?.slots['9am']?.time || (new Date(currentDate + 'T12:00:00').getDay() === 0 ? '10:00 AM' : '09:00 AM')}
                                                     onChange={(e) => updateSlot('9am', { time: e.target.value })}
                                                 />
                                                 <span className="text-xs text-yellow-400/50 uppercase">al</span>
                                                 <input
                                                     type="text"
-                                                    className="bg-transparent border-b border-white/20 px-1 py-0.5 text-lg text-yellow-400 w-24 font-sans focus:outline-none focus:border-yellow-400 tracking-normal placeholder:text-yellow-400/30"
+                                                    className="bg-transparent border-b border-white/[0.1] px-1 py-0.5 text-lg text-yellow-400 w-24 font-sans focus:outline-none focus:border-yellow-400 tracking-normal placeholder:text-yellow-400/30"
                                                     value={currentDaySchedule?.slots['9am']?.endTime || (new Date(currentDate + 'T12:00:00').getDay() === 0 ? '12:00 PM' : '10:00 AM')}
                                                     onChange={(e) => updateSlot('9am', { endTime: e.target.value })}
                                                 />
@@ -1587,7 +1583,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 </div>
 
                                                 {currentDaySchedule?.slots['9am']?.sundayType === 'exchange' && (
-                                                    <div className="mt-4 bg-white/5 p-4 rounded-xl border border-white/10">
+                                                    <div className="mt-4 bg-white/5 p-4 rounded-xl border border-white/[0.05]">
                                                         <label className="text-[10px] font-bold uppercase text-purple-400/80 tracking-widest block mb-1">Cuerpo o Iglesia de Procedencia (Opcional)</label>
                                                         <input
                                                             type="text"
@@ -1835,11 +1831,11 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         }}
                                         className={cn(
                                             "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
-                                            (settings.churchLogoUrl === '') ? "border-primary bg-primary/10" : "border-white/5 bg-foreground/5 hover:border-white/10"
+                                            (settings.churchLogoUrl === '') ? "border-primary bg-primary/10" : "border-white/[0.03] bg-foreground/5 hover:border-white/[0.05]"
                                         )}
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-b from-slate-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                        <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5 group-hover:border-white/10 transition-all text-slate-500">
+                                        <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/[0.03] group-hover:border-white/[0.05] transition-all text-slate-500">
                                             <XCircle className="w-10 h-10" />
                                         </div>
                                         <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest transition-colors", (settings.churchLogoUrl === '') ? "text-primary" : "text-slate-500")}>
@@ -1884,12 +1880,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     }}
                                                     className={cn(
                                                         "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full cursor-pointer",
-                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
+                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/[0.05] bg-foreground/5 hover:border-white/[0.1]"
                                                     )}
                                                 >
                                                     {slotUrl ? (
                                                         <>
-                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5">
+                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/[0.03]">
                                                                 <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
                                                             </div>
                                                             <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-slate-500")}>
@@ -1961,12 +1957,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     }}
                                                     className={cn(
                                                         "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full cursor-pointer",
-                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/10 bg-foreground/5 hover:border-white/20"
+                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/[0.05] bg-foreground/5 hover:border-white/[0.1]"
                                                     )}
                                                 >
                                                     {slotUrl ? (
                                                         <>
-                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/5">
+                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/[0.03]">
                                                                 <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
                                                             </div>
                                                             <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-slate-500")}>
@@ -2031,13 +2027,13 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 }}
                                                 className={cn(
                                                     "flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all relative group overflow-hidden",
-                                                    settings.displayBgMode === bg.mode ? "border-primary bg-primary/10" : "border-white/5 bg-foreground/5"
+                                                    settings.displayBgMode === bg.mode ? "border-primary bg-primary/10" : "border-white/[0.03] bg-foreground/5"
                                                 )}
                                             >
                                                 {bg.mode === 'custom' && settings.displayCustomBgUrl && settings.displayBgMode === 'custom' ? (
-                                                    <img src={settings.displayCustomBgUrl} className="w-12 h-12 object-cover rounded-xl border border-white/20" />
+                                                    <img src={settings.displayCustomBgUrl} className="w-12 h-12 object-cover rounded-xl border border-white/[0.1]" />
                                                 ) : (
-                                                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-black/20 border border-white/5">{bg.icon}</div>
+                                                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-black/20 border border-white/[0.03]">{bg.icon}</div>
                                                 )}
                                                 <span className="text-[9px] font-black uppercase tracking-widest">{bg.label}</span>
                                                 {bg.mode === 'custom' && (
@@ -2050,8 +2046,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
 
                                     {settings.displayBgMode === 'custom' && settings.displayCustomBgUrl && (
-                                        <div className="flex items-center gap-4 p-3 bg-black/40 border border-white/5 rounded-2xl">
-                                            <div className="w-16 h-10 rounded-lg overflow-hidden border border-white/10">
+                                        <div className="flex items-center gap-4 p-3 bg-black/40 border border-white/[0.03] rounded-2xl">
+                                            <div className="w-16 h-10 rounded-lg overflow-hidden border border-white/[0.05]">
                                                 <img src={settings.displayCustomBgUrl} className="w-full h-full object-cover" />
                                             </div>
                                             <div className="flex-1">
@@ -2107,7 +2103,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             {/* Outer Glow on Focus */}
                                             <div className="absolute -inset-1 bg-amber-500/0 group-focus-within:bg-amber-500/10 rounded-[2rem] blur-xl transition-all duration-500" />
                                             
-                                            <div className="relative bg-black/60 border border-white/30 rounded-2xl overflow-hidden focus-within:border-amber-500/60 focus-within:bg-black/80 transition-all duration-300 backdrop-blur-md flex items-center px-4">
+                                            <div className="relative bg-black/60 border border-white/[0.15] rounded-2xl overflow-hidden focus-within:border-amber-500/60 focus-within:bg-black/80 transition-all duration-300 backdrop-blur-md flex items-center px-4">
                                                 <Search className="w-4 h-4 text-slate-400 group-focus-within:text-amber-400 transition-colors" />
                                                 <input 
                                                     type="text"
@@ -2155,12 +2151,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         className={cn(
                                                             "w-full p-4 rounded-2xl border-2 transition-all flex items-center justify-between group",
                                                             isSelected ? "border-amber-500 bg-amber-500/10" : 
-                                                            isFocused ? "border-amber-500/30 bg-white/5" : "border-white/5 bg-white/5 hover:border-white/10"
+                                                            isFocused ? "border-amber-500/30 bg-white/5" : "border-white/[0.03] bg-white/5 hover:border-white/[0.05]"
                                                         )}
                                                     >
                                                         <div className="flex items-center gap-4">
                                                             <div className={cn(
-                                                                "w-10 h-10 rounded-xl flex items-center justify-center text-xl font-black bg-white/5 border border-white/5",
+                                                                "w-10 h-10 rounded-xl flex items-center justify-center text-xl font-black bg-white/5 border border-white/[0.03]",
                                                                 isSelected && "bg-amber-500/20 border-amber-500/30 text-amber-500"
                                                             )} style={{ fontFamily: `"${font.name}", sans-serif` }}>
                                                                 Aa
@@ -2216,7 +2212,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     ))}
                                                 </div>
                                             </div>
-                                            <div className="p-4 bg-black/20 rounded-2xl border border-white/5 min-h-[60px] flex items-center justify-center">
+                                            <div className="p-4 bg-black/20 rounded-2xl border border-white/[0.03] min-h-[60px] flex items-center justify-center">
                                                 <p className="text-center text-sm" style={{ 
                                                     fontFamily: settings.fontMain ? `"${settings.fontMain}", sans-serif` : 'inherit',
                                                     fontWeight: settings.fontWeight || '400'
@@ -2237,7 +2233,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Dinámica visual del display</CardDescription>
                                 </CardHeader>
                                 <CardContent className="space-y-6">
-                                    <div className="flex gap-2 p-1 bg-black/20 rounded-2xl border border-white/5">
+                                    <div className="flex gap-2 p-1 bg-black/20 rounded-2xl border border-white/[0.03]">
                                         <Button
                                             variant={settings.displayBgStyle === 'static' ? "neon" : "ghost"}
                                             className="flex-1 h-10 text-[9px] font-black uppercase rounded-xl"
@@ -2254,7 +2250,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         </Button>
                                     </div>
 
-                                    <div className="flex items-center justify-between p-4 bg-foreground/5 rounded-2xl border border-white/5">
+                                    <div className="flex items-center justify-between p-4 bg-foreground/5 rounded-2xl border border-white/[0.03]">
                                         <div className="space-y-1">
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">Efecto Cristal (Glassmorphism)</label>
                                             <p className="text-[8px] text-slate-500 font-bold uppercase">Agrega profundidad y reflejos</p>
@@ -2288,9 +2284,9 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                     <div className="space-y-4">
                                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Color de Marca (Sistema y Display)</label>
-                                        <div className="flex items-center gap-4 p-4 bg-foreground/5 rounded-2xl border border-white/5">
+                                        <div className="flex items-center gap-4 p-4 bg-foreground/5 rounded-2xl border border-white/[0.03]">
                                             <div
-                                                className="w-14 h-14 rounded-xl border-2 border-white/20"
+                                                className="w-14 h-14 rounded-xl border-2 border-white/[0.1]"
                                                 style={{ backgroundColor: settings.primaryColor }}
                                             />
                                             <div className="flex-1 flex gap-2">
@@ -2298,12 +2294,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     type="color"
                                                     value={settings.primaryColor}
                                                     onChange={(e) => setSettings({ primaryColor: e.target.value })}
-                                                    className="h-12 w-16 bg-black/40 border-white/10 rounded-xl cursor-pointer p-1"
+                                                    className="h-12 w-16 bg-black/40 border-white/[0.05] rounded-xl cursor-pointer p-1"
                                                 />
                                                 <Input
                                                     value={settings.primaryColor}
                                                     onChange={(e) => setSettings({ primaryColor: e.target.value })}
-                                                    className="h-12 flex-1 bg-black/20 border-white/10 rounded-xl text-xs font-black uppercase font-mono"
+                                                    className="h-12 flex-1 bg-black/20 border-white/[0.05] rounded-xl text-xs font-black uppercase font-mono"
                                                 />
                                             </div>
                                         </div>
@@ -2329,7 +2325,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         }}
                                                         className={cn(
                                                             "h-12 rounded-xl border-2 font-black uppercase text-[10px] transition-all",
-                                                            calendarStyles.template === tmpl.id ? "bg-primary/20 border-primary text-primary" : "bg-foreground/5 border-white/5 text-slate-500"
+                                                            calendarStyles.template === tmpl.id ? "bg-primary/20 border-primary text-primary" : "bg-foreground/5 border-white/[0.03] text-slate-500"
                                                         )}
                                                     >
                                                         {tmpl.label}
@@ -2351,7 +2347,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             "flex flex-col p-3 rounded-xl border-2 transition-all text-left",
                                                             calendarStyles.fontSetIndex === idx || (calendarStyles.fontSetIndex === undefined && idx === 0)
                                                                 ? "bg-primary/20 border-primary"
-                                                                : "bg-foreground/5 border-white/5 opacity-60 hover:opacity-100"
+                                                                : "bg-foreground/5 border-white/[0.03] opacity-60 hover:opacity-100"
                                                         )}
                                                     >
                                                         <div className="flex justify-between items-center mb-1">
@@ -2375,7 +2371,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
                                 {/* ── NEON FORGE EXCLUSIVE CONTROLS ── */}
                                 {calendarStyles.template === 'neon' && (
-                                    <div className="space-y-6 pt-6 border-t border-white/5">
+                                    <div className="space-y-6 pt-6 border-t border-white/[0.03]">
                                         <div>
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2">
                                                 <span>⚡</span> Neon Forge — Variante de Color
@@ -2393,7 +2389,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             "flex flex-col items-start p-3 rounded-xl border-2 transition-all text-left gap-1",
                                                             (settings.neonForgeVariant || 'lime') === v.id
                                                                 ? "border-primary bg-primary/10"
-                                                                : "border-white/5 bg-foreground/5 opacity-60 hover:opacity-100"
+                                                                : "border-white/[0.03] bg-foreground/5 opacity-60 hover:opacity-100"
                                                         )}
                                                     >
                                                         <div className="w-6 h-6 rounded-lg mb-1" style={{ background: v.accent }} />
@@ -2425,7 +2421,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
                                 {/* ── AQUA EXCLUSIVE CONTROLS ── */}
                                 {calendarStyles.template === 'cristal' && (
-                                    <div className="space-y-6 pt-6 border-t border-white/5">
+                                    <div className="space-y-6 pt-6 border-t border-white/[0.03]">
                                         <div>
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2">
                                                 <span>💎</span> Cristal — Variante de Color
@@ -2443,7 +2439,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             "flex flex-col items-start p-3 rounded-xl border-2 transition-all text-left gap-1",
                                                             (settings.aquaVariant || 'teal') === v.id
                                                                 ? "border-primary bg-primary/10"
-                                                                : "border-white/5 bg-foreground/5 opacity-60 hover:opacity-100"
+                                                                : "border-white/[0.03] bg-foreground/5 opacity-60 hover:opacity-100"
                                                         )}
                                                     >
                                                         <div className="w-6 h-6 rounded-lg mb-1" style={{ background: v.accent }} />
@@ -2471,7 +2467,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
                                 {/* ── IGLESIA EXCLUSIVE CONTROLS ── */}
                                 {calendarStyles.template === 'iglesia' && (
-                                    <div className="space-y-6 pt-6 border-t border-white/5">
+                                    <div className="space-y-6 pt-6 border-t border-white/[0.03]">
                                         <div>
                                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2">
                                                 <span>🏛️</span> Cátedra — Tono de Apariencia
@@ -2488,7 +2484,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             "flex flex-col items-start p-4 rounded-2xl border-2 transition-all text-left gap-1",
                                                             (settings.iglesiaVariant || 'light') === v.id
                                                                 ? "border-red-500 bg-red-500/10"
-                                                                : "border-white/5 bg-foreground/5 opacity-60 hover:opacity-100"
+                                                                : "border-white/[0.03] bg-foreground/5 opacity-60 hover:opacity-100"
                                                         )}
                                                     >
                                                         <div className="w-8 h-8 rounded-xl mb-1 flex items-center justify-center" style={{ background: v.id === 'light' ? '#F8F9FA' : '#1A1B1E' }}>
@@ -2517,7 +2513,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 )}
 
                                 {/* Colores Calendario */}
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-white/5">
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-white/[0.03]">
                                     {[
                                         { id: 'sundayColor', label: 'Domingos - Día del Señor', color: calendarStyles.sundayColor },
                                         { id: 'thursdayColor', label: 'Jueves - Oración Especial', color: calendarStyles.thursdayColor },
@@ -2530,12 +2526,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     type="color"
                                                     value={field.color}
                                                     onChange={(e) => setCalendarStyles({ [field.id]: e.target.value })}
-                                                    className="h-10 w-12 bg-black/40 border-white/10 rounded-xl cursor-pointer p-1"
+                                                    className="h-10 w-12 bg-black/40 border-white/[0.05] rounded-xl cursor-pointer p-1"
                                                 />
                                                 <Input
                                                     value={field.color}
                                                     onChange={(e) => setCalendarStyles({ [field.id]: e.target.value })}
-                                                    className="h-10 flex-1 bg-black/20 border-white/10 rounded-xl text-[10px] font-black uppercase"
+                                                    className="h-10 flex-1 bg-black/20 border-white/[0.05] rounded-xl text-[10px] font-black uppercase"
                                                 />
                                             </div>
                                         </div>
@@ -2669,7 +2665,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         </CardTitle>
                                         <CardDescription>Asigne uniformes y privilegios infantiles para días específicos</CardDescription>
                                     </div>
-                                    <div className="flex items-center gap-2 px-3 py-1 bg-foreground/5 rounded-lg border border-white/5">
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-foreground/5 rounded-lg border border-white/[0.03]">
                                         <Calendar className="w-3.5 h-3.5 text-cyan-500 opacity-50" />
                                         <span className="text-xs font-bold text-foreground uppercase ">{(() => {
                                             try {
@@ -2777,7 +2773,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     <Save className="w-4 h-4" /> Guardar Asignaciones
                                                 </Button>
                                             </div>
-                                            <p className="text-[9px] text-slate-500 mt-6 uppercase font-bold text-center border-t border-white/5 pt-4">
+                                            <p className="text-[9px] text-slate-500 mt-6 uppercase font-bold text-center border-t border-white/[0.03] pt-4">
                                                 Estas asignaciones aparecen automáticamente en el **Panel del Corito** y para el **Responsable de Asistencia**.
                                             </p>
                                         </div>
@@ -2849,7 +2845,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             "flex flex-col items-center justify-center p-4 rounded-3xl border transition-all duration-300 gap-3 group/theme",
                                                             isActive 
                                                                 ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.1)]" 
-                                                                : "bg-slate-900/40 border-white/5 text-slate-500 hover:border-white/20 hover:text-slate-300"
+                                                                : "bg-slate-900/40 border-white/[0.03] text-slate-500 hover:border-white/[0.1] hover:text-slate-300"
                                                         )}
                                                     >
                                                         <theme.icon className={cn("w-6 h-6 transition-transform duration-500 group-hover/theme:scale-110", isActive ? "text-emerald-400" : "")} />
@@ -2875,7 +2871,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <select
                                                     value={settings.transitionsEnabled !== false ? 'true' : 'false'}
                                                     onChange={(e) => setSettings({ transitionsEnabled: e.target.value === 'true' })}
-                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
+                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
                                                 >
                                                     <option value="true" className="bg-[#020617] text-white">Animaciones Activas (Moderno)</option>
                                                     <option value="false" className="bg-[#020617] text-white">Sin Transiciones (Instantáneo)</option>
@@ -2894,7 +2890,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         const key = `${themeId}SlideDuration` as any;
                                                         setSettings({ [key]: parseInt(e.target.value) });
                                                     }}
-                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
+                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
                                                 >
                                                     <option value="5" className="bg-[#020617] text-white">Rápido (5 seg)</option>
                                                     <option value="12" className="bg-[#020617] text-white">Normal (12 seg)</option>
@@ -2920,7 +2916,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             <select
                                                 value={settings.themeMode}
                                                 onChange={(e) => setSettings({ themeMode: e.target.value as any })}
-                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-primary/50"
+                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-primary/50"
                                             >
                                                 <option value="light" className="bg-[#020617] text-white">Modo Claro (Fondo Blanco)</option>
                                                 <option value="dark" className="bg-[#020617] text-white">Modo Oscuro (Fondo Galaxia)</option>
@@ -2949,7 +2945,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     setSettings({ adminTheme: newValue });
                                                     saveSettingsToCloud({ adminTheme: newValue });
                                                 }}
-                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-amber-500/50"
+                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-amber-500/50"
                                             >
                                                 <option value="primitivo" className="bg-[#020617] text-white">Plantilla Primitiva (Producción Cloud)</option>
                                                 <option value="classic" className="bg-[#020617] text-white">Plantilla Clásica (Tactile Local)</option>
@@ -2963,7 +2959,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </div>
 
                                 {/* Ministro Responsable */}
-                                <div className="p-10 rounded-[2.5rem] bg-slate-900/40 border border-white/10 relative overflow-hidden group">
+                                <div className="p-10 rounded-[2.5rem] bg-slate-900/40 border border-white/[0.05] relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
                                     <div className="flex flex-col lg:flex-row gap-16 relative z-10">
@@ -2988,7 +2984,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                     setImageToEdit(minister.avatar);
                                                                 }
                                                             }}
-                                                            className="w-12 h-12 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center border border-white/20 hover:bg-white/30 transition-all z-20"
+                                                            className="w-12 h-12 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center border border-white/[0.1] hover:bg-white/30 transition-all z-20"
                                                             title="Ajustar posición / Zoom"
                                                         >
                                                             <Move className="w-5 h-5" />
@@ -2997,7 +2993,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             whileHover={{ scale: 1.1 }}
                                                             whileTap={{ scale: 0.9 }}
                                                             onClick={() => document.getElementById('minister-photo-upload')?.click()}
-                                                            className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center border border-white/20 hover:bg-primary/90 transition-all z-20"
+                                                            className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center border border-white/[0.1] hover:bg-primary/90 transition-all z-20"
                                                             title="Cambiar Foto"
                                                         >
                                                             <Camera className="w-6 h-6" />
@@ -3005,7 +3001,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     </div>
 
                                                 </div>
-                                                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary px-8 py-2.5 rounded-full border border-white/20 whitespace-nowrap">
+                                                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary px-8 py-2.5 rounded-full border border-white/[0.1] whitespace-nowrap">
                                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white ">Ministro Responsable</span>
                                                 </div>
                                             </div>
@@ -3015,7 +3011,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] bg-primary/10 px-4 py-1.5 rounded-full inline-block">Responsable</p>
                                             </div>
 
-                                            <div className="mt-10 w-full p-6 rounded-[2rem] bg-foreground/5 border border-white/5 backdrop-blur-md flex justify-around">
+                                            <div className="mt-10 w-full p-6 rounded-[2rem] bg-foreground/5 border border-white/[0.03] backdrop-blur-md flex justify-around">
                                                 <div className="text-center">
                                                     <div className="text-xl font-black text-foreground ">100%</div>
                                                     <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-1">Fidelidad</div>
@@ -3041,7 +3037,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-4">
-                                                    <div className="flex items-center gap-4 bg-foreground/5 px-5 py-2.5 rounded-2xl border border-white/10 backdrop-blur-sm">
+                                                    <div className="flex items-center gap-4 bg-foreground/5 px-5 py-2.5 rounded-2xl border border-white/[0.05] backdrop-blur-sm">
                                                         <span className="text-[9px] font-black uppercase text-slate-400">Pantalla</span>
                                                         <Button
                                                             variant={settings.showMinisterOnDisplay ? "neon" : "outline"}
@@ -3083,7 +3079,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <Input
                                                             value={minister.name || ''}
                                                             onChange={(e) => setMinister({ name: e.target.value })}
-                                                            className="h-16 bg-foreground/5 border-white/10 pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
+                                                            className="h-16 bg-foreground/5 border-white/[0.05] pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
                                                             placeholder="Ej. P.E. Benjamin Rojas"
                                                         />
                                                     </div>
@@ -3095,7 +3091,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <Input
                                                             value={minister.phone || ''}
                                                             onChange={(e) => setMinister({ phone: e.target.value })}
-                                                            className="h-16 bg-foreground/5 border-white/10 pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
+                                                            className="h-16 bg-foreground/5 border-white/[0.05] pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
                                                             placeholder="+1 (555) 000-0000"
                                                         />
                                                     </div>
@@ -3107,7 +3103,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <Input
                                                             value={minister.email || ''}
                                                             onChange={(e) => setMinister({ email: e.target.value })}
-                                                            className="h-16 bg-foreground/5 border-white/10 pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
+                                                            className="h-16 bg-foreground/5 border-white/[0.05] pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
                                                             placeholder="contacto@lldmrodeo.org"
                                                         />
                                                     </div>
@@ -3171,7 +3167,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500">
                                         Ajuste Manual de Posición
                                     </h4>
-                                    <div className="flex flex-col items-center gap-3 p-6 rounded-[2rem] bg-foreground/5 border border-white/10">
+                                    <div className="flex flex-col items-center gap-3 p-6 rounded-[2rem] bg-foreground/5 border border-white/[0.05]">
                                         <Button
                                             variant="outline"
                                             className="w-14 h-14 rounded-2xl"
@@ -3249,7 +3245,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/5 shadow-xl"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/[0.03] shadow-xl"
                             )}>
                                 <div className="absolute inset-0 bg-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <Users className="w-10 h-10 text-amber-400 mb-3" />
@@ -3259,7 +3255,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </Card>
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
                             )}>
                                 <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="w-10 h-10 flex items-center justify-center mb-3">
@@ -3271,7 +3267,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </Card>
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
                             )}>
                                 <div className="absolute inset-0 bg-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="w-10 h-10 flex items-center justify-center mb-3">
@@ -3283,7 +3279,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </Card>
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/5 shadow-none rounded-[1.5rem]" : "glass-card p-6 shadow-2xl bg-slate-900/40 border-white/40"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card p-6 shadow-2xl bg-slate-900/40 border-white/40"
                             )}>
                                 <div className="absolute inset-0 bg-amber-500/10 animate-pulse opacity-30" />
                                 <ShieldAlert className="w-10 h-10 text-amber-500 mb-3 animate-pulse" />
@@ -3337,13 +3333,13 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             "space-y-6 transition-all duration-500 group/member relative overflow-hidden",
                                             settings.adminTheme === 'primitivo' 
                                                 ? "bg-amber-500/[0.03] border border-amber-500/20 hover:border-amber-500/40 rounded-[2rem] p-5 shadow-none" 
-                                                : "glass-card bg-[#0a0a0a]/80 border border-white/5 p-6 rounded-[2rem] shadow-2xl hover:border-amber-500/40"
+                                                : "glass-card bg-[#0a0a0a]/80 border border-white/[0.03] p-6 rounded-[2rem] shadow-2xl hover:border-amber-500/40"
                                         )}>
                                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent opacity-0 group-hover/member:opacity-100 transition-opacity" />
                                             <div className="flex items-center gap-5">
                                                 <div className="relative w-16 h-16 shrink-0">
                                                     <div className="absolute inset-0 bg-amber-500/20 rounded-[1.5rem] blur-xl opacity-0 group-hover/member:opacity-100 transition-opacity" />
-                                                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden border-2 border-white/10 group-hover/member:border-amber-500/50 transition-all bg-slate-900">
+                                                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden border-2 border-white/[0.05] group-hover/member:border-amber-500/50 transition-all bg-slate-900">
                                                         {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover transition-transform group-hover/member:scale-110" /> : <User className="w-full h-full p-4 text-amber-500/40" />}
                                                     </div>
                                                     {pending.is_pre_registered && (
@@ -3415,10 +3411,10 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         RECHAZAR
                                                     </Button>
                                                 </div>
-                                                <div className="pt-4 border-t border-white/5 space-y-3">
+                                                <div className="pt-4 border-t border-white/[0.03] space-y-3">
                                                     <p className="text-[7px] font-black uppercase text-slate-400 tracking-[0.2em] text-center opacity-70 ">Vincular con Registro Manual:</p>
                                                     <select 
-                                                        className="w-full bg-[#111]/80 border border-white/10 rounded-2xl px-4 py-3 text-[10px] font-black uppercase text-amber-500 outline-none focus:border-amber-500/50 appearance-none cursor-pointer transition-all hover:bg-[#151515]"
+                                                        className="w-full bg-[#111]/80 border border-white/[0.05] rounded-2xl px-4 py-3 text-[10px] font-black uppercase text-amber-500 outline-none focus:border-amber-500/50 appearance-none cursor-pointer transition-all hover:bg-[#151515]"
                                                         onChange={async (e) => {
                                                             const memberId = e.target.value;
                                                             if (!memberId) return;
@@ -3560,7 +3556,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         </div>
                                                         <div className="space-y-1">
                                                             {similarMembers.map(m => (
-                                                                <div key={m.id} className="flex items-center justify-between text-[10px] bg-white/5 p-2 rounded-lg border border-white/5">
+                                                                <div key={m.id} className="flex items-center justify-between text-[10px] bg-white/5 p-2 rounded-lg border border-white/[0.03]">
                                                                     <div className="flex flex-col">
                                                                         <span className="font-black text-foreground">{m.name}</span>
                                                                         <span className="text-[8px] text-slate-500 truncate max-w-[120px]">{m.email}</span>
@@ -3694,8 +3690,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <div className={cn(
                                                     "relative border overflow-hidden transition-all duration-300 backdrop-blur-md",
                                                     settings.adminTheme === 'primitivo'
-                                                        ? "bg-[#0A0D14] border-white/10 rounded-2xl focus-within:border-amber-500/30 focus-within:bg-[#101420] shadow-sm shadow-black"
-                                                        : "bg-black/40 border-white/30 rounded-full focus-within:border-emerald-500/60 focus-within:bg-black/80 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+                                                        ? "bg-[#0A0D14] border-white/[0.05] rounded-2xl focus-within:border-amber-500/30 focus-within:bg-[#101420] shadow-sm shadow-black"
+                                                        : "bg-black/40 border-white/[0.15] rounded-full focus-within:border-emerald-500/60 focus-within:bg-black/80 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
                                                 )}>
                                                     <Search className={cn(
                                                         "absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors",
@@ -3729,8 +3725,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             ? "bg-amber-400 border-amber-400 text-black font-black shadow-none scale-[1.02] z-20" 
                                                             : "bg-primary border-primary text-primary-foreground font-black shadow-lg shadow-primary/20 scale-[1.05] z-30")
                                                         : (settings.adminTheme === 'primitivo'
-                                                            ? "bg-[#101420] border-white/5 text-slate-400 hover:text-white hover:border-white/10"
-                                                            : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white")
+                                                            ? "bg-[#101420] border-white/[0.03] text-slate-400 hover:text-white hover:border-white/[0.05]"
+                                                            : "bg-white/5 border-white/[0.03] text-slate-400 hover:bg-white/10 hover:text-white")
                                                 )}
                                             >
                                                 <div className="flex items-center gap-3 z-10">
@@ -3775,7 +3771,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     <div className="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-4 max-h-[700px] overflow-y-auto pr-2 custom-scrollbar p-2 self-start align-top">
                                         {members.length === 0 ? (
                                             <div className="col-span-full py-20 text-center space-y-4">
-                                                <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto border border-white/5 opacity-50">
+                                                <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto border border-white/[0.03] opacity-50">
                                                     <Users className="w-10 h-10 text-slate-500" />
                                                 </div>
                                                 <p className="text-xs text-slate-500 uppercase tracking-widest font-black">No hay miembros registrados</p>
@@ -3809,7 +3805,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             <div className="flex items-center gap-4 px-4 overflow-hidden">
                                                                  <div className={cn(
                                                                     "p-2.5 rounded-2xl border transition-all",
-                                                                    settings.adminTheme === 'primitivo' ? "bg-amber-500/10 border-amber-500/20 shadow-none" : "bg-foreground/[0.03] border-white/5 shadow-2xl"
+                                                                    settings.adminTheme === 'primitivo' ? "bg-amber-500/10 border-amber-500/20 shadow-none" : "bg-foreground/[0.03] border-white/[0.03] shadow-2xl"
                                                                 )}>
                                                                     <group.icon className={cn("w-4 h-4", settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-500")} />
                                                                 </div>
@@ -3834,7 +3830,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                  className={cn(
                                                                     "p-5 border transition-all duration-300 group relative overflow-hidden",
                                                                     settings.adminTheme === 'primitivo' 
-                                                                        ? "bg-[#101420] border-white/5 hover:border-white/10 rounded-2xl shadow-none" 
+                                                                        ? "bg-[#101420] border-white/[0.03] hover:border-white/[0.05] rounded-2xl shadow-none" 
                                                                         : (m.is_pre_registered 
                                                                             ? "bg-amber-500/[0.03] border-amber-500/20 hover:border-amber-500/40 rounded-[1.5rem] shadow-none"
                                                                             : "bg-foreground/[0.02] border-border/10 hover:border-primary/30 hover:bg-primary/[0.02] rounded-[1.5rem] shadow-xl")
@@ -3864,7 +3860,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                     <img src={m.avatar} alt={m.name} className="w-full h-full object-cover" />
                                                                                     
                                                                                     {/* Safe Line Overlay */}
-                                                                                    <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none z-20" />
+                                                                                    <div className="absolute inset-0 border border-white/[0.05] rounded-2xl pointer-events-none z-20" />
                                                                                     
                                                                                     {/* Rule of Thirds Grid (Subtle) */}
                                                                                     <div className="absolute inset-0 opacity-0 group-hover/avatar:opacity-20 transition-opacity z-20 pointer-events-none">
@@ -3893,7 +3889,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                             m.role === 'Ministro a Cargo' ? "text-[#f5bb24]" : (settings.adminTheme === 'primitivo' ? "text-amber-400" : "text-emerald-400")
                                                                                     )} />
                                                                                     {/* Safe Line even for empty avatar */}
-                                                                                    <div className="absolute inset-0 border border-white/5 rounded-2xl pointer-events-none" />
+                                                                                    <div className="absolute inset-0 border border-white/[0.03] rounded-2xl pointer-events-none" />
                                                                                 </div>
                                                                             )}
                                                                         </div>
@@ -3952,7 +3948,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                     <select
                                                                                         value={editingRole}
                                                                                         onChange={(e) => setEditingRole(e.target.value)}
-                                                                                        className="bg-transparent text-[9px] font-black text-foreground outline-none px-2 cursor-pointer border-b border-white/5 pb-0.5"
+                                                                                        className="bg-transparent text-[9px] font-black text-foreground outline-none px-2 cursor-pointer border-b border-white/[0.03] pb-0.5"
                                                                                     >
                                                                                         <option value="Miembro" className="bg-[#0f172a]">MIEMBRO</option>
                                                                                         <option value="Ministro a Cargo" className="bg-[#0f172a]">MINISTRO A CARGO</option>
@@ -3996,7 +3992,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                             setEditingMemberId(m.id);
                                                                                             setEditingRole(m.role);
                                                                                         }}
-                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/5"
+                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/[0.03]"
                                                                                     >
                                                                                         <Edit2 className="w-3.5 h-3.5" />
                                                                                     </motion.button>
@@ -4009,7 +4005,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                                 await loadMembersFromCloud();
                                                                                             }
                                                                                         }}
-                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-red-500 transition-colors border border-white/5"
+                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-red-500 transition-colors border border-white/[0.03]"
                                                                                     >
                                                                                         <Trash2 className="w-3.5 h-3.5" />
                                                                                     </motion.button>
@@ -4105,7 +4101,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <Input 
                                                     value={currentUser?.name || ''} 
                                                     onChange={(e) => currentUser && setCurrentUser({ ...currentUser, name: e.target.value })}
-                                                    className="bg-white/5 border-white/10 h-14 rounded-2xl font-black focus:border-amber-500/50 transition-all font-outfit"
+                                                    className="bg-white/5 border-white/[0.05] h-14 rounded-2xl font-black focus:border-amber-500/50 transition-all font-outfit"
                                                 />
                                             </div>
                                             <div className="space-y-3">
@@ -4113,7 +4109,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <Input 
                                                     value={currentUser?.email || ''} 
                                                     disabled
-                                                    className="bg-white/5 border-white/10 h-14 rounded-2xl font-bold opacity-40 cursor-not-allowed"
+                                                    className="bg-white/5 border-white/[0.05] h-14 rounded-2xl font-bold opacity-40 cursor-not-allowed"
                                                 />
                                             </div>
                                         </div>
@@ -4124,7 +4120,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 value={currentUser?.favorite_verse || (currentUser as any)?.favoriteVerse || ''} 
                                                 onChange={(e) => currentUser && setCurrentUser({ ...currentUser, favorite_verse: e.target.value })}
                                                 placeholder="Ej: Salmos 23:1 - Jehová es mi pastor..."
-                                                className="bg-white/5 border-white/10 h-14 rounded-2xl font-medium focus:border-amber-500/50 transition-all "
+                                                className="bg-white/5 border-white/[0.05] h-14 rounded-2xl font-medium focus:border-amber-500/50 transition-all "
                                             />
                                         </div>
 
@@ -4134,7 +4130,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 value={currentUser?.bio || ''} 
                                                 onChange={(e) => currentUser && setCurrentUser({ ...currentUser, bio: e.target.value })}
                                                 rows={4}
-                                                className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 font-medium text-sm focus:border-amber-500/50 transition-all outline-none resize-none"
+                                                className="w-full bg-white/5 border border-white/[0.05] rounded-2xl p-4 font-medium text-sm focus:border-amber-500/50 transition-all outline-none resize-none"
                                                 placeholder="Cuéntanos un poco sobre ti..."
                                             />
                                         </div>
