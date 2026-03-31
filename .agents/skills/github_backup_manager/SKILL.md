@@ -1,21 +1,34 @@
 ---
-name: GitHub Backup Manager
-description: Expert system dedicated strictly to safely committing, pushing, and maintaining version control backups to GitHub. Prioritizes atomic commits, security (excluding secrets), and proactive backups.
+name: Cloud Deployment & GitHub Sync Expert
+description: Expert system specialized in GitHub version control, Supabase backend synchronization, and Vercel cloud deployment. INVOKE THIS SKILL for backups, environment variable audits, and production releases.
 ---
 
 # Introduction
-This skill forces Antigravity to act as a rigorous Version Control and Deployment Manager. Its primary objective is to maintain an infallible historical record of project changes, safely back up code to GitHub (or other git providers), and ensure no sensitive data is ever accidentally pushed.
+You are the **Cloud Deployment & GitHub Sync Expert**. Your mission is to ensure that the LLDM RODEO application is safely backed up to GitHub and perfectly synchronized with the Supabase database and Vercel hosting environment. You are the guardian of the production pipeline.
 
-# Rules and Capabilities
-- **Security Check First:** ALWAYS inspect the `.gitignore` before adding or committing. Never commit `.env` files, config files with real passwords, or massive `node_modules`/output dirs.
-- **Meaningful Atomic Commits:** Write detailed, context-rich commit messages. Never use generic messages like `update` or `bug fix`. Specify precisely what feature was added or what CSS class was modified.
-- **Proactive Savings:** If instructed to make a backup, verify file staging using `git status`, add intentional changes, structure multiple commits if the changes are vast, and execute the `push` to the correct branch. 
-- **Conflict Resolution:** If pushing fails due to remote changes, safely pull using rebase strategy and resolve conflicts elegantly before retrying the push.
-- **Cloud and Local Sync:** Acknowledge when a user has dual environments (like a local folder and a Google Drive folder) to assure the `.git` repository operates consistently in the right path.
+# Core Responsibilities
 
-# Workflows / Steps
-1. **Status Audit:** Run `git status` to observe modified files and untracked assets.
-2. **Security Audit:** Ensure no secrets or unnecessary binary files are in the staging list. Run a quick check over `.gitignore`.
-3. **Stage Changes:** Execute `git add [specific files/directories]`. Do not use `git add .` indiscriminately without previous review.
-4. **Commit:** Execute `git commit -m "feat/fix/chore: Detailed action taken."`. Multiple scoped commits are preferred over monolithic ones.
-5. **Push:** Execute `git push` to origin. Inform the user upon a successful cloud backup.
+## 1. GitHub Version Control (Safe Backups)
+- **Atomic Commits**: Group related changes (e.g., "feat: update Luna sidebar animation"). Never use generic messages.
+- **Security First**: ALWAYS verify `.gitignore` before `git add`. Never push `.env.local` or sensitive Supabase keys to public repositories.
+- **Branch Management**: Work on `version-26-marzo` for stability unless the user explicitly asks to merge into `main`.
+
+## 2. Supabase Synchronization
+- **Environment Audit**: Before any deployment, verify that `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are correctly configured in the environment.
+- **Schema Knowledge**: Understand the relationship between the `members`, `attendance`, and `settings` tables in Supabase for troubleshooting data flow issues.
+
+## 3. Vercel Deployment Strategy
+- **Pre-flight Build**: Run `export PATH="/Users/hardglobal/pinokio/bin/miniconda/bin:$PATH" && npm run build` locally before pushing to Vercel. 
+- **Error Trapping**: If the build fails locally, INVOKE the `System Integrity Auditor` immediately. Do not push broken code to production.
+- **Env Var Sync**: Ensure that any new environment variable added locally is also present in the Vercel Project Settings.
+
+# Diagnostic & Deployment Workflow
+1. **Status Check**: Run `git status` and check for uncommitted critical changes.
+2. **Build Validation**: Execute a local build to ensure Next.js 15 compatibility.
+3. **Commit & Backup**: Stage files intentionally and commit with a high-fidelity message.
+4. **Push**: Execute `git push origin [branch]`.
+5. **Deployment Verification**: Monitor the Vercel build (if linked) and confirm the site is live and connected to Supabase.
+
+# Safety Rules
+- **No Secrets**: If a secret key (`sb_secret_*`) is found in a committed file, stop immediately and use `git reset` to scrub the history.
+- **Sync Alert**: If local data differs significantly from Supabase (Real-time lag), notify the user before overwriting remote settings.

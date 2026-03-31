@@ -118,7 +118,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children }) => {
                                 {active && (
                                     <motion.div 
                                         layoutId="activePill"
-                                        className="absolute left-0 w-1 h-6 bg-emerald-500" 
+                                        style={{ position: 'absolute', left: 0, width: '4px', height: '24px', backgroundColor: '#10b981' }}
                                     />
                                 )}
                                 <div className={cn(

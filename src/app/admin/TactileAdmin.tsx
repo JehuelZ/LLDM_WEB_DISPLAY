@@ -403,7 +403,7 @@ const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled }: any
     );
 };
 
-export default function TactileAdmin({ propTab }: { propTab?: string }) {
+export default function TactileAdmin({ propTab, children }: { propTab?: string, children?: React.ReactNode }) {
     const {
         settings, setSettings,
         calendarStyles, setCalendarStyles,

@@ -155,11 +155,11 @@ function AdminLayoutContent({
                     <div className="absolute inset-0 dots-pattern opacity-10" />
                 </div>
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="w-full max-w-md z-10"
-                >
+                <div className="w-full max-w-md z-10">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                    >
                     <Card className="glass-card border-white/5 shadow-2xl overflow-hidden backdrop-blur-2xl bg-card/50">
                         <div className="h-2 w-full bg-gradient-to-r from-red-600 via-orange-500 to-red-600 animate-pulse" />
                         <CardHeader className="text-center pt-10 pb-6">
@@ -203,6 +203,7 @@ function AdminLayoutContent({
                         ID de Intento: {currentUser?.id.slice(0, 8)}...
                     </p>
                 </motion.div>
+                </div>
             </div>
         );
     }
