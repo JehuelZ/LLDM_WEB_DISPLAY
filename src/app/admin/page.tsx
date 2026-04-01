@@ -136,7 +136,17 @@ const MessagesPanel = ({
                                             <div className="flex items-center gap-2 opacity-40">
                                                 <Clock className="w-3 h-3" />
                                                 <span className="text-[9px] text-white uppercase font-black tracking-widest leading-none">
-                                                    {format(new Date(msg.createdAt), 'dd MMM, HH:mm', { locale: es }).toLowerCase()}
+                                                    {(() => {
+                                                        try {
+                                                            const dateStr = msg.createdAt || msg.created_at;
+                                                            if (!dateStr) return 'Reciente';
+                                                            const d = new Date(dateStr);
+                                                            if (isNaN(d.getTime())) return 'Reciente';
+                                                            return format(d, 'dd MMM, HH:mm', { locale: es }).toLowerCase();
+                                                        } catch (e) {
+                                                            return 'Reciente';
+                                                        }
+                                                    })()}
                                                 </span>
                                             </div>
                                         </div>
@@ -398,11 +408,18 @@ const MiniCountdown = () => {
 
 const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
     const { loadDetailedWeeklyStats, members, authSession } = useAppStore();
-    const [weekStart, setWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }));
+    const [weekStart, setWeekStart] = useState<Date | null>(null);
     const [stats, setStats] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
 
+    useEffect(() => {
+        if (!weekStart) {
+            setWeekStart(startOfWeek(new Date(), { weekStartsOn: 0 }));
+        }
+    }, [weekStart]);
+
     const weekDays = useMemo(() => {
+        if (!weekStart) return [];
         return Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
     }, [weekStart]);
 
@@ -421,7 +438,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
     }, [formattedDays, loadDetailedWeeklyStats, authSession]);
 
     const changeWeek = (direction: number) => {
-        setWeekStart(prev => addDays(prev, direction * 7));
+        setWeekStart(prev => prev ? addDays(prev, direction * 7) : startOfWeek(new Date(), { weekStartsOn: 0 }));
     };
 
     return (
@@ -434,7 +451,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                         distribución semanal de asistencia
                     </CardTitle>
                     <CardDescription className="text-[9px] uppercase font-bold text-muted-foreground mt-1">
-                        semana del {format(weekDays[0], 'd MMM', { locale: es })} al {format(weekDays[6], 'd MMM', { locale: es })}
+                        {weekDays.length > 0 ? `semana del ${format(weekDays[0], 'd MMM', { locale: es })} al ${format(weekDays[6], 'd MMM', { locale: es })}` : 'cargando calendario...'}
                     </CardDescription>
                 </div>
                 <div className="flex gap-2">
@@ -459,7 +476,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                         size="icon" 
                         className="h-7 w-7 rounded-none border-[var(--tactile-border)] bg-[var(--tactile-item-hover)] hover:bg-[var(--tactile-panel-bg)]/20"
                         onClick={() => changeWeek(1)}
-                        disabled={weekStart >= startOfWeek(new Date(), { weekStartsOn: 0 })}
+                        disabled={!weekStart || weekStart >= startOfWeek(new Date(), { weekStartsOn: 0 })}
                     >
                         <ChevronRight className="h-3 w-3 text-white" />
                     </Button>
@@ -1116,6 +1133,29 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         <span className="whitespace-nowrap">inteligencia mensual</span>
                                     </div>
                                     <div className="flex-1 h-px bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" />
+                                    
+                                    {/* Dynamically styled Range Selector */}
+                                    <div className="flex bg-white/5 p-1 rounded-none border border-white/10 relative z-30 ml-4">
+                                        {[
+                                            { label: '7 Días', value: 7 },
+                                            { label: '15 Días', value: 15 },
+                                            { label: '30 Días', value: 30 },
+                                            { label: 'Este Mes', value: 'month' }
+                                        ].map((r) => (
+                                            <button
+                                                key={r.label}
+                                                onClick={() => setIntelligenceRange(r.value as any)}
+                                                className={cn(
+                                                    "px-3 py-1 text-[8px] font-black uppercase tracking-widest transition-all",
+                                                    intelligenceRange === r.value 
+                                                        ? "bg-[#dca54e] text-black shadow-[0_0_15px_rgba(220,165,78,0.4)]" 
+                                                        : "text-muted-foreground/60 hover:text-foreground hover:bg-white/5"
+                                                )}
+                                            >
+                                                {r.label}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </CardTitle>
                                 <CardDescription className="text-[8px] font-bold uppercase text-muted-foreground mt-1">
                                     {intelligenceRange === 'month' ? 'Rendimiento Este Mes' : `Rendimiento Últimos ${intelligenceRange} Días`}
@@ -1384,26 +1424,25 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         </div>
                     </Card>
 
-                    <div className={cn("space-y-8", activeTab !== 'dashboard' && "hidden")}>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <div id="mensajes">
-                                <MessagesPanel
-                                    messages={messages}
-                                    onMarkRead={markMessageAsRead}
-                                    onReply={async (recipientId, content) => {
-                                        await sendCloudMessage({ senderId: currentUser?.id || '', receiverId: recipientId, content, subject: 'Respuesta de Administración' });
-                                        showNotification('Respuesta enviada');
-                                    }}
-                                    settings={settings}
-                                />
-                            </div>
-                            <div id="analytics-overview" className="space-y-6">
-                                {/* Consolidated into Membership Intelligence */}
-                            </div>
+                    </motion.div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
+                        <div id="mensajes">
+                            <MessagesPanel
+                                messages={messages}
+                                onMarkRead={markMessageAsRead}
+                                onReply={async (recipientId, content) => {
+                                    await sendCloudMessage({ senderId: currentUser?.id || '', receiverId: recipientId, content, subject: 'Respuesta de Administración' });
+                                    showNotification('Respuesta enviada');
+                                }}
+                                settings={settings}
+                            />
+                        </div>
+                        <div id="analytics-overview" className="space-y-6">
+                            {/* Consolidated into Membership Intelligence */}
                         </div>
                     </div>
-                </motion.div>
-            </div>
+                </div>
 
 
             {

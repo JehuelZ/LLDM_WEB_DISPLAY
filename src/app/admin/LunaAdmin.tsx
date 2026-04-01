@@ -114,8 +114,8 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
                                         data={monthlyStats.map(s => ({ label: s.label, value: s.val }))} 
                                     />
                                 </div>
-                            </div>
                         </div>
+                    </div>
 
                         <div className="space-y-10">
                             <div className="p-10 border border-white/[0.02] bg-white/[0.01]">

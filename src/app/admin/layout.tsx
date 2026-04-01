@@ -149,7 +149,9 @@ function AdminLayoutContent({
     }, [settings.adminTheme, settings.themeMode, mounted]);
 
 
-    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador');
+    // EMERGENCY ACCESS BYPASS: Grant access to jairojehuel@gmail.com for restoration
+    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador') || 
+                         (currentUser?.email === 'jairojehuel@gmail.com');
 
     // Prevent hydration mismatch by returning a consistent loader or null until mounted
     if (!mounted) {
@@ -172,11 +174,11 @@ function AdminLayoutContent({
                     <div className="absolute inset-0 dots-pattern opacity-10" />
                 </div>
 
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="w-full max-w-md z-10"
-                >
+                <div className="w-full max-w-md z-10">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                    >
                     <Card className="glass-card border-white/5 shadow-2xl overflow-hidden backdrop-blur-2xl bg-card/50">
                         <div className="h-2 w-full bg-gradient-to-r from-red-600 via-orange-500 to-red-600 animate-pulse" />
                         <CardHeader className="text-center pt-10 pb-6">
@@ -220,12 +222,13 @@ function AdminLayoutContent({
                         ID de Intento: {currentUser?.id.slice(0, 8)}...
                     </p>
                 </motion.div>
+                </div>
             </div>
         );
     }
 
-    // Force flama-oficial for branding regardless of settings, unless a real custom icon is intentionally set
-    const logoUrl = settings.churchLogoUrl || "/flama-oficial.svg";
+    // RESTORED USER IDENTITY: Priority to custom logo uploaded by user
+    const logoUrl = settings.churchLogoUrl || settings.customLogo1 || "/flama-oficial.svg";
 
 
 

@@ -23,23 +23,46 @@ interface ChartProps {
 }
 
 export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, showHighlight = true, totalMembers = 100 }: ChartProps) => {
-    // Determine if we have real data
-    const hasData = data && data.length > 0 && data.some(d => (d.attended || d.value || 0) > 0);
+    // Determine if we have real data (simply check if data array is provided and not empty)
+    const hasData = data && data.length > 0;
+    
+    // Check if data is "zeroed" to show a visual hint
+    const isAllZeros = hasData && data.every(d => (d.attended || d.value || 0) === 0);
 
-    // Generate beautiful demo data if no real data exists
-    const demoData = Array.from({ length: 31 }, (_, i) => {
-        const d = new Date();
-        d.setDate(i + 1);
-        return {
-            label: (i + 1).toString(),
-            date: format(d, 'yyyy-MM-dd'),
-            value: 40 + Math.sin(i * 0.5) * 20 + Math.random() * 10,
-            total: 100
-        };
-    });
+    const [isMounted, setIsMounted] = React.useState(false);
+    const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
+    const [isDragging, setIsDragging] = React.useState(false);
+
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    // Generate beautiful demo data if no data was provided at all
+    const demoData = React.useMemo(() => {
+        if (!isMounted) return [];
+        return Array.from({ length: 31 }, (_, i) => {
+            const d = new Date();
+            d.setDate(i + 1);
+            return {
+                label: (i + 1).toString(),
+                date: format(d, 'yyyy-MM-dd'),
+                value: 40 + Math.sin(i * 0.5) * 20 + Math.random() * 10,
+                total: 100
+            };
+        });
+    }, [isMounted]);
 
     const activeData = hasData ? data : demoData;
     
+    // Find index for today to set as default
+    const todayIndex = React.useMemo(() => {
+        if (!isMounted) return 0;
+        const todayStr = format(new Date(), 'yyyy-MM-dd');
+        const idx = activeData.findIndex(d => d.date === todayStr);
+        return idx >= 0 ? idx : activeData.length - 1;
+    }, [activeData, isMounted]);
+
+    if (!isMounted) return <div className="h-full w-full bg-slate-900/10 animate-pulse" />;
     if (!activeData || activeData.length === 0) return <div className="h-full w-full flex items-center justify-center text-[10px] font-black text-white/20">SIN DATOS</div>;
 
     const width = 440;
@@ -69,16 +92,6 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
         return path;
     };
 
-    const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
-    const [isDragging, setIsDragging] = React.useState(false);
-    
-    // Find index for today to set as default
-    const todayIndex = React.useMemo(() => {
-        const todayStr = format(new Date(), 'yyyy-MM-dd');
-        const idx = activeData.findIndex(d => d.date === todayStr);
-        return idx >= 0 ? idx : activeData.length - 1;
-    }, [activeData]);
-    
     const handleInteraction = (clientX: number, target: SVGSVGElement) => {
         const rect = target.getBoundingClientRect();
         const svgX = ((clientX - rect.left) / rect.width) * width;
@@ -114,6 +127,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
     // Use today's index as default if not hovering or dragging
     const displayIdx = hoverIdx !== null ? hoverIdx : todayIndex;
     const highlightPoint = points[displayIdx];
+
 
     const gradientId = `line-gradient-${color.replace('#', '')}`;
     const filterId = `serpent-glow-${color.replace('#', '')}`;
@@ -173,8 +187,8 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 
                 {/* Strategic Visual Rulings (Filtered to avoid saturation) */}
                 {points.map((p, i) => {
+                    const isShortRange = points.length <= 15;
                     const isStep = i === 0 || i === points.length - 1 || i % 5 === 0;
-                    const isShortRange = points.length <= 7;
                     
                     if (!isShortRange && !isStep) return (
                         <circle key={`dot-${i}`} cx={p.x} cy={p.y} r="1" fill="var(--tactile-text-sub)" fillOpacity="0.2" />
@@ -237,8 +251,8 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
 
                 {/* Bottom Day Labels - Adaptive Frequency */}
                 {points.map((p, i) => {
+                    const isShortRange = points.length <= 15;
                     const isStep = i === 0 || i === points.length - 1 || i % 5 === 0;
-                    const isShortRange = points.length <= 7;
                     
                     if (!isShortRange && !isStep) return null;
 
