@@ -3,12 +3,15 @@
 import React from 'react';
 
 interface ProgressProps {
-    progress: number;
+    slides: any[];
+    currentSlide: number;
     color?: string;
     showLabel?: boolean;
 }
 
-const Progress: React.FC<ProgressProps> = ({ progress, color, showLabel = true }) => {
+const Progress: React.FC<ProgressProps> = ({ slides, currentSlide, color, showLabel = true }) => {
+    const progress = slides.length > 0 ? ((currentSlide + 1) / slides.length) * 100 : 0;
+
     return (
         <div className="flex flex-col gap-2 w-full animate-in fade-in duration-1000">
             {showLabel && (
