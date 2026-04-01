@@ -438,7 +438,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
     }, [formattedDays, loadDetailedWeeklyStats, authSession]);
 
     const changeWeek = (direction: number) => {
-        setWeekStart(prev => addDays(prev, direction * 7));
+        setWeekStart(prev => prev ? addDays(prev, direction * 7) : startOfWeek(new Date(), { weekStartsOn: 0 }));
     };
 
     return (
@@ -476,7 +476,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                         size="icon" 
                         className="h-7 w-7 rounded-none border-[var(--tactile-border)] bg-[var(--tactile-item-hover)] hover:bg-[var(--tactile-panel-bg)]/20"
                         onClick={() => changeWeek(1)}
-                        disabled={weekStart >= startOfWeek(new Date(), { weekStartsOn: 0 })}
+                        disabled={!weekStart || weekStart >= startOfWeek(new Date(), { weekStartsOn: 0 })}
                     >
                         <ChevronRight className="h-3 w-3 text-white" />
                     </Button>
