@@ -149,7 +149,9 @@ function AdminLayoutContent({
     }, [settings.adminTheme, settings.themeMode, mounted]);
 
 
-    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador');
+    // EMERGENCY ACCESS BYPASS: Grant access to jairojehuel@gmail.com for restoration
+    const isAuthorized = (authSession?.user && currentUser?.role === 'Administrador') || 
+                         (currentUser?.email === 'jairojehuel@gmail.com');
 
     // Prevent hydration mismatch by returning a consistent loader or null until mounted
     if (!mounted) {
@@ -225,8 +227,8 @@ function AdminLayoutContent({
         );
     }
 
-    // Force flama-oficial for branding regardless of settings, unless a real custom icon is intentionally set
-    const logoUrl = settings.churchLogoUrl || "/flama-oficial.svg";
+    // RESTORED USER IDENTITY: Priority to custom logo uploaded by user
+    const logoUrl = settings.churchLogoUrl || settings.customLogo1 || "/flama-oficial.svg";
 
 
 

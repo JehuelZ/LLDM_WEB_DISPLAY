@@ -114,7 +114,7 @@ function StatusBadge({ label, active = false, isLive = false, T, isDark, languag
                 )}
                 <span style={{ fontSize: 11, fontWeight: 900, color: (isLive || active) ? '#FFFFFF' : T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat }}>
                     {label || (isLive ? 'En Curso' : '')}
-                    {isLive && label && ' - EN CURSO'}
+                    {isLive && label && !label.includes('EN CURSO') && ' - EN CURSO'}
                 </span>
             </div>
             {language === 'en' && (
@@ -553,7 +553,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                         </div>
                                         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                             <AcademicButton
-                                                label={`${cons9am.name || 'Por Asignar'} | ${doc9am.name || 'Por Asignar'}`}
+                                                label={cons9am.name === doc9am.name ? (cons9am.name || 'Por Asignar') : `${cons9am.name || 'Por Asignar'} | ${doc9am.name || 'Por Asignar'}`}
                                                 icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow}
                                             />
                                             <div style={{ display: 'flex', gap: 12 }}>
@@ -612,7 +612,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                     </div>
                                     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                         <AcademicButton
-                                            label={`${evLeaders[0]?.name || 'Por Asignar'} | ${evLeaders[1]?.name || 'Por Asignar'}`}
+                                            label={evLeaders[0]?.name === evLeaders[1]?.name ? (evLeaders[0]?.name || 'Por Asignar') : `${evLeaders[0]?.name || 'Por Asignar'} | ${evLeaders[1]?.name || 'Por Asignar'}`}
                                             icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow}
                                         />
                                         <div style={{ display: 'flex', gap: 12 }}>

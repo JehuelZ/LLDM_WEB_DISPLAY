@@ -390,3 +390,45 @@ export const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled
         </div>
     );
 };
+
+// --- RESTORED GRAPHIC COMPONENTS ---
+export const TactileBarChart = ({ data, color = "#dca54e" }: any) => (
+    <div className="flex items-end gap-1.5 h-full w-full px-2 pb-4">
+        {data && data.length > 0 ? data.map((item: any, i: number) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-2 group/bar h-full justify-end">
+                <div className="relative w-full flex-1 flex items-end">
+                    <motion.div 
+                        initial={{ height: 0 }}
+                        animate={{ height: `${(item.value / Math.max(...data.map((d: any) => d.value || 1))) * 100}%` }}
+                        className="w-full rounded-t-lg bg-opacity-20 group-hover/bar:bg-opacity-40 transition-all relative overflow-hidden"
+                        style={{ backgroundColor: color }}
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent" />
+                    </motion.div>
+                </div>
+                <span className="text-[7px] font-black uppercase tracking-tighter text-muted-foreground">{item.label}</span>
+            </div>
+        )) : null}
+    </div>
+);
+
+export const TactileAreaChart = ({ data, color = "#dca54e" }: any) => (
+    <div className="relative w-full h-40 bg-black/20 rounded-2xl border border-white/5 overflow-hidden p-2">
+        <div className="absolute inset-0 dots-pattern opacity-10" />
+        <div className="relative z-10 w-full h-full flex items-end gap-0.5">
+            {data && data.length > 0 ? data.map((item: any, i: number) => (
+                <motion.div 
+                    key={i}
+                    initial={{ height: 0 }}
+                    animate={{ height: `${item.value || 0}%` }}
+                    className="flex-1"
+                    style={{ 
+                        backgroundColor: color, 
+                        opacity: 0.1 + ((item.value || 0) / 100),
+                        boxShadow: `0 0 10px ${color}11`
+                    }}
+                />
+            )) : null}
+        </div>
+    </div>
+);

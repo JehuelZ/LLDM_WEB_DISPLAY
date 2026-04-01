@@ -11,7 +11,6 @@ import { es } from 'date-fns/locale'
 import { useAppStore, DailySchedule } from '@/lib/store'
 import { cn } from '@/lib/utils'
 import { TactileGlassCard, TactileSelect, TactileInput } from '@/components/admin/TactileUI'
-import PremiumCalendar from '@/components/PremiumCalendar'
 
 interface HorariosTabProps {
     currentDate: string
@@ -74,11 +73,6 @@ export const HorariosTab = ({
             const currentSlot = currentDaySchedule.slots[slot];
             const updatedSlot = { ...currentSlot, ...updates };
             
-            // For special multi-leader slots (evening)
-            if (updates.leaderId && !updatedSlot.leaderIds) {
-                updatedSlot.leaderIds = [updates.leaderId];
-            }
-
             const updatedSchedule = {
                 ...currentDaySchedule,
                 slots: {
@@ -87,7 +81,7 @@ export const HorariosTab = ({
                 }
             };
 
-            await saveScheduleDayToCloud(currentDate, updatedSchedule);
+            await saveScheduleDayToCloud(currentDate, updatedSchedule as any);
             showNotification('Horario actualizado correctamente', 'success');
         } catch (error) {
             console.error("Error updating slot:", error);
@@ -120,39 +114,12 @@ export const HorariosTab = ({
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="relative group">
-                        <button
-                            onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-                            className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50 relative z-20"
-                        >
-                            <CalendarClock className="w-3.5 h-3.5 mr-2 text-primary" />
-                            {isCalendarOpen ? 'CERRAR CALENDARIO' : 'CAMBIAR FECHA'}
-                        </button>
-                        
-                        <AnimatePresence>
-                            {isCalendarOpen && (
-                                <div className="fixed inset-0 sm:absolute sm:top-full sm:right-0 sm:inset-auto mt-0 sm:mt-4 z-[100] flex items-center justify-center sm:block p-4 sm:p-0 w-full sm:w-[340px]">
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                                        className="shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full max-w-[340px] sm:max-w-none"
-                                    >
-                                        <PremiumCalendar 
-                                            selectedDate={currentDate}
-                                            onDateSelect={(date) => {
-                                                setCurrentDate(date);
-                                                setIsCalendarOpen(false);
-                                            }}
-                                            theme="primitivo"
-                                        />
-                                    </motion.div>
-                                    <div 
-                                        className="fixed inset-0 bg-black/80 backdrop-blur-md sm:bg-transparent sm:backdrop-blur-none z-[-1]" 
-                                        onClick={() => setIsCalendarOpen(false)}
-                                    />
-                                </div>
-                            )}
-                        </AnimatePresence>
+                        <input
+                            type="date"
+                            value={currentDate}
+                            onChange={(e) => setCurrentDate(e.target.value)}
+                            className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50 relative z-20 outline-none"
+                        />
                     </div>
                     <button
                         onClick={() => {
@@ -395,10 +362,6 @@ export const HorariosTab = ({
                             searchable={false}
                             onChange={(val: string) => {
                                 const updates: any = { type: val };
-                                const isMulti = ['special', 'youth', 'praise', 'married', 'children'].includes(val);
-                                if (!isMulti && currentDaySchedule.slots['evening'].leaderIds.length > 1) {
-                                    updates.leaderIds = [currentDaySchedule.slots['evening'].leaderIds[0]];
-                                }
                                 updateSlot('evening', updates);
                             }}
                             options={[

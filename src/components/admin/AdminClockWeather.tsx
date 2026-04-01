@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Clock, Cloud, Sun, CloudRain, CloudLightning, Thermometer, MapPin, Radio } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
+import { Clock, Search, Cloud, Sun, CloudRain, MapPin, Radio } from 'lucide-react';
+import { format, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
@@ -22,19 +22,28 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
     const { settings, monthlySchedule, currentDate } = useAppStore();
     const isDark = settings.themeMode === 'dark';
 
-    // Mock weather data
-    const [weather] = useState({
-        temp: 24,
-        condition: 'Despejado',
-        city: 'Rodeo',
-        icon: Sun,
-        forecast: [
-            { day: 'Dom', temp: 26, icon: Sun, condition: 'Soleado' },
-            { day: 'Lun', temp: 22, icon: Cloud, condition: 'Nublado' },
-            { day: 'Mar', temp: 19, icon: CloudRain, condition: 'Lluvia' },
-            { day: 'Mié', temp: 21, icon: Cloud, condition: 'Parcial' },
-            { day: 'Jue', temp: 25, icon: Sun, condition: 'Soleado' },
-        ]
+    // Dynamic weather data - Days are calculated based on current date
+    const [weather] = useState(() => {
+        const conditions = [
+            { dayOffset: 1, temp: 26, icon: Sun, condition: 'Soleado' },
+            { dayOffset: 2, temp: 22, icon: Cloud, condition: 'Nublado' },
+            { dayOffset: 3, temp: 19, icon: CloudRain, condition: 'Lluvia' },
+            { dayOffset: 4, temp: 21, icon: Cloud, condition: 'Parcial' },
+            { dayOffset: 5, temp: 25, icon: Sun, condition: 'Soleado' },
+        ];
+
+        return {
+            temp: 24,
+            condition: 'Despejado',
+            city: 'Rodeo',
+            icon: Sun,
+            forecast: conditions.map(c => ({
+                day: format(addDays(new Date(), c.dayOffset), 'eee', { locale: es }),
+                temp: c.temp,
+                icon: c.icon,
+                condition: c.condition
+            }))
+        };
     });
 
     useEffect(() => {
@@ -59,26 +68,18 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
         const curMin = time.getHours() * 60 + time.getMinutes();
         const sched = monthlySchedule[currentDate];
         if (!sched) return null;
-
         const isSunToday = time.getDay() === 0;
         const defaults = {
             '5am': { start: '05:00', end: '06:15' },
             '9am': { start: isSunToday ? '10:00' : '09:00', end: isSunToday ? '12:00' : '10:15' },
             'evening': { start: '18:30', end: '20:30' },
         };
-
         const checkActive = (slotId: '5am' | '9am' | 'evening') => {
             const slot = (sched?.slots as any)?.[slotId];
             let start = parseTimeStr(slot?.time) ?? parseTimeStr(defaults[slotId].start)!;
             let end = parseTimeStr(slot?.endTime) ?? parseTimeStr(defaults[slotId].end)!;
-
-            if (slotId === '9am' && isSunToday) {
-                if (slot?.time === '09:00 AM' || !slot?.time) start = 600; // 10:00 AM
-                if (slot?.endTime === '10:00 AM' || !slot?.endTime) end = 720; // 12:00 PM
-            }
             return curMin >= start && curMin <= end;
         };
-
         if (checkActive('9am')) return { id: '9am', label: isSunToday ? 'Dominical' : 'Oración' };
         if (checkActive('evening')) return { id: 'evening', label: 'Servicio' };
         if (checkActive('5am')) return { id: '5am', label: 'Oración 5AM' };
@@ -89,78 +90,92 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
 
     return (
         <div className={cn(
-            "flex flex-col gap-4 p-6 rounded-3xl transition-all duration-500 group/weather",
-            !compact && "bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] backdrop-blur-md shadow-xl",
+            "flex items-center gap-6 p-4 transition-all duration-500 group/weather shadow-none border-none bg-transparent",
+            !compact ? "bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] backdrop-blur-md shadow-xl p-6 rounded-3xl" : "p-0",
             className
         )}>
-            <div className="flex items-center justify-between gap-8">
-                {/* Clock Section */}
-                <div className="flex items-center gap-4 border-r border-[var(--tactile-border)] pr-8">
-                    <div className={cn(
-                        "p-3 rounded-2xl bg-primary/10 border border-primary/20",
-                        isDark ? "text-primary" : "text-primary-dark"
-                    )}>
-                        <Clock className="w-5 h-5" />
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-2xl font-black tracking-tighter tabular-nums leading-none">
-                            {format(time, 'HH:mm')}
-                            <span className="text-sm opacity-40 ml-1">{format(time, 'ss')}</span>
-                        </span>
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--tactile-text-sub)] mt-1.5">
-                            {format(time, "EEEE, d 'de' MMMM", { locale: es })}
-                        </span>
-                    </div>
+            {/* Searcher Section - FIRST POSITION */}
+            <div className="relative group/search flex-1 min-w-[200px] max-w-[280px]">
+                <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground/30 group-focus-within/search:text-primary transition-colors">
+                    <Search className="w-4 h-4" />
                 </div>
-
-                {/* Main Weather Section */}
-                <div className="flex items-center gap-4 flex-1">
-                    <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 group-hover/weather:scale-110 transition-transform duration-500">
-                        <weather.icon className="w-6 h-6" />
-                    </div>
-                    <div className="flex flex-col">
-                        <div className="flex items-center gap-2">
-                            <span className="text-2xl font-black tracking-tighter tabular-nums leading-none">
-                                {settings.weatherUnit === 'fahrenheit' ? Math.round(weather.temp * 1.8 + 32) : weather.temp}°
-                            </span>
-                            <span className="text-xs font-black text-[var(--tactile-text-sub)] uppercase">
-                                {settings.weatherUnit === 'fahrenheit' ? 'F' : 'C'}
-                            </span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)] mt-1.5">
-                            <MapPin className="w-3 h-3 text-primary" />
-                            {weather.city} • {weather.condition}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Live Indicator (Optional compact version) */}
-                <AnimatePresence>
-                    {activeSession && (
-                        <Link href="/display" target="_blank">
-                            <motion.div 
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="px-4 py-2 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-3 cursor-pointer group/live"
-                            >
-                                <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444] animate-pulse" />
-                                <span className="text-[10px] font-black text-red-500 uppercase tracking-widest leading-none">VIVO: {activeSession.label}</span>
-                            </motion.div>
-                        </Link>
-                    )}
-                </AnimatePresence>
+                <input 
+                    type="text" 
+                    placeholder="Buscar..." 
+                    className="w-full h-11 pl-11 pr-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] focus:bg-white/[0.06] focus:border-primary/30 transition-all text-xs font-bold tracking-tight placeholder:text-muted-foreground/20 focus:outline-none"
+                />
             </div>
 
-            {/* 5-Day Forecast Grid */}
-            <div className="grid grid-cols-5 gap-3 pt-4 border-t border-[var(--tactile-border)]">
+            {/* Clock Section */}
+            <div className="flex items-center gap-4 border-r border-white/5 pr-6 shrink-0">
+                <div className={cn(
+                    "p-2.5 rounded-xl bg-primary/10 border border-primary/20",
+                    isDark ? "text-primary" : "text-primary-dark"
+                )}>
+                    <Clock className="w-4 h-4" />
+                </div>
+                <div className="flex flex-col">
+                    <span className="text-xl font-black tracking-tighter tabular-nums leading-none">
+                        {format(time, 'HH:mm')}
+                        <span className="text-[10px] opacity-40 ml-1">{format(time, 'ss')}</span>
+                    </span>
+                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground mt-1 opacity-60">
+                        {format(time, "EEEE, d 'de' MMMM", { locale: es })}
+                    </span>
+                </div>
+            </div>
+
+            {/* Main Weather Section */}
+            <div className="flex items-center gap-4 border-r border-white/5 pr-6 shrink-0">
+                <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 group-hover/weather:scale-110 transition-transform duration-500">
+                    <weather.icon className="w-5 h-5" />
+                </div>
+                <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5 leading-none">
+                        <span className="text-xl font-black tracking-tighter tabular-nums">
+                            {settings.weatherUnit === 'fahrenheit' ? Math.round(weather.temp * 1.8 + 32) : weather.temp}°
+                        </span>
+                        <span className="text-[9px] font-black text-muted-foreground uppercase">
+                            {settings.weatherUnit === 'fahrenheit' ? 'F' : 'C'}
+                        </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-1 opacity-60">
+                        {weather.city} • {weather.condition}
+                    </div>
+                </div>
+            </div>
+
+            {/* 5-Day Forecast - LINEAR INTEGRATION */}
+            <div className="flex items-center gap-2.5">
                 {weather.forecast.map((f, i) => (
-                    <div key={i} className="flex flex-col items-center gap-2 p-3 rounded-2xl bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] hover:border-primary/30 transition-all group/day cursor-help">
-                        <span className="text-[9px] font-black text-[var(--tactile-text-sub)] uppercase tracking-widest">{f.day}</span>
-                        <f.icon className="w-4 h-4 text-amber-500/70 group-hover/day:scale-125 transition-transform" />
-                        <span className="text-sm font-black tracking-tighter">{f.temp}°</span>
+                    <div 
+                        key={i} 
+                        className="flex items-center gap-3 p-1.5 px-3 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:border-primary/30 hover:bg-white/[0.06] transition-all group/day cursor-help min-w-[70px]"
+                    >
+                        <div className="flex flex-col items-start leading-none gap-1">
+                            <span className="text-[7px] font-black text-muted-foreground uppercase tracking-[0.15em] leading-none">{f.day}</span>
+                            <span className="text-[11px] font-black tracking-tighter text-foreground tabular-nums leading-none">{f.temp}°</span>
+                        </div>
+                        <f.icon className="w-3.5 h-3.5 text-amber-500/60" />
                     </div>
                 ))}
             </div>
+
+            {/* Live Indicator */}
+            <AnimatePresence>
+                {activeSession && (
+                    <Link href="/display" target="_blank" className="ml-2">
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center gap-2.5 cursor-pointer group/live whitespace-nowrap"
+                        >
+                            <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444] animate-pulse" />
+                            <span className="text-[9px] font-black text-red-500 uppercase tracking-[0.2em] leading-none">{activeSession.label}</span>
+                        </motion.div>
+                    </Link>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

@@ -101,11 +101,10 @@ const StatDoughnut = ({
                         fill="transparent"
                         stroke="currentColor"
                         strokeWidth="12"
-                        className="text-black/80 dark:text-[#0a0c10]"
+                        className="text-black/80 dark:text-[#0a0c10] transition-all duration-1000 ease-out"
                         strokeDasharray={circumference}
                         style={{ strokeDashoffset }}
                         strokeLinecap="round"
-                        className="transition-all duration-1000 ease-out"
                     />
 
                     {/* Progress Circle (Neon Core) */}
@@ -521,7 +520,9 @@ export default function MembersPage() {
                                                     <div>
                                                         <div className="font-black text-foreground group-hover:text-primary transition-colors text-sm tracking-tight">{member.name}</div>
                                                         <div className="flex gap-2 items-center mt-1">
-                                                            <span className="admin-badge-primitivo">{member.gender === 'Brother' || member.gender === 'Male' ? 'VARON' : 'HERMANA'}</span>
+                                                            <span className="admin-badge-primitivo">
+                                                                {member.gender === 'Varon' ? 'VARON' : 'HERMANA'}
+                                                            </span>
                                                             <span className="admin-badge-primitivo">{member.member_group}</span>
                                                         </div>
                                                     </div>

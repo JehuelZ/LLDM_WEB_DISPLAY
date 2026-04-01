@@ -36,7 +36,7 @@ const inter = Inter({
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-noto-sans", // Wait, this was --font-montserrat in the original? Let me check.
+  variable: "--font-montserrat",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -87,7 +87,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${saira.variable} ${outfit.variable} ${sora.variable} ${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable} ${orbitron.variable} ${blackOps.variable} ${notoSans.variable} ${poppins.variable} ${barlow.variable} antialiased`}>
+      <body suppressHydrationWarning className={`${saira.variable} ${outfit.variable} ${sora.variable} ${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable} ${orbitron.variable} ${blackOps.variable} ${notoSans.variable} ${poppins.variable} ${barlow.variable} antialiased`}>
         <script
           dangerouslySetInnerHTML={{
             __html: `

@@ -473,7 +473,7 @@ export const useAppStore = create<AppState>()(
                     .from('schedule')
                     .select('*')
                     .eq('date', targetDate)
-                    .single();
+                    .maybeSingle();
 
                 if (data) {
                     // Parse sundayType from topic field (format: "dominical:TYPE")
@@ -801,7 +801,7 @@ export const useAppStore = create<AppState>()(
                     // NOTIFICAR AL USUARIO SI HA SIDO ACTIVADO (solo si hay email y es distinto de lo anterior)
                     if (updates.status === 'Activo' && updates.email) {
                         try {
-                            await supabase.from('messages').insert({
+                            await supabase.from('attendance_messages').insert({
                                 receiver_id: cleanId,
                                 subject: '¡Tu cuenta ha sido activada!',
                                 content: 'Ya puedes acceder a todas las funciones del Tablero Digital LLDM Rodeo.'
@@ -1118,7 +1118,7 @@ export const useAppStore = create<AppState>()(
                             set({ currentUser: { ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: [] } as UserProfile });
                             
                             // Notificar al admin sobre la nueva solicitud
-                            await supabase.from('messages').insert({
+                            await supabase.from('attendance_messages').insert({
                                 sender_id: authUserId,
                                 target_role: 'Administrador',
                                 subject: 'Nueva Solicitud de Acceso',
@@ -1664,7 +1664,7 @@ export const useAppStore = create<AppState>()(
             },
 
             sendCloudMessage: async (msg: Partial<Message>) => {
-                const { error } = await supabase.from('messages').insert({
+                const { error } = await supabase.from('attendance_messages').insert({
                     sender_id: msg.senderId,
                     receiver_id: msg.receiverId,
                     target_role: msg.targetRole,
@@ -1685,7 +1685,7 @@ export const useAppStore = create<AppState>()(
                 const choirQuery = isChoirMember ? `,target_role.eq.'Coro'` : '';
 
                 const { data, error } = await supabase
-                    .from('messages')
+                    .from('attendance_messages')
                     .select('*, sender:profiles!sender_id(name)')
                     .or(`receiver_id.eq.${session.user.id},target_role.eq.'${currentUser.role}'${choirQuery}`)
                     .order('created_at', { ascending: false });
@@ -1712,7 +1712,7 @@ export const useAppStore = create<AppState>()(
             },
 
             markMessageAsRead: async (id) => {
-                await supabase.from('messages').update({ is_read: true }).eq('id', id);
+                await supabase.from('attendance_messages').update({ is_read: true }).eq('id', id);
                 set(state => ({
                     messages: state.messages.map(m => m.id === id ? { ...m, isRead: true } : m)
                 }));
@@ -1721,7 +1721,7 @@ export const useAppStore = create<AppState>()(
             subscribeToMessages: () => {
                 const channel = supabase
                     .channel('messages_realtime')
-                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, (payload) => {
+                    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'attendance_messages' }, (payload) => {
                         const newMsg = payload.new as any;
                         const currentUser = get().currentUser;
                         const session = get().authSession;
@@ -2448,7 +2448,7 @@ export const useAppStore = create<AppState>()(
                 const totalMembers = get().members.filter(m => m.status === 'Activo').length;
                 const daysInInterval = eachDayOfInterval({ start: startDate, end: endDate });
 
-                return daysInInterval.map((day) => {
+                return daysInInterval.map((day, index) => {
                     const dateStr = format(day, 'yyyy-MM-dd');
                     const dayRecords = data?.filter(r => r.date === dateStr) || [];
                     const uniqueAttended = new Set(dayRecords.map(r => r.member_id)).size;
@@ -2457,7 +2457,7 @@ export const useAppStore = create<AppState>()(
                     
                     return {
                         date: dateStr,
-                        label: format(day, range === 7 ? 'eee d' : 'd'), // Letras si son pocos días
+                        label: (index + 1).toString(),
                         value: percentage,
                         total: 100
                     };

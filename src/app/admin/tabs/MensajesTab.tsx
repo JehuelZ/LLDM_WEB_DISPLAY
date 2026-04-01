@@ -3,12 +3,12 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-    MessageSquare, CheckCircle, Reply, CheckCircle2, User
+    MessageSquare, Reply, CheckCircle2, User, 
+    Bell, Zap, Shield, ArrowRight, Trash2,
+    Activity, Radio, Terminal
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { 
-    TactileGlassCard 
-} from '@/components/admin/TactileUI'
+import { TactileGlassCard } from '@/components/admin/TactileUI'
 import { format, parseISO } from 'date-fns'
 
 interface MensajesTabProps {
@@ -33,87 +33,151 @@ export const MensajesTab = ({
 
     return (
         <motion.div
-            key="mensajes"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 md:grid-cols-12 gap-8"
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="max-w-5xl mx-auto space-y-10"
         >
-            <div className="col-span-1 md:col-span-12 px-4">
-                <h2 className="text-4xl font-black capitalize tracking-tighter mb-8 group">Buzón de <span className="text-primary group-hover:text-muted-foreground transition-colors">Mensajes Admin</span></h2>
+            {/* INBOX HEADER - INDUSTRIAL MONITOR STYLE */}
+            <div className="relative p-8 rounded-[40px] bg-[#0b101e] border-t-4 border-t-[#dca54e] border-x border-b border-[#dca54e]/10 overflow-hidden shadow-2xl">
+                <div className="absolute top-0 right-0 p-6 flex gap-3 items-center">
+                    <div className="flex gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#dca54e] animate-pulse" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#dca54e]/40" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#dca54e]/20" />
+                    </div>
+                    <span className="text-[8px] font-black uppercase tracking-[0.4em] text-[#dca54e]/60">CONSOLA ACTIVA</span>
+                </div>
+                
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 bg-[#dca54e]/10 rounded-xl">
+                                <Radio className="w-4 h-4 text-[#dca54e]" />
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dca54e]">Canal de Comunicaciones</span>
+                        </div>
+                        <h2 className="text-4xl font-black font-orbitron text-white italic tracking-tighter uppercase">
+                            Buzón de <span className="text-[#dca54e]">Mensajes</span>
+                        </h2>
+                    </div>
+                    <div className="flex items-center gap-4 bg-black/40 p-4 rounded-3xl border border-white/5">
+                        <div className="text-right">
+                            <p className="text-[8px] font-black uppercase text-muted-foreground tracking-widest mb-1">Total Entrantes</p>
+                            <p className="text-2xl font-black font-orbitron text-white">{adminMessages.length}</p>
+                        </div>
+                        <div className="w-px h-10 bg-white/10" />
+                        <div className="text-right">
+                            <p className="text-[8px] font-black uppercase text-primary tracking-widest mb-1">Sin Leer</p>
+                            <p className="text-2xl font-black font-orbitron text-primary">{adminMessages.filter(m => !m.isRead).length}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div className="col-span-1 md:col-span-12 space-y-4">
+            {/* MESSAGES LIST - ROBUST BOXES */}
+            <div className="space-y-6">
                 {adminMessages.length === 0 ? (
-                    <TactileGlassCard className="py-20 flex flex-col items-center justify-center opacity-40">
-                        <MessageSquare className="w-20 h-20 mb-6" />
-                        <p className="text-sm font-black capitalize tracking-[0.3em]">No hay mensajes para el administrador</p>
-                    </TactileGlassCard>
+                    <div className="py-32 flex flex-col items-center justify-center opacity-30 text-center space-y-6">
+                        <div className="w-24 h-24 rounded-full border-2 border-dashed border-white/20 flex items-center justify-center">
+                            <Terminal size={40} />
+                        </div>
+                        <p className="text-xs font-black uppercase tracking-[0.5em]">Frecuencia limpia: Sin transmisiones</p>
+                    </div>
                 ) : (
-                    <div className="grid grid-cols-1 gap-4">
-                        {adminMessages.map(msg => (
-                            <div key={msg.id} className={cn(
-                                "tactile-glass-panel p-6 border-l-4 transition-all",
-                                msg.isRead ? "border-l-[var(--tactile-border-strong)] opacity-70" : "border-l-primary bg-primary/5 active:scale-[0.99]"
-                            )}>
-                                <div className="flex justify-between items-start mb-4">
-                                    <div className="flex items-center gap-4">
-                                        <div className="w-12 h-12 rounded-xl bg-[var(--tactile-item-hover)] border border-[var(--tactile-border-strong)] flex items-center justify-center text-primary text-sm font-black capitalize shadow-inner">
-                                            {msg.senderName?.charAt(0) || 'U'}
+                    adminMessages.map((msg, index) => (
+                        <motion.div 
+                            key={msg.id}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className={cn(
+                                "group relative p-8 rounded-[35px] border transition-all duration-500",
+                                !msg.isRead 
+                                    ? "bg-[#0b101e] border-[#dca54e]/40 shadow-[0_20px_50px_rgba(220,165,78,0.1)]" 
+                                    : "bg-black/20 border-white/5 opacity-80"
+                            )}
+                        >
+                            {/* NEW MESSAGE BADGE */}
+                            {!msg.isRead && (
+                                <div className="absolute top-0 left-12 -translate-y-1/2 bg-[#dca54e] text-black text-[8px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(220,165,78,0.4)]">
+                                    Nuevo Mensaje
+                                </div>
+                            )}
+
+                            <div className="flex flex-col md:flex-row gap-8">
+                                {/* Sender Info - Sidebar Style */}
+                                <div className="md:w-48 flex flex-row md:flex-col items-center md:items-start gap-4 border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 md:pr-6">
+                                    <div className="relative">
+                                        <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-[#dca54e]/20 to-black border border-[#dca54e]/30 flex items-center justify-center overflow-hidden">
+                                            {msg.senderAvatar ? (
+                                                <img src={msg.senderAvatar} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <User className="w-8 h-8 text-[#dca54e]" />
+                                            )}
                                         </div>
-                                        <div>
-                                            <h4 className="font-black text-foreground text-lg flex items-center gap-2">
-                                                {msg.senderName || 'Usuario'}
-                                                {!msg.isRead && <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />}
-                                            </h4>
-                                            <span className="text-[10px] text-muted-foreground capitalize font-bold tracking-widest">{msg.createdAt ? format(parseISO(msg.createdAt), "d MMM, h:mm a") : 'Ahora'}</span>
+                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-[#0b101e] border border-white/10 flex items-center justify-center">
+                                            <div className={cn("w-2 h-2 rounded-full", msg.isRead ? "bg-white/20" : "bg-emerald-500")} />
                                         </div>
                                     </div>
-                                    <div className="flex gap-2">
+                                    <div className="flex-1">
+                                        <h4 className="text-sm font-black text-white uppercase tracking-tight truncate max-w-[150px]">{msg.senderName || 'Anónimo'}</h4>
+                                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
+                                            {msg.createdAt ? format(parseISO(msg.createdAt), "d MMM | h:mm a") : 'Terminal Local'}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Message Content - Massive Area */}
+                                <div className="flex-1 space-y-6">
+                                    <div className="relative">
+                                        <p className="text-base font-medium text-white/90 leading-relaxed italic bg-white/5 p-8 rounded-[30px] border border-white/5">
+                                            "{msg.content}"
+                                        </p>
+                                    </div>
+
+                                    {/* Action Buttons - Tactile Relieve */}
+                                    <div className="flex items-center justify-end gap-3">
                                         {!msg.isRead && (
                                             <button
                                                 onClick={() => markMessageAsRead(msg.id)}
-                                                className="w-10 h-10 rounded-xl bg-[var(--tactile-item-hover)] border border-[var(--tactile-border-strong)] flex items-center justify-center text-emerald-400 hover:bg-primary/20 transition-all font-black text-xs"
-                                                title="Marcar como leído"
+                                                className="h-10 px-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2"
                                             >
-                                                <CheckCircle2 className="w-5 h-5" />
+                                                <CheckCircle2 size={14} /> Archivar
                                             </button>
                                         )}
                                         <button
                                             onClick={() => setReplyingTo(replyingTo === msg.id ? null : msg.id)}
-                                            className="w-10 h-10 rounded-xl bg-[var(--tactile-item-hover)] border border-[var(--tactile-border-strong)] flex items-center justify-center text-primary hover:bg-primary/20 transition-all font-black text-xs"
-                                            title="Responder"
+                                            className={cn(
+                                                "h-10 px-8 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg",
+                                                replyingTo === msg.id 
+                                                    ? "bg-white text-black" 
+                                                    : "bg-[#dca54e] text-black shadow-[#dca54e]/20"
+                                            )}
                                         >
-                                            <Reply className="w-5 h-5" />
+                                            <Reply size={14} /> {replyingTo === msg.id ? 'Cerrar Terminal' : 'Abrir Respuesta'}
                                         </button>
                                     </div>
-                                </div>
 
-                                <div className="bg-[var(--tactile-inner-bg)]/60 p-5 rounded-xl border border-[var(--tactile-border)] shadow-inner mb-4">
-                                    <p className="text-sm font-medium text-muted-foreground leading-relaxed whitespace-pre-wrap">{msg.content}</p>
-                                </div>
-
-                                <AnimatePresence>
-                                    {replyingTo === msg.id && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            className="overflow-hidden"
-                                        >
-                                            <div className="pt-4 space-y-4">
+                                    {/* REPLY TERMINAL */}
+                                    <AnimatePresence>
+                                        {replyingTo === msg.id && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: 10 }}
+                                                className="mt-6 p-6 rounded-[30px] bg-black border border-[#dca54e]/20 space-y-4"
+                                            >
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <Terminal size={12} className="text-[#dca54e]" />
+                                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dca54e]">Terminal de Respuesta</span>
+                                                </div>
                                                 <textarea
                                                     value={replyText}
                                                     onChange={(e) => setReplyText(e.target.value)}
-                                                    placeholder={`Escribe tu respuesta para ${msg.senderName}...`}
-                                                    className="w-full h-32 bg-[var(--tactile-inner-bg-alt)] border border-primary/20 rounded-xl p-6 text-sm font-medium focus:outline-none focus:border-primary/50 transition-all resize-none shadow-inner text-[var(--tactile-text)]"
+                                                    placeholder="Escribiendo protocolo de respuesta..."
+                                                    className="w-full h-40 bg-white/5 border border-white/5 rounded-2xl p-6 text-sm font-medium focus:outline-none focus:border-[#dca54e]/50 transition-all resize-none text-white italic"
                                                 />
-                                                <div className="flex justify-end gap-3">
-                                                    <button
-                                                        onClick={() => setReplyingTo(null)}
-                                                        className="px-6 h-12 rounded-xl text-[10px] font-black capitalize tracking-widest text-muted-foreground hover:text-foreground"
-                                                    >
-                                                        CANCELAR
-                                                    </button>
+                                                <div className="flex justify-end">
                                                     <button
                                                         onClick={async () => {
                                                             if (!replyText.trim()) return;
@@ -125,20 +189,20 @@ export const MensajesTab = ({
                                                             });
                                                             setReplyText('');
                                                             setReplyingTo(null);
-                                                            showNotification('Respuesta enviada.', 'success');
+                                                            showNotification('Respuesta transmitida con éxito.', 'success');
                                                         }}
-                                                        className="px-8 h-12 bg-amber-500 text-black rounded-xl text-[10px] font-black capitalize tracking-widest shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all"
+                                                        className="h-12 px-10 bg-gradient-to-r from-[#dca54e] to-[#b88636] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-[#dca54e]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
                                                     >
-                                                        ENVIAR RESPUESTA
+                                                        Transmitir Protocolo <ArrowRight size={16} />
                                                     </button>
                                                 </div>
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
                             </div>
-                        ))}
-                    </div>
+                        </motion.div>
+                    ))
                 )}
             </div>
         </motion.div>
