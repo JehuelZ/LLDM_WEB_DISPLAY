@@ -2071,8 +2071,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         {/* Unified Header & Sub-Tab Navigation */}
                         <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-1 bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[2.5rem] px-8 py-4 sticky top-4 z-[40] shadow-2xl">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-primary/20 rounded-2xl border border-primary/30">
-                                    <Settings className="h-6 w-6 text-primary" />
+                                <div className="p-3 bg-emerald-500/20 rounded-2xl border border-emerald-500/30">
+                                    <Settings className="h-6 w-6 text-emerald-500" />
                                 </div>
                                 <div>
                                     <h2 className="text-xl font-black uppercase tracking-tighter text-foreground">Configuración Central</h2>
@@ -2080,7 +2080,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </div>
                             </div>
 
-                            <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/[0.03] gap-1">
+                            {/* Rubik-style Navigation Tabs */}
+                            <div className="flex items-end gap-1 px-2 border-b border-white/10 w-full md:w-auto self-end">
                                 {[
                                     { id: 'general', label: 'General', icon: Layers },
                                     { id: 'pantalla', label: 'Pantalla (TV)', icon: Eye },
@@ -2090,22 +2091,20 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         key={tab.id}
                                         onClick={() => setConfigSubTab(tab.id as any)}
                                         className={cn(
-                                            "flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                            "relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.1em] transition-all duration-500 group",
                                             configSubTab === tab.id 
-                                                ? "bg-primary text-black shadow-[0_10px_20px_rgba(var(--primary-rgb),0.3)] scale-[1.02]" 
-                                                : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
+                                                ? "bg-emerald-600 text-white rounded-t-2xl z-[10] shadow-[0_-10px_40px_rgba(16,185,129,0.3)] translate-y-[1px]" 
+                                                : "text-slate-500 hover:text-slate-300 hover:bg-white/[0.02] rounded-t-xl mb-0.5"
                                         )}
                                     >
-                                        <tab.icon className="w-3.5 h-3.5" /> {tab.label}
+                                        <tab.icon className={cn("w-4 h-4 transition-transform group-hover:scale-110", configSubTab === tab.id ? "text-white" : "text-slate-600")} /> 
+                                        {tab.label}
                                     </button>
                                 ))}
                             </div>
 
                             <Button
-                                className={cn(
-                                    "text-white font-black uppercase tracking-widest gap-2 h-12 px-8 rounded-2xl border transition-all",
-                                    settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500 border-amber-400/30" : "bg-emerald-600 hover:bg-emerald-500 border-emerald-400/30 shadow-[0_10px_30px_rgba(16,185,129,0.3)]"
-                                )}
+                                className="text-white font-black uppercase tracking-widest gap-2 h-12 px-8 rounded-2xl border border-emerald-400/20 bg-emerald-600 hover:bg-emerald-500 transition-all shadow-[0_10px_30px_rgba(16,185,129,0.3)]"
                                 onClick={async () => {
                                     setIsSaving(true);
                                     await saveSettingsToCloud(settings);
@@ -2114,7 +2113,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 }}
                                 disabled={isSaving}
                             >
-                                <Save className="w-4 h-4" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
+                                <Save className="w-4 h-4 text-white" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
                             </Button>
                         </div>
 
