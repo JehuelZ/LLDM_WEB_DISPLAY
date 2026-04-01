@@ -14,7 +14,7 @@ import {
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target, Contrast,
     Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert,
-    Sunrise, BookOpen
+    Sunrise, BookOpen, Palette, Layers, Eye
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
@@ -632,8 +632,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [fontSearch, setFontSearch] = useState('');
     const [focusedFontIndex, setFocusedFontIndex] = useState(0);
 
-    const queryTab = searchParams.get('tab') || 'dashboard';
-    const [activeTab, setActiveTab] = useState(queryTab);
+    const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'dashboard');
+    const [configSubTab, setConfigSubTab] = useState<'general' | 'pantalla' | 'estetica'>('general');
     const [demoMode, setDemoMode] = useState(false);
     const [demoFluctuation, setDemoFluctuation] = useState(0);
     const [recentCheckins, setRecentCheckins] = useState<{name: string, time: string}[]>([]);
@@ -667,6 +667,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     }, [demoMode]);
 
     // Sync state with query param
+    const queryTab = searchParams.get('tab') || 'dashboard';
+
     useEffect(() => {
         const aliasMap: Record<string, string> = {
             'mensajes': 'dashboard',
@@ -678,8 +680,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
             'configuracion': 'configuracion'
         };
 
-        const targetTab = queryTab;
-        const mappedTab = aliasMap[targetTab] || targetTab;
+        const mappedTab = aliasMap[queryTab] || queryTab;
 
         const validTabs = ['dashboard', 'horarios', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil'];
 
@@ -1842,770 +1843,6 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                 )
             }
             {
-                activeTab === 'contenido' && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="space-y-8"
-                    >
-                        {/* 1. SECCIÓN: IDENTIDAD DE MARCA (LOGOS) */}
-                        <Card className="glass-card border-t-4 border-t-blue-500">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
-                                    <LayoutDashboard className="h-5 w-5 text-blue-500" /> Identidad Visual
-                                </CardTitle>
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                                    Define el imagotipo principal que representa a la iglesia en la pizarra
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-8">
-                                <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                                    {/* Sin Logotipo */}
-                                    <motion.button
-                                        whileHover={{ y: -5, scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={() => {
-                                            setSettings({ churchLogoUrl: '' });
-                                            saveSettingsToCloud({ churchLogoUrl: '' });
-                                        }}
-                                        className={cn(
-                                            "group relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-500 overflow-hidden",
-                                            (settings.churchLogoUrl === '') ? "border-primary bg-primary/10" : "border-white/[0.03] bg-foreground/5 hover:border-white/[0.05]"
-                                        )}
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-b from-slate-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                        <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/[0.03] group-hover:border-white/[0.05] transition-all text-slate-500">
-                                            <XCircle className="w-10 h-10" />
-                                        </div>
-                                        <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest transition-colors", (settings.churchLogoUrl === '') ? "text-primary" : "text-slate-500")}>
-                                            Sin Logotipo
-                                        </span>
-                                    </motion.button>
-
-                                    {/* Slot 1 Reservado para personalización */}
-                                    {[1].map((slotIndex) => {
-                                        const slotKey = `customLogo${slotIndex}` as keyof AppSettings;
-                                        const slotUrl = (settings as any)[slotKey] as string;
-                                        const isActive = settings.churchLogoUrl === slotUrl && slotUrl;
-
-                                        return (
-                                            <div key={slotIndex} className="relative group">
-                                                {slotUrl && (
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            const updates: any = { [slotKey]: null };
-                                                            if (settings.churchLogoUrl === slotUrl) {
-                                                                updates.churchLogoUrl = '';
-                                                            }
-                                                            setSettings(updates);
-                                                            saveSettingsToCloud(updates);
-                                                        }}
-                                                        className="absolute top-2 right-2 z-50 p-2 bg-red-500/20 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100"
-                                                        title="Eliminar logo"
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                )}
-                                                <motion.div
-                                                    whileHover={{ y: -5 }}
-                                                    onClick={() => {
-                                                        if (slotUrl) {
-                                                        setSettings({ churchLogoUrl: slotUrl });
-                                                        saveSettingsToCloud({ churchLogoUrl: slotUrl });
-                                                        } else {
-                                                            document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
-                                                        }
-                                                    }}
-                                                    className={cn(
-                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full cursor-pointer",
-                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/[0.05] bg-foreground/5 hover:border-white/[0.1]"
-                                                    )}
-                                                >
-                                                    {slotUrl ? (
-                                                        <>
-                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/[0.03]">
-                                                                <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
-                                                            </div>
-                                                            <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-slate-500")}>
-                                                                Logo Principal
-                                                            </span>
-                                                            <button
-                                                                type="button"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
-                                                                }}
-                                                                className="absolute top-2 right-2 p-2 bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/20 text-white"
-                                                            >
-                                                                <Upload className="w-3 h-3" />
-                                                            </button>
-                                                        </>
-                                                    ) : (
-                                                        <div className="flex flex-col items-center justify-center gap-2 h-full py-4">
-                                                            <Plus className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
-                                                            <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Subir Logo 1</span>
-                                                        </div>
-                                                    )}
-                                                </motion.div>
-                                                <input
-                                                    type="file"
-                                                    id={`custom-logo-upload-${slotIndex}`}
-                                                    className="hidden"
-                                                    accept="image/*,.svg"
-                                                    onChange={(e) => handleCustomLogoUpload(e, slotIndex as any)}
-                                                />
-                                            </div>
-                                        );
-                                    })}
-
-                                    {/* Slots 2, 3, 4 */}
-                                    {[2, 3, 4].map((slotIndex) => {
-                                        const slotKey = `customLogo${slotIndex}` as keyof AppSettings;
-                                        const slotUrl = (settings as any)[slotKey] as string;
-                                        const isActive = settings.churchLogoUrl === slotUrl && slotUrl;
-
-                                        return (
-                                            <div key={slotIndex} className="relative group">
-                                                {slotUrl && (
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            const updates: any = { [slotKey]: null };
-                                                            if (settings.churchLogoUrl === slotUrl) {
-                                                                updates.churchLogoUrl = '';
-                                                            }
-                                                            setSettings(updates);
-                                                            saveSettingsToCloud(updates);
-                                                        }}
-                                                        className="absolute top-2 right-2 z-50 p-2 bg-red-500/20 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100"
-                                                        title="Eliminar logo"
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                )}
-                                                <motion.div
-                                                    whileHover={{ y: -5 }}
-                                                    onClick={() => {
-                                                        if (slotUrl) {
-                                                        setSettings({ churchLogoUrl: slotUrl });
-                                                        saveSettingsToCloud({ churchLogoUrl: slotUrl });
-                                                        } else {
-                                                            document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
-                                                        }
-                                                    }}
-                                                    className={cn(
-                                                        "w-full relative flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 border-dashed transition-all duration-500 overflow-hidden h-full cursor-pointer",
-                                                        isActive ? "border-primary bg-primary/10 border-solid" : "border-white/[0.05] bg-foreground/5 hover:border-white/[0.1]"
-                                                    )}
-                                                >
-                                                    {slotUrl ? (
-                                                        <>
-                                                            <div className="relative z-10 w-20 h-20 flex items-center justify-center p-2 rounded-2xl bg-white/5 backdrop-blur-md border border-white/[0.03]">
-                                                                <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
-                                                            </div>
-                                                            <span className={cn("relative z-10 text-[10px] font-black uppercase tracking-widest", isActive ? "text-primary" : "text-slate-500")}>
-                                                                Logo {slotIndex}
-                                                            </span>
-                                                            <button
-                                                                type="button"
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    document.getElementById(`custom-logo-upload-${slotIndex}`)?.click();
-                                                                }}
-                                                                className="absolute top-2 right-2 p-2 bg-white/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-primary/20 text-white"
-                                                            >
-                                                                <Upload className="w-3 h-3" />
-                                                            </button>
-                                                        </>
-                                                    ) : (
-                                                        <div className="flex flex-col items-center justify-center gap-2 h-full py-4">
-                                                            <Plus className="w-8 h-8 text-slate-600 group-hover:text-primary transition-colors" />
-                                                            <span className="text-[9px] font-black uppercase text-slate-600 tracking-tighter">Subir Logo {slotIndex}</span>
-                                                        </div>
-                                                    )}
-                                                </motion.div>
-                                                <input
-                                                    type="file"
-                                                    id={`custom-logo-upload-${slotIndex}`}
-                                                    className="hidden"
-                                                    accept="image/*,.svg"
-                                                    onChange={(e) => handleCustomLogoUpload(e, slotIndex as any)}
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* 3. SECCIÓN: FONDO Y EFECTOS DEL DISPLAY */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <Card className="glass-card border-t-4 border-t-purple-500">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
-                                        <Monitor className="h-5 w-5 text-purple-500" /> Fondo de Proyección
-                                    </CardTitle>
-                                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Logo de fondo para la pantalla gigante</CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-6">
-                                    <div className="grid grid-cols-3 gap-4">
-                                        {[
-                                            { mode: 'custom', label: 'Custom', icon: <Upload className="w-5 h-5" /> },
-                                            { mode: 'none', label: 'Limpio', icon: <X className="w-5 h-5" /> }
-                                        ].map((bg) => (
-                                            <button
-                                                key={bg.mode}
-                                                onClick={() => {
-                                                    if (bg.mode === 'custom' && settings.displayBgMode === 'custom') {
-                                                        document.getElementById('display-bg-upload-styling')?.click();
-                                                    } else {
-                                                        setSettings({ displayBgMode: bg.mode as any });
-                                                        saveSettingsToCloud({ displayBgMode: bg.mode as any });
-                                                    }
-                                                }}
-                                                className={cn(
-                                                    "flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all relative group overflow-hidden",
-                                                    settings.displayBgMode === bg.mode ? "border-primary bg-primary/10" : "border-white/[0.03] bg-foreground/5"
-                                                )}
-                                            >
-                                                {bg.mode === 'custom' && settings.displayCustomBgUrl && settings.displayBgMode === 'custom' ? (
-                                                    <img src={settings.displayCustomBgUrl} className="w-12 h-12 object-cover rounded-xl border border-white/[0.1]" />
-                                                ) : (
-                                                    <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-black/20 border border-white/[0.03]">{bg.icon}</div>
-                                                )}
-                                                <span className="text-[9px] font-black uppercase tracking-widest">{bg.label}</span>
-                                                {bg.mode === 'custom' && (
-                                                    <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <Edit2 className="w-3 h-3 text-primary" />
-                                                    </div>
-                                                )}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    {settings.displayBgMode === 'custom' && settings.displayCustomBgUrl && (
-                                        <div className="flex items-center gap-4 p-3 bg-black/40 border border-white/[0.03] rounded-2xl">
-                                            <div className="w-16 h-10 rounded-lg overflow-hidden border border-white/[0.05]">
-                                                <img src={settings.displayCustomBgUrl} className="w-full h-full object-cover" />
-                                            </div>
-                                            <div className="flex-1">
-                                                <p className="text-[9px] font-black uppercase text-slate-400">Imagen Activa</p>
-                                                <p className="text-[10px] font-bold text-primary truncate max-w-[150px]">Fondo Personalizado</p>
-                                            </div>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="text-rose-500 hover:bg-rose-500/10"
-                                                onClick={() => setSettings({ displayCustomBgUrl: '', displayBgMode: 'official' })}
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    )}
-
-                                    <input
-                                        id="display-bg-upload-styling"
-                                        type="file"
-                                        className="hidden"
-                                        accept="image/*,.svg"
-                                        onChange={async (e) => {
-                                            const file = e.target.files?.[0];
-                                            if (file) {
-                                                const compressed = await compressImage(file, 1920, 1080, 0.8);
-                                                const publicUrl = await uploadAvatar('display-bg', compressed);
-                                                if (publicUrl) {
-                                                    setSettings({
-                                                        displayCustomBgUrl: publicUrl,
-                                                        displayBgMode: 'custom',
-                                                        // Also sync as the main church logo if it's a custom upload
-                                                        churchLogoUrl: publicUrl,
-                                                        churchIcon: 'custom'
-                                                    });
-                                                }
-                                            }
-                                        }}
-                                    />
-                                </CardContent>
-                            </Card>
-
-                            <Card className="glass-card border-t-4 border-t-amber-500">
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
-                                        <Type className="h-5 w-5 text-amber-500" /> Tipografía Global
-                                    </CardTitle>
-                                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Fuente del sistema (Google Fonts)</CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-6">
-                                    <div className="space-y-6">
-                                        <div className="relative group">
-                                            {/* Outer Glow on Focus */}
-                                            <div className="absolute -inset-1 bg-amber-500/0 group-focus-within:bg-amber-500/10 rounded-[2rem] blur-xl transition-all duration-500" />
-                                            
-                                            <div className="relative bg-black/60 border border-white/[0.15] rounded-2xl overflow-hidden focus-within:border-amber-500/60 focus-within:bg-black/80 transition-all duration-300 backdrop-blur-md flex items-center px-4">
-                                                <Search className="w-4 h-4 text-slate-400 group-focus-within:text-amber-400 transition-colors" />
-                                                <input 
-                                                    type="text"
-                                                    placeholder="Buscar fuente de Google..."
-                                                    className="bg-transparent border-none outline-none flex-1 h-14 font-black uppercase text-[10px] tracking-[0.2em] text-white placeholder:text-slate-600 pl-4"
-                                                    value={fontSearch}
-                                                    onChange={(e) => {
-                                                        setFontSearch(e.target.value);
-                                                        setFocusedFontIndex(0);
-                                                    }}
-                                                    onKeyDown={(e) => {
-                                                        const filtered = GOOGLE_FONTS.filter(f => f.name.toLowerCase().includes(fontSearch.toLowerCase()));
-                                                        if (e.key === 'ArrowDown') {
-                                                            e.preventDefault();
-                                                            setFocusedFontIndex(prev => Math.min(prev + 1, filtered.length - 1));
-                                                        } else if (e.key === 'ArrowUp') {
-                                                            e.preventDefault();
-                                                            setFocusedFontIndex(prev => Math.max(prev - 1, 0));
-                                                        } else if (e.key === 'Enter' && filtered[focusedFontIndex]) {
-                                                            const selected = filtered[focusedFontIndex];
-                                                            setSettings({ fontMain: selected.name as any });
-                                                            saveSettingsToCloud({ fontMain: selected.name as any });
-                                                            showNotification(`Fuente aplicada: ${selected.name}`, 'success');
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="max-h-[500px] overflow-y-auto pr-2 custom-scrollbar space-y-2">
-                                            {GOOGLE_FONTS.filter(f => f.name.toLowerCase().includes(fontSearch.toLowerCase())).map((font, idx) => {
-                                                const isSelected = settings.fontMain === font.name;
-                                                const isFocused = focusedFontIndex === idx;
-                                                
-                                                return (
-                                                    <button
-                                                        key={font.id}
-                                                        ref={(el) => { if (isFocused) el?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }}
-                                                        onClick={() => {
-                                                            setSettings({ fontMain: font.name as any });
-                                                            saveSettingsToCloud({ fontMain: font.name as any });
-                                                            showNotification(`Fuente aplicada: ${font.name}`, 'success');
-                                                        }}
-                                                        onMouseEnter={() => setFocusedFontIndex(idx)}
-                                                        className={cn(
-                                                            "w-full p-4 rounded-2xl border-2 transition-all flex items-center justify-between group",
-                                                            isSelected ? "border-amber-500 bg-amber-500/10" : 
-                                                            isFocused ? "border-amber-500/30 bg-white/5" : "border-white/[0.03] bg-white/5 hover:border-white/[0.05]"
-                                                        )}
-                                                    >
-                                                        <div className="flex items-center gap-4">
-                                                            <div className={cn(
-                                                                "w-10 h-10 rounded-xl flex items-center justify-center text-xl font-black bg-white/5 border border-white/[0.03]",
-                                                                isSelected && "bg-amber-500/20 border-amber-500/30 text-amber-500"
-                                                            )} style={{ fontFamily: `"${font.name}", sans-serif` }}>
-                                                                Aa
-                                                            </div>
-                                                            <div className="text-left">
-                                                                <p className="text-[11px] font-black uppercase tracking-widest text-foreground group-hover:text-amber-500 transition-colors">{font.name}</p>
-                                                                <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest opacity-60">{font.category}</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex items-center gap-4">
-                                                            <span className="text-xs opacity-50 font-medium hidden md:block" style={{ fontFamily: `"${font.name}", sans-serif` }}>
-                                                                The quick brown fox jumps over the lazy dog
-                                                            </span>
-                                                            <div className={cn(
-                                                                "w-2 h-2 rounded-full transition-all",
-                                                                isSelected ? "bg-amber-500 scale-125" : "bg-white/10"
-                                                            )} />
-                                                        </div>
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-
-                                        <div className="space-y-4 p-6 bg-amber-500/5 rounded-[2rem] border border-amber-500/10">
-                                            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                                                <div className="space-y-1">
-                                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-400">Peso y Grosor (Varianza)</h4>
-                                                    <p className="text-[8px] text-slate-500 font-bold uppercase">Afecta la elegancia o fuerza del texto</p>
-                                                </div>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {[
-                                                        { label: 'DELGADA', weight: '300' },
-                                                        { label: 'NORMAL', weight: '400' },
-                                                        { label: 'MEDIANA', weight: '500' },
-                                                        { label: 'BOLD', weight: '700' },
-                                                        { label: 'EXTRA', weight: '900' },
-                                                    ].map((w) => (
-                                                        <button 
-                                                            key={w.weight}
-                                                            onClick={async () => {
-                                                                setSettings({ fontWeight: w.weight });
-                                                                await saveSettingsToCloud({ fontWeight: w.weight });
-                                                                showNotification(`Grosor actualizado: ${w.label}`, 'success');
-                                                            }}
-                                                            className={cn(
-                                                                "px-3 py-2 rounded-xl text-[8px] font-black uppercase tracking-tighter transition-all",
-                                                                settings.fontWeight === w.weight ? "bg-amber-500 text-black" : "bg-white/5 text-slate-500 hover:bg-white/10"
-                                                            )}
-                                                            style={{ fontWeight: w.weight }}
-                                                        >
-                                                            {w.label}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <div className="p-4 bg-black/20 rounded-2xl border border-white/[0.03] min-h-[60px] flex items-center justify-center">
-                                                <p className="text-center text-sm" style={{ 
-                                                    fontFamily: settings.fontMain ? `"${settings.fontMain}", sans-serif` : 'inherit',
-                                                    fontWeight: settings.fontWeight || '400'
-                                                }}>
-                                                    Previsualización: El Señor es mi fortaleza y mi escudo.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-
-                            <Card className={cn("glass-card border-t-4", settings.adminTheme === 'primitivo' ? "border-t-primary" : "border-t-emerald-500")}>
-                                <CardHeader>
-                                    <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
-                                        <Sparkles className={cn("h-5 w-5", settings.adminTheme === 'primitivo' ? "text-primary" : "text-emerald-500")} /> Partículas y Efectos
-                                    </CardTitle>
-                                    <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Dinámica visual del display</CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-6">
-                                    <div className="flex gap-2 p-1 bg-black/20 rounded-2xl border border-white/[0.03]">
-                                        <Button
-                                            variant={settings.displayBgStyle === 'static' ? "neon" : "ghost"}
-                                            className="flex-1 h-10 text-[9px] font-black uppercase rounded-xl"
-                                            onClick={() => setSettings({ displayBgStyle: 'static' })}
-                                        >
-                                            Puntos Estáticos
-                                        </Button>
-                                        <Button
-                                            variant={settings.displayBgStyle === 'dynamic' ? "neon" : "ghost"}
-                                            className="flex-1 h-10 text-[9px] font-black uppercase rounded-xl"
-                                            onClick={() => setSettings({ displayBgStyle: 'dynamic' })}
-                                        >
-                                            Partículas Animadas
-                                        </Button>
-                                    </div>
-
-                                    <div className="flex items-center justify-between p-4 bg-foreground/5 rounded-2xl border border-white/[0.03]">
-                                        <div className="space-y-1">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">Efecto Cristal (Glassmorphism)</label>
-                                            <p className="text-[8px] text-slate-500 font-bold uppercase">Agrega profundidad y reflejos</p>
-                                        </div>
-                                        <div
-                                            onClick={() => setCalendarStyles({ showGlassEffect: !calendarStyles.showGlassEffect })}
-                                            className={cn(
-                                                "w-12 h-6 rounded-full p-1 cursor-pointer transition-colors duration-300 relative",
-                                                calendarStyles.showGlassEffect ? "bg-primary" : "bg-slate-700"
-                                            )}
-                                        >
-                                            <motion.div
-                                                animate={{ x: calendarStyles.showGlassEffect ? 24 : 0 }}
-                                                className="w-4 h-4 bg-white rounded-full"
-                                            />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
-
-                        {/* 4. SECCIÓN: COLORES Y TIPOGRAFÍA */}
-                        <Card className="glass-card border-t-4 border-t-pink-500">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-xl font-black uppercase tracking-tighter">
-                                    <Sun className="h-5 w-5 text-pink-500" /> Colores y Tipografía Global
-                                </CardTitle>
-                                <CardDescription className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Paleta cromática y fuentes de toda la plataforma</CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-10">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                                    <div className="space-y-4">
-                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Color de Marca (Sistema y Display)</label>
-                                        <div className="flex items-center gap-4 p-4 bg-foreground/5 rounded-2xl border border-white/[0.03]">
-                                            <div
-                                                className="w-14 h-14 rounded-xl border-2 border-white/[0.1]"
-                                                style={{ backgroundColor: settings.primaryColor }}
-                                            />
-                                            <div className="flex-1 flex gap-2">
-                                                <Input
-                                                    type="color"
-                                                    value={settings.primaryColor}
-                                                    onChange={(e) => setSettings({ primaryColor: e.target.value })}
-                                                    className="h-12 w-16 bg-black/40 border-white/[0.05] rounded-xl cursor-pointer p-1"
-                                                />
-                                                <Input
-                                                    value={settings.primaryColor}
-                                                    onChange={(e) => setSettings({ primaryColor: e.target.value })}
-                                                    className="h-12 flex-1 bg-black/20 border-white/[0.05] rounded-xl text-xs font-black uppercase font-mono"
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div className="space-y-4">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Plantilla Visual Global</label>
-                                            <div className="grid grid-cols-2 gap-2">
-                                                {[
-                                                    { id: 'iglesia', label: '🏛️ Cátedra (Neumórfico)' },
-                                                    { id: 'cristal', label: '💎 Cristal (Moderno)' },
-                                                    { id: 'minimal', label: '🌑 Minimal (SaaS)' },
-                                                    { id: 'nocturno', label: '🌌 Nocturno (Estelar)' },
-                                                    { id: 'neon', label: '⚡ Neon (Dinámico)' },
-                                                    { id: 'luna', label: '🌙 Luna (Premium)' }
-                                                ].map((tmpl) => (
-                                                    <button
-                                                        key={tmpl.id}
-                                                        onClick={() => {
-                                                            setCalendarStyles({ template: tmpl.id as any });
-                                                            saveSettingsToCloud({ displayTemplate: tmpl.id as any });
-                                                        }}
-                                                        className={cn(
-                                                            "h-12 rounded-xl border-2 font-black uppercase text-[10px] transition-all",
-                                                            calendarStyles.template === tmpl.id ? "bg-primary/20 border-primary text-primary" : "bg-foreground/5 border-white/[0.03] text-slate-500"
-                                                        )}
-                                                    >
-                                                        {tmpl.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Identidad de Tipografía ({ALL_THEMES[calendarStyles.template]?.name})</label>
-                                            <div className="grid grid-cols-1 gap-2">
-                                                {(ALL_THEMES[calendarStyles.template]?.fontOptions || [
-                                                    { primary: 'Outfit', secondary: 'Inter', accent: 'Outfit' }
-                                                ]).map((fonts, idx) => (
-                                                    <button
-                                                        key={idx}
-                                                        onClick={() => setCalendarStyles({ fontSetIndex: idx })}
-                                                        className={cn(
-                                                            "flex flex-col p-3 rounded-xl border-2 transition-all text-left",
-                                                            calendarStyles.fontSetIndex === idx || (calendarStyles.fontSetIndex === undefined && idx === 0)
-                                                                ? "bg-primary/20 border-primary"
-                                                                : "bg-foreground/5 border-white/[0.03] opacity-60 hover:opacity-100"
-                                                        )}
-                                                    >
-                                                        <div className="flex justify-between items-center mb-1">
-                                                            <span className="text-[9px] font-black uppercase text-primary">Opción {idx + 1}</span>
-                                                            <div className="flex gap-1">
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-                                                            </div>
-                                                        </div>
-                                                        <span className={cn("text-sm font-bold truncate", fonts.primary)}>Aa Bb Cc — {fonts.primary.replace('font-', '')}</span>
-                                                        <div className="flex gap-2 mt-1">
-                                                            <span className={cn("text-[8px] uppercase tracking-tighter opacity-50", fonts.secondary)}>Secondary: {fonts.secondary.replace('font-', '')}</span>
-                                                            <span className={cn("text-[8px] uppercase tracking-tighter opacity-50", fonts.accent)}>Accent: {fonts.accent.replace('font-', '')}</span>
-                                                        </div>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* ── NEON FORGE EXCLUSIVE CONTROLS ── */}
-                                {calendarStyles.template === 'neon' && (
-                                    <div className="space-y-6 pt-6 border-t border-white/[0.03]">
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2">
-                                                <span>⚡</span> Neon Forge — Variante de Color
-                                            </label>
-                                            <div className="grid grid-cols-3 gap-3 mt-3">
-                                                {[
-                                                    { id: 'lime', label: '⚡ Lima', desc: 'Verde Eléctrico + Violeta', accent: '#BBFF00' },
-                                                    { id: 'cyan', label: '💠 Cian', desc: 'Azul Neón + Índigo', accent: '#00E5FF' },
-                                                    { id: 'amber', label: '🔥 Ámbar', desc: 'Naranja + Rojo', accent: '#FFB800' },
-                                                ].map((v) => (
-                                                    <button
-                                                        key={v.id}
-                                                        onClick={() => setSettings({ neonForgeVariant: v.id as any })}
-                                                        className={cn(
-                                                            "flex flex-col items-start p-3 rounded-xl border-2 transition-all text-left gap-1",
-                                                            (settings.neonForgeVariant || 'lime') === v.id
-                                                                ? "border-primary bg-primary/10"
-                                                                : "border-white/[0.03] bg-foreground/5 opacity-60 hover:opacity-100"
-                                                        )}
-                                                    >
-                                                        <div className="w-6 h-6 rounded-lg mb-1" style={{ background: v.accent }} />
-                                                        <span className="text-[11px] font-black uppercase tracking-wide text-foreground">{v.label}</span>
-                                                        <span className="text-[9px] text-slate-500">{v.desc}</span>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2 mb-3">
-                                                <span>🌤</span> Ciudad para el Clima
-                                            </label>
-                                            <CitySearch
-                                                value={settings.neonForgeCityData || null}
-                                                onChange={(city) => setSettings({ neonForgeCityData: city })}
-                                                accentColor={
-                                                    (settings.neonForgeVariant || 'lime') === 'lime' ? '#BBFF00' :
-                                                        (settings.neonForgeVariant || 'lime') === 'cyan' ? '#00E5FF' : '#FFB800'
-                                                }
-                                            />
-                                            <p className="text-[9px] text-slate-600 mt-2 ml-1">
-                                                Busca por nombre de ciudad, estado o código postal · Powered by Open-Meteo Geocoding
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* ── AQUA EXCLUSIVE CONTROLS ── */}
-                                {calendarStyles.template === 'cristal' && (
-                                    <div className="space-y-6 pt-6 border-t border-white/[0.03]">
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2">
-                                                <span>💎</span> Cristal — Variante de Color
-                                            </label>
-                                            <div className="grid grid-cols-3 gap-3 mt-3">
-                                                {[
-                                                    { id: 'teal', label: '💠 Zafiro', desc: 'Teal/Cian + Violeta', accent: '#00D4FF' },
-                                                    { id: 'violet', label: '💜 Amatista', desc: 'Violeta + Cian', accent: '#A78BFA' },
-                                                    { id: 'emerald', label: '💚 Esmeralda', desc: 'Verde + Índigo', accent: '#10B981' },
-                                                ].map((v) => (
-                                                    <button
-                                                        key={v.id}
-                                                        onClick={() => setSettings({ aquaVariant: v.id as any })}
-                                                        className={cn(
-                                                            "flex flex-col items-start p-3 rounded-xl border-2 transition-all text-left gap-1",
-                                                            (settings.aquaVariant || 'teal') === v.id
-                                                                ? "border-primary bg-primary/10"
-                                                                : "border-white/[0.03] bg-foreground/5 opacity-60 hover:opacity-100"
-                                                        )}
-                                                    >
-                                                        <div className="w-6 h-6 rounded-lg mb-1" style={{ background: v.accent }} />
-                                                        <span className="text-[11px] font-black uppercase tracking-wide text-foreground">{v.label}</span>
-                                                        <span className="text-[9px] text-slate-500">{v.desc}</span>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2 mb-3">
-                                                <span>🌤</span> Ciudad para el Clima (Cristal)
-                                            </label>
-                                            <CitySearch
-                                                value={settings.neonForgeCityData || null}
-                                                onChange={(city) => setSettings({ neonForgeCityData: city })}
-                                                accentColor={(settings.aquaVariant || 'teal') === 'teal' ? '#00D4FF' : (settings.aquaVariant || 'teal') === 'violet' ? '#A78BFA' : '#10B981'}
-                                            />
-                                            <p className="text-[9px] text-slate-600 mt-2 ml-1">
-                                                Busca por nombre de ciudad, estado o código postal · Powered by Open-Meteo Geocoding
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* ── IGLESIA EXCLUSIVE CONTROLS ── */}
-                                {calendarStyles.template === 'iglesia' && (
-                                    <div className="space-y-6 pt-6 border-t border-white/[0.03]">
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2">
-                                                <span>🏛️</span> Cátedra — Tono de Apariencia
-                                            </label>
-                                            <div className="grid grid-cols-2 gap-3 mt-3">
-                                                {[
-                                                    { id: 'light', label: '☀️ Claro', desc: 'Neumórfico Blanco/Crema', accent: '#EA2A33' },
-                                                    { id: 'dark', label: '🌙 Oscuro', desc: 'Neumórfico Carbón/Noche', accent: '#EA2A1F' },
-                                                ].map((v) => (
-                                                    <button
-                                                        key={v.id}
-                                                        onClick={() => setSettings({ iglesiaVariant: v.id as any })}
-                                                        className={cn(
-                                                            "flex flex-col items-start p-4 rounded-2xl border-2 transition-all text-left gap-1",
-                                                            (settings.iglesiaVariant || 'light') === v.id
-                                                                ? "border-red-500 bg-red-500/10"
-                                                                : "border-white/[0.03] bg-foreground/5 opacity-60 hover:opacity-100"
-                                                        )}
-                                                    >
-                                                        <div className="w-8 h-8 rounded-xl mb-1 flex items-center justify-center" style={{ background: v.id === 'light' ? '#F8F9FA' : '#1A1B1E' }}>
-                                                            <div className="w-1.5 h-4 bg-red-500 rounded-full" />
-                                                        </div>
-                                                        <span className="text-[12px] font-black uppercase tracking-wide text-foreground">{v.label}</span>
-                                                        <span className="text-[10px] text-slate-500">{v.desc}</span>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1 flex items-center gap-2 mb-3">
-                                                <span>🗺</span> Ubicación del Tablero (Cátedra)
-                                            </label>
-                                            <CitySearch
-                                                value={settings.neonForgeCityData || null}
-                                                onChange={(city) => setSettings({ neonForgeCityData: city })}
-                                                accentColor="#EA2A33"
-                                            />
-                                            <p className="text-[9px] text-slate-600 mt-2 ml-1">
-                                                Permite mostrar la información meteorológica local en el tema Iglesia.
-                                            </p>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Colores Calendario */}
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-white/[0.03]">
-                                    {[
-                                        { id: 'sundayColor', label: 'Domingos - Día del Señor', color: calendarStyles.sundayColor },
-                                        { id: 'thursdayColor', label: 'Jueves - Oración Especial', color: calendarStyles.thursdayColor },
-                                        { id: 'special14thColor', label: 'Días 14 - Recordación', color: calendarStyles.special14thColor }
-                                    ].map((field) => (
-                                        <div key={field.id} className="space-y-3">
-                                            <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-1">{field.label}</label>
-                                            <div className="flex gap-2">
-                                                <Input
-                                                    type="color"
-                                                    value={field.color}
-                                                    onChange={(e) => setCalendarStyles({ [field.id]: e.target.value })}
-                                                    className="h-10 w-12 bg-black/40 border-white/[0.05] rounded-xl cursor-pointer p-1"
-                                                />
-                                                <Input
-                                                    value={field.color}
-                                                    onChange={(e) => setCalendarStyles({ [field.id]: e.target.value })}
-                                                    className="h-10 flex-1 bg-black/20 border-white/[0.05] rounded-xl text-[10px] font-black uppercase"
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Botón de Guardado Unificado */}
-                        <div className="flex justify-center pt-8">
-                            <Button
-                                size="lg"
-                                className="h-16 px-16 bg-primary text-black font-black uppercase tracking-[0.2em] rounded-2xl hover:scale-105 active:scale-95 transition-all gap-4"
-                                onClick={async () => {
-                                    setIsSaving(true);
-                                    try {
-                                        await saveSettingsToCloud(settings);
-                                        showNotification("Todos los temas, estilos y cuenta regresiva han sido guardados correctamente.");
-                                    } catch (e) {
-                                        showNotification("Error al persistir los cambios.", 'error');
-                                    } finally {
-                                        setIsSaving(false);
-                                    }
-                                }}
-                                disabled={isSaving}
-                            >
-                                <Save className="w-6 h-6" /> {isSaving ? 'GUARDANDO...' : 'APLICAR Y GUARDAR TODO'}
-                            </Button>
-                        </div>
-                    </motion.div>
-                )
-            }
-
-
-            {
                 activeTab === 'coros' && (
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -2829,154 +2066,92 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="space-y-8"
+                        className="space-y-6"
                     >
-                        <Card id="configuracion" className="glass-card">
-                            <CardHeader className="flex flex-row items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Settings className="h-5 w-5 text-primary" />
-                                    <CardTitle className="text-xl font-black uppercase tracking-tighter">
-                                        Ajustes de Interfaz y Perfil
-                                    </CardTitle>
+                        {/* Unified Header & Sub-Tab Navigation */}
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-1 bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[2.5rem] px-8 py-4 sticky top-4 z-[40] shadow-2xl">
+                            <div className="flex items-center gap-4">
+                                <div className="p-3 bg-primary/20 rounded-2xl border border-primary/30">
+                                    <Settings className="h-6 w-6 text-primary" />
                                 </div>
-                                <Button
-                                    className={cn(
-                                        "text-white font-black uppercase tracking-widest gap-2 h-9 text-[10px]",
-                                        settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500" : "bg-emerald-600 hover:bg-emerald-500"
-                                    )}
-                                    onClick={async () => {
-                                        setIsSaving(true);
-                                        await saveSettingsToCloud(settings);
-                                        setIsSaving(false);
-                                    }}
-                                    disabled={isSaving}
-                                >
-                                    <Save className="w-3.5 h-3.5" /> Guardar Configuración
-                                </Button>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h2 className="text-xl font-black uppercase tracking-tighter text-foreground">Configuración Central</h2>
+                                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">Gestión Total del Sistema LLDM Rodeo</p>
+                                </div>
+                            </div>
 
-                                    {/* Plantilla del Display (Pizarra) */}
-                                    <div className="col-span-full space-y-4 p-8 rounded-[2.5rem] bg-emerald-500/5 border border-emerald-500/10 flex flex-col justify-center relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-                                            <Monitor className="w-32 h-32 text-emerald-500" />
-                                        </div>
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 ml-1 flex items-center gap-2">
-                                            <Monitor className="w-3.5 h-3.5" /> Selección de Tema para el Display (Pizarra)
-                                        </h4>
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 relative z-10 mt-2">
-                                            {[
-                                                { id: 'iglesia', label: 'Oficial', icon: Church },
-                                                { id: 'cristal', label: 'Cristal', icon: Sparkles },
-                                                { id: 'minimal', label: 'Minimal', icon: Type },
-                                                { id: 'nocturno', label: 'Nocturno', icon: Moon },
-                                                { id: 'neon', label: 'Neon', icon: Flame },
-                                                { id: 'luna', label: 'Luna', icon: Sunrise },
-                                                { id: 'primitivo', label: 'Legacy', icon: BookOpen },
-                                            ].map((theme) => {
-                                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id;
-                                                return (
-                                                    <button
-                                                        key={theme.id}
-                                                        onClick={() => setSettings({ displayTemplate: theme.id as any })}
-                                                        className={cn(
-                                                            "flex flex-col items-center justify-center p-4 rounded-3xl border transition-all duration-300 gap-3 group/theme",
-                                                            isActive 
-                                                                ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.1)]" 
-                                                                : "bg-slate-900/40 border-white/[0.03] text-slate-500 hover:border-white/[0.1] hover:text-slate-300"
-                                                        )}
-                                                    >
-                                                        <theme.icon className={cn("w-6 h-6 transition-transform duration-500 group-hover/theme:scale-110", isActive ? "text-emerald-400" : "")} />
-                                                        <span className="text-[9px] font-black uppercase tracking-wider">{theme.label}</span>
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
+                            <div className="flex bg-black/40 p-1.5 rounded-2xl border border-white/[0.03] gap-1">
+                                {[
+                                    { id: 'general', label: 'General', icon: Layers },
+                                    { id: 'pantalla', label: 'Pantalla (TV)', icon: Eye },
+                                    { id: 'estetica', label: 'Estética', icon: Palette },
+                                ].map((tab) => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setConfigSubTab(tab.id as any)}
+                                        className={cn(
+                                            "flex items-center gap-2 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                            configSubTab === tab.id 
+                                                ? "bg-primary text-black shadow-[0_10px_20px_rgba(var(--primary-rgb),0.3)] scale-[1.02]" 
+                                                : "text-slate-500 hover:text-slate-300 hover:bg-white/5"
+                                        )}
+                                    >
+                                        <tab.icon className="w-3.5 h-3.5" /> {tab.label}
+                                    </button>
+                                ))}
+                            </div>
 
-                                    {/* Transitions & Duration Setting */}
+                            <Button
+                                className={cn(
+                                    "text-white font-black uppercase tracking-widest gap-2 h-12 px-8 rounded-2xl border transition-all",
+                                    settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500 border-amber-400/30" : "bg-emerald-600 hover:bg-emerald-500 border-emerald-400/30 shadow-[0_10px_30px_rgba(16,185,129,0.3)]"
+                                )}
+                                onClick={async () => {
+                                    setIsSaving(true);
+                                    await saveSettingsToCloud(settings);
+                                    setIsSaving(false);
+                                    showNotification("Todos los cambios sincronizados correctamente.", 'success');
+                                }}
+                                disabled={isSaving}
+                            >
+                                <Save className="w-4 h-4" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
+                            </Button>
+                        </div>
 
-                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 flex flex-col justify-center relative overflow-hidden group">
-                                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
-                                            <Sparkles className="w-32 h-32 text-indigo-500" />
-                                        </div>
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 ml-1 flex items-center gap-2">
-                                            <Monitor className="w-3.5 h-3.5" /> Configuración de Reproducción (Display)
-                                        </h4>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
-                                            <div className="space-y-2">
-                                                <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-1">Efectos de Transición</label>
-                                                <select
-                                                    value={settings.transitionsEnabled !== false ? 'true' : 'false'}
-                                                    onChange={(e) => setSettings({ transitionsEnabled: e.target.value === 'true' })}
-                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
-                                                >
-                                                    <option value="true" className="bg-[#020617] text-white">Animaciones Activas (Moderno)</option>
-                                                    <option value="false" className="bg-[#020617] text-white">Sin Transiciones (Instantáneo)</option>
-                                                </select>
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-[9px] font-black uppercase tracking-widest text-slate-500 ml-1">Duración del Slide ({calendarStyles.template?.toUpperCase()})</label>
-                                                <select
-                                                    value={(() => {
-                                                        const themeId = calendarStyles.template || 'nocturno';
-                                                        const key = `${themeId}SlideDuration` as keyof typeof settings;
-                                                        return (settings[key] as number) || 12;
-                                                    })()}
-                                                    onChange={(e) => {
-                                                        const themeId = calendarStyles.template || 'nocturno';
-                                                        const key = `${themeId}SlideDuration` as any;
-                                                        setSettings({ [key]: parseInt(e.target.value) });
-                                                    }}
-                                                    className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-2xl px-6 py-4 text-xs font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer"
-                                                >
-                                                    <option value="5" className="bg-[#020617] text-white">Rápido (5 seg)</option>
-                                                    <option value="12" className="bg-[#020617] text-white">Normal (12 seg)</option>
-                                                    <option value="20" className="bg-[#020617] text-white">Lento (20 seg)</option>
-                                                    <option value="30" className="bg-[#020617] text-white">Muy Lento (30 seg)</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Modo de Apariencia */}
-                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 flex flex-col justify-center relative overflow-hidden group">
+                        {/* CONTENT: GENERAL (System & Minister) */}
+                        {configSubTab === 'general' && (
+                            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    {/* Dashboard Theme Selection */}
+                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Sun className="w-32 h-32 text-indigo-500" />
                                         </div>
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 ml-1 flex items-center gap-2">
-                                            <Sun className="w-3.5 h-3.5" /> Estilo Visual del Dashboard
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 flex items-center gap-2">
+                                            <Sun className="w-3.5 h-3.5" /> Modo de Apariencia Dashboard
                                         </h4>
                                         <div className="relative z-10">
-                                            {settings.themeMode === 'light' ? <Sun className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-500" /> :
-                                                settings.themeMode === 'dark' ? <Moon className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" /> :
-                                                    <Monitor className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />}
                                             <select
                                                 value={settings.themeMode}
                                                 onChange={(e) => setSettings({ themeMode: e.target.value as any })}
-                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-primary/50"
+                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[1.5rem] px-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none"
                                             >
-                                                <option value="light" className="bg-[#020617] text-white">Modo Claro (Fondo Blanco)</option>
-                                                <option value="dark" className="bg-[#020617] text-white">Modo Oscuro (Fondo Galaxia)</option>
-                                                <option value="system" className="bg-[#020617] text-white">Sincronizar con el Sistema</option>
+                                                <option value="light" className="bg-[#020617] text-white">Modo Claro (Clásico)</option>
+                                                <option value="dark" className="bg-[#020617] text-white">Modo Oscuro (Galactic)</option>
+                                                <option value="system" className="bg-[#020617] text-white">Sincronizar Sistema</option>
                                             </select>
-                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                <ChevronRight className="w-5 h-5 text-slate-500 rotate-90" />
-                                            </div>
                                         </div>
                                     </div>
-                                    
-                                    {/* Plantilla del Panel Admin */}
-                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-amber-500/5 border border-amber-500/10 flex flex-col justify-center relative overflow-hidden group">
+
+                                    {/* Admin Layout Selection */}
+                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-amber-500/5 border border-amber-500/10 relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <LayoutDashboard className="w-32 h-32 text-amber-500" />
                                         </div>
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 ml-1 flex items-center gap-2">
-                                            <LayoutDashboard className="w-3.5 h-3.5" /> Plantilla del Panel Administrador
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 flex items-center gap-2">
+                                            <LayoutDashboard className="w-3.5 h-3.5" /> Estructura del Panel Admin
                                         </h4>
                                         <div className="relative z-10">
-                                            <Contrast className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-500" />
                                             <select
                                                 value={settings.adminTheme || 'classic'}
                                                 onChange={(e) => {
@@ -2984,294 +2159,253 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     setSettings({ adminTheme: newValue });
                                                     saveSettingsToCloud({ adminTheme: newValue });
                                                 }}
-                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[1.5rem] pl-16 pr-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none focus:border-amber-500/50"
+                                                className="w-full bg-slate-900/40 backdrop-blur-xl border border-white/[0.05] rounded-[1.5rem] px-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-slate-900/60 transition-all outline-none"
                                             >
-                                                <option value="primitivo" className="bg-[#020617] text-white">Plantilla Primitiva (Producción Cloud)</option>
-                                                <option value="classic" className="bg-[#020617] text-white">Plantilla Clásica (Tactile Local)</option>
-                                                <option value="luna" className="bg-[#020617] text-white">Plantilla Luna Premium (Industrial)</option>
+                                                <option value="primitivo" className="bg-[#020617] text-white">Plantilla Primitiva (Producción)</option>
+                                                <option value="classic" className="bg-[#020617] text-white">Plantilla Clásica (Tactile)</option>
+                                                <option value="luna" className="bg-[#020617] text-white">Plantilla Luna (Premium)</option>
                                             </select>
-                                            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
-                                                <ChevronRight className="w-5 h-5 text-slate-500 rotate-90" />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Ministro Responsable */}
+                                {/* Minister Profile Card (Consolidated) */}
                                 <div className="p-10 rounded-[2.5rem] bg-slate-900/40 border border-white/[0.05] relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
-                                    <div className="flex flex-col lg:flex-row gap-16 relative z-10">
-                                        {/* Profile Card Sidebar */}
-                                        <div className="lg:w-80 flex flex-col items-center">
-                                            <div className="relative group/avatar">
-                                                <div className="w-56 h-56 rounded-full border-4 border-primary/20 p-2 relative">
-                                                    <div className="w-full h-full rounded-full overflow-hidden border-2 border-primary/50 bg-slate-800">
-                                                        <img
-                                                            src={minister.avatar}
-                                                            className="w-full h-full object-cover transition-transform duration-700 group-hover/avatar:scale-110"
-                                                            alt="Ministro"
-                                                        />
-                                                    </div>
-                                                    <div className="absolute bottom-4 right-4 flex gap-2">
-                                                        <motion.button
-                                                            whileHover={{ scale: 1.1 }}
-                                                            whileTap={{ scale: 0.9 }}
-                                                            onClick={() => {
-                                                                if (minister.avatar) {
-                                                                    setEditingImageTarget({ type: 'minister' });
-                                                                    setImageToEdit(minister.avatar);
-                                                                }
-                                                            }}
-                                                            className="w-12 h-12 bg-white/20 backdrop-blur-md text-white rounded-2xl flex items-center justify-center border border-white/[0.1] hover:bg-white/30 transition-all z-20"
-                                                            title="Ajustar posición / Zoom"
-                                                        >
-                                                            <Move className="w-5 h-5" />
-                                                        </motion.button>
-                                                        <motion.button
-                                                            whileHover={{ scale: 1.1 }}
-                                                            whileTap={{ scale: 0.9 }}
-                                                            onClick={() => document.getElementById('minister-photo-upload')?.click()}
-                                                            className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center border border-white/[0.1] hover:bg-primary/90 transition-all z-20"
-                                                            title="Cambiar Foto"
-                                                        >
-                                                            <Camera className="w-6 h-6" />
-                                                        </motion.button>
-                                                    </div>
-
+                                    <div className="flex flex-col lg:flex-row gap-12 relative z-10 items-center">
+                                        <div className="relative group/avatar">
+                                            <div className="w-48 h-48 rounded-full border-4 border-primary/20 p-2 relative">
+                                                <div className="w-full h-full rounded-full overflow-hidden border-2 border-primary/50 bg-slate-800 shadow-2xl">
+                                                    <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
                                                 </div>
-                                                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 bg-primary px-8 py-2.5 rounded-full border border-white/[0.1] whitespace-nowrap">
-                                                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white ">Ministro Responsable</span>
+                                                <div className="absolute bottom-2 right-2 flex gap-1">
+                                                    <Button size="icon" className="w-10 h-10 rounded-xl" onClick={() => document.getElementById('minister-photo-upload')?.click()}><Camera className="w-4 h-4" /></Button>
                                                 </div>
                                             </div>
-
-                                            <div className="mt-14 text-center space-y-3">
-                                                <h4 className="text-3xl font-black uppercase text-foreground tracking-tighter">{minister.name || 'Sin Nombre'}</h4>
-                                                <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] bg-primary/10 px-4 py-1.5 rounded-full inline-block">Responsable</p>
+                                            <input id="minister-photo-upload" type="file" className="hidden" accept="image/*" onChange={handleMinisterAvatarChange} />
+                                        </div>
+                                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nombre del Responsable</label>
+                                                <Input value={minister.name || ''} onChange={(e) => setMinister({ name: e.target.value })} className="h-14 bg-foreground/5 rounded-2xl" placeholder="Ej. P.E. Benjamín Rojas" />
                                             </div>
-
-                                            <div className="mt-10 w-full p-6 rounded-[2rem] bg-foreground/5 border border-white/[0.03] backdrop-blur-md flex justify-around">
-                                                <div className="text-center">
-                                                    <div className="text-xl font-black text-foreground ">100%</div>
-                                                    <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-1">Fidelidad</div>
-                                                </div>
-                                                <div className="w-px h-10 bg-white/10" />
-                                                <div className="text-center">
-                                                    <div className="text-xl font-black text-primary ">Activo</div>
-                                                    <div className="text-[8px] font-black text-slate-500 uppercase tracking-widest mt-1">Estado</div>
-                                                </div>
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Teléfono</label>
+                                                <Input value={minister.phone || ''} onChange={(e) => setMinister({ phone: e.target.value })} className="h-14 bg-foreground/5 rounded-2xl" />
+                                            </div>
+                                            <div className="md:col-span-2 space-y-4">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Correo Institucional</label>
+                                                <Input value={minister.email || ''} onChange={(e) => setMinister({ email: e.target.value })} className="h-14 bg-foreground/5 rounded-2xl" />
                                             </div>
                                         </div>
-
-                                        {/* Edit Fields */}
-                                        <div className="flex-1 space-y-10">
-                                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-                                                <div className="flex items-center gap-4">
-                                                    <div className="p-3.5 bg-primary/20 rounded-2xl border border-primary/30">
-                                                        <User className="w-6 h-6 text-primary" />
-                                                    </div>
-                                                    <div>
-                                                        <h3 className="text-2xl font-black uppercase text-foreground tracking-tight">Detalles del Ministro</h3>
-                                                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Información oficial para visualización pública</p>
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center gap-4">
-                                                    <div className="flex items-center gap-4 bg-foreground/5 px-5 py-2.5 rounded-2xl border border-white/[0.05] backdrop-blur-sm">
-                                                        <span className="text-[9px] font-black uppercase text-slate-400">Pantalla</span>
-                                                        <Button
-                                                            variant={settings.showMinisterOnDisplay ? "neon" : "outline"}
-                                                            size="sm"
-                                                            className="h-9 px-4 text-[10px] font-black"
-                                                            onClick={() => setSettings({ showMinisterOnDisplay: !settings.showMinisterOnDisplay })}
-                                                        >
-                                                            {settings.showMinisterOnDisplay ? "VISIBLE" : "OCULTO"}
-                                                        </Button>
-                                                    </div>
-                                                    <Button
-                                                        className={cn(
-                                                            "text-white font-black uppercase tracking-widest gap-2 h-12 px-10 rounded-2xl transition-all hover:translate-y-[-2px] active:translate-y-[1px]",
-                                                            settings.adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500 shadow-none" : "bg-emerald-600 hover:bg-emerald-500 shadow-[0_15px_30px_rgba(16,185,129,0.3)]"
-                                                        )}
-                                                        onClick={async () => {
-                                                            setIsSaving(true);
-                                                            await saveSettingsToCloud({
-                                                                ministerName: minister.name,
-                                                                ministerPhone: minister.phone,
-                                                                ministerEmail: minister.email,
-                                                                ministerAvatar: minister.avatar
-                                                            });
-                                                            setIsSaving(false);
-                                                            showNotification("Información del Ministro guardada correctamente.");
-                                                        }}
-                                                        disabled={isSaving}
-                                                    >
-                                                        <Save className="w-5 h-5" /> GUARDAR
-                                                    </Button>
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                                <div className="space-y-4">
-                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Nombre Completo y Grado</label>
-                                                    <div className="relative group/input">
-                                                        <User className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40 group-focus-within/input:text-primary transition-colors" />
-                                                        <Input
-                                                            value={minister.name || ''}
-                                                            onChange={(e) => setMinister({ name: e.target.value })}
-                                                            className="h-16 bg-foreground/5 border-white/[0.05] pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
-                                                            placeholder="Ej. P.E. Benjamin Rojas"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-4">
-                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Teléfono de Contacto</label>
-                                                    <div className="relative group/input">
-                                                        <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40 group-focus-within/input:text-primary transition-colors" />
-                                                        <Input
-                                                            value={minister.phone || ''}
-                                                            onChange={(e) => setMinister({ phone: e.target.value })}
-                                                            className="h-16 bg-foreground/5 border-white/[0.05] pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
-                                                            placeholder="+1 (555) 000-0000"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="space-y-4 md:col-span-2">
-                                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Correo Electrónico</label>
-                                                    <div className="relative group/input">
-                                                        <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary/40 group-focus-within/input:text-primary transition-colors" />
-                                                        <Input
-                                                            value={minister.email || ''}
-                                                            onChange={(e) => setMinister({ email: e.target.value })}
-                                                            className="h-16 bg-foreground/5 border-white/[0.05] pl-14 rounded-[1.25rem] text-sm font-black focus:border-primary/50 focus:bg-foreground/10 transition-all outline-none"
-                                                            placeholder="contacto@lldmrodeo.org"
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <input
-                                            id="minister-photo-upload"
-                                            type="file"
-                                            className="hidden"
-                                            accept="image/*,.svg"
-                                            onChange={handleMinisterAvatarChange}
-                                        />
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </motion.div>
+                        )}
 
-                        {/* TV Display Optimization */}
-                        <Card className="glass-card border-t-4 border-t-cyan-500">
-                            <CardHeader>
-                                <div className="flex items-center gap-2">
-                                    <Monitor className="h-5 w-5 text-cyan-500" />
-                                    <CardTitle className="text-xl font-black uppercase tracking-tighter">
-                                        Optimización de Pantalla (TV)
-                                    </CardTitle>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="space-y-8">
-                                {/* Scale Controls */}
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center">
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500">
-                                            Escala del Display
+                        {/* CONTENT: PANTALLA (TV Controls) */}
+                        {configSubTab === 'pantalla' && (
+                            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                    {/* Display Mode Selection */}
+                                    <div className="lg:col-span-2 p-8 rounded-[2.5rem] bg-emerald-500/5 border border-emerald-500/10">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 mb-6 flex items-center gap-2">
+                                            <Monitor className="w-3.5 h-3.5" /> Temas de la Pizarra Gigante
                                         </h4>
-                                        <span className="text-lg font-black text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
+                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                            {[
+                                                { id: 'iglesia', label: 'Oficial', icon: Church },
+                                                { id: 'cristal', label: 'Cristal', icon: Sparkles },
+                                                { id: 'minimal', label: 'Minimal', icon: Type },
+                                                { id: 'nocturno', label: 'Night', icon: Moon },
+                                                { id: 'neon', label: 'Neon', icon: Flame },
+                                                { id: 'luna', label: 'Luna', icon: Sunrise },
+                                                { id: 'primitivo', label: 'Legacy', icon: BookOpen },
+                                            ].map((theme) => (
+                                                <button
+                                                    key={theme.id}
+                                                    onClick={() => setSettings({ displayTemplate: theme.id as any })}
+                                                    className={cn(
+                                                        "flex flex-col items-center justify-center p-4 rounded-2xl border transition-all gap-2",
+                                                        (settings.displayTemplate || 'nocturno') === theme.id 
+                                                            ? "bg-emerald-500/20 border-emerald-500 text-emerald-400" 
+                                                            : "bg-slate-900 border-white/[0.05] text-slate-500 hover:border-emerald-500/30"
+                                                    )}
+                                                >
+                                                    <theme.icon className="w-5 h-5" />
+                                                    <span className="text-[9px] font-black uppercase">{theme.label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <div className="grid grid-cols-7 gap-2">
-                                        {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
-                                            <Button
-                                                key={sc}
-                                                variant={(settings.displayScale || 1.0) === sc ? "neon" : "outline"}
-                                                className="h-12 font-black text-sm"
-                                                onClick={() => {
-                                                    setSettings({ displayScale: sc });
-                                                    saveSettingsToCloud({ displayScale: sc });
-                                                }}
-                                            >
-                                                {Math.round(sc * 100)}%
-                                            </Button>
-                                        ))}
+
+                                    {/* Playback Settings */}
+                                    <div className="p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 flex flex-col gap-6">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 flex items-center gap-2">
+                                            <Sparkles className="w-3.5 h-3.5" /> Efectos & Duración
+                                        </h4>
+                                        <div className="space-y-4">
+                                            <div className="space-y-2">
+                                                <label className="text-[9px] font-black uppercase text-slate-500">Transiciones</label>
+                                                <select
+                                                    value={settings.transitionsEnabled !== false ? 'true' : 'false'}
+                                                    onChange={(e) => setSettings({ transitionsEnabled: e.target.value === 'true' })}
+                                                    className="w-full bg-slate-900/40 border border-white/[0.05] rounded-xl px-4 py-3 text-xs font-black uppercase outline-none"
+                                                >
+                                                    <option value="true">Activas (Moderno)</option>
+                                                    <option value="false">Instantáneas</option>
+                                                </select>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <label className="text-[9px] font-black uppercase text-slate-500">Tiempo por Slide</label>
+                                                <select
+                                                    value={settings.displaySlideDuration || 12}
+                                                    onChange={(e) => setSettings({ displaySlideDuration: parseInt(e.target.value) })}
+                                                    className="w-full bg-slate-900/40 border border-white/[0.05] rounded-xl px-4 py-3 text-xs font-black uppercase outline-none"
+                                                >
+                                                    <option value="5">Rápido (5s)</option>
+                                                    <option value="12">Normal (12s)</option>
+                                                    <option value="20">Lento (20s)</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p className="text-xs text-slate-500 ">
-                                        * Si el contenido se ve cortado en los bordes de la TV, baje la escala al 80% o 70%.
-                                    </p>
                                 </div>
 
-                                {/* Position Controls */}
-                                <div className="space-y-4">
-                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500">
-                                        Ajuste Manual de Posición
-                                    </h4>
-                                    <div className="flex flex-col items-center gap-3 p-6 rounded-[2rem] bg-foreground/5 border border-white/[0.05]">
-                                        <Button
-                                            variant="outline"
-                                            className="w-14 h-14 rounded-2xl"
-                                            onClick={() => {
-                                                const val = (settings.displayOffsetY || 0) - 20;
-                                                setSettings({ displayOffsetY: val });
-                                                saveSettingsToCloud({ displayOffsetY: val });
-                                            }}
-                                        >
-                                            <ChevronUp className="w-6 h-6" />
-                                        </Button>
-                                        <div className="flex gap-3 items-center">
-                                            <Button
-                                                variant="outline"
-                                                className="w-14 h-14 rounded-2xl"
-                                                onClick={() => {
-                                                    const val = (settings.displayOffsetX || 0) - 20;
-                                                    setSettings({ displayOffsetX: val });
-                                                    saveSettingsToCloud({ displayOffsetX: val });
-                                                }}
-                                            >
-                                                <ChevronLeft className="w-6 h-6" />
-                                            </Button>
-                                            <Button
-                                                variant="neon"
-                                                className="w-20 h-14 rounded-2xl font-black text-[10px] tracking-widest"
-                                                onClick={() => {
-                                                    setSettings({ displayOffsetX: 0, displayOffsetY: 0 });
-                                                    saveSettingsToCloud({ displayOffsetX: 0, displayOffsetY: 0 });
-                                                }}
-                                            >
-                                                RESET
-                                            </Button>
-                                            <Button
-                                                variant="outline"
-                                                className="w-14 h-14 rounded-2xl"
-                                                onClick={() => {
-                                                    const val = (settings.displayOffsetX || 0) + 20;
-                                                    setSettings({ displayOffsetX: val });
-                                                    saveSettingsToCloud({ displayOffsetX: val });
-                                                }}
-                                            >
-                                                <ChevronRight className="w-6 h-6" />
-                                            </Button>
+                                {/* TV SCALE & POSITION (The Tactile Grid) */}
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    <div className="p-8 rounded-[2.5rem] bg-cyan-500/5 border border-cyan-500/10 flex flex-col gap-6">
+                                        <div className="flex justify-between items-center">
+                                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500">Escala del Contenido (%)</h4>
+                                            <span className="text-xl font-black text-cyan-400">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
                                         </div>
-                                        <Button
-                                            variant="outline"
-                                            className="w-14 h-14 rounded-2xl"
-                                            onClick={() => {
-                                                const val = (settings.displayOffsetY || 0) + 20;
-                                                setSettings({ displayOffsetY: val });
-                                                saveSettingsToCloud({ displayOffsetY: val });
-                                            }}
-                                        >
-                                            <ChevronDown className="w-6 h-6" />
-                                        </Button>
-                                        <p className="text-xs text-slate-500 mt-2">
-                                            Use las flechas para mover el contenido. Los cambios se aplican en tiempo real en la TV.
-                                        </p>
+                                        <div className="grid grid-cols-7 gap-2">
+                                            {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
+                                                <button
+                                                    key={sc}
+                                                    onClick={() => setSettings({ displayScale: sc })}
+                                                    className={cn(
+                                                        "h-10 rounded-lg font-black text-[10px] transition-all",
+                                                        (settings.displayScale || 1.0) === sc ? "bg-cyan-500 text-black" : "bg-white/5 text-slate-500"
+                                                    )}
+                                                >
+                                                    {Math.round(sc * 100)}%
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div className="p-8 rounded-[2.5rem] bg-slate-900/40 border border-white/[0.05] flex flex-col items-center gap-4">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Centrado Manual del Display</h4>
+                                        <div className="flex flex-col items-center gap-2">
+                                            <Button variant="outline" size="icon" onClick={() => setSettings({ displayOffsetY: (settings.displayOffsetY || 0) - 10 })}><ChevronUp /></Button>
+                                            <div className="flex gap-2">
+                                                <Button variant="outline" size="icon" onClick={() => setSettings({ displayOffsetX: (settings.displayOffsetX || 0) - 10 })}><ChevronLeft /></Button>
+                                                <Button variant="neon" className="px-6 h-10" onClick={() => setSettings({ displayOffsetX: 0, displayOffsetY: 0 })}>RESET</Button>
+                                                <Button variant="outline" size="icon" onClick={() => setSettings({ displayOffsetX: (settings.displayOffsetX || 0) + 10 })}><ChevronRight /></Button>
+                                            </div>
+                                            <Button variant="outline" size="icon" onClick={() => setSettings({ displayOffsetY: (settings.displayOffsetY || 0) + 10 })}><ChevronDown /></Button>
+                                        </div>
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </motion.div>
+                        )}
+
+                        {/* CONTENT: ESTÉTICA (Logos, Fonts, Colors) - MIGRATED */}
+                        {configSubTab === 'estetica' && (
+                            <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                    {/* LOGO SELECTION */}
+                                    <div className="p-8 rounded-[2.5rem] bg-blue-500/5 border border-blue-500/10 space-y-6">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 flex items-center gap-2">
+                                            <Palette className="w-3.5 h-3.5" /> Logotipo Institucional
+                                        </h4>
+                                        <div className="flex flex-wrap gap-4">
+                                            {[1, 2, 3, 4].map((idx) => {
+                                                const url = (settings as any)[`customLogo${idx}`];
+                                                return (
+                                                    <div key={idx} className="relative group">
+                                                        <button 
+                                                            onClick={() => url ? setSettings({ churchLogoUrl: url }) : document.getElementById(`logo-up-${idx}`)?.click()}
+                                                            className={cn("w-20 h-20 rounded-2xl border-2 flex items-center justify-center overflow-hidden transition-all", settings.churchLogoUrl === url && url ? "border-primary bg-primary/10" : "border-white/5 bg-black/20")}
+                                                        >
+                                                            {url ? <img src={url} className="w-full h-full object-contain p-2" /> : <Plus className="text-slate-500" />}
+                                                        </button>
+                                                        <input id={`logo-up-${idx}`} type="file" className="hidden" onChange={(e) => handleCustomLogoUpload(e, idx as any)} />
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* COLORS & FONTS */}
+                                    <div className="p-8 rounded-[2.5rem] bg-pink-500/5 border border-pink-500/10 space-y-6">
+                                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-pink-500 flex items-center gap-2">
+                                            <Sparkles className="w-3.5 h-3.5" /> Colores & Tipografía Global
+                                        </h4>
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 rounded-xl" style={{ backgroundColor: settings.primaryColor }} />
+                                            <Input type="color" value={settings.primaryColor} onChange={(e) => setSettings({ primaryColor: e.target.value })} className="flex-1 bg-black/40 border-white/10" />
+                                        </div>
+                                        <div className="space-y-4">
+                                            <div className="relative group">
+                                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                                <input 
+                                                    value={fontSearch} onChange={(e) => setFontSearch(e.target.value)}
+                                                    placeholder="Buscar fuente Google..."
+                                                    className="w-full h-12 bg-black/40 border border-white/10 rounded-xl pl-12 text-[10px] font-black uppercase outline-none focus:border-pink-500/50"
+                                                />
+                                            </div>
+                                            <div className="max-h-40 overflow-y-auto custom-scrollbar flex flex-col gap-1">
+                                                {GOOGLE_FONTS.filter(f => f.name.toLowerCase().includes(fontSearch.toLowerCase())).slice(0, 50).map(f => (
+                                                    <button 
+                                                        key={f.id} 
+                                                        onClick={() => setSettings({ fontMain: f.name as any })} 
+                                                        className={cn("px-4 py-2 text-[10px] font-black uppercase text-left rounded-lg transition-all", settings.fontMain === f.name ? "bg-pink-500 text-black" : "text-slate-500 hover:bg-white/5")}
+                                                    >
+                                                        {f.name}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* BACKGROUND SELECTION */}
+                                <div className="p-8 rounded-[2.5rem] bg-purple-500/5 border border-purple-500/10 space-y-6">
+                                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-purple-500">Imagen de Fondo del Display</h4>
+                                    <div className="flex items-center gap-6">
+                                        <button 
+                                            onClick={() => setSettings({ displayBgMode: 'none' })}
+                                            className={cn("w-32 h-20 rounded-2xl border-2 flex flex-col items-center justify-center gap-2", settings.displayBgMode === 'none' ? "border-primary bg-primary/10" : "border-white/5")}
+                                        >
+                                            <XCircle className="w-5 h-5 text-slate-500" />
+                                            <span className="text-[8px] font-black uppercase">Limpio</span>
+                                        </button>
+                                        <button 
+                                            onClick={() => document.getElementById('display-bg-up')?.click()}
+                                            className={cn("flex-1 h-20 rounded-2xl border-2 border-dashed flex items-center justify-center gap-4 transition-all", settings.displayBgMode === 'custom' ? "border-primary bg-primary/5" : "border-white/10 hover:border-white/30")}
+                                        >
+                                            {settings.displayCustomBgUrl ? (
+                                                <img src={settings.displayCustomBgUrl} className="h-full w-full object-cover rounded-2xl opacity-50" />
+                                            ) : <Upload className="text-slate-500" />}
+                                            <span className="absolute text-[10px] font-black uppercase tracking-widest">{settings.displayCustomBgUrl ? 'CAMBIAR FONDO' : 'SUBIR FONDO PERSONALIZADO'}</span>
+                                        </button>
+                                        <input id="display-bg-up" type="file" className="hidden" onChange={async (e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) {
+                                                const compressed = await compressImage(file, 1920, 1080);
+                                                const url = await uploadAvatar('display-bg', compressed);
+                                                if (url) setSettings({ displayCustomBgUrl: url, displayBgMode: 'custom' });
+                                            }
+                                        }} />
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
                     </motion.div>
                 )
+
             }
 
             {

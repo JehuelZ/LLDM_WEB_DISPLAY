@@ -340,21 +340,6 @@ function AdminLayoutContent({
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.horarios}</span>}
                     </Link>
 
-                    <Link href="/admin?tab=contenido"
-                        className={cn(
-                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
-                            (currentTab === 'contenido' || currentTab === 'temas') 
-                                ? "bg-tactile-orange-pill text-tactile-orange font-bold rounded-full" 
-                                : settings.adminTheme === 'primitivo' 
-                                    ? "text-muted-foreground hover:text-foreground" 
-                                    : "text-white/40 hover:text-white bg-transparent",
-                            collapsed && "justify-center px-0"
-                        )}>
-                        {(currentTab === 'contenido' || currentTab === 'temas') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-orange rounded-r-full" />}
-                        <BookOpen className={cn("w-5 h-5 transition-colors shrink-0", (currentTab === 'contenido' || currentTab === 'temas') ? "text-tactile-orange" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-orange")} />
-                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.temas}</span>}
-                    </Link>
-
                     <Link 
                         href="/admin?tab=asistencia"
                         onClick={() => {
