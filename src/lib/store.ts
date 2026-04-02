@@ -985,6 +985,23 @@ export const useAppStore = create<AppState>()(
                     .ilike('email', userEmail || '')
                     .maybeSingle();
 
+                // 1b. PROTOCOLO DE INTELIGENCIA: Si no hay por email, buscamos por NOMBRE en pre-registrados
+                // Esto es crucial para usuarios que el administrador registró sin saber su correo
+                if (!existingProfile && userName) {
+                    console.log(`SYNC: Email no coincide, intentando búsqueda por nombre para: ${userName}`);
+                    const { data: nameMatches } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .ilike('name', userName)
+                        .eq('is_pre_registered', true);
+                    
+                    // Solo vinculamos automáticamente si hay UNA única coincidencia clara por nombre
+                    if (nameMatches && nameMatches.length === 1) {
+                        console.log(`SYNC: ¡Coincidencia por nombre detectada! Vinculando con perfil pre-registrado ID: ${nameMatches[0].id}`);
+                        existingProfile = nameMatches[0];
+                    }
+                }
+
                 if (existingProfile) {
                     // Si el perfil existe pero no tiene el ID de autenticación vinculado, lo vinculamos
                     // Usamos auth_user_id para el vínculo, NO el id primario para evitar colisiones y errores de FK
