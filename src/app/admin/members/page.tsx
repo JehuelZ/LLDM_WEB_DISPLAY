@@ -82,15 +82,15 @@ const StatDoughnut = ({
                         </filter>
                     </defs>
                     
-                    {/* Background Track - The Official Gray #525568 */}
+                    {/* Background Track - Adaptive visibility for light/dark themes */}
                     <circle
                         cx="50"
                         cy="50"
                         r={radius}
                         fill="transparent"
                         stroke="currentColor" 
-                        strokeWidth="10"
-                        className="text-muted/20"
+                        strokeWidth="8"
+                        className="opacity-[0.12] dark:opacity-20 text-foreground"
                     />
 
                     {/* Physical Housing (Dark Border around color) */}
