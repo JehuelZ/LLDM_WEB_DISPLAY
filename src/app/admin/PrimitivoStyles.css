@@ -469,7 +469,7 @@ body.admin-theme-primitivo {
 /* INTERCALATED ROWS (ZEBRA STRIPING) - Dashboard & Tables */
 .admin-theme-primitivo .tactile-glass-panel.group:nth-child(even),
 .admin-theme-primitivo .member-row.row-even {
-    background: rgba(255, 255, 255, 0.05) !important; /* Improved contrast for alternate rows */
+    background: rgba(16, 185, 129, 0.04) !important; /* Subtle emerald tint for alternate rows */
 }
 
 .admin-theme-primitivo .tactile-glass-panel.group,
