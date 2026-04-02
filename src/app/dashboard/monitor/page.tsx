@@ -434,7 +434,7 @@ export default function AttendanceDashboard() {
                                 <span className="text-[11px] font-black text-muted-foreground uppercase tracking-[0.2em] italic">Panel de Estadísticas Reales</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1.5 px-3 py-1 bg-black/40 border border-emerald-500/20 rounded-full">
+                                <div className="flex items-center gap-1.5 px-3 py-1 bg-white/[0.08] border border-emerald-500/30 rounded-full">
                                     <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
                                     <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">Live Sync Active</span>
                                 </div>
@@ -443,7 +443,7 @@ export default function AttendanceDashboard() {
 
                         <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
                             {/* Live Attendance Donut Mirror (from Admin Dashboard) */}
-                            <Card className="glass-card bg-black/60 border-emerald-500/10 p-4 md:p-6 relative overflow-hidden group">
+                            <Card className="glass-card bg-white/[0.03] border-emerald-500/10 p-4 md:p-6 relative overflow-hidden group">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-2">
                                         <div className="relative">
