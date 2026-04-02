@@ -305,7 +305,7 @@ export default function MembersPage() {
                 <Card className={cn(
                     "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
-                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
@@ -324,7 +324,7 @@ export default function MembersPage() {
                 <Card className={cn(
                     "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
-                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
@@ -343,7 +343,7 @@ export default function MembersPage() {
                 <Card className={cn(
                     "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
-                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
@@ -369,7 +369,7 @@ export default function MembersPage() {
                 <Card className={cn(
                     "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
-                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
