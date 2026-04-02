@@ -303,8 +303,10 @@ export default function MembersPage() {
             {/* Admin Overview Stats */}
             <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
-                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none shadow-2xl"
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    settings.adminTheme === 'primitivo' 
+                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
                         <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">membresía global</p>
@@ -320,8 +322,10 @@ export default function MembersPage() {
                 </Card>
 
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
-                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none"
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    settings.adminTheme === 'primitivo' 
+                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
                         <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">participación</p>
@@ -337,8 +341,10 @@ export default function MembersPage() {
                 </Card>
 
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
-                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none"
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    settings.adminTheme === 'primitivo' 
+                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
                         <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">crecimiento</p>
@@ -361,8 +367,10 @@ export default function MembersPage() {
                 </Card>
 
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-none",
-                    settings.adminTheme === 'primitivo' ? "primitivo-card" : "glass-card border-none shadow-2xl"
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    settings.adminTheme === 'primitivo' 
+                        ? "bg-emerald-500/[0.03] border-emerald-500/10 shadow-none hover:bg-emerald-500/[0.06]" 
+                        : "glass-card border-none shadow-2xl"
                 )}>
                     <div className="relative z-10">
                         <p className="text-[10px] font-light uppercase tracking-[0.3em] text-muted-foreground mb-1">puntualidad</p>
