@@ -428,19 +428,19 @@ export const AjustesTab = ({
                                             "group relative p-4 rounded-2xl border transition-all duration-500 text-left overflow-hidden",
                                             isActive 
                                                 ? "bg-primary/20 border-primary/50" 
-                                                : "bg-black/5 border-[var(--tactile-border)] hover:bg-[var(--tactile-item-hover)]"
+                                                : "bg-white/[0.03] border-[var(--tactile-border)] hover:bg-white/[0.08]"
                                         )}
                                     >
                                         <div className="flex items-center gap-3 mb-2">
                                             <div className={cn(
-                                                "p-2 rounded-lg",
-                                                isActive ? "bg-primary text-white" : "bg-black/20 text-muted-foreground"
+                                                "p-2 rounded-lg transition-colors",
+                                                isActive ? "bg-primary text-white" : "bg-white/[0.08] text-muted-foreground group-hover:bg-white/20"
                                             )}>
                                                 <theme.icon className="w-4 h-4" />
                                             </div>
-                                            <span className={cn("text-xs font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground")}>{theme.label}</span>
+                                            <span className={cn("text-xs font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}>{theme.label}</span>
                                         </div>
-                                        <p className="text-[8px] text-muted-foreground/60 leading-relaxed">{theme.desc}</p>
+                                        <p className="text-[8px] text-muted-foreground/60 leading-relaxed group-hover:text-muted-foreground/80 transition-colors">{theme.desc}</p>
                                     </button>
                                 )
                             })}
