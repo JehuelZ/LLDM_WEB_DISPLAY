@@ -22,11 +22,11 @@ const StatBox = ({ title, value, icon: Icon, color, trend, onClick }: any) => (
         whileHover={{ scale: 1.02, y: -2 }}
         onClick={onClick}
         className={cn(
-            "relative p-5 rounded-3xl bg-[#0b101e] border border-[#dca54e]/10 group overflow-hidden transition-all",
-            onClick && "cursor-pointer hover:border-[#dca54e]/40"
+            "relative p-5 rounded-3xl bg-card border border-primary/10 group overflow-hidden transition-all",
+            onClick && "cursor-pointer hover:border-primary/40 shadow-xl"
         )}
     >
-        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+        <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
             <Icon size={64} style={{ color }} />
         </div>
         <div className="flex items-start justify-between mb-4">
@@ -71,9 +71,14 @@ const AttendancePillRow = ({ label, values }: { label: string, values: number[] 
 const OrbitalGauge = ({ value, label, color = "#10b981" }: any) => (
     <div className="flex flex-col items-center gap-4 group">
         <div className="relative w-32 h-32">
-            {/* Background Circle - Made significantly more prominent for visibility */}
+            {/* Background Circle - Adaptive to light/dark themes */}
             <svg className="w-full h-full transform -rotate-90">
-                <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-white/20" />
+                <circle 
+                    cx="64" cy="64" r="58" 
+                    stroke="currentColor" strokeWidth="4" 
+                    fill="transparent" 
+                    className="opacity-[0.15] dark:opacity-20 text-foreground" 
+                />
                 <motion.circle 
                     cx="64" cy="64" r="58" 
                     stroke={color} strokeWidth="6" 
@@ -137,7 +142,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         Consola <span className="text-[#dca54e]">Hardware</span>
                     </h1>
                 </div>
-                <div className="flex items-center gap-4 bg-[#0b101e] p-2 rounded-2xl border border-[#dca54e]/10">
+                <div className="flex items-center gap-4 bg-card/80 backdrop-blur-md p-2 rounded-2xl border border-primary/10">
                     <AdminClockWeather className="scale-90" />
                 </div>
             </div>
@@ -167,9 +172,9 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
                 {/* TELEMETRY PANEL (RADARS) */}
-                <div className="lg:col-span-8 p-8 rounded-[40px] bg-[#0b101e] border border-[#dca54e]/10 relative overflow-hidden">
+                <div className="lg:col-span-8 p-8 rounded-[40px] bg-card border border-primary/10 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8 flex gap-2">
-                        <div className="w-2 h-2 rounded-full bg-[#dca54e] animate-pulse" />
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                         <div className="w-2 h-2 rounded-full bg-white/10" />
                         <div className="w-2 h-2 rounded-full bg-white/10" />
                     </div>
@@ -244,7 +249,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         <OrbitalGauge value={75} label="Participación" color="#10b981" />
                     </div>
 
-                    <div className="space-y-4 bg-black/20 p-6 rounded-3xl border border-white/5">
+                    <div className="space-y-4 bg-foreground/[0.03] p-6 rounded-3xl border border-foreground/[0.05]">
                         <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-4">Relación de Asistencia Semanal (Primitivo Scale)</h4>
                         <AttendancePillRow label="Lunes" values={[85, 70, 95]} />
                         <AttendancePillRow label="Martes" values={[92, 85, 88]} />
@@ -255,9 +260,9 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
 
                 {/* SIDE ACTIONS / CHANNELS */}
                 <div className="lg:col-span-4 space-y-6">
-                    <div className="p-6 rounded-[35px] bg-gradient-to-br from-[#dca54e] to-[#b88636] group relative overflow-hidden cursor-pointer"
+                    <div className="p-6 rounded-[35px] bg-gradient-to-br from-primary to-emerald-700 group relative overflow-hidden cursor-pointer shadow-lg active:scale-[0.98] transition-all"
                          onClick={() => window.open('https://lldmrodeo.org', '_blank')}>
-                        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
+                        <div className="absolute inset-0 bg-black/10 group-hover:opacity-0 transition-opacity" />
                         <div className="relative z-10">
                             <div className="p-3 bg-white/20 rounded-2xl w-fit mb-4 backdrop-blur-md">
                                 <Smartphone className="w-6 h-6 text-white" />
@@ -270,9 +275,9 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         </div>
                     </div>
 
-                    <div className="p-8 rounded-[35px] bg-[#0b101e] border border-[#dca54e]/10 space-y-6">
+                    <div className="p-8 rounded-[35px] bg-card border border-primary/10 space-y-6 shadow-sm">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dca54e]">Estado de Solicitudes</h3>
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Estado de Solicitudes</h3>
                             <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-500 text-[8px] font-black uppercase">{pendingMembers.length} Pendientes</span>
                         </div>
                         
@@ -292,7 +297,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                             )}
                         </div>
 
-                        <div className="pt-4 border-t border-white/5 space-y-3">
+                        <div className="pt-4 border-t border-foreground/[0.08] space-y-3">
                             <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Protocolos Rápidos</h4>
                             {[
                                 { label: 'Gestionar Miembros', icon: Users, tab: 'miembros' },
@@ -304,10 +309,10 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                 <button 
                                     key={i} 
                                     onClick={() => btn.tab && setActiveTab?.(btn.tab)}
-                                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-[#dca54e]/30 hover:bg-white/[0.05] transition-all group"
+                                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-foreground/[0.03] border border-foreground/[0.05] hover:border-primary/30 hover:bg-foreground/[0.05] transition-all group"
                                 >
                                     <div className="flex items-center gap-3">
-                                        <btn.icon size={14} className="text-muted-foreground group-hover:text-[#dca54e] transition-colors" />
+                                        <btn.icon size={14} className="text-muted-foreground group-hover:text-primary transition-colors" />
                                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-foreground">{btn.label}</span>
                                     </div>
                                     <ChevronRight size={12} className="text-muted-foreground group-hover:translate-x-1 transition-all" />
