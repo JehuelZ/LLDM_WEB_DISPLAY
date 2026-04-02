@@ -6,18 +6,25 @@ import {
     LayoutDashboard, CheckCircle2, TrendingUp, 
     ArrowUpRight, Users, UserCheck, Clock,
     Zap, Activity, Shield, Target, Smartphone,
-    ChevronRight, Bell, Calendar
+    ChevronRight, Bell, Calendar, UserPlus, AlertCircle,
+    UserX, Mail
 } from 'lucide-react'
-import { useAppStore } from '@/lib/store'
+import { useAppStore, UserProfile } from '@/lib/store'
 import { cn } from '@/lib/utils'
 import AdminClockWeather from '@/components/admin/AdminClockWeather'
+import { format, parseISO } from 'date-fns'
+import { es } from 'date-fns/locale'
 
 // --- HIGH FIDELITY WIDGETS (PRIMITIVO DNA) ---
 
-const StatBox = ({ title, value, icon: Icon, color, trend }: any) => (
+const StatBox = ({ title, value, icon: Icon, color, trend, onClick }: any) => (
     <motion.div 
         whileHover={{ scale: 1.02, y: -2 }}
-        className="relative p-5 rounded-3xl bg-[#0b101e] border border-[#dca54e]/10 group overflow-hidden"
+        onClick={onClick}
+        className={cn(
+            "relative p-5 rounded-3xl bg-[#0b101e] border border-[#dca54e]/10 group overflow-hidden transition-all",
+            onClick && "cursor-pointer hover:border-[#dca54e]/40"
+        )}
     >
         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
             <Icon size={64} style={{ color }} />
@@ -26,7 +33,7 @@ const StatBox = ({ title, value, icon: Icon, color, trend }: any) => (
             <div className={cn("p-3 rounded-2xl bg-opacity-10", `bg-[${color}]/10`)} style={{ backgroundColor: `${color}15` }}>
                 <Icon size={20} style={{ color }} />
             </div>
-            {trend && (
+            {trend !== undefined && (
                 <div className={cn("flex items-center gap-1 text-[10px] font-black italic", trend > 0 ? "text-emerald-500" : "text-orange-500")}>
                     {trend > 0 ? <ArrowUpRight size={12} /> : <Activity size={12} />}
                     {Math.abs(trend)}%
@@ -96,10 +103,19 @@ const OrbitalGauge = ({ value, label, color = "#dca54e" }: any) => (
 
 // --- MAIN COMPONENT ---
 
-export const DashboardTab = () => {
-    const { members, messages, setActiveTab, settings } = useAppStore();
+export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) => void }) => {
+    const { members, messages, settings } = useAppStore();
 
     const activeMembers = useMemo(() => members.filter(m => m.status === 'Activo'), [members]);
+    const pendingMembers = useMemo(() => 
+        members.filter(m => m.status === 'Pendiente' || m.is_pre_registered)
+               .sort((a, b) => {
+                   const dateA = a.createdAt || a.lastActive || '';
+                   const dateB = b.createdAt || b.lastActive || '';
+                   return dateB.localeCompare(dateA);
+               }), [members]);
+
+    const unreadMessages = useMemo(() => messages.filter(m => !m.isRead), [messages]);
     
     return (
         <motion.div
@@ -127,8 +143,21 @@ export const DashboardTab = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <StatBox title="Miembros Totales" value={members.length} icon={Users} color="#dca54e" trend={+2.4} />
                 <StatBox title="Asistencia hoy" value="84%" icon={UserCheck} color="#3b82f6" trend={+1.1} />
-                <StatBox title="Mensajes" value={messages.length} icon={Bell} color="#ef4444" trend={-0.5} />
-                <StatBox title="Sincronización" value="99.9" icon={Activity} color="#10b981" />
+                <StatBox 
+                    title="Nuevos Registros" 
+                    value={pendingMembers.length} 
+                    icon={UserPlus} 
+                    color="#f59e0b" 
+                    onClick={() => setActiveTab?.('miembros')}
+                />
+                <StatBox 
+                    title="Bandeja Inbox" 
+                    value={unreadMessages.length} 
+                    icon={Bell} 
+                    color="#ef4444" 
+                    trend={unreadMessages.length > 0 ? +unreadMessages.length : 0}
+                    onClick={() => setActiveTab?.('mensajes')}
+                />
             </div>
 
             {/* MAIN DATA GRID */}
@@ -142,9 +171,68 @@ export const DashboardTab = () => {
                         <div className="w-2 h-2 rounded-full bg-white/10" />
                     </div>
                     
-                    <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-[#dca54e] mb-12 flex items-center gap-4">
+                    <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-[#dca54e] mb-10 flex items-center gap-4">
                         <Target size={14} /> Telemetría Global de Membresía
                     </h3>
+
+                    {/* NEW: INBOX DE ACTIVIDAD / REGISTROS */}
+                    <div className="mb-12 space-y-6">
+                        <div className="flex items-center justify-between">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground flex items-center gap-3">
+                                <Activity className="w-4 h-4 text-[#dca54e]" /> 
+                                Bandeja de Actividad Reciente
+                            </h4>
+                            <button 
+                                onClick={() => setActiveTab?.('miembros')}
+                                className="text-[9px] font-black uppercase tracking-widest text-[#dca54e] hover:text-foreground transition-colors"
+                            >
+                                Ver todos
+                            </button>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 gap-3">
+                            {pendingMembers.length === 0 ? (
+                                <div className="p-10 rounded-3xl bg-white/[0.02] border border-dashed border-white/5 flex flex-col items-center justify-center text-center">
+                                    <CheckCircle2 className="w-8 h-8 text-emerald-500/30 mb-4" />
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">No hay registros pendientes de aprobación</p>
+                                </div>
+                            ) : (
+                                pendingMembers.slice(0, 3).map((member, i) => (
+                                    <motion.div 
+                                        key={member.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: i * 0.1 }}
+                                        className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-between group hover:border-[#dca54e]/30 transition-all cursor-pointer"
+                                        onClick={() => setActiveTab?.('miembros')}
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-xl bg-[#dca54e]/10 border border-[#dca54e]/20 flex items-center justify-center overflow-hidden">
+                                                {member.avatar ? (
+                                                    <img src={member.avatar} className="w-full h-full object-cover" alt={member.name} />
+                                                ) : (
+                                                    <UserPlus className="w-5 h-5 text-[#dca54e]" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <h4 className="text-xs font-black text-foreground uppercase italic tracking-tighter">{member.name}</h4>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[8px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 rounded-full">Solicitud de Registro</span>
+                                                    <span className="text-[8px] font-bold text-muted-foreground">
+                                                        {member.createdAt ? format(parseISO(member.createdAt), 'dd MMM, HH:mm', { locale: es }) : 'Reciente'}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
+                                            <ChevronRight size={14} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                                        </div>
+                                    </motion.div>
+                                ))
+                            )}
+                        </div>
+                    </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
                         <OrbitalGauge value={Math.round((activeMembers.length / members.length) * 100)} label="Actividad" />
