@@ -303,7 +303,7 @@ export default function MembersPage() {
             {/* Admin Overview Stats */}
             <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-md transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
                         ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
@@ -322,7 +322,7 @@ export default function MembersPage() {
                 </Card>
 
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-md transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
                         ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
@@ -341,7 +341,7 @@ export default function MembersPage() {
                 </Card>
 
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-md transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
                         ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
@@ -367,7 +367,7 @@ export default function MembersPage() {
                 </Card>
 
                 <Card className={cn(
-                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-[20px] transition-all duration-300",
+                    "p-6 flex items-center justify-between group overflow-hidden relative rounded-md transition-all duration-300",
                     settings.adminTheme === 'primitivo' 
                         ? "bg-emerald-500/[0.08] border-emerald-500/20 shadow-none hover:bg-emerald-500/[0.12]" 
                         : "glass-card border-none shadow-2xl"
@@ -429,10 +429,10 @@ export default function MembersPage() {
                     <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
                         <div className="relative w-full md:w-96 group">
                             {/* Outer Glow on Focus */}
-                            <div className="absolute -inset-0.5 bg-emerald-500/0 group-focus-within:bg-emerald-500/15 rounded-2xl blur-md transition-all duration-500" />
+                            <div className="absolute -inset-0.5 bg-emerald-500/0 group-focus-within:bg-emerald-500/15 rounded-md blur-md transition-all duration-500" />
                             
                             <div className={cn(
-                                "relative border rounded-2xl overflow-hidden focus-within:border-emerald-500/60 transition-all duration-300 backdrop-blur-md",
+                                "relative border rounded-md overflow-hidden focus-within:border-emerald-500/60 transition-all duration-300 backdrop-blur-md",
                                 settings.adminTheme === 'primitivo' ? "bg-background/80 border-border/40" : "bg-black/60 border-white/30 focus-within:bg-black/80"
                             )}>
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-emerald-400 transition-colors" />
@@ -514,7 +514,7 @@ export default function MembersPage() {
                                                             settings.adminTheme === 'primitivo' ? "border-emerald-500/40 shadow-none" : "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.35)]"
                                                         )}>
                                                             {member.avatar ? (
-                                                                <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+                                                                <img src={member.avatar} alt={member.name} className="w-full h-full object-cover rounded-full" />
                                                             ) : (
                                                                 <span className="text-primary font-bold">{member.name.charAt(0)}</span>
                                                             )}
@@ -603,7 +603,7 @@ export default function MembersPage() {
                                                         <div className="col-span-1 border-r border-border/20 pr-8 space-y-6">
                                                             <div className="relative group/avatar w-24 h-24 mx-auto md:mx-0">
                                                                 <div className={cn(
-                                                                    "w-24 h-24 rounded-2xl overflow-hidden border-2 bg-emerald-500/5",
+                                                                    "w-24 h-24 rounded-full overflow-hidden border-2 bg-emerald-500/5",
                                                                     settings.adminTheme === 'primitivo' ? "border-emerald-500/20 shadow-none" : "border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.2)]"
                                                                 )}>
                                                                     {member.avatar ? (
@@ -616,7 +616,7 @@ export default function MembersPage() {
                                                                 </div>
                                                                 <button 
                                                                     className={cn(
-                                                                        "absolute -bottom-2 -right-2 p-2 bg-primary text-black rounded-lg opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:scale-110 active:scale-95 transition-all",
+                                                                        "absolute -bottom-2 -right-2 p-2 bg-primary text-black rounded-md opacity-0 group-hover/avatar:opacity-100 transition-opacity hover:scale-110 active:scale-95 transition-all",
                                                                         settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-lg"
                                                                     )}
                                                                     onClick={() => showNotification(`Actividad reciente de ${member.name} sincronizada`, 'success')}
@@ -625,7 +625,7 @@ export default function MembersPage() {
                                                                 </button>
                                                             </div>
                                                             <div className="space-y-4">
-                                                                <h4 className="inline-block px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20 mb-4">Perfil del Miembro</h4>
+                                                                <h4 className="inline-block px-3 py-1.5 rounded-md bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20 mb-4">Perfil del Miembro</h4>
                                                                 <div className="space-y-2">
                                                                     <div className="flex items-center gap-2 text-xs text-muted-foreground"><Mail className="h-3 w-3" /> {member.email}</div>
                                                                     <div className="flex items-center gap-2 text-xs text-muted-foreground"><Phone className="h-3 w-3" /> {member.phone}</div>
@@ -672,7 +672,7 @@ export default function MembersPage() {
 
                                                             {/* Privileges Assignment Section */}
                                                             <div className="pt-8 border-t border-border/20">
-                                                                <h4 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-black uppercase tracking-widest mb-6">
+                                                                <h4 className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-black uppercase tracking-widest mb-6">
                                                                     <Flame className="w-4 h-4 text-emerald-500" />
                                                                     Asignación de Roles y Privilegios
                                                                 </h4>
@@ -696,7 +696,7 @@ export default function MembersPage() {
                                                                                 key={priv.id}
                                                                                 variant="outline"
                                                                                 className={cn(
-                                                                                    "h-auto py-4 px-6 flex flex-col items-center gap-3 rounded-2xl border transition-all duration-300",
+                                                                                    "h-auto py-4 px-6 flex flex-col items-center gap-3 rounded-md border transition-all duration-300",
                                                                                     isActive
                                                                                         ? "bg-foreground/10 border-white/20"
                                                                                         : "bg-transparent border-border/20 opacity-40 hover:opacity-100 hover:bg-foreground/5"
@@ -763,9 +763,9 @@ export default function MembersPage() {
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
                                 {/* Basic Info Column */}
                                 <div className="lg:col-span-2 space-y-6">
-                                    <div className="flex items-center gap-6 mb-8 p-4 bg-foreground/5 rounded-2xl border border-border/40">
+                                    <div className="flex items-center gap-6 mb-8 p-4 bg-foreground/5 rounded-md border border-border/40">
                                         <div className="relative group cursor-pointer" onClick={() => (document.getElementById('member-avatar-upload') as HTMLInputElement)?.click()}>
-                                            <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary/30 bg-card">
+                                            <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/30 bg-card">
                                                 {memberModal.data.avatar ? (
                                                     <img src={memberModal.data.avatar} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                                                 ) : (
@@ -774,7 +774,7 @@ export default function MembersPage() {
                                                     </div>
                                                 )}
                                             </div>
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl">
+                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
                                                 <Camera className="w-8 h-8 text-white" />
                                             </div>
                                             <input

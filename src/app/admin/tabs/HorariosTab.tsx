@@ -99,7 +99,7 @@ export const HorariosTab = ({
             exit={{ opacity: 0, y: -20 }}
             className="space-y-8"
         >
-            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white/5 p-6 rounded-[2rem] border border-[var(--tactile-border)]">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white/5 p-6 rounded-md border border-[var(--tactile-border)]">
                 <div className="flex flex-col md:flex-row items-baseline gap-3">
                     <h2 className="text-2xl font-black text-foreground capitalize tracking-tighter">Programación</h2>
                     <span className="text-lg font-bold text-muted-foreground capitalize tracking-tight opacity-70">

@@ -80,9 +80,9 @@ export const MiembrosTab = ({
                         color: 'text-orange-500' 
                     },
                 ].map((stat, i) => (
-                    <div key={i} className="bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] p-6 rounded-[2rem] relative overflow-hidden group hover:border-primary/20 transition-all">
+                    <div key={i} className="bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] p-6 rounded-md relative overflow-hidden group hover:border-primary/20 transition-all">
                         <div className="flex justify-between items-start mb-4">
-                            <div className={cn("p-3 rounded-2xl bg-[var(--tactile-item-hover)] border border-[var(--tactile-border)]", stat.color)}>
+                            <div className={cn("p-3 rounded-md bg-[var(--tactile-item-hover)] border border-[var(--tactile-border)]", stat.color)}>
                                 <stat.icon className="w-5 h-5 shadow-inner" />
                             </div>
                             <div className="flex flex-col items-end">
@@ -97,7 +97,7 @@ export const MiembrosTab = ({
 
             {/* Distribution Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 bg-[var(--tactile-inner-bg-alt)]/50 border border-[var(--tactile-border)] rounded-[2.5rem] p-8">
+                <div className="lg:col-span-2 bg-[var(--tactile-inner-bg-alt)]/50 border border-[var(--tactile-border)] rounded-md p-8">
                     <div className="flex justify-between items-center mb-8">
                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">DISTRIBUCIÓN DE MEMBRESÍA</h4>
                     </div>
@@ -124,7 +124,7 @@ export const MiembrosTab = ({
                     </div>
                 </div>
 
-                <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-[2.5rem] p-8 flex flex-col justify-between overflow-hidden relative">
+                <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-md p-8 flex flex-col justify-between overflow-hidden relative">
                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full blur-[40px] pointer-events-none" />
                     <div>
                         <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2">SALUD LOCAL</h4>
@@ -134,7 +134,7 @@ export const MiembrosTab = ({
                         <span className="text-6xl font-black tracking-tighter text-[var(--tactile-text)]">A+</span>
                         <span className="text-xs font-black text-emerald-500 uppercase">Óptimo</span>
                     </div>
-                    <button className="w-full py-4 bg-[var(--tactile-card-bg)] border border-[var(--tactile-border-strong)] rounded-2xl text-[9px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-white transition-all">
+                    <button className="w-full py-4 bg-[var(--tactile-card-bg)] border border-[var(--tactile-border-strong)] rounded-md text-[9px] font-black uppercase tracking-[0.2em] hover:bg-primary hover:text-white transition-all">
                         VER REPORTE DETALLADO
                     </button>
                 </div>
@@ -145,11 +145,11 @@ export const MiembrosTab = ({
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-[var(--tactile-inner-bg)]/80 border border-emerald-500/20 rounded-[2.5rem] p-8 space-y-6 shadow-2xl relative overflow-hidden backdrop-blur-xl"
+                    className="bg-[var(--tactile-inner-bg)]/80 border border-emerald-500/20 rounded-md p-8 space-y-6 shadow-2xl relative overflow-hidden backdrop-blur-xl"
                 >
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-500/30">
+                            <div className="w-12 h-12 bg-emerald-500/20 rounded-md flex items-center justify-center border border-emerald-500/30">
                                 <ShieldAlert className="w-6 h-6 text-emerald-500" />
                             </div>
                             <div>
@@ -164,10 +164,10 @@ export const MiembrosTab = ({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
                         {pendingMembers.map((pending) => (
-                            <div key={pending.id} className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-5 rounded-[1.75rem] space-y-4 hover:border-emerald-500/40 transition-all duration-300 group/audit-card relative overflow-hidden flex flex-col justify-between">
+                            <div key={pending.id} className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-5 rounded-md space-y-4 hover:border-emerald-500/40 transition-all duration-300 group/audit-card relative overflow-hidden flex flex-col justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="relative w-14 h-11 shrink-0">
-                                        <div className="relative w-full h-full rounded-xl overflow-hidden border border-[var(--tactile-border-strong)] bg-[var(--tactile-inner-bg)]">
+                                        <div className="relative w-full h-full rounded-md overflow-hidden border border-[var(--tactile-border-strong)] bg-[var(--tactile-inner-bg)]">
                                             {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-full h-full p-3 text-emerald-500/40" />}
                                         </div>
                                     </div>
@@ -181,7 +181,7 @@ export const MiembrosTab = ({
                                 </div>
                                 <div className="flex gap-2 pt-2">
                                     <button 
-                                        className="flex-1 h-9 bg-emerald-600 hover:bg-primary text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl shadow-lg transition-all"
+                                        className="flex-1 h-9 bg-emerald-600 hover:bg-primary text-foreground text-[9px] font-black uppercase tracking-widest rounded-md shadow-lg transition-all"
                                         disabled={isSaving}
                                         onClick={async () => {
                                             setIsSaving(true);
@@ -194,7 +194,7 @@ export const MiembrosTab = ({
                                         APROBAR
                                     </button>
                                     <button 
-                                        className="px-4 h-9 bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-foreground text-[8px] font-black uppercase tracking-widest rounded-xl transition-all"
+                                        className="px-4 h-9 bg-rose-500/10 text-rose-500 border border-rose-500/20 hover:bg-rose-500 hover:text-foreground text-[8px] font-black uppercase tracking-widest rounded-md transition-all"
                                         onClick={async () => {
                                             if (confirm(`¿ELIMINAR SOLICITUD DE ${pending.name.toUpperCase()}?`)) {
                                                 setIsSaving(true);
@@ -217,7 +217,7 @@ export const MiembrosTab = ({
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-2">
                 <div className="w-full md:w-auto flex items-center gap-6">
                     <h2 className="text-4xl font-black tracking-tighter shrink-0">MIEMBROS <span className="text-muted-foreground/40">LOCALES</span></h2>
-                    <div className="relative w-full max-w-md bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border-strong)] rounded-xl p-1 shadow-2xl backdrop-blur-xl group">
+                    <div className="relative w-full max-w-md bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border-strong)] rounded-md p-1 shadow-2xl backdrop-blur-xl group">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 group-focus-within:text-emerald-400 transition-colors" />
                         <input
                             type="text"
@@ -230,14 +230,14 @@ export const MiembrosTab = ({
                 </div>
                 <button
                     onClick={() => { setEditingMember(null); setShowAddMember(true); }}
-                    className="w-full md:w-auto bg-primary text-foreground h-11 px-8 rounded-xl text-[10px] font-black tracking-widest hover:scale-[1.02] transition-transform active:scale-95 shadow-xl shadow-black/40"
+                    className="w-full md:w-auto bg-primary text-foreground h-11 px-8 rounded-md text-[10px] font-black tracking-widest hover:scale-[1.02] transition-transform active:scale-95 shadow-xl shadow-black/40"
                 >
                     AGREGAR MIEMBRO
                 </button>
             </div>
 
             {/* Filters Bar */}
-            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl shadow-2xl overflow-hidden">
+            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                 {[
                     { id: 'all', label: 'TODOS LOS MIEMBROS', count: members.length },
                     { id: 'Administración', label: 'SIERVOS DE DIOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
@@ -250,7 +250,7 @@ export const MiembrosTab = ({
                         key={group.id}
                         onClick={() => setMemberFilter(group.id)}
                         className={cn(
-                            "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                            "px-5 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                             memberFilter === group.id 
                                 ? "bg-primary text-foreground scale-[1.02]" 
                                 : "text-foreground/40 hover:text-foreground hover:bg-[var(--tactile-item-hover)]"
@@ -282,16 +282,16 @@ export const MiembrosTab = ({
                     .map(member => (
                         <div 
                             key={member.id} 
-                            className="group bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-6 rounded-[1.5rem] flex items-center gap-6 hover:border-emerald-400/30 transition-all duration-500 relative overflow-hidden"
+                            className="group bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-6 rounded-md flex items-center gap-6 hover:border-emerald-400/30 transition-all duration-500 relative overflow-hidden"
                         >
                             <div className="relative shrink-0 z-10">
                                 <div className={cn(
-                                    "w-20 h-20 rounded-xl border transition-all duration-500 group-hover:scale-105 bg-[var(--tactile-inner-bg)] p-1 overflow-hidden",
+                                    "w-20 h-20 rounded-md border transition-all duration-500 group-hover:scale-105 bg-[var(--tactile-inner-bg)] p-1 overflow-hidden",
                                     member.status === 'Activo' ? "border-emerald-500/30 bg-primary/10" : "border-[var(--tactile-border-strong)]"
                                 )}>
                                     <img 
                                         src={member.avatar || `https://ui-avatars.com/api/?name=${member.name}&background=random`} 
-                                        className="w-full h-full object-cover rounded-[1.4rem]" 
+                                        className="w-full h-full object-cover rounded-md" 
                                         alt={member.name} 
                                     />
                                 </div>

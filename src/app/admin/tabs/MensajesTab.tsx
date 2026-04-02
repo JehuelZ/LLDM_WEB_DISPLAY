@@ -51,7 +51,7 @@ export const MensajesTab = ({
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="space-y-1">
                         <div className="flex items-center gap-3 mb-2">
-                            <div className="p-2 bg-[#dca54e]/10 rounded-xl">
+                            <div className="p-2 bg-[#dca54e]/10 rounded-md">
                                 <Radio className="w-4 h-4 text-[#dca54e]" />
                             </div>
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dca54e]">Canal de Comunicaciones</span>
@@ -60,7 +60,7 @@ export const MensajesTab = ({
                             Buzón de <span className="text-[#dca54e]">Mensajes</span>
                         </h2>
                     </div>
-                    <div className="flex items-center gap-4 bg-black/40 p-4 rounded-3xl border border-white/5">
+                    <div className="flex items-center gap-4 bg-black/40 p-4 rounded-md border border-white/5">
                         <div className="text-right">
                             <p className="text-[8px] font-black uppercase text-muted-foreground tracking-widest mb-1">Total Entrantes</p>
                             <p className="text-2xl font-black font-orbitron text-white">{adminMessages.length}</p>
@@ -108,14 +108,14 @@ export const MensajesTab = ({
                                 {/* Sender Info - Sidebar Style */}
                                 <div className="md:w-48 flex flex-row md:flex-col items-center md:items-start gap-4 border-b md:border-b-0 md:border-r border-white/5 pb-6 md:pb-0 md:pr-6">
                                     <div className="relative">
-                                        <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-[#dca54e]/20 to-black border border-[#dca54e]/30 flex items-center justify-center overflow-hidden">
+                                        <div className="w-16 h-16 rounded-md bg-gradient-to-br from-[#dca54e]/20 to-black border border-[#dca54e]/30 flex items-center justify-center overflow-hidden">
                                             {msg.senderAvatar ? (
                                                 <img src={msg.senderAvatar} className="w-full h-full object-cover" />
                                             ) : (
                                                 <User className="w-8 h-8 text-[#dca54e]" />
                                             )}
                                         </div>
-                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-[#0b101e] border border-white/10 flex items-center justify-center">
+                                        <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-md bg-[#0b101e] border border-white/10 flex items-center justify-center">
                                             <div className={cn("w-2 h-2 rounded-full", msg.isRead ? "bg-white/20" : "bg-emerald-500")} />
                                         </div>
                                     </div>
@@ -140,7 +140,7 @@ export const MensajesTab = ({
                                         {!msg.isRead && (
                                             <button
                                                 onClick={() => markMessageAsRead(msg.id)}
-                                                className="h-10 px-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2"
+                                                className="h-10 px-6 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[9px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2"
                                             >
                                                 <CheckCircle2 size={14} /> Archivar
                                             </button>
@@ -148,7 +148,7 @@ export const MensajesTab = ({
                                         <button
                                             onClick={() => setReplyingTo(replyingTo === msg.id ? null : msg.id)}
                                             className={cn(
-                                                "h-10 px-8 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg",
+                                                "h-10 px-8 rounded-md text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg",
                                                 replyingTo === msg.id 
                                                     ? "bg-white text-black" 
                                                     : "bg-[#dca54e] text-black shadow-[#dca54e]/20"
@@ -175,7 +175,7 @@ export const MensajesTab = ({
                                                     value={replyText}
                                                     onChange={(e) => setReplyText(e.target.value)}
                                                     placeholder="Escribiendo protocolo de respuesta..."
-                                                    className="w-full h-40 bg-white/5 border border-white/5 rounded-2xl p-6 text-sm font-medium focus:outline-none focus:border-[#dca54e]/50 transition-all resize-none text-white italic"
+                                                    className="w-full h-40 bg-white/5 border border-white/5 rounded-md p-6 text-sm font-medium focus:outline-none focus:border-[#dca54e]/50 transition-all resize-none text-white italic"
                                                 />
                                                 <div className="flex justify-end">
                                                     <button
@@ -191,7 +191,7 @@ export const MensajesTab = ({
                                                             setReplyingTo(null);
                                                             showNotification('Respuesta transmitida con éxito.', 'success');
                                                         }}
-                                                        className="h-12 px-10 bg-gradient-to-r from-[#dca54e] to-[#b88636] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-[#dca54e]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
+                                                        className="h-12 px-10 bg-gradient-to-r from-[#dca54e] to-[#b88636] text-black font-black uppercase tracking-widest text-[10px] rounded-md shadow-xl shadow-[#dca54e]/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2"
                                                     >
                                                         Transmitir Protocolo <ArrowRight size={16} />
                                                     </button>

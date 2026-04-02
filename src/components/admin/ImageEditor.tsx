@@ -113,7 +113,7 @@ export const ImageEditor = ({ isOpen, onClose, imageSrc, onSave, aspectRatio = 1
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="relative w-full max-w-2xl bg-[#0a0a0f] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl"
+                        className="relative w-full max-w-2xl bg-[#0a0a0f] border border-white/10 rounded-md overflow-hidden shadow-2xl"
                     >
                         <div className="p-8 border-b border-white/5 flex items-center justify-between">
                             <div>
@@ -128,7 +128,7 @@ export const ImageEditor = ({ isOpen, onClose, imageSrc, onSave, aspectRatio = 1
                         <div className="p-8">
                             <div 
                                 ref={containerRef}
-                                className="relative aspect-square w-full max-w-[400px] mx-auto bg-black rounded-3xl overflow-hidden border border-white/10 cursor-move group"
+                                className="relative aspect-square w-full max-w-[400px] mx-auto bg-black rounded-md overflow-hidden border border-white/10 cursor-move group"
                                 onMouseDown={handleMouseDown}
                                 onMouseMove={handleMouseMove}
                                 onMouseUp={handleMouseUp}
@@ -182,19 +182,19 @@ export const ImageEditor = ({ isOpen, onClose, imageSrc, onSave, aspectRatio = 1
                                 <div className="flex justify-center gap-4">
                                     <button 
                                         onClick={() => setRotation(prev => prev - 90)}
-                                        className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 transition-colors group"
+                                        className="p-4 bg-white/5 hover:bg-white/10 rounded-md border border-white/5 transition-colors group"
                                     >
                                         <RotateCw className="w-5 h-5 text-white/60 group-hover:text-white rotate-180" />
                                     </button>
                                     <button 
                                         onClick={() => setRotation(prev => prev + 90)}
-                                        className="p-4 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 transition-colors group"
+                                        className="p-4 bg-white/5 hover:bg-white/10 rounded-md border border-white/5 transition-colors group"
                                     >
                                         <RotateCw className="w-5 h-5 text-white/60 group-hover:text-white" />
                                     </button>
                                     <button 
                                         onClick={resetEditor}
-                                        className="px-6 bg-white/5 hover:bg-white/10 rounded-2xl border border-white/5 text-[10px] font-black tracking-widest text-white/60 transition-colors"
+                                        className="px-6 bg-white/5 hover:bg-white/10 rounded-md border border-white/5 text-[10px] font-black tracking-widest text-white/60 transition-colors"
                                     >
                                         RESETEAR
                                     </button>
@@ -205,13 +205,13 @@ export const ImageEditor = ({ isOpen, onClose, imageSrc, onSave, aspectRatio = 1
                         <div className="p-8 bg-white/[0.02] border-t border-white/5 flex gap-4">
                             <button 
                                 onClick={onClose}
-                                className="flex-1 h-14 rounded-2xl border border-white/10 text-[10px] font-black tracking-[0.2em] text-white/40 hover:bg-white/5 transition-colors"
+                                className="flex-1 h-14 rounded-md border border-white/10 text-[10px] font-black tracking-[0.2em] text-white/40 hover:bg-white/5 transition-colors"
                             >
                                 CANCELAR
                             </button>
                             <button 
                                 onClick={handleSave}
-                                className="flex-1 h-14 rounded-2xl bg-primary text-black text-[10px] font-black tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(var(--primary-rgb),0.3)]"
+                                className="flex-1 h-14 rounded-md bg-primary text-black text-[10px] font-black tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(var(--primary-rgb),0.3)]"
                             >
                                 APLICAR CAMBIOS
                             </button>

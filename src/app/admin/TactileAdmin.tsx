@@ -317,7 +317,7 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
                         exit={{ opacity: 0, scale: 0.5 }}
                         className="fixed bottom-10 right-10 z-[200]"
                     >
-                        <div className="bg-primary/20 backdrop-blur-xl border border-primary/40 p-4 rounded-2xl flex items-center gap-3 shadow-2xl">
+                        <div className="bg-primary/20 backdrop-blur-xl border border-primary/40 p-4 rounded-md flex items-center gap-3 shadow-2xl">
                             <RefreshCw className="w-5 h-5 text-primary animate-spin" />
                             <span className="text-[10px] font-black uppercase tracking-widest text-primary">Sincronizando...</span>
                         </div>

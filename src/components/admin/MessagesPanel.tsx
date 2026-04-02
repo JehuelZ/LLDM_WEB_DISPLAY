@@ -31,7 +31,7 @@ export const MessagesPanel = ({
         <Card className={cn(
             "card border-none relative overflow-hidden group transition-all duration-500",
             settings.adminTheme === 'primitivo' 
-                ? "bg-[#101420] rounded-[1.5rem] border border-white/5 shadow-none" 
+                ? "bg-[#101420] rounded-md border border-white/5 shadow-none" 
                 : "bg-slate-900/60 rounded-none glass-card shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
         )}>
             <div className={cn(
@@ -45,7 +45,7 @@ export const MessagesPanel = ({
                             <div className="flex items-center gap-3">
                                 <div className={cn(
                                     "w-10 h-10 flex items-center justify-center shadow-none transition-all",
-                                    settings.adminTheme === 'primitivo' ? "bg-white/5 rounded-2xl border border-white/10" : "bg-white/5 rounded-none border border-white/10"
+                                    settings.adminTheme === 'primitivo' ? "bg-white/5 rounded-md border border-white/10" : "bg-white/5 rounded-none border border-white/10"
                                 )}>
                                     <Mail className={cn("h-4 w-4", settings.adminTheme === 'primitivo' ? "text-white/70" : "text-white")} />
                                 </div>
@@ -66,7 +66,7 @@ export const MessagesPanel = ({
                         <div className="flex flex-col items-center justify-center py-24 text-white/20">
                             <div className={cn(
                                 "w-20 h-20 flex items-center justify-center mb-8 border transition-all",
-                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-[2rem] border-white/5" : "bg-white/[0.02] border-white/5 rounded-none"
+                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-md border-white/5" : "bg-white/[0.02] border-white/5 rounded-none"
                             )}>
                                 <Mail className={cn("h-10 w-10 opacity-5", settings.adminTheme === 'primitivo' ? "text-white" : "")} />
                             </div>
@@ -77,14 +77,14 @@ export const MessagesPanel = ({
                             <div key={msg.id} className={cn(
                                 "group/msg p-6 border transition-all duration-500 relative overflow-hidden",
                                 settings.adminTheme === 'primitivo'
-                                    ? "bg-white/[0.02] border-white/5 rounded-[1.5rem] hover:bg-white/[0.04] scroll-m-2"
+                                    ? "bg-white/[0.02] border-white/5 rounded-md hover:bg-white/[0.04] scroll-m-2"
                                     : "bg-black/20 border-white/5 rounded-none hover:border-emerald-500/20 shadow-inner"
                             )}>
                                 <div className="flex justify-between items-start mb-4 relative z-10">
                                     <div className="flex items-center gap-4">
                                         <div className={cn(
                                             "w-10 h-10 flex items-center justify-center text-xs font-black",
-                                            settings.adminTheme === 'primitivo' ? "bg-white/5 rounded-xl text-white/50" : "bg-emerald-500/10 rounded-none text-emerald-500 border border-emerald-500/20"
+                                            settings.adminTheme === 'primitivo' ? "bg-white/5 rounded-md text-white/50" : "bg-emerald-500/10 rounded-none text-emerald-500 border border-emerald-500/20"
                                         )}>
                                             {(msg.senderName || msg.sender_name)?.[0]?.toUpperCase() || '?'}
                                         </div>
@@ -111,7 +111,7 @@ export const MessagesPanel = ({
                                     <button
                                         onClick={() => setReplyingTo(replyingTo === msg.id ? null : msg.id)}
                                         className={cn(
-                                            "flex items-center gap-2 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shadow-none",
+                                            "flex items-center gap-2 px-4 py-2 rounded-md text-[9px] font-black uppercase tracking-widest transition-all shadow-none",
                                             settings.adminTheme === 'primitivo' ? "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white" : "bg-emerald-500/5 text-emerald-500 hover:bg-emerald-500/10"
                                         )}
                                     >
@@ -137,7 +137,7 @@ export const MessagesPanel = ({
                                         >
                                             <textarea
                                                 className={cn(
-                                                    "w-full h-24 p-4 text-xs bg-black/40 border-none rounded-xl focus:ring-1 transition-all placeholder:text-slate-700 resize-none",
+                                                    "w-full h-24 p-4 text-xs bg-black/40 border-none rounded-md focus:ring-1 transition-all placeholder:text-slate-700 resize-none",
                                                     settings.adminTheme === 'primitivo' ? "focus:ring-white/10" : "focus:ring-emerald-500/30"
                                                 )}
                                                 placeholder="Escribe tu respuesta..."
@@ -157,7 +157,7 @@ export const MessagesPanel = ({
                                                     size="sm"
                                                     onClick={() => handleSendReply(msg.senderId || msg.sender_id)}
                                                     className={cn(
-                                                        "px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-none",
+                                                        "px-6 py-2 rounded-md text-[9px] font-black uppercase tracking-widest shadow-none",
                                                         settings.adminTheme === 'primitivo' ? "bg-white text-black hover:bg-white/90" : "bg-emerald-600 text-white hover:bg-emerald-500"
                                                     )}
                                                 >

@@ -27,6 +27,7 @@ export const AsistenciaTab = ({
     weeklyStats
 }: AsistenciaTabProps) => {
     const {
+        settings,
         attendanceRecords,
         saveAttendanceToCloud,
         showNotification,
@@ -118,7 +119,7 @@ export const AsistenciaTab = ({
             className="space-y-8"
         >
             {/* Attendance Header & Controls */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.03] p-8 rounded-[2.5rem] border border-[var(--tactile-border)] backdrop-blur-xl">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.03] p-8 rounded-md border border-[var(--tactile-border)] backdrop-blur-xl">
                 <div className="flex flex-col gap-2 text-center md:text-left">
                     <h2 className="text-3xl font-black  capitalize tracking-tighter text-foreground">
                         Control de <span className="text-emerald-400">Asistencia</span>
@@ -144,13 +145,13 @@ export const AsistenciaTab = ({
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-3">
-                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl shadow-2xl overflow-hidden">
+                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                         {(['5am', '9am', 'evening'] as const).map(session => (
                             <button
                                 key={session}
                                 onClick={() => setCurrentAttendanceSession(session)}
                                 className={cn(
-                                    "px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                    "px-6 py-3 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                     currentAttendanceSession === session
                                         ? "bg-[#576983] text-black transform scale-[1.02]"
                                         : "text-muted-foreground hover:text-foreground hover:bg-white/5"
@@ -173,7 +174,7 @@ export const AsistenciaTab = ({
 
             {/* Horizontal Filter Bar & Search for Attendance Groups */}
             <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="admin-member-filters-bar flex-1 flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl shadow-2xl overflow-hidden">
+                <div className="admin-member-filters-bar flex-1 flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                     {[
                         { id: 'all', label: 'TODOS', count: members.length },
                         { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
@@ -186,7 +187,7 @@ export const AsistenciaTab = ({
                             key={group.id}
                             onClick={() => setMemberFilter(group.id)}
                             className={cn(
-                                "px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                "px-5 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                 memberFilter === group.id
                                     ? "bg-[#576983] text-black transform scale-[1.02]"
                                     : "text-muted-foreground hover:text-foreground hover:bg-white/5"
@@ -196,7 +197,7 @@ export const AsistenciaTab = ({
                         </button>
                     ))}
                 </div>
-                <div className="relative w-full md:w-64 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl p-1 shadow-inner group">
+                <div className="relative w-full md:w-64 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md p-1 shadow-inner group">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/40 group-focus-within:text-primary transition-colors" />
                     <input
                         type="text"
@@ -316,7 +317,7 @@ export const AsistenciaTab = ({
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className={cn(
-                                    "relative flex items-center gap-4 p-4 rounded-3xl border transition-all duration-300 text-left overflow-hidden group",
+                                    "relative flex items-center gap-4 p-4 rounded-md border transition-all duration-300 text-left overflow-hidden group",
                                     isPresent 
                                         ? "bg-primary/20 border-primary/40 shadow-[0_0_20px_rgba(59,130,246,0.15)]" 
                                         : "bg-white/[0.02] border-[var(--tactile-border)] hover:border-[var(--tactile-border-strong)]"
@@ -329,14 +330,18 @@ export const AsistenciaTab = ({
                                 <div className="relative shrink-0 cursor-pointer hover:scale-110 transition-transform z-10"
                                      onClick={(e) => { e.stopPropagation(); handleViewHistory(member); }}>
                                     <div className={cn(
-                                        "w-12 h-12 rounded-xl border-2 overflow-hidden transition-all duration-500",
-                                        isPresent ? "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]" : "border-[var(--tactile-border-strong)]"
+                                        "w-12 h-12 rounded-md border transition-all duration-500 overflow-hidden p-1 shadow-sm",
+                                        settings.adminTheme === 'primitivo' 
+                                            ? (isPresent ? "border-emerald-500/60 bg-emerald-500/20" : "border-emerald-500/10 bg-emerald-500/5 hover:border-emerald-500/40")
+                                            : (isPresent ? "border-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.35)]" : "border-[var(--tactile-border-strong)]")
                                     )}>
                                         {member.avatar ? (
-                                            <img src={member.avatar} className="w-full h-full object-cover" alt="" />
+                                            <img src={member.avatar} className="w-full h-full object-cover rounded-md transition-transform group-hover:scale-110" alt="" />
                                         ) : (
-                                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                                                <User className="w-6 h-6 text-muted-foreground/20" />
+                                            <div className="w-full h-full flex items-center justify-center bg-[var(--tactile-inner-bg)] rounded-md">
+                                                <span className={cn("text-xs font-black tracking-tighter", isPresent ? "text-emerald-500" : "text-muted-foreground/30")}>
+                                                    {member.name.charAt(0).toUpperCase()}
+                                                </span>
                                             </div>
                                         )}
                                     </div>
@@ -351,7 +356,7 @@ export const AsistenciaTab = ({
                                         </div>
                                     )}
                                     {member.is_pre_registered && (
-                                        <div className="absolute -top-1.5 -right-1.5 bg-[#10b981] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover:rotate-0 transition-transform z-20">
+                                        <div className="absolute -top-1.5 -right-1.5 bg-[#10b981] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-md border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover:rotate-0 transition-transform z-20">
                                             PRE
                                         </div>
                                     )}

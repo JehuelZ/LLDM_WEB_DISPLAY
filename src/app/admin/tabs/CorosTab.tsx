@@ -46,12 +46,12 @@ export const CorosTab = ({
                 <TactileGlassCard title="ENSAYOS DE CORO">
                     <div className="space-y-4">
                         {rehearsals.length === 0 ? (
-                            <div className="p-8 border-2 border-dashed border-[var(--tactile-border)] rounded-2xl text-center bg-black/5">
+                            <div className="p-8 border-2 border-dashed border-[var(--tactile-border)] rounded-md text-center bg-black/5">
                                 <p className="text-muted-foreground text-xs font-bold">No hay ensayos programados</p>
                             </div>
                         ) : (
                             rehearsals.map(reh => (
-                                <div key={reh.id} className="flex items-center gap-4 p-4 bg-black/5 rounded-xl border border-[var(--tactile-border)] group">
+                                <div key={reh.id} className="flex items-center gap-4 p-4 bg-black/5 rounded-md border border-[var(--tactile-border)] group">
                                     <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-xs">
                                         {['D', 'L', 'M', 'X', 'J', 'V', 'S'][reh.dayOfWeek]}
                                     </div>
@@ -102,12 +102,12 @@ export const CorosTab = ({
                                 const uniformId = uniformSchedule[date];
                                 const uniform = uniforms.find(u => u.id === uniformId);
                                 return (
-                                    <div key={date} className="flex items-center justify-between p-4 bg-black/5 rounded-xl border border-[var(--tactile-border)] relative group/row">
+                                    <div key={date} className="flex items-center justify-between p-4 bg-black/5 rounded-md border border-[var(--tactile-border)] relative group/row">
                                         <div className="flex flex-col">
                                             <span className="text-[9px] font-black text-muted-foreground capitalize tracking-widest mb-1 truncate">
                                                 {format(parseISO(date), "EEEE d 'de' MMMM", { locale: es })}
                                             </span>
-                                            <span className={cn("font-black px-4 py-1.5 rounded-xl border border-[var(--tactile-border)] bg-black/20 text-xs", uniform ? "text-primary border-primary/20" : "text-foreground/20")}>
+                                            <span className={cn("font-black px-4 py-1.5 rounded-md border border-[var(--tactile-border)] bg-black/20 text-xs", uniform ? "text-primary border-primary/20" : "text-foreground/20")}>
                                                 {uniform?.name || 'NO DEFINIDO'}
                                             </span>
                                         </div>
@@ -138,13 +138,13 @@ export const CorosTab = ({
                 </div>
                 <div className="space-y-4">
                     {announcements.filter(a => a.category === 'choir' || a.title.toLowerCase().includes('coro')).length === 0 ? (
-                        <div className="p-12 border-2 border-dashed border-[var(--tactile-border)] rounded-[2.5rem] text-center bg-black/5">
+                        <div className="p-12 border-2 border-dashed border-[var(--tactile-border)] rounded-md text-center bg-black/5">
                             <p className="text-muted-foreground font-bold capitalize tracking-widest text-xs">No hay avisos específicos para el coro</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {announcements.filter(a => a.category === 'choir' || a.title.toLowerCase().includes('coro')).map((ann) => (
-                                <div key={ann.id} className="bg-black/5 p-6 rounded-3xl border border-[var(--tactile-border)] flex items-start gap-4 group hover:bg-[var(--tactile-item-hover)] transition-colors">
+                                <div key={ann.id} className="bg-black/5 p-6 rounded-md border border-[var(--tactile-border)] flex items-start gap-4 group hover:bg-[var(--tactile-item-hover)] transition-colors">
                                     <div className="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-500 border border-pink-500/20">
                                         <Bell className="w-4 h-4" />
                                     </div>

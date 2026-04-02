@@ -14,7 +14,7 @@ export const TactileIconBox = ({ icon: Icon, color }: { icon: any, color: string
 
 export const TactileBadge = ({ children, className }: { children: React.ReactNode, className?: string }) => (
     <div className={cn(
-        "bg-[var(--tactile-panel-bg)] border border-[var(--tactile-border-strong)] rounded-lg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest inline-flex items-center justify-center transition-all hover:bg-[var(--tactile-item-hover)] text-[var(--tactile-text-sub)]",
+        "bg-[var(--tactile-panel-bg)] border border-[var(--tactile-border-strong)] rounded-md px-2.5 py-1 text-[9px] font-black uppercase tracking-widest inline-flex items-center justify-center transition-all hover:bg-[var(--tactile-item-hover)] text-[var(--tactile-text-sub)]",
         className
     )}>
         {children}
@@ -22,7 +22,7 @@ export const TactileBadge = ({ children, className }: { children: React.ReactNod
 )
 
 export const TactileGlassCard = ({ children, title, className, subtitle, extra }: { children: React.ReactNode, title?: string, className?: string, subtitle?: string, extra?: React.ReactNode }) => (
-    <div className={cn("relative group/card bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] rounded-[3rem] p-8 backdrop-blur-3xl overflow-hidden", className)}>
+    <div className={cn("relative group/card bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] rounded-md p-8 backdrop-blur-3xl overflow-hidden", className)}>
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-[100px] -mr-32 -mt-32 pointer-events-none group-hover/card:bg-primary/10 transition-colors duration-700" />
         <div className="relative z-10 text-[var(--tactile-text)]">
             {title && (
@@ -52,7 +52,7 @@ export const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, 
                 onChange={onChange}
                 placeholder={placeholder}
                 className={cn(
-                    "w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl h-12 text-sm font-bold px-4 transition-all outline-none focus:border-primary/50 text-[var(--tactile-text)]",
+                    "w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md h-12 text-sm font-bold px-4 transition-all outline-none focus:border-primary/50 text-[var(--tactile-text)]",
                     Icon && "pl-12"
                 )}
             />
@@ -82,7 +82,7 @@ export const TactileSelect = ({ label, value, onChange, options, icon: Icon, dis
                     type="button"
                     onClick={() => !disabled && setIsOpen(!isOpen)}
                     className={cn(
-                        "w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl h-12 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
+                        "w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md h-12 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
                         isOpen && "border-primary/50 bg-[var(--tactile-inner-bg-alt)]",
                         Icon && "pl-12"
                     )}
@@ -108,7 +108,7 @@ export const TactileSelect = ({ label, value, onChange, options, icon: Icon, dis
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute left-0 right-0 top-full mt-2 bg-[var(--tactile-dropdown-bg)] backdrop-blur-2xl border border-[var(--tactile-border-strong)] rounded-xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[350px]"
+                                className="absolute left-0 right-0 top-full mt-2 bg-[var(--tactile-dropdown-bg)] backdrop-blur-2xl border border-[var(--tactile-border-strong)] rounded-md shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[350px]"
                             >
                                 {searchable && (
                                     <div className="p-2 border-b border-[var(--tactile-border)] sticky top-0 bg-transparent z-10">
@@ -120,7 +120,7 @@ export const TactileSelect = ({ label, value, onChange, options, icon: Icon, dis
                                                 placeholder="Buscar..."
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl pl-9 pr-4 py-2 text-xs font-bold focus:outline-none focus:border-primary/50 transition-colors"
+                                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md pl-9 pr-4 py-2 text-xs font-bold focus:outline-none focus:border-primary/50 transition-colors"
                                             />
                                         </div>
                                     </div>
@@ -131,7 +131,7 @@ export const TactileSelect = ({ label, value, onChange, options, icon: Icon, dis
                                             opt.isHeader ? (
                                                 <div 
                                                     key={`header-${i}`} 
-                                                    className="px-4 py-2 text-[8px] font-black capitalize tracking-[0.2em] text-primary/60 border-t border-[var(--tactile-border)] first:border-0 mt-3 first:mt-1 bg-[var(--tactile-item-hover)] rounded-lg mb-1"
+                                                    className="px-4 py-2 text-[8px] font-black capitalize tracking-[0.2em] text-primary/60 border-t border-[var(--tactile-border)] first:border-0 mt-3 first:mt-1 bg-[var(--tactile-item-hover)] rounded-md mb-1"
                                                 >
                                                     {opt.label}
                                                 </div>
@@ -140,7 +140,7 @@ export const TactileSelect = ({ label, value, onChange, options, icon: Icon, dis
                                                     key={opt.value}
                                                     type="button"
                                                     className={cn(
-                                                        "w-full px-4 py-2.5 text-xs font-bold text-left rounded-xl transition-all flex items-center gap-3 group/opt",
+                                                        "w-full px-4 py-2.5 text-xs font-bold text-left rounded-md transition-all flex items-center gap-3 group/opt",
                                                         value === opt.value ? "bg-primary/10 text-primary" : "text-foreground/70 hover:bg-[var(--tactile-item-hover)] hover:text-foreground"
                                                     )}
                                                     onClick={() => {
@@ -290,7 +290,7 @@ export const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled
                     type="button"
                     onClick={() => !disabled && setIsOpen(!isOpen)}
                     className={cn(
-                        "w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl h-11 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
+                        "w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md h-11 text-sm font-bold px-4 flex items-center justify-between group-focus-within:border-primary/50 transition-all text-left",
                         isOpen && "border-primary/50 bg-[var(--tactile-inner-bg-alt)]",
                         Icon && "pl-12"
                     )}
@@ -319,7 +319,7 @@ export const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute left-0 right-0 top-full mt-2 bg-[var(--tactile-dropdown-bg)] backdrop-blur-2xl border border-[var(--tactile-border-strong)] rounded-xl shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[450px]"
+                                className="absolute left-0 right-0 top-full mt-2 bg-[var(--tactile-dropdown-bg)] backdrop-blur-2xl border border-[var(--tactile-border-strong)] rounded-md shadow-2xl z-[110] overflow-hidden flex flex-col max-h-[450px]"
                             >
                                 <div className="p-3 border-b border-[var(--tactile-border-strong)] sticky top-0 bg-transparent z-10 backdrop-blur-md">
                                     <div className="relative">
@@ -330,7 +330,7 @@ export const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled
                                             placeholder="Buscar fuente... (↑ ↓ Enter)"
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border-strong)] rounded-xl pl-9 pr-4 py-3 text-xs font-bold focus:outline-none focus:border-primary/50 transition-colors"
+                                            className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border-strong)] rounded-md pl-9 pr-4 py-3 text-xs font-bold focus:outline-none focus:border-primary/50 transition-colors"
                                         />
                                     </div>
                                 </div>
@@ -340,7 +340,7 @@ export const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled
                                             opt.isHeader ? (
                                                 <div 
                                                     key={`header-${i}`} 
-                                                    className="px-4 py-2 text-[8px] font-black capitalize tracking-[0.2em] text-primary/60 border-t border-[var(--tactile-border)] first:border-0 mt-3 first:mt-1 bg-[var(--tactile-item-hover)] rounded-lg mb-1"
+                                                    className="px-4 py-2 text-[8px] font-black capitalize tracking-[0.2em] text-primary/60 border-t border-[var(--tactile-border)] first:border-0 mt-3 first:mt-1 bg-[var(--tactile-item-hover)] rounded-md mb-1"
                                                 >
                                                     {opt.label}
                                                 </div>
@@ -353,7 +353,7 @@ export const TactileFontSelect = ({ label, value, onChange, icon: Icon, disabled
                                                         setActiveIndex(i);
                                                     }}
                                                     className={cn(
-                                                        "w-full px-4 py-4 text-left rounded-xl transition-all flex items-center justify-between group/opt",
+                                                        "w-full px-4 py-4 text-left rounded-md transition-all flex items-center justify-between group/opt",
                                                         (value === opt.value || activeIndex === i) ? "bg-primary/20 text-foreground" : "text-foreground/60 hover:bg-[var(--tactile-item-hover)] hover:text-foreground"
                                                     )}
                                                     onClick={() => {
@@ -400,7 +400,7 @@ export const TactileBarChart = ({ data, color = "#dca54e" }: any) => (
                     <motion.div 
                         initial={{ height: 0 }}
                         animate={{ height: `${(item.value / Math.max(...data.map((d: any) => d.value || 1))) * 100}%` }}
-                        className="w-full rounded-t-lg bg-opacity-20 group-hover/bar:bg-opacity-40 transition-all relative overflow-hidden"
+                        className="w-full rounded-md bg-opacity-20 group-hover/bar:bg-opacity-40 transition-all relative overflow-hidden"
                         style={{ backgroundColor: color }}
                     >
                         <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent" />
@@ -413,7 +413,7 @@ export const TactileBarChart = ({ data, color = "#dca54e" }: any) => (
 );
 
 export const TactileAreaChart = ({ data, color = "#dca54e" }: any) => (
-    <div className="relative w-full h-40 bg-black/20 rounded-2xl border border-white/5 overflow-hidden p-2">
+    <div className="relative w-full h-40 bg-black/20 rounded-md border border-white/5 overflow-hidden p-2">
         <div className="absolute inset-0 dots-pattern opacity-10" />
         <div className="relative z-10 w-full h-full flex items-end gap-0.5">
             {data && data.length > 0 ? data.map((item: any, i: number) => (

@@ -22,7 +22,7 @@ const StatBox = ({ title, value, icon: Icon, color, trend, onClick }: any) => (
         whileHover={{ scale: 1.02, y: -2 }}
         onClick={onClick}
         className={cn(
-            "relative p-5 rounded-3xl bg-card border border-primary/10 group overflow-hidden transition-all",
+            "relative p-5 rounded-md bg-card border border-primary/10 group overflow-hidden transition-all",
             onClick && "cursor-pointer hover:border-primary/40 shadow-xl"
         )}
     >
@@ -30,7 +30,7 @@ const StatBox = ({ title, value, icon: Icon, color, trend, onClick }: any) => (
             <Icon size={64} style={{ color }} />
         </div>
         <div className="flex items-start justify-between mb-4">
-            <div className={cn("p-3 rounded-2xl bg-opacity-10", `bg-[${color}]/10`)} style={{ backgroundColor: `${color}15` }}>
+            <div className={cn("p-3 rounded-md bg-opacity-10", `bg-[${color}]/10`)} style={{ backgroundColor: `${color}15` }}>
                 <Icon size={20} style={{ color }} />
             </div>
             {trend !== undefined && (
@@ -142,7 +142,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         Consola <span className="text-[#dca54e]">Hardware</span>
                     </h1>
                 </div>
-                <div className="flex items-center gap-4 bg-card/80 backdrop-blur-md p-2 rounded-2xl border border-primary/10">
+                <div className="flex items-center gap-4 bg-card/80 backdrop-blur-md p-2 rounded-md border border-primary/10">
                     <AdminClockWeather className="scale-90" />
                 </div>
             </div>
@@ -172,7 +172,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
                 {/* TELEMETRY PANEL (RADARS) */}
-                <div className="lg:col-span-8 p-8 rounded-[40px] bg-card border border-primary/10 relative overflow-hidden">
+                <div className="lg:col-span-8 p-8 rounded-md bg-card border border-primary/10 relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8 flex gap-2">
                         <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                         <div className="w-2 h-2 rounded-full bg-white/10" />
@@ -200,7 +200,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         
                         <div className="grid grid-cols-1 gap-3">
                             {pendingMembers.length === 0 ? (
-                                <div className="p-10 rounded-3xl bg-white/[0.02] border border-dashed border-white/5 flex flex-col items-center justify-center text-center">
+                                <div className="p-10 rounded-md bg-white/[0.02] border border-dashed border-white/5 flex flex-col items-center justify-center text-center">
                                     <CheckCircle2 className="w-8 h-8 text-emerald-500/30 mb-4" />
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">No hay registros pendientes de aprobación</p>
                                 </div>
@@ -211,11 +211,11 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.1 }}
-                                        className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-between group hover:border-[#dca54e]/30 transition-all cursor-pointer"
+                                        className="p-4 rounded-md bg-white/[0.03] border border-white/5 flex items-center justify-between group hover:border-[#dca54e]/30 transition-all cursor-pointer"
                                         onClick={() => setActiveTab?.('miembros')}
                                     >
                                         <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-[#dca54e]/10 border border-[#dca54e]/20 flex items-center justify-center overflow-hidden">
+                                            <div className="w-10 h-10 rounded-md bg-[#dca54e]/10 border border-[#dca54e]/20 flex items-center justify-center overflow-hidden">
                                                 {member.avatar ? (
                                                     <img src={member.avatar} className="w-full h-full object-cover" alt={member.name} />
                                                 ) : (
@@ -249,7 +249,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         <OrbitalGauge value={75} label="Participación" color="#10b981" />
                     </div>
 
-                    <div className="space-y-4 bg-foreground/[0.03] p-6 rounded-3xl border border-foreground/[0.05]">
+                    <div className="space-y-4 bg-foreground/[0.03] p-6 rounded-md border border-foreground/[0.05]">
                         <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-4">Relación de Asistencia Semanal (Primitivo Scale)</h4>
                         <AttendancePillRow label="Lunes" values={[85, 70, 95]} />
                         <AttendancePillRow label="Martes" values={[92, 85, 88]} />
@@ -260,11 +260,11 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
 
                 {/* SIDE ACTIONS / CHANNELS */}
                 <div className="lg:col-span-4 space-y-6">
-                    <div className="p-6 rounded-[35px] bg-gradient-to-br from-primary to-emerald-700 group relative overflow-hidden cursor-pointer shadow-lg active:scale-[0.98] transition-all"
+                    <div className="p-6 rounded-md bg-gradient-to-br from-primary to-emerald-700 group relative overflow-hidden cursor-pointer shadow-lg active:scale-[0.98] transition-all"
                          onClick={() => window.open('https://lldmrodeo.org', '_blank')}>
                         <div className="absolute inset-0 bg-black/10 group-hover:opacity-0 transition-opacity" />
                         <div className="relative z-10">
-                            <div className="p-3 bg-white/20 rounded-2xl w-fit mb-4 backdrop-blur-md">
+                            <div className="p-3 bg-white/20 rounded-md w-fit mb-4 backdrop-blur-md">
                                 <Smartphone className="w-6 h-6 text-white" />
                             </div>
                             <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">Ver Sitio En Vivo</h3>
@@ -275,10 +275,10 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         </div>
                     </div>
 
-                    <div className="p-8 rounded-[35px] bg-card border border-primary/10 space-y-6 shadow-sm">
+                    <div className="p-8 rounded-md bg-card border border-primary/10 space-y-6 shadow-sm">
                         <div className="flex items-center justify-between">
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Estado de Solicitudes</h3>
-                            <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-500 text-[8px] font-black uppercase">{pendingMembers.length} Pendientes</span>
+                            <span className="px-2 py-0.5 rounded-md bg-orange-500/10 text-orange-500 text-[8px] font-black uppercase">{pendingMembers.length} Pendientes</span>
                         </div>
                         
                         <div className="space-y-4">
@@ -309,7 +309,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                 <button 
                                     key={i} 
                                     onClick={() => btn.tab && setActiveTab?.(btn.tab)}
-                                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-foreground/[0.03] border border-foreground/[0.05] hover:border-primary/30 hover:bg-foreground/[0.05] transition-all group"
+                                    className="w-full flex items-center justify-between p-3.5 rounded-md bg-foreground/[0.03] border border-foreground/[0.05] hover:border-primary/30 hover:bg-foreground/[0.05] transition-all group"
                                 >
                                     <div className="flex items-center gap-3">
                                         <btn.icon size={14} className="text-muted-foreground group-hover:text-primary transition-colors" />

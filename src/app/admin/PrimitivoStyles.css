@@ -264,7 +264,7 @@ body.admin-theme-primitivo {
     -webkit-backdrop-filter: blur(24px) !important;
     border: 1px solid var(--primitivo-card-border) !important;
     box-shadow: var(--primitivo-card-shadow) !important;
-    border-radius: 1.25rem !important; /* Slightly tighter for precision feel */
+    border-radius: 0.35rem !important; /* Extremely slight rounding - User requested 'muy leve' */
     overflow: hidden;
     color: var(--primitivo-text-main) !important;
     transition: transform 300ms ease, box-shadow 300ms ease !important;
@@ -280,7 +280,7 @@ body.admin-theme-primitivo {
     background-color: var(--primitivo-card-dark) !important;
     color: #ffffff !important; /* Always white text on dark cards */
     border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-radius: 1.25rem !important;
+    border-radius: 0.35rem !important;
     overflow: hidden;
     transition: all 300ms ease !important;
 }
@@ -404,7 +404,7 @@ body.admin-theme-primitivo {
     background-color: var(--primitivo-nav-bg) !important;
     border: 1px solid var(--primitivo-nav-border) !important; /* Border visible as requested earlier */
     padding: 6px !important;
-    border-radius: 1rem !important;
+    border-radius: 0.4rem !important;
     width: fit-content !important;
     display: flex !important;
     gap: 4px !important;
@@ -418,7 +418,7 @@ body.admin-theme-primitivo {
     background: transparent !important;
     border: none !important;
     color: var(--primitivo-text-muted) !important;
-    border-radius: 0.75rem !important;
+    border-radius: 0.35rem !important;
     padding: 10px 20px !important;
     font-size: 10px !important;
     font-weight: 700 !important;
@@ -444,7 +444,7 @@ body.admin-theme-primitivo {
     background-color: var(--primitivo-nav-bg) !important;
     border: 1px solid var(--primitivo-nav-border) !important;
     padding: 6px !important;
-    border-radius: 1rem !important; /* Reduced from 2rem */
+    border-radius: 0.3rem !important; /* Reduced from 0.4rem */
     display: flex !important;
     align-items: center !important;
     gap: 4px !important;
@@ -457,7 +457,7 @@ body.admin-theme-primitivo {
     background: transparent !important;
     border: none !important;
     color: var(--primitivo-text-muted) !important;
-    border-radius: 0.75rem !important; /* Reduced from 1.5rem */
+    border-radius: 0.3rem !important; /* Reduced from 0.45rem */
     padding: 8px 18px !important;
     font-size: 10px !important;
     font-weight: 700 !important;
@@ -584,7 +584,7 @@ body.admin-theme-primitivo {
 /* Detailed Profile Card Photo - Square with Softly Rounded Corners */
 .admin-theme-primitivo .w-32.h-32,
 .admin-theme-primitivo .w-24.h-24 {
-    border-radius: 12px !important; /* Softly rounded square */
+    border-radius: 9999px !important; /* Circles as requested by 'removing square border' */
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
@@ -606,7 +606,7 @@ body.admin-theme-primitivo {
 }
 
 .admin-theme-primitivo img[class*="w-16"] {
-    border-radius: 12px !important; /* Soft square as requested earlier */
+    border-radius: 9999px !important; /* Circles as requested */
     border: none !important;
     padding: 2px !important;
     background: transparent !important;
@@ -616,7 +616,7 @@ body.admin-theme-primitivo {
 .admin-theme-primitivo .w-48.h-48,
 .admin-theme-primitivo .w-48.h-48 img,
 .admin-theme-primitivo .w-48.h-48 .bg-primary\/10 {
-    border-radius: 0 !important; /* PERFECT SQUARE */
+    border-radius: 9999px !important; /* Circular look as requested - Removing 'square' style */
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     padding: 0 !important; /* Flush look */
 }
@@ -669,8 +669,8 @@ body.admin-theme-primitivo {
 
 /* Ensure horizontal menus always use the Primitivo palette even if classes overlap */
 .admin-theme-primitivo .admin-member-filters-bar {
-    background-color: #121523 !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
+    background-color: var(--primitivo-nav-bg) !important;
+    border-color: var(--primitivo-nav-border) !important;
 }
 
 .admin-theme-primitivo .admin-member-filters-bar button:hover {

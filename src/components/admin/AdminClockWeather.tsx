@@ -91,7 +91,7 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
     return (
         <div className={cn(
             "flex items-center gap-6 p-4 transition-all duration-500 group/weather shadow-none border-none bg-transparent",
-            !compact ? "bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] backdrop-blur-md shadow-xl p-6 rounded-3xl" : "p-0",
+            !compact ? "bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] backdrop-blur-md shadow-xl p-6 rounded-md" : "p-0",
             className
         )}>
             {/* Searcher Section - FIRST POSITION */}
@@ -103,7 +103,7 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                     type="text" 
                     placeholder="Buscar..." 
                     className={cn(
-                        "w-full h-11 pl-11 pr-4 rounded-2xl transition-all text-xs font-bold tracking-tight focus:outline-none",
+                        "w-full h-11 pl-11 pr-4 rounded-md transition-all text-xs font-bold tracking-tight focus:outline-none",
                         isDark 
                             ? "bg-white/[0.03] border-white/[0.05] focus:bg-white/[0.06] focus:border-emerald-500/30 text-white placeholder:text-muted-foreground/20" 
                             : "bg-white/40 border-black/[0.05] focus:bg-white focus:border-emerald-500/30 text-slate-900 placeholder:text-slate-400 shadow-sm"
@@ -114,7 +114,7 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
             {/* Clock Section */}
             <div className={cn("flex items-center gap-4 pr-6 shrink-0 border-r", isDark ? "border-white/5" : "border-black/5")}>
                 <div className={cn(
-                    "p-2.5 rounded-xl bg-primary/10 border border-primary/20",
+                    "p-2.5 rounded-md bg-primary/10 border border-primary/20",
                     isDark ? "text-primary" : "text-primary-dark"
                 )}>
                     <Clock className="w-4 h-4" />
@@ -132,7 +132,7 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
 
             {/* Main Weather Section */}
             <div className={cn("flex items-center gap-4 pr-6 shrink-0 border-r", isDark ? "border-white/5" : "border-black/5")}>
-                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 group-hover/weather:scale-110 transition-transform duration-500">
+                <div className="p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 group-hover/weather:scale-110 transition-transform duration-500">
                     <weather.icon className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col">
@@ -156,7 +156,7 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                     <div 
                         key={i} 
                         className={cn(
-                            "flex items-center gap-3 p-1.5 px-3 rounded-xl transition-all group/day cursor-help min-w-[70px] border",
+                            "flex items-center gap-3 p-1.5 px-3 rounded-md transition-all group/day cursor-help min-w-[70px] border",
                             isDark 
                                 ? "bg-white/[0.03] border-white/[0.05] hover:border-emerald-500/30 hover:bg-white/[0.06]" 
                                 : "bg-white/40 border-black/[0.05] hover:border-emerald-500/30 hover:bg-white/60 shadow-sm"
@@ -178,7 +178,7 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                         <motion.div 
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center gap-2.5 cursor-pointer group/live whitespace-nowrap"
+                            className="px-3 py-1.5 rounded-md bg-red-500/10 border border-red-500/20 flex items-center gap-2.5 cursor-pointer group/live whitespace-nowrap"
                         >
                             <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444] animate-pulse" />
                             <span className="text-[9px] font-black text-red-500 uppercase tracking-[0.2em] leading-none">{activeSession.label}</span>

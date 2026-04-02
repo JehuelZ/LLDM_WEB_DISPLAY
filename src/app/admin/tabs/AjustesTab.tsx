@@ -79,7 +79,7 @@ export const AjustesTab = ({
                                         key={color}
                                         onClick={() => saveSettingsToCloud({ primaryColor: color })}
                                         className={cn(
-                                            "aspect-square rounded-xl border-4 transition-all scale-90 hover:scale-100 shadow-lg",
+                                            "aspect-square rounded-md border-4 transition-all scale-90 hover:scale-100 shadow-lg",
                                             settings.primaryColor === color ? "border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-100" : "border-transparent"
                                         )}
                                         style={{ backgroundColor: color }}
@@ -101,7 +101,7 @@ export const AjustesTab = ({
 
                         <div className="space-y-4 pt-2">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">PESO Y GROSOR</label>
-                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl shadow-2xl overflow-hidden">
+                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                                 {[
                                     { label: 'THIN', weight: '300' },
                                     { label: 'NORM', weight: '400' },
@@ -116,7 +116,7 @@ export const AjustesTab = ({
                                             saveSettingsToCloud({ fontWeight: w.weight });
                                         }}
                                         className={cn(
-                                            "flex-1 px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-300",
+                                            "flex-1 px-4 py-2.5 rounded-md text-[9px] font-black uppercase tracking-widest transition-all duration-300",
                                             (settings.fontWeight || '400') === w.weight 
                                                 ? "bg-primary text-foreground shadow-lg transform scale-[1.02]" 
                                                 : "text-foreground/40 hover:text-foreground hover:bg-[var(--tactile-item-hover)]"
@@ -133,7 +133,7 @@ export const AjustesTab = ({
                                 <span>OPTIMIZACIÓN DE TV (OVERSCAN / ESCALA)</span>
                                 <span className="text-primary">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
                             </label>
-                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl shadow-2xl overflow-hidden">
+                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                                 {[0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0].map((sc) => (
                                     <button
                                         key={sc}
@@ -142,7 +142,7 @@ export const AjustesTab = ({
                                             saveSettingsToCloud({ displayScale: sc });
                                         }}
                                         className={cn(
-                                            "flex-1 px-3 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                            "flex-1 px-3 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                             (settings.displayScale || 1.0) === sc 
                                                 ? "bg-primary text-foreground shadow-lg transform scale-[1.02]" 
                                                 : "text-foreground/40 hover:text-foreground hover:bg-[var(--tactile-item-hover)]"
@@ -168,7 +168,7 @@ export const AjustesTab = ({
                                         setSettings({ ...settings, displayOffsetY: val });
                                         saveSettingsToCloud({ displayOffsetY: val });
                                     }}
-                                    className="p-3 bg-[var(--tactile-item-hover)] rounded-xl border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
+                                    className="p-3 bg-[var(--tactile-item-hover)] rounded-md border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
                                 >
                                     <ChevronUp className="w-5 h-5" />
                                 </button>
@@ -179,7 +179,7 @@ export const AjustesTab = ({
                                             setSettings({ ...settings, displayOffsetX: val });
                                             saveSettingsToCloud({ displayOffsetX: val });
                                         }}
-                                        className="p-3 bg-[var(--tactile-item-hover)] rounded-xl border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
+                                        className="p-3 bg-[var(--tactile-item-hover)] rounded-md border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
                                     >
                                         <ChevronLeft className="w-5 h-5" />
                                     </button>
@@ -188,7 +188,7 @@ export const AjustesTab = ({
                                             setSettings({ ...settings, displayOffsetX: 0, displayOffsetY: 0 });
                                             saveSettingsToCloud({ displayOffsetX: 0, displayOffsetY: 0 });
                                         }}
-                                        className="px-4 bg-orange-500/20 text-orange-500 rounded-xl border border-orange-500/20 hover:bg-orange-500/30 font-bold text-[10px]"
+                                        className="px-4 bg-orange-500/20 text-orange-500 rounded-md border border-orange-500/20 hover:bg-orange-500/30 font-bold text-[10px]"
                                     >
                                         RESET
                                     </button>
@@ -198,7 +198,7 @@ export const AjustesTab = ({
                                             setSettings({ ...settings, displayOffsetX: val });
                                             saveSettingsToCloud({ displayOffsetX: val });
                                         }}
-                                        className="p-3 bg-[var(--tactile-item-hover)] rounded-xl border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
+                                        className="p-3 bg-[var(--tactile-item-hover)] rounded-md border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
                                     >
                                         <ChevronRight className="w-5 h-5" />
                                     </button>
@@ -209,7 +209,7 @@ export const AjustesTab = ({
                                         setSettings({ ...settings, displayOffsetY: val });
                                         saveSettingsToCloud({ displayOffsetY: val });
                                     }}
-                                    className="p-3 bg-[var(--tactile-item-hover)] rounded-xl border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
+                                    className="p-3 bg-[var(--tactile-item-hover)] rounded-md border border-[var(--tactile-border)] hover:bg-primary/20 transition-colors"
                                 >
                                     <ChevronDown className="w-5 h-5" />
                                 </button>
@@ -235,7 +235,7 @@ export const AjustesTab = ({
                             <div className="space-y-4">
                                 <div 
                                     onClick={() => document.getElementById('tactile-bg-upload')?.click()}
-                                    className="w-full aspect-video rounded-3xl border-2 border-dashed border-[var(--tactile-border-strong)] hover:border-primary/40 bg-[var(--tactile-inner-bg)] flex flex-col items-center justify-center gap-4 cursor-pointer overflow-hidden transition-all group"
+                                    className="w-full aspect-video rounded-md border-2 border-dashed border-[var(--tactile-border-strong)] hover:border-primary/40 bg-[var(--tactile-inner-bg)] flex flex-col items-center justify-center gap-4 cursor-pointer overflow-hidden transition-all group"
                                 >
                                     {settings.displayCustomBgUrl ? (
                                         <div className="relative w-full h-full">
@@ -246,7 +246,7 @@ export const AjustesTab = ({
                                         </div>
                                     ) : (
                                         <>
-                                            <div className="w-16 h-11 rounded-xl bg-[var(--tactile-item-hover)] flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                            <div className="w-16 h-11 rounded-md bg-[var(--tactile-item-hover)] flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                                 <Upload className="w-6 h-6 text-muted-foreground" />
                                             </div>
                                             <div className="text-center">
@@ -284,11 +284,11 @@ export const AjustesTab = ({
                         
                         <div className="py-4 border-t border-[var(--tactile-border)] space-y-4">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">ESTILO DE PUNTOS / ANIMACIÓN</label>
-                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl shadow-2xl overflow-hidden">
+                            <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                                 <button
                                     onClick={() => saveSettingsToCloud({ displayBgStyle: 'static' })}
                                     className={cn(
-                                        "flex-1 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                        "flex-1 px-6 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                         settings.displayBgStyle === 'static' 
                                             ? "bg-primary text-foreground shadow-lg transform scale-[1.02]" 
                                             : "text-foreground/40 hover:text-foreground hover:bg-[var(--tactile-item-hover)]"
@@ -299,7 +299,7 @@ export const AjustesTab = ({
                                 <button
                                     onClick={() => saveSettingsToCloud({ displayBgStyle: 'dynamic' })}
                                     className={cn(
-                                        "flex-1 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                        "flex-1 px-6 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
                                         settings.displayBgStyle === 'dynamic' 
                                             ? "bg-primary text-foreground shadow-lg transform scale-[1.02]" 
                                             : "text-foreground/40 hover:text-foreground hover:bg-[var(--tactile-item-hover)]"
@@ -318,7 +318,7 @@ export const AjustesTab = ({
                         await saveSettingsToCloud(settings);
                         setIsSaving(false);
                     }}
-                    className="w-full h-12 bg-orange-500 text-white rounded-2xl flex items-center justify-center gap-3 text-sm font-black tracking-widest hover:bg-orange-600 transition-colors shadow-xl"
+                    className="w-full h-12 bg-orange-500 text-white rounded-md flex items-center justify-center gap-3 text-sm font-black tracking-widest hover:bg-orange-600 transition-colors shadow-xl"
                 >
                     <Save className="w-5 h-5" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR PREFERENCIAS'}
                 </button>
@@ -400,7 +400,7 @@ export const AjustesTab = ({
                                 showNotification("Datos del ministro actualizados exitosamente.", 'success');
                                 setIsSaving(false);
                             }}
-                            className="w-full h-12 bg-orange-500 text-white rounded-xl flex items-center justify-center gap-3 font-black capitalize tracking-widest hover:bg-orange-600 transition-colors"
+                            className="w-full h-12 bg-orange-500 text-white rounded-md flex items-center justify-center gap-3 font-black capitalize tracking-widest hover:bg-orange-600 transition-colors"
                         >
                             <Save className="w-4 h-4" /> {isSaving ? 'Guardando...' : 'Guardar Datos'}
                         </button>
@@ -425,15 +425,17 @@ export const AjustesTab = ({
                                         key={theme.id}
                                         onClick={() => saveSettingsToCloud({ displayTemplate: theme.id as any })}
                                         className={cn(
-                                            "group relative p-4 rounded-2xl border transition-all duration-500 text-left overflow-hidden",
+                                            "group relative p-4 rounded-md border transition-all duration-500 text-left overflow-hidden",
                                             isActive 
                                                 ? "bg-primary/20 border-primary/50" 
-                                                : "bg-white/[0.03] border-[var(--tactile-border)] hover:bg-white/[0.08]"
+                                                : settings.themeMode === 'light'
+                                                    ? "bg-black/[0.03] border-slate-200 hover:bg-black/[0.08]"
+                                                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.08]"
                                         )}
                                     >
                                         <div className="flex items-center gap-3 mb-2">
                                             <div className={cn(
-                                                "p-2 rounded-lg transition-colors",
+                                                "p-2 rounded-md transition-colors",
                                                 isActive ? "bg-primary text-white" : "bg-white/[0.08] text-muted-foreground group-hover:bg-white/20"
                                             )}>
                                                 <theme.icon className="w-4 h-4" />

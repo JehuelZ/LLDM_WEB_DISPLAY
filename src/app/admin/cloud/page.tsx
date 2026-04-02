@@ -99,7 +99,7 @@ export default function SimpleAdmin() {
                 </div>
 
                 {status && (
-                    <div className={`p-4 rounded-2xl flex items-center gap-3 border shadow-lg animate-in fade-in slide-in-from-top-4 ${status.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
+                    <div className={`p-4 rounded-md flex items-center gap-3 border shadow-lg animate-in fade-in slide-in-from-top-4 ${status.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
                         }`}>
                         {status.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
                         <p className="font-bold uppercase text-xs tracking-wider">{status.msg}</p>
@@ -131,7 +131,7 @@ export default function SimpleAdmin() {
                                     value={ann.content}
                                     onChange={(e) => setAnn({ ...ann, content: e.target.value })}
                                     placeholder="Escribe aquí la información..."
-                                    className="w-full min-h-[100px] bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all"
+                                    className="w-full min-h-[100px] bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-primary transition-all"
                                 />
                             </div>
                             <Button
@@ -168,7 +168,7 @@ export default function SimpleAdmin() {
                                     <select
                                         value={sched.evening_time}
                                         onChange={(e) => setSched({ ...sched, evening_time: e.target.value })}
-                                        className="w-full bg-[#0f172a] border border-white/10 rounded-xl h-10 px-3 text-xs font-bold"
+                                        className="w-full bg-[#0f172a] border border-white/10 rounded-md h-10 px-3 text-xs font-bold"
                                     >
                                         <option value="6:00 PM">6:00 PM</option>
                                         <option value="6:30 PM">6:30 PM</option>
@@ -180,7 +180,7 @@ export default function SimpleAdmin() {
                                     <select
                                         value={sched.evening_type}
                                         onChange={(e) => setSched({ ...sched, evening_type: e.target.value })}
-                                        className="w-full bg-[#0f172a] border border-white/10 rounded-xl h-10 px-3 text-xs font-bold uppercase"
+                                        className="w-full bg-[#0f172a] border border-white/10 rounded-md h-10 px-3 text-xs font-bold uppercase"
                                     >
                                         <option value="regular">Regular</option>
                                         <option value="youth">Jóvenes</option>
@@ -224,7 +224,7 @@ export default function SimpleAdmin() {
                                         <select
                                             value={theme.type}
                                             onChange={(e) => setThemeState({ ...theme, type: e.target.value })}
-                                            className="w-full bg-[#0f172a] border border-white/10 rounded-xl h-10 px-3 text-xs font-bold uppercase"
+                                            className="w-full bg-[#0f172a] border border-white/10 rounded-md h-10 px-3 text-xs font-bold uppercase"
                                         >
                                             <option value="orthodoxy">Sana Doctrina</option>
                                             <option value="apostolic_letter">Carta Apostólica</option>
@@ -260,7 +260,7 @@ export default function SimpleAdmin() {
                                             value={theme.description}
                                             onChange={(e) => setThemeState({ ...theme, description: e.target.value })}
                                             placeholder="Breve explicación del tema..."
-                                            className="w-full min-h-[80px] bg-white/5 border border-white/10 rounded-xl p-3 text-sm focus:outline-none focus:ring-1 focus:ring-secondary transition-all"
+                                            className="w-full min-h-[80px] bg-white/5 border border-white/10 rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-secondary transition-all"
                                         />
                                     </div>
                                 </div>
@@ -276,7 +276,7 @@ export default function SimpleAdmin() {
                     </Card>
                 </div>
 
-                <div className="p-6 rounded-3xl bg-white/5 border border-white/10 text-center">
+                <div className="p-6 rounded-md bg-white/5 border border-white/10 text-center">
                     <p className="text-[10px] text-slate-500 uppercase font-black tracking-[0.2em]">
                         Esta es una interfaz de administración segura conectada a <span className="text-white">Supabase Cloud</span>
                     </p>

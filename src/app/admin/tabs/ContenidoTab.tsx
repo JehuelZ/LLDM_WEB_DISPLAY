@@ -113,7 +113,7 @@ export const ContenidoTab = ({
                         <div className="space-y-2">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">RESUMEN / DESCRIPCIÓN</label>
                             <textarea
-                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all text-[var(--tactile-text)]"
+                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all text-[var(--tactile-text)]"
                                 value={theme.description || ''}
                                 onChange={(e) => setTheme({ ...theme, description: e.target.value })}
                                 placeholder="Breve resumen del tema..."
@@ -123,7 +123,7 @@ export const ContenidoTab = ({
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">CONTENIDO VISUAL (URL)</label>
                             <div className="flex gap-2">
                                 <input
-                                    className="flex-1 bg-black/40 border border-[var(--tactile-border)] rounded-xl h-12 px-4 text-xs font-bold outline-none"
+                                    className="flex-1 bg-black/40 border border-[var(--tactile-border)] rounded-md h-12 px-4 text-xs font-bold outline-none"
                                     value={theme.fileUrl || ''}
                                     onChange={(e) => setTheme({ ...theme, fileUrl: e.target.value })}
                                     placeholder="https://..."
@@ -183,7 +183,7 @@ export const ContenidoTab = ({
                 </TactileGlassCard>
 
                 <TactileGlassCard title="EVENTO MEMORABLE (COUNTDOWN)">
-                    <div className="flex items-center justify-between p-4 bg-black/20 rounded-xl">
+                    <div className="flex items-center justify-between p-4 bg-black/20 rounded-md">
                         <div className="space-y-1">
                             <h4 className="font-bold text-sm">Contador Regresivo</h4>
                             <p className="text-[10px] text-muted-foreground capitalize tracking-widest font-black">Activar en el Display</p>
@@ -211,7 +211,7 @@ export const ContenidoTab = ({
                         <div className="space-y-2">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">CONTENIDO DEL MENSAJE</label>
                             <textarea
-                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl p-4 text-xs font-bold outline-none min-h-[120px] focus:border-primary/50 transition-all text-[var(--tactile-text)]"
+                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md p-4 text-xs font-bold outline-none min-h-[120px] focus:border-primary/50 transition-all text-[var(--tactile-text)]"
                                 value={newAnn.content}
                                 onChange={(e) => setNewAnn({ ...newAnn, content: e.target.value })}
                                 placeholder="Escribe el mensaje completo aquí..."
@@ -261,7 +261,7 @@ export const ContenidoTab = ({
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
                                         <div className={cn(
-                                            "w-10 h-10 rounded-xl flex items-center justify-center border",
+                                            "w-10 h-10 rounded-md flex items-center justify-center border",
                                             ann.category === 'urgent' ? "bg-red-500/20 border-red-500/20 text-red-500" : "bg-primary/20 border-primary/20 text-primary"
                                         )}>
                                             <Bell className="w-5 h-5" />
@@ -277,13 +277,13 @@ export const ContenidoTab = ({
                                                 setEditingAnnId(ann.id)
                                                 setNewAnn({ ...ann })
                                             }}
-                                            className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary"
+                                            className="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center text-primary"
                                         >
                                             <Edit2 className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => deleteAnnouncementFromCloud(ann.id)}
-                                            className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500"
+                                            className="w-10 h-10 rounded-md bg-red-500/10 flex items-center justify-center text-red-500"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                         </button>

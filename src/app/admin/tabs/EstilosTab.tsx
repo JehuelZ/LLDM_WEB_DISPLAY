@@ -46,11 +46,11 @@ export const EstilosTab = ({
                         <button
                             onClick={() => saveSettingsToCloud({ churchLogoUrl: '' })}
                             className={cn(
-                                "flex flex-col items-center gap-4 p-6 rounded-[2rem] border-2 transition-all duration-300",
+                                "flex flex-col items-center gap-4 p-6 rounded-md border-2 transition-all duration-300",
                                 (settings.churchLogoUrl === '') ? "bg-primary/20 border-primary/40 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/40 border-[var(--tactile-border)] hover:bg-[var(--tactile-item-hover)]"
                             )}
                         >
-                            <div className="w-16 h-11 flex items-center justify-center p-2 rounded-xl bg-white/5 border border-white/10 text-slate-500">
+                            <div className="w-16 h-11 flex items-center justify-center p-2 rounded-md bg-white/5 border border-white/10 text-slate-500">
                                 <XCircle className="w-10 h-10" />
                             </div>
                             <span className={cn("text-[10px] font-black capitalize tracking-widest", (settings.churchLogoUrl === '') ? "text-primary" : "text-muted-foreground")}>
@@ -76,13 +76,13 @@ export const EstilosTab = ({
                                             }
                                         }}
                                         className={cn(
-                                            "w-full flex flex-col items-center gap-4 p-8 rounded-[2.5rem] border-2 border-dashed transition-all h-full cursor-pointer",
+                                            "w-full flex flex-col items-center gap-4 p-8 rounded-md border-2 border-dashed transition-all h-full cursor-pointer",
                                             isActive ? "bg-primary/20 border-primary/40 border-solid shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]" : "bg-black/20 border-white/10 hover:border-white/20"
                                         )}
                                     >
                                         {slotUrl ? (
                                             <>
-                                                <div className="w-20 h-20 flex items-center justify-center p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+                                                <div className="w-20 h-20 flex items-center justify-center p-3 rounded-md bg-white/5 backdrop-blur-md border border-white/10">
                                                     <img src={slotUrl} className="w-full h-full object-contain" alt={`Custom ${slotIndex}`} />
                                                 </div>
                                                 <span className={cn("text-[10px] font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground")}>
@@ -137,7 +137,7 @@ export const EstilosTab = ({
                             saveSettingsToCloud({ displayTemplate: themeOpt.id as any });
                         }}
                         className={cn(
-                            "w-full flex items-center gap-4 px-6 py-5 rounded-[2rem] transition-all border text-left",
+                            "w-full flex items-center gap-4 px-6 py-5 rounded-md transition-all border text-left",
                             calendarStyles.template === themeOpt.id ? "bg-primary/20 border-primary/40 text-primary shadow-lg" : "bg-black/20 border-white/5 text-muted-foreground hover:bg-white/5"
                         )}
                     >

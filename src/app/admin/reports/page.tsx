@@ -20,11 +20,11 @@ const StatCard = ({ title, value, change, trend, icon: Icon, color }: any) => (
         </div>
         <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
-                <div className={cn("p-2 rounded-xl bg-white/5 border border-white/10", color)}>
+                <div className={cn("p-2 rounded-md bg-white/5 border border-white/10", color)}>
                     <Icon className="w-5 h-5" />
                 </div>
                 <div className={cn(
-                    "flex items-center text-[10px] font-black px-2 py-0.5 rounded-lg border",
+                    "flex items-center text-[10px] font-black px-2 py-0.5 rounded-md border",
                     trend === 'up' ? "text-emerald-400 bg-emerald-400/10 border-emerald-400/20" : "text-rose-400 bg-rose-400/10 border-rose-400/20"
                 )}>
                     {trend === 'up' ? <ArrowUpRight className="w-3 h-3 mr-1" /> : <ArrowDownRight className="w-3 h-3 mr-1" />}
@@ -81,7 +81,7 @@ export default function ReportsPage() {
                     </p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <div className="bg-white/5 border border-white/10 p-1 rounded-xl flex items-center gap-2">
+                    <div className="bg-white/5 border border-white/10 p-1 rounded-md flex items-center gap-2">
                         <Button 
                             variant="ghost" 
                             size="sm" 
@@ -182,7 +182,7 @@ export default function ReportsPage() {
                         <AttendanceBar label="Miembros del Coro" percent={0} value="0" color="bg-indigo-500" />
 
                         <div className="pt-6 border-t border-white/5 flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
+                            <div className="w-12 h-12 rounded-md bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
                                 <Users className="w-6 h-6 text-emerald-500" />
                             </div>
                             <div>
@@ -236,7 +236,7 @@ export default function ReportsPage() {
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mt-8 p-6 rounded-3xl bg-secondary/5 border border-secondary/10 flex items-center justify-center gap-4 backdrop-blur-xl no-print"
+                className="mt-8 p-6 rounded-md bg-secondary/5 border border-secondary/10 flex items-center justify-center gap-4 backdrop-blur-xl no-print"
             >
                 <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20">
                     <Music className="h-5 w-5 text-secondary" />

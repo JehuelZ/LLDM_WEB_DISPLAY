@@ -64,13 +64,13 @@ export const PerfilTab = ({
             <div className="col-span-1 md:col-span-5 flex flex-col items-center">
                 <TactileGlassCard className="w-full h-full flex flex-col items-center justify-center py-12">
                     <div
-                        className="w-48 h-48 rounded-3xl border-8 border-primary/20 p-2 relative group cursor-pointer overflow-hidden shadow-2xl"
+                        className="w-48 h-48 rounded-md border-8 border-primary/20 p-2 relative group cursor-pointer overflow-hidden shadow-2xl"
                         onClick={() => document.getElementById('admin-avatar-upload')?.click()}
                     >
                         {currentUser?.avatar ? (
-                            <img src={currentUser.avatar} className="w-full h-full object-cover rounded-xl group-hover:scale-110 transition-transform duration-700" alt="Avatar" />
+                            <img src={currentUser.avatar} className="w-full h-full object-cover rounded-md group-hover:scale-110 transition-transform duration-700" alt="Avatar" />
                         ) : (
-                            <div className="w-full h-full bg-primary/10 flex items-center justify-center rounded-xl">
+                            <div className="w-full h-full bg-primary/10 flex items-center justify-center rounded-md">
                                 <User className="w-20 h-20 text-primary opacity-20" />
                             </div>
                         )}
@@ -105,7 +105,7 @@ export const PerfilTab = ({
 
                     <button
                         onClick={signOut}
-                        className="mt-12 group flex items-center gap-3 px-8 py-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-500 shadow-lg shadow-red-500/5"
+                        className="mt-12 group flex items-center gap-3 px-8 py-4 rounded-md bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-500 shadow-lg shadow-red-500/5"
                     >
                         <LogOut className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                         <span className="text-[10px] font-black uppercase tracking-widest">Cerrar Sesión</span>
@@ -138,7 +138,7 @@ export const PerfilTab = ({
                         <div className="space-y-2">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">BIO / NOTAS</label>
                             <textarea
-                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-xl p-4 text-xs font-bold outline-none min-h-[120px] focus:border-primary/50 transition-all text-[var(--tactile-text)]"
+                                className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md p-4 text-xs font-bold outline-none min-h-[120px] focus:border-primary/50 transition-all text-[var(--tactile-text)]"
                                 value={profileData.bio}
                                 onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                                 placeholder="Escribe algo sobre ti..."
@@ -149,7 +149,7 @@ export const PerfilTab = ({
                             onClick={handleSaveProfile}
                             disabled={isSaving}
                             className={cn(
-                                "w-full h-14 bg-primary text-white rounded-2xl flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all",
+                                "w-full h-14 bg-primary text-white rounded-md flex items-center justify-center gap-3 text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all",
                                 isSaving && "opacity-50 cursor-wait"
                             )}
                         >

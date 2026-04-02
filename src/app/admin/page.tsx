@@ -14,7 +14,7 @@ import {
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target, Contrast,
     Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert,
-    Sunrise, BookOpen, Palette, Layers, Eye
+    Sunrise, BookOpen, Palette, Layers, Eye, RefreshCw, Check
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
@@ -30,6 +30,8 @@ import TactileAdmin from './TactileAdmin';
 import LunaAdmin from './LunaAdmin';
 import { TactileAreaChart, TactileBarChart, TactilePieChart } from '@/components/ui/Charts';
 import PremiumCalendar from '@/components/ui/PremiumCalendar';
+import { AsistenciaTab } from './tabs/AsistenciaTab';
+import { MensajesTab } from './tabs/MensajesTab';
 
 const MessagesPanel = ({
     messages,
@@ -56,7 +58,7 @@ const MessagesPanel = ({
         <Card className={cn(
             "card border-none relative overflow-hidden group transition-all duration-500",
             settings.adminTheme === 'primitivo' 
-                ? "bg-[#101420] rounded-[1.5rem] border border-white/[0.03] shadow-none" 
+                ? "bg-[#101420] rounded-md border border-white/[0.03] shadow-none" 
                 : "bg-[var(--tactile-panel-bg)] rounded-none glass-card shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
         )}>
             <div className={cn(
@@ -70,7 +72,7 @@ const MessagesPanel = ({
                             <div className="flex items-center gap-3">
                                 <div className={cn(
                                     "w-10 h-10 flex items-center justify-center shadow-none transition-all",
-                                    settings.adminTheme === 'primitivo' ? "bg-white/10 dark:bg-white/5 rounded-2xl border border-white/[0.05]" : "bg-[var(--tactile-item-hover)] rounded-none border border-[var(--tactile-border)]"
+                                    settings.adminTheme === 'primitivo' ? "bg-white/10 dark:bg-white/5 rounded-md border border-white/[0.05]" : "bg-[var(--tactile-item-hover)] rounded-none border border-[var(--tactile-border)]"
                                 )}>
                                     <Mail className={cn("h-4 w-4", settings.adminTheme === 'primitivo' ? "text-white/70" : "text-foreground")} />
                                 </div>
@@ -91,7 +93,7 @@ const MessagesPanel = ({
                         <div className="flex flex-col items-center justify-center py-24 text-white/20">
                             <div className={cn(
                                 "w-20 h-20 flex items-center justify-center mb-8 border transition-all",
-                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-[2rem] border-white/[0.03]" : "bg-[var(--tactile-inner-bg-alt)] border-[var(--tactile-border)] rounded-none"
+                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-md border-white/[0.03]" : "bg-[var(--tactile-inner-bg-alt)] border-[var(--tactile-border)] rounded-none"
                             )}>
                                 <Mail className={cn("h-10 w-10 opacity-5", settings.adminTheme === 'primitivo' ? "text-white" : "text-foreground")} />
                             </div>
@@ -105,7 +107,7 @@ const MessagesPanel = ({
                                 animate={{ opacity: 1, y: 0 }}
                                 className={cn(
                                     "p-6 border transition-all duration-500 flex flex-col gap-6 relative group overflow-hidden backdrop-blur-xl",
-                                    settings.adminTheme === 'primitivo' ? "shadow-none rounded-3xl" : "shadow-2xl rounded-none",
+                                    settings.adminTheme === 'primitivo' ? "shadow-none rounded-md" : "shadow-2xl rounded-none",
                                     msg.isRead
                                         ? "bg-[var(--tactile-inner-bg)]/50 border-[var(--tactile-border)] opacity-50 hover:opacity-100"
                                         : (settings.adminTheme === 'primitivo' ? "bg-black/40 border-emerald-400/20 ring-1 ring-emerald-400/10 shadow-none" : "bg-[var(--tactile-panel-bg)] border-[var(--tactile-border-strong)] ring-1 ring-[var(--tactile-border)] shadow-2xl")
@@ -115,7 +117,7 @@ const MessagesPanel = ({
                                     <div className="flex items-center gap-5">
                                         <div className={cn(
                                             "w-12 h-12 flex items-center justify-center text-sm font-black transition-all duration-500",
-                                            settings.adminTheme === 'primitivo' ? "rounded-2xl" : "rounded-none",
+                                            settings.adminTheme === 'primitivo' ? "rounded-md" : "rounded-none",
                                             msg.isRead 
                                                 ? (settings.adminTheme === 'primitivo' ? "bg-black/60 text-white/30 border border-white/[0.03]" : "bg-[var(--tactile-inner-bg-alt)] text-muted-foreground border border-[var(--tactile-border)]")
                                                 : (settings.adminTheme === 'primitivo' ? "bg-emerald-400/10 text-emerald-400 border border-emerald-400/30 shadow-[0_0_15px_rgba(251,191,36,0.1)]" : "bg-foreground text-background shadow-2xl shadow-foreground/10 border border-[var(--tactile-border-strong)]")
@@ -163,7 +165,7 @@ const MessagesPanel = ({
                                                 onClick={() => onMarkRead(msg.id)}
                                                 className={cn(
                                                     "h-10 w-10 transition-all active:scale-95 border",
-                                                    settings.adminTheme === 'primitivo' ? "rounded-xl bg-white/10 dark:bg-white/5 text-white/50 border-white/[0.05] hover:bg-white/10 hover:text-white" : "rounded-none bg-[var(--tactile-item-hover)] border-[var(--tactile-border)] text-muted-foreground hover:text-foreground hover:border-[var(--tactile-border-strong)]"
+                                                    settings.adminTheme === 'primitivo' ? "rounded-md bg-white/10 dark:bg-white/5 text-white/50 border-white/[0.05] hover:bg-white/10 hover:text-white" : "rounded-none bg-[var(--tactile-item-hover)] border-[var(--tactile-border)] text-muted-foreground hover:text-foreground hover:border-[var(--tactile-border-strong)]"
                                                 )}
                                                 title="Marcar leído"
                                             >
@@ -176,7 +178,7 @@ const MessagesPanel = ({
                                             onClick={() => setReplyingTo(replyingTo === msg.id ? null : msg.id)}
                                             className={cn(
                                                 "h-10 w-10 transition-all active:scale-95 border",
-                                                settings.adminTheme === 'primitivo' ? "rounded-xl" : "rounded-none",
+                                                settings.adminTheme === 'primitivo' ? "rounded-md" : "rounded-none",
                                                 replyingTo === msg.id 
                                                     ? (settings.adminTheme === 'primitivo' ? "text-white border-white/[0.1] bg-white/10" : "text-white border-white/[0.15] bg-white/10")
                                                     : (settings.adminTheme === 'primitivo' ? "text-white/30 hover:text-white bg-white/10 dark:bg-white/5 border-white/[0.03]" : "text-muted-foreground hover:text-foreground bg-[var(--tactile-item-hover)] border-[var(--tactile-border)]")
@@ -190,7 +192,7 @@ const MessagesPanel = ({
 
                                 <div className={cn(
                                     "p-6 border transition-all",
-                                    settings.adminTheme === 'primitivo' ? "bg-[#0a0a0a]/40 rounded-2xl border-white/[0.03] shadow-none" : "bg-[var(--tactile-inner-bg)] rounded-none border-[var(--tactile-border)] shadow-inner"
+                                    settings.adminTheme === 'primitivo' ? "bg-[#0a0a0a]/40 rounded-md border-white/[0.03] shadow-none" : "bg-[var(--tactile-inner-bg)] rounded-none border-[var(--tactile-border)] shadow-inner"
                                 )}>
                                     <p className="text-[14px] text-white/80 leading-relaxed font-light ">{msg.content}</p>
                                 </div>
@@ -201,7 +203,7 @@ const MessagesPanel = ({
                                         animate={{ opacity: 1, height: 'auto' }}
                                         className={cn(
                                             "mt-4 space-y-6 p-6 border relative overflow-hidden",
-                                            settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-2xl border-white/[0.05] shadow-none" : "bg-[var(--tactile-bg)]/60 rounded-none border-[var(--tactile-border-strong)] shadow-2xl"
+                                            settings.adminTheme === 'primitivo' ? "bg-white/[0.03] rounded-md border-white/[0.05] shadow-none" : "bg-[var(--tactile-bg)]/60 rounded-none border-[var(--tactile-border-strong)] shadow-2xl"
                                         )}
                                     >
                                         <div className={cn("absolute top-0 left-0 w-[2px] h-full", settings.adminTheme === 'primitivo' ? "bg-white/20" : "bg-[var(--tactile-border-strong)]")} />
@@ -211,17 +213,17 @@ const MessagesPanel = ({
                                             placeholder={`escribe tu respuesta a ${msg.senderName.split(' ')[0].toLowerCase()}...`}
                                             className={cn(
                                                 "w-full h-32 bg-black/40 p-5 text-sm text-white placeholder:text-white/20 focus:outline-none transition-all resize-none font-light",
-                                                settings.adminTheme === 'primitivo' ? "rounded-xl border border-white/[0.03] focus:border-white/[0.1]" : "rounded-none border border-[var(--tactile-border)] focus:border-primary/50"
+                                                settings.adminTheme === 'primitivo' ? "rounded-md border border-white/[0.03] focus:border-white/[0.1]" : "rounded-none border border-[var(--tactile-border)] focus:border-primary/50"
                                             )}
                                         />
                                         <div className="flex justify-end gap-3">
                                             <Button size="sm" variant="ghost" className={cn(
                                                 "h-11 text-[9px] font-black uppercase tracking-[0.2em] hover:text-white transition-all",
-                                                settings.adminTheme === 'primitivo' ? "rounded-xl text-white/20" : "rounded-none text-white/40"
+                                                settings.adminTheme === 'primitivo' ? "rounded-md text-white/20" : "rounded-none text-white/40"
                                             )} onClick={() => setReplyingTo(null)}>cancelar</Button>
                                             <Button size="sm" className={cn(
                                                 "h-11 text-[10px] font-black uppercase tracking-[0.3em] px-10 transition-all hover:translate-y-[-2px] active:translate-y-0 shadow-none",
-                                                settings.adminTheme === 'primitivo' ? "bg-[#121523] text-white border border-white/[0.05] hover:bg-slate-800 rounded-xl" : "bg-foreground text-background hover:bg-muted rounded-none shadow-foreground/10 shadow-2xl"
+                                                settings.adminTheme === 'primitivo' ? "bg-[#121523] text-white border border-white/[0.05] hover:bg-slate-800 rounded-md" : "bg-foreground text-background hover:bg-muted rounded-none shadow-foreground/10 shadow-2xl"
                                             )} onClick={() => handleSendReply(msg.senderId)}>
                                                 <Send className="w-4 h-4 mr-3" /> enviar respuesta
                                             </Button>
@@ -289,7 +291,7 @@ const CustomSelect = ({
                                         placeholder="Buscar miembro..."
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="w-full bg-foreground/5 border border-border/20 rounded-lg pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-primary/50 transition-colors"
+                                        className="w-full bg-foreground/5 border border-border/20 rounded-md pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-primary/50 transition-colors"
                                     />
                                 </div>
                             </div>
@@ -388,7 +390,7 @@ const MiniCountdown = () => {
     return (
         <div className="flex items-center gap-4">
             {settings.countdownLogoUrl && (
-                <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 overflow-hidden shrink-0">
+                <div className="w-12 h-12 rounded-md bg-primary/10 border border-primary/20 overflow-hidden shrink-0">
                     <img src={settings.countdownLogoUrl} className="w-full h-full object-contain" alt="Logo Evento" />
                 </div>
             )}
@@ -513,6 +515,106 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
     );
 };
 
+const ThemeQuickEditor = ({ theme, setTheme, onSave, settings }: { theme: any, setTheme: (theme: any) => void, onSave: () => Promise<void>, settings: AppSettings }) => {
+    const [isSavingLocal, setIsSavingLocal] = useState(false);
+    
+    return (
+        <Card className={cn(
+            "card border-none relative overflow-hidden group transition-all duration-500 h-full",
+            settings.adminTheme === 'primitivo' 
+                ? "bg-[#101420] rounded-md border border-white/[0.03] shadow-none" 
+                : "bg-[var(--tactile-panel-bg)] rounded-none glass-card shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+        )}>
+            <div className={cn(
+                "absolute top-0 right-0 w-64 h-64 blur-[100px] -mr-32 -mt-32 pointer-events-none transition-all duration-700",
+                settings.adminTheme === 'primitivo' ? "bg-transparent" : "bg-[var(--tactile-item-hover)]"
+            )} />
+            <CardHeader className="relative z-10 pb-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <CardTitle className="relative z-10 flex items-center gap-4 text-2xl font-black uppercase tracking-tighter text-foreground drop-shadow-sm w-full">
+                            <div className="flex items-center gap-3">
+                                <div className={cn(
+                                    "w-10 h-10 flex items-center justify-center shadow-none transition-all",
+                                    settings.adminTheme === 'primitivo' ? "bg-white/10 dark:bg-white/5 rounded-md border border-white/[0.05]" : "bg-[var(--tactile-item-hover)] rounded-none border border-[var(--tactile-border)]"
+                                )}>
+                                    <Sparkles className={cn("h-4 w-4", settings.adminTheme === 'primitivo' ? "text-white/70" : "text-primary")} />
+                                </div>
+                                <span className="whitespace-nowrap text-foreground">tema <span className={cn("text-foreground underline underline-offset-8", settings.adminTheme === 'primitivo' ? "decoration-foreground/10" : "decoration-primary/30")}>semanal</span></span>
+                            </div>
+                            <div className={cn(
+                                "flex-1 h-px ml-4",
+                                settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" : "bg-gradient-to-r from-[var(--tactile-border-strong)] via-[var(--tactile-border)] to-transparent"
+                            )} />
+                        </CardTitle>
+                        <CardDescription className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mt-3 ml-1">configuración rápida del tema dominical</CardDescription>
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent className="relative z-10 space-y-6">
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Título del Tema</label>
+                        <Input 
+                            value={theme.title || ''} 
+                            onChange={(e) => setTheme({ ...theme, title: e.target.value })}
+                            className={cn(
+                                "h-12 text-sm font-bold border-none transition-all outline-none",
+                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] text-white rounded-md focus:bg-white/[0.05] focus:ring-1 focus:ring-white/10" : "bg-[var(--tactile-inner-bg)] text-foreground rounded-none border-b border-[var(--tactile-border)] focus:bg-[var(--tactile-item-hover)]"
+                            )}
+                            placeholder="Ej: La Perseverancia del Cristiano"
+                        />
+                    </div>
+                    
+                    <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Resumen / Descripción</label>
+                        <textarea
+                            value={theme.description || ''}
+                            onChange={(e) => setTheme({ ...theme, description: e.target.value })}
+                            className={cn(
+                                "w-full min-h-[120px] p-4 text-xs font-bold border-none transition-all outline-none resize-none",
+                                settings.adminTheme === 'primitivo' ? "bg-white/[0.03] text-white/80 rounded-md focus:bg-white/[0.05] focus:ring-1 focus:ring-white/10" : "bg-[var(--tactile-inner-bg)] text-foreground rounded-none border-b border-[var(--tactile-border)] focus:bg-[var(--tactile-item-hover)]"
+                            )}
+                            placeholder="Escriba un resumen breve..."
+                        />
+                    </div>
+                </div>
+                
+                <div className="flex justify-center pt-2">
+                    <Button 
+                        onClick={async () => {
+                            setIsSavingLocal(true);
+                            await onSave();
+                            setIsSavingLocal(false);
+                        }}
+                        className={cn(
+                            "px-10 h-10 font-black uppercase tracking-[0.2em] text-[9px] transition-all",
+                            settings.adminTheme === 'primitivo' ? "bg-[#10b981] hover:bg-[#10b981]/80 text-white rounded-md" : "bg-primary hover:bg-primary/90 text-white rounded-none shadow-lg"
+                        )}
+                        disabled={isSavingLocal}
+                    >
+                        {isSavingLocal ? (
+                            <div className="flex items-center gap-2">
+                                 <RefreshCw className="w-4 h-4 animate-spin" />
+                                 <span>Sincronizando...</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <Save className="w-4 h-4" />
+                                <span>Actualizar Tema</span>
+                            </div>
+                        )}
+                    </Button>
+                </div>
+
+                <p className="text-[8px] text-center text-muted-foreground uppercase font-black tracking-widest opacity-40">
+                    * para ajustes avanzados (fechas, imágenes), use la sección de contenido.
+                </p>
+            </CardContent>
+        </Card>
+    );
+};
+
 const GOOGLE_FONTS = [
     { id: 'outfit', name: 'Outfit', category: 'Modern Geometric Sans' },
     { id: 'sora', name: 'Sora', category: 'High-Tech Sans' },
@@ -598,6 +700,17 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     
     const [intelligenceRange, setIntelligenceRange] = useState<'month' | 30 | 15 | 7>(7);
     
+    // Attendance stats for AsistenciaTab
+    const weeklyStats = useMemo(() => [
+        { day: 'Lun', attendance: 45 },
+        { day: 'Mar', attendance: 52 },
+        { day: 'Mie', attendance: 48 },
+        { day: 'Jue', attendance: 61 },
+        { day: 'Vie', attendance: 55 },
+        { day: 'Sab', attendance: 70 },
+        { day: 'Dom', attendance: 95 },
+    ], []);
+    
     useEffect(() => {
         const loadStats = async () => {
             const stats = await loadMonthlyIntelligenceStats(intelligenceRange);
@@ -675,8 +788,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
     useEffect(() => {
         const aliasMap: Record<string, string> = {
-            'mensajes': 'dashboard',
-            'anuncios-resumen': 'dashboard',
+            'asistencia': 'asistencia',
+            'mensajes': 'mensajes',
             'horarios': 'horarios',
             'temas': 'contenido',
             'contenido': 'contenido',
@@ -686,7 +799,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
         const mappedTab = aliasMap[queryTab] || queryTab;
 
-        const validTabs = ['dashboard', 'horarios', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil'];
+        const validTabs = ['dashboard', 'horarios', 'asistencia', 'mensajes', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil'];
 
         if (mappedTab && validTabs.includes(mappedTab)) {
             setActiveTab(mappedTab);
@@ -1065,7 +1178,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                     <Card className="glass-card border-white/[0.03] shadow-2xl overflow-hidden backdrop-blur-2xl">
                         <div className="h-2 w-full bg-gradient-to-r from-red-600 via-emerald-500 to-red-600 animate-pulse" />
                         <CardHeader className="text-center pt-10 pb-6">
-                            <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-red-500/20">
+                            <div className="w-20 h-20 bg-red-500/10 rounded-md flex items-center justify-center mx-auto mb-6 border border-red-500/20">
                                 <Lock className="w-10 h-10 text-red-500" />
                             </div>
                             <CardTitle className="text-3xl font-black uppercase tracking-tighter text-foreground mb-2">
@@ -1080,20 +1193,20 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 <div className="space-y-4">
                                     <p className="text-[10px] uppercase font-black tracking-widest text-slate-600 text-center">Debes iniciar sesión con tu cuenta autorizada</p>
                                     <Link href="/login" className="block">
-                                        <Button className="w-full h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all gap-2 group">
+                                        <Button className="w-full h-14 bg-primary text-white font-black uppercase tracking-widest text-xs rounded-md hover:scale-[1.02] active:scale-[0.98] transition-all gap-2 group">
                                             Ir al Login <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                         </Button>
                                     </Link>
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    <div className="p-4 bg-white/10 dark:bg-white/5 rounded-2xl border border-white/[0.05] text-center">
+                                    <div className="p-4 bg-white/10 dark:bg-white/5 rounded-md border border-white/[0.05] text-center">
                                         <p className="text-[10px] uppercase font-black tracking-widest text-slate-600 mb-1">Usuario Activo</p>
                                         <p className="text-sm font-bold text-foreground">{authSession.user.email}</p>
                                         <p className="text-[9px] text-red-400 font-black uppercase mt-2 ">Sin permisos de administrador</p>
                                     </div>
                                     <Link href="/" className="block">
-                                        <Button variant="outline" className="w-full h-12 border-white/[0.03] bg-white/10 dark:bg-white/5 hover:bg-white/10 text-slate-600 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all">
+                                        <Button variant="outline" className="w-full h-12 border-white/[0.03] bg-white/10 dark:bg-white/5 hover:bg-white/10 text-slate-600 font-black uppercase tracking-widest text-[10px] rounded-md transition-all">
                                             Volver al Inicio
                                         </Button>
                                     </Link>
@@ -1193,7 +1306,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                     <div className="lg:col-span-1">
                         <Card className={cn(
                             "glass-card border-none relative overflow-hidden group w-full aspect-square flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.3)]",
-                            settings.adminTheme === 'primitivo' ? "bg-muted/30 rounded-[2.5rem]" : "rounded-none"
+                            settings.adminTheme === 'primitivo' ? "bg-muted/30 rounded-md" : "rounded-none"
                         )}>
                             <CardHeader className="pb-2">
                                 <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-4 w-full">
@@ -1403,7 +1516,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                     {/* 4. Membership Intelligence Card - CONSOLIDATED PIE CHART */}
                     <Card className={cn(
                         "card glass-card border-none relative overflow-hidden group h-full rounded-none lg:col-span-1 flex flex-col justify-between",
-                        settings.adminTheme === 'primitivo' ? "bg-[#101420] shadow-none rounded-[1.5rem]" : "bg-slate-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
+                        settings.adminTheme === 'primitivo' ? "bg-[#101420] shadow-none rounded-md" : "bg-slate-900/60 shadow-[0_20px_50px_rgba(0,0,0,0.3)]"
                     )}>
                         <CardHeader className="pb-2">
                         <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-4 w-full">
@@ -1474,12 +1587,174 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 settings={settings}
                             />
                         </div>
-                        <div id="analytics-overview" className="space-y-6">
-                            {/* Consolidated into Membership Intelligence */}
+                        <div id="quick-theme-editor" className="h-full">
+                            <ThemeQuickEditor
+                                theme={theme}
+                                setTheme={setTheme}
+                                onSave={async () => {
+                                    try {
+                                        await saveThemeToCloud(theme);
+                                        showNotification('Tema semanal actualizado correctamente.', 'success');
+                                    } catch (err) {
+                                        showNotification('Error al actualizar tema.', 'error');
+                                    }
+                                }}
+                                settings={settings}
+                            />
                         </div>
                     </div>
-                </div>
 
+                    {/* 🔒 AUDITORÍA DE SEGURIDAD (PENDING APPROVALS) - DASHBOARD INTEGRATION */}
+                    {members.filter(m => m.status === 'Pendiente').length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className={cn(
+                                "p-10 rounded-md bg-gradient-to-br from-emerald-500/10 via-[#0a0a0a] to-emerald-500/[0.03] border border-emerald-500/20 space-y-8 relative overflow-hidden backdrop-blur-3xl group/audit mt-12",
+                                settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-[0_0_50px_rgba(245,158,11,0.05)]"
+                            )}
+                        >
+                            <div className="absolute top-0 right-0 p-12 opacity-5 rotate-12 group-hover/audit:rotate-0 transition-transform duration-700">
+                                <ShieldAlert className="w-48 h-48 text-emerald-500" />
+                            </div>
+                            <div className="absolute -left-20 -top-20 w-64 h-64 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none" />
+                            
+                            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                                <div className="space-y-2 text-center md:text-left">
+                                    <div className="flex items-center justify-center md:justify-start gap-4">
+                                        <div className={cn(
+                                            "w-12 h-12 bg-emerald-500 rounded-md flex items-center justify-center",
+                                            settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-[0_0_20px_rgba(245,158,11,0.4)]"
+                                        )}>
+                                            <ShieldAlert className="w-6 h-6 text-black" />
+                                        </div>
+                                        <h3 className="text-3xl font-black uppercase tracking-tighter text-emerald-500">
+                                            Auditoría de <span className="text-white">Seguridad</span>
+                                        </h3>
+                                    </div>
+                                    <p className="text-xs text-slate-700 dark:text-slate-600 font-black uppercase tracking-[0.25em] ml-1">Protocolo de aprobación de nuevos perfiles</p>
+                                </div>
+                                <div className={cn(
+                                    "bg-emerald-500/10 px-8 py-3 rounded-md border border-emerald-500/30 backdrop-blur-md",
+                                    settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-xl"
+                                )}>
+                                    <span className="text-lg font-black text-emerald-500 tabular-nums tracking-tighter">{members.filter(m => m.status === 'Pendiente').length} SOLICITUDES ACTIVAS</span>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 relative z-10">
+                                {members.filter(m => m.status === 'Pendiente').map((pending) => (
+                                    <Card key={pending.id} className={cn(
+                                        "space-y-6 transition-all duration-500 group/member relative overflow-hidden",
+                                        settings.adminTheme === 'primitivo' 
+                                            ? "bg-emerald-500/[0.03] border border-emerald-500/20 hover:border-emerald-500/40 rounded-sm p-6 shadow-none" 
+                                            : "glass-card bg-[#0a0a0a]/80 border border-white/[0.03] p-8 rounded-none shadow-2xl hover:border-emerald-500/40"
+                                    )}>
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 group-hover/member:opacity-100 transition-opacity" />
+                                        <div className="flex items-center gap-5">
+                                            <div className="relative w-16 h-16 shrink-0">
+                                                <div className="absolute inset-0 bg-emerald-500/20 rounded-md blur-xl opacity-0 group-hover/member:opacity-100 transition-opacity" />
+                                                <div className={cn(
+                                                    "relative w-full h-full overflow-hidden border transition-all bg-slate-900 rounded-md p-1",
+                                                    settings.adminTheme === 'primitivo' ? "border-white/[0.05]" : "border-white/[0.1]"
+                                                )}>
+                                                    {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover rounded-md transition-transform group-hover/member:scale-110" /> : <User className="w-full h-full p-4 text-emerald-500/40" />}
+                                                </div>
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-lg font-black text-white truncate uppercase tracking-tighter leading-none mb-1">{pending.name}</p>
+                                                <p className="text-[9px] text-slate-700 dark:text-slate-600 truncate font-black uppercase tracking-widest flex items-center gap-1.5 leading-none">
+                                                    <Mail className="w-2.5 h-2.5" />
+                                                    {pending.email}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-4">
+                                            <div className="flex gap-3">
+                                                <Button 
+                                                    className={cn(
+                                                        "flex-1 h-12 text-white text-[10px] font-black uppercase tracking-widest transition-all hover:translate-y-[-1px] active:translate-y-0",
+                                                        settings.adminTheme === 'primitivo' ? "bg-emerald-600 hover:bg-emerald-500 rounded-md shadow-none" : "bg-emerald-600 hover:bg-emerald-500 rounded-none shadow-lg shadow-emerald-500/10"
+                                                    )}
+                                                    disabled={isSaving}
+                                                    onClick={async () => {
+                                                        setIsSaving(true);
+                                                        try {
+                                                            await updateProfileInCloud(pending.id, { ...pending, status: 'Activo' } as any);
+                                                            await loadMembersFromCloud();
+                                                            showNotification(`El hermano(a) ${pending.name} ha sido activado.`, 'success');
+                                                        } catch (err) {
+                                                            showNotification('Error al activar perfil.', 'error');
+                                                        } finally {
+                                                            setIsSaving(false);
+                                                        }
+                                                    }}
+                                                >
+                                                    APROBAR CUENTA
+                                                </Button>
+                                                <Button 
+                                                    variant="ghost" 
+                                                    className={cn(
+                                                        "h-12 text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-5 border border-rose-500/10 transition-all",
+                                                        settings.adminTheme === 'primitivo' ? "rounded-md" : "rounded-none"
+                                                    )}
+                                                    onClick={async () => {
+                                                        if (confirm(`¿Estás seguro de RECHAZAR a ${pending.name}?`)) {
+                                                            setIsSaving(true);
+                                                            try {
+                                                                await supabase.from('profiles').delete().eq('id', pending.id);
+                                                                await loadMembersFromCloud();
+                                                                showNotification('Solicitud rechazada y eliminada.', 'info');
+                                                            } catch (err) {
+                                                                showNotification('Error al rechazar.', 'error');
+                                                            } finally {
+                                                                setIsSaving(false);
+                                                            }
+                                                        }
+                                                    }}
+                                                >
+                                                    <XCircle className="w-5 h-5" />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                    </div>
+            {
+                activeTab === 'asistencia' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="space-y-8"
+                    >
+                        <AsistenciaTab 
+                            currentDate={currentDate}
+                            setCurrentDate={setCurrentDate}
+                            members={members}
+                            weeklyStats={weeklyStats}
+                        />
+                    </motion.div>
+                )
+            }
+            {
+                activeTab === 'mensajes' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                    >
+                        <MensajesTab 
+                            messages={messages}
+                            currentUser={currentUser}
+                            markMessageAsRead={markMessageAsRead}
+                            sendCloudMessage={sendCloudMessage}
+                            showNotification={showNotification}
+                        />
+                    </motion.div>
+                )
+            }
 
             {
                 activeTab === 'horarios' && (
@@ -1543,7 +1818,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     seedMonthSchedule();
                                                 }
                                             }}
-                                            className="bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest gap-2 h-9 px-4 rounded-xl"
+                                            className="bg-primary/5 hover:bg-primary/10 border-primary/20 text-primary text-[10px] font-black uppercase tracking-widest gap-2 h-9 px-4 rounded-md"
                                         >
                                             <Sparkles className="w-3.5 h-3.5" />
                                             Poblar Mes
@@ -1557,7 +1832,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             <CardContent className="!overflow-visible">
                                 <div className="grid gap-8 md:grid-cols-3">
                                     {/* 5 AM Slot */}
-                                    <div className="space-y-4 p-4 rounded-xl bg-foreground/5 border border-border/40">
+                                    <div className="space-y-4 p-4 rounded-md bg-foreground/5 border border-border/40">
                                         <div className="flex items-center gap-4 text-blue-400 font-bold uppercase tracking-tighter justify-between">
                                             <div className="flex items-center gap-2">
                                                 <input
@@ -1614,7 +1889,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
 
                                     {/* 9 AM Slot */}
-                                    <div className="space-y-4 p-4 rounded-xl bg-foreground/5 border border-border/40">
+                                    <div className="space-y-4 p-4 rounded-md bg-foreground/5 border border-border/40">
                                         <div className="flex items-center gap-4 text-emerald-400 font-bold uppercase tracking-tighter justify-between">
                                             <div className="flex items-center gap-2 flex-1">
                                                 <input
@@ -1631,7 +1906,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     onChange={(e) => updateSlot('9am', { endTime: e.target.value })}
                                                 />
                                             </div>
-                                            {new Date(currentDate + 'T12:00:00').getDay() === 0 && <span className="text-emerald-600 ml-2 text-[10px] bg-emerald-400/10 px-2 py-0.5 rounded-lg border border-emerald-400/20">DOMINICAL</span>}
+                                            {new Date(currentDate + 'T12:00:00').getDay() === 0 && <span className="text-emerald-600 ml-2 text-[10px] bg-emerald-400/10 px-2 py-0.5 rounded-md border border-emerald-400/20">DOMINICAL</span>}
                                             <Button
                                                 size="sm"
                                                 variant={currentDaySchedule?.slots['9am'].language === 'en' ? 'neon' : 'outline'}
@@ -1646,7 +1921,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <div>
                                                     <label className="text-[10px] font-bold uppercase text-emerald-500/80 tracking-widest block mb-1">Tipo de Dominical</label>
                                                     <select
-                                                        className="w-full bg-black/40 border border-emerald-500/20 text-emerald-400 py-2.5 px-3 rounded-xl text-sm font-semibold focus:outline-none focus:border-emerald-500 transition-colors"
+                                                        className="w-full bg-black/40 border border-emerald-500/20 text-emerald-400 py-2.5 px-3 rounded-md text-sm font-semibold focus:outline-none focus:border-emerald-500 transition-colors"
                                                         value={currentDaySchedule?.slots['9am']?.sundayType || 'local'}
                                                         onChange={(e) => updateSlot('9am', { sundayType: e.target.value as any })}
                                                     >
@@ -1658,11 +1933,11 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 </div>
 
                                                 {currentDaySchedule?.slots['9am']?.sundayType === 'exchange' && (
-                                                    <div className="mt-4 bg-white/10 dark:bg-white/5 p-4 rounded-xl border border-white/[0.05]">
+                                                    <div className="mt-4 bg-white/10 dark:bg-white/5 p-4 rounded-md border border-white/[0.05]">
                                                         <label className="text-[10px] font-bold uppercase text-purple-400/80 tracking-widest block mb-1">Cuerpo o Iglesia de Procedencia (Opcional)</label>
                                                         <input
                                                             type="text"
-                                                            className="w-full bg-black/40 border border-purple-500/20 text-purple-100 py-2.5 px-3 rounded-xl text-sm font-semibold focus:outline-none focus:border-purple-500 placeholder:text-white/20 transition-colors"
+                                                            className="w-full bg-black/40 border border-purple-500/20 text-purple-100 py-2.5 px-3 rounded-md text-sm font-semibold focus:outline-none focus:border-purple-500 placeholder:text-white/20 transition-colors"
                                                             placeholder="Ej. Hermosa Provincia, GDL"
                                                             value={currentDaySchedule?.slots['9am']?.churchOrigin || ''}
                                                             onChange={(e) => updateSlot('9am', { churchOrigin: e.target.value })}
@@ -1730,7 +2005,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
 
                                     {/* Evening Slot */}
-                                    <div className="space-y-4 p-4 rounded-xl bg-foreground/5 border border-border/40 relative">
+                                    <div className="space-y-4 p-4 rounded-md bg-foreground/5 border border-border/40 relative">
                                         <div className="absolute top-2 right-2 px-2 py-0.5 rounded bg-primary text-white text-[10px] font-bold uppercase">
                                             Estelar
                                         </div>
@@ -1899,7 +2174,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 <CardContent className="space-y-4">
                                     <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                                         {uniforms.map(u => (
-                                            <div key={u.id} className="p-3 rounded-xl bg-foreground/5 border border-border/40 flex justify-between items-center group">
+                                            <div key={u.id} className="p-3 rounded-md bg-foreground/5 border border-border/40 flex justify-between items-center group">
                                                 <div>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm font-bold text-foreground uppercase tracking-tighter">{u.name}</span>
@@ -1976,7 +2251,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         </CardTitle>
                                         <CardDescription>Asigne uniformes y privilegios infantiles para días específicos</CardDescription>
                                     </div>
-                                    <div className="flex items-center gap-2 px-3 py-1 bg-foreground/5 rounded-lg border border-white/[0.03]">
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-foreground/5 rounded-md border border-white/[0.03]">
                                         <Calendar className="w-3.5 h-3.5 text-cyan-500 opacity-50" />
                                         <span className="text-xs font-bold text-foreground uppercase ">{(() => {
                                             try {
@@ -1989,7 +2264,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </CardHeader>
                                 <CardContent className="space-y-6">
                                     {/* Selector de Uniforme para la fecha actual */}
-                                    <div className="p-4 rounded-2xl bg-foreground/5 border border-border/40">
+                                    <div className="p-4 rounded-md bg-foreground/5 border border-border/40">
                                         <h4 className="text-xs font-black uppercase text-slate-600 mb-4 flex items-center gap-2">
                                             <Shirt className="w-3.5 h-3.5" /> Uniforme del Día
                                         </h4>
@@ -2003,7 +2278,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         await saveUniformForDateToCloud(currentDate, e.target.value);
                                                         setIsSaving(false);
                                                     }}
-                                                    className="w-full bg-foreground/5 border border-border/40 rounded-xl h-10 px-3 text-xs font-bold text-foreground outline-none focus:border-secondary/50 transition-colors"
+                                                    className="w-full bg-foreground/5 border border-border/40 rounded-md h-10 px-3 text-xs font-bold text-foreground outline-none focus:border-secondary/50 transition-colors"
                                                 >
                                                     <option value="" className="bg-[#0f172a]">Sin uniforme asignado</option>
                                                     {uniforms.filter(u => u.category === 'Adulto').map(u => (
@@ -2019,7 +2294,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         const existing = kidsAssignments[currentDate] || { serviceChild: '', doctrineChild: '', uniformId: '' };
                                                         setKidsAssignment(currentDate, { ...existing, uniformId: e.target.value });
                                                     }}
-                                                    className="w-full bg-foreground/5 border border-border/40 rounded-xl h-10 px-3 text-xs font-bold text-foreground outline-none focus:border-cyan-500/50 transition-colors"
+                                                    className="w-full bg-foreground/5 border border-border/40 rounded-md h-10 px-3 text-xs font-bold text-foreground outline-none focus:border-cyan-500/50 transition-colors"
                                                 >
                                                     <option value="" className="bg-[#0f172a]">Sin uniforme asignado</option>
                                                     {uniforms.filter(u => u.category === 'Niño').map(u => (
@@ -2031,7 +2306,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
 
                                     {/* Asignaciones Infantiles (Sólo si es Sábado u autorizado) */}
-                                    <div className="p-6 rounded-3xl bg-cyan-500/5 border border-cyan-500/10 relative overflow-hidden">
+                                    <div className="p-6 rounded-md bg-cyan-500/5 border border-cyan-500/10 relative overflow-hidden">
                                         <div className="absolute top-0 right-0 p-4 opacity-5 rotate-12">
                                             <Baby className="w-24 h-24 text-cyan-500" />
                                         </div>
@@ -2104,9 +2379,9 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         className="space-y-6"
                     >
                         {/* Unified Header & Sub-Tab Navigation */}
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-[2.5rem] px-8 py-4 sticky top-4 z-[40] shadow-2xl">
+                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-1 bg-white/[0.03] backdrop-blur-3xl border border-white/10 rounded-md px-8 py-4 sticky top-4 z-[40] shadow-2xl">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-emerald-500/20 rounded-2xl border border-emerald-500/30">
+                                <div className="p-3 bg-emerald-500/20 rounded-md border border-emerald-500/30">
                                     <Settings className="h-6 w-6 text-emerald-500" />
                                 </div>
                                 <div>
@@ -2128,8 +2403,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         className={cn(
                                             "relative flex items-center gap-3 px-8 py-4 text-[11px] font-black uppercase tracking-[0.1em] transition-all duration-500 group",
                                             configSubTab === tab.id 
-                                                ? "bg-emerald-600 text-white rounded-t-2xl z-[10] shadow-[0_-10px_40px_rgba(16,185,129,0.3)] translate-y-[1px]" 
-                                                : "text-slate-600 hover:text-slate-300 hover:bg-white/[0.02] rounded-t-xl mb-0.5"
+                                                ? "bg-emerald-600 text-white rounded-t-md z-[10] shadow-[0_-10px_40px_rgba(16,185,129,0.3)] translate-y-[1px]" 
+                                                : "text-slate-600 hover:text-slate-300 hover:bg-white/[0.02] rounded-t-md mb-0.5"
                                         )}
                                     >
                                         <tab.icon className={cn("w-4 h-4 transition-transform group-hover:scale-110", configSubTab === tab.id ? "text-white" : "text-slate-600")} /> 
@@ -2139,7 +2414,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </div>
 
                             <Button
-                                className="text-white font-black uppercase tracking-widest gap-2 h-12 px-8 rounded-2xl border border-emerald-400/20 bg-emerald-600 hover:bg-emerald-500 transition-all shadow-[0_10px_30px_rgba(16,185,129,0.3)]"
+                                className="text-white font-black uppercase tracking-widest gap-2 h-12 px-8 rounded-md border border-emerald-400/20 bg-emerald-600 hover:bg-emerald-500 transition-all shadow-[0_10px_30px_rgba(16,185,129,0.3)]"
                                 onClick={async () => {
                                     setIsSaving(true);
                                     await saveSettingsToCloud(settings);
@@ -2157,7 +2432,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     {/* Dashboard Theme Selection */}
-                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 relative overflow-hidden group">
+                                    <div className="space-y-4 p-8 rounded-md bg-indigo-500/5 border border-indigo-500/10 relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <Sun className="w-32 h-32 text-indigo-500" />
                                         </div>
@@ -2168,7 +2443,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             <select
                                                 value={settings.themeMode}
                                                 onChange={(e) => setSettings({ themeMode: e.target.value as any })}
-                                                className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[1.5rem] px-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-white/[0.06] transition-all outline-none shadow-inner"
+                                                className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-md px-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-white/[0.06] transition-all outline-none shadow-inner"
                                             >
                                                 <option value="light" className="bg-[#020617] text-white">Modo Claro (Clásico)</option>
                                                 <option value="dark" className="bg-[#020617] text-white">Modo Oscuro (Galactic)</option>
@@ -2178,7 +2453,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
 
                                     {/* Admin Layout Selection */}
-                                    <div className="space-y-4 p-8 rounded-[2.5rem] bg-emerald-500/5 border border-emerald-500/10 relative overflow-hidden group">
+                                    <div className="space-y-4 p-8 rounded-md bg-emerald-500/5 border border-emerald-500/10 relative overflow-hidden group">
                                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                                             <LayoutDashboard className="w-32 h-32 text-emerald-500" />
                                         </div>
@@ -2193,7 +2468,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     setSettings({ adminTheme: newValue });
                                                     saveSettingsToCloud({ adminTheme: newValue });
                                                 }}
-                                                className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[1.5rem] px-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-white/[0.06] transition-all outline-none shadow-inner"
+                                                className="w-full bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-md px-8 py-5 text-sm font-black uppercase tracking-widest text-foreground appearance-none cursor-pointer hover:bg-white/[0.06] transition-all outline-none shadow-inner"
                                             >
                                                 <option value="primitivo" className="bg-[#020617] text-white">Plantilla Primitiva (Producción)</option>
                                                 <option value="classic" className="bg-[#020617] text-white">Plantilla Clásica (Tactile)</option>
@@ -2204,7 +2479,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </div>
 
                                 {/* Minister Profile Card (Consolidated) */}
-                                <div className="p-10 rounded-[2.5rem] bg-white/[0.02] border border-white/10 relative overflow-hidden group shadow-lg">
+                                <div className="p-10 rounded-md bg-white/[0.02] border border-white/10 relative overflow-hidden group shadow-lg">
                                     <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                                     <div className="flex flex-col lg:flex-row gap-12 relative z-10 items-center">
                                         <div className="relative group/avatar">
@@ -2213,7 +2488,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
                                                 </div>
                                                 <div className="absolute bottom-2 right-2 flex gap-1">
-                                                    <Button size="icon" className="w-10 h-10 rounded-xl" onClick={() => document.getElementById('minister-photo-upload')?.click()}><Camera className="w-4 h-4" /></Button>
+                                                    <Button size="icon" className="w-10 h-10 rounded-md" onClick={() => document.getElementById('minister-photo-upload')?.click()}><Camera className="w-4 h-4" /></Button>
                                                 </div>
                                             </div>
                                             <input id="minister-photo-upload" type="file" className="hidden" accept="image/*" onChange={handleMinisterAvatarChange} />
@@ -2221,15 +2496,15 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-4">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Nombre del Responsable</label>
-                                                <Input value={minister.name || ''} onChange={(e) => setMinister({ name: e.target.value })} className="h-14 bg-foreground/5 rounded-2xl" placeholder="Ej. P.E. Benjamín Rojas" />
+                                                <Input value={minister.name || ''} onChange={(e) => setMinister({ name: e.target.value })} className="h-14 bg-foreground/5 rounded-md" placeholder="Ej. P.E. Benjamín Rojas" />
                                             </div>
                                             <div className="space-y-4">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Teléfono</label>
-                                                <Input value={minister.phone || ''} onChange={(e) => setMinister({ phone: e.target.value })} className="h-14 bg-foreground/5 rounded-2xl" />
+                                                <Input value={minister.phone || ''} onChange={(e) => setMinister({ phone: e.target.value })} className="h-14 bg-foreground/5 rounded-md" />
                                             </div>
                                             <div className="md:col-span-2 space-y-4">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Correo Institucional</label>
-                                                <Input value={minister.email || ''} onChange={(e) => setMinister({ email: e.target.value })} className="h-14 bg-foreground/5 rounded-2xl" />
+                                                <Input value={minister.email || ''} onChange={(e) => setMinister({ email: e.target.value })} className="h-14 bg-foreground/5 rounded-md" />
                                             </div>
                                         </div>
                                     </div>
@@ -2242,7 +2517,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
                                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                                     {/* Display Mode Selection */}
-                                    <div className="lg:col-span-2 p-8 rounded-[2.5rem] bg-emerald-500/5 border border-emerald-500/10">
+                                    <div className="lg:col-span-2 p-8 rounded-md bg-emerald-500/5 border border-emerald-500/10">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 mb-6 flex items-center gap-2">
                                             <Monitor className="w-3.5 h-3.5" /> Temas de la Pizarra Gigante
                                         </h4>
@@ -2260,7 +2535,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     key={theme.id}
                                                     onClick={() => setSettings({ displayTemplate: theme.id as any })}
                                                     className={cn(
-                                                        "flex flex-col items-center justify-center p-4 rounded-2xl border transition-all gap-2",
+                                                        "flex flex-col items-center justify-center p-4 rounded-md border transition-all gap-2",
                                                         (settings.displayTemplate || 'nocturno') === theme.id 
                                                             ? "bg-emerald-500/20 border-emerald-500 text-emerald-400" 
                                                             : "bg-slate-900 border-white/[0.05] text-slate-600 hover:border-emerald-500/30"
@@ -2274,7 +2549,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
 
                                     {/* Playback Settings */}
-                                    <div className="p-8 rounded-[2.5rem] bg-indigo-500/5 border border-indigo-500/10 flex flex-col gap-6">
+                                    <div className="p-8 rounded-md bg-indigo-500/5 border border-indigo-500/10 flex flex-col gap-6">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-500 flex items-center gap-2">
                                             <Sparkles className="w-3.5 h-3.5" /> Efectos & Duración
                                         </h4>
@@ -2284,7 +2559,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <select
                                                     value={settings.transitionsEnabled !== false ? 'true' : 'false'}
                                                     onChange={(e) => setSettings({ transitionsEnabled: e.target.value === 'true' })}
-                                                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-xs font-black uppercase outline-none focus:border-primary/50"
+                                                    className="w-full bg-white/[0.03] border border-white/10 rounded-md px-4 py-3 text-xs font-black uppercase outline-none focus:border-primary/50"
                                                 >
                                                     <option value="true">Activas (Moderno)</option>
                                                     <option value="false">Instantáneas</option>
@@ -2295,7 +2570,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <select
                                                     value={settings.iglesiaSlideDuration || 12}
                                                     onChange={(e) => setSettings({ iglesiaSlideDuration: parseInt(e.target.value) })}
-                                                    className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-xs font-black uppercase outline-none focus:border-primary/50"
+                                                    className="w-full bg-white/[0.03] border border-white/10 rounded-md px-4 py-3 text-xs font-black uppercase outline-none focus:border-primary/50"
                                                 >
                                                     <option value="5">Rápido (5s)</option>
                                                     <option value="12">Normal (12s)</option>
@@ -2308,7 +2583,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
                                 {/* TV SCALE & POSITION (The Tactile Grid) */}
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    <div className="p-8 rounded-[2.5rem] bg-cyan-500/5 border border-cyan-500/10 flex flex-col gap-6">
+                                    <div className="p-8 rounded-md bg-cyan-500/5 border border-cyan-500/10 flex flex-col gap-6">
                                         <div className="flex justify-between items-center">
                                             <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-500">Escala del Contenido (%)</h4>
                                             <span className="text-xl font-black text-cyan-400">{Math.round((settings.displayScale || 1.0) * 100)}%</span>
@@ -2319,7 +2594,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     key={sc}
                                                     onClick={() => setSettings({ displayScale: sc })}
                                                     className={cn(
-                                                        "h-10 rounded-lg font-black text-[10px] transition-all",
+                                                        "h-10 rounded-md font-black text-[10px] transition-all",
                                                         (settings.displayScale || 1.0) === sc ? "bg-cyan-500 text-black" : "bg-white/10 dark:bg-white/5 text-slate-600"
                                                     )}
                                                 >
@@ -2329,7 +2604,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         </div>
                                     </div>
 
-                                    <div className="p-8 rounded-[2.5rem] bg-white/[0.02] border border-white/10 flex flex-col items-center gap-4">
+                                    <div className="p-8 rounded-md bg-white/[0.02] border border-white/10 flex flex-col items-center gap-4">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">Centrado Manual del Display</h4>
                                         <div className="flex flex-col items-center gap-2">
                                             <Button variant="outline" size="icon" onClick={() => setSettings({ displayOffsetY: (settings.displayOffsetY || 0) - 10 })}><ChevronUp /></Button>
@@ -2350,7 +2625,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="space-y-8">
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                     {/* LOGO SELECTION */}
-                                    <div className="p-8 rounded-[2.5rem] bg-blue-500/5 border border-blue-500/10 space-y-6">
+                                    <div className="p-8 rounded-md bg-blue-500/5 border border-blue-500/10 space-y-6">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 flex items-center gap-2">
                                             <Palette className="w-3.5 h-3.5" /> Logotipo Institucional
                                         </h4>
@@ -2361,7 +2636,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     <div key={idx} className="relative group">
                                                         <button 
                                                             onClick={() => url ? setSettings({ churchLogoUrl: url }) : document.getElementById(`logo-up-${idx}`)?.click()}
-                                                            className={cn("w-20 h-20 rounded-2xl border-2 flex items-center justify-center overflow-hidden transition-all", settings.churchLogoUrl === url && url ? "border-primary bg-primary/10" : "border-white/5 bg-black/20")}
+                                                            className={cn("w-20 h-20 rounded-md border-2 flex items-center justify-center overflow-hidden transition-all", settings.churchLogoUrl === url && url ? "border-primary bg-primary/10" : "border-white/5 bg-black/20")}
                                                         >
                                                             {url ? <img src={url} className="w-full h-full object-contain p-2" /> : <Plus className="text-slate-600" />}
                                                         </button>
@@ -2373,12 +2648,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     </div>
 
                                     {/* COLORS & FONTS */}
-                                    <div className="p-8 rounded-[2.5rem] bg-pink-500/5 border border-pink-500/10 space-y-6">
+                                    <div className="p-8 rounded-md bg-pink-500/5 border border-pink-500/10 space-y-6">
                                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-pink-500 flex items-center gap-2">
                                             <Sparkles className="w-3.5 h-3.5" /> Colores & Tipografía Global
                                         </h4>
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl" style={{ backgroundColor: settings.primaryColor }} />
+                                            <div className="w-12 h-12 rounded-md" style={{ backgroundColor: settings.primaryColor }} />
                                             <Input type="color" value={settings.primaryColor} onChange={(e) => setSettings({ primaryColor: e.target.value })} className="flex-1 bg-black/40 border-slate-200 dark:border-white/10" />
                                         </div>
                                         <div className="space-y-4">
@@ -2387,7 +2662,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <input 
                                                     value={fontSearch} onChange={(e) => setFontSearch(e.target.value)}
                                                     placeholder="Buscar fuente Google..."
-                                                    className="w-full h-12 bg-black/40 border border-slate-200 dark:border-white/10 rounded-xl pl-12 text-[10px] font-black uppercase outline-none focus:border-pink-500/50"
+                                                    className="w-full h-12 bg-black/40 border border-slate-200 dark:border-white/10 rounded-md pl-12 text-[10px] font-black uppercase outline-none focus:border-pink-500/50"
                                                 />
                                             </div>
                                             <div className="max-h-40 overflow-y-auto custom-scrollbar flex flex-col gap-1">
@@ -2395,7 +2670,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     <button 
                                                         key={f.id} 
                                                         onClick={() => setSettings({ fontMain: f.name as any })} 
-                                                        className={cn("px-4 py-2 text-[10px] font-black uppercase text-left rounded-lg transition-all", settings.fontMain === f.name ? "bg-pink-500 text-black" : "text-slate-600 hover:bg-white/10 dark:bg-white/5")}
+                                                        className={cn("px-4 py-2 text-[10px] font-black uppercase text-left rounded-md transition-all", settings.fontMain === f.name ? "bg-pink-500 text-black" : "text-slate-600 hover:bg-white/10 dark:bg-white/5")}
                                                     >
                                                         {f.name}
                                                     </button>
@@ -2406,22 +2681,22 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </div>
 
                                 {/* BACKGROUND SELECTION */}
-                                <div className="p-8 rounded-[2.5rem] bg-purple-500/5 border border-purple-500/10 space-y-6">
+                                <div className="p-8 rounded-md bg-purple-500/5 border border-purple-500/10 space-y-6">
                                     <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-purple-500">Imagen de Fondo del Display</h4>
                                     <div className="flex items-center gap-6">
                                         <button 
                                             onClick={() => setSettings({ displayBgMode: 'none' })}
-                                            className={cn("w-32 h-20 rounded-2xl border-2 flex flex-col items-center justify-center gap-2", settings.displayBgMode === 'none' ? "border-primary bg-primary/10" : "border-white/5")}
+                                            className={cn("w-32 h-20 rounded-md border-2 flex flex-col items-center justify-center gap-2", settings.displayBgMode === 'none' ? "border-primary bg-primary/10" : "border-white/5")}
                                         >
                                             <XCircle className="w-5 h-5 text-slate-600" />
                                             <span className="text-[8px] font-black uppercase">Limpio</span>
                                         </button>
                                         <button 
                                             onClick={() => document.getElementById('display-bg-up')?.click()}
-                                            className={cn("flex-1 h-20 rounded-2xl border-2 border-dashed flex items-center justify-center gap-4 transition-all", settings.displayBgMode === 'custom' ? "border-primary bg-primary/5" : "border-slate-200 dark:border-white/10 hover:border-white/30")}
+                                            className={cn("flex-1 h-20 rounded-md border-2 border-dashed flex items-center justify-center gap-4 transition-all", settings.displayBgMode === 'custom' ? "border-primary bg-primary/5" : "border-slate-200 dark:border-white/10 hover:border-white/30")}
                                         >
                                             {settings.displayCustomBgUrl ? (
-                                                <img src={settings.displayCustomBgUrl} className="h-full w-full object-cover rounded-2xl opacity-50" />
+                                                <img src={settings.displayCustomBgUrl} className="h-full w-full object-cover rounded-md opacity-50" />
                                             ) : <Upload className="text-slate-600" />}
                                             <span className="absolute text-[10px] font-black uppercase tracking-widest">{settings.displayCustomBgUrl ? 'CAMBIAR FONDO' : 'SUBIR FONDO PERSONALIZADO'}</span>
                                         </button>
@@ -2452,7 +2727,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/[0.03] shadow-xl"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-md" : "glass-card bg-slate-900/40 border-white/[0.03] shadow-xl"
                             )}>
                                 <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <Users className="w-10 h-10 text-emerald-400 mb-3" />
@@ -2462,7 +2737,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </Card>
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-md" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
                             )}>
                                 <div className="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="w-10 h-10 flex items-center justify-center mb-3">
@@ -2474,7 +2749,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </Card>
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-md" : "glass-card bg-slate-900/40 border-white/40 shadow-xl"
                             )}>
                                 <div className="absolute inset-0 bg-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <div className="w-10 h-10 flex items-center justify-center mb-3">
@@ -2486,7 +2761,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </Card>
                             <Card className={cn(
                                 "p-6 flex flex-col items-center justify-center text-center group transition-all duration-500 hover:scale-105 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-[1.5rem]" : "glass-card p-6 shadow-2xl bg-slate-900/40 border-white/40"
+                                settings.adminTheme === 'primitivo' ? "bg-[#101420] border-white/[0.03] shadow-none rounded-md" : "glass-card p-6 shadow-2xl bg-slate-900/40 border-white/40"
                             )}>
                                 <div className="absolute inset-0 bg-emerald-500/10 animate-pulse opacity-30" />
                                 <ShieldAlert className="w-10 h-10 text-emerald-500 mb-3 animate-pulse" />
@@ -2502,7 +2777,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className={cn(
-                                    "p-10 rounded-[3rem] bg-gradient-to-br from-emerald-500/10 via-[#0a0a0a] to-emerald-500/[0.03] border border-emerald-500/20 space-y-8 relative overflow-hidden backdrop-blur-3xl group/audit",
+                                    "p-10 rounded-md bg-gradient-to-br from-emerald-500/10 via-[#0a0a0a] to-emerald-500/[0.03] border border-emerald-500/20 space-y-8 relative overflow-hidden backdrop-blur-3xl group/audit",
                                     settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-[0_0_50px_rgba(245,158,11,0.05)]"
                                 )}
                             >
@@ -2515,7 +2790,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     <div className="space-y-2 text-center md:text-left">
                                         <div className="flex items-center justify-center md:justify-start gap-4">
                                             <div className={cn(
-                                                "w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center",
+                                                "w-12 h-12 bg-emerald-500 rounded-md flex items-center justify-center",
                                                 settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-[0_0_20px_rgba(245,158,11,0.4)]"
                                             )}>
                                                 <ShieldAlert className="w-6 h-6 text-black" />
@@ -2527,7 +2802,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         <p className="text-xs text-slate-700 dark:text-slate-600 font-black uppercase tracking-[0.25em] ml-1">Protocolo de aprobación de nuevos perfiles</p>
                                     </div>
                                     <div className={cn(
-                                        "bg-emerald-500/10 px-8 py-3 rounded-2xl border border-emerald-500/30 backdrop-blur-md",
+                                        "bg-emerald-500/10 px-8 py-3 rounded-md border border-emerald-500/30 backdrop-blur-md",
                                         settings.adminTheme === 'primitivo' ? "shadow-none" : "shadow-xl"
                                     )}>
                                         <span className="text-lg font-black text-emerald-500 tabular-nums tracking-tighter">{members.filter(m => m.status === 'Pendiente').length} SOLICITUDES ACTIVAS</span>
@@ -2539,14 +2814,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         <Card key={pending.id} className={cn(
                                             "space-y-6 transition-all duration-500 group/member relative overflow-hidden",
                                             settings.adminTheme === 'primitivo' 
-                                                ? "bg-emerald-500/[0.03] border border-emerald-500/20 hover:border-emerald-500/40 rounded-[2rem] p-5 shadow-none" 
-                                                : "glass-card bg-[#0a0a0a]/80 border border-white/[0.03] p-6 rounded-[2rem] shadow-2xl hover:border-emerald-500/40"
+                                                ? "bg-emerald-500/[0.03] border border-emerald-500/20 hover:border-emerald-500/40 rounded-md p-5 shadow-none" 
+                                                : "glass-card bg-[#0a0a0a]/80 border border-white/[0.03] p-6 rounded-md shadow-2xl hover:border-emerald-500/40"
                                         )}>
                                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 group-hover/member:opacity-100 transition-opacity" />
                                             <div className="flex items-center gap-5">
                                                 <div className="relative w-16 h-16 shrink-0">
-                                                    <div className="absolute inset-0 bg-emerald-500/20 rounded-[1.5rem] blur-xl opacity-0 group-hover/member:opacity-100 transition-opacity" />
-                                                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden border-2 border-white/[0.05] group-hover/member:border-emerald-500/50 transition-all bg-slate-900">
+                                                    <div className="absolute inset-0 bg-emerald-500/20 rounded-md blur-xl opacity-0 group-hover/member:opacity-100 transition-opacity" />
+                                                    <div className="relative w-full h-full rounded-md overflow-hidden border-2 border-white/[0.05] group-hover/member:border-emerald-500/50 transition-all bg-slate-900">
                                                         {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover transition-transform group-hover/member:scale-110" /> : <User className="w-full h-full p-4 text-emerald-500/40" />}
                                                     </div>
                                                     {pending.is_pre_registered && (
@@ -2589,7 +2864,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <div className="flex gap-3">
                                                     <Button 
                                                         className={cn(
-                                                            "flex-1 h-12 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl transition-all hover:translate-y-[-1px] active:translate-y-0",
+                                                            "flex-1 h-12 text-white text-[10px] font-black uppercase tracking-widest rounded-md transition-all hover:translate-y-[-1px] active:translate-y-0",
                                                             settings.adminTheme === 'primitivo' ? "bg-emerald-600 hover:bg-emerald-500 shadow-none" : "bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/10"
                                                         )}
                                                         disabled={isSaving}
@@ -2605,7 +2880,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     </Button>
                                                     <Button 
                                                         variant="ghost" 
-                                                        className="h-12 text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-5 rounded-2xl border border-rose-500/10 transition-all"
+                                                        className="h-12 text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 text-[9px] font-black uppercase tracking-widest px-5 rounded-md border border-rose-500/10 transition-all"
                                                         onClick={async () => {
                                                             if (confirm(`¿Estás seguro de RECHAZAR a ${pending.name}?`)) {
                                                                 setIsSaving(true);
@@ -2621,7 +2896,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <div className="pt-4 border-t border-white/[0.03] space-y-3">
                                                     <p className="text-[7px] font-black uppercase text-slate-700 dark:text-slate-600 tracking-[0.2em] text-center opacity-70 ">Vincular con Registro Manual:</p>
                                                     <select 
-                                                        className="w-full bg-[#111]/80 border border-white/[0.05] rounded-2xl px-4 py-3 text-[10px] font-black uppercase text-emerald-500 outline-none focus:border-emerald-500/50 appearance-none cursor-pointer transition-all hover:bg-[#151515]"
+                                                        className="w-full bg-[#111]/80 border border-white/[0.05] rounded-md px-4 py-3 text-[10px] font-black uppercase text-emerald-500 outline-none focus:border-emerald-500/50 appearance-none cursor-pointer transition-all hover:bg-[#151515]"
                                                         onChange={async (e) => {
                                                             const memberId = e.target.value;
                                                             if (!memberId) return;
@@ -2676,7 +2951,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         animate={{ opacity: 1, height: 'auto', scale: 1 }}
                                         exit={{ opacity: 0, height: 0, scale: 0.95 }}
                                         className={cn(
-                                            "p-8 rounded-[2.5rem] space-y-8 relative overflow-hidden mb-8 shadow-2xl",
+                                            "p-8 rounded-md space-y-8 relative overflow-hidden mb-8 shadow-2xl",
                                             settings.adminTheme === 'primitivo' ? "bg-emerald-400/[0.03] border border-emerald-400/20 shadow-emerald-400/5" : "bg-emerald-500/[0.03] border border-emerald-500/20 shadow-emerald-500/5"
                                         )}
                                     >
@@ -2693,7 +2968,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     settings.adminTheme === 'primitivo' ? "text-emerald-400" : "text-emerald-400"
                                                 )}>
                                                     <div className={cn(
-                                                        "p-2 rounded-xl border",
+                                                        "p-2 rounded-md border",
                                                         settings.adminTheme === 'primitivo' ? "bg-emerald-400/20 border-emerald-400/30" : "bg-emerald-500/20 border-emerald-500/30"
                                                     )}>
                                                         <UserPlus className="w-5 h-5" />
@@ -2717,7 +2992,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 </Button>
                                                 <Button
                                                     className={cn(
-                                                        "text-white font-black uppercase tracking-[0.15em] gap-3 h-12 px-8 rounded-2xl transition-all hover:translate-y-[-2px] active:translate-y-[1px]",
+                                                        "text-white font-black uppercase tracking-[0.15em] gap-3 h-12 px-8 rounded-md transition-all hover:translate-y-[-2px] active:translate-y-[1px]",
                                                         settings.adminTheme === 'primitivo' ? "bg-emerald-600 hover:bg-emerald-500 shadow-none" : "bg-emerald-600 hover:bg-emerald-500 shadow-[0_15px_30px_rgba(16,185,129,0.3)]"
                                                     )}
                                                     disabled={!newMember.name || isSaving}
@@ -2746,7 +3021,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     onChange={(e) => setNewMember({ ...newMember, name: e.target.value })}
                                                     placeholder="Ej: María López"
                                                     className={cn(
-                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black transition-all outline-none",
+                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-md text-sm font-black transition-all outline-none",
                                                         settings.adminTheme === 'primitivo' ? "focus:border-emerald-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]",
                                                         similarMembers.length > 0 && "border-emerald-500/50 bg-emerald-500/5"
                                                     )}
@@ -2755,7 +3030,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     <motion.div
                                                         initial={{ opacity: 0, y: -10 }}
                                                         animate={{ opacity: 1, y: 0 }}
-                                                        className="absolute top-full left-0 right-0 mt-2 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl z-20 backdrop-blur-xl shadow-2xl"
+                                                        className="absolute top-full left-0 right-0 mt-2 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-md z-20 backdrop-blur-xl shadow-2xl"
                                                     >
                                                         <div className="flex items-center gap-2 mb-2">
                                                             <AlertCircle className="w-3 h-3 text-emerald-500" />
@@ -2763,7 +3038,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         </div>
                                                         <div className="space-y-1">
                                                             {similarMembers.map(m => (
-                                                                <div key={m.id} className="flex items-center justify-between text-[10px] bg-white/10 dark:bg-white/5 p-2 rounded-lg border border-white/[0.03]">
+                                                                <div key={m.id} className="flex items-center justify-between text-[10px] bg-white/10 dark:bg-white/5 p-2 rounded-md border border-white/[0.03]">
                                                                     <div className="flex flex-col">
                                                                         <span className="font-black text-foreground">{m.name}</span>
                                                                         <span className="text-[8px] text-slate-700 dark:text-slate-600 truncate max-w-[120px]">{m.email}</span>
@@ -2784,7 +3059,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     onChange={(e) => setNewMember({ ...newMember, email: e.target.value })}
                                                     placeholder="ejemplo@gmail.com"
                                                     className={cn(
-                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black transition-all outline-none",
+                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-md text-sm font-black transition-all outline-none",
                                                         settings.adminTheme === 'primitivo' ? "focus:border-emerald-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]",
                                                         similarMembers.some(m => m.email?.toLowerCase().trim() === newMember.email.toLowerCase().trim()) && "border-red-500/50 bg-red-500/5"
                                                     )}
@@ -2800,7 +3075,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     onChange={(e) => setNewMember({ ...newMember, phone: e.target.value })}
                                                     placeholder="+1 (555) 000-0000"
                                                     className={cn(
-                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-2xl text-sm font-black transition-all outline-none",
+                                                        "bg-foreground/[0.03] border-border/10 h-14 rounded-md text-sm font-black transition-all outline-none",
                                                         settings.adminTheme === 'primitivo' ? "focus:border-emerald-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
                                                     )}
                                                 />
@@ -2815,7 +3090,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         value={newMember.role}
                                                         onChange={(e) => setNewMember({ ...newMember, role: e.target.value })}
                                                         className={cn(
-                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
+                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-md h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
                                                             settings.adminTheme === 'primitivo' ? "focus:border-emerald-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
                                                         )}
                                                     >
@@ -2841,7 +3116,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         value={newMember.category}
                                                         onChange={(e) => setNewMember({ ...newMember, category: e.target.value })}
                                                         className={cn(
-                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
+                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-md h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
                                                             settings.adminTheme === 'primitivo' ? "focus:border-emerald-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
                                                         )}
                                                     >
@@ -2862,7 +3137,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         value={newMember.member_group}
                                                         onChange={(e) => setNewMember({ ...newMember, member_group: e.target.value })}
                                                         className={cn(
-                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-2xl h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
+                                                            "w-full bg-foreground/[0.03] border border-border/10 rounded-md h-14 px-4 text-sm font-black text-foreground outline-none appearance-none transition-all",
                                                             settings.adminTheme === 'primitivo' ? "focus:border-emerald-400/50 focus:bg-foreground/[0.05]" : "focus:border-emerald-500/50 focus:bg-foreground/[0.05]"
                                                         )}
                                                     >
@@ -2890,14 +3165,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             <div className="relative group">
                                                 {/* Outer Glow on Focus */}
                                                 <div className={cn(
-                                                    "absolute -inset-0.5 rounded-2xl blur-md transition-all duration-500",
+                                                    "absolute -inset-0.5 rounded-md blur-md transition-all duration-500",
                                                     settings.adminTheme === 'primitivo' ? "bg-emerald-500/0 group-focus-within:bg-emerald-500/15" : "bg-emerald-500/0 group-focus-within:bg-emerald-500/15"
                                                 )} />
                                                 
                                                 <div className={cn(
                                                     "relative border overflow-hidden transition-all duration-300 backdrop-blur-md",
                                                     settings.adminTheme === 'primitivo'
-                                                        ? "bg-[#0A0D14] border-white/[0.05] rounded-2xl focus-within:border-emerald-500/30 focus-within:bg-[#101420] shadow-sm shadow-black"
+                                                        ? "bg-[#0A0D14] border-white/[0.05] rounded-md focus-within:border-emerald-500/30 focus-within:bg-[#101420] shadow-sm shadow-black"
                                                         : "bg-black/40 border-white/[0.15] rounded-full focus-within:border-emerald-500/60 focus-within:bg-black/80 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
                                                 )}>
                                                     <Search className={cn(
@@ -2926,7 +3201,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 key={group.id}
                                                 onClick={() => setMemberFilter(group.id)}
                                                 className={cn(
-                                                    "w-full flex items-center justify-between p-3 rounded-2xl transition-all duration-300 relative group overflow-hidden border",
+                                                    "w-full flex items-center justify-between p-3 rounded-md transition-all duration-300 relative group overflow-hidden border",
                                                     memberFilter === group.id 
                                                         ? "bg-emerald-600 text-white shadow-lg scale-[1.02] z-20" 
                                                         : "bg-black/5 dark:bg-white/10 dark:bg-white/5 text-slate-700 dark:text-slate-400 hover:text-emerald-600"
@@ -2934,7 +3209,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             >
                                                 <div className="flex items-center gap-3 z-10">
                                                     <div className={cn(
-                                                        "p-2 rounded-lg border transition-all",
+                                                        "p-2 rounded-md border transition-all",
                                                         memberFilter === group.id
                                                             ? (settings.adminTheme === 'primitivo' ? "bg-black/20 border-black/10" : `bg-${group.color}-500/20 border-${group.color}-500/30 shadow-lg`)
                                                             : "bg-foreground/5 border-border/10 group-hover:bg-foreground/10"
@@ -3007,7 +3282,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <div className="col-span-full flex flex-col gap-1 mt-6 first:mt-2 mb-4">
                                                             <div className="flex items-center gap-4 px-4 overflow-hidden">
                                                                  <div className={cn(
-                                                                    "p-2.5 rounded-2xl border transition-all",
+                                                                    "p-2.5 rounded-md border transition-all",
                                                                     settings.adminTheme === 'primitivo' ? "bg-emerald-500/10 border-emerald-500/20 shadow-none" : "bg-foreground/[0.03] border-white/[0.03] shadow-2xl"
                                                                 )}>
                                                                     <group.icon className={cn("w-4 h-4", settings.adminTheme === 'primitivo' ? "text-emerald-400" : "text-emerald-500")} />
@@ -3033,10 +3308,10 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                  className={cn(
                                                                     "p-5 border transition-all duration-300 group relative overflow-hidden",
                                                                     settings.adminTheme === 'primitivo' 
-                                                                        ? "bg-[#101420] border-white/[0.03] hover:border-white/[0.05] rounded-2xl shadow-none" 
+                                                                        ? "bg-[#101420] border-white/[0.03] hover:border-white/[0.05] rounded-md shadow-none" 
                                                                         : (m.is_pre_registered 
-                                                                            ? "bg-emerald-500/[0.03] border-emerald-500/20 hover:border-emerald-500/40 rounded-[1.5rem] shadow-none"
-                                                                            : "bg-foreground/[0.02] border-border/10 hover:border-primary/30 hover:bg-primary/[0.02] rounded-[1.5rem] shadow-xl")
+                                                                            ? "bg-emerald-500/[0.03] border-emerald-500/20 hover:border-emerald-500/40 rounded-md shadow-none"
+                                                                            : "bg-foreground/[0.02] border-border/10 hover:border-primary/30 hover:bg-primary/[0.02] rounded-md shadow-xl")
                                                                 )}
                                                             >
                                                                 {/* Background Accent / Glow (Aurora) */}
@@ -3050,7 +3325,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                     {/* Avatar Area */}
                                                                     <div className="relative shrink-0">
                                                                         <div className={cn(
-                                                                            "rounded-2xl overflow-hidden relative z-10 transition-all duration-500 group-hover:scale-110",
+                                                                            "rounded-md overflow-hidden relative z-10 transition-all duration-500 group-hover:scale-110",
                                                                             settings.adminTheme === "primitivo" ? "w-16 h-16 border-[3px] border-emerald-500 p-0" : "w-20 h-20 border p-1",
                                                                             m.role === 'Administrador' ? cn("border-red-500/30 bg-red-500/5 shadow-none") :
                                                                                 m.role === 'Ministro a Cargo' ? cn("border-emerald-400/30 bg-emerald-400/10 shadow-none") :
@@ -3063,7 +3338,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                     <img src={m.avatar} alt={m.name} className="w-full h-full object-cover" />
                                                                                     
                                                                                     {/* Safe Line Overlay */}
-                                                                                    <div className="absolute inset-0 border border-white/[0.05] rounded-2xl pointer-events-none z-20" />
+                                                                                    <div className="absolute inset-0 border border-white/[0.05] rounded-md pointer-events-none z-20" />
                                                                                     
                                                                                     {/* Rule of Thirds Grid (Subtle) */}
                                                                                     <div className="absolute inset-0 opacity-0 group-hover/avatar:opacity-20 transition-opacity z-20 pointer-events-none">
@@ -3078,21 +3353,21 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                             setEditingImageTarget({ type: 'member', id: m.id });
                                                                                             setImageToEdit(m.avatar!);
                                                                                         }}
-                                                                                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity rounded-2xl z-30"
+                                                                                        className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity rounded-md z-30"
                                                                                         title="Ajustar foto"
                                                                                     >
                                                                                         <Move className="w-6 h-6 text-white" />
                                                                                     </button>
                                                                                 </div>
                                                                             ) : (
-                                                                                <div className="w-full h-full bg-slate-900 rounded-2xl flex items-center justify-center relative">
+                                                                                <div className="w-full h-full bg-slate-900 rounded-md flex items-center justify-center relative">
                                                                                     <User className={cn(
                                                                                         "w-10 h-10",
                                                                                         m.role === 'Administrador' ? "text-red-400" :
                                                                                             m.role === 'Ministro a Cargo' ? "text-[#f5bb24]" : (settings.adminTheme === 'primitivo' ? "text-emerald-400" : "text-emerald-400")
                                                                                     )} />
                                                                                     {/* Safe Line even for empty avatar */}
-                                                                                    <div className="absolute inset-0 border border-white/[0.03] rounded-2xl pointer-events-none" />
+                                                                                    <div className="absolute inset-0 border border-white/[0.03] rounded-md pointer-events-none" />
                                                                                 </div>
                                                                             )}
                                                                         </div>
@@ -3163,7 +3438,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                     <div className="flex items-center gap-1.5">
                                                                                         <button 
                                                                                             onClick={() => setEditingMemberId(null)} 
-                                                                                            className="p-2 text-slate-600 hover:text-white transition-colors rounded-xl bg-transparent hover:bg-white/10 dark:bg-white/5"
+                                                                                            className="p-2 text-slate-600 hover:text-white transition-colors rounded-md bg-transparent hover:bg-white/10 dark:bg-white/5"
                                                                                             title="Cancelar"
                                                                                         >
                                                                                             <X className="w-4 h-4" />
@@ -3177,7 +3452,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                                 setEditingMemberId(null);
                                                                                             }}
                                                                                             className={cn(
-                                                                                                "p-2 text-white rounded-xl transition-colors",
+                                                                                                "p-2 text-white rounded-md transition-colors",
                                                                                                 settings.adminTheme === 'primitivo' ? "bg-emerald-500 hover:bg-emerald-400 shadow-none" : "bg-emerald-500 hover:bg-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                                                                                             )}
                                                                                             title="Guardar Cambios"
@@ -3195,7 +3470,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                             setEditingMemberId(m.id);
                                                                                             setEditingRole(m.role);
                                                                                         }}
-                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/[0.03]"
+                                                                                        className="p-2 rounded-md bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/[0.03]"
                                                                                     >
                                                                                         <Edit2 className="w-3.5 h-3.5" />
                                                                                     </motion.button>
@@ -3208,7 +3483,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                                 await loadMembersFromCloud();
                                                                                             }
                                                                                         }}
-                                                                                        className="p-2 rounded-xl bg-transparent text-muted-foreground hover:text-red-500 transition-colors border border-white/[0.03]"
+                                                                                        className="p-2 rounded-md bg-transparent text-muted-foreground hover:text-red-500 transition-colors border border-white/[0.03]"
                                                                                     >
                                                                                         <Trash2 className="w-3.5 h-3.5" />
                                                                                     </motion.button>
@@ -3227,7 +3502,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                 </div>
 
                                 {/* Nota informativa */}
-                                <div className="p-4 rounded-xl bg-blue-500/5 border border-blue-500/10">
+                                <div className="p-4 rounded-md bg-blue-500/5 border border-blue-500/10">
                                     <p className="text-[10px] text-blue-300 font-bold uppercase leading-relaxed">
                                         💡 <strong>¿Cómo funciona?</strong> Tú pre-registras al miembro con su Gmail. Cuando esa persona abra la app e inicie sesión con Google, su cuenta se vinculará automáticamente al perfil que creaste, con el rol y datos que ya configuraste.
                                     </p>
@@ -3249,7 +3524,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             <CardHeader className="relative">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl pointer-events-none" />
                                 <CardTitle className="text-3xl font-black uppercase tracking-tighter flex items-center gap-4">
-                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center border border-emerald-500/30">
+                                    <div className="w-12 h-12 bg-emerald-500/20 rounded-md flex items-center justify-center border border-emerald-500/30">
                                         <User className="w-6 h-6 text-emerald-500" />
                                     </div>
                                     Gestión de <span className="text-emerald-500">Mi Perfil Personal</span>
@@ -3261,16 +3536,16 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                     {/* Avatar Column */}
                                     <div className="flex flex-col items-center gap-6 shrink-0 w-full md:w-auto">
                                         <div className="relative group">
-                                            <div className="w-48 h-48 rounded-[3rem] overflow-hidden border-4 border-emerald-500/50 p-2 bg-slate-900 shadow-2xl transition-all duration-500 group-hover:border-emerald-500/80">
+                                            <div className="w-48 h-48 rounded-md overflow-hidden border-4 border-emerald-500/50 p-2 bg-slate-900 shadow-2xl transition-all duration-500 group-hover:border-emerald-500/80">
                                                 <img 
                                                     src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name || 'Admin'}&background=random`} 
                                                     alt="Admin Avatar" 
-                                                    className="w-full h-full object-cover rounded-[2.2rem] group-hover:scale-105 transition-all duration-700" 
+                                                    className="w-full h-full object-cover rounded-md group-hover:scale-105 transition-all duration-700" 
                                                 />
                                             </div>
                                             <button 
                                                 onClick={() => document.getElementById('admin-avatar-upload')?.click()}
-                                                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 border-4 border-[#0a0a0a]"
+                                                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-6 py-2.5 rounded-md font-black text-[10px] uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-2 border-4 border-[#0a0a0a]"
                                             >
                                                 <Camera className="w-3.5 h-3.5" /> Cambiar Foto
                                             </button>
@@ -3304,7 +3579,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <Input 
                                                     value={currentUser?.name || ''} 
                                                     onChange={(e) => currentUser && setCurrentUser({ ...currentUser, name: e.target.value })}
-                                                    className="bg-white/10 dark:bg-white/5 border-white/[0.05] h-14 rounded-2xl font-black focus:border-emerald-500/50 transition-all font-outfit"
+                                                    className="bg-white/10 dark:bg-white/5 border-white/[0.05] h-14 rounded-md font-black focus:border-emerald-500/50 transition-all font-outfit"
                                                 />
                                             </div>
                                             <div className="space-y-3">
@@ -3312,7 +3587,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 <Input 
                                                     value={currentUser?.email || ''} 
                                                     disabled
-                                                    className="bg-white/10 dark:bg-white/5 border-white/[0.05] h-14 rounded-2xl font-bold opacity-40 cursor-not-allowed"
+                                                    className="bg-white/10 dark:bg-white/5 border-white/[0.05] h-14 rounded-md font-bold opacity-40 cursor-not-allowed"
                                                 />
                                             </div>
                                         </div>
@@ -3323,7 +3598,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 value={currentUser?.favorite_verse || (currentUser as any)?.favoriteVerse || ''} 
                                                 onChange={(e) => currentUser && setCurrentUser({ ...currentUser, favorite_verse: e.target.value })}
                                                 placeholder="Ej: Salmos 23:1 - Jehová es mi pastor..."
-                                                className="bg-white/10 dark:bg-white/5 border-white/[0.05] h-14 rounded-2xl font-medium focus:border-emerald-500/50 transition-all "
+                                                className="bg-white/10 dark:bg-white/5 border-white/[0.05] h-14 rounded-md font-medium focus:border-emerald-500/50 transition-all "
                                             />
                                         </div>
 
@@ -3333,7 +3608,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 value={currentUser?.bio || ''} 
                                                 onChange={(e) => currentUser && setCurrentUser({ ...currentUser, bio: e.target.value })}
                                                 rows={4}
-                                                className="w-full bg-white/10 dark:bg-white/5 border border-white/[0.05] rounded-2xl p-4 font-medium text-sm focus:border-emerald-500/50 transition-all outline-none resize-none"
+                                                className="w-full bg-white/10 dark:bg-white/5 border border-white/[0.05] rounded-md p-4 font-medium text-sm focus:border-emerald-500/50 transition-all outline-none resize-none"
                                                 placeholder="Cuéntanos un poco sobre ti..."
                                             />
                                         </div>
@@ -3354,7 +3629,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     }
                                                     setIsSaving(false);
                                                 }}
-                                                className="bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest h-14 px-12 rounded-2xl shadow-xl hover:translate-y-[-2px] transition-all active:translate-y-0"
+                                                className="bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest h-14 px-12 rounded-md shadow-xl hover:translate-y-[-2px] transition-all active:translate-y-0"
                                             >
                                                 {isSaving ? 'GUARDANDO...' : 'GUARDAR CAMBIOS'}
                                             </Button>
@@ -3364,8 +3639,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             </CardContent>
                         </Card>
 
-                        <div className="p-6 rounded-[2rem] bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-6">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center shrink-0">
+                        <div className="p-6 rounded-md bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-6">
+                            <div className="w-12 h-12 rounded-md bg-emerald-500/20 flex items-center justify-center shrink-0">
                                 <Activity className="w-6 h-6 text-emerald-500" />
                             </div>
                             <div>
@@ -3429,10 +3704,10 @@ export default function AdminDashboard() {
     return (
         <Suspense fallback={
             <div className="p-8 space-y-8">
-                <div className="h-48 w-full bg-foreground/5 rounded-3xl animate-pulse" />
+                <div className="h-48 w-full bg-foreground/5 rounded-md animate-pulse" />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="h-32 bg-foreground/5 rounded-3xl animate-pulse" />
+                        <div key={i} className="h-32 bg-foreground/5 rounded-md animate-pulse" />
                     ))}
                 </div>
             </div>

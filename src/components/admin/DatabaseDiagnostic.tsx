@@ -138,7 +138,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                     <Button 
                         onClick={() => loadMembersFromCloud()}
                         className={cn(
-                            "h-14 font-black uppercase tracking-widest gap-3 rounded-2xl group transition-all",
+                            "h-14 font-black uppercase tracking-widest gap-3 rounded-md group transition-all",
                             adminTheme === 'primitivo' ? "bg-emerald-600 hover:bg-emerald-500" : "bg-emerald-600 hover:bg-emerald-500"
                         )}
                     >
@@ -153,12 +153,12 @@ export const DatabaseDiagnostic: React.FC = () => {
 
             {/* Powerful Search Tool */}
             <Card className={cn(
-                "rounded-[2.5rem] overflow-hidden border-2",
+                "rounded-md overflow-hidden border-2",
                 adminTheme === 'primitivo' ? "bg-[#0a0a0a] border-white/5" : "glass-card border-white/10"
             )}>
                 <CardHeader className="p-10 border-b border-white/5">
                     <div className="flex items-center gap-4">
-                        <div className="p-4 bg-primary/20 rounded-2xl border border-primary/30">
+                        <div className="p-4 bg-primary/20 rounded-md border border-primary/30">
                             <Search className="w-8 h-8 text-primary" />
                         </div>
                         <div>
@@ -172,7 +172,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                 <CardContent className="p-10 space-y-10">
                     <form onSubmit={handleSearch} className="relative group">
                         <div className={cn(
-                            "absolute -inset-1 rounded-[2rem] blur-xl opacity-0 group-focus-within:opacity-20 transition-opacity duration-500",
+                            "absolute -inset-1 rounded-md blur-xl opacity-0 group-focus-within:opacity-20 transition-opacity duration-500",
                             adminTheme === 'primitivo' ? "bg-emerald-500" : "bg-primary"
                         )} />
                         
@@ -183,14 +183,14 @@ export const DatabaseDiagnostic: React.FC = () => {
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
                                     placeholder="INGRESAR CORREO GMAIL COMPLETO O NOMBRE..."
-                                    className="h-20 bg-white/5 border-white/10 pl-16 rounded-3xl text-lg font-black uppercase tracking-tight focus:border-primary/50 transition-all"
+                                    className="h-20 bg-white/5 border-white/10 pl-16 rounded-md text-lg font-black uppercase tracking-tight focus:border-primary/50 transition-all"
                                 />
                             </div>
                             <Button 
                                 type="submit" 
                                 disabled={isSearching || !searchTerm}
                                 className={cn(
-                                    "h-20 px-10 rounded-3xl font-black uppercase tracking-widest text-lg gap-3",
+                                    "h-20 px-10 rounded-md font-black uppercase tracking-widest text-lg gap-3",
                                     adminTheme === 'primitivo' ? "bg-primary text-black" : "bg-primary text-primary-foreground"
                                 )}
                             >
@@ -212,12 +212,12 @@ export const DatabaseDiagnostic: React.FC = () => {
                                         <div 
                                             key={p.id}
                                             className={cn(
-                                                "p-6 rounded-3xl border transition-all duration-300 group/item relative overflow-hidden",
+                                                "p-6 rounded-md border transition-all duration-300 group/item relative overflow-hidden",
                                                 adminTheme === 'primitivo' ? "bg-white/[0.02] border-white/5" : "bg-slate-900/40 border-white/10"
                                             )}
                                         >
                                             <div className="flex items-center gap-5 relative z-10">
-                                                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-800 border-2 border-white/10">
+                                                <div className="w-16 h-16 rounded-md overflow-hidden bg-slate-800 border-2 border-white/10">
                                                     {p.avatar ? (
                                                         <img src={p.avatar} className="w-full h-full object-cover" />
                                                     ) : (
@@ -253,7 +253,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                                                                 size="sm"
                                                                 disabled={isRepairing === p.id}
                                                                 onClick={() => handleRepair(p.id, 'Activo')}
-                                                                className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[9px] h-8 px-3 rounded-lg"
+                                                                className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[9px] h-8 px-3 rounded-md"
                                                             >
                                                                 APROBAR
                                                             </Button>
@@ -264,7 +264,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                                                                 variant="outline"
                                                                 disabled={isRepairing === p.id}
                                                                 onClick={() => handleRepair(p.id, 'Pendiente')}
-                                                                className="flex-1 border-emerald-500/30 text-emerald-500 font-black text-[9px] h-8 px-3 rounded-lg hover:bg-emerald-500/10"
+                                                                className="flex-1 border-emerald-500/30 text-emerald-500 font-black text-[9px] h-8 px-3 rounded-md hover:bg-emerald-500/10"
                                                             >
                                                                 SUSPENDER
                                                             </Button>
@@ -273,7 +273,7 @@ export const DatabaseDiagnostic: React.FC = () => {
 
                                                     <div className="text-[8px] font-black text-slate-500 uppercase mt-2 mb-1 ml-1">Asignar Rol</div>
                                                     <select 
-                                                        className="h-8 bg-slate-800 border border-white/5 rounded-lg text-[10px] font-black text-white px-2 outline-none focus:border-primary/50"
+                                                        className="h-8 bg-slate-800 border border-white/5 rounded-md text-[10px] font-black text-white px-2 outline-none focus:border-primary/50"
                                                         value={p.role || 'Miembro'}
                                                         onChange={(e) => handleRoleChange(p.id, e.target.value)}
                                                         disabled={isRepairing === p.id}
@@ -290,7 +290,7 @@ export const DatabaseDiagnostic: React.FC = () => {
 
                                             {/* Inconsistency Detection */}
                                             {(p.status as string) === 'pendiente' && (
-                                                <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-3">
+                                                <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-md flex items-center gap-3">
                                                     <AlertTriangle className="w-4 h-4 text-emerald-500 shrink-0" />
                                                     <p className="text-[9px] font-black text-emerald-500 uppercase leading-tight">
                                                         Inconsistencia Detectada: Estado en minúsculas. Esto puede ocultar al usuario de la lista principal.
@@ -298,7 +298,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                                                     <Button 
                                                         size="sm"
                                                         onClick={() => handleRepair(p.id, 'Pendiente')}
-                                                        className="ml-auto bg-emerald-500 text-black font-black text-[8px] h-7 px-3 rounded-lg"
+                                                        className="ml-auto bg-emerald-500 text-black font-black text-[8px] h-7 px-3 rounded-md"
                                                     >
                                                         CORREGIR
                                                     </Button>
@@ -334,7 +334,7 @@ export const DatabaseDiagnostic: React.FC = () => {
 
             {/* Quick Repair Section */}
             <Card className={cn(
-                "rounded-[2.5rem] overflow-hidden group",
+                "rounded-md overflow-hidden group",
                 adminTheme === 'primitivo' ? "bg-rose-500/[0.02] border-rose-500/10" : "bg-slate-900/40 border-white/10"
             )}>
                 <CardHeader>
@@ -350,7 +350,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Button 
                             variant="outline" 
-                            className="h-16 rounded-2xl border-rose-500/30 text-rose-500 font-extrabold uppercase text-xs tracking-widest hover:bg-rose-500/5"
+                            className="h-16 rounded-md border-rose-500/30 text-rose-500 font-extrabold uppercase text-xs tracking-widest hover:bg-rose-500/5"
                             onClick={() => {
                                 if(confirm('¿Buscar y arreglar automáticamente todos los estados en minúsculas?')) {
                                     const suspicious = members.filter(m => (m.status as string) === 'pendiente');
@@ -368,7 +368,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                         </Button>
                         <Button 
                             variant="outline" 
-                            className="h-16 rounded-2xl border-white/10 text-slate-400 font-extrabold uppercase text-xs tracking-widest hover:bg-white/5"
+                            className="h-16 rounded-md border-white/10 text-slate-400 font-extrabold uppercase text-xs tracking-widest hover:bg-white/5"
                             onClick={() => {
                                 showNotification('Herramientas avanzadas desactivadas en esta versión.', 'warning');
                             }}

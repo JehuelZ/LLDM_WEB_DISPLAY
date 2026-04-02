@@ -182,7 +182,7 @@ function AdminLayoutContent({
                     <Card className="glass-card border-white/5 shadow-2xl overflow-hidden backdrop-blur-2xl bg-card/50">
                         <div className="h-2 w-full bg-gradient-to-r from-red-600 via-emerald-500 to-red-600 animate-pulse" />
                         <CardHeader className="text-center pt-10 pb-6">
-                            <div className="w-20 h-20 bg-red-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6 border border-red-500/20 shadow-lg shadow-red-500/5">
+                            <div className="w-20 h-20 bg-red-500/10 rounded-md flex items-center justify-center mx-auto mb-6 border border-red-500/20 shadow-lg shadow-red-500/5">
                                 <Lock className="w-10 h-10 text-red-500" />
                             </div>
                             <CardTitle className="text-3xl font-black uppercase tracking-tighter italic text-foreground mb-2">
@@ -197,20 +197,20 @@ function AdminLayoutContent({
                                 <div className="space-y-4">
                                     <p className="text-[10px] uppercase font-black tracking-widest text-slate-700 text-center">Debes iniciar sesión con tu cuenta autorizada</p>
                                     <Link href="/login" className="block">
-                                        <Button className="w-full h-14 bg-primary text-black font-black uppercase tracking-widest text-xs rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all gap-2 group shadow-xl shadow-primary/20">
+                                        <Button className="w-full h-14 bg-primary text-black font-black uppercase tracking-widest text-xs rounded-md hover:scale-[1.02] active:scale-[0.98] transition-all gap-2 group shadow-xl shadow-primary/20">
                                             Ir al Login <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                         </Button>
                                     </Link>
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 text-center">
+                                    <div className="p-4 bg-white/5 rounded-md border border-white/10 text-center">
                                         <p className="text-[10px] uppercase font-black tracking-widest text-slate-700 mb-1">Usuario Activo</p>
                                         <p className="text-sm font-bold text-foreground">{currentUser?.email}</p>
                                         <p className="text-[9px] text-red-400 font-black uppercase mt-2 italic">Sin permisos de administrador</p>
                                     </div>
                                     <Link href="/" className="block">
-                                        <Button variant="outline" className="w-full h-12 border-white/5 bg-white/5 hover:bg-white/10 text-slate-600 font-black uppercase tracking-widest text-[10px] rounded-xl transition-all">
+                                        <Button variant="outline" className="w-full h-12 border-white/5 bg-white/5 hover:bg-white/10 text-slate-600 font-black uppercase tracking-widest text-[10px] rounded-md transition-all">
                                             Volver al Inicio
                                         </Button>
                                     </Link>
@@ -254,7 +254,7 @@ function AdminLayoutContent({
             )}>
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="absolute -right-3.5 top-20 w-7 h-7 bg-[#10b981] rounded-full flex items-center justify-center z-[60] text-white hover:scale-110 transition-transform border-none active:scale-95 shadow-lg"
+                    className="absolute -right-3.5 top-20 w-7 h-7 bg-[#10b981] rounded-md flex items-center justify-center z-[60] text-white hover:scale-110 transition-transform border-none active:scale-95 shadow-lg"
                     title={collapsed ? "Expandir" : "Contraer"}
                 >
                     {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -307,14 +307,14 @@ function AdminLayoutContent({
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             (pathname === '/admin' && currentTab === 'dashboard') 
-                                ? "bg-tactile-emerald-pill text-white font-bold rounded-full" 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                                 : settings.adminTheme === 'primitivo' 
                                     ? "text-slate-600 dark:text-slate-600 hover:text-slate-900 dark:hover:text-white" 
                                     : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        {(pathname === '/admin' && currentTab === 'dashboard') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
-                        <LayoutDashboard className={cn("w-5 h-5 shrink-0 transition-colors", (pathname === '/admin' && currentTab === 'dashboard') ? "text-white" : "")} />
+                        {(pathname === '/admin' && currentTab === 'dashboard') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <LayoutDashboard className={cn("w-5 h-5 shrink-0 transition-colors", (pathname === '/admin' && currentTab === 'dashboard') ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.dashboard}</span>}
                     </Link>
 
@@ -329,14 +329,14 @@ function AdminLayoutContent({
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'horarios' 
-                                ? "bg-tactile-emerald-pill text-white font-bold rounded-full" 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                                 : settings.adminTheme === 'primitivo' 
                                     ? "text-muted-foreground hover:text-foreground" 
                                     : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        {currentTab === 'horarios' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
-                        <Calendar className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'horarios' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
+                        {currentTab === 'horarios' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <Calendar className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'horarios' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.horarios}</span>}
                     </Link>
 
@@ -351,14 +351,14 @@ function AdminLayoutContent({
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'asistencia' 
-                                ? "bg-tactile-emerald-pill text-white font-bold rounded-full" 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                                 : settings.adminTheme === 'primitivo' 
                                     ? "text-muted-foreground hover:text-foreground" 
                                     : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        {currentTab === 'asistencia' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
-                        <ClipboardCheck className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'asistencia' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
+                        {currentTab === 'asistencia' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <ClipboardCheck className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'asistencia' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Asistencia</span>}
                     </Link>
 
@@ -371,42 +371,42 @@ function AdminLayoutContent({
                     <Link href="/admin/members" className={cn(
                         "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                         pathname === '/admin/members' 
-                            ? "bg-tactile-emerald-pill text-tactile-emerald font-bold rounded-full" 
+                            ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                             : settings.adminTheme === 'primitivo' 
                                 ? "text-muted-foreground hover:text-foreground" 
                                 : "text-white/40 hover:text-white bg-transparent",
                         collapsed && "justify-center px-0"
                     )}>
-                        {pathname === '/admin/members' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
-                        <Users className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/members' ? "text-tactile-emerald" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
+                        {pathname === '/admin/members' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <Users className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/members' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.miembros}</span>}
                     </Link>
 
                     <Link href="/admin/reports" className={cn(
                         "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                         pathname === '/admin/reports' 
-                            ? "bg-tactile-emerald-pill text-tactile-emerald font-bold rounded-full" 
+                            ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                             : settings.adminTheme === 'primitivo' 
                                 ? "text-muted-foreground hover:text-foreground" 
                                 : "text-white/40 hover:text-white bg-transparent",
                         collapsed && "justify-center px-0"
                     )}>
-                        {pathname === '/admin/reports' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
-                        <FileText className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/reports' ? "text-tactile-emerald" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
+                        {pathname === '/admin/reports' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <FileText className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/reports' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.reportes}</span>}
                     </Link>
 
                     <Link href="/admin/cloud" className={cn(
                         "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                         pathname === '/admin/cloud' 
-                            ? "bg-tactile-emerald-pill text-tactile-emerald font-bold rounded-full" 
+                            ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                             : settings.adminTheme === 'primitivo' 
                                 ? "text-muted-foreground hover:text-foreground" 
                                 : "text-white/40 hover:text-white bg-transparent",
                         collapsed && "justify-center px-0"
                     )}>
-                        {pathname === '/admin/cloud' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
-                        <Cloud className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/cloud' ? "text-tactile-emerald" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
+                        {pathname === '/admin/cloud' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <Cloud className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/cloud' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.admin_cloud}</span>}
                     </Link>
 
@@ -414,13 +414,13 @@ function AdminLayoutContent({
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'coros' 
-                                ? "bg-tactile-emerald-pill text-white font-bold rounded-full" 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                                 : settings.adminTheme === 'primitivo' 
                                     ? "text-muted-foreground hover:text-foreground" 
                                     : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        {currentTab === 'coros' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
+                        {currentTab === 'coros' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
                         <Music className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'coros' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Coros</span>}
                     </Link>
@@ -429,13 +429,13 @@ function AdminLayoutContent({
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'mensajes' 
-                                ? "bg-tactile-emerald-pill text-white font-bold rounded-full" 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                                 : settings.adminTheme === 'primitivo' 
                                     ? "text-muted-foreground hover:text-foreground" 
                                     : "text-white/40 hover:text-white bg-transparent",
                             collapsed && "justify-center px-0"
                         )}>
-                        {currentTab === 'mensajes' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-full" />}
+                        {currentTab === 'mensajes' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
                         <Bell className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'mensajes' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-white")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Mensajes</span>}
                     </Link>
@@ -503,13 +503,13 @@ function AdminLayoutContent({
                             className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                                 currentTab === 'configuracion' 
-                                    ? "bg-tactile-emerald-pill text-white font-semibold rounded-full" 
+                                    ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
                                     : settings.adminTheme === 'primitivo' 
                                         ? "text-muted-foreground hover:text-foreground" 
                                         : "text-white/40 hover:text-white bg-transparent",
                                 collapsed && "justify-center px-0"
                             )}>
-                            {currentTab === 'configuracion' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/2 bg-slate-400 rounded-r-full" />}
+                            {currentTab === 'configuracion' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/2 bg-slate-400 rounded-r-md" />}
                             <Settings className={cn("w-5 h-5 group-hover:rotate-45 transition-transform duration-500 shrink-0 shadow-none", currentTab === 'configuracion' ? "" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
                             {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">{t.configuracion}</span>}
                         </Link>
@@ -577,8 +577,8 @@ function AdminLayoutContent({
                     className={cn("block px-4 py-3 transition-colors cursor-pointer bg-transparent shadow-none border-none", collapsed ? "p-3" : "mt-2")}
                 >
                     <div className={cn("flex items-center gap-3", collapsed ? "justify-center" : "px-1")}>
-                        <div className="w-9 h-9 shrink-0 overflow-hidden bg-transparent shadow-none border-none">
-                            <img src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name}&background=random`} className="w-full h-full object-cover rounded-full" alt="Admin" />
+                        <div className="w-9 h-9 shrink-0 overflow-hidden bg-transparent shadow-none border-none rounded-full">
+                            <img src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name}&background=random`} className="w-full h-full object-cover" alt="Admin" />
                         </div>
                         {!collapsed && (
                             <div className="overflow-hidden whitespace-nowrap">
@@ -631,7 +631,7 @@ function AdminLayoutContent({
                             <button
                                 onClick={() => (document.getElementById('global-sync-btn') as HTMLElement)?.click()}
                                 className={cn(
-                                    "w-10 h-10 rounded-xl flex items-center justify-center transition-all group border",
+                                    "w-10 h-10 rounded-md flex items-center justify-center transition-all group border",
                                     settings.themeMode === 'light' 
                                         ? "bg-white border-black/[0.05] text-slate-500 hover:text-emerald-600 hover:border-emerald-500/30 shadow-sm" 
                                         : "bg-white/5 border-white/5 text-white/40 hover:text-primary hover:bg-primary/20"
@@ -646,7 +646,7 @@ function AdminLayoutContent({
                                 <button 
                                     onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                                     className={cn(
-                                        "h-10 px-4 rounded-xl border text-[9px] font-black uppercase tracking-widest tabular-nums transition-colors flex items-center gap-2",
+                                        "h-10 px-4 rounded-md border text-[9px] font-black uppercase tracking-widest tabular-nums transition-colors flex items-center gap-2",
                                         settings.themeMode === 'light' 
                                             ? "bg-slate-100 border-slate-200 text-slate-600 hover:text-primary" 
                                             : "bg-white/5 border-white/5 text-white/60 hover:text-primary"
@@ -684,7 +684,7 @@ function AdminLayoutContent({
                             </div>
 
                             <Link href="/display" target="_blank">
-                                <button className="h-10 px-6 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
+                                <button className="h-10 px-6 rounded-md bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
                                     <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
                                     <span>Pizarra</span>
                                 </button>
@@ -699,8 +699,8 @@ function AdminLayoutContent({
                                 <span className="text-[9px] font-black uppercase tracking-widest text-primary leading-none opacity-60">ADMINISTRADOR</span>
                                 <span className="text-xs font-bold text-foreground mt-1">{currentUser?.name?.split(' ')[0]}</span>
                             </div>
-                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center p-1">
-                                <img src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name}&background=random`} className="w-full h-full object-cover rounded-lg" alt="Admin" />
+                            <div className="w-10 h-10 rounded-md bg-white/5 border border-white/10 flex items-center justify-center p-1">
+                                <img src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name}&background=random`} className="w-full h-full object-cover rounded-md" alt="Admin" />
                             </div>
                         </div>
                     </div>
