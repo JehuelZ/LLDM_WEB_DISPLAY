@@ -143,7 +143,7 @@ export function MonitorReport() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                 <StatCard title="Promedio Mensual (Aprox)" value="84%" change="+2%" trend="up" icon={TrendingUp} color="text-emerald-500" />
                 <StatCard title="Total Membresía" value={totalMembers.toString()} change="Estable" trend="up" icon={Users} color="text-primary" />
-                <StatCard title="Puntualidad General" value="78%" change="-1%" trend="down" icon={Clock} color="text-amber-500" />
+                <StatCard title="Puntualidad General" value="78%" change="-1%" trend="down" icon={Clock} color="text-emerald-500" />
                 <StatCard title="Actividad Niños" value="92%" change="+5%" trend="up" icon={Baby} color="text-cyan-400" />
             </div>
 
@@ -233,12 +233,12 @@ export function MonitorReport() {
                                     </td>
                                     <td className="px-6 py-4 text-center font-black text-slate-300">{(totalMembers * 0.25).toFixed(0)}</td>
                                     <td className="px-6 py-4 text-center">
-                                        <div className="inline-flex items-center gap-2 font-black text-amber-400 bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20">
+                                        <div className="inline-flex items-center gap-2 font-black text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-lg border border-emerald-500/20">
                                             78% <TrendingUp className="w-3 h-3" />
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <span className="text-[10px] font-black uppercase text-amber-500">Requiere Atención</span>
+                                        <span className="text-[10px] font-black uppercase text-emerald-500">Requiere Atención</span>
                                     </td>
                                 </tr>
                                 <tr className="hover:bg-white/5 transition-colors bg-black/20">

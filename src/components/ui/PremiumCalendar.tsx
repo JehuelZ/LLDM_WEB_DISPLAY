@@ -51,9 +51,9 @@ const PremiumCalendar: React.FC<PremiumCalendarProps> = ({
     };
 
     const renderHeader = () => {
-        const accentColor = theme === 'primitivo' ? 'text-amber-400' : theme === 'luna' ? 'text-emerald-400' : 'text-primary';
+        const accentColor = theme === 'primitivo' ? 'text-emerald-400' : theme === 'luna' ? 'text-emerald-400' : 'text-primary';
         const buttonStyle = theme === 'primitivo' 
-            ? 'hover:bg-amber-400/10 border-amber-400/20' 
+            ? 'hover:bg-emerald-400/10 border-emerald-400/20' 
             : theme === 'luna' 
             ? 'hover:bg-emerald-400/10 border-emerald-400/20' 
             : 'hover:bg-primary/10 border-primary/20';
@@ -135,7 +135,7 @@ const PremiumCalendar: React.FC<PremiumCalendarProps> = ({
                 
                 if (isSelected) {
                     if (theme === 'primitivo') {
-                        innerStyle += " bg-amber-400 text-black shadow-[0_0_20px_rgba(251,191,36,0.4)] scale-110";
+                        innerStyle += " bg-emerald-400 text-black shadow-[0_0_20px_rgba(251,191,36,0.4)] scale-110";
                     } else if (theme === 'luna') {
                         innerStyle += " bg-emerald-500 text-black shadow-[0_0_20px_rgba(16,185,129,0.4)] scale-110";
                     } else {
@@ -164,7 +164,7 @@ const PremiumCalendar: React.FC<PremiumCalendarProps> = ({
                         {isTodayDate && !isSelected && (
                             <div className={cn(
                                 "absolute bottom-1 w-1 h-1 rounded-full",
-                                theme === 'primitivo' ? 'bg-amber-400' : theme === 'luna' ? 'bg-emerald-400' : 'bg-primary'
+                                theme === 'primitivo' ? 'bg-emerald-400' : theme === 'luna' ? 'bg-emerald-400' : 'bg-primary'
                             )} />
                         )}
                     </div>

@@ -150,7 +150,7 @@ export const DashboardTab = () => {
                         <OrbitalGauge value={Math.round((activeMembers.length / members.length) * 100)} label="Actividad" />
                         <OrbitalGauge value={88} label="Puntualidad" color="#3b82f6" />
                         <OrbitalGauge value={92} label="Retención" color="#10b981" />
-                        <OrbitalGauge value={75} label="Participación" color="#f59e0b" />
+                        <OrbitalGauge value={75} label="Participación" color="#10b981" />
                     </div>
 
                     <div className="space-y-4 bg-black/20 p-6 rounded-3xl border border-white/5">

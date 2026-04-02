@@ -443,14 +443,14 @@ export default function AttendanceDashboard() {
 
                         <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
                             {/* Live Attendance Donut Mirror (from Admin Dashboard) */}
-                            <Card className="glass-card bg-black/60 border-amber-500/10 p-4 md:p-6 relative overflow-hidden group">
+                            <Card className="glass-card bg-black/60 border-emerald-500/10 p-4 md:p-6 relative overflow-hidden group">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-2">
                                         <div className="relative">
-                                            <div className="absolute inset-0 bg-amber-400/20 rounded-full animate-ping" />
-                                            <Activity className="h-4 w-4 text-amber-500 relative z-10" />
+                                            <div className="absolute inset-0 bg-emerald-400/20 rounded-full animate-ping" />
+                                            <Activity className="h-4 w-4 text-emerald-500 relative z-10" />
                                         </div>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-amber-500">Live Presence</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Live Presence</span>
                                     </div>
                                     <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">{currentSession}</span>
                                 </div>
@@ -458,18 +458,18 @@ export default function AttendanceDashboard() {
                                 <div className="flex flex-col items-center justify-center py-2 relative">
                                     {/* Rotating Radar Effect */}
                                     <motion.div 
-                                        className="absolute w-28 h-28 md:w-36 md:h-36 rounded-full border border-amber-500/5 pointer-events-none"
+                                        className="absolute w-28 h-28 md:w-36 md:h-36 rounded-full border border-emerald-500/5 pointer-events-none"
                                         animate={{ rotate: 360 }}
                                         transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
                                     >
-                                        <div className="absolute top-1/2 left-[50%] w-[50%] h-[1px] bg-gradient-to-r from-amber-500/30 to-transparent origin-left" />
+                                        <div className="absolute top-1/2 left-[50%] w-[50%] h-[1px] bg-gradient-to-r from-emerald-500/30 to-transparent origin-left" />
                                     </motion.div>
 
                                     <div className="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
                                         <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
                                             <defs>
                                                 <linearGradient id="monitorLiveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                    <stop offset="0%" stopColor="#fbbf24" />
+                                                    <stop offset="0%" stopColor="#10b981" />
                                                     <stop offset="100%" stopColor="#fef3c7" />
                                                 </linearGradient>
                                                 <filter id="monitorLiveGlow">
@@ -500,7 +500,7 @@ export default function AttendanceDashboard() {
                                 </div>
                                 <div className="mt-4 flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                                     <span>{presentCount} Presentes</span>
-                                    <span className="text-amber-500">{members.length - presentCount} Faltan</span>
+                                    <span className="text-emerald-500">{members.length - presentCount} Faltan</span>
                                 </div>
                             </Card>
                             {/* Session Summary Stats (Replaces Selector) */}
@@ -513,7 +513,7 @@ export default function AttendanceDashboard() {
                                     {[
                                         { label: '5:00 AM', count: stats.session5am, color: 'text-sky-400' },
                                         { label: stats.isSunday ? 'Dominical' : '9:00 AM', count: stats.session9am, color: 'text-emerald-400' },
-                                        { label: 'Tarde', count: stats.sessionEvening, color: 'text-amber-400' }
+                                        { label: 'Tarde', count: stats.sessionEvening, color: 'text-emerald-400' }
                                     ].map((s) => (
                                         <div key={s.label} className="flex justify-between items-center border-b border-white/5 pb-2 last:border-none">
                                             <span className="text-[10px] font-black uppercase tracking-tight text-muted-foreground">{s.label}</span>
@@ -552,7 +552,7 @@ export default function AttendanceDashboard() {
                                     {[
                                         { label: '5A', count: stats.session5am, color: 'bg-sky-400' },
                                         { label: stats.isSunday ? 'DOM' : '9A', count: stats.session9am, color: 'bg-emerald-400' },
-                                        { label: 'TAR', count: stats.sessionEvening, color: 'bg-amber-400' }
+                                        { label: 'TAR', count: stats.sessionEvening, color: 'bg-emerald-400' }
                                     ].map((bar) => {
                                         const height = stats.total > 0 ? (bar.count / stats.total) * 100 : 0;
                                         return (
@@ -667,10 +667,10 @@ export default function AttendanceDashboard() {
                             </Card>
 
                             {/* Group Distribution (Mini Bars) */}
-                            <Card className="glass-card bg-amber-500/5 border-amber-500/20 p-5 md:p-6 flex flex-col gap-4">
+                            <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-5 md:p-6 flex flex-col gap-4">
                                 <div className="flex items-center gap-2 mb-1">
-                                    <Users className="h-4 w-4 text-amber-500" />
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-amber-500">Porcentaje por Grupo</span>
+                                    <Users className="h-4 w-4 text-emerald-500" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Porcentaje por Grupo</span>
                                 </div>
 
                                 <div className="space-y-4">
@@ -835,7 +835,7 @@ export default function AttendanceDashboard() {
                                         {activeTab === 'varones' && <span className="text-primary">Lista de Varones</span>}
                                         {activeTab === 'hermanas' && <span className="text-rose-500">Lista de Hermanas</span>}
                                         {activeTab === 'jovenes' && <span className="text-orange-500">Lista de Jóvenes</span>}
-                                        {activeTab === 'casados' && <span className="text-amber-400">Lista de Casados</span>}
+                                        {activeTab === 'casados' && <span className="text-emerald-400">Lista de Casados</span>}
                                         {activeTab === 'solas' && <span className="text-indigo-400">Lista de Solas</span>}
                                         {activeTab === 'ninos' && <span className="text-cyan-400">Lista de Niños</span>}
                                     </CardTitle>
@@ -979,7 +979,7 @@ export default function AttendanceDashboard() {
                                 </div>
 
                                 <div className="border-t border-border/20 pt-8 space-y-4">
-                                    <div className="flex items-center gap-2 text-amber-500">
+                                    <div className="flex items-center gap-2 text-emerald-500">
                                         <LogOut className="w-5 h-5" />
                                         <h4 className="text-sm font-black uppercase tracking-widest italic">Salida / Entrega Final</h4>
                                     </div>
@@ -989,7 +989,7 @@ export default function AttendanceDashboard() {
                                             <UserCircle className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                                             <Input
                                                 placeholder="Nombre de quien recoge..."
-                                                className="pl-10 bg-foreground/5 border-border/40 focus:ring-amber-500/50"
+                                                className="pl-10 bg-foreground/5 border-border/40 focus:ring-emerald-500/50"
                                                 defaultValue={securityChild.collectedBy}
                                                 onKeyDown={(e) => {
                                                     if (e.key === 'Enter') handleSecurityUpdate(securityChild.id, 'collected', (e.target as HTMLInputElement).value);
@@ -999,7 +999,7 @@ export default function AttendanceDashboard() {
                                     </div>
                                     <Button
                                         variant="outline"
-                                        className="w-full border-amber-500/30 text-amber-500 hover:bg-amber-500/10 font-black uppercase tracking-widest h-12 rounded-xl"
+                                        className="w-full border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 font-black uppercase tracking-widest h-12 rounded-xl"
                                         onClick={() => {
                                             const input = document.querySelector('input[placeholder="Nombre de quien recoge..."]') as HTMLInputElement;
                                             handleSecurityUpdate(securityChild.id, 'collected', input.value);

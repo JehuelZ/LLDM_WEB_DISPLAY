@@ -4,7 +4,7 @@
     --tactile-panel-bg: rgba(255, 255, 255, 0.02);
     --tactile-text: #ffffff;
     --tactile-text-sub: #a0a0a0;
-    --tactile-accent-orange: #f59e0b;
+    --tactile-accent-orange: #10b981;
     --tactile-accent-blue: #3b82f6;
     --tactile-neon-pink: #db2777;
     --tactile-neon-purple: #8b5cf6;
@@ -12,8 +12,8 @@
 
     /* Functional Semantic Tokens (Default Dark) */
     --tactile-card-bg: rgba(255, 255, 255, 0.02);
-    --tactile-inner-bg: #121523;
-    --tactile-inner-bg-alt: #101420;
+    --tactile-inner-bg: #1a233b; /* Lighter navy for internal containers */
+    --tactile-inner-bg-alt: #161f32; /* Consistent with Primitivo cards */
     --tactile-dropdown-bg: rgba(26, 28, 32, 0.95);
     --tactile-item-hover: rgba(255, 255, 255, 0.05);
     --tactile-border: rgba(255, 255, 255, 0.03);
@@ -118,7 +118,7 @@
 }
 
 .neon-orange {
-    background: #f59e0b;
+    background: #10b981;
     box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
 }
 
@@ -205,7 +205,7 @@
 }
 
 .tactile-btn-orange {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3),
         inset 0 1px 1px rgba(255, 255, 255, 0.3);

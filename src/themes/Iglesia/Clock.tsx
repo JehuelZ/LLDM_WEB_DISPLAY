@@ -225,7 +225,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                             }}>
                                                 <span style={{ fontSize: 8, fontWeight: 800, color: dIsToday ? T.accent : T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat, opacity: 0.8 }}>{dayName}</span>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                                    <WeatherIcon code={iconCode} className={offset % 2 === 0 ? "text-amber-400" : "text-blue-300"} size={14} />
+                                                    <WeatherIcon code={iconCode} className={offset % 2 === 0 ? "text-emerald-400" : "text-blue-300"} size={14} />
                                                     <span style={{ fontSize: 16, fontWeight: 600, color: T.textPrimary, fontFamily: T.fontInter }}>{temp}°</span>
                                                 </div>
                                             </div>

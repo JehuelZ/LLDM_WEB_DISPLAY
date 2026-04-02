@@ -21,9 +21,9 @@ export const GlassmorphismAnnouncements = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-6 mb-6 border-b border-white/5 pb-4"
                 >
-                    <div className="w-16 h-16 bg-amber-500/10 rounded-[1.5rem] flex items-center justify-center border border-amber-500/20 shadow-2xl relative overflow-hidden group">
-                        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-500" />
-                        <Bell className="w-8 h-8 text-amber-500 relative z-10 animate-bounce" />
+                    <div className="w-16 h-16 bg-emerald-500/10 rounded-[1.5rem] flex items-center justify-center border border-emerald-500/20 shadow-2xl relative overflow-hidden group">
+                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-500" />
+                        <Bell className="w-8 h-8 text-emerald-500 relative z-10 animate-bounce" />
                     </div>
                     <div>
                         <h2 className="text-4xl font-black uppercase text-white leading-none tracking-tighter italic">
@@ -45,20 +45,20 @@ export const GlassmorphismAnnouncements = () => {
                                 className={cn(
                                     "flex flex-col p-6 rounded-[2rem] border transition-all hover:bg-white/[0.04] relative overflow-hidden group/ann",
                                     ann.priority > 0
-                                        ? "border-amber-500/40 bg-amber-500/[0.03] shadow-[0_20px_40px_rgba(245,158,11,0.05)]"
+                                        ? "border-emerald-500/40 bg-emerald-500/[0.03] shadow-[0_20px_40px_rgba(245,158,11,0.05)]"
                                         : "border-white/10 bg-white/[0.02]"
                                 )}
                             >
                                 {ann.priority > 0 && (
-                                    <div className="absolute top-0 right-0 bg-amber-500/20 border-b border-l border-amber-500/40 px-6 py-2 rounded-bl-3xl z-10">
-                                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest italic text-glow-amber">Urgente</span>
+                                    <div className="absolute top-0 right-0 bg-emerald-500/20 border-b border-l border-emerald-500/40 px-6 py-2 rounded-bl-3xl z-10">
+                                        <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest italic text-glow-emerald">Urgente</span>
                                     </div>
                                 )}
 
                                 <div className="flex items-center gap-5 mb-6">
                                     <div className={cn(
                                         "w-14 h-14 rounded-2xl flex items-center justify-center border shadow-lg group-hover/ann:scale-110 transition-transform",
-                                        ann.priority > 0 ? "bg-amber-500/20 border-amber-500/30 text-amber-500 px-10" : "bg-white/5 border-white/10 text-white/40"
+                                        ann.priority > 0 ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-500 px-10" : "bg-white/5 border-white/10 text-white/40"
                                     )}>
                                         <Bell className="w-6 h-6" />
                                     </div>
@@ -68,7 +68,7 @@ export const GlassmorphismAnnouncements = () => {
                                 </div>
 
                                 <div className="flex-1 flex flex-col gap-4">
-                                    <p className="text-xl text-white/70 leading-relaxed italic border-l-4 border-amber-500/20 pl-6 font-medium">
+                                    <p className="text-xl text-white/70 leading-relaxed italic border-l-4 border-emerald-500/20 pl-6 font-medium">
                                         {ann.content}
                                     </p>
                                 </div>

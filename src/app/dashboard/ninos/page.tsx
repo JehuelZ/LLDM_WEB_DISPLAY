@@ -66,7 +66,7 @@ export default function NiñosDashboard() {
                             <div className="w-20 h-20 rounded-3xl overflow-hidden border-2 border-cyan-400/30">
                                 <img src={childProfile.avatar} alt={childProfile.name} className="w-full h-full object-cover" />
                             </div>
-                            <div className="absolute -bottom-2 -right-2 bg-yellow-500 text-black p-1.5 rounded-xl">
+                            <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-black p-1.5 rounded-xl">
                                 <Trophy className="w-4 h-4" />
                             </div>
                         </div>
@@ -79,8 +79,8 @@ export default function NiñosDashboard() {
                             </h1>
                             <div className="flex items-center gap-3 mt-1">
                                 <span className="text-xs text-slate-500 font-bold uppercase tracking-widest bg-foreground/5 px-2 py-0.5 rounded border border-border/20">{childProfile.member_group}</span>
-                                <span className="text-xs text-yellow-500/80 font-black uppercase flex items-center gap-1.5">
-                                    <Star className="w-3.5 h-3.5 fill-yellow-500" /> {childProfile.medals} Medallas de Fidelidad
+                                <span className="text-xs text-emerald-500/80 font-black uppercase flex items-center gap-1.5">
+                                    <Star className="w-3.5 h-3.5 fill-emerald-500" /> {childProfile.medals} Medallas de Fidelidad
                                 </span>
                             </div>
                         </div>
@@ -217,15 +217,15 @@ export default function NiñosDashboard() {
                         {/* Achievement Wall - Medallas de Oro */}
                         <Card className="glass-card border-none bg-black/40 relative overflow-hidden group">
                              {/* Background Glow */}
-                             <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/5 rounded-full blur-[100px] pointer-events-none" />
+                             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none" />
                              
                             <CardHeader className="flex flex-row items-center justify-between pb-4">
-                                <CardTitle className="text-[14px] font-black uppercase italic text-amber-500 flex items-center gap-2">
+                                <CardTitle className="text-[14px] font-black uppercase italic text-emerald-500 flex items-center gap-2">
                                     <Trophy className="w-5 h-5" /> Muro de Medallas de Oro
                                 </CardTitle>
                                 <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse shadow-[0_0_8px_#f59e0b]" />
-                                    <span className="text-[10px] font-black text-amber-500 bg-amber-500/10 px-3 py-1 rounded-xl uppercase tracking-widest border border-amber-500/20">Súper Fiel</span>
+                                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]" />
+                                    <span className="text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-3 py-1 rounded-xl uppercase tracking-widest border border-emerald-500/20">Súper Fiel</span>
                                 </div>
                             </CardHeader>
                             <CardContent>
@@ -237,9 +237,9 @@ export default function NiñosDashboard() {
                                             whileInView={{ scale: 1, rotate: 0 }}
                                             transition={{ delay: i * 0.05, type: 'spring' }}
                                             whileHover={{ scale: 1.2, rotate: 10 }}
-                                            className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-500/30 to-amber-500/5 border border-amber-500/20 flex items-center justify-center shadow-[0_5px_15px_rgba(245,158,11,0.1)] group/medal"
+                                            className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center shadow-[0_5px_15px_rgba(245,158,11,0.1)] group/medal"
                                         >
-                                            <Star className="w-6 h-6 text-amber-400 fill-amber-400 group-hover/medal:scale-110 transition-transform" />
+                                            <Star className="w-6 h-6 text-emerald-400 fill-emerald-400 group-hover/medal:scale-110 transition-transform" />
                                         </motion.div>
                                     ))}
                                     <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center border-dashed group/next">

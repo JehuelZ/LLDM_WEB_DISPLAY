@@ -63,7 +63,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
     const navItems = [
         { id: 'dashboard', icon: Layout, label: 'dashboard', color: 'bg-emerald-500' },
         { id: 'miembros', icon: Users, label: 'miembros', color: 'bg-blue-500' },
-        { id: 'horarios', icon: Clock, label: 'horarios', color: 'bg-amber-500' },
+        { id: 'horarios', icon: Clock, label: 'horarios', color: 'bg-emerald-500' },
         { id: 'contenido', icon: Monitor, label: 'contenido', color: 'bg-purple-500' },
         { id: 'coros', icon: Music2, label: 'coros', color: 'bg-pink-500' },
         { id: 'configuracion', icon: SettingsIcon, label: 'configuracion', color: 'bg-slate-500' },

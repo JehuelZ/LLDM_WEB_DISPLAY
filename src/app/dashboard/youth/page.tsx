@@ -21,8 +21,8 @@ export default function YouthDashboard() {
 
     const stats = [
         { label: 'Participación', value: '—%', icon: TrendingUp, color: 'text-indigo-400' },
-        { label: 'Actividades', value: '0/0', icon: Calendar, color: 'text-amber-400' },
-        { label: 'Puntos', value: '0', icon: Trophy, color: 'text-yellow-400' },
+        { label: 'Actividades', value: '0/0', icon: Calendar, color: 'text-emerald-400' },
+        { label: 'Puntos', value: '0', icon: Trophy, color: 'text-emerald-400' },
     ];
 
     return (

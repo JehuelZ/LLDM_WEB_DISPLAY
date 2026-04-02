@@ -222,7 +222,7 @@ export default function CalendarPage() {
                                                                 </div>
                                                             )}
                                                             {event.slots['9am'].doctrineLeaderId && (
-                                                                <div className="p-1 rounded bg-amber-500/10 text-amber-400 text-[7px] font-black uppercase truncate">
+                                                                <div className="p-1 rounded bg-emerald-500/10 text-emerald-400 text-[7px] font-black uppercase truncate">
                                                                     9AM: {getMemberName(event.slots['9am'].doctrineLeaderId).split(' ')[0]}
                                                                 </div>
                                                             )}
@@ -263,15 +263,15 @@ export default function CalendarPage() {
                         </Card>
 
                         <Card className="glass-card border-none bg-black/40 rounded-[2rem] relative overflow-hidden group">
-                             <div className="absolute top-0 left-0 w-1 h-full bg-amber-500/50" />
+                             <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500/50" />
                             <CardHeader className="pb-4">
                                 <CardTitle className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3 text-foreground">
-                                    <Star className="w-4 h-4 text-amber-500 animate-pulse" /> Eventos Próximos
+                                    <Star className="w-4 h-4 text-emerald-500 animate-pulse" /> Eventos Próximos
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4 pb-8">
                                 <div className="flex gap-5 items-center p-4 rounded-2xl hover:bg-white/[0.02] transition-colors group/ev cursor-pointer">
-                                    <div className="w-12 h-12 rounded-[1.2rem] bg-amber-500/10 border border-amber-500/20 text-amber-500 flex flex-col items-center justify-center shrink-0 group-hover/ev:scale-110 transition-transform shadow-xl">
+                                    <div className="w-12 h-12 rounded-[1.2rem] bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex flex-col items-center justify-center shrink-0 group-hover/ev:scale-110 transition-transform shadow-xl">
                                         <span className="text-sm font-black leading-none">22</span>
                                         <span className="text-[9px] font-black uppercase">Feb</span>
                                     </div>

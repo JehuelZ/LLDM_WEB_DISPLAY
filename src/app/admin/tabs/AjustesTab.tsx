@@ -74,7 +74,7 @@ export const AjustesTab = ({
                         <div className="space-y-4">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">COLOR PRIMARIO</label>
                             <div className="grid grid-cols-5 gap-3">
-                                {['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'].map(color => (
+                                {['#3b82f6', '#10b981', '#10b981', '#ef4444', '#8b5cf6'].map(color => (
                                     <button
                                         key={color}
                                         onClick={() => saveSettingsToCloud({ primaryColor: color })}

@@ -42,7 +42,7 @@ export interface AppSettings {
     countdownAccentColor?: string;
     countdownBgImageUrl?: string;
     // NeonForge theme settings
-    neonForgeVariant?: 'lime' | 'cyan' | 'amber';
+    neonForgeVariant?: 'lime' | 'cyan' | 'emerald';
     neonForgeCity?: string;  // legacy key (kept for backwards compat)
     neonForgeCityData?: { lat: number; lon: number; name: string; country: string };
     // Aqua theme settings

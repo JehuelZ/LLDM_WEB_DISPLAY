@@ -181,7 +181,7 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                             "backdrop-blur-[80px] bg-white/15 min-w-[340px] max-w-[450px] overflow-hidden",
                             notification.type === 'success' && "border-emerald-500/30",
                             notification.type === 'error' && "border-red-500/30",
-                            notification.type === 'warning' && "border-amber-400/30"
+                            notification.type === 'warning' && "border-emerald-400/30"
                         )}
                     >
                         {/* Interactive Shine Effect */}

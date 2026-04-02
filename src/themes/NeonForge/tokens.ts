@@ -5,7 +5,7 @@
 // 3 presets selectable from Admin
 // ─────────────────────────────────────────────
 
-export type NeonForgeVariant = 'lime' | 'cyan' | 'amber';
+export type NeonForgeVariant = 'lime' | 'cyan' | 'emerald';
 
 export interface NeonForgeTokens {
     bg: string;
@@ -57,7 +57,7 @@ export const VARIANTS: Record<NeonForgeVariant, NeonForgeTokens> = {
         textMuted: '#465A60',
         live: '#FF5757',
     },
-    amber: {
+    emerald: {
         bg: '#0D0A06',
         card: '#1A1408',
         cardFeatured: '#1F1900',
@@ -78,7 +78,7 @@ export const VARIANTS: Record<NeonForgeVariant, NeonForgeTokens> = {
 export const VARIANT_LABELS: Record<NeonForgeVariant, string> = {
     lime: '⚡ Lima · Verde Eléctrico',
     cyan: '💠 Cian · Azul Neón',
-    amber: '🔥 Ámbar · Naranja Encendido',
+    emerald: '🔥 Ámbar · Naranja Encendido',
 };
 
 export function getVariantTokens(settings: any): NeonForgeTokens {

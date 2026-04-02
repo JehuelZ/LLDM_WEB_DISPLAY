@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useAppStore } from '@/lib/store';
 
 interface ChartDataPoint {
     date?: string;
@@ -22,13 +23,14 @@ interface ChartProps {
     totalMembers?: number; // Nueva prop para escala real
 }
 
-export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, showHighlight = true, totalMembers = 100 }: ChartProps) => {
+export const TactileAreaChart = ({ data, color = "#10b981", isSmooth = true, showHighlight = true, totalMembers = 100 }: ChartProps) => {
     // Determine if we have real data (simply check if data array is provided and not empty)
     const hasData = data && data.length > 0;
     
     // Check if data is "zeroed" to show a visual hint
     const isAllZeros = hasData && data.every(d => (d.attended || d.value || 0) === 0);
 
+    const { settings } = useAppStore();
     const [isMounted, setIsMounted] = React.useState(false);
     const [hoverIdx, setHoverIdx] = React.useState<number | null>(null);
     const [isDragging, setIsDragging] = React.useState(false);
@@ -135,7 +137,7 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
              {!hasData && (
-                <div className="absolute top-10 right-10 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30 text-[8px] font-black text-amber-500 uppercase tracking-widest animate-pulse">
+                <div className="absolute top-10 right-10 z-20 px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/30 text-[8px] font-black text-emerald-500 uppercase tracking-widest animate-pulse">
                     VISTA PREVIA (SIN DATOS)
                 </div>
             )}
@@ -215,7 +217,10 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                             key={multiplier} 
                             x={paddingX + 2} // Align slightly off-edge
                             y={height - paddingY - (multiplier) * (height - paddingY * 2) + 3} 
-                            className="fill-[var(--tactile-text-sub)] opacity-40 text-[9px] font-black uppercase tracking-widest"
+                            className={cn(
+                                "fill-[var(--tactile-text-sub)] uppercase tracking-widest text-[9px] font-black",
+                                settings.themeMode === 'light' ? "fill-slate-500 opacity-60" : "fill-white/40"
+                            )}
                         >
                             {absVal}
                         </text>
@@ -263,7 +268,8 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                             y={height - 15} 
                             textAnchor="middle" 
                             className={cn(
-                                "fill-[var(--tactile-text-sub)] opacity-50 font-black uppercase tracking-[0.05em]",
+                                "font-black uppercase tracking-[0.05em]",
+                                settings.themeMode === 'light' ? "fill-slate-500 opacity-70" : "fill-white/50",
                                 points.length > 15 ? "text-[7px]" : "text-[9px]"
                             )}
                         >
@@ -289,11 +295,19 @@ export const TactileAreaChart = ({ data, color = "#f59e0b", isSmooth = true, sho
                             style={{ overflow: 'visible', background: 'transparent' }}
                         >
                             <div className="flex flex-col items-center bg-transparent">
-                                <div className="px-3 py-2 bg-white text-[16px] font-black text-slate-950 rounded-2xl shadow-[0_25px_60px_rgba(0,0,0,1)] flex items-center gap-2 translate-y-2 border border-black/5">
+                                <div className={cn(
+                                    "px-3 py-2 text-[16px] font-black rounded-2xl flex items-center gap-2 translate-y-2 border shadow-2xl",
+                                    settings.themeMode === 'light'
+                                        ? "bg-white text-slate-950 border-black/5"
+                                        : "bg-slate-900 text-white border-white/10"
+                                )}>
                                     {Math.round(highlightPoint.val)}%
                                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse ring-4 ring-emerald-500/30" />
                                 </div>
-                                <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-white relative z-10" />
+                                <div className={cn(
+                                    "w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] relative z-10",
+                                    settings.themeMode === 'light' ? "border-t-slate-900" : "border-t-white"
+                                )} />
                             </div>
                         </motion.foreignObject>
 
@@ -335,6 +349,7 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
         { label: 'DO', sessions: { '5am': 60, '9am': 85, 'evening': 95 } },
     ];
 
+    const { settings } = useAppStore();
     const activeData = hasData ? data : demoData;
 
     const width = 450;
@@ -354,7 +369,7 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
     const sessionConfig = [
         { key: '5am' as const, color: '#3b82f6' },
         { key: '9am' as const, color: '#f43f5e' },
-        { key: 'evening' as const, color: '#f59e0b' }
+        { key: 'evening' as const, color: '#10b981' }
     ];
 
     const fixedLabels = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
@@ -362,7 +377,7 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
     return (
         <div className="relative w-full h-full group select-none overflow-visible">
             {!hasData && (
-                <div className="absolute top-2 right-10 z-20 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30 text-[8px] font-black text-amber-500 uppercase tracking-widest animate-pulse">
+                <div className="absolute top-2 right-10 z-20 px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/30 text-[8px] font-black text-emerald-500 uppercase tracking-widest animate-pulse">
                     VISTA PREVIA
                 </div>
             )}
@@ -386,14 +401,18 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                             <line 
                                 x1={paddingX} y1={y} 
                                 x2={width - paddingX} y2={y} 
-                                stroke="var(--tactile-chart-grid)" strokeWidth="1"
+                                stroke={settings.themeMode === 'light' ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)"} 
+                                strokeWidth="1"
                                 strokeDasharray="2 4"
                             />
                             <text 
                                 x={paddingX - 10} 
                                 y={y + 3} 
                                 textAnchor="end"
-                                className="fill-[var(--tactile-text-sub)] opacity-40 text-[8px] font-black uppercase tracking-widest"
+                                className={cn(
+                                    "text-[8px] font-black uppercase tracking-widest",
+                                    settings.themeMode === 'light' ? "fill-slate-500 opacity-60" : "fill-white/30"
+                                )}
                             >
                                 {absVal}
                             </text>
@@ -456,12 +475,14 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                             />
                                         )}
                                         
-                                        {/* Hover Count */}
                                         <text 
                                             x={x + barWidth / 2} 
                                             y={y - 10} 
                                             textAnchor="middle" 
-                                            className="fill-white font-black text-[9px] opacity-0 group-hover/bar:opacity-100 transition-opacity pointer-events-none tabular-nums drop-shadow-lg"
+                                            className={cn(
+                                                "font-black text-[9px] opacity-0 group-hover/bar:opacity-100 transition-opacity pointer-events-none tabular-nums drop-shadow-lg",
+                                                settings.themeMode === 'light' ? "fill-slate-900" : "fill-white"
+                                            )}
                                         >
                                             {Math.round(val)}
                                         </text>
@@ -474,7 +495,10 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
                                 x={slotCenterX} 
                                 y={height - 15} 
                                 textAnchor="middle" 
-                                className="fill-[var(--tactile-text-sub)] opacity-30 text-[9px] font-black uppercase tracking-widest"
+                                className={cn(
+                                    "text-[9px] font-black uppercase tracking-widest",
+                                    settings.themeMode === 'light' ? "fill-slate-600 opacity-70" : "fill-white/30"
+                                )}
                             >
                                 {displayLabel}
                             </text>
@@ -488,6 +512,7 @@ export const TactileBarChart = ({ data, totalMembers = 100 }: { data: any[], tot
 
 export const TactilePieChart = ({ data, title }: { data: { label: string, value: number, color: string }[], title: string }) => {
     const total = data.reduce((acc, d) => acc + d.value, 0);
+    const { settings } = useAppStore();
     const size = 180;
     const center = size / 2;
     const radius = 70;
@@ -509,9 +534,9 @@ export const TactilePieChart = ({ data, title }: { data: { label: string, value:
                             <stop offset="0%" stopColor="#10b981" />
                             <stop offset="100%" stopColor="#34d399" />
                         </linearGradient>
-                        <linearGradient id="amberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#f59e0b" />
-                            <stop offset="100%" stopColor="#fbbf24" />
+                        <linearGradient id="emeraldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#10b981" />
+                            <stop offset="100%" stopColor="#10b981" />
                         </linearGradient>
                     </defs>
 
@@ -521,7 +546,7 @@ export const TactilePieChart = ({ data, title }: { data: { label: string, value:
                         cy={center}
                         r={radius}
                         fill="none"
-                        stroke="rgba(255,255,255,0.03)"
+                        stroke={settings.themeMode === 'light' ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.05)"}
                         strokeWidth={strokeWidth}
                     />
 
@@ -535,7 +560,7 @@ export const TactilePieChart = ({ data, title }: { data: { label: string, value:
 
                         // Map colors to gradients if available
                         const strokeColor = d.color === '#10b981' ? 'url(#emeraldGrad)' : 
-                                            d.color === '#f59e0b' ? 'url(#amberGrad)' : d.color;
+                                            d.color === '#10b981' ? 'url(#emeraldGrad)' : d.color;
 
                         return (
                             <g key={i}>
@@ -585,20 +610,41 @@ export const TactilePieChart = ({ data, title }: { data: { label: string, value:
 
                 {/* Center Content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <div className="text-3xl font-black italic text-white tracking-tighter">{total}</div>
-                    <div className="text-[8px] font-black uppercase text-white/30 tracking-[0.2em]">{title}</div>
+                    <div className={cn(
+                        "text-3xl font-black italic tracking-tighter",
+                        settings.themeMode === 'light' ? "text-slate-900" : "text-white"
+                    )}>
+                        {total}
+                    </div>
+                    <div className={cn(
+                        "text-[8px] font-black uppercase tracking-[0.2em]",
+                        settings.themeMode === 'light' ? "text-slate-700/40" : "text-white/30"
+                    )}>
+                        {title}
+                    </div>
                 </div>
             </div>
 
             {/* Legend */}
-            <div className="grid grid-cols-2 gap-x-8 gap-y-2 mt-6 w-full px-4">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-2 mt-6 w-full px-4 text-left">
                 {data.map((d, i) => (
                     <div key={i} className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color, boxShadow: `0 0 10px ${d.color}` }} />
-                        <div className="flex flex-col">
-                            <span className="text-[8px] font-black uppercase text-white/40 tracking-wider whitespace-nowrap">{d.label}</span>
-                            <span className="text-xs font-bold text-white tabular-nums">
-                                {d.value} <span className="text-[9px] opacity-40">({total > 0 ? Math.round((d.value/total)*100) : 0}%)</span>
+                        <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: d.color, boxShadow: `0 0 10px ${d.color}` }} />
+                        <div className="flex flex-col min-w-0">
+                            <span className={cn(
+                                "text-[8px] font-black uppercase tracking-[0.2em] truncate",
+                                settings.themeMode === 'light' ? "text-slate-700/80" : "text-white/40"
+                            )}>
+                                {d.label}
+                            </span>
+                            <span className={cn(
+                                "text-[9px] font-bold tabular-nums",
+                                settings.themeMode === 'light' ? "text-slate-900" : "text-white"
+                            )}>
+                                {d.value} <span className={cn(
+                                    "text-[9px]",
+                                    settings.themeMode === 'light' ? "text-slate-500" : "opacity-40"
+                                )}>({total > 0 ? Math.round((d.value/total)*100) : 0}%)</span>
                             </span>
                         </div>
                     </div>

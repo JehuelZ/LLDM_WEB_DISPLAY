@@ -117,17 +117,17 @@ export const DatabaseDiagnostic: React.FC = () => {
 
                 <Card className={cn(
                     "relative overflow-hidden group transition-all duration-500",
-                    pendingCount > 0 ? "border-amber-500/30" : "border-emerald-500/30",
+                    pendingCount > 0 ? "border-emerald-500/30" : "border-emerald-500/30",
                     adminTheme === 'primitivo' ? "bg-[#101420]" : "glass-card"
                 )}>
                     <div className="absolute top-0 right-0 p-6 opacity-10 rotate-12">
-                        <ShieldAlert className={cn("w-24 h-24", pendingCount > 0 ? "text-amber-500" : "text-emerald-500")} />
+                        <ShieldAlert className={cn("w-24 h-24", pendingCount > 0 ? "text-emerald-500" : "text-emerald-500")} />
                     </div>
                     <CardHeader className="pb-2">
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Estados Pendientes</p>
                     </CardHeader>
                     <CardContent>
-                        <h3 className={cn("text-4xl font-black", pendingCount > 0 ? "text-amber-500" : "text-emerald-500")}>
+                        <h3 className={cn("text-4xl font-black", pendingCount > 0 ? "text-emerald-500" : "text-emerald-500")}>
                             {pendingCount}
                         </h3>
                         <p className="text-[9px] font-bold text-slate-500 uppercase mt-2">Requieren Auditoría Manual</p>
@@ -139,7 +139,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                         onClick={() => loadMembersFromCloud()}
                         className={cn(
                             "h-14 font-black uppercase tracking-widest gap-3 rounded-2xl group transition-all",
-                            adminTheme === 'primitivo' ? "bg-amber-600 hover:bg-amber-500" : "bg-emerald-600 hover:bg-emerald-500"
+                            adminTheme === 'primitivo' ? "bg-emerald-600 hover:bg-emerald-500" : "bg-emerald-600 hover:bg-emerald-500"
                         )}
                     >
                         <RefreshCw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
@@ -173,7 +173,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                     <form onSubmit={handleSearch} className="relative group">
                         <div className={cn(
                             "absolute -inset-1 rounded-[2rem] blur-xl opacity-0 group-focus-within:opacity-20 transition-opacity duration-500",
-                            adminTheme === 'primitivo' ? "bg-amber-500" : "bg-primary"
+                            adminTheme === 'primitivo' ? "bg-emerald-500" : "bg-primary"
                         )} />
                         
                         <div className="relative flex gap-4">
@@ -234,7 +234,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                                                         <span className={cn(
                                                             "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest",
                                                             p.status === 'Activo' ? "bg-emerald-500/10 text-emerald-400" :
-                                                            (p.status === 'Pendiente' || (p.status as string) === 'pendiente') ? "bg-amber-500/10 text-amber-500" :
+                                                            (p.status === 'Pendiente' || (p.status as string) === 'pendiente') ? "bg-emerald-500/10 text-emerald-500" :
                                                             "bg-slate-800 text-slate-400"
                                                         )}>
                                                             {p.status}
@@ -264,7 +264,7 @@ export const DatabaseDiagnostic: React.FC = () => {
                                                                 variant="outline"
                                                                 disabled={isRepairing === p.id}
                                                                 onClick={() => handleRepair(p.id, 'Pendiente')}
-                                                                className="flex-1 border-amber-500/30 text-amber-500 font-black text-[9px] h-8 px-3 rounded-lg hover:bg-amber-500/10"
+                                                                className="flex-1 border-emerald-500/30 text-emerald-500 font-black text-[9px] h-8 px-3 rounded-lg hover:bg-emerald-500/10"
                                                             >
                                                                 SUSPENDER
                                                             </Button>
@@ -290,15 +290,15 @@ export const DatabaseDiagnostic: React.FC = () => {
 
                                             {/* Inconsistency Detection */}
                                             {(p.status as string) === 'pendiente' && (
-                                                <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center gap-3">
-                                                    <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
-                                                    <p className="text-[9px] font-black text-amber-500 uppercase leading-tight">
+                                                <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center gap-3">
+                                                    <AlertTriangle className="w-4 h-4 text-emerald-500 shrink-0" />
+                                                    <p className="text-[9px] font-black text-emerald-500 uppercase leading-tight">
                                                         Inconsistencia Detectada: Estado en minúsculas. Esto puede ocultar al usuario de la lista principal.
                                                     </p>
                                                     <Button 
                                                         size="sm"
                                                         onClick={() => handleRepair(p.id, 'Pendiente')}
-                                                        className="ml-auto bg-amber-500 text-black font-black text-[8px] h-7 px-3 rounded-lg"
+                                                        className="ml-auto bg-emerald-500 text-black font-black text-[8px] h-7 px-3 rounded-lg"
                                                     >
                                                         CORREGIR
                                                     </Button>

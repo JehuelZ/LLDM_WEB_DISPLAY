@@ -109,8 +109,8 @@ export default function SimpleAdmin() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Crear Anuncio */}
                     <Card className="glass-card border-none bg-white/5 overflow-hidden">
-                        <CardHeader className="bg-amber-500/10 border-b border-white/5">
-                            <CardTitle className="flex items-center gap-2 text-amber-500 uppercase">
+                        <CardHeader className="bg-emerald-500/10 border-b border-white/5">
+                            <CardTitle className="flex items-center gap-2 text-emerald-500 uppercase">
                                 <Bell className="w-5 h-5" /> Nuevo Anuncio
                             </CardTitle>
                             <CardDescription>Aparecerá inmediatamente en el tablero</CardDescription>
@@ -137,7 +137,7 @@ export default function SimpleAdmin() {
                             <Button
                                 onClick={handleSaveAnnouncement}
                                 disabled={loading || !ann.title}
-                                className="w-full bg-amber-500 hover:bg-amber-600 text-black font-black uppercase tracking-wider py-6"
+                                className="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-black uppercase tracking-wider py-6"
                             >
                                 <Save className="mr-2 w-4 h-4" /> Publicar en la Nube
                             </Button>

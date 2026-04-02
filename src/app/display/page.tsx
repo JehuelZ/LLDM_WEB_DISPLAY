@@ -364,8 +364,8 @@ export default function DisplayPage() {
                     >
                         {settings?.lowPerformanceMode ? (
                             <>
-                                <ZapOff className="w-5 h-5 text-amber-500" />
-                                <span className="text-xs font-black uppercase tracking-widest text-white">MODO RENDIMIENTO: <span className="text-amber-500 text-sm italic">OPTIMIZADO</span></span>
+                                <ZapOff className="w-5 h-5 text-emerald-500" />
+                                <span className="text-xs font-black uppercase tracking-widest text-white">MODO RENDIMIENTO: <span className="text-emerald-500 text-sm italic">OPTIMIZADO</span></span>
                             </>
                         ) : (
                             <>

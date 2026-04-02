@@ -153,7 +153,7 @@ export default function ReportsPage() {
                     change="0%"
                     trend="up"
                     icon={Clock}
-                    color="text-amber-500"
+                    color="text-emerald-500"
                 />
                 <StatCard
                     title="Actividad de Niños"

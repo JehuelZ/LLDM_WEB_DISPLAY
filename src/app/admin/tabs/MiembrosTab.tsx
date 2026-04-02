@@ -70,7 +70,7 @@ export const MiembrosTab = ({
                         value: members.filter(m => m.role === 'Ministro a Cargo').length, 
                         sub: '3 en guardia',
                         icon: ShieldCheck,
-                        color: 'text-amber-500' 
+                        color: 'text-emerald-500' 
                     },
                     { 
                         label: 'ACTIVIDAD', 
@@ -105,7 +105,7 @@ export const MiembrosTab = ({
                         {[
                             { label: 'Hermanos Adultos', count: members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length, total: Math.max(1, members.length), color: 'bg-primary' },
                             { label: 'Hermanas Adultas', count: members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length, total: Math.max(1, members.length), color: 'bg-pink-500' },
-                            { label: 'Niños y Niñas', count: members.filter(m => m.category === 'Niño').length, total: Math.max(1, members.length), color: 'bg-amber-500' },
+                            { label: 'Niños y Niñas', count: members.filter(m => m.category === 'Niño').length, total: Math.max(1, members.length), color: 'bg-emerald-500' },
                         ].map((bar, idx) => (
                             <div key={idx} className="space-y-2">
                                 <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
@@ -145,30 +145,30 @@ export const MiembrosTab = ({
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-[var(--tactile-inner-bg)]/80 border border-amber-500/20 rounded-[2.5rem] p-8 space-y-6 shadow-2xl relative overflow-hidden backdrop-blur-xl"
+                    className="bg-[var(--tactile-inner-bg)]/80 border border-emerald-500/20 rounded-[2.5rem] p-8 space-y-6 shadow-2xl relative overflow-hidden backdrop-blur-xl"
                 >
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-amber-500/20 rounded-xl flex items-center justify-center border border-amber-500/30">
-                                <ShieldAlert className="w-6 h-6 text-amber-500" />
+                            <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-500/30">
+                                <ShieldAlert className="w-6 h-6 text-emerald-500" />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-black tracking-tighter text-amber-500 uppercase">AUDITORÍA DE SEGURIDAD</h3>
+                                <h3 className="text-2xl font-black tracking-tighter text-emerald-500 uppercase">AUDITORÍA DE SEGURIDAD</h3>
                                 <p className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/30 mt-1">PROTOCOLO DE APROBACIÓN</p>
                             </div>
                         </div>
-                        <TactileBadge className="bg-amber-500/10 border-amber-500/30 text-amber-500 px-6 py-2">
+                        <TactileBadge className="bg-emerald-500/10 border-emerald-500/30 text-emerald-500 px-6 py-2">
                             {pendingMembers.length} SOLICITUDES ACTIVAS
                         </TactileBadge>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
                         {pendingMembers.map((pending) => (
-                            <div key={pending.id} className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-5 rounded-[1.75rem] space-y-4 hover:border-amber-500/40 transition-all duration-300 group/audit-card relative overflow-hidden flex flex-col justify-between">
+                            <div key={pending.id} className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-5 rounded-[1.75rem] space-y-4 hover:border-emerald-500/40 transition-all duration-300 group/audit-card relative overflow-hidden flex flex-col justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="relative w-14 h-11 shrink-0">
                                         <div className="relative w-full h-full rounded-xl overflow-hidden border border-[var(--tactile-border-strong)] bg-[var(--tactile-inner-bg)]">
-                                            {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-full h-full p-3 text-amber-500/40" />}
+                                            {pending.avatar ? <img src={pending.avatar} className="w-full h-full object-cover" /> : <User className="w-full h-full p-3 text-emerald-500/40" />}
                                         </div>
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -218,7 +218,7 @@ export const MiembrosTab = ({
                 <div className="w-full md:w-auto flex items-center gap-6">
                     <h2 className="text-4xl font-black tracking-tighter shrink-0">MIEMBROS <span className="text-muted-foreground/40">LOCALES</span></h2>
                     <div className="relative w-full max-w-md bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border-strong)] rounded-xl p-1 shadow-2xl backdrop-blur-xl group">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 group-focus-within:text-amber-400 transition-colors" />
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground/40 group-focus-within:text-emerald-400 transition-colors" />
                         <input
                             type="text"
                             placeholder="BUSCAR..."
@@ -282,7 +282,7 @@ export const MiembrosTab = ({
                     .map(member => (
                         <div 
                             key={member.id} 
-                            className="group bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-6 rounded-[1.5rem] flex items-center gap-6 hover:border-amber-400/30 transition-all duration-500 relative overflow-hidden"
+                            className="group bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-6 rounded-[1.5rem] flex items-center gap-6 hover:border-emerald-400/30 transition-all duration-500 relative overflow-hidden"
                         >
                             <div className="relative shrink-0 z-10">
                                 <div className={cn(
@@ -308,7 +308,7 @@ export const MiembrosTab = ({
                                     <TactileBadge className={cn(
                                         "px-2.5 py-0.5",
                                         (member.role === 'Administrador' || member.role === 'Ministro a Cargo')
-                                            ? "bg-amber-500/10 border-amber-500/20 text-amber-500" 
+                                            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" 
                                             : "bg-primary/10 border-emerald-500/30 text-emerald-400"
                                     )}>
                                         {member.role === 'Administrador' ? 'ADMIN' : member.role}

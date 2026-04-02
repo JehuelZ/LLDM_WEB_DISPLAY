@@ -257,7 +257,7 @@ export default function MinistroDashboard() {
                         icon={Database}
                         label="Grupos Vigentes"
                         value={Object.keys(stats.groups).length}
-                        color="text-amber-500"
+                        color="text-emerald-500"
                     />
                 </div>
 
@@ -346,12 +346,12 @@ export default function MinistroDashboard() {
 
                                                 {/* 9 AM */}
                                                 <div className="bg-black/20 p-3 rounded-2xl border border-white/5 flex flex-col gap-2 min-w-[120px]">
-                                                    <span className="text-[9px] font-black text-amber-500/80 uppercase flex items-center gap-1">
+                                                    <span className="text-[9px] font-black text-emerald-500/80 uppercase flex items-center gap-1">
                                                         <Star className="w-2.5 h-2.5" /> 9 AM
                                                     </span>
                                                     <div className="flex flex-col gap-1.5">
                                                         <div className="flex items-center gap-2">
-                                                            <div className="w-5 h-5 rounded-full bg-slate-800 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-black text-amber-500/50 uppercase italic">
+                                                            <div className="w-5 h-5 rounded-full bg-slate-800 border border-white/10 overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-black text-emerald-500/50 uppercase italic">
                                                                 {(() => {
                                                                     const id = daySched?.slots['9am']?.consecrationLeaderId;
                                                                     const m = members.find(x => x.id === id);

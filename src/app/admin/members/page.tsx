@@ -61,7 +61,7 @@ const StatDoughnut = ({
     const gradients = {
         blue: { start: '#1e3a8a', end: '#60a5fa', glow: 'rgba(59,130,246,0.5)' },
         purple: { start: '#581c87', end: '#a855f7', glow: 'rgba(168,85,247,0.5)' },
-        orange: { start: '#92400e', end: '#fbbf24', glow: 'rgba(245,158,11,0.5)' },
+        orange: { start: '#92400e', end: '#10b981', glow: 'rgba(245,158,11,0.5)' },
         emerald: { start: '#064e3b', end: '#10b981', glow: 'rgba(16,185,129,0.5)' }
     };
 
@@ -533,8 +533,8 @@ export default function MembersPage() {
                                                     "transition-all uppercase",
                                                     "text-[9px] font-bold tracking-wider px-2 py-0.5 rounded-[4px] ",
                                                     settings.adminTheme === 'primitivo'
-                                                        ? (member.role === 'Administrador' || member.role === 'Ministro a Cargo' ? "bg-amber-500/10 text-amber-600" : "bg-emerald-500/10 text-emerald-600")
-                                                        : (member.role === 'Administrador' || member.role === 'Ministro a Cargo' ? "bg-amber-900 text-amber-500" : "bg-emerald-900 text-emerald-400")
+                                                        ? (member.role === 'Administrador' || member.role === 'Ministro a Cargo' ? "bg-emerald-500/10 text-emerald-600" : "bg-emerald-500/10 text-emerald-600")
+                                                        : (member.role === 'Administrador' || member.role === 'Ministro a Cargo' ? "bg-emerald-900 text-emerald-500" : "bg-emerald-900 text-emerald-400")
                                                 )}>
                                                     {member.role === 'Administrador' ? 'ADMINISTRADOR DEL SISTEMA' : member.role}
                                                 </span>
@@ -674,7 +674,7 @@ export default function MembersPage() {
                                                                         { id: 'leader', label: 'Dirigente / Responsable', icon: Star, color: 'text-primary', adultOnly: true },
                                                                         { id: 'choir', label: 'Miembro de Coro Adulto', icon: Music, color: 'text-secondary', adultOnly: true },
                                                                         { id: 'kids_choir', label: 'Responsable de Coro Niños', icon: Baby, color: 'text-cyan-400', adultOnly: true },
-                                                                        { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, color: 'text-amber-500', adultOnly: true },
+                                                                        { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, color: 'text-emerald-500', adultOnly: true },
                                                                         { id: 'youth_leader', label: 'Responsable de Jóvenes', icon: Users, color: 'text-indigo-400', adultOnly: true },
                                                                         { id: 'kids_leader', label: 'Maestro / Dirigente de Niños', icon: Baby, color: 'text-cyan-400', adultOnly: true },
                                                                         { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: Flame, color: 'text-rose-400', adultOnly: true },
@@ -940,7 +940,7 @@ export default function MembersPage() {
                                 <Button
                                     className={cn(
                                         "flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest gap-3 py-7 text-sm border border-emerald-400/30 transition-all duration-300 group/save",
-                                        settings.adminTheme === 'primitivo' ? "bg-amber-500 hover:bg-amber-400 text-black border-none shadow-none" : "shadow-[0_0_25px_rgba(16,185,129,0.4)]"
+                                        settings.adminTheme === 'primitivo' ? "bg-emerald-500 hover:bg-emerald-400 text-black border-none shadow-none" : "shadow-[0_0_25px_rgba(16,185,129,0.4)]"
                                     )}
                                     disabled={isSaving}
                                     onClick={async () => {

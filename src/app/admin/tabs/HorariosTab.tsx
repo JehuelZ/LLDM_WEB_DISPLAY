@@ -127,7 +127,7 @@ export const HorariosTab = ({
                         }}
                         className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group"
                     >
-                        <Sparkles className="w-3.5 h-3.5 mr-2 group-hover:text-amber-400 transition-colors" />
+                        <Sparkles className="w-3.5 h-3.5 mr-2 group-hover:text-emerald-400 transition-colors" />
                         POBLAR MES
                     </button>
                 </div>
@@ -204,7 +204,7 @@ export const HorariosTab = ({
                 <TactileGlassCard
                     title={isSun ? "10:00 AM" : "09:00 AM"}
                     subtitle={isSun ? "Escuela Dominical" : "Consagración / Doctrina"}
-                    className={cn("border-t-2", isSun ? "border-t-primary/30" : "border-t-yellow-500/30")}
+                    className={cn("border-t-2", isSun ? "border-t-primary/30" : "border-t-emerald-500/30")}
                 >
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">

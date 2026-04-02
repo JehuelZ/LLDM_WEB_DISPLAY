@@ -214,7 +214,7 @@ export default function CoroDashboard() {
                         {/* Assign Uniforms (Quick View) */}
                         <Card className="glass-card bg-transparent border-dashed border-border/40">
                             <CardHeader>
-                                <CardTitle className="text-sm font-black uppercase text-amber-500 flex items-center gap-2">
+                                <CardTitle className="text-sm font-black uppercase text-emerald-500 flex items-center gap-2">
                                     <Shirt className="w-4 h-4" /> Asignar Uniformes
                                 </CardTitle>
                                 <CardDescription>Para Jueves y Domingos próximos</CardDescription>
@@ -434,11 +434,11 @@ export default function CoroDashboard() {
 
                     {/* Calendario de Uniformes */}
                     <Card className="glass-card border-none bg-black/40 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
-                        <div className="absolute top-0 left-0 w-1 h-full bg-amber-500 group-hover:w-2 transition-all opacity-50" />
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+                        <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500 group-hover:w-2 transition-all opacity-50" />
                         
                         <CardHeader className="pb-4">
-                            <CardTitle className="flex items-center gap-2 text-amber-500 text-[11px] font-black uppercase tracking-widest">
+                            <CardTitle className="flex items-center gap-2 text-emerald-500 text-[11px] font-black uppercase tracking-widest">
                                 <Shirt className="h-4 w-4" /> Uniformes de Gala
                             </CardTitle>
                             <CardDescription className="text-[9px] uppercase font-black text-muted-foreground tracking-tighter">Presentaciones Jueves y Domingo</CardDescription>
@@ -447,13 +447,13 @@ export default function CoroDashboard() {
                             {upcomingDays.map((day, i) => {
                                 const uniform = uniforms.find(u => u.id === day.uniformId);
                                 return (
-                                    <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5 group/row hover:bg-amber-500/10 transition-all duration-500">
+                                    <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5 group/row hover:bg-emerald-500/10 transition-all duration-500">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-[8px] font-black text-amber-500/70 uppercase italic tracking-widest">{day.dayName}, {format(parseISO(day.date), 'd MMM')}</span>
-                                                {uniform && <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />}
+                                                <span className="text-[8px] font-black text-emerald-500/70 uppercase italic tracking-widest">{day.dayName}, {format(parseISO(day.date), 'd MMM')}</span>
+                                                {uniform && <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />}
                                             </div>
-                                            <p className="text-[15px] font-black text-foreground tracking-tight uppercase italic group-hover/row:text-amber-400 transition-colors leading-none">{uniform ? uniform.name : 'Por asignar'}</p>
+                                            <p className="text-[15px] font-black text-foreground tracking-tight uppercase italic group-hover/row:text-emerald-400 transition-colors leading-none">{uniform ? uniform.name : 'Por asignar'}</p>
                                             {uniform && (
                                                 <div className="flex flex-col gap-1 mt-3 opacity-60 group-hover/row:opacity-100 transition-opacity">
                                                     <div className="flex items-start gap-2">
@@ -471,7 +471,7 @@ export default function CoroDashboard() {
                                                 </div>
                                             )}
                                         </div>
-                                        {uniform && <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/10 group-hover/row:scale-110 transition-transform"><Shirt className="w-4 h-4 text-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" /></div>}
+                                        {uniform && <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center border border-emerald-500/10 group-hover/row:scale-110 transition-transform"><Shirt className="w-4 h-4 text-emerald-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]" /></div>}
                                     </div>
                                 );
                             })}

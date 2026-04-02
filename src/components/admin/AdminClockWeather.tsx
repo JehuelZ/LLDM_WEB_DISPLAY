@@ -102,12 +102,17 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                 <input 
                     type="text" 
                     placeholder="Buscar..." 
-                    className="w-full h-11 pl-11 pr-4 rounded-2xl bg-white/[0.03] border border-white/[0.05] focus:bg-white/[0.06] focus:border-primary/30 transition-all text-xs font-bold tracking-tight placeholder:text-muted-foreground/20 focus:outline-none"
+                    className={cn(
+                        "w-full h-11 pl-11 pr-4 rounded-2xl transition-all text-xs font-bold tracking-tight focus:outline-none",
+                        isDark 
+                            ? "bg-white/[0.03] border-white/[0.05] focus:bg-white/[0.06] focus:border-emerald-500/30 text-white placeholder:text-muted-foreground/20" 
+                            : "bg-white/40 border-black/[0.05] focus:bg-white focus:border-emerald-500/30 text-slate-900 placeholder:text-slate-400 shadow-sm"
+                    )}
                 />
             </div>
 
             {/* Clock Section */}
-            <div className="flex items-center gap-4 border-r border-white/5 pr-6 shrink-0">
+            <div className={cn("flex items-center gap-4 pr-6 shrink-0 border-r", isDark ? "border-white/5" : "border-black/5")}>
                 <div className={cn(
                     "p-2.5 rounded-xl bg-primary/10 border border-primary/20",
                     isDark ? "text-primary" : "text-primary-dark"
@@ -117,17 +122,17 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                 <div className="flex flex-col">
                     <span className="text-xl font-black tracking-tighter tabular-nums leading-none">
                         {format(time, 'HH:mm')}
-                        <span className="text-[10px] opacity-40 ml-1">{format(time, 'ss')}</span>
+                        <span className={cn("text-[10px] ml-1", isDark ? "opacity-40" : "opacity-60")}>{format(time, 'ss')}</span>
                     </span>
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-muted-foreground mt-1 opacity-60">
+                    <span className={cn("text-[8px] font-black uppercase tracking-[0.2em] mt-1", isDark ? "text-muted-foreground opacity-60" : "text-slate-600 opacity-90")}>
                         {format(time, "EEEE, d 'de' MMMM", { locale: es })}
                     </span>
                 </div>
             </div>
 
             {/* Main Weather Section */}
-            <div className="flex items-center gap-4 border-r border-white/5 pr-6 shrink-0">
-                <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 group-hover/weather:scale-110 transition-transform duration-500">
+            <div className={cn("flex items-center gap-4 pr-6 shrink-0 border-r", isDark ? "border-white/5" : "border-black/5")}>
+                <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 group-hover/weather:scale-110 transition-transform duration-500">
                     <weather.icon className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col">
@@ -150,13 +155,18 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                 {weather.forecast.map((f, i) => (
                     <div 
                         key={i} 
-                        className="flex items-center gap-3 p-1.5 px-3 rounded-xl bg-white/[0.03] border border-white/[0.05] hover:border-primary/30 hover:bg-white/[0.06] transition-all group/day cursor-help min-w-[70px]"
+                        className={cn(
+                            "flex items-center gap-3 p-1.5 px-3 rounded-xl transition-all group/day cursor-help min-w-[70px] border",
+                            isDark 
+                                ? "bg-white/[0.03] border-white/[0.05] hover:border-emerald-500/30 hover:bg-white/[0.06]" 
+                                : "bg-white/40 border-black/[0.05] hover:border-emerald-500/30 hover:bg-white/60 shadow-sm"
+                        )}
                     >
                         <div className="flex flex-col items-start leading-none gap-1">
-                            <span className="text-[7px] font-black text-muted-foreground uppercase tracking-[0.15em] leading-none">{f.day}</span>
+                            <span className={cn("text-[7px] font-black uppercase tracking-[0.15em] leading-none", isDark ? "text-muted-foreground" : "text-slate-600")}>{f.day}</span>
                             <span className="text-[11px] font-black tracking-tighter text-foreground tabular-nums leading-none">{f.temp}°</span>
                         </div>
-                        <f.icon className="w-3.5 h-3.5 text-amber-500/60" />
+                        <f.icon className="w-3.5 h-3.5 text-emerald-500/60" />
                     </div>
                 ))}
             </div>

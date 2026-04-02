@@ -75,9 +75,9 @@ export default function DashboardIndex() {
             description: 'Supervisión global de la iglesia y programación espiritual.',
             href: '/dashboard/ministro',
             icon: LayoutDashboard,
-            color: 'text-amber-500',
-            bgColor: 'bg-amber-500/10',
-            borderColor: 'border-amber-500/20',
+            color: 'text-emerald-500',
+            bgColor: 'bg-emerald-500/10',
+            borderColor: 'border-emerald-500/20',
             show: currentUser.role === 'Administrador' || currentUser.role === 'Ministro a Cargo' || currentUser.privileges?.includes('leader')
         }
     ].filter(d => d.show);

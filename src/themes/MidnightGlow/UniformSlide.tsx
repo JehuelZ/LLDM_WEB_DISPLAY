@@ -148,7 +148,7 @@ function UniformItem({ label, value, icon, color = 'blue' }: { label: string; va
     const colors = {
         blue: "text-[#4F7FFF] bg-[#4F7FFF]/10 border-[#4F7FFF]/20",
         emerald: "text-[#A3FF57] bg-[#A3FF57]/10 border-[#A3FF57]/20",
-        accent: "text-amber-400 bg-amber-400/10 border-amber-400/20"
+        accent: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20"
     };
 
     return (

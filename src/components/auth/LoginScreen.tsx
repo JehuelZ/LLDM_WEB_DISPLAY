@@ -28,7 +28,7 @@ const BokehLayer = () => (
                     repeat: Infinity,
                     ease: "linear"
                 }}
-                className="absolute rounded-full bg-amber-500/20 blur-[100px]"
+                className="absolute rounded-full bg-emerald-500/20 blur-[100px]"
                 style={{
                     width: `${300 + Math.random() * 200}px`,
                     height: `${300 + Math.random() * 200}px`,
@@ -66,7 +66,7 @@ const GoldenDustLayer = () => (
                         delay: delay,
                         ease: "linear"
                     }}
-                    className="absolute bg-amber-400 rounded-full blur-[0.5px] shadow-[0_0_5px_rgba(251,191,36,0.6)]"
+                    className="absolute bg-emerald-400 rounded-full blur-[0.5px] shadow-[0_0_5px_rgba(251,191,36,0.6)]"
                     style={{
                         width: size,
                         height: size,
@@ -89,7 +89,7 @@ const LightSweep = () => (
             repeatDelay: 4,
             ease: "easeInOut"
         }}
-        className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-amber-400/5 to-transparent skew-x-12"
+        className="absolute inset-0 pointer-events-none bg-gradient-to-r from-transparent via-emerald-400/5 to-transparent skew-x-12"
     />
 );
 
@@ -129,7 +129,7 @@ export function LoginScreen() {
                 >
                     {/* Dynamic Outer Glow */}
                     <div className={cn(
-                        "absolute -inset-1 bg-amber-500/20 rounded-[3rem] blur-2xl transition-opacity duration-1000",
+                        "absolute -inset-1 bg-emerald-500/20 rounded-[3rem] blur-2xl transition-opacity duration-1000",
                         (isHovered && !isPhone) ? "opacity-40" : "opacity-0"
                     )} />
 
@@ -146,8 +146,8 @@ export function LoginScreen() {
                                 animate={isHovered ? { scale: 1.05, rotate: 2 } : { scale: 1, rotate: 0 }}
                                 className="w-24 h-24 mb-6 relative"
                             >
-                                <div className="absolute inset-0 bg-amber-500/30 rounded-3xl blur-2xl animate-pulse" />
-                                <div className="relative w-full h-full bg-slate-950/80 rounded-3xl border border-amber-500/20 flex items-center justify-center p-5 shadow-inner">
+                                <div className="absolute inset-0 bg-emerald-500/30 rounded-3xl blur-2xl animate-pulse" />
+                                <div className="relative w-full h-full bg-slate-950/80 rounded-3xl border border-emerald-500/20 flex items-center justify-center p-5 shadow-inner">
                                     <img
                                         src={settings.churchLogoUrl || "/flama-oficial.svg"}
                                         style={{ filter: 'brightness(0) saturate(100%) invert(84%) sepia(18%) saturate(3040%) hue-rotate(330deg) brightness(103%) contrast(100%)' }}
@@ -158,10 +158,10 @@ export function LoginScreen() {
                             </motion.div>
 
                             <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-2 leading-none">
-                                LLDM <span className="text-amber-500">RODEO</span>
+                                LLDM <span className="text-emerald-500">RODEO</span>
                             </h1>
                             <div className="flex justify-center">
-                                <span className="text-[9px] uppercase font-black tracking-[0.4em] text-amber-500/60">
+                                <span className="text-[9px] uppercase font-black tracking-[0.4em] text-emerald-500/60">
                                     Digital Experience
                                 </span>
                             </div>
@@ -174,13 +174,13 @@ export function LoginScreen() {
                                 whileHover={{ scale: 1.02, y: -2 }}
                                 whileTap={{ scale: 0.98 }}
                                 onClick={signInWithGoogle}
-                                className="w-full group relative h-16 rounded-2xl bg-white border border-transparent flex items-center justify-between px-6 transition-all shadow-xl hover:shadow-amber-500/10"
+                                className="w-full group relative h-16 rounded-2xl bg-white border border-transparent flex items-center justify-between px-6 transition-all shadow-xl hover:shadow-emerald-500/10"
                             >
                                 <div className="flex items-center gap-4">
                                     <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G" />
                                     <span className="text-slate-900 font-extrabold uppercase tracking-widest text-xs">Acceso con Google</span>
                                 </div>
-                                <div className="w-8 h-8 rounded-full bg-slate-900/5 group-hover:bg-amber-500 flex items-center justify-center transition-all group-hover:rotate-[-45deg]">
+                                <div className="w-8 h-8 rounded-full bg-slate-900/5 group-hover:bg-emerald-500 flex items-center justify-center transition-all group-hover:rotate-[-45deg]">
                                     <ArrowRight className="w-4 h-4 text-slate-800 group-hover:text-white" />
                                 </div>
                             </motion.button>
@@ -194,23 +194,23 @@ export function LoginScreen() {
                             {/* Email / Pass Inputs */}
                             <div className="space-y-4">
                                 <div className="group/input relative">
-                                    <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-amber-500 transition-colors" />
+                                    <User className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-emerald-500 transition-colors" />
                                     <input
                                         type="email"
                                         placeholder="CORREO"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full h-14 pl-14 pr-4 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all font-bold text-[11px] tracking-widest"
+                                        className="w-full h-14 pl-14 pr-4 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/40 focus:bg-white/[0.05] transition-all font-bold text-[11px] tracking-widest"
                                     />
                                 </div>
                                 <div className="group/input relative">
-                                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-amber-500 transition-colors" />
+                                    <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within/input:text-emerald-500 transition-colors" />
                                     <input
                                         type="password"
                                         placeholder="CONTRASEÑA"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full h-14 pl-14 pr-4 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-amber-500/40 focus:bg-white/[0.05] transition-all font-bold text-[11px] tracking-widest"
+                                        className="w-full h-14 pl-14 pr-4 rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder:text-slate-600 focus:outline-none focus:border-emerald-500/40 focus:bg-white/[0.05] transition-all font-bold text-[11px] tracking-widest"
                                     />
                                 </div>
 
@@ -244,11 +244,11 @@ export function LoginScreen() {
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="mt-8 p-6 rounded-3xl bg-amber-500/10 border border-amber-500/20 backdrop-blur-md"
+                        className="mt-8 p-6 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 backdrop-blur-md"
                     >
                         <div className="flex items-center gap-3 mb-4">
-                            <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-amber-500">Developer Quick Access</span>
+                            <Sparkles className="w-4 h-4 text-emerald-500 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">Developer Quick Access</span>
                         </div>
                         <Button
                             onClick={async () => {

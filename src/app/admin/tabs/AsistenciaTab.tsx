@@ -121,7 +121,7 @@ export const AsistenciaTab = ({
             <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.03] p-8 rounded-[2.5rem] border border-[var(--tactile-border)] backdrop-blur-xl">
                 <div className="flex flex-col gap-2 text-center md:text-left">
                     <h2 className="text-3xl font-black  capitalize tracking-tighter text-foreground">
-                        Control de <span className="text-amber-400">Asistencia</span>
+                        Control de <span className="text-emerald-400">Asistencia</span>
                     </h2>
                     <div className="flex items-center justify-center md:justify-start gap-4">
                         <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
@@ -244,7 +244,7 @@ export const AsistenciaTab = ({
                                             <defs>
                                                 <linearGradient id="globalProgressGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                                     <stop offset="0%" stopColor="#cc9900" />
-                                                    <stop offset="100%" stopColor="#f59e0b" />
+                                                    <stop offset="100%" stopColor="#10b981" />
                                                 </linearGradient>
                                             </defs>
                                             <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" strokeWidth="6" className="text-foreground/5" />
@@ -346,12 +346,12 @@ export const AsistenciaTab = ({
                                         </div>
                                     )}
                                     {member.role === 'Administrador' && (
-                                        <div className="absolute -top-1.5 -left-1.5 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full p-1 border border-white/20 shadow-lg rotate-[-15deg] z-20">
+                                        <div className="absolute -top-1.5 -left-1.5 bg-gradient-to-br from-emerald-400 to-orange-600 rounded-full p-1 border border-white/20 shadow-lg rotate-[-15deg] z-20">
                                             <Crown className="w-2.5 h-2.5 text-black" strokeWidth={3} />
                                         </div>
                                     )}
                                     {member.is_pre_registered && (
-                                        <div className="absolute -top-1.5 -right-1.5 bg-[#f59e0b] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover:rotate-0 transition-transform z-20">
+                                        <div className="absolute -top-1.5 -right-1.5 bg-[#10b981] text-[8px] font-black w-9 h-6 flex items-center justify-center rounded-lg border-2 border-[#0b101e] text-black shadow-[0_0_15px_rgba(245,158,11,0.5)] rotate-[5deg] group-hover:rotate-0 transition-transform z-20">
                                             PRE
                                         </div>
                                     )}

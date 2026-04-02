@@ -106,7 +106,7 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                         </h3>
                         <p 
                             className="text-[9px] font-black uppercase opacity-70"
-                            style={{ color: '#fbbf24', letterSpacing: '0.2em' }}
+                            style={{ color: '#10b981', letterSpacing: '0.2em' }}
                         >
                             DESLICE PARA REENCUADRAR • USE EL ZOOM
                         </p>
@@ -158,7 +158,7 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                         <div className="space-y-5">
                             <div className="flex items-center justify-between shadow-none">
                                 <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
-                                    <ZoomIn className="w-4 h-4" style={{ color: '#fbbf24' }} /> AMPLIACIÓN
+                                    <ZoomIn className="w-4 h-4" style={{ color: '#10b981' }} /> AMPLIACIÓN
                                 </span>
                                 <span className="text-white text-[10px] font-black bg-white/[0.04] px-2 py-1 rounded border border-white/[0.08] shadow-none">
                                     {Math.round(zoom * 100)}%
@@ -172,7 +172,7 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                                     step="0.01"
                                     value={zoom}
                                     onChange={(e) => setZoom(parseFloat(e.target.value))}
-                                    className="w-full h-0.5 bg-white/[0.1] rounded-full appearance-none cursor-pointer accent-[#fbbf24] hover:bg-white/[0.2] transition-colors shadow-none"
+                                    className="w-full h-0.5 bg-white/[0.1] rounded-full appearance-none cursor-pointer accent-[#10b981] hover:bg-white/[0.2] transition-colors shadow-none"
                                 />
                             </div>
                         </div>
@@ -180,10 +180,10 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                         <div className="flex gap-4 shadow-none">
                             <button
                                 onClick={() => setRotation(prev => prev + 90)}
-                                className="flex-1 border border-white/[0.04] hover:border-[#fbbf24]/30 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl flex items-center justify-center gap-3 transition-all text-white shadow-none"
+                                className="flex-1 border border-white/[0.04] hover:border-[#10b981]/30 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl flex items-center justify-center gap-3 transition-all text-white shadow-none"
                                 style={{ backgroundColor: '#060a17', backgroundImage: 'none' }}
                             >
-                                <RotateCw className="w-4 h-4" style={{ color: '#fbbf24' }} /> ROTAR IMAGEN
+                                <RotateCw className="w-4 h-4" style={{ color: '#10b981' }} /> ROTAR IMAGEN
                             </button>
                             <button
                                 onClick={() => {
@@ -192,10 +192,10 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                                     x.set(0);
                                     y.set(0);
                                 }}
-                                className="flex-1 border border-white/[0.04] hover:border-[#fbbf24]/30 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl flex items-center justify-center gap-3 transition-all text-white shadow-none"
+                                className="flex-1 border border-white/[0.04] hover:border-[#10b981]/30 text-[10px] font-black uppercase tracking-widest h-14 rounded-2xl flex items-center justify-center gap-3 transition-all text-white shadow-none"
                                 style={{ backgroundColor: '#060a17', backgroundImage: 'none' }}
                             >
-                                <Grid3X3 className="w-4 h-4" style={{ color: '#fbbf24' }} /> REESTABLECER
+                                <Grid3X3 className="w-4 h-4" style={{ color: '#10b981' }} /> REESTABLECER
                             </button>
                         </div>
                     </div>

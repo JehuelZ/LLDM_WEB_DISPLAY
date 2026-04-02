@@ -28,7 +28,7 @@ const StatDoughnut = ({
   label: string;
   value: number | string;
   total?: number | string;
-  color?: 'primary' | 'secondary' | 'accent' | 'emerald' | 'amber' | 'cyan';
+  color?: 'primary' | 'secondary' | 'accent' | 'emerald' | 'emerald' | 'cyan';
   size?: number;
 }) => {
   const radius = 40;
@@ -42,7 +42,7 @@ const StatDoughnut = ({
     secondary: "grad-purple",
     accent: "grad-pink",
     emerald: "grad-green",
-    amber: "grad-orange",
+    emerald: "grad-orange",
     cyan: "grad-cyan"
   };
 
@@ -51,7 +51,7 @@ const StatDoughnut = ({
     secondary: "rgba(168, 85, 247, 0.5)",
     accent: "rgba(236, 72, 153, 0.5)",
     emerald: "rgba(16, 185, 129, 0.5)",
-    amber: "rgba(245, 158, 11, 0.5)",
+    emerald: "rgba(245, 158, 11, 0.5)",
     cyan: "rgba(6, 182, 212, 0.5)"
   };
 
@@ -77,7 +77,7 @@ const StatDoughnut = ({
               <stop offset="100%" stopColor="#047857" />
             </linearGradient>
             <linearGradient id="grad-orange" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f59e0b" />
+              <stop offset="0%" stopColor="#10b981" />
               <stop offset="100%" stopColor="#b45309" />
             </linearGradient>
             <linearGradient id="grad-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -296,7 +296,7 @@ export default function Home() {
         <div className="relative z-10 text-center space-y-6">
             <div className="relative flex justify-center">
                 <div className="w-24 h-24 border-2 border-white/5 rounded-full animate-ping absolute" />
-                <div className="w-24 h-24 border-t-2 border-amber-500 rounded-full animate-spin relative z-10" />
+                <div className="w-24 h-24 border-t-2 border-emerald-500 rounded-full animate-spin relative z-10" />
             </div>
             <div className="space-y-2">
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white italic">Sincronizando</p>
@@ -320,8 +320,8 @@ export default function Home() {
           className="relative z-10 max-w-md w-full text-center space-y-8"
         >
           <div className="relative inline-block">
-            <div className="absolute inset-0 bg-amber-500/20 blur-3xl rounded-full scale-150 animate-pulse" />
-            <div className="relative w-32 h-32 mx-auto bg-slate-900/80 rounded-[2.5rem] border border-amber-500/20 flex items-center justify-center p-6 shadow-2xl">
+            <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full scale-150 animate-pulse" />
+            <div className="relative w-32 h-32 mx-auto bg-slate-900/80 rounded-[2.5rem] border border-emerald-500/20 flex items-center justify-center p-6 shadow-2xl">
               <img 
                 src={settings?.churchLogoUrl || "/flama-oficial.svg"} 
                 className="w-full h-full object-contain" 
@@ -329,13 +329,13 @@ export default function Home() {
                 alt="LLDM" 
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-amber-500 rounded-2xl flex items-center justify-center border-4 border-[#02040a]">
+            <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center border-4 border-[#02040a]">
                 <Clock className="w-5 h-5 text-black animate-spin" />
             </div>
           </div>
           <div className="space-y-4">
             <h1 className="text-4xl font-black italic uppercase text-foreground tracking-tighter leading-tight">
-              Registro <span className="text-amber-500">Pendiente</span>
+              Registro <span className="text-emerald-500">Pendiente</span>
             </h1>
             <p className="text-slate-400 text-sm leading-relaxed px-4">
               Hola <span className="text-foreground font-bold">{currentUser.name}</span>, tu cuenta está en revisión.
@@ -658,7 +658,7 @@ export default function Home() {
                     label="Puntualidad"
                     value={currentUser.stats?.punctuality || 95}
                     total={100}
-                    color="amber"
+                    color="emerald"
                     size={140}
                     />
                 </div>
@@ -739,7 +739,7 @@ export default function Home() {
                         </div>
                         <div className={cn(
                           "flex items-center gap-1.5 px-2 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter",
-                          resp.status === 'completed' ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-amber-500/20 text-amber-400 border border-amber-500/30 animate-pulse"
+                          resp.status === 'completed' ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 animate-pulse"
                         )}>
                           {resp.status === 'completed' ? <CheckCircle2 className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
                           {resp.label}

@@ -27,7 +27,7 @@
   --card-foreground: #ffffff;
   --popover: #0f172a;
   --popover-foreground: #ffffff;
-  --primary: #fbbf24;
+  --primary: #10b981;
   --primary-foreground: #020617;
   --secondary: #3b82f6;
   --secondary-foreground: #ffffff;
@@ -37,7 +37,7 @@
   --accent-foreground: #ffffff;
   --border: #1e293b;
   --input: #1e293b;
-  --ring: #fbbf24;
+  --ring: #10b981;
   --radius: 0.5rem;
 }
 
@@ -50,17 +50,17 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #fbbf24;
-  --primary-foreground: #020617;
+  --primary: #10b981;
+  --primary-foreground: #ffffff;
   --secondary: #3b82f6;
   --secondary-foreground: #ffffff;
   --muted: #f1f5f9; /* Slate 100 */
-  --muted-foreground: #64748b; /* Slate 500 */
+  --muted-foreground: #334155; /* Slate 700 - Better contrast */
   --accent: #d946ef;
   --accent-foreground: #ffffff;
   --border: #e2e8f0; /* Slate 200 */
   --input: #e2e8f0;
-  --ring: #fbbf24;
+  --ring: #10b981;
 }
 
 /* --- THE NEW PEACE TREATY --- */
@@ -171,11 +171,11 @@ body:not([class*="admin-theme-"]) .bg-card * {
 }
 
 /* Semantic Utility Classes (Used in Tactile/Primitivo) */
-.text-tactile-orange { color: #f59e0b; }
-.bg-tactile-orange-pill { background-color: rgba(245, 158, 11, 0.15); }
-.bg-tactile-orange { background-color: #f59e0b; }
-.hover-text-tactile-orange:hover { color: #f59e0b; }
-.active-indicator-orange { 
-    background-color: #f59e0b;
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+.text-tactile-emerald { color: #10b981; }
+.bg-tactile-emerald-pill { background-color: rgba(16, 185, 129, 0.15); }
+.bg-tactile-emerald { background-color: #10b981; }
+.hover-text-tactile-emerald:hover { color: #10b981; }
+.active-indicator-emerald { 
+    background-color: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
 }

@@ -10,17 +10,17 @@
 
 :root {
   /* DARK THEME (DEFAULT) */
-  --primitivo-bg: #020617; /* Slate 950 */
-  --primitivo-sidebar-bg: #0b101e; /* Exact Photoshop Color */
-  --primitivo-sidebar-border: rgba(255, 255, 255, 0.08);
+  --primitivo-bg: #0a0f1d; /* Slightly lighter Slate 950 variant */
+  --primitivo-sidebar-bg: #0d1425; /* Adjusted for better depth */
+  --primitivo-sidebar-border: rgba(255, 255, 255, 0.1);
   --primitivo-sidebar-text: #94a3b8;
-  --primitivo-sidebar-hover: rgba(255, 255, 255, 0.05);
-  --primitivo-pill-active: #171c2a; 
-  --primitivo-accent-amber: #fbbf24; /* Production Amber-400 */
-  --primitivo-card-bg: #101420;
-  --primitivo-card-border: rgba(255, 255, 255, 0.06);
-  --primitivo-nav-bg: #121523;
-  --primitivo-nav-border: rgba(255, 255, 255, 0.05);
+  --primitivo-sidebar-hover: rgba(255, 255, 255, 0.08);
+  --primitivo-pill-active: #1e293b; 
+  --primitivo-accent-emerald: #10b981; 
+  --primitivo-card-bg: #161f32; /* Lighter navy-slate for cards */
+  --primitivo-card-border: rgba(255, 255, 255, 0.08);
+  --primitivo-nav-bg: #1a243d; /* Lighter navy for navbars */
+  --primitivo-nav-border: rgba(255, 255, 255, 0.1);
   --primitivo-text-main: #f8fafc;
   --primitivo-text-muted: #94a3b8;
   --primitivo-active-bg: #14b8a6; /* Teal 500 (Softer than 600) */
@@ -45,7 +45,7 @@
   --primitivo-sidebar-text: #475569; /* Slate 600 */
   --primitivo-sidebar-hover: rgba(15, 23, 42, 0.05);
   --primitivo-pill-active: #e2e8f0;
-  --primitivo-accent-amber: #d97706; /* Darker Amber-600 */
+  --primitivo-accent-emerald: #059669; /* Darker Amber-600 */
   --primitivo-card-bg: #ffffff;
   --primitivo-card-border: rgba(15, 23, 42, 0.08);
   --primitivo-nav-bg: #f1f5f9;
@@ -136,7 +136,7 @@ body.admin-theme-primitivo {
 }
 
 .admin-theme-primitivo .logo-rodeo {
-    color: var(--primitivo-accent-amber) !important; /* Exact Amber-400 from Production */
+    color: var(--primitivo-accent-emerald) !important; /* Exact Amber-400 from Production */
 }
 
 /* THE BLUE GLOW - Mirror effect around the content area */
@@ -180,11 +180,11 @@ body.admin-theme-primitivo {
     display: none !important;
 }
 
-/* ACTIVE STATE - Full Pill Highlight Mirror (#fbbf24 at 10% opacity) */
+/* ACTIVE STATE - Full Pill Highlight Mirror (#10b981 at 10% opacity) */
 #admin-sidebar-master.admin-sidebar-isolation-primitivo a.bg-tactile-orange-pill,
-#admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#f59e0b]"] {
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#10b981]"] {
     background: rgba(251, 191, 36, 0.1) !important;
-    color: var(--primitivo-accent-amber) !important; /* Amber-400 */
+    color: var(--primitivo-accent-emerald) !important; /* Amber-400 */
     border: 1px solid rgba(251, 191, 36, 0.2) !important;
     font-weight: 700 !important;
     box-shadow: none !important;
@@ -192,8 +192,8 @@ body.admin-theme-primitivo {
 
 /* Active Icon */
 #admin-sidebar-master.admin-sidebar-isolation-primitivo a.bg-tactile-orange-pill svg,
-#admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#f59e0b]"] svg {
-    color: var(--primitivo-accent-amber) !important;
+#admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#10b981]"] svg {
+    color: var(--primitivo-accent-emerald) !important;
 }
 
 /* Hover effects */
@@ -243,12 +243,12 @@ body.admin-theme-primitivo {
 /* Special fix for the Settings link */
 #admin-sidebar-master.admin-sidebar-isolation-primitivo a[class*="bg-[#535468]"] {
     background: rgba(251, 191, 36, 0.1) !important;
-    color: var(--primitivo-accent-amber) !important;
+    color: var(--primitivo-accent-emerald) !important;
 }
 
 /* CARD TITLES COLORING */
 .admin-theme-primitivo .card-title {
-    color: var(--primitivo-accent-amber) !important; /* Default Amber for main titles */
+    color: var(--primitivo-accent-emerald) !important; /* Default Amber for main titles */
 }
 
 .admin-theme-primitivo .card-description,
@@ -382,7 +382,7 @@ body.admin-theme-primitivo {
 }
 
 .admin-theme-primitivo .admin-header-subtitle .logo-rodeo {
-    color: var(--primitivo-accent-amber) !important; 
+    color: var(--primitivo-accent-emerald) !important; 
     font-weight: 900 !important;
 }
 
@@ -469,12 +469,12 @@ body.admin-theme-primitivo {
 /* INTERCALATED ROWS (ZEBRA STRIPING) - Dashboard & Tables */
 .admin-theme-primitivo .tactile-glass-panel.group:nth-child(even),
 .admin-theme-primitivo .member-row.row-even {
-    background: rgba(100, 116, 139, 0.03) !important; /* Subtle tint for alternate rows */
+    background: rgba(255, 255, 255, 0.05) !important; /* Improved contrast for alternate rows */
 }
 
 .admin-theme-primitivo .tactile-glass-panel.group,
 .admin-theme-primitivo .member-row.row-odd {
-    background: var(--primitivo-card-bg) !important; /* Base Dark Navy */
+    background: var(--primitivo-card-bg) !important; /* Base Dark Navy (Lighter) */
 }
 
 .admin-theme-primitivo .tactile-glass-panel.group:hover,
@@ -632,7 +632,7 @@ body.admin-theme-primitivo {
 
 /* Edit Camera Button on Profile */
 .admin-theme-primitivo .bg-primary.rounded-xl.hover\:scale-110 {
-    background: #fbbf24 !important;
+    background: #10b981 !important;
     color: #000000 !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     box-shadow: none !important;
@@ -640,15 +640,15 @@ body.admin-theme-primitivo {
 
 /* THEME-WIDE COLOR DEFAULTS - ALLOW TAILWIND OVERRIDES */
 .admin-theme-primitivo .text-primary {
-    color: var(--primitivo-accent-amber);
+    color: var(--primitivo-accent-emerald);
 }
 
 .admin-theme-primitivo .bg-primary {
-    background-color: var(--primitivo-accent-amber);
+    background-color: var(--primitivo-accent-emerald);
 }
 
 .admin-theme-primitivo .border-primary {
-    border-color: var(--primitivo-accent-amber);
+    border-color: var(--primitivo-accent-emerald);
 }
 
 .admin-theme-primitivo .admin-badge-primitivo {
