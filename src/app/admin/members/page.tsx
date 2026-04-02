@@ -93,17 +93,17 @@ const StatDoughnut = ({
                         className="opacity-[0.12] dark:opacity-20 text-foreground"
                     />
 
-                    {/* Physical Housing (Dark Border around color) */}
+                    {/* Sub-Glow Background (Subtle Color Shadow instead of black border) */}
                     <circle
                         cx="50"
                         cy="50"
                         r={radius}
                         fill="transparent"
-                        stroke="currentColor"
-                        strokeWidth="12"
-                        className="text-black/80 dark:text-[#0a0c10] transition-all duration-1000 ease-out"
+                        stroke={currentGrad.end}
+                        strokeWidth="14"
+                        className="opacity-[0.08] transition-all duration-1000 ease-out"
+                        style={{ filter: 'blur(4px)', strokeDashoffset }}
                         strokeDasharray={circumference}
-                        style={{ strokeDashoffset }}
                         strokeLinecap="round"
                     />
 
