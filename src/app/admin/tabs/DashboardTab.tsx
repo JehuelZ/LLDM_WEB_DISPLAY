@@ -268,20 +268,46 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                     </div>
 
                     <div className="p-8 rounded-[35px] bg-[#0b101e] border border-[#dca54e]/10 space-y-6">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dca54e]">Protocolos Rápidos</h3>
-                        <div className="space-y-3">
-                            {[
-                                { label: 'Crear Notificación', icon: Bell },
-                                { label: 'Gestionar Miembros', icon: Users },
-                                { label: 'Calendario de Cultos', icon: Calendar },
-                                { label: 'Ajustes del Sistema', icon: Shield }
-                            ].map((btn, i) => (
-                                <button key={i} className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/[0.03] border border-white/5 hover:border-[#dca54e]/30 hover:bg-white/[0.05] transition-all group">
-                                    <div className="flex items-center gap-3">
-                                        <btn.icon size={16} className="text-muted-foreground group-hover:text-[#dca54e] transition-colors" />
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-foreground">{btn.label}</span>
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dca54e]">Estado de Solicitudes</h3>
+                            <span className="px-2 py-0.5 rounded-full bg-orange-500/10 text-orange-500 text-[8px] font-black uppercase">{pendingMembers.length} Pendientes</span>
+                        </div>
+                        
+                        <div className="space-y-4">
+                            {pendingMembers.length === 0 ? (
+                                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40 italic">No hay solicitudes activas</p>
+                            ) : (
+                                pendingMembers.slice(0, 4).map((member) => (
+                                    <div key={member.id} className="flex items-center justify-between group cursor-pointer" onClick={() => setActiveTab?.('miembros')}>
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]" />
+                                            <span className="text-[10px] font-black uppercase tracking-tighter text-foreground group-hover:text-orange-500 transition-colors truncate max-w-[120px]">{member.name}</span>
+                                        </div>
+                                        <span className="text-[8px] font-bold text-muted-foreground uppercase">{member.createdAt ? format(parseISO(member.createdAt), 'dd/MM') : 'HOY'}</span>
                                     </div>
-                                    <ChevronRight size={14} className="text-muted-foreground group-hover:translate-x-1 transition-all" />
+                                ))
+                            )}
+                        </div>
+
+                        <div className="pt-4 border-t border-white/5 space-y-3">
+                            <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Protocolos Rápidos</h4>
+                            {[
+                                { label: 'Gestionar Miembros', icon: Users, tab: 'miembros' },
+                                { label: 'Bandeja de Mensajes', icon: Bell, tab: 'mensajes' },
+                                { label: 'Crear Notificación', icon: Mail, tab: 'contenido' },
+                                { label: 'Calendario de Cultos', icon: Calendar, tab: 'horarios' },
+                                { label: 'Ajustes del Sistema', icon: Shield, tab: 'configuracion' }
+                            ].map((btn, i) => (
+                                <button 
+                                    key={i} 
+                                    onClick={() => btn.tab && setActiveTab?.(btn.tab)}
+                                    className="w-full flex items-center justify-between p-3.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-[#dca54e]/30 hover:bg-white/[0.05] transition-all group"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <btn.icon size={14} className="text-muted-foreground group-hover:text-[#dca54e] transition-colors" />
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-foreground">{btn.label}</span>
+                                    </div>
+                                    <ChevronRight size={12} className="text-muted-foreground group-hover:translate-x-1 transition-all" />
                                 </button>
                             ))}
                         </div>
