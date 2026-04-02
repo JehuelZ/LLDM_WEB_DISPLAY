@@ -68,15 +68,15 @@ const AttendancePillRow = ({ label, values }: { label: string, values: number[] 
     </div>
 );
 
-const OrbitalGauge = ({ value, label, color = "#dca54e" }: any) => (
+const OrbitalGauge = ({ value, label, color = "#10b981" }: any) => (
     <div className="flex flex-col items-center gap-4 group">
         <div className="relative w-32 h-32">
-            {/* Background Circle */}
+            {/* Background Circle - Made darker for better contrast */}
             <svg className="w-full h-full transform -rotate-90">
-                <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="2" fill="transparent" className="text-white/5" />
+                <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-white/10" />
                 <motion.circle 
                     cx="64" cy="64" r="58" 
-                    stroke={color} strokeWidth="4" 
+                    stroke={color} strokeWidth="6" 
                     strokeDasharray={364}
                     initial={{ strokeDashoffset: 364 }}
                     animate={{ strokeDashoffset: 364 - (364 * value / 100) }}
@@ -88,16 +88,19 @@ const OrbitalGauge = ({ value, label, color = "#dca54e" }: any) => (
             <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-2xl font-black font-orbitron text-foreground">{value}%</span>
             </div>
-            {/* Orbital Marker */}
+            {/* Orbital Marker - Increased visibility with double glow */}
             <motion.div 
                 animate={{ rotate: 360 }}
                 transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0 p-1"
             >
-                <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_white]" style={{ backgroundColor: color }} />
+                <div 
+                    className="w-3 h-3 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.5)] border border-white/20" 
+                    style={{ backgroundColor: color }} 
+                />
             </motion.div>
         </div>
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors">{label}</span>
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-all duration-300 transform group-hover:scale-105">{label}</span>
     </div>
 );
 
@@ -235,9 +238,9 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-                        <OrbitalGauge value={Math.round((activeMembers.length / members.length) * 100)} label="Actividad" />
+                        <OrbitalGauge value={Math.round((activeMembers.length / members.length) * 100)} label="Actividad" color="#10b981" />
                         <OrbitalGauge value={88} label="Puntualidad" color="#3b82f6" />
-                        <OrbitalGauge value={92} label="Retención" color="#10b981" />
+                        <OrbitalGauge value={92} label="Retención" color="#059669" />
                         <OrbitalGauge value={75} label="Participación" color="#10b981" />
                     </div>
 
