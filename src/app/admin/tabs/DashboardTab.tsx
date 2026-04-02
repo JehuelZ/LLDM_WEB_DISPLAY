@@ -71,9 +71,9 @@ const AttendancePillRow = ({ label, values }: { label: string, values: number[] 
 const OrbitalGauge = ({ value, label, color = "#10b981" }: any) => (
     <div className="flex flex-col items-center gap-4 group">
         <div className="relative w-32 h-32">
-            {/* Background Circle - Made darker for better contrast */}
+            {/* Background Circle - Made significantly more prominent for visibility */}
             <svg className="w-full h-full transform -rotate-90">
-                <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-white/10" />
+                <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-white/20" />
                 <motion.circle 
                     cx="64" cy="64" r="58" 
                     stroke={color} strokeWidth="6" 
