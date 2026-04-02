@@ -146,6 +146,31 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         }
     }, [fontFamily, isNextFont]);
 
+    // --- DYNAMIC FAVICON SYNC ---
+    useEffect(() => {
+        if (mounted) {
+            const logoUrl = (settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/favicon.ico" : settings.churchLogoUrl;
+            
+            // Update standard icon
+            let link = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+            link.href = logoUrl;
+
+            // Update Apple Touch Icon if it exists or create one
+            let appleLink = document.querySelector("link[rel='apple-touch-icon']") as HTMLLinkElement;
+            if (!appleLink) {
+                appleLink = document.createElement('link');
+                appleLink.rel = 'apple-touch-icon';
+                document.head.appendChild(appleLink);
+            }
+            appleLink.href = logoUrl;
+        }
+    }, [settings.churchLogoUrl, mounted]);
+
     // Construct final font family for CSS
     const realFontName = googleFontNameMap[fontFamily.toLowerCase()] || fontFamily;
     const finalFontFamily = isNextFont ? nextFontVarMap[fontFamily.toLowerCase()] : `"${realFontName}"`;
