@@ -16,12 +16,13 @@ import '@/app/admin/LunaStyles.css';
 import '@/app/admin/ClassicStyles.css';
 
 export function AppWrapper({ children }: { children: React.ReactNode }) {
-    const { calendarStyles, settings, setAuthSession, syncUserWithCloud, notification, hideNotification } = useAppStore();
+    const { calendarStyles, settings, setAuthSession, syncUserWithCloud, notification, hideNotification, loadSettingsFromCloud } = useAppStore();
     const [mounted, setMounted] = useState(false);
     const isPhone = useIsPhone();
 
     useEffect(() => {
         setMounted(true);
+        loadSettingsFromCloud(); // Carga configuración pública (logo, tema, etc.) de inmediato
 
         // --- AUTH & SYNC ---
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
