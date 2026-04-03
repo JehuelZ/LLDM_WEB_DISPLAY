@@ -170,7 +170,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                         </div>
                         <div className="flex flex-col items-center">
                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] mb-1">{roleName}</span>
-                            <span className="text-[22px] font-bold text-white leading-tight">{memberName || 'Por Asignar'}</span>
+                            <span className="text-[22px] font-bold text-white leading-tight">{memberName || 'NO ASIGNADO'}</span>
                         </div>
                         {isActive && <div className="flex items-center gap-2 mt-2 px-3 py-1 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/30">
                             <Check className="w-3 h-3 text-[#3B82F6]" />
@@ -190,7 +190,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4B5563]">{roleName}</span>
-                                    <span className="text-[15px] font-semibold text-white truncate">{memberName || 'Por Asignar'}</span>
+                                    <span className="text-[15px] font-semibold text-white truncate">{memberName || 'NO ASIGNADO'}</span>
                                 </div>
                                 {isActive && <Check className="w-4 h-4 text-[#3B82F6] ml-auto flex-shrink-0" />}
                             </div>
@@ -206,7 +206,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4B5563]">{roleName2}</span>
-                                    <span className="text-[15px] font-semibold text-white truncate">{memberName2 || 'Por Asignar'}</span>
+                                    <span className="text-[15px] font-semibold text-white truncate">{memberName2 || 'NO ASIGNADO'}</span>
                                 </div>
                             </div>
                         )}
@@ -217,7 +217,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                         <div className="w-10 h-10 rounded-xl border border-[#23242F] bg-[#0F1117] flex items-center justify-center">
                             {icon}
                         </div>
-                        <span className="text-[14px] font-medium text-[#4B5563]">Por Asignar</span>
+                        <span className="text-[14px] font-medium text-[#4B5563]">NO ASIGNADO</span>
                     </div>
                 )}
             </div>
@@ -284,7 +284,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             <div className="w-14 h-14 rounded-xl border border-[#23242F] bg-[#0F1117] flex items-center justify-center">
                                 <Church className="w-6 h-6 text-[#4B5563]" />
                             </div>
-                            <span className="text-[16px] font-medium text-[#4B5563]">Por Asignar</span>
+                            <span className="text-[16px] font-medium text-[#4B5563]">NO ASIGNADO</span>
                         </div>
                     )}
                     {leaderIds.length > 0 && type === 'married' ? (
@@ -305,7 +305,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                                 {i === 0 ? 'Servicio' : 'Doctrina'}
                                             </span>
                                             <span className="text-[14px] font-semibold text-white truncate">
-                                                {detail.name || (i === 0 ? 'Por Asignar' : 'Esposa')}
+                                                {detail.name || (i === 0 ? 'NO ASIGNADO' : 'Esposa')}
                                             </span>
                                         </div>
                                         {isActive && i === 0 && <Check className="w-4 h-4 text-[#3B82F6] ml-auto flex-shrink-0" />}
@@ -331,7 +331,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                         </div>
                                         <div className="flex flex-col min-w-0">
                                             <span className="text-[9px] font-semibold uppercase tracking-widest text-[#60A5FA]">{roles[i]}</span>
-                                            <span className="text-[14px] font-semibold text-white truncate">{detail.name || 'Por Asignar'}</span>
+                                            <span className="text-[14px] font-semibold text-white truncate">{detail.name || 'NO ASIGNADO'}</span>
                                         </div>
                                     </div>
                                 );
@@ -348,7 +348,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             </div>
                             <div className="flex flex-col items-center">
                                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#60A5FA] mb-2">Consagración y Doctrina</span>
-                                <span className="text-[28px] font-black text-white leading-tight">{getMemberDetail(leaderIds.filter(Boolean)[0]).name || 'Por Asignar'}</span>
+                                <span className="text-[28px] font-black text-white leading-tight">{getMemberDetail(leaderIds.filter(Boolean)[0]).name || 'NO ASIGNADO'}</span>
                             </div>
                             {isActive && (
                                 <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#3B82F6] text-white">
@@ -435,7 +435,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             </div>
                             <div className="flex flex-col items-center">
                                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#F59E0B] mb-2">Ministro Local</span>
-                                <p className="text-[26px] font-black text-white leading-tight">{minister?.name || 'Por Asignar'}</p>
+                                <p className="text-[26px] font-black text-white leading-tight">{minister?.name || 'NO ASIGNADO'}</p>
                             </div>
                         </div>
                     ) : (

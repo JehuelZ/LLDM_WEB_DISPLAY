@@ -94,8 +94,8 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
             !compact ? "bg-[var(--tactile-card-bg)] border border-[var(--tactile-border)] backdrop-blur-md shadow-xl p-6 rounded-md" : "p-0",
             className
         )}>
-            {/* Searcher Section - FIRST POSITION */}
-            <div className="relative group/search flex-1 min-w-[200px] max-w-[280px]">
+            {/* Searcher Section - HIDDEN ON MOBILE/TABLET */}
+            <div className="relative group/search hidden xl:flex flex-1 min-w-[200px] max-w-[280px]">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-muted-foreground/30 group-focus-within/search:text-primary transition-colors">
                     <Search className="w-4 h-4" />
                 </div>
@@ -150,8 +150,8 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                 </div>
             </div>
 
-            {/* 5-Day Forecast - LINEAR INTEGRATION */}
-            <div className="flex items-center gap-2.5">
+            {/* 5-Day Forecast - HIDDEN ON MOBILE/TABLET */}
+            <div className="hidden 2xl:flex items-center gap-2.5">
                 {weather.forecast.map((f, i) => (
                     <div 
                         key={i} 

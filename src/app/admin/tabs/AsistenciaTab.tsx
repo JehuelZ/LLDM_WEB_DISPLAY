@@ -119,15 +119,15 @@ export const AsistenciaTab = ({
             className="space-y-8"
         >
             {/* Attendance Header & Controls */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.03] p-8 rounded-md border border-[var(--tactile-border)] backdrop-blur-xl">
-                <div className="flex flex-col gap-2 text-center md:text-left">
-                    <h2 className="text-3xl font-black  capitalize tracking-tighter text-foreground">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-white/[0.03] p-4 md:p-8 rounded-md border border-[var(--tactile-border)] backdrop-blur-xl">
+                <div className="flex flex-col gap-2 text-center md:text-left w-full md:w-auto">
+                    <h2 className="text-xl md:text-3xl font-black capitalize tracking-tighter text-foreground">
                         Control de <span className="text-emerald-400">Asistencia</span>
                     </h2>
-                    <div className="flex items-center justify-center md:justify-start gap-4">
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
                         <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full border border-primary/20">
                             <Calendar className="w-3.5 h-3.5 text-primary" />
-                            <span className="text-[10px] font-black capitalize text-primary">
+                            <span className="text-[10px] font-black capitalize text-primary text-center">
                                 {(() => {
                                     try {
                                         return format(parseISO(currentDate), "EEEE, d 'de' MMMM", { locale: es });
@@ -137,21 +137,21 @@ export const AsistenciaTab = ({
                                 })()}
                             </span>
                         </div>
-                        <div className="w-1.5 h-1.5 rounded-full bg-foreground/20" />
+                        <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-foreground/20" />
                         <span className="text-[10px] font-bold text-muted-foreground capitalize tracking-widest leading-none">
-                            {members.length} Miembros Registrados
+                            {members.filter(m => !m.hide_from_attendance).length} Miembros en Lista
                         </span>
                     </div>
                 </div>
 
                 <div className="flex flex-wrap justify-center gap-3">
-                    <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
+                    <div className="admin-member-filters-bar flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto w-full md:w-auto scrollbar-hide">
                         {(['5am', '9am', 'evening'] as const).map(session => (
                             <button
                                 key={session}
                                 onClick={() => setCurrentAttendanceSession(session)}
                                 className={cn(
-                                    "px-6 py-3 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                    "flex-1 md:flex-none px-4 md:px-6 py-3 rounded-md text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all duration-300 whitespace-nowrap",
                                     currentAttendanceSession === session
                                         ? "bg-[#576983] text-black transform scale-[1.02]"
                                         : "text-muted-foreground hover:text-foreground hover:bg-white/5"
@@ -174,20 +174,20 @@ export const AsistenciaTab = ({
 
             {/* Horizontal Filter Bar & Search for Attendance Groups */}
             <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="admin-member-filters-bar flex-1 flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
+                <div className="admin-member-filters-bar flex-1 flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto scrollbar-hide w-full">
                     {[
-                        { id: 'all', label: 'TODOS', count: members.length },
-                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
-                        { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.member_group === 'Casados' || m.member_group === 'Casadas').length },
-                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.member_group === 'Solos y Solas').length },
-                        { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.member_group === 'Jovenes').length },
-                        { id: 'Niños', label: 'NIÑOS', count: members.filter(m => m.member_group === 'Niños' || m.member_group === 'Niñas').length },
+                        { id: 'all', label: 'TODOS', count: members.filter(m => !m.hide_from_attendance).length },
+                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => !m.hide_from_attendance && (m.role === 'Administrador' || m.member_group === 'Administración')).length },
+                        { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => !m.hide_from_attendance && (m.member_group === 'Casados' || m.member_group === 'Casadas')).length },
+                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => !m.hide_from_attendance && m.member_group === 'Solos y Solas').length },
+                        { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => !m.hide_from_attendance && m.member_group === 'Jovenes').length },
+                        { id: 'Niños', label: 'NIÑOS', count: members.filter(m => !m.hide_from_attendance && (m.member_group === 'Niños' || m.member_group === 'Niñas')).length },
                     ].map(group => (
                         <button
                             key={group.id}
                             onClick={() => setMemberFilter(group.id)}
                             className={cn(
-                                "px-5 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                "flex-none px-4 md:px-5 py-2.5 rounded-md text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all duration-300 whitespace-nowrap",
                                 memberFilter === group.id
                                     ? "bg-[#576983] text-black transform scale-[1.02]"
                                     : "text-muted-foreground hover:text-foreground hover:bg-white/5"
@@ -223,7 +223,7 @@ export const AsistenciaTab = ({
                         </div>
                         
                         <div className="flex-1 min-h-[150px] relative">
-                            <TactileBarChart data={weeklyStats} totalMembers={members.filter(m => m.status === 'Activo').length} />
+                            <TactileBarChart data={weeklyStats} totalMembers={members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length} />
                         </div>
                     </div>
                 </TactileGlassCard>
@@ -234,7 +234,8 @@ export const AsistenciaTab = ({
                             const date = currentDate;
                             const session = currentAttendanceSession;
                             const count = (attendanceRecords[date] || []).filter(r => r.session_type === session && r.present).length;
-                            const percent = Math.round((count / (members.length || 1)) * 100);
+                            const totalEligible = members.filter(m => !m.hide_from_attendance).length;
+                            const percent = Math.round((count / (totalEligible || 1)) * 100);
                             const displayPercent = Math.max(percent, 0.5);
 
                             return (
@@ -262,7 +263,7 @@ export const AsistenciaTab = ({
                                             <div className="flex items-center gap-1 mt-1 px-2 py-0.5 bg-white/5 rounded-full border border-[var(--tactile-border-strong)]">
                                                 <span className="text-[8px] font-black text-muted-foreground/70">{count}</span>
                                                 <span className="text-[7px] font-bold text-muted-foreground/30">/</span>
-                                                <span className="text-[8px] font-black text-muted-foreground/70">{members.length}</span>
+                                                <span className="text-[8px] font-black text-muted-foreground/70">{members.filter(m => !m.hide_from_attendance).length}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -292,6 +293,7 @@ export const AsistenciaTab = ({
                         const matchesSearch = nameMatch || groupMatch;
 
                         if (!matchesSearch) return false;
+                        if (m.hide_from_attendance) return false;
 
                         if (memberFilter === 'all') return true;
                         if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';

@@ -84,7 +84,7 @@ const EmptyRow = ({ label, icon, T }: { label: string; icon: React.ReactNode; T:
         </div>
         <div>
             <p className="text-[8px] font-bold uppercase tracking-wider" style={{ color: T.textMuted }}>{label}</p>
-            <p className="text-[14px] font-semibold" style={{ color: T.textMuted }}>Por Asignar</p>
+            <p className="text-[14px] font-semibold" style={{ color: T.textMuted }}>NO ASIGNADO</p>
         </div>
     </div>
 );

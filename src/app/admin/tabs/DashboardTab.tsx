@@ -41,8 +41,8 @@ const StatBox = ({ title, value, icon: Icon, color, trend, onClick }: any) => (
             )}
         </div>
         <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">{title}</p>
-            <h3 className="text-3xl font-black text-foreground font-orbitron">{value}</h3>
+            <p className="text-[9px] lg:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">{title}</p>
+            <h3 className="text-2xl lg:text-3xl font-black text-foreground font-orbitron">{value}</h3>
         </div>
     </motion.div>
 );
@@ -69,22 +69,22 @@ const AttendancePillRow = ({ label, values }: { label: string, values: number[] 
 );
 
 const OrbitalGauge = ({ value, label, color = "#10b981" }: any) => (
-    <div className="flex flex-col items-center gap-4 group">
-        <div className="relative w-32 h-32">
+    <div className="flex flex-col items-center gap-4 group flex-shrink-0">
+        <div className="relative w-24 h-24 lg:w-32 lg:h-32">
             {/* Background Circle - Adaptive to light/dark themes */}
             <svg className="w-full h-full transform -rotate-90">
                 <circle 
-                    cx="64" cy="64" r="58" 
+                    cx="50%" cy="50%" r="44%" 
                     stroke="currentColor" strokeWidth="4" 
                     fill="transparent" 
                     className="opacity-[0.15] dark:opacity-20 text-foreground" 
                 />
                 <motion.circle 
-                    cx="64" cy="64" r="58" 
+                    cx="50%" cy="50%" r="44%" 
                     stroke={color} strokeWidth="6" 
-                    strokeDasharray={364}
-                    initial={{ strokeDashoffset: 364 }}
-                    animate={{ strokeDashoffset: 364 - (364 * value / 100) }}
+                    strokeDasharray={276}
+                    initial={{ strokeDashoffset: 276 }}
+                    animate={{ strokeDashoffset: 276 - (276 * value / 100) }}
                     strokeLinecap="round"
                     fill="transparent"
                 />
@@ -114,7 +114,8 @@ const OrbitalGauge = ({ value, label, color = "#10b981" }: any) => (
 export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) => void }) => {
     const { members, messages, settings } = useAppStore();
 
-    const activeMembers = useMemo(() => members.filter(m => m.status === 'Activo'), [members]);
+    const membershipMembers = useMemo(() => members.filter(m => !m.hide_from_membership_count), [members]);
+    const activeMembers = useMemo(() => membershipMembers.filter(m => m.status === 'Activo'), [membershipMembers]);
     const pendingMembers = useMemo(() => 
         members.filter(m => m.status === 'Pendiente' || m.is_pre_registered)
                .sort((a, b) => {
@@ -138,18 +139,18 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         <div className="w-8 h-[2px] bg-[#dca54e]" />
                         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#dca54e]">Sistema de Mando LLDM Rodeo</span>
                     </div>
-                    <h1 className="text-5xl font-black text-foreground tracking-tighter italic uppercase font-orbitron">
+                    <h1 className="text-3xl md:text-5xl font-black text-foreground tracking-tighter italic uppercase font-orbitron">
                         Consola <span className="text-[#dca54e]">Hardware</span>
                     </h1>
                 </div>
-                <div className="flex items-center gap-4 bg-card/80 backdrop-blur-md p-2 rounded-md border border-primary/10">
+                <div className="hidden md:flex items-center gap-4 bg-card/80 backdrop-blur-md p-2 rounded-md border border-primary/10">
                     <AdminClockWeather className="scale-90" />
                 </div>
             </div>
 
             {/* TOP STATS ROW */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatBox title="Miembros Totales" value={members.length} icon={Users} color="#dca54e" trend={+2.4} />
+                <StatBox title="Total de Membresía" value={membershipMembers.length} icon={Users} color="#dca54e" trend={+2.4} />
                 <StatBox title="Asistencia hoy" value="84%" icon={UserCheck} color="#3b82f6" trend={+1.1} />
                 <StatBox 
                     title="Nuevos Registros" 
@@ -242,8 +243,8 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-                        <OrbitalGauge value={Math.round((activeMembers.length / members.length) * 100)} label="Actividad" color="#10b981" />
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 mb-16 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 scrollbar-hide">
+                        <OrbitalGauge value={Math.round((activeMembers.length / (membershipMembers.length || 1)) * 100)} label="Actividad" color="#10b981" />
                         <OrbitalGauge value={88} label="Puntualidad" color="#3b82f6" />
                         <OrbitalGauge value={92} label="Retención" color="#059669" />
                         <OrbitalGauge value={75} label="Participación" color="#10b981" />

@@ -14,7 +14,7 @@ import {
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target, Contrast,
     Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert,
-    Sunrise, BookOpen, Palette, Layers, Eye, RefreshCw, Check
+    Sunrise, BookOpen, Palette, Layers, Eye, EyeOff, RefreshCw, Check
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
@@ -740,10 +740,13 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [showAddMember, setShowAddMember] = useState(false);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [newMember, setNewMember] = useState({
-        name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: ''
+        name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '',
+        hide_from_attendance: false, hide_from_membership_count: false
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
     const [editingRole, setEditingRole] = useState('Miembro');
+    const [editingHideAttendance, setEditingHideAttendance] = useState(false);
+    const [editingHideMembershipCount, setEditingHideMembershipCount] = useState(false);
 
     const searchParams = useSearchParams();
     const [fontSearch, setFontSearch] = useState('');
@@ -2985,7 +2988,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     className="h-12 px-6 text-[10px] font-black uppercase hover:bg-white/10 dark:bg-white/5 tracking-widest"
                                                     onClick={() => {
                                                         setShowAddMember(false);
-                                                        setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '' });
+                                                        setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false });
                                                     }}
                                                 >
                                                     Descartar
@@ -3000,7 +3003,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         setIsSaving(true);
                                                         const success = await addMemberToCloud(newMember);
                                                         if (success) {
-                                                            setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '' });
+                                                            setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false });
                                                             setShowAddMember(false);
                                                         }
                                                         setIsSaving(false);
@@ -3103,6 +3106,30 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <option value="Dirigente Coro Niños" className="bg-background">DIRIGENTE CORO NIÑOS</option>
                                                         <option value="Responsable de Asistencia" className="bg-background">RESPONSABLE ASIST.</option>
                                                     </select>
+
+                                                                                     <div className="flex items-center gap-2 px-2 border-l border-white/10 ml-2">
+                                                                                         <button 
+                                                                                            onClick={() => setEditingHideAttendance(!editingHideAttendance)}
+                                                                                            className={cn(
+                                                                                                "p-1.5 rounded-sm transition-all",
+                                                                                                editingHideAttendance ? "bg-red-500/20 text-red-400" : "text-slate-600 hover:text-white"
+                                                                                            )}
+                                                                                            title={editingHideAttendance ? "Oculto de asistencia" : "Visible en asistencia"}
+                                                                                         >
+                                                                                            {editingHideAttendance ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                                                                                         </button>
+                                                                                         
+                                                                                         <button 
+                                                                                            onClick={() => setEditingHideMembershipCount(!editingHideMembershipCount)}
+                                                                                            className={cn(
+                                                                                                "p-1.5 rounded-sm transition-all",
+                                                                                                editingHideMembershipCount ? "bg-red-500/20 text-red-400" : "text-slate-600 hover:text-white"
+                                                                                            )}
+                                                                                            title={editingHideMembershipCount ? "Excluido de estadísticas" : "Incluido en estadísticas"}
+                                                                                         >
+                                                                                            <ShieldAlert className="w-3.5 h-3.5" />
+                                                                                         </button>
+                                                                                     </div>
                                                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                                                 </div>
                                             </div>
@@ -3148,6 +3175,62 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <option value="Niños" className="bg-background">NIÑOS</option>
                                                     </select>
                                                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                                                </div>
+                                            </div>
+
+                                            <div className="md:col-span-2 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                                <div className={cn(
+                                                    "p-4 rounded-md border flex items-center justify-between transition-all",
+                                                    newMember.hide_from_attendance 
+                                                        ? (settings.adminTheme === 'primitivo' ? "bg-red-500/10 border-red-500/30" : "bg-red-500/5 border-red-500/20")
+                                                        : (settings.adminTheme === 'primitivo' ? "bg-emerald-500/5 border-white/5" : "bg-emerald-500/5 border-border/10")
+                                                )}>
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="flex items-center gap-2">
+                                                            <EyeOff className={cn("w-3.5 h-3.5", newMember.hide_from_attendance ? "text-red-400" : "text-emerald-400")} />
+                                                            <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Excluir de Pase de Lista</span>
+                                                        </div>
+                                                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tight">NO APARECERÁ EN LA LISTA DE ASISTENCIA DIARIA</p>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setNewMember({ ...newMember, hide_from_attendance: !newMember.hide_from_attendance })}
+                                                        className={cn(
+                                                            "w-12 h-6 rounded-full relative transition-all duration-300",
+                                                            newMember.hide_from_attendance ? "bg-red-500" : "bg-slate-700"
+                                                        )}
+                                                    >
+                                                        <div className={cn(
+                                                            "absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300",
+                                                            newMember.hide_from_attendance ? "left-7" : "left-1"
+                                                        )} />
+                                                    </button>
+                                                </div>
+
+                                                <div className={cn(
+                                                    "p-4 rounded-md border flex items-center justify-between transition-all",
+                                                    newMember.hide_from_membership_count
+                                                        ? (settings.adminTheme === 'primitivo' ? "bg-red-500/10 border-red-500/30" : "bg-red-500/5 border-red-500/20")
+                                                        : (settings.adminTheme === 'primitivo' ? "bg-emerald-500/5 border-white/5" : "bg-emerald-500/5 border-border/10")
+                                                )}>
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="flex items-center gap-2">
+                                                            <ShieldAlert className={cn("w-3.5 h-3.5", newMember.hide_from_membership_count ? "text-red-400" : "text-emerald-400")} />
+                                                            <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Excluir del Conteo Total</span>
+                                                        </div>
+                                                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tight">NO CONTARÁ PARA ESTADÍSTICAS GLOBALES DE MEMBRESÍA</p>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setNewMember({ ...newMember, hide_from_membership_count: !newMember.hide_from_membership_count })}
+                                                        className={cn(
+                                                            "w-12 h-6 rounded-full relative transition-all duration-300",
+                                                            newMember.hide_from_membership_count ? "bg-red-500" : "bg-slate-700"
+                                                        )}
+                                                    >
+                                                        <div className={cn(
+                                                            "absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300",
+                                                            newMember.hide_from_membership_count ? "left-7" : "left-1"
+                                                        )} />
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -3435,6 +3518,30 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                         <option value="Dirigente Coro Niños" className="bg-[#0f172a]">DIRIGENTE CORO NIÑOS</option>
                                                                                         <option value="Responsable de Asistencia" className="bg-[#0f172a]">RESPONSABLE ASIST.</option>
                                                                                     </select>
+
+                                                                                     <div className="flex items-center gap-2 px-2 border-l border-white/10 ml-2">
+                                                                                         <button 
+                                                                                            onClick={() => setEditingHideAttendance(!editingHideAttendance)}
+                                                                                            className={cn(
+                                                                                                "p-1.5 rounded-sm transition-all",
+                                                                                                editingHideAttendance ? "bg-red-500/20 text-red-400" : "text-slate-600 hover:text-white"
+                                                                                            )}
+                                                                                            title={editingHideAttendance ? "Oculto de asistencia" : "Visible en asistencia"}
+                                                                                         >
+                                                                                            {editingHideAttendance ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                                                                                         </button>
+                                                                                         
+                                                                                         <button 
+                                                                                            onClick={() => setEditingHideMembershipCount(!editingHideMembershipCount)}
+                                                                                            className={cn(
+                                                                                                "p-1.5 rounded-sm transition-all",
+                                                                                                editingHideMembershipCount ? "bg-red-500/20 text-red-400" : "text-slate-600 hover:text-white"
+                                                                                            )}
+                                                                                            title={editingHideMembershipCount ? "Excluido de estadísticas" : "Incluido en estadísticas"}
+                                                                                         >
+                                                                                            <ShieldAlert className="w-3.5 h-3.5" />
+                                                                                         </button>
+                                                                                     </div>
                                                                                     <div className="flex items-center gap-1.5">
                                                                                         <button 
                                                                                             onClick={() => setEditingMemberId(null)} 
@@ -3447,7 +3554,11 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                             whileHover={{ scale: 1.1 }}
                                                                                             whileTap={{ scale: 0.9 }}
                                                                                             onClick={async () => {
-                                                                                                await updateProfileInCloud(m.id, { role: editingRole as any });
+                                                                                                 await updateProfileInCloud(m.id, { 
+                                                                                                     role: editingRole as any,
+                                                                                                     hide_from_attendance: editingHideAttendance,
+                                                                                                     hide_from_membership_count: editingHideMembershipCount
+                                                                                                 });
                                                                                                 await loadMembersFromCloud();
                                                                                                 setEditingMemberId(null);
                                                                                             }}
@@ -3469,6 +3580,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                         onClick={() => {
                                                                                             setEditingMemberId(m.id);
                                                                                             setEditingRole(m.role);
+                                                                                             setEditingHideAttendance(m.hide_from_attendance || false);
+                                                                                             setEditingHideMembershipCount(m.hide_from_membership_count || false);
                                                                                         }}
                                                                                         className="p-2 rounded-md bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/[0.03]"
                                                                                     >

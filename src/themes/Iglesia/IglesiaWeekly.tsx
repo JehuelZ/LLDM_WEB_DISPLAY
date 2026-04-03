@@ -557,7 +557,7 @@ export function IglesiaWeekly() {
                                                                 </div>
                                                                 <div style={{ textAlign: 'center' }}>
                                                                     <p style={{ fontSize: 13, fontWeight: 700, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), lineHeight: 1.1, fontFamily: T.fontMontserrat, marginBottom: 4 }}>
-                                                                        {consec9am?.name === doctrine9am?.name ? (consec9am?.name || 'Por Asignar') : `${consec9am?.name || 'Por Asignar'} | ${doctrine9am?.name || 'Por Asignar'}`}
+                                                                        {consec9am?.name === doctrine9am?.name ? (consec9am?.name || 'NO ASIGNADO') : `${consec9am?.name || 'NO ASIGNADO'} | ${doctrine9am?.name || 'NO ASIGNADO'}`}
                                                                     </p>
                                                                     <div style={{ display: 'flex', gap: 6, justifyContent: 'center', opacity: isActive ? 1 : 0.8 }}>
                                                                         <RoleBadge label="Cons." icon={Sunrise} T={T} isDark={isDark} />
@@ -685,7 +685,7 @@ export function IglesiaWeekly() {
                                                             </div>
                                                             <div style={{ textAlign: 'center' }}>
                                                                 <p style={{ fontSize: 13, fontWeight: 700, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), lineHeight: 1.1, fontFamily: T.fontMontserrat, marginBottom: 4 }}>
-                                                                    {evLeaders[0]?.name === evLeaders[1]?.name ? (evLeaders[0]?.name || 'Por Asignar') : `${evLeaders[0]?.name || 'Por Asignar'} | ${evLeaders[1]?.name || 'Por Asignar'}`}
+                                                                    {evLeaders[0]?.name === evLeaders[1]?.name ? (evLeaders[0]?.name || 'NO ASIGNADO') : `${evLeaders[0]?.name || 'NO ASIGNADO'} | ${evLeaders[1]?.name || 'NO ASIGNADO'}`}
                                                                 </p>
                                                                 <div style={{ display: 'flex', gap: 6, justifyContent: 'center', opacity: isActive ? 1 : 0.8 }}>
                                                                     <RoleBadge label={isSun ? "Director" : "Cons."} icon={isSun ? User : Sunrise} T={T} isDark={isDark} />

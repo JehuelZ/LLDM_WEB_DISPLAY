@@ -74,7 +74,7 @@ export const GlassmorphismWeekly = () => {
         const cleanId = id.trim().toLowerCase();
         const member = members.find((m: any) => m.id.toLowerCase() === cleanId);
         return {
-            name: member ? member.name : (id.length > 20 ? 'Asignado' : id),
+            name: member ? member.name : (id.length > 20 ? 'HERMANO ASIGNADO' : (id || 'NO ASIGNADO')),
             avatar: member?.avatar || null,
         };
     };
@@ -227,7 +227,7 @@ export const GlassmorphismWeekly = () => {
                                                         slotKey === '9am' ? (isSunday ? 'DOMINICAL' : 'CONS. | DOCTRINA') :
                                                             (() => {
                                                                 const sOut = (day.sched?.slots as any)?.evening;
-                                                                if (sOut?.customLabel) return sOut.customLabel.toUpperCase();
+                                                                if (sOut?.customLabel) return (sOut.customLabel || '').toUpperCase();
                                                                 switch (sOut?.type) {
                                                                     case 'youth': return 'JÓVENES';
                                                                     case 'praise': return 'ALABANZA';

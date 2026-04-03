@@ -86,7 +86,7 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
                 letterSpacing: '-0.02em', fontFamily: T.fontMontserrat,
                 margin: 0, display: 'flex', gap: 6, alignItems: 'center'
             }}>
-                {name.toUpperCase() || 'LLDM'} <span style={{ color: T.accent, fontSize: 13, fontWeight: 800, letterSpacing: '0.1em', opacity: 0.9 }}>RODEO</span>
+                {(name || '').toUpperCase() || 'LLDM'} <span style={{ color: T.accent, fontSize: 13, fontWeight: 800, letterSpacing: '0.1em', opacity: 0.9 }}>RODEO</span>
             </h2>
         </div>
     );

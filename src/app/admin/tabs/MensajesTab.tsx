@@ -38,14 +38,14 @@ export const MensajesTab = ({
             className="max-w-5xl mx-auto space-y-10"
         >
             {/* INBOX HEADER - INDUSTRIAL MONITOR STYLE */}
-            <div className="relative p-8 rounded-[40px] bg-[#0b101e] border-t-4 border-t-[#dca54e] border-x border-b border-[#dca54e]/10 overflow-hidden shadow-2xl">
-                <div className="absolute top-0 right-0 p-6 flex gap-3 items-center">
+            <div className="relative p-6 md:p-8 rounded-2xl md:rounded-[40px] bg-[#0b101e] border-t-4 border-t-[#dca54e] border-x border-b border-[#dca54e]/10 overflow-hidden shadow-2xl">
+                <div className="absolute top-0 right-0 p-4 md:p-6 flex gap-3 items-center">
                     <div className="flex gap-1.5">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#dca54e] animate-pulse" />
                         <div className="w-1.5 h-1.5 rounded-full bg-[#dca54e]/40" />
                         <div className="w-1.5 h-1.5 rounded-full bg-[#dca54e]/20" />
                     </div>
-                    <span className="text-[8px] font-black uppercase tracking-[0.4em] text-[#dca54e]/60">CONSOLA ACTIVA</span>
+                    <span className="hidden sm:inline text-[8px] font-black uppercase tracking-[0.4em] text-[#dca54e]/60">CONSOLA ACTIVA</span>
                 </div>
                 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -56,19 +56,19 @@ export const MensajesTab = ({
                             </div>
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dca54e]">Canal de Comunicaciones</span>
                         </div>
-                        <h2 className="text-4xl font-black font-orbitron text-white italic tracking-tighter uppercase">
+                        <h2 className="text-2xl md:text-4xl font-black font-orbitron text-white italic tracking-tighter uppercase">
                             Buzón de <span className="text-[#dca54e]">Mensajes</span>
                         </h2>
                     </div>
-                    <div className="flex items-center gap-4 bg-black/40 p-4 rounded-md border border-white/5">
-                        <div className="text-right">
-                            <p className="text-[8px] font-black uppercase text-muted-foreground tracking-widest mb-1">Total Entrantes</p>
-                            <p className="text-2xl font-black font-orbitron text-white">{adminMessages.length}</p>
+                    <div className="flex items-center gap-4 bg-black/40 p-3 md:p-4 rounded-md border border-white/5 w-full md:w-auto overflow-x-auto">
+                        <div className="text-right flex-1 md:flex-none">
+                            <p className="text-[7px] md:text-[8px] font-black uppercase text-muted-foreground tracking-widest mb-1">Total</p>
+                            <p className="text-lg md:text-2xl font-black font-orbitron text-white">{adminMessages.length}</p>
                         </div>
-                        <div className="w-px h-10 bg-white/10" />
-                        <div className="text-right">
-                            <p className="text-[8px] font-black uppercase text-primary tracking-widest mb-1">Sin Leer</p>
-                            <p className="text-2xl font-black font-orbitron text-primary">{adminMessages.filter(m => !m.isRead).length}</p>
+                        <div className="w-px h-8 md:h-10 bg-white/10" />
+                        <div className="text-right flex-1 md:flex-none">
+                            <p className="text-[7px] md:text-[8px] font-black uppercase text-primary tracking-widest mb-1">Sin Leer</p>
+                            <p className="text-lg md:text-2xl font-black font-orbitron text-primary">{adminMessages.filter(m => !m.isRead).length}</p>
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ export const MensajesTab = ({
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.1 }}
                             className={cn(
-                                "group relative p-8 rounded-[35px] border transition-all duration-500",
+                                "group relative p-4 md:p-8 rounded-2xl md:rounded-[35px] border transition-all duration-500",
                                 !msg.isRead 
                                     ? "bg-[#0b101e] border-[#dca54e]/40 shadow-[0_20px_50px_rgba(220,165,78,0.1)]" 
                                     : "bg-black/20 border-white/5 opacity-80"
@@ -99,8 +99,8 @@ export const MensajesTab = ({
                         >
                             {/* NEW MESSAGE BADGE */}
                             {!msg.isRead && (
-                                <div className="absolute top-0 left-12 -translate-y-1/2 bg-[#dca54e] text-black text-[8px] font-black uppercase tracking-[0.3em] px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(220,165,78,0.4)]">
-                                    Nuevo Mensaje
+                                <div className="absolute top-0 left-6 md:left-12 -translate-y-1/2 bg-[#dca54e] text-black text-[7px] md:text-[8px] font-black uppercase tracking-[0.3em] px-3 md:px-4 py-1 md:py-1.5 rounded-full shadow-[0_0_15px_rgba(220,165,78,0.4)]">
+                                    Nuevo
                                 </div>
                             )}
 
@@ -130,7 +130,7 @@ export const MensajesTab = ({
                                 {/* Message Content - Massive Area */}
                                 <div className="flex-1 space-y-6">
                                     <div className="relative">
-                                        <p className="text-base font-medium text-white/90 leading-relaxed italic bg-white/5 p-8 rounded-[30px] border border-white/5">
+                                        <p className="text-sm md:text-base font-medium text-white/90 leading-relaxed italic bg-white/5 p-5 md:p-8 rounded-xl md:rounded-[30px] border border-white/5">
                                             "{msg.content}"
                                         </p>
                                     </div>

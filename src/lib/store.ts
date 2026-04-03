@@ -118,6 +118,8 @@ export interface UserProfile {
     bio?: string;
     favorite_verse?: string;
     createdAt?: string;
+    hide_from_attendance?: boolean;
+    hide_from_membership_count?: boolean;
 }
 
 export interface CalendarStyles {
@@ -675,7 +677,9 @@ export const useAppStore = create<AppState>()(
                             stats: p.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
                             privileges: p.roles || [],
                             is_pre_registered: p.is_pre_registered || false,
-                            bio: p.bio || ''
+                            bio: p.bio || '',
+                            hide_from_attendance: p.hide_from_attendance || false,
+                            hide_from_membership_count: p.hide_from_membership_count || false
                         }));
 
                         // Sincronizar estado del Ministro si se encuentra en la lista oficial
@@ -749,6 +753,9 @@ export const useAppStore = create<AppState>()(
                     // Unified bio and verse mapping (confirmed in production schema)
                     if ('bio' in updates) dbUpdates.bio = updates.bio;
                     if ('favorite_verse' in updates) dbUpdates.favorite_verse = (updates as any).favorite_verse || (updates as any).favoriteVerse;
+                    
+                    if ('hide_from_attendance' in updates) dbUpdates.hide_from_attendance = updates.hide_from_attendance;
+                    if ('hide_from_membership_count' in updates) dbUpdates.hide_from_membership_count = updates.hide_from_membership_count;
 
                     console.log('UpdateProfile: Final dbUpdates for Supabase:', dbUpdates);
 
@@ -1196,6 +1203,10 @@ export const useAppStore = create<AppState>()(
                 if (member.avatarUrl) insertData.avatar_url = member.avatarUrl;
                 if (member.avatar) insertData.avatar_url = member.avatar;
                 if (member.privileges) insertData.roles = member.privileges;
+                // @ts-ignore - added fields
+                if (member.hide_from_attendance !== undefined) insertData.hide_from_attendance = member.hide_from_attendance;
+                // @ts-ignore - added fields
+                if (member.hide_from_membership_count !== undefined) insertData.hide_from_membership_count = member.hide_from_membership_count;
                 // if (member.bio) insertData.bio = member.bio;
 
                 console.log('Adding member:', insertData);

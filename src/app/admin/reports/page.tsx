@@ -68,50 +68,52 @@ export default function ReportsPage() {
     };
 
     return (
-        <div className="p-8 space-y-8 max-w-7xl mx-auto">
+        <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
-                <div>
-                    <h2 className="text-4xl font-black tracking-tighter text-white uppercase flex items-center gap-3">
-                        <FileText className="h-10 w-10 text-emerald-500" />
+                <div className="w-full md:w-auto">
+                    <h2 className="text-2xl md:text-4xl font-black tracking-tighter text-white uppercase flex items-center gap-3">
+                        <FileText className="h-6 w-6 md:h-10 md:w-10 text-emerald-500" />
                         Reportes <span className="text-emerald-500">Sintetizados</span>
                     </h2>
-                    <p className="text-slate-500 font-bold tracking-widest uppercase text-xs mt-1">
+                    <p className="text-slate-500 font-bold tracking-widest uppercase text-[10px] md:text-xs mt-1">
                         Análisis de Fidelidad e Impacto en la Iglesia
                     </p>
                 </div>
-                <div className="flex items-center gap-3">
-                    <div className="bg-white/5 border border-white/10 p-1 rounded-md flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <div className="bg-white/5 border border-white/10 p-1 rounded-md flex items-center gap-2 flex-1 md:flex-none justify-between">
                         <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="text-[10px] font-black uppercase"
+                            className="text-[9px] md:text-[10px] font-black uppercase px-2 md:px-3"
                             onClick={() => showNotification('Filtrado avanzado próximamente', 'info')}
                         >
-                            <Filter className="w-3 h-3 mr-2 text-emerald-500" /> Filtrar
+                            <Filter className="w-3 h-3 mr-1 md:mr-2 text-emerald-500" /> Filtrar
                         </Button>
                         <div className="w-px h-4 bg-white/10" />
                         <button 
-                            className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-black uppercase text-white hover:text-emerald-400 transition-colors"
+                            className="flex items-center gap-2 px-2 md:px-3 py-1.5 text-[9px] md:text-[10px] font-black uppercase text-white hover:text-emerald-400 transition-colors whitespace-nowrap"
                             onClick={() => showNotification('Selección de mes próximamente', 'info')}
                         >
                             {selectedMonth} <ChevronDown className="w-3 h-3" />
                         </button>
                     </div>
-                    <Button onClick={handlePrint} variant="outline" className="border-white/10 bg-white/5 hover:bg-white/10 gap-2 font-black uppercase text-[10px]">
-                        <Printer className="w-4 h-4" /> Imprimir
-                    </Button>
-                    <Button
-                        onClick={handleDownload}
-                        disabled={isGenerating}
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white gap-2 font-black uppercase text-[10px] min-w-[140px]"
-                    >
-                        {isGenerating ? (
-                            <>Generando...</>
-                        ) : (
-                            <><Download className="w-4 h-4" /> Exportar PDF</>
-                        )}
-                    </Button>
+                    <div className="flex items-center gap-2 w-full md:w-auto">
+                        <Button onClick={handlePrint} variant="outline" className="flex-1 md:flex-none border-white/10 bg-white/5 hover:bg-white/10 gap-2 font-black uppercase text-[10px] h-10">
+                            <Printer className="w-4 h-4" /> <span className="hidden sm:inline">Imprimir</span>
+                        </Button>
+                        <Button
+                            onClick={handleDownload}
+                            disabled={isGenerating}
+                            className="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-500 text-white gap-2 font-black uppercase text-[10px] h-10"
+                        >
+                            {isGenerating ? (
+                                <>...</>
+                            ) : (
+                                <><Download className="w-4 h-4" /> <span className="hidden sm:inline">Exportar</span> PDF</>
+                            )}
+                        </Button>
+                    </div>
                 </div>
             </div>
 

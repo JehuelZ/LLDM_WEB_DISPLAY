@@ -28,7 +28,7 @@ export function MidnightGlowCalendar() {
         const cleanId = id.trim().toLowerCase();
         const member = members.find((m: any) => m.id.toLowerCase() === cleanId);
         return {
-            name: member ? member.name : (id.length > 20 ? 'Asignado' : id),
+            name: member ? member.name : (id.length > 20 ? 'HERMANO ASIGNADO' : (id || 'NO ASIGNADO')),
             avatar: member?.avatar || null,
         };
     };
@@ -81,7 +81,7 @@ export function MidnightGlowCalendar() {
 
     const formatAbbrTime = (timeStr?: string, defaultFallback: string = "") => {
         if (!timeStr) return defaultFallback;
-        let t = timeStr.toUpperCase().replace(/\s/g, '');
+        let t = (timeStr || '').toUpperCase().replace(/\s/g, '');
         if (t.startsWith('0')) t = t.substring(1);
         t = t.replace(':00', '');
         return t;

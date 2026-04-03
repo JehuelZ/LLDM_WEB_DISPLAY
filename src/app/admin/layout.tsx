@@ -104,6 +104,7 @@ function AdminLayoutContent({
     const [mounted, setMounted] = useState(false);
     const [collapsed, setCollapsed] = useState(false);
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const searchParams = useSearchParams();
     const currentTab = searchParams.get('tab') || 'dashboard';
 
@@ -240,12 +241,25 @@ function AdminLayoutContent({
 
     return (
         <div className={cn("min-h-screen bg-background text-foreground flex overflow-hidden", themeClass)}>
-            {/* Sidebar */}
+            {/* Sidebar Desktop/Mobile */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+                    />
+                )}
+            </AnimatePresence>
+
             <aside 
                 id="admin-sidebar-master"
                 className={cn(
-                "relative h-screen flex flex-col transition-all duration-300 z-50 admin-sidebar-v2 overflow-visible border-r border-border/10",
-                collapsed ? "w-24" : "w-64",
+                "fixed inset-y-0 left-0 lg:relative h-screen flex flex-col transition-all duration-300 z-[60] admin-sidebar-v2 overflow-visible border-r border-border/10",
+                collapsed ? "lg:w-24" : "lg:w-64",
+                isMobileMenuOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full lg:translate-x-0",
                 themeClass === 'admin-theme-primitivo' 
                     ? "admin-sidebar-isolation-primitivo" 
                     : themeClass === 'admin-theme-tactile'
@@ -254,7 +268,7 @@ function AdminLayoutContent({
             )}>
                 <button
                     onClick={() => setCollapsed(!collapsed)}
-                    className="absolute -right-3.5 top-20 w-7 h-7 bg-[#10b981] rounded-md flex items-center justify-center z-[60] text-white hover:scale-110 transition-transform border-none active:scale-95 shadow-lg"
+                    className="hidden lg:flex absolute -right-3.5 top-20 w-7 h-7 bg-[#10b981] rounded-md items-center justify-center z-[60] text-white hover:scale-110 transition-transform border-none active:scale-95 shadow-lg"
                     title={collapsed ? "Expandir" : "Contraer"}
                 >
                     {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -593,11 +607,18 @@ function AdminLayoutContent({
 
             <div className="flex-1 flex flex-col min-w-0 bg-background relative transition-all duration-300">
                 <header className={cn(
-                    "h-20 px-8 flex items-center justify-between z-30 shrink-0 border-b",
+                    "h-16 lg:h-20 px-4 lg:px-8 flex items-center justify-between z-30 shrink-0 border-b",
                     settings.themeMode === 'light' ? "bg-white/40 border-black/5" : "bg-slate-900/40 border-white/5"
                 )}>
-                    {/* Identity + Breadcrumb (Pizarra) */}
-                    <div className="flex items-center gap-6">
+                    {/* Mobile Menu Toggle + Identity */}
+                    <div className="flex items-center gap-4 lg:gap-6">
+                        <button 
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            className="w-10 h-10 flex lg:hidden items-center justify-center rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                        >
+                            <Menu className="w-5 h-5" />
+                        </button>
+                        
                         <div className="flex flex-col">
                             <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/80 leading-none">
                                 Bienvenido, <span className="text-foreground">{currentUser?.name.split(' ')[0] || 'Admin'}</span>
@@ -609,7 +630,7 @@ function AdminLayoutContent({
                         
                         <div className={cn("w-[1px] h-8 mx-2", settings.themeMode === 'light' ? "bg-black/10" : "bg-white/5")} />
 
-                        <div className="flex flex-col">
+                        <div className="hidden sm:flex flex-col">
                             <span className={cn("text-[10px] font-black uppercase tracking-[0.4em] opacity-40 leading-none", settings.themeMode === 'light' ? "text-slate-600" : "text-muted-foreground")}>Pizarra</span>
                             <span className="text-[12px] font-black uppercase tracking-tighter text-foreground mt-1.5 font-sans">
                                 {currentTab === 'dashboard' ? 'Principal' : currentTab}
@@ -631,7 +652,7 @@ function AdminLayoutContent({
                             <button
                                 onClick={() => (document.getElementById('global-sync-btn') as HTMLElement)?.click()}
                                 className={cn(
-                                    "w-10 h-10 rounded-md flex items-center justify-center transition-all group border",
+                                    "w-9 h-9 lg:w-10 lg:h-10 rounded-md flex items-center justify-center transition-all group border",
                                     settings.themeMode === 'light' 
                                         ? "bg-white border-black/[0.05] text-slate-500 hover:text-emerald-600 hover:border-emerald-500/30 shadow-sm" 
                                         : "bg-white/5 border-white/5 text-white/40 hover:text-primary hover:bg-primary/20"
@@ -641,12 +662,12 @@ function AdminLayoutContent({
                                 <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" />
                             </button>
 
-                            {/* Global Calendar */}
-                            <div className="relative">
+                            {/* Global Calendar - Hidden in very small devices to save space */}
+                            <div className="relative hidden md:block">
                                 <button 
                                     onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                                     className={cn(
-                                        "h-10 px-4 rounded-md border text-[9px] font-black uppercase tracking-widest tabular-nums transition-colors flex items-center gap-2",
+                                        "h-9 lg:h-10 px-3 lg:px-4 rounded-md border text-[9px] font-black uppercase tracking-widest tabular-nums transition-colors flex items-center gap-2",
                                         settings.themeMode === 'light' 
                                             ? "bg-slate-100 border-slate-200 text-slate-600 hover:text-primary" 
                                             : "bg-white/5 border-white/5 text-white/60 hover:text-primary"
@@ -683,23 +704,23 @@ function AdminLayoutContent({
                                 </AnimatePresence>
                             </div>
 
-                            <Link href="/display" target="_blank">
-                                <button className="h-10 px-6 rounded-md bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
+                            <Link href="/display" target="_blank" className="hidden sm:block">
+                                <button className="h-9 lg:h-10 px-4 lg:px-6 rounded-md bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
                                     <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                                    <span>Pizarra</span>
+                                    <span className="hidden lg:inline">Pizarra</span>
                                 </button>
                             </Link>
                         </div>
                         
-                        <div className="w-[1px] h-8 bg-white/5" />
+                        <div className="hidden sm:block w-[1px] h-8 bg-white/5" />
 
                         {/* User Profile Mini */}
                         <div className="flex items-center gap-3">
-                            <div className="flex flex-col items-end">
+                            <div className="hidden md:flex flex-col items-end">
                                 <span className="text-[9px] font-black uppercase tracking-widest text-primary leading-none opacity-60">ADMINISTRADOR</span>
                                 <span className="text-xs font-bold text-foreground mt-1">{currentUser?.name?.split(' ')[0]}</span>
                             </div>
-                            <div className="w-10 h-10 rounded-md bg-white/5 border border-white/10 flex items-center justify-center p-1">
+                            <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-md bg-white/5 border border-white/10 flex items-center justify-center p-1">
                                 <img src={currentUser?.avatar || `https://ui-avatars.com/api/?name=${currentUser?.name}&background=random`} className="w-full h-full object-cover rounded-md" alt="Admin" />
                             </div>
                         </div>
@@ -707,7 +728,7 @@ function AdminLayoutContent({
                 </header>
 
                 {/* Content Area - Minimized Padding */}
-                <div className="flex-1 p-4 md:p-6 lg:p-8 relative z-10 overflow-y-auto">
+                <div className="flex-1 p-4 md:p-6 lg:p-8 pb-32 lg:pb-8 relative z-10 overflow-y-auto">
                     {(settings.adminTheme as any) === 'luna' ? (
                         <LunaAdmin propTab={currentTab} isSubpage={pathname !== '/admin'}>
                             {children}
@@ -720,6 +741,56 @@ function AdminLayoutContent({
                         children
                     )}
                 </div>
+
+                {/* TACTILE BOTTOM DOCK - MOBILE ONLY */}
+                <motion.div 
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] lg:hidden w-[calc(100%-32px)] max-w-md"
+                >
+                    <div className={cn(
+                        "flex items-center justify-around h-16 px-2 rounded-2xl border backdrop-blur-2xl shadow-2xl transition-all duration-500",
+                        settings.themeMode === 'light' 
+                            ? "bg-white/80 border-black/5 shadow-black/10" 
+                            : "bg-slate-900/90 border-white/10 shadow-black/40"
+                    )}>
+                        {[
+                            { id: 'dashboard', icon: LayoutDashboard, label: 'Inicio', path: '/admin?tab=dashboard' },
+                            { id: 'members', icon: Users, label: 'Miembros', path: '/admin/members' },
+                            { id: 'asistencia', icon: ClipboardCheck, label: 'Asistencia', path: '/admin?tab=asistencia' },
+                            { id: 'mensajes', icon: Bell, label: 'Inbox', path: '/admin?tab=mensajes' },
+                            { id: 'configuracion', icon: Settings, label: 'Panel', path: '/admin?tab=configuracion' }
+                        ].map((item) => {
+                            const isActive = item.path.includes('/admin/members') ? pathname === '/admin/members' : currentTab === item.id;
+                            
+                            return (
+                                <Link 
+                                    key={item.id} 
+                                    href={item.path}
+                                    className="relative flex flex-col items-center justify-center w-12 h-12 group"
+                                >
+                                    {isActive && (
+                                        <motion.div 
+                                            layoutId="activeDockItem"
+                                            className="absolute inset-0 bg-primary/10 rounded-xl border border-primary/20"
+                                            transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                                        />
+                                    )}
+                                    <item.icon className={cn(
+                                        "w-5 h-5 transition-all duration-300 relative z-10",
+                                        isActive ? "text-primary scale-110" : "text-muted-foreground group-hover:text-foreground"
+                                    )} />
+                                    <span className={cn(
+                                        "text-[7px] font-black uppercase tracking-[0.2em] mt-1 transition-all duration-300 relative z-10",
+                                        isActive ? "text-primary opacity-100" : "text-muted-foreground opacity-40"
+                                    )}>
+                                        {item.label}
+                                    </span>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </motion.div>
             </div>
         </div>
     );

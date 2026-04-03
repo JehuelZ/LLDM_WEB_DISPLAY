@@ -276,7 +276,7 @@ export default function MembersPage() {
     }, 0) / members.length * 100) : 0;
 
     return (
-        <div className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="p-4 lg:p-8 space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             {/* Header */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
@@ -389,7 +389,7 @@ export default function MembersPage() {
             {/* Members Tabs */}
             <div className={cn(
                 "flex flex-wrap items-center gap-1 transition-all duration-300",
-                settings.adminTheme === 'primitivo' ? "primitivo-nav-bar" : "bg-slate-900/40 border-white/5 admin-member-filters-bar p-1 rounded-none border w-fit backdrop-blur-xl"
+                settings.adminTheme === 'primitivo' ? "primitivo-nav-bar" : "bg-slate-900/40 border-white/5 admin-member-filters-bar p-1 rounded-none border w-full lg:w-fit backdrop-blur-xl"
             )}>
                 {[
                     { id: 'todos', label: 'todos', icon: Users },
@@ -404,18 +404,18 @@ export default function MembersPage() {
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id as any)}
                         className={cn(
-                            "transition-all flex items-center gap-3",
+                            "transition-all flex items-center gap-3 flex-1 lg:flex-none justify-center lg:justify-start min-w-[100px]",
                             settings.adminTheme === 'primitivo'
                                 ? cn("primitivo-nav-item", activeTab === tab.id && "active")
                                 : cn(
-                                    "px-6 py-3 rounded-none text-[10px] uppercase tracking-[0.3em] font-[family-name:var(--font-poppins)]",
+                                    "px-4 lg:px-6 py-2.5 lg:py-3 rounded-none text-[9px] lg:text-[10px] uppercase tracking-[0.2em] lg:tracking-[0.3em] font-[family-name:var(--font-poppins)]",
                                     activeTab === tab.id
                                         ? "bg-white/10 text-white border-b-2 border-white/50"
                                         : "text-white/30 hover:text-white hover:bg-white/5 font-light"
                                 )
                         )}
                     >
-                        <tab.icon className="w-3.5 h-3.5" /> {tab.label.toLowerCase()}
+                        <tab.icon className="w-3 h-3 lg:w-3.5 lg:h-3.5" /> {tab.label.toLowerCase()}
                     </button>
                 ))}
             </div>
@@ -466,7 +466,92 @@ export default function MembersPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="p-0">
-                    <div className="overflow-x-auto">
+                    {/* Mobile Card View - ONLY VISIBLE ON SMALL SCREENS */}
+                    <div className="lg:hidden p-4 space-y-4">
+                        {filteredMembers.map((member: Member) => (
+                            <div 
+                                key={member.id} 
+                                className={cn(
+                                    "p-4 rounded-md border flex flex-col gap-4 animate-in slide-in-from-right-4 duration-500",
+                                    settings.adminTheme === 'primitivo' 
+                                        ? "bg-emerald-500/[0.05] border-emerald-500/10" 
+                                        : "bg-white/[0.03] border-white/5"
+                                )}
+                                onClick={() => setExpandedMember(expandedMember === member.id ? null : member.id)}
+                            >
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <div className={cn(
+                                            "h-12 w-12 rounded-full border-2 flex items-center justify-center overflow-hidden",
+                                            member.status === 'Activo' ? "border-emerald-500" : "border-slate-600"
+                                        )}>
+                                            {member.avatar ? (
+                                                <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <span className="text-lg font-bold text-primary">{member.name.charAt(0)}</span>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <div className="font-black text-sm uppercase tracking-tight">{member.name}</div>
+                                            <div className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">{member.role}</div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col items-end gap-1">
+                                        <span className={cn(
+                                            "text-[8px] font-black px-1.5 py-0.5 rounded uppercase",
+                                            member.status === 'Activo' ? "bg-emerald-500/20 text-emerald-500" : "bg-slate-500/20 text-slate-500"
+                                        )}>
+                                            {member.status}
+                                        </span>
+                                        <div className="text-[10px] font-black text-primary">{((member.stats?.attendance?.attended || 0) / (member.stats?.attendance?.total || 1) * 100).toFixed(0)}%</div>
+                                    </div>
+                                </div>
+
+                                {expandedMember === member.id && (
+                                    <div className="pt-4 border-t border-white/5 grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                                        <div className="space-y-1">
+                                            <p className="text-[8px] text-muted-foreground uppercase font-black">Contacto</p>
+                                            <p className="text-[10px] truncate">{member.email}</p>
+                                        </div>
+                                        <div className="space-y-1">
+                                            <p className="text-[8px] text-muted-foreground uppercase font-black">Categoría</p>
+                                            <p className="text-[10px]">{member.gender === 'Varon' ? 'VARON' : 'HERMANA'}</p>
+                                        </div>
+                                        <div className="col-span-2 flex gap-2">
+                                            <Button 
+                                                variant="outline" 
+                                                size="sm" 
+                                                className="flex-1 text-[9px] h-8 font-black uppercase"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setMemberModal({ mode: 'edit', data: member });
+                                                }}
+                                            >
+                                                Editar Perfil
+                                            </Button>
+                                            <Button 
+                                                variant="ghost" 
+                                                size="sm" 
+                                                className="h-8 w-8 p-0 text-red-500"
+                                                onClick={async (e) => {
+                                                    e.stopPropagation();
+                                                    if (confirm('¿Eliminar definitivamente?')) {
+                                                        const success = await useAppStore.getState().deleteMemberFromCloud(member.id);
+                                                        if (success) await loadMembersFromCloud();
+                                                    }
+                                                }}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Desktop Table View - HIDDEN ON MOBILE */}
+                    <div className="hidden lg:block overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-border/10">
@@ -734,13 +819,13 @@ export default function MembersPage() {
                                 ))}
                             </tbody>
                         </table>
-                        {filteredMembers.length === 0 && (
-                            <div className="p-12 text-center">
-                                <Users className="h-12 w-12 text-slate-600 mx-auto mb-4 opacity-20" />
-                                <p className="text-slate-500 ">No se encontraron miembros con ese nombre.</p>
-                            </div>
-                        )}
                     </div>
+                    {filteredMembers.length === 0 && (
+                        <div className="p-12 text-center">
+                            <Users className="h-12 w-12 text-slate-600 mx-auto mb-4 opacity-20" />
+                            <p className="text-slate-500 ">No se encontraron miembros con ese nombre.</p>
+                        </div>
+                    )}
                 </CardContent>
             </Card>
 

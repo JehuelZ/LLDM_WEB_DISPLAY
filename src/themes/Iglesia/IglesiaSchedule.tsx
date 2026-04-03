@@ -293,7 +293,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
         });
 
         return {
-            name: m?.name || (id.length > 20 ? 'Asignado' : id),
+            name: m?.name || (id.length > 20 ? 'HERMANO ASIGNADO' : (id || 'NO ASIGNADO')),
             avatar: m?.avatar || m?.avatarUrl || null
         };
     };
@@ -413,7 +413,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
                             <Avatar src={leader5am.avatar} size={240} T={T} isDark={isDark} />
                             <AcademicButton
-                                label={leader5am.name || 'Por Asignar'}
+                                label={leader5am.name || 'NO ASIGNADO'}
                                 icon={User}
                                 variant="reliefAura"
                                 T={T}
@@ -535,7 +535,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%' }}>
                                             <Avatar src={cons9am.avatar} size={240} T={T} isDark={isDark} />
                                             <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-                                                <AcademicButton label={cons9am.name || 'Por Asignar'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
+                                                <AcademicButton label={cons9am.name || 'NO ASIGNADO'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
                                                 <RoleBadge label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={Sunrise} T={T} isDark={isDark} />
                                             </div>
                                         </div>
@@ -553,7 +553,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                         </div>
                                         <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                             <AcademicButton
-                                                label={cons9am.name === doc9am.name ? (cons9am.name || 'Por Asignar') : `${cons9am.name || 'Por Asignar'} | ${doc9am.name || 'Por Asignar'}`}
+                                                label={cons9am.name === doc9am.name ? (cons9am.name || 'NO ASIGNADO') : `${cons9am.name || 'NO ASIGNADO'} | ${doc9am.name || 'NO ASIGNADO'}`}
                                                 icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow}
                                             />
                                             <div style={{ display: 'flex', gap: 12 }}>
@@ -581,7 +581,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
                             <Avatar src={getMember(slot12pm.leaderId).avatar} size={240} T={T} isDark={isDark} />
                             <AcademicButton
-                                label={getMember(slot12pm.leaderId).name || 'Por Asignar'}
+                                label={getMember(slot12pm.leaderId).name || 'NO ASIGNADO'}
                                 icon={User}
                                 variant="reliefAura"
                                 T={T}
@@ -612,7 +612,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                     </div>
                                     <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
                                         <AcademicButton
-                                            label={evLeaders[0]?.name === evLeaders[1]?.name ? (evLeaders[0]?.name || 'Por Asignar') : `${evLeaders[0]?.name || 'Por Asignar'} | ${evLeaders[1]?.name || 'Por Asignar'}`}
+                                            label={evLeaders[0]?.name === evLeaders[1]?.name ? (evLeaders[0]?.name || 'NO ASIGNADO') : `${evLeaders[0]?.name || 'NO ASIGNADO'} | ${evLeaders[1]?.name || 'NO ASIGNADO'}`}
                                             icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow}
                                         />
                                         <div style={{ display: 'flex', gap: 12 }}>
@@ -627,7 +627,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                             return renderCard('evening', cardTitle, (
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
                                     <Avatar src={evLeaders[0]?.avatar} size={240} T={T} isDark={isDark} />
-                                    <AcademicButton label={evLeaders[0]?.name || 'Por Asignar'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow} />
+                                    <AcademicButton label={evLeaders[0]?.name || 'NO ASIGNADO'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow} />
                                     <div style={{ display: 'flex', gap: 12 }}>
                                         <RoleBadge label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={Sunrise} T={T} isDark={isDark} />
                                     </div>

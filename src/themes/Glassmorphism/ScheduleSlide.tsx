@@ -127,9 +127,9 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     time="7:00 PM"
                     title={(() => {
                         const slot = schedule?.slots?.['evening'];
-                        if (slot?.customLabel) return slot.customLabel.toUpperCase();
-                        if (slot?.topic) return slot.topic.toUpperCase();
-                        return getServiceTypeLabel(slot?.type || 'regular', settings.language, is14th).toUpperCase();
+                        if (slot?.customLabel) return (slot.customLabel || '').toUpperCase();
+                        if (slot?.topic) return (slot.topic || '').toUpperCase();
+                        return (getServiceTypeLabel(slot?.type || 'regular', settings.language, is14th) || '').toUpperCase();
                     })()}
                     leaderId={schedule?.slots?.['evening']?.leaderIds?.[0]}
                     secondaryLeaderId={schedule?.slots?.['evening']?.doctrineLeaderId || schedule?.slots?.['evening']?.leaderIds?.[1]}

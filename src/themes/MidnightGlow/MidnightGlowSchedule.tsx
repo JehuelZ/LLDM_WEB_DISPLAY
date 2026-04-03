@@ -58,7 +58,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
         const cleanId = id.trim().toLowerCase();
         const member = (members || []).find((m: any) => m.id.toString().toLowerCase() === cleanId);
         return {
-            name: member ? member.name : (id.length > 20 ? 'Asignado' : id),
+            name: member ? member.name : (id.length > 20 ? 'HERMANO ASIGNADO' : (id || 'NO ASIGNADO')),
             avatar: member?.avatar || (member as any)?.avatarUrl || null,
         };
     };
@@ -113,7 +113,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                 <div className="flex flex-col flex-1 min-w-0">
                     <span className="text-[9px] font-bold tracking-[0.25em] text-[#A3FF57]/70 uppercase">{role}</span>
                     <span className="text-[15px] font-bold text-white/90 truncate leading-tight group-hover:text-white transition-colors">
-                        {leader.name || 'Por Asignar'}
+                        {leader.name || 'NO ASIGNADO'}
                     </span>
                 </div>
                 {/* dot indicator */}
@@ -762,7 +762,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                     <Flame className="w-16 h-16 text-[#A3FF57]/50" />
                                 </div>
                                 <div className="mt-4 px-10 py-3 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-2xl backdrop-blur-xl">
-                                    <span className="text-[22px] font-black text-white uppercase tracking-[0.1em]">Por Asignar</span>
+                                    <span className="text-[22px] font-black text-white uppercase tracking-[0.1em]">NO ASIGNADO</span>
                                 </div>
                             </div>
                         )}

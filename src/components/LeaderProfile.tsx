@@ -32,7 +32,7 @@ export const LeaderProfile = ({
         return members.find(m => m.id.toLowerCase() === cleanId);
     }, [leaderId, members]);
 
-    const name = member ? member.name : (leaderId && leaderId.length > 20 ? 'HERMANO ASIGNADO' : (leaderId || '---'));
+    const name = member ? member.name : (leaderId && leaderId.length > 20 ? 'HERMANO ASIGNADO' : (leaderId || 'NO ASIGNADO'));
     const avatar = member?.avatar;
 
     if (layout === "horizontal") {
