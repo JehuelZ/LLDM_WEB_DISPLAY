@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { Flame, Church, Cross, Star, Heart } from 'lucide-react';
+import { Flame, Church, BookOpen, Star, Heart } from 'lucide-react';
 
 export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isMounted: boolean, settings: any }) => {
     // Circumference of the circle for the seconds ring

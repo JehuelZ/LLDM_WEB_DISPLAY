@@ -226,10 +226,11 @@ export default function SimpleAdmin() {
                                             onChange={(e) => setThemeState({ ...theme, type: e.target.value })}
                                             className="w-full bg-[#0f172a] border border-white/10 rounded-md h-10 px-3 text-xs font-bold uppercase"
                                         >
-                                            <option value="orthodoxy">Sana Doctrina</option>
+                                            <option value="apostolic_presentation">Presentación Apostólica</option>
                                             <option value="apostolic_letter">Carta Apostólica</option>
-                                            <option value="history">Historia</option>
-                                            <option value="free">Tema Libre</option>
+                                            <option value="orthodoxy">Sana Doctrina</option>
+                                            <option value="exchange">Intercambio de Ministro</option>
+                                            <option value="free">Tema Ministerial / Libre</option>
                                         </select>
                                     </div>
                                 </div>

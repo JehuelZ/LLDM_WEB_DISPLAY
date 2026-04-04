@@ -62,8 +62,13 @@ export const HorariosTab = ({
         }
     };
 
-    const memberOptions = members
+    const allMemberOptions = members
         .filter(m => m.status === 'Activo')
+        .sort((a,b) => a.name.localeCompare(b.name))
+        .map(m => ({ value: m.id, label: m.name }));
+
+    const privilegedMemberOptions = members
+        .filter(m => m.status === 'Activo' && m.can_manage_prayers !== false)
         .sort((a,b) => a.name.localeCompare(b.name))
         .map(m => ({ value: m.id, label: m.name }));
 
@@ -168,7 +173,7 @@ export const HorariosTab = ({
                             value={currentDaySchedule.slots['5am'].leaderId}
                             onChange={(val: string) => updateSlot('5am', { leaderId: val })}
                             disabled={isSaving}
-                            options={memberOptions}
+                            options={privilegedMemberOptions}
                             icon={User}
                         />
 
@@ -260,7 +265,7 @@ export const HorariosTab = ({
                                     value={currentDaySchedule.slots['9am'].consecrationLeaderId}
                                     onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
                                     disabled={isSaving}
-                                    options={memberOptions}
+                                    options={privilegedMemberOptions}
                                     icon={User}
                                 />
                                 <TactileSelect
@@ -268,7 +273,7 @@ export const HorariosTab = ({
                                     value={currentDaySchedule.slots['9am'].doctrineLeaderId}
                                     onChange={(val: string) => updateSlot('9am', { doctrineLeaderId: val })}
                                     disabled={isSaving}
-                                    options={memberOptions}
+                                    options={privilegedMemberOptions}
                                     icon={Flame}
                                 />
                             </>
@@ -315,7 +320,7 @@ export const HorariosTab = ({
                             value={currentDaySchedule?.slots?.['12pm']?.leaderId || ''}
                             onChange={(val: string) => updateSlot('12pm', { leaderId: val })}
                             disabled={isSaving}
-                            options={memberOptions}
+                            options={privilegedMemberOptions}
                             icon={User}
                         />
                         <button
@@ -383,7 +388,7 @@ export const HorariosTab = ({
                                     value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
                                     onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
                                     disabled={isSaving}
-                                    options={memberOptions}
+                                    options={privilegedMemberOptions}
                                     icon={User}
                                 />
                                 <TactileSelect
@@ -391,7 +396,7 @@ export const HorariosTab = ({
                                     value={currentDaySchedule.slots['evening'].doctrineLeaderId || ''}
                                     onChange={(val: string) => updateSlot('evening', { doctrineLeaderId: val })}
                                     disabled={isSaving}
-                                    options={memberOptions}
+                                    options={privilegedMemberOptions}
                                     icon={BookOpen}
                                 />
                             </div>
@@ -401,7 +406,7 @@ export const HorariosTab = ({
                                 value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
                                 onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
                                 disabled={isSaving}
-                                options={memberOptions}
+                                options={privilegedMemberOptions}
                                 icon={User}
                             />
                         )}

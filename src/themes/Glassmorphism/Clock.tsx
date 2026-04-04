@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Flame, Church, Cross, Star, Heart } from 'lucide-react';
+import { Flame, Church, Star, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const GlassmorphismClock = ({ now, isMounted, settings }: { now: Date, isMounted: boolean, settings: any }) => {

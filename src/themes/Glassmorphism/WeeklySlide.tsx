@@ -1,11 +1,12 @@
 'use client';
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { CalendarDays, BookOpen, User, Church, Music, Sparkles, Star, Cross, Radio } from 'lucide-react';
+import { CalendarDays, BookOpen, User, Church, Music, Sparkles, Star, Flame, Radio } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { format, addDays, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { getThemeLabel } from '@/lib/display_labels';
 
 export const GlassmorphismWeekly = () => {
     const monthlySchedule = useAppStore((state) => state.monthlySchedule);
@@ -106,7 +107,9 @@ export const GlassmorphismWeekly = () => {
                 <div className="flex-1 max-w-2xl mx-8 bg-white/5 border border-white/10 rounded-[2rem] p-4 backdrop-blur-3xl overflow-hidden relative shadow-2xl">
                     <div className="absolute top-0 left-0 w-2 h-full bg-blue-500" />
                     <h3 className="text-2xl font-black text-white uppercase italic truncate">{theme.title || 'ORACIÓN CONTINUA'}</h3>
-                    <p className="text-[9px] text-white/40 uppercase tracking-[0.4em] mt-1 font-black">{theme.type || 'ESTUDIO BÍBLICO'}</p>
+                    <p className="text-[9px] text-white/40 uppercase tracking-[0.4em] mt-1 font-black">
+                        {getThemeLabel(theme.type || 'orthodoxy', settings.language)}
+                    </p>
                 </div>
             </motion.div>
 
@@ -136,7 +139,9 @@ export const GlassmorphismWeekly = () => {
                                     };
 
                                     let shortName = '';
-                                    if (slotKey === '5am') {
+                                    if (day.dayNum === '14') {
+                                        shortName = settings.language === 'es' ? 'RECORDACIÓN: HISTORIA' : 'REMEMBRANCE: HISTORY';
+                                    } else if (slotKey === '5am') {
                                         shortName = formatShortName(getMemberDetail(slot.leaderId).name);
                                     } else if (slotKey === '9am') {
                                         const l1 = getMemberDetail(slot.consecrationLeaderId).name;

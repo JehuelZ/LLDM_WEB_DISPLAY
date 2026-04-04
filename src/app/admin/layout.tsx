@@ -52,7 +52,8 @@ import PremiumCalendar from '@/components/ui/PremiumCalendar';
 
 const ICON_MAP: Record<string, any> = {
     church: Church,
-    cross: Cross,
+    flame: Flame,
+    book: BookOpen,
     star: Star,
     heart: Heart,
 };
@@ -352,6 +353,28 @@ function AdminLayoutContent({
                         {currentTab === 'horarios' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
                         <Calendar className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'horarios' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.horarios}</span>}
+                    </Link>
+
+                    <Link 
+                        href="/admin?tab=temas"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'temas' 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'temas' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <BookOpen className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'temas' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.temas}</span>}
                     </Link>
 
                     <Link 

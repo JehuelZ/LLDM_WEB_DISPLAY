@@ -147,30 +147,70 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
         }
     }, [fontFamily, isNextFont]);
 
-    // --- DYNAMIC FAVICON SYNC ---
+    // --- DYNAMIC FAVICON SYNC & THEMING ---
     useEffect(() => {
-        if (mounted) {
-            const logoUrl = (settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/favicon.ico" : settings.churchLogoUrl;
-            
-            // Update standard icon
+        if (!mounted) return;
+
+        // Determine the "Template Color" based on the active admin theme or primary setting
+        // Primitivo: Emerald (#10b981), Luna: White/Silver (#ffffff), Others use primaryColor
+        let templateColor = settings.primaryColor || '#3b82f6';
+        if (settings.adminTheme === 'primitivo') templateColor = '#10b981';
+        else if (settings.adminTheme === 'luna') templateColor = '#ffffff';
+        else if (settings.adminTheme === 'classic') templateColor = '#10b981';
+
+        const logoUrl = (settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/lldm_flama_3.svg" : settings.churchLogoUrl;
+        const isSvg = logoUrl.toLowerCase().endsWith('.svg');
+
+        const updateLinks = (href: string, type: string = 'image/x-icon') => {
+            // Standard Favicon
             let link = document.querySelector("link[rel*='icon']") as HTMLLinkElement;
             if (!link) {
                 link = document.createElement('link');
                 link.rel = 'icon';
                 document.head.appendChild(link);
             }
-            link.href = logoUrl;
+            link.href = href;
+            link.type = type;
 
-            // Update Apple Touch Icon if it exists or create one
+            // Apple Touch Icon
             let appleLink = document.querySelector("link[rel='apple-touch-icon']") as HTMLLinkElement;
             if (!appleLink) {
                 appleLink = document.createElement('link');
                 appleLink.rel = 'apple-touch-icon';
                 document.head.appendChild(appleLink);
             }
-            appleLink.href = logoUrl;
+            appleLink.href = href;
+        };
+
+        if (isSvg) {
+            // THEME SVG FAVICON: Fetch and string-replace branding colors
+            fetch(logoUrl)
+                .then(res => {
+                    if (!res.ok) throw new Error("SVG not found");
+                    return res.text();
+                })
+                .then(svgText => {
+                    // Replace common branded colors with the template's primary color
+                    // This includes the LLDM Gold colors (#fbbf24, #d97706) and currentColor
+                    let themedSvg = svgText
+                        .replace(/#fbbf24/gi, templateColor)
+                        .replace(/#d97706/gi, templateColor)
+                        .replace(/currentColor/gi, templateColor);
+                    
+                    // Convert to Data URL
+                    const base64 = btoa(unescape(encodeURIComponent(themedSvg)));
+                    const dataUrl = `data:image/svg+xml;base64,${base64}`;
+                    updateLinks(dataUrl, 'image/svg+xml');
+                })
+                .catch(err => {
+                    console.warn("Favicon: Could not theme SVG, using original.", err);
+                    updateLinks(logoUrl, 'image/svg+xml');
+                });
+        } else {
+            // Static Image (ico/png)
+            updateLinks(logoUrl, logoUrl.endsWith('.ico') ? 'image/x-icon' : 'image/png');
         }
-    }, [settings.churchLogoUrl, mounted]);
+    }, [settings.churchLogoUrl, settings.primaryColor, settings.adminTheme, mounted]);
 
     // Construct final font family for CSS
     const realFontName = googleFontNameMap[fontFamily.toLowerCase()] || fontFamily;

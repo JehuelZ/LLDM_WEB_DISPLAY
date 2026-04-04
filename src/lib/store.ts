@@ -19,7 +19,7 @@ import { getLocalDateString } from './utils';
 
 export interface AppSettings {
     themeMode: 'light' | 'dark' | 'system';
-    churchIcon: 'church' | 'cross' | 'star' | 'heart' | 'custom';
+    churchIcon: 'church' | 'flame' | 'star' | 'heart' | 'custom';
     customIconUrl?: string;
     primaryColor: string;
     showMinisterOnDisplay: boolean;
@@ -120,6 +120,7 @@ export interface UserProfile {
     createdAt?: string;
     hide_from_attendance?: boolean;
     hide_from_membership_count?: boolean;
+    can_manage_prayers?: boolean;
 }
 
 export interface CalendarStyles {
@@ -257,7 +258,7 @@ interface AppState {
     loadMembersFromCloud: () => Promise<void>;
     updateProfileInCloud: (userId: string, updates: Partial<UserProfile>) => Promise<boolean>;
     deleteMemberFromCloud: (userId: string) => Promise<boolean>;
-    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string }) => Promise<boolean>;
+    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
     mergeProfiles: (pendingId: string, memberEmail: string, existingMemberId: string) => Promise<boolean>;
@@ -679,7 +680,8 @@ export const useAppStore = create<AppState>()(
                             is_pre_registered: p.is_pre_registered || false,
                             bio: p.bio || '',
                             hide_from_attendance: p.hide_from_attendance || false,
-                            hide_from_membership_count: p.hide_from_membership_count || false
+                            hide_from_membership_count: p.hide_from_membership_count || false,
+                            can_manage_prayers: p.can_manage_prayers ?? true
                         }));
 
                         // Sincronizar estado del Ministro si se encuentra en la lista oficial
@@ -1203,11 +1205,8 @@ export const useAppStore = create<AppState>()(
                 if (member.avatarUrl) insertData.avatar_url = member.avatarUrl;
                 if (member.avatar) insertData.avatar_url = member.avatar;
                 if (member.privileges) insertData.roles = member.privileges;
-                // @ts-ignore - added fields
                 if (member.hide_from_attendance !== undefined) insertData.hide_from_attendance = member.hide_from_attendance;
-                // @ts-ignore - added fields
                 if (member.hide_from_membership_count !== undefined) insertData.hide_from_membership_count = member.hide_from_membership_count;
-                // if (member.bio) insertData.bio = member.bio;
 
                 console.log('Adding member:', insertData);
 

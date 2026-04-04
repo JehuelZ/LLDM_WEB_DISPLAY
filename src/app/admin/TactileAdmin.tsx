@@ -168,6 +168,7 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
                         setCurrentDate={setCurrentDate}
                         members={members}
                         weeklyStats={weeklyStats}
+                        setShowAddMember={setShowAddMember}
                     />
                 );
             case 'horarios':

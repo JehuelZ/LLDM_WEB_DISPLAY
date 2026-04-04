@@ -6,13 +6,14 @@ import { cn } from '@/lib/utils';
 import { format, parseISO, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { LeaderProfile } from '@/components/LeaderProfile';
-import { CalendarDays, User, Clock as ClockIcon, Church, ChevronRight, Radio } from 'lucide-react';
+import { CalendarDays, User, Clock as ClockIcon, Church, ChevronRight, Radio, Sparkles } from 'lucide-react';
 import { getServiceTypeLabel } from '@/lib/display_labels';
 
 export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
     const monthlySchedule = useAppStore((state) => state.monthlySchedule);
     const members = useAppStore((state) => state.members);
     const settings = useAppStore((state) => state.settings);
+    const theme = useAppStore((state) => state.theme);
     const [currentTime, setCurrentTime] = useState(new Date());
 
     useEffect(() => {
@@ -94,7 +95,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
             </motion.div>
 
             {/* Main schedule layout */}
-            <div className="flex-1 grid grid-cols-3 gap-6 items-stretch">
+            <div className="flex-1 grid grid-cols-3 gap-8 p-12 overflow-y-auto">
                 <ScheduleBlock
                     time="5:00 AM"
                     title="CONSAGRACIÓN"
@@ -106,6 +107,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     language={schedule?.slots?.['5am']?.language}
                     isActive={isSlotActive('5am')}
                     lowPerf={settings.lowPerformanceMode}
+                    isHistoryDay={is14th}
                 />
 
                 <ScheduleBlock
@@ -121,6 +123,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     language={schedule?.slots?.['9am']?.language}
                     isActive={isSlotActive('9am')}
                     lowPerf={settings.lowPerformanceMode}
+                    isHistoryDay={is14th}
                 />
 
                 <ScheduleBlock
@@ -139,6 +142,8 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     language={schedule?.slots?.['evening']?.language}
                     isActive={isSlotActive('evening')}
                     lowPerf={settings.lowPerformanceMode}
+                    isHistoryDay={is14th}
+                    isApostolic={theme?.type === 'apostolic_presentation'}
                 />
             </div>
 
@@ -146,7 +151,7 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
     );
 };
 
-const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colorClass, icon, language, isTiny, minimal, isActive, lowPerf }: any) => {
+const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colorClass, icon, language, isTiny, minimal, isActive, lowPerf, isHistoryDay, isApostolic }: any) => {
     return (
         <motion.div
             initial={{ y: 50, opacity: 0 }}
@@ -162,21 +167,40 @@ const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colo
             className={cn(
                 "group relative flex flex-col rounded-[4rem] border transition-all hover:bg-white/5 shadow-2xl overflow-hidden p-12",
                 lowPerf ? "bg-[#121212]" : "bg-white/[0.02] backdrop-blur-3xl",
-                isActive ? "border-emerald-500/60 bg-emerald-500/[0.04] shadow-[0_0_80px_rgba(16,185,129,0.25)] ring-2 ring-emerald-500/30" : "border-white/10"
+                isActive ? "border-emerald-500/60 bg-emerald-500/[0.04] shadow-[0_0_80px_rgba(16,185,129,0.25)] ring-2 ring-emerald-500/30" : "border-white/10",
+                isHistoryDay && "border-blue-500/60 bg-blue-500/[0.04] shadow-[0_0_80px_rgba(59,130,246,0.25)] ring-1 ring-blue-500/40",
+                isApostolic && "border-amber-400 bg-amber-400/[0.08] shadow-[0_0_100px_rgba(251,191,36,0.4)] ring-[4px] ring-amber-400/30"
             )}
         >
-            {isActive && (
-                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/[0.05] via-transparent to-transparent pointer-events-none" />
+            {(isActive || isApostolic) && (
+                <div className={cn(
+                    "absolute inset-0 pointer-events-none",
+                    isApostolic ? "bg-gradient-to-br from-amber-400/[0.15] via-transparent to-transparent" : "bg-gradient-to-br from-emerald-500/[0.05] via-transparent to-transparent"
+                )} />
             )}
 
-            {isActive && (
-                <div className="absolute top-8 right-8 z-20 flex items-center gap-3 px-6 py-2.5 rounded-full bg-emerald-500/20 backdrop-blur-2xl border-2 border-emerald-500/50 shadow-[0_0_40px_rgba(16,185,129,0.3)]">
-                    <Radio className="w-4 h-4 text-emerald-400 animate-pulse" />
+            {(isActive || isApostolic) && (
+                <div className={cn(
+                    "absolute top-8 right-8 z-20 flex items-center gap-3 px-6 py-2.5 rounded-full backdrop-blur-2xl border-2",
+                    isApostolic 
+                        ? "bg-amber-400/30 border-amber-400/60 shadow-[0_0_50px_rgba(251,191,36,0.5)]" 
+                        : "bg-emerald-500/20 border-emerald-500/50 shadow-[0_0_40px_rgba(16,185,129,0.3)]"
+                )}>
+                    {isApostolic ? (
+                        <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                    ) : (
+                        <Radio className="w-4 h-4 text-emerald-400 animate-pulse" />
+                    )}
                     <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 shadow-[0_0_15px_#10b981]"></span>
+                        <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", isApostolic ? "bg-amber-400" : "bg-emerald-400")}></span>
+                        <span className={cn("relative inline-flex rounded-full h-3 w-3 shadow-[0_0_15px_currentColor]", isApostolic ? "bg-amber-400 text-amber-400" : "bg-emerald-500 text-emerald-500")}></span>
                     </span>
-                    <span className="text-[13px] font-black uppercase tracking-[0.3em] text-emerald-400 drop-shadow-[0_0_12px_rgba(16,185,129,0.6)]">EN CURSO</span>
+                    <span className={cn(
+                        "text-[13px] font-black uppercase tracking-[0.3em] drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]",
+                        isApostolic ? "text-amber-300" : "text-emerald-400"
+                    )}>
+                        {isApostolic ? 'EVENTO PRINCIPAL' : 'EN CURSO'}
+                    </span>
                 </div>
             )}
 

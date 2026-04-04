@@ -75,7 +75,7 @@ export interface DailySchedule {
     };
 }
 
-export type ThemeType = 'orthodoxy' | 'apostolic_letter' | 'free' | 'history';
+export type ThemeType = 'apostolic_presentation' | 'apostolic_letter' | 'orthodoxy' | 'exchange' | 'free';
 
 export interface WeeklyTheme {
     id: string;

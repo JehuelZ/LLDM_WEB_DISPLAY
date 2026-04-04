@@ -62,10 +62,10 @@ export function getSlideSystemTitle(slideId: string, lang: 'es' | 'en' = 'es'): 
 }
 
 export function getServiceTypeLabel(type: string, lang: 'es' | 'en' = 'es', is14th: boolean = false): string {
-    if (is14th && (type === 'doctrine' || type === 'consecration' || type === 'regular')) {
-        // Special rule for the 14th: History is prioritized if it's a doctrine-focused slot
-        if (type === 'doctrine') {
-            return lang === 'es' ? 'Historia de la Iglesia' : 'Church History';
+    if (is14th) {
+        // Special rule for the 14th: History is the priority reminder
+        if (type === 'doctrine' || type === 'regular' || type === 'special') {
+            return lang === 'es' ? 'Recordación: Historia de la Iglesia' : 'Remembrance: Church History';
         }
     }
 
@@ -82,4 +82,15 @@ export function getServiceTypeLabel(type: string, lang: 'es' | 'en' = 'es', is14
         doctrine: { es: 'Estudio de Doctrina', en: 'Doctrine Study' }
     };
     return labels[type]?.[lang] || labels.regular[lang];
+}
+
+export function getThemeLabel(type: string, lang: 'es' | 'en' = 'es'): string {
+    const labels: Record<string, { es: string, en: string }> = {
+        apostolic_presentation: { es: 'Presentación Apostólica', en: 'Apostolic Presentation' },
+        apostolic_letter: { es: 'Carta Apostólica', en: 'Apostolic Letter' },
+        orthodoxy: { es: 'Sana Doctrina', en: 'Sound Doctrine' },
+        exchange: { es: 'Intercambio de Ministro', en: 'Minister Exchange' },
+        free: { es: 'Tema Ministerial / Libre', en: 'Special Theme' }
+    };
+    return labels[type]?.[lang] || labels.orthodoxy[lang];
 }

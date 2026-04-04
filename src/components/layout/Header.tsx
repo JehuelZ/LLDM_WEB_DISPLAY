@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useAppStore } from '@/lib/store';
 import { Button } from '@/components/ui/button';
-import { LogOut, User, LogIn, Mail, Church, Cross, Star, Heart, ClipboardCheck, Music } from 'lucide-react';
+import { LogOut, User, LogIn, Mail, Church, Flame, Star, Heart, ClipboardCheck, Music } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';

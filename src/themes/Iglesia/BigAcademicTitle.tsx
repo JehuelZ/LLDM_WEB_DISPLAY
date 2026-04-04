@@ -36,7 +36,7 @@ export function BigAcademicTitle({ label, icon: Icon, T, isDark, small = false }
     );
 }
 
-import { Flame, Church, Cross, Star, Heart } from 'lucide-react';
+import { Flame, Church, BookOpen, Star, Heart } from 'lucide-react';
 
 export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string; T: any; isDark: boolean; settings: any }) {
     const shadow = isDark
@@ -49,7 +49,7 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
     const showLogo = currentLogo !== '';
     const finalLogoUrl = (currentLogo === '' || !currentLogo) ? officialLogo : currentLogo;
 
-    const icons: Record<string, any> = { flame: Flame, church: Church, cross: Cross, star: Star, heart: Heart };
+    const icons: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
     const SelectedIcon = icons[settings?.churchIcon || 'flame'] || Flame;
 
     return (

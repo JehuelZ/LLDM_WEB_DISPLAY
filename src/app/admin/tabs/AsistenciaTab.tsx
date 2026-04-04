@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { 
     Calendar, ClipboardCheck, Search, CalendarClock, 
     RefreshCw, CheckCircle2, TrendingUp, TrendingDown,
-    User, Check, Crown
+    User, Check, Crown, UserPlus, Plus
 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -18,13 +18,15 @@ interface AsistenciaTabProps {
     setCurrentDate: (date: string) => void
     members: UserProfile[]
     weeklyStats: any[]
+    setShowAddMember: (show: boolean) => void
 }
 
 export const AsistenciaTab = ({
     currentDate,
     setCurrentDate,
     members,
-    weeklyStats
+    weeklyStats,
+    setShowAddMember
 }: AsistenciaTabProps) => {
     const {
         settings,
@@ -293,7 +295,9 @@ export const AsistenciaTab = ({
                         const matchesSearch = nameMatch || groupMatch;
 
                         if (!matchesSearch) return false;
-                        if (m.hide_from_attendance) return false;
+                        
+                        // If searching, show even hidden members. If not searching, hide them as usual.
+                        if (m.hide_from_attendance && !searchTerm) return false;
 
                         if (memberFilter === 'all') return true;
                         if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';
@@ -370,6 +374,11 @@ export const AsistenciaTab = ({
                                         isPresent ? "text-primary" : "text-foreground"
                                     )}>
                                         {member.name}
+                                        {member.hide_from_attendance && (
+                                            <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded-full text-[7px] font-black bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase tracking-widest">
+                                                OCULTO
+                                            </span>
+                                        )}
                                     </h4>
                                     <div className="flex items-center gap-2 mt-1">
                                         <span className="text-[9px] font-bold text-muted-foreground/30 capitalize tracking-widest">{member.member_group}</span>
@@ -387,6 +396,24 @@ export const AsistenciaTab = ({
                             </motion.div>
                         );
                     })}
+
+                    {searchTerm && members.filter(m => {
+                        const normalize = (text: string) => (text || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+                        const searchNormalized = normalize(searchTerm);
+                        return normalize(m.name).includes(searchNormalized);
+                    }).length === 0 && (
+                        <div className="col-span-full py-12 flex flex-col items-center justify-center bg-white/[0.01] border border-dashed border-[var(--tactile-border)] rounded-md">
+                            <UserPlus className="w-8 h-8 text-muted-foreground/20 mb-4" />
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-4">No se encontró a nadie con ese nombre</p>
+                            <button 
+                                onClick={() => setShowAddMember(true)}
+                                className="tactile-btn tactile-btn-glass text-[10px] px-8 h-10 border-[var(--tactile-border-strong)]"
+                            >
+                                <Plus className="w-4 h-4 mr-2" />
+                                REGISTRAR NUEVA PERSONA
+                            </button>
+                        </div>
+                    )}
                 </div>
             </TactileGlassCard>
         </motion.div>

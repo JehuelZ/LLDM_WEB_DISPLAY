@@ -30,7 +30,9 @@ import {
     Save,
     Trash2,
     Edit2,
-    Camera
+    Camera,
+    EyeOff,
+    ShieldAlert
 } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { ImageEditor } from '@/components/ImageEditor';
@@ -223,7 +225,9 @@ export default function MembersPage() {
         status: 'Activo',
         lastActive: 'Nunca',
         stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 0 },
-        privileges: []
+        privileges: [],
+        hide_from_attendance: false,
+        hide_from_membership_count: false
     };
 
     const filteredMembers = members.filter((m: Member) => {
@@ -972,6 +976,63 @@ export default function MembersPage() {
                                                 />
                                             </div>
                                         )}
+                                        
+                                        {/* Exclusion Controls */}
+                                        <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
+                                            <div className={cn(
+                                                "p-4 rounded-md border flex items-center justify-between transition-all",
+                                                memberModal.data.hide_from_attendance 
+                                                    ? "bg-red-500/10 border-red-500/30"
+                                                    : "bg-emerald-500/5 border-white/5"
+                                            )}>
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <EyeOff className={cn("w-3.5 h-3.5", memberModal.data.hide_from_attendance ? "text-red-400" : "text-emerald-400")} />
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Excluir Pase Lista</span>
+                                                    </div>
+                                                    <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-tight">Ocultar en asistencia diaria</p>
+                                                </div>
+                                                <button
+                                                    onClick={() => setMemberModal({ ...memberModal, data: { ...memberModal.data, hide_from_attendance: !memberModal.data.hide_from_attendance } })}
+                                                    className={cn(
+                                                        "w-10 h-5 rounded-full relative transition-all duration-300 shrink-0",
+                                                        memberModal.data.hide_from_attendance ? "bg-red-500" : "bg-slate-700"
+                                                    )}
+                                                >
+                                                    <div className={cn(
+                                                        "absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all duration-300",
+                                                        memberModal.data.hide_from_attendance ? "left-5.5" : "left-0.5"
+                                                    )} style={{ left: memberModal.data.hide_from_attendance ? '22px' : '2px' }} />
+                                                </button>
+                                            </div>
+
+                                            <div className={cn(
+                                                "p-4 rounded-md border flex items-center justify-between transition-all",
+                                                memberModal.data.hide_from_membership_count
+                                                    ? "bg-red-500/10 border-red-500/30"
+                                                    : "bg-emerald-500/5 border-white/5"
+                                            )}>
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <ShieldAlert className={cn("w-3.5 h-3.5", memberModal.data.hide_from_membership_count ? "text-red-400" : "text-emerald-400")} />
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Excluir Conteo</span>
+                                                    </div>
+                                                    <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-tight">No contar en estadísticas</p>
+                                                </div>
+                                                <button
+                                                    onClick={() => setMemberModal({ ...memberModal, data: { ...memberModal.data, hide_from_membership_count: !memberModal.data.hide_from_membership_count } })}
+                                                    className={cn(
+                                                        "w-10 h-5 rounded-full relative transition-all duration-300 shrink-0",
+                                                        memberModal.data.hide_from_membership_count ? "bg-red-500" : "bg-slate-700"
+                                                    )}
+                                                >
+                                                    <div className={cn(
+                                                        "absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all duration-300",
+                                                        memberModal.data.hide_from_membership_count ? "left-5.5" : "left-0.5"
+                                                    )} style={{ left: memberModal.data.hide_from_membership_count ? '22px' : '2px' }} />
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1050,7 +1111,9 @@ export default function MembersPage() {
                                                 category: (memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas') ? 'Niño' : (memberModal.data.gender === 'Hermana' ? 'Hermana' : 'Varon'),
                                                 member_group: memberModal.data.member_group,
                                                 avatar: memberModal.data.avatar,
-                                                privileges: memberModal.data.privileges
+                                                privileges: memberModal.data.privileges,
+                                                hide_from_attendance: memberModal.data.hide_from_attendance,
+                                                hide_from_membership_count: memberModal.data.hide_from_membership_count
                                             });
                                         } else {
                                             // Para editar, usar UPDATE

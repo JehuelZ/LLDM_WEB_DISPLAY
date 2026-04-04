@@ -67,30 +67,26 @@ export const ContenidoTab = ({
     }
 
     return (
-        <motion.div
-            key="contenido"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 md:grid-cols-12 gap-8"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="col-span-1 md:col-span-6 space-y-6">
                 <TactileGlassCard title="TEMA SEMANAL">
                     <div className="space-y-6">
                         <TactileInput
                             label="TÍTULO DEL TEMA"
-                            value={theme.title || ''}
-                            onChange={(e: any) => setTheme({ ...theme, title: e.target.value })}
+                            value={theme?.title || ''}
+                            onChange={(e: any) => setTheme({ ...(theme || {}), title: e.target.value })}
                             icon={Sparkles}
                         />
                         <TactileSelect
                             label="CATEGORÍA / TIPO DE TEMA"
-                            value={theme.type || 'orthodoxy'}
-                            onChange={(val: any) => setTheme({ ...theme, type: val })}
+                            value={theme?.type || 'orthodoxy'}
+                            onChange={(val: any) => setTheme({ ...(theme || {}), type: val })}
                             options={[
-                                { value: 'orthodoxy', label: 'Estudio de Ortodoxia' },
+                                { value: 'apostolic_presentation', label: 'Presentación Apostólica' },
                                 { value: 'apostolic_letter', label: 'Carta Apostólica' },
-                                { value: 'history', label: 'Relato Histórico' },
-                                { value: 'free', label: 'Tema de Edificación' }
+                                { value: 'orthodoxy', label: 'Sana Doctrina' },
+                                { value: 'exchange', label: 'Intercambio de Ministro' },
+                                { value: 'free', label: 'Tema Libre / Ministerial' }
                             ]}
                             icon={BookOpen}
                         />
@@ -98,15 +94,15 @@ export const ContenidoTab = ({
                             <TactileInput
                                 label="FECHA INICIO"
                                 type="date"
-                                value={theme.startDate || ''}
-                                onChange={(e: any) => setTheme({ ...theme, startDate: e.target.value })}
+                                value={theme?.startDate || ''}
+                                onChange={(e: any) => setTheme({ ...(theme || {}), startDate: e.target.value })}
                                 icon={Calendar}
                             />
                             <TactileInput
                                 label="FECHA FIN"
                                 type="date"
-                                value={theme.endDate || ''}
-                                onChange={(e: any) => setTheme({ ...theme, endDate: e.target.value })}
+                                value={theme?.endDate || ''}
+                                onChange={(e: any) => setTheme({ ...(theme || {}), endDate: e.target.value })}
                                 icon={Calendar}
                             />
                         </div>
@@ -114,8 +110,8 @@ export const ContenidoTab = ({
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">RESUMEN / DESCRIPCIÓN</label>
                             <textarea
                                 className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md p-4 text-xs font-bold outline-none min-h-[100px] focus:border-primary/50 transition-all text-[var(--tactile-text)]"
-                                value={theme.description || ''}
-                                onChange={(e) => setTheme({ ...theme, description: e.target.value })}
+                                value={theme?.description || ''}
+                                onChange={(e) => setTheme({ ...(theme || {}), description: e.target.value })}
                                 placeholder="Breve resumen del tema..."
                             />
                         </div>
@@ -124,8 +120,8 @@ export const ContenidoTab = ({
                             <div className="flex gap-2">
                                 <input
                                     className="flex-1 bg-black/40 border border-[var(--tactile-border)] rounded-md h-12 px-4 text-xs font-bold outline-none"
-                                    value={theme.fileUrl || ''}
-                                    onChange={(e) => setTheme({ ...theme, fileUrl: e.target.value })}
+                                    value={theme?.fileUrl || ''}
+                                    onChange={(e) => setTheme({ ...(theme || {}), fileUrl: e.target.value })}
                                     placeholder="https://..."
                                 />
                                 <button
@@ -139,7 +135,7 @@ export const ContenidoTab = ({
                                                 setIsSaving(true);
                                                 const url = await uploadAvatar(`theme-${Date.now()}`, file);
                                                 if (url) {
-                                                    setTheme({ ...theme, fileUrl: url });
+                                                    setTheme({ ...(theme || {}), fileUrl: url });
                                                     showNotification('Imagen subida. No olvides guardar.', 'info');
                                                 }
                                                 setIsSaving(false);
@@ -158,7 +154,7 @@ export const ContenidoTab = ({
                             onClick={async () => {
                                 setIsSaving(true);
                                 try {
-                                    await saveThemeToCloud(theme);
+                                    await saveThemeToCloud(theme || {});
                                     showNotification('Tema guardado en la nube.', 'success');
                                 } catch (err) {
                                     showNotification('Error al guardar el tema', 'error');
@@ -189,10 +185,10 @@ export const ContenidoTab = ({
                             <p className="text-[10px] text-muted-foreground capitalize tracking-widest font-black">Activar en el Display</p>
                         </div>
                         <button
-                            onClick={() => setSettings({ ...settings, showCountdown: !settings.showCountdown })}
-                            className={cn("w-14 h-8 rounded-full p-1 transition-colors", settings.showCountdown ? "bg-primary" : "bg-[var(--tactile-item-hover)]")}
+                            onClick={() => setSettings({ ...settings, showCountdown: !settings?.showCountdown })}
+                            className={cn("w-14 h-8 rounded-full p-1 transition-colors", settings?.showCountdown ? "bg-primary" : "bg-[var(--tactile-item-hover)]")}
                         >
-                            <div className={cn("w-6 h-6 bg-foreground rounded-full shadow-lg transition-transform", settings.showCountdown && "translate-x-6")} />
+                            <div className={cn("w-6 h-6 bg-foreground rounded-full shadow-lg transition-transform", settings?.showCountdown && "translate-x-6")} />
                         </button>
                     </div>
                 </TactileGlassCard>
@@ -256,7 +252,7 @@ export const ContenidoTab = ({
                 <div className="space-y-4">
                     <h3 className="text-[10px] font-black capitalize tracking-[0.3em] text-muted-foreground ml-2">Avisos Recientes</h3>
                     <div className="grid grid-cols-1 gap-4">
-                        {announcements.map(ann => (
+                        {(announcements || []).map(ann => (
                             <div key={ann.id} className="tactile-glass-panel p-6 flex flex-col gap-4 group">
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
@@ -295,6 +291,6 @@ export const ContenidoTab = ({
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </div>
     )
 }

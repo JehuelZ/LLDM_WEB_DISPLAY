@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
     Calendar, Users, User, FileText, Settings, ExternalLink,
-    Sun, Moon, Monitor, Church, Cross, Star, Heart, Flame,
+    Sun, Moon, Monitor, Church, Star, Heart, Flame,
     Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2, Plus,
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
@@ -32,6 +32,7 @@ import { TactileAreaChart, TactileBarChart, TactilePieChart } from '@/components
 import PremiumCalendar from '@/components/ui/PremiumCalendar';
 import { AsistenciaTab } from './tabs/AsistenciaTab';
 import { MensajesTab } from './tabs/MensajesTab';
+import { ContenidoTab } from './tabs/ContenidoTab';
 
 const MessagesPanel = ({
     messages,
@@ -658,6 +659,9 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
         updateProfileInCloud,
         saveScheduleDayToCloud,
         saveThemeToCloud,
+        announcements,
+        saveAnnouncementToCloud,
+        deleteAnnouncementFromCloud,
         loadDayScheduleFromCloud,
         loadAllSchedulesFromCloud,
         loadThemeFromCloud,
@@ -741,12 +745,13 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [newMember, setNewMember] = useState({
         name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '',
-        hide_from_attendance: false, hide_from_membership_count: false
+        hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
     const [editingRole, setEditingRole] = useState('Miembro');
     const [editingHideAttendance, setEditingHideAttendance] = useState(false);
     const [editingHideMembershipCount, setEditingHideMembershipCount] = useState(false);
+    const [editingCanManagePrayers, setEditingCanManagePrayers] = useState(true);
 
     const searchParams = useSearchParams();
     const [fontSearch, setFontSearch] = useState('');
@@ -1754,6 +1759,29 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             markMessageAsRead={markMessageAsRead}
                             sendCloudMessage={sendCloudMessage}
                             showNotification={showNotification}
+                        />
+                    </motion.div>
+                )
+            }
+
+            {
+                activeTab === 'contenido' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="space-y-8"
+                    >
+                        <ContenidoTab
+                            theme={theme}
+                            setTheme={setTheme}
+                            saveThemeToCloud={saveThemeToCloud}
+                            announcements={announcements}
+                            saveAnnouncementToCloud={saveAnnouncementToCloud}
+                            deleteAnnouncementFromCloud={deleteAnnouncementFromCloud}
+                            settings={settings}
+                            setSettings={setSettings}
+                            showNotification={showNotification}
+                            uploadAvatar={uploadAvatar}
                         />
                     </motion.div>
                 )
@@ -3003,7 +3031,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         setIsSaving(true);
                                                         const success = await addMemberToCloud(newMember);
                                                         if (success) {
-                                                            setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false });
+                                                            setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true });
                                                             setShowAddMember(false);
                                                         }
                                                         setIsSaving(false);
@@ -3107,29 +3135,6 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <option value="Responsable de Asistencia" className="bg-background">RESPONSABLE ASIST.</option>
                                                     </select>
 
-                                                                                     <div className="flex items-center gap-2 px-2 border-l border-white/10 ml-2">
-                                                                                         <button 
-                                                                                            onClick={() => setEditingHideAttendance(!editingHideAttendance)}
-                                                                                            className={cn(
-                                                                                                "p-1.5 rounded-sm transition-all",
-                                                                                                editingHideAttendance ? "bg-red-500/20 text-red-400" : "text-slate-600 hover:text-white"
-                                                                                            )}
-                                                                                            title={editingHideAttendance ? "Oculto de asistencia" : "Visible en asistencia"}
-                                                                                         >
-                                                                                            {editingHideAttendance ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                                                                                         </button>
-                                                                                         
-                                                                                         <button 
-                                                                                            onClick={() => setEditingHideMembershipCount(!editingHideMembershipCount)}
-                                                                                            className={cn(
-                                                                                                "p-1.5 rounded-sm transition-all",
-                                                                                                editingHideMembershipCount ? "bg-red-500/20 text-red-400" : "text-slate-600 hover:text-white"
-                                                                                            )}
-                                                                                            title={editingHideMembershipCount ? "Excluido de estadísticas" : "Incluido en estadísticas"}
-                                                                                         >
-                                                                                            <ShieldAlert className="w-3.5 h-3.5" />
-                                                                                         </button>
-                                                                                     </div>
                                                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                                                 </div>
                                             </div>
@@ -3200,8 +3205,35 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         )}
                                                     >
                                                         <div className={cn(
-                                                            "absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300",
+                                                            "absolute top-1 w-4 h-4 rounded-full bg-white transition-all duration-300",
                                                             newMember.hide_from_attendance ? "left-7" : "left-1"
+                                                        )} />
+                                                    </button>
+                                                </div>
+
+                                                <div className={cn(
+                                                    "p-4 rounded-md border flex items-center justify-between transition-all",
+                                                    !newMember.can_manage_prayers 
+                                                        ? (settings.adminTheme === 'primitivo' ? "bg-red-500/10 border-red-500/30" : "bg-red-500/5 border-red-500/20")
+                                                        : (settings.adminTheme === 'primitivo' ? "bg-emerald-500/5 border-white/5" : "bg-emerald-500/5 border-border/10")
+                                                )}>
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="flex items-center gap-2">
+                                                            <ShieldAlert className={cn("w-3.5 h-3.5", !newMember.can_manage_prayers ? "text-red-400" : "text-emerald-400")} />
+                                                            <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Gestionar Oraciones/Consagraciones</span>
+                                                        </div>
+                                                        <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-tight">HABILITA LA APARICIÓN EN LISTAS DE ORACIÓN Y PREDICACIÓN</p>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => setNewMember({ ...newMember, can_manage_prayers: !newMember.can_manage_prayers })}
+                                                        className={cn(
+                                                            "w-12 h-6 rounded-full relative transition-all duration-300",
+                                                            newMember.can_manage_prayers ? "bg-emerald-500" : "bg-slate-700"
+                                                        )}
+                                                    >
+                                                        <div className={cn(
+                                                            "absolute top-1 w-4 h-4 rounded-full bg-white transition-all duration-300",
+                                                            newMember.can_manage_prayers ? "left-7" : "left-1"
                                                         )} />
                                                     </button>
                                                 </div>
@@ -3541,6 +3573,17 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                          >
                                                                                             <ShieldAlert className="w-3.5 h-3.5" />
                                                                                          </button>
+
+                                                                                         <button 
+                                                                                            onClick={() => setEditingCanManagePrayers(!editingCanManagePrayers)}
+                                                                                            className={cn(
+                                                                                                "p-1.5 rounded-sm transition-all",
+                                                                                                editingCanManagePrayers ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"
+                                                                                            )}
+                                                                                            title={editingCanManagePrayers ? "Puede gestionar oraciones" : "Privilegio de oraciones revocado"}
+                                                                                         >
+                                                                                            <Briefcase className="w-3.5 h-3.5" />
+                                                                                         </button>
                                                                                      </div>
                                                                                     <div className="flex items-center gap-1.5">
                                                                                         <button 
@@ -3557,7 +3600,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                                  await updateProfileInCloud(m.id, { 
                                                                                                      role: editingRole as any,
                                                                                                      hide_from_attendance: editingHideAttendance,
-                                                                                                     hide_from_membership_count: editingHideMembershipCount
+                                                                                                     hide_from_membership_count: editingHideMembershipCount,
+                                                                                                     can_manage_prayers: editingCanManagePrayers
                                                                                                  });
                                                                                                 await loadMembersFromCloud();
                                                                                                 setEditingMemberId(null);
@@ -3582,6 +3626,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                             setEditingRole(m.role);
                                                                                              setEditingHideAttendance(m.hide_from_attendance || false);
                                                                                              setEditingHideMembershipCount(m.hide_from_membership_count || false);
+                                                                                             setEditingCanManagePrayers(m.can_manage_prayers !== false);
                                                                                         }}
                                                                                         className="p-2 rounded-md bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/[0.03]"
                                                                                     >
