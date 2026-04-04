@@ -23,6 +23,7 @@ import {
     Calendar,
     Activity,
     ClipboardCheck,
+    Briefcase,
     Star,
     Music,
     Baby,
@@ -227,7 +228,8 @@ export default function MembersPage() {
         stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 0 },
         privileges: [],
         hide_from_attendance: false,
-        hide_from_membership_count: false
+        hide_from_membership_count: false,
+        can_manage_prayers: true
     };
 
     const filteredMembers = members.filter((m: Member) => {
@@ -1032,6 +1034,33 @@ export default function MembersPage() {
                                                     )} style={{ left: memberModal.data.hide_from_membership_count ? '22px' : '2px' }} />
                                                 </button>
                                             </div>
+
+                                            <div className={cn(
+                                                "p-4 rounded-md border flex items-center justify-between transition-all md:col-span-2",
+                                                memberModal.data.can_manage_prayers === false
+                                                    ? "bg-red-500/10 border-red-500/30"
+                                                    : "bg-emerald-500/5 border-emerald-500/30"
+                                            )}>
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="flex items-center gap-2">
+                                                        <Briefcase className={cn("w-3.5 h-3.5", memberModal.data.can_manage_prayers === false ? "text-red-400" : "text-emerald-400")} />
+                                                        <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Gestionar Oraciones</span>
+                                                    </div>
+                                                    <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-tight">Permitir oficiar oraciones y consagraciones</p>
+                                                </div>
+                                                <button
+                                                    onClick={() => setMemberModal({ ...memberModal, data: { ...memberModal.data, can_manage_prayers: memberModal.data.can_manage_prayers === false ? true : false } })}
+                                                    className={cn(
+                                                        "w-10 h-5 rounded-full relative transition-all duration-300 shrink-0",
+                                                        memberModal.data.can_manage_prayers !== false ? "bg-emerald-500" : "bg-red-500"
+                                                    )}
+                                                >
+                                                    <div className={cn(
+                                                        "absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all duration-300",
+                                                        memberModal.data.can_manage_prayers !== false ? "left-5.5" : "left-0.5"
+                                                    )} style={{ left: memberModal.data.can_manage_prayers !== false ? '22px' : '2px' }} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1113,7 +1142,8 @@ export default function MembersPage() {
                                                 avatar: memberModal.data.avatar,
                                                 privileges: memberModal.data.privileges,
                                                 hide_from_attendance: memberModal.data.hide_from_attendance,
-                                                hide_from_membership_count: memberModal.data.hide_from_membership_count
+                                                hide_from_membership_count: memberModal.data.hide_from_membership_count,
+                                                can_manage_prayers: memberModal.data.can_manage_prayers
                                             });
                                         } else {
                                             // Para editar, usar UPDATE

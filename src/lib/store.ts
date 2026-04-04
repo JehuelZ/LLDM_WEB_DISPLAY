@@ -258,7 +258,7 @@ interface AppState {
     loadMembersFromCloud: () => Promise<void>;
     updateProfileInCloud: (userId: string, updates: Partial<UserProfile>) => Promise<boolean>;
     deleteMemberFromCloud: (userId: string) => Promise<boolean>;
-    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean }) => Promise<boolean>;
+    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean; can_manage_prayers?: boolean }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
     mergeProfiles: (pendingId: string, memberEmail: string, existingMemberId: string) => Promise<boolean>;
@@ -758,6 +758,7 @@ export const useAppStore = create<AppState>()(
                     
                     if ('hide_from_attendance' in updates) dbUpdates.hide_from_attendance = updates.hide_from_attendance;
                     if ('hide_from_membership_count' in updates) dbUpdates.hide_from_membership_count = updates.hide_from_membership_count;
+                    if ('can_manage_prayers' in updates) dbUpdates.can_manage_prayers = updates.can_manage_prayers;
 
                     console.log('UpdateProfile: Final dbUpdates for Supabase:', dbUpdates);
 
@@ -1207,6 +1208,7 @@ export const useAppStore = create<AppState>()(
                 if (member.privileges) insertData.roles = member.privileges;
                 if (member.hide_from_attendance !== undefined) insertData.hide_from_attendance = member.hide_from_attendance;
                 if (member.hide_from_membership_count !== undefined) insertData.hide_from_membership_count = member.hide_from_membership_count;
+                if (member.can_manage_prayers !== undefined) insertData.can_manage_prayers = member.can_manage_prayers;
 
                 console.log('Adding member:', insertData);
 
