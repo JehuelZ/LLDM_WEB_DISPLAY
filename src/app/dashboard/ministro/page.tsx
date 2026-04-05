@@ -433,10 +433,12 @@ export default function MinistroDashboard() {
     };
 
     // Horario de la semana para el Ministro
-    const today = new Date();
-    const weekStart = startOfWeek(today, { weekStartsOn: 1 });
-    const weekEnd = endOfWeek(today, { weekStartsOn: 1 });
-    const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
+    const today = useMemo(() => new Date(), []);
+    const weekStart = useMemo(() => startOfWeek(today, { weekStartsOn: 1 }), [today]);
+    const weekEnd = useMemo(() => endOfWeek(today, { weekStartsOn: 1 }), [today]);
+    const weekDays = useMemo(() => eachDayOfInterval({ start: weekStart, end: weekEnd }), [weekStart, weekEnd]);
+
+    if (!mounted || !currentUser) return <div className="min-h-screen bg-[#060606]" />;
 
     return (
         <div className="min-h-screen text-foreground transition-colors duration-500">
@@ -572,7 +574,7 @@ export default function MinistroDashboard() {
                             activeTab === 'agenda' ? "bg-secondary text-white shadow-[0_0_20px_rgba(var(--secondary-rgb),0.3)]" : "text-muted-foreground hover:text-white"
                         )}
                     >
-                        <Calendar className="w-4 h-4" /> GESTIÓN
+                        <Calendar className="w-4 h-4" /> AGENDA
                         {activeTab === 'agenda' && <motion.div layoutId="tab-glow" className="absolute inset-0 rounded-2xl bg-white/10 blur-sm pointer-events-none" />}
                     </button>
                     <button
@@ -748,10 +750,13 @@ export default function MinistroDashboard() {
                                         </Button>
                                     </div>
                                     <div>
-                                        <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter leading-none mb-2 tabular-nums">
-                                            {format(selectedDate, "eeee, dd MMMM", { locale: es })}
-                                        </h2>
-                                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 italic">Sistema de Llenado Ministerial</p>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <Calendar className="w-4 h-4 text-primary" />
+                                            <h2 className="text-xl font-black text-white uppercase italic tracking-tighter leading-none">
+                                                Agenda de la Semana
+                                            </h2>
+                                        </div>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 italic">Supervisión de Privilegios</p>
                                     </div>
                                 </div>
 
@@ -885,8 +890,10 @@ export default function MinistroDashboard() {
                                             <div>
                                                 <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2 mb-1 italic"><Star className="w-3.5 h-3.5" /> {selectedDate.getDay() === 0 ? "10:00 AM" : "09:00 AM"}</span>
                                                 <div className="flex items-baseline gap-2">
-                                                    <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">{selectedDate.getDay() === 0 ? "Escuela Dominical" : "Consagración"}</h4>
-                                                    {selectedDate.getDay() !== 0 && <span className="text-[10px] font-black text-pink-400/60 uppercase italic tracking-widest">(Hermanas)</span>}
+                                                    <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">
+                                                        {selectedDate.getDay() === 0 ? "Escuela Dominical" : "Consagración"}
+                                                    </h4>
+                                                    {selectedDate.getDay() !== 0 && <span className="text-[10px] font-black text-pink-400/60 uppercase italic tracking-widest">(Hermana)</span>}
                                                 </div>
                                             </div>
                                             <Button 
@@ -970,6 +977,8 @@ export default function MinistroDashboard() {
                                                 <div className="flex items-baseline gap-2">
                                                     <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">
                                                         {(() => {
+                                                            if (format(selectedDate, 'd') === '14') return 'Servicio de Historia';
+                                                            
                                                             const slotData = monthlySchedule[format(selectedDate, 'yyyy-MM-dd')]?.slots?.['evening'];
                                                             const serviceType = slotData?.type || (selectedDate.getDay() === 4 ? 'youth' : (selectedDate.getDay() === 0 ? 'married' : 'regular'));
                                                             
@@ -983,7 +992,7 @@ export default function MinistroDashboard() {
                                                             }
                                                         })()}
                                                     </h4>
-                                                    {format(selectedDate, 'd') === '14' && <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-lg text-[8px] font-bold tracking-[0.2em] animate-pulse uppercase">Día 14 • Historia</span>}
+                                                    {format(selectedDate, 'd') === '14' && <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-lg text-[8px] font-bold tracking-[0.2em] animate-pulse uppercase">Día 14 • Pasaje Bíblico</span>}
                                                 </div>
                                             </div>
                                             <Button 
