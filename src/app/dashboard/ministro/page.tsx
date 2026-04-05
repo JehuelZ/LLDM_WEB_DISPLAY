@@ -680,7 +680,7 @@ export default function MinistroDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                     <StatCard
                         icon={Users}
-                        label="Membresía Total"
+                        label="Distribución de la Membresía"
                         value={stats.total}
                         trend={stats.memberTrend + " este mes"}
                         color="text-blue-500"
@@ -705,10 +705,46 @@ export default function MinistroDashboard() {
                     />
                     <StatCard
                         icon={Database}
-                        label="Grupos Vigentes"
+                        label="Censo por Grupos"
                         value={Object.keys(stats.groups).length}
                         color="text-emerald-500"
                     />
+                </div>
+                
+                {/* --- NUEVA SECCIÓN: AGENDA DE LA SEMANA (PREVIEW VIGILANCIA) --- */}
+                <div className="bg-black/40 border border-white/5 rounded-[2.5rem] p-8 mt-6">
+                    <div className="flex items-center gap-2 mb-6">
+                        <Calendar className="w-4 h-4 text-primary" />
+                        <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground italic">Vista rápida: Agenda de la Semana / Supervisión</h3>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {(['5am', '9am', 'evening'] as const).map((slot) => {
+                            const dayData = monthlySchedule[format(selectedDate, 'yyyy-MM-dd')];
+                            const data = dayData?.slots ? (dayData.slots as any)[slot] : null;
+                            return (
+                                <div key={slot} className="p-5 rounded-[2rem] bg-white/[0.02] border border-white/5">
+                                    <p className="text-[9px] font-black uppercase text-primary/60 tracking-widest mb-1 italic">
+                                        {slot === '5am' ? '05:00 AM' : (slot === '9am' ? (selectedDate.getDay() === 0 ? '10:00 AM' : '09:00 AM') : '07:00 PM')}
+                                    </p>
+                                    <h4 className="text-sm font-black text-white uppercase italic tracking-tighter mb-2">
+                                        {slot === '5am' ? 'Consagración' : (slot === '9am' ? (selectedDate.getDay() === 0 ? 'Escuela Dominical' : (selectedDate.getDate() === 14 ? 'Servicio de Historia' : 'Consagración')) : (selectedDate.getDay() === 0 ? 'Escuela Dominical' : 'Servicio de Oración'))}
+                                    </h4>
+                                    <div className="flex items-center gap-2 pt-3 border-t border-white/5">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
+                                        <span className="text-[10px] font-bold text-muted-foreground uppercase">{data?.leaderName || 'PENDIENTE'}</span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="mt-6 w-full text-[9px] font-black uppercase tracking-widest text-primary/40 hover:text-primary transition-all border border-white/5 rounded-2xl h-10"
+                        onClick={() => setActiveTab('agenda')}
+                    >
+                        Gestionar Agenda Completa
+                    </Button>
                 </div>
 
                 {/* --- NUEVA SECCIÓN: ATENCIÓN PASTORAL REQUERIDA (ALERTAS) --- */}
@@ -833,7 +869,7 @@ export default function MinistroDashboard() {
                                                 Agenda de la Semana
                                             </h2>
                                         </div>
-                                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 italic">Supervisión de Privilegios</p>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 italic border-l-2 border-primary/20 pl-3">Supervisión de Privilegios</p>
                                     </div>
                                 </div>
 
