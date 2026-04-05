@@ -9,6 +9,7 @@ import {
 import { useAppStore, UserProfile } from '@/lib/store'
 import { cn } from '@/lib/utils'
 import { TactileBadge } from '@/components/admin/TactileUI'
+import { MemberProfileFicha } from '@/components/admin/MemberProfileFicha'
 
 interface MiembrosTabProps {
     members: UserProfile[]
@@ -37,6 +38,7 @@ export const MiembrosTab = ({
     } = useAppStore()
 
     const [isSaving, setIsSaving] = useState(false)
+    const [selectedFichaMember, setSelectedFichaMember] = useState<UserProfile | null>(null)
 
     const pendingMembers = members.filter(m => m.status === 'Pendiente');
 
@@ -279,10 +281,22 @@ export const MiembrosTab = ({
                         if (memberFilter === 'Niños') return m.member_group === 'Niños' || m.member_group === 'Niñas';
                         return m.member_group === memberFilter;
                     })
-                    .map(member => (
+                    .map(member => {
+                        const canViewFicha = member.status === 'Activo' && !member.hide_from_attendance && member.role !== 'Administrador';
+                        return (
                         <div 
                             key={member.id} 
-                            className="group bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-6 rounded-md flex items-center gap-6 hover:border-emerald-400/30 transition-all duration-500 relative overflow-hidden"
+                            onClick={(e) => {
+                                // Prevent triggering if clicking on action buttons
+                                if ((e.target as HTMLElement).closest('button')) return;
+                                if (canViewFicha) {
+                                    setSelectedFichaMember(member);
+                                }
+                            }}
+                            className={cn(
+                                "group bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] p-6 rounded-md flex items-center gap-6 transition-all duration-500 relative overflow-hidden",
+                                canViewFicha ? "cursor-pointer hover:border-emerald-400/30" : "hover:border-white/10"
+                            )}
                         >
                             <div className="relative shrink-0 z-10">
                                 <div className={cn(
@@ -355,8 +369,15 @@ export const MiembrosTab = ({
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    )})}
             </div>
+
+            {selectedFichaMember && (
+                <MemberProfileFicha 
+                    member={selectedFichaMember} 
+                    onClose={() => setSelectedFichaMember(null)} 
+                />
+            )}
         </motion.div>
     )
 }

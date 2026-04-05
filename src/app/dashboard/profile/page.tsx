@@ -42,6 +42,198 @@ import { ImageEditor } from '@/components/ImageEditor';
 import { Suspense } from 'react';
 import { cn } from '@/lib/utils';
 
+// --- Shared High-Fidelity Chart Components ---
+
+const StatDoughnut = ({
+    percent,
+    label,
+    value,
+    total,
+    size = 120,
+    gradientId = "blue"
+}: {
+    percent: number;
+    label: string;
+    value: number | string;
+    total: number | string;
+    size?: number;
+    gradientId?: 'blue' | 'purple' | 'orange' | 'emerald';
+}) => {
+    const radius = 40;
+    const circumference = 2 * Math.PI * radius;
+    const safePercent = Math.max(0.5, percent); // Ensure a dot is visible at 0%
+    const strokeDashoffset = circumference - (safePercent / 100) * circumference;
+
+    const gradients = {
+        blue: { start: '#1e3a8a', end: '#60a5fa', glow: 'rgba(59,130,246,0.5)' },
+        purple: { start: '#581c87', end: '#a855f7', glow: 'rgba(168,85,247,0.5)' },
+        orange: { start: '#92400e', end: '#10b981', glow: 'rgba(245,158,11,0.5)' },
+        emerald: { start: '#064e3b', end: '#10b981', glow: 'rgba(16,185,129,0.5)' }
+    };
+
+    const currentGrad = gradients[gradientId];
+
+    return (
+        <div className="flex flex-col items-center gap-2 group transition-transform duration-300 hover:scale-105 font-[family-name:var(--font-poppins)]">
+            <div className="relative" style={{ width: size, height: size }}>
+                <svg className="w-full h-full -rotate-90 transform overflow-visible" viewBox="0 0 100 100">
+                    <defs>
+                        <linearGradient id={`grad-${gradientId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor={currentGrad.start} />
+                            <stop offset="100%" stopColor={currentGrad.end} />
+                        </linearGradient>
+                        <filter id={`glow-${gradientId}`} x="-30%" y="-30%" width="160%" height="160%">
+                            <feGaussianBlur stdDeviation="2.5" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke="currentColor" 
+                        strokeWidth="8"
+                        className="opacity-[0.12] dark:opacity-20 text-foreground"
+                    />
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke={currentGrad.end}
+                        strokeWidth="14"
+                        className="opacity-[0.08] transition-all duration-1000 ease-out"
+                        style={{ filter: 'blur(4px)', strokeDashoffset }}
+                        strokeDasharray={circumference}
+                        strokeLinecap="round"
+                    />
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke={`url(#grad-${gradientId})`}
+                        strokeWidth="8"
+                        strokeDasharray={circumference}
+                        style={{ strokeDashoffset }}
+                        strokeLinecap="round"
+                        filter={`url(#glow-${gradientId})`}
+                        className="transition-all duration-1000 ease-out"
+                    />
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke="rgba(255,255,255,0.4)"
+                        strokeWidth="12"
+                        strokeDasharray={circumference}
+                        style={{ strokeDashoffset }}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out opacity-20"
+                    />
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r={radius}
+                        fill="transparent"
+                        stroke="rgba(255,255,255,0.2)"
+                        strokeWidth="1"
+                        strokeDasharray={circumference}
+                        style={{ strokeDashoffset }}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
+                    />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center -rotate-0">
+                    <span className="text-xl font-light text-foreground tracking-tighter">{percent}%</span>
+                    {(value !== "" || total !== "") && (
+                        <span className="text-[9px] uppercase font-light text-muted-foreground tracking-tighter">{value}/{total}</span>
+                    )}
+                </div>
+            </div>
+            {label && (
+                <span className="text-[10px] font-light uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors">
+                    {label.toLowerCase()}
+                </span>
+            )}
+        </div>
+    );
+};
+
+const StatBarChart = ({
+    percent,
+    label,
+    value,
+    total,
+    size = 120,
+    gradientId = "blue"
+}: {
+    percent: number;
+    label: string;
+    value: number | string;
+    total: number | string;
+    size?: number;
+    gradientId?: 'blue' | 'purple' | 'orange' | 'emerald';
+}) => {
+    const gradients = {
+        blue: { start: '#1e3a8a', end: '#60a5fa', glow: 'rgba(59,130,246,0.5)' },
+        purple: { start: '#581c87', end: '#a855f7', glow: 'rgba(168,85,247,0.5)' },
+        orange: { start: '#92400e', end: '#10b981', glow: 'rgba(245,158,11,0.5)' },
+        emerald: { start: '#064e3b', end: '#10b981', glow: 'rgba(16,185,129,0.5)' }
+    };
+
+    const currentGrad = gradients[gradientId];
+    
+    // Generate 5 bars mimicking the TactileBarChart style
+    const bars = [
+        Math.max(10, percent - 20),
+        Math.max(10, percent + 10),
+        percent,
+        Math.max(10, percent - 5),
+        percent + 15
+    ].map(v => Math.min(100, Math.max(0, v)));
+
+    return (
+        <div className="flex flex-col items-center gap-2 group transition-transform duration-300 hover:scale-105 font-[family-name:var(--font-poppins)]">
+            <div className="relative flex items-end justify-center gap-[6px]" style={{ width: size, height: size, paddingBottom: 10 }}>
+                {bars.map((barVal, idx) => {
+                    const h = Math.max(8, (barVal / 100) * (size - 30));
+                    return (
+                        <div key={idx} className="relative group/bar flex items-end" style={{ height: size - 30, width: 8 }}>
+                            <div 
+                                className="absolute bottom-0 w-full rounded-full transition-all duration-1000 ease-out"
+                                style={{ 
+                                    height: `${h}px`, 
+                                    backgroundImage: `linear-gradient(to top, ${currentGrad.start}, ${currentGrad.end})`,
+                                    filter: `drop-shadow(0 0 4px ${currentGrad.glow})`
+                                }}
+                            />
+                            <div 
+                                className="absolute bottom-0 -left-1 w-[16px] rounded-full blur-[8px] opacity-30 pointer-events-none transition-all duration-1000"
+                                style={{ 
+                                    height: `${h}px`,
+                                    backgroundColor: currentGrad.end
+                                }}
+                            />
+                        </div>
+                    );
+                })}
+                <div className="absolute inset-x-0 top-0 flex flex-col items-center justify-start pointer-events-none drop-shadow-md">
+                    <span className="text-xl font-light text-foreground tracking-tighter" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{percent}%</span>
+                    <span className="text-[9px] uppercase font-light text-muted-foreground tracking-tighter mb-2">{value}/{total}</span>
+                </div>
+            </div>
+            {label && (
+                <span className="text-[10px] font-light uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors mt-2">
+                    {label.toLowerCase()}
+                </span>
+            )}
+        </div>
+    );
+};
+
 function ProfileContent() {
     const {
         currentUser, updateProfileInCloud, uploadAvatar, setCurrentUser,
@@ -428,7 +620,11 @@ function ProfileContent() {
                             </div>
                             <div className="glass-card p-4 bg-primary/5 border border-primary/10 rounded-3xl">
                                 <p className="text-[9px] font-black text-primary uppercase tracking-widest leading-none">Asistencia</p>
-                                <h4 className="text-2xl font-black text-foreground italic mt-2">{currentUser.stats?.attendance ? Math.round((currentUser.stats.attendance.attended / currentUser.stats.attendance.total) * 100) : 0}%</h4>
+                                <h4 className="text-2xl font-black text-foreground italic mt-2">
+                                    {currentUser.stats?.attendance && currentUser.stats.attendance.total > 0 
+                                        ? Math.round((currentUser.stats.attendance.attended / currentUser.stats.attendance.total) * 100) 
+                                        : 0}%
+                                </h4>
                             </div>
                         </div>
                     </div>
@@ -777,46 +973,117 @@ function ProfileContent() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
-                                    className="space-y-8"
+                                    className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
                                 >
                                     <h2 className="text-2xl font-black tracking-tighter text-foreground uppercase italic px-4">
-                                        Detalle de <span className="text-orange-400 italic">Estadísticas</span>
+                                        Mi Panel de <span className="text-primary italic">Rendimiento</span>
                                     </h2>
 
-                                    <div className="grid gap-6 md:grid-cols-3">
-                                        <Card className="glass-card bg-primary/5 border-primary/20 p-8 flex flex-col items-center justify-center text-center group">
-                                            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 border border-primary/20 group-hover:scale-110 transition-transform">
-                                                <Calendar className="w-8 h-8 text-primary" />
-                                            </div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-primary/80 mb-2">Asistencia Total</p>
-                                            <h3 className="text-4xl font-black text-foreground italic">{currentUser.stats?.attendance?.attended || 0}</h3>
-                                            <p className="text-[9px] text-muted-foreground mt-4 font-bold uppercase tracking-tight">Servicios presentados</p>
-                                        </Card>
-
-                                        <Card className="glass-card bg-secondary/5 border-secondary/20 p-8 flex flex-col items-center justify-center text-center group">
-                                            <div className="w-16 h-16 rounded-2xl bg-secondary/10 flex items-center justify-center mb-6 border border-secondary/20 group-hover:scale-110 transition-transform">
-                                                <Star className="w-8 h-8 text-secondary" />
-                                            </div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-secondary/80 mb-2">Participaciones</p>
-                                            <h3 className="text-4xl font-black text-foreground italic">{currentUser.stats?.participation?.led || 0}</h3>
-                                            <p className="text-[9px] text-muted-foreground mt-4 font-bold uppercase tracking-tight">Como responsable / orador</p>
-                                        </Card>
-
-                                        <Card className="glass-card bg-orange-400/5 border-orange-400/20 p-8 flex flex-col items-center justify-center text-center group">
-                                            <div className="w-16 h-16 rounded-2xl bg-orange-400/10 flex items-center justify-center mb-6 border border-orange-400/20 group-hover:scale-110 transition-transform">
-                                                <TrendingUp className="w-8 h-8 text-orange-400" />
-                                            </div>
-                                            <p className="text-[10px] font-black uppercase tracking-widest text-orange-400/80 mb-2">Medallas</p>
-                                            <h3 className="text-4xl font-black text-foreground italic">{currentUser.medals || 0}</h3>
-                                            <p className="text-[9px] text-muted-foreground mt-4 font-bold uppercase tracking-tight">Insignias de reconocimiento</p>
-                                        </Card>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
+                                        <StatBarChart
+                                            percent={Math.round(((currentUser.stats?.attendance?.attended || 0) / (currentUser.stats?.attendance?.total || 1)) * 100)}
+                                            label="Asistencia Mes"
+                                            value={currentUser.stats?.attendance?.attended || 0}
+                                            total={currentUser.stats?.attendance?.total || 0}
+                                            gradientId="blue"
+                                        />
+                                        <StatDoughnut
+                                            percent={Math.round(((currentUser.stats?.participation?.led || 0) / (currentUser.stats?.participation?.total || 1)) * 100)}
+                                            label="Participación"
+                                            value={currentUser.stats?.participation?.led || 0}
+                                            total={currentUser.stats?.participation?.total || 0}
+                                            gradientId="purple"
+                                        />
+                                        <StatDoughnut
+                                            percent={currentUser.stats?.punctuality || 0}
+                                            label="Puntualidad"
+                                            value={currentUser.stats?.punctuality || 0}
+                                            total={100}
+                                            gradientId="orange"
+                                        />
                                     </div>
 
-                                    {/* Placeholder for charts or future details */}
-                                    <Card className="glass-card border-none bg-foreground/5 p-12 text-center opacity-40">
-                                        <Activity className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-                                        <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Próximamente: Gráficas de rendimiento histórico</p>
-                                    </Card>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+                                        <div className="space-y-4 p-6 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md transition-all hover:bg-white/[0.07]">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <TrendingUp className="w-5 h-5 text-blue-400" />
+                                                <h4 className="text-blue-400 font-black uppercase tracking-widest text-xs">Rendimiento de Asistencia</h4>
+                                            </div>
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between items-center text-xs">
+                                                    <span className="text-slate-400 font-light">Servicios presentados este mes:</span>
+                                                    <span className="text-white font-bold">{currentUser.stats?.attendance?.attended || 0} de {currentUser.stats?.attendance?.total || 1}</span>
+                                                </div>
+                                                 <div className="flex justify-between items-center text-xs">
+                                                    <span className="text-slate-400 font-light">Promedio Mensual:</span>
+                                                    <span className="text-white font-bold">{currentUser.stats?.attendance?.total && currentUser.stats.attendance.total > 0 ? Math.round(((currentUser.stats?.attendance?.attended || 0) / currentUser.stats.attendance.total) * 100) : 0}%</span>
+                                                </div>
+                                                <div className="w-full bg-black/40 rounded-full h-1.5 mt-2 overflow-hidden">
+                                                    <div className="bg-blue-500 h-1.5 rounded-full transition-all duration-1000" style={{ width: `${currentUser.stats?.attendance?.total && currentUser.stats.attendance.total > 0 ? Math.round(((currentUser.stats?.attendance?.attended || 0) / currentUser.stats.attendance.total) * 100) : 0}%` }} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4 p-6 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md transition-all hover:bg-white/[0.07]">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <Calendar className="w-5 h-5 text-purple-400" />
+                                                <h4 className="text-purple-400 font-black uppercase tracking-widest text-xs">Próximos Privilegios</h4>
+                                            </div>
+                                            <div className="space-y-3">
+                                                {currentUser.responsibilities && currentUser.responsibilities.length > 0 ? (
+                                                    <ul className="space-y-2">
+                                                        {currentUser.responsibilities.map((resp: any, idx: number) => (
+                                                            <li key={idx} className="flex justify-between items-center text-xs p-2 rounded bg-black/20 border border-white/5">
+                                                                <div className="flex flex-col">
+                                                                    <span className="text-white font-bold">{resp.label}</span>
+                                                                    <span className="text-slate-500 font-light text-[10px] uppercase tracking-widest">{resp.type}</span>
+                                                                </div>
+                                                                <div className="flex flex-col items-end">
+                                                                    <span className="text-purple-400 font-bold">{resp.date}</span>
+                                                                    <span className="text-[9px] uppercase tracking-widest font-black" style={{ color: resp.status === 'completed' ? '#10b981' : '#f59e0b' }}>
+                                                                        {resp.status === 'completed' ? 'Completado' : 'Pendiente'}
+                                                                    </span>
+                                                                </div>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <div className="text-xs text-slate-500 font-light text-center py-6 bg-black/20 rounded-xl border border-white/5 italic">
+                                                        Por el momento no tienes privilegios asignados próximamente.
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between items-center text-xs pt-3 mt-3 border-t border-white/10">
+                                                    <span className="text-slate-400 font-light">Responsable en el mes:</span>
+                                                    <span className="text-white font-bold bg-purple-500/20 text-purple-300 px-3 py-1 rounded-full">{currentUser.stats?.participation?.led || 0} veces</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Fila Táctica Personal */}
+                                        <div className="md:col-span-2 flex flex-col md:flex-row items-center gap-6 p-6 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl backdrop-blur-sm">
+                                            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                                                <Activity className="w-6 h-6 text-emerald-500" />
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                                                <div>
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest opacity-70">Mi Grupo</p>
+                                                    <p className="text-white text-[10px] mt-1 font-black uppercase tracking-widest bg-white/10 py-1 px-3 rounded-full w-max">{currentUser.member_group || 'General'}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest opacity-70">Categoría</p>
+                                                    <p className="text-white text-xs mt-1 font-bold">{currentUser.category}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest opacity-70">Rol Asignado</p>
+                                                    <p className="text-white text-xs mt-1 font-bold">{currentUser.role || 'Miembro'}</p>
+                                                </div>
+                                                <div className="flex flex-col items-end">
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest opacity-70">Sistema Digital</p>
+                                                    <p className="text-xs mt-1 font-black text-white/40 italic tracking-tighter">LV. {currentUser.medals || 0}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </motion.div>
                             )}
                         </AnimatePresence>

@@ -55,11 +55,26 @@ Cada tema tiene reglas de oro que no se pueden romper:
 
 ---
 
-## 📅 4. LÓGICA DE FECHAS ESPECIALES
+## 📅 4. LÓGICA DE FECHAS Y HORARIOS (SINCRO LITÚRGICA)
 
-*   **Día 14 de cada mes**: Por regla general, los días 14 se recuerda la **Historia de la Iglesia**. 
-    *   **Lógica de Servicio**: La **Consagración (5 AM)** y el **Servicio Vespertino** se llevan a cabo de forma normal. Es específicamente en la **Doctrina** donde se recuerda la historia.
-*   **Excepciones y Prioridad**: Solamente en días especiales (Aniversarios, Santa Cena, etc.) se cambia el tema para reflejar la celebración específica. El motivo del cambio siempre debe ser la celebración superior que ocurra en esa fecha.
+El sistema debe respetar obligatoriamente el calendario de actividades de la iglesia. **Todos los horarios están sujetos a cambios discrecionales del Ministro**, pero los valores predeterminados son:
+
+### 🕒 Estándar Semanal (Mañanas)
+*   **05:00 AM (L-D)**: **Primicias**. Servicio diario de búsqueda espiritual.
+*   **09:00 AM (L-S)**: **Consagraciones (Sisters Only)**. Dirigidas obligatoriamente por dos hermanas (Consagración y Doctrina).
+*   **10:00 AM (Dom)**: **Escuela Dominical**. Inicia a las 10:00 AM (no hay servicio a las 9:00 AM). Requiere definir Modalidad y Tema.
+*   **12:00 PM**: **CERRADO**. No existen reuniones al mediodía.
+
+### 🌓 Estándar Semanal (Tardes/Noches)
+*   **07:00 PM (L, M, Mi, V)**: **Oración Regular**. Servicios estándar.
+*   **06:30 PM (Jueves)**: **Alabanza de Jóvenes**. Puede ser bilingüe (EN/ES) según la lista de oraciones.
+*   **07:00 PM (Sábado)**: **Regular o Niños**. El Ministro decide si es oración estándar o **Alabanza de Niños**.
+*   **07:00 PM (Domingo)**: **Alabanza Casados**. Cierre dominical especial.
+
+### 📖 Días Especiales
+*   **Día 14 de cada mes**: Recordación de la **Historia de la Iglesia**. 
+    *   **Lógica de Servicio**: Se recuerda **exclusivamente en la Oración de la Tarde (7:00 PM)**. Las mañanas son regulares.
+*   **Excepciones**: Solamente en festividades mayores (Aniversarios, Santa Cena, etc.) se altera este esquema bajo mando directo del Ministro.
 
 ---
 

@@ -412,7 +412,7 @@ export const AsistenciaTab = ({
                                                     "w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center transition-all duration-300 border font-black text-[9px] md:text-[10px]",
                                                     isSessProcessing && "animate-pulse opacity-50 cursor-wait",
                                                     isSessPresent
-                                                        ? "bg-emerald-500 border-emerald-400 text-black scale-110 shadow-[0_0_10px_rgba(16,185,129,0.4)]"
+                                                        ? "bg-emerald-500/20 border-emerald-500 text-emerald-400 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
                                                         : "bg-foreground/5 border-border/20 text-muted-foreground hover:border-emerald-500/50"
                                                 )}
                                             >

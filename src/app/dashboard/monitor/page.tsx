@@ -900,7 +900,7 @@ export default function AttendanceDashboard() {
                                                                     "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 font-black text-[10px] sm:text-xs",
                                                                     isProcessing && "animate-pulse opacity-50 cursor-wait",
                                                                     isPresent
-                                                                        ? "bg-emerald-500 border-emerald-400 text-black scale-110"
+                                                                        ? "bg-emerald-500/20 border-emerald-500 text-emerald-400 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
                                                                         : "bg-foreground/5 border-border/20 text-muted-foreground hover:border-emerald-500/50"
                                                                 )}
                                                             >

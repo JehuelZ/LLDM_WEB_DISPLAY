@@ -170,6 +170,82 @@ const StatDoughnut = ({
     );
 };
 
+const StatBarChart = ({
+    percent,
+    label,
+    value,
+    total,
+    size = 120,
+    gradientId = "blue"
+}: {
+    percent: number;
+    label: string;
+    value: number | string;
+    total: number | string;
+    size?: number;
+    gradientId?: 'blue' | 'purple' | 'orange' | 'emerald';
+}) => {
+    const gradients = {
+        blue: { start: '#1e3a8a', end: '#60a5fa', glow: 'rgba(59,130,246,0.5)' },
+        purple: { start: '#581c87', end: '#a855f7', glow: 'rgba(168,85,247,0.5)' },
+        orange: { start: '#92400e', end: '#10b981', glow: 'rgba(245,158,11,0.5)' },
+        emerald: { start: '#064e3b', end: '#10b981', glow: 'rgba(16,185,129,0.5)' }
+    };
+
+    const currentGrad = gradients[gradientId];
+    
+    // Generate 5 bars mimicking the TactileBarChart style
+    const bars = [
+        Math.max(10, percent - 20),
+        Math.max(10, percent + 10),
+        percent,
+        Math.max(10, percent - 5),
+        percent + 15
+    ].map(v => Math.min(100, Math.max(0, v)));
+
+    return (
+        <div className="flex flex-col items-center gap-2 group transition-transform duration-300 hover:scale-105 font-[family-name:var(--font-poppins)]">
+            <div className="relative flex items-end justify-center gap-[6px]" style={{ width: size, height: size, paddingBottom: 10 }}>
+                {bars.map((barVal, idx) => {
+                    const h = Math.max(8, (barVal / 100) * (size - 30));
+                    return (
+                        <div key={idx} className="relative group/bar flex items-end" style={{ height: size - 30, width: 8 }}>
+                            {/* Main Pill */}
+                            <div 
+                                className="absolute bottom-0 w-full rounded-full transition-all duration-1000 ease-out"
+                                style={{ 
+                                    height: `${h}px`, 
+                                    backgroundImage: `linear-gradient(to top, ${currentGrad.start}, ${currentGrad.end})`,
+                                    filter: `drop-shadow(0 0 4px ${currentGrad.glow})`
+                                }}
+                            />
+                            {/* Glow Layer */}
+                            <div 
+                                className="absolute bottom-0 -left-1 w-[16px] rounded-full blur-[8px] opacity-30 pointer-events-none transition-all duration-1000"
+                                style={{ 
+                                    height: `${h}px`,
+                                    backgroundColor: currentGrad.end
+                                }}
+                            />
+                        </div>
+                    );
+                })}
+                
+                {/* Center Text overlay absolutely positioned above the bars */}
+                <div className="absolute inset-x-0 top-0 flex flex-col items-center justify-start pointer-events-none drop-shadow-md">
+                    <span className="text-xl font-light text-foreground tracking-tighter" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>{percent}%</span>
+                    <span className="text-[9px] uppercase font-light text-muted-foreground tracking-tighter mb-2">{value}/{total}</span>
+                </div>
+            </div>
+            {label && (
+                <span className="text-[10px] font-light uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors mt-2">
+                    {label.toLowerCase()}
+                </span>
+            )}
+        </div>
+    );
+};
+
 import { UserProfile as Member } from '@/lib/store';
 
 const INITIAL_MEMBERS: Member[] = [];
@@ -187,6 +263,7 @@ export default function MembersPage() {
     const [expandedMember, setExpandedMember] = useState<string | null>(null);
     const [imageToEdit, setImageToEdit] = useState<string | null>(null);
     const [memberModal, setMemberModal] = useState<{ mode: 'new' | 'edit', data: Member } | null>(null);
+    const [memberModalTab, setMemberModalTab] = useState<'stats' | 'config'>('stats');
     const [isSaving, setIsSaving] = useState(false);
 
     const [mounted, setMounted] = useState(false);
@@ -299,7 +376,7 @@ export default function MembersPage() {
                             ? "bg-primary text-white border-none hover:bg-primary/90" 
                             : "bg-white/5 border border-white/10 text-white hover:bg-white/10 shadow-lg"
                     )}
-                    onClick={() => setMemberModal({ mode: 'new', data: { ...BLANK_MEMBER, id: Math.random().toString(36).substr(2, 9) } })}
+                    onClick={() => { setMemberModal({ mode: 'new', data: { ...BLANK_MEMBER, id: Math.random().toString(36).substr(2, 9) } }); setMemberModalTab('config'); }}
                 >
                     <UserPlus className="h-4 w-4" />
                     nuevo miembro
@@ -730,7 +807,7 @@ export default function MembersPage() {
                                                                     variant="outline"
                                                                     size="sm"
                                                                     className="w-full border-primary/20 hover:bg-primary/10 text-xs gap-2"
-                                                                    onClick={() => setMemberModal({ mode: 'edit', data: member })}
+                                                                    onClick={() => { setMemberModal({ mode: 'edit', data: member }); setMemberModalTab('stats'); }}
                                                                 >
                                                                     <Edit2 className="w-3 h-3" /> Editar Perfil Completo
                                                                 </Button>
@@ -839,21 +916,155 @@ export default function MembersPage() {
             {memberModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
                     <Card className="w-full max-w-4xl glass-card bg-slate-900 border-white/10 overflow-hidden rounded-none">
-                        <CardHeader className="border-b border-white/5 bg-white/5 flex flex-row items-center justify-between py-8">
-                            <div>
-                                <CardTitle className="text-3xl font-light text-white font-[family-name:var(--font-poppins)] tracking-tighter">
-                                    {memberModal.mode === 'new' ? 'registrar nuevo miembro' : 'editar perfil del miembro'}
-                                </CardTitle>
-                                <CardDescription className="text-white/30 font-light tracking-[0.5em] uppercase text-[9px] mt-2">administración lldm rodeo</CardDescription>
+                        <CardHeader className="border-b border-white/5 bg-white/5 pb-0 pt-8 px-8">
+                            <div className="flex flex-row items-start justify-between mb-6">
+                                <div>
+                                    <CardTitle className="text-3xl font-light text-white font-[family-name:var(--font-poppins)] tracking-tighter">
+                                        {memberModal.mode === 'new' ? 'registrar nuevo miembro' : 'perfil del miembro'}
+                                    </CardTitle>
+                                    <CardDescription className="text-white/30 font-light tracking-[0.5em] uppercase text-[9px] mt-2">administración lldm rodeo</CardDescription>
+                                </div>
+                                <Button variant="ghost" size="icon" className="rounded-none hover:bg-white/5" onClick={() => setMemberModal(null)}>
+                                    <X className="h-5 w-5 text-white/50" />
+                                </Button>
                             </div>
-                            <Button variant="ghost" size="icon" className="rounded-none hover:bg-white/5" onClick={() => setMemberModal(null)}>
-                                <X className="h-5 w-5 text-white/50" />
-                            </Button>
+                            
+                            {memberModal.mode === 'edit' && (
+                                <div className="flex gap-8 border-b border-white/10">
+                                    <button 
+                                        className={cn(
+                                            "pb-4 text-xs font-bold uppercase tracking-widest transition-all",
+                                            memberModalTab === 'stats' ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-300"
+                                        )}
+                                        onClick={() => setMemberModalTab('stats')}
+                                    >
+                                        Estadísticas
+                                    </button>
+                                    <button 
+                                        className={cn(
+                                            "pb-4 text-xs font-bold uppercase tracking-widest transition-all",
+                                            memberModalTab === 'config' ? "text-primary border-b-2 border-primary" : "text-slate-500 hover:text-slate-300"
+                                        )}
+                                        onClick={() => setMemberModalTab('config')}
+                                    >
+                                        Configuración
+                                    </button>
+                                </div>
+                            )}
                         </CardHeader>
-                        <CardContent className="p-8">
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                                {/* Basic Info Column */}
-                                <div className="lg:col-span-2 space-y-6">
+                        <CardContent className="p-8 pb-12">
+                            {memberModalTab === 'stats' && memberModal.mode === 'edit' ? (
+                                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        <StatBarChart
+                                            percent={Math.round(((memberModal.data.stats?.attendance?.attended || 0) / (memberModal.data.stats?.attendance?.total || 1)) * 100)}
+                                            label="Asistencia Mes"
+                                            value={memberModal.data.stats?.attendance?.attended || 0}
+                                            total={memberModal.data.stats?.attendance?.total || 0}
+                                            gradientId="blue"
+                                        />
+                                        <StatDoughnut
+                                            percent={Math.round(((memberModal.data.stats?.participation?.led || 0) / (memberModal.data.stats?.participation?.total || 1)) * 100)}
+                                            label="Responsable Oración"
+                                            value={memberModal.data.stats?.participation?.led || 0}
+                                            total={memberModal.data.stats?.participation?.total || 0}
+                                            gradientId="purple"
+                                        />
+                                        <StatDoughnut
+                                            percent={memberModal.data.stats?.punctuality || 0}
+                                            label="Puntualidad"
+                                            value={memberModal.data.stats?.punctuality || 0}
+                                            total={100}
+                                            gradientId="orange"
+                                        />
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+                                        <div className="space-y-4 p-6 bg-white/5 border border-white/10 rounded-md">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <TrendingUp className="w-5 h-5 text-blue-400" />
+                                                <h4 className="text-blue-400 font-black uppercase tracking-widest text-xs">Rendimiento de Asistencia</h4>
+                                            </div>
+                                            <div className="space-y-3">
+                                                <div className="flex justify-between items-center text-xs">
+                                                    <span className="text-slate-400 font-light">Asistencias este mes:</span>
+                                                    <span className="text-white font-bold">{memberModal.data.stats?.attendance?.attended || 0} de {memberModal.data.stats?.attendance?.total || 1}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center text-xs">
+                                                    <span className="text-slate-400 font-light">Porcentaje del mes (Vs Total):</span>
+                                                    <span className="text-white font-bold">{Math.round(((memberModal.data.stats?.attendance?.attended || 0) / (memberModal.data.stats?.attendance?.total || 1)) * 100)}%</span>
+                                                </div>
+                                                <div className="w-full bg-black/40 rounded-full h-1.5 mt-2 overflow-hidden">
+                                                    <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: `${Math.round(((memberModal.data.stats?.attendance?.attended || 0) / (memberModal.data.stats?.attendance?.total || 1)) * 100)}%` }} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4 p-6 bg-white/5 border border-white/10 rounded-md">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <Calendar className="w-5 h-5 text-purple-400" />
+                                                <h4 className="text-purple-400 font-black uppercase tracking-widest text-xs">Próximos Privilegios</h4>
+                                            </div>
+                                            <div className="space-y-3">
+                                                {memberModal.data.responsibilities && memberModal.data.responsibilities.length > 0 ? (
+                                                    <ul className="space-y-2">
+                                                        {memberModal.data.responsibilities.map((resp, idx) => (
+                                                            <li key={idx} className="flex justify-between items-center text-xs p-2 rounded bg-black/20 border border-white/5">
+                                                                <div className="flex flex-col">
+                                                                    <span className="text-white font-bold">{resp.label}</span>
+                                                                    <span className="text-slate-500 font-light text-[10px] uppercase tracking-widest">{resp.type}</span>
+                                                                </div>
+                                                                <div className="flex flex-col items-end">
+                                                                    <span className="text-purple-400 font-bold">{resp.date}</span>
+                                                                    <span className="text-[9px] uppercase tracking-widest font-black" style={{ color: resp.status === 'completed' ? '#10b981' : '#f59e0b' }}>
+                                                                        {resp.status === 'completed' ? 'Completado' : 'Pendiente'}
+                                                                    </span>
+                                                                </div>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <div className="text-xs text-slate-500 font-light text-center py-4 bg-black/20 rounded-md border border-white/5">
+                                                        No hay privilegios (oraciones / consagraciones) asignados próximamente.
+                                                    </div>
+                                                )}
+                                                <div className="flex justify-between items-center text-xs pt-3 mt-3 border-t border-white/10">
+                                                    <span className="text-slate-400 font-light">Responsable de oración en el mes:</span>
+                                                    <span className="text-white font-bold bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded">{memberModal.data.stats?.participation?.led || 0} veces</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Fila General Info */}
+                                        <div className="md:col-span-2 flex flex-col md:flex-row items-center gap-6 p-6 bg-emerald-500/5 border border-emerald-500/20 rounded-md">
+                                            <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                                                <Activity className="w-6 h-6 text-emerald-500" />
+                                            </div>
+                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                                                <div>
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest">Última Actividad</p>
+                                                    <p className="text-white text-xs mt-1 font-bold">{memberModal.data.lastActive}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest">Teléfono / WhatsApp</p>
+                                                    <p className="text-white text-xs mt-1">{memberModal.data.phone || 'No registrado'}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest">Correo Electrónico</p>
+                                                    <p className="text-white text-xs mt-1 truncate">{memberModal.data.email || 'No registrado'}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] text-emerald-500 font-black uppercase tracking-widest">Grupo Designado</p>
+                                                    <p className="text-white text-xs mt-1 uppercase font-black tracking-widest text-[10px] bg-white/10 py-0.5 px-2 rounded w-max">{memberModal.data.member_group || 'No asignado'}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                                    {/* Basic Info Column */}
+                                    <div className="lg:col-span-2 space-y-6">
                                     <div className="flex items-center gap-6 mb-8 p-4 bg-foreground/5 rounded-md border border-border/40">
                                         <div className="relative group cursor-pointer" onClick={() => (document.getElementById('member-avatar-upload') as HTMLInputElement)?.click()}>
                                             <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary/30 bg-card">
@@ -1164,6 +1375,8 @@ export default function MembersPage() {
                                     {memberModal.mode === 'new' ? 'Crear Miembro Ahora' : 'Confirmar y Guardar Cambios'}
                                 </Button>
                             </div>
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </div>

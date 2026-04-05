@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -699,7 +699,22 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
     const shouldHideLayout = hideLayout || settings.adminTheme === 'luna';
 
+    const router = useRouter();
     const [mounted, setMounted] = useState(false);
+
+    // --- SEGURIDAD: CONTROL DE ACCESO POR ROL (RBAC) ---
+    useEffect(() => {
+        if (mounted && currentUser) {
+            // Solo Administrador aquí.
+            if (currentUser.role !== 'Administrador') {
+                const target = currentUser.role === 'Ministro a Cargo' ? '/dashboard/ministro' : '/dashboard/profile';
+                router.push(target);
+            }
+        } else if (mounted && !currentUser) {
+            router.push('/login?returnTo=/admin');
+        }
+    }, [mounted, currentUser, router]);
+
     const [monthlyStats, setMonthlyStats] = useState<{ label: string, value: number }[]>([]);
     
     const [intelligenceRange, setIntelligenceRange] = useState<'month' | 30 | 15 | 7>(7);
