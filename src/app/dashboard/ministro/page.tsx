@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { format, addDays, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay, parseISO, startOfMonth, endOfMonth } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabaseClient';
 
 // --- Shared High-Fidelity Chart Components for Ministro ---
 
@@ -211,7 +212,7 @@ export default function MinistroDashboard() {
         currentUser, members, monthlySchedule, currentDate, messages,
         loadMembersFromCloud, loadAllSchedulesFromCloud, loadCloudMessages, loadMonthlyGlobalAttendanceStats,
         setScheduleForDay, saveScheduleDayToCloud, showNotification, updateProfileInCloud,
-        saveRecurringScheduleToCloud
+        saveRecurringScheduleToCloud, setCurrentUser
     } = useAppStore();
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
@@ -225,6 +226,41 @@ export default function MinistroDashboard() {
     const [isExporting, setIsExporting] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 12;
+
+    // FORCED SESSION RECOVERY FOR GHOST UI
+    useEffect(() => {
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session && !currentUser) {
+                // If store hasn't loaded user, reload members which should trigger store sync
+                await loadMembersFromCloud();
+                // Attempt to sync using the specific session user
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('email', session.user.email)
+                    .maybeSingle();
+                
+                if (profile) {
+                    setCurrentUser({
+                        id: profile.id,
+                        name: profile.name,
+                        email: profile.email,
+                        phone: profile.phone,
+                        avatar: profile.avatar_url,
+                        category: profile.category,
+                        member_group: profile.member_group,
+                        role: profile.role || 'Miembro',
+                        gender: profile.gender || 'Varon',
+                        status: profile.status || 'Activo',
+                        lastActive: profile.last_active || 'Hoy',
+                        privileges: profile.roles || [],
+                    } as any);
+                }
+            }
+        };
+        checkSession();
+    }, [currentUser, loadMembersFromCloud, setCurrentUser]);
 
     const handleExportDirectoryPDF = async () => {
         setIsExporting(true);
@@ -426,7 +462,41 @@ export default function MinistroDashboard() {
         };
     }, [members]);
 
-    if (!mounted || !currentUser) return <div className="min-h-screen bg-background" />;
+    // PREVENCIÓN DE GHOST UI: Bloqueo de renderizado estático del servidor
+    if (!mounted) {
+        return (
+            <div className="min-h-screen bg-[#060606] flex items-center justify-center font-[family-name:var(--font-poppins)]">
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0.2, 0.4, 0.2] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                    className="flex flex-col items-center gap-6"
+                >
+                    <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/40 italic">Iniciando Consola Ministerial v3.0...</span>
+                </motion.div>
+            </div>
+        );
+    }
+
+    // Si no hay usuario y no está cargando, redirigir es una opción, pero por ahora solo mostrar fondo
+    if (!currentUser) {
+        return (
+            <div className="min-h-screen bg-[#060606] flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Sincronizando Perfil Ministerial...</div>
+                    <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-[9px] font-black uppercase tracking-widest text-primary/40 hover:text-primary transition-all"
+                        onClick={() => router.push('/login')}
+                    >
+                        O Reintentar Inicio de Sesión
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     const handlePrint = () => {
         window.print();
@@ -438,7 +508,14 @@ export default function MinistroDashboard() {
     const weekEnd = useMemo(() => endOfWeek(today, { weekStartsOn: 1 }), [today]);
     const weekDays = useMemo(() => eachDayOfInterval({ start: weekStart, end: weekEnd }), [weekStart, weekEnd]);
 
-    if (!mounted || !currentUser) return <div className="min-h-screen bg-[#060606]" />;
+    // PREVENCIÓN DE GHOST UI: Si no está montado no renderizar NADA estático del servidor
+    if (!mounted) {
+        return <div className="min-h-screen bg-[#060606] flex items-center justify-center">
+            <motion.div animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/40 italic">Iniciando Consola Ministerial...</motion.div>
+        </div>;
+    }
+
+    if (!currentUser) return <div className="min-h-screen bg-[#060606]" />;
 
     return (
         <div className="min-h-screen text-foreground transition-colors duration-500">
@@ -888,10 +965,13 @@ export default function MinistroDashboard() {
                                     <Card className="glass-card border-none bg-black/40 p-8 rounded-[2.5rem] space-y-6 group hover:border-emerald-500/20 transition-all">
                                         <div className="flex justify-between items-start">
                                             <div>
-                                                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2 mb-1 italic"><Star className="w-3.5 h-3.5" /> {selectedDate.getDay() === 0 ? "10:00 AM" : "09:00 AM"}</span>
+                                                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest flex items-center gap-2 mb-1 italic">
+                                                    <Star className="w-3.5 h-3.5" /> 
+                                                    {selectedDate.getDay() === 0 ? "10:00 AM" : (monthlySchedule[format(selectedDate, 'yyyy-MM-dd')]?.slots?.['9am']?.time || "09:00 AM")}
+                                                </span>
                                                 <div className="flex items-baseline gap-2">
                                                     <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">
-                                                        {selectedDate.getDay() === 0 ? "Escuela Dominical" : "Consagración"}
+                                                        {selectedDate.getDay() === 0 ? "Escuela Dominical" : (selectedDate.getDate() === 14 ? "Servicio de Historia" : "Consagración")}
                                                     </h4>
                                                     {selectedDate.getDay() !== 0 && <span className="text-[10px] font-black text-pink-400/60 uppercase italic tracking-widest">(Hermana)</span>}
                                                 </div>
