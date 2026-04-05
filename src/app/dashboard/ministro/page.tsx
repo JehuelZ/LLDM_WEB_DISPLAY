@@ -1,5 +1,10 @@
 'use client';
 
+// FORCE DYNAMIC RENDER TO KILL GHOST UI CACHE
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+// Build ID: FINAL_STABILIZATION_v5_APR_05_17_00
+
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -566,7 +571,7 @@ export default function MinistroDashboard() {
                              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
                              <div>
                                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-widest leading-none mb-1">Status</p>
-                                <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">LIVE SYNC</p>
+                                <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">LIVE SYNC v3.5</p>
                              </div>
                          </div>
                     </div>
