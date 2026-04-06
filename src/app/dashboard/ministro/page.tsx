@@ -3,7 +3,7 @@
 // FORCE DYNAMIC RENDER TO KILL GHOST UI CACHE
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-// Build ID: FINAL_STABILIZATION_v5_APR_05_17_00
+// Build ID: FINAL_STABILIZATION_v6_APR_06_02_00
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -230,42 +230,47 @@ export default function MinistroDashboard() {
     const [isSaving, setIsSaving] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isCheckingSession, setIsCheckingSession] = useState(true);
     const itemsPerPage = 12;
 
     // FORCED SESSION RECOVERY FOR GHOST UI
     useEffect(() => {
         const checkSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session && !currentUser) {
-                // If store hasn't loaded user, reload members which should trigger store sync
-                await loadMembersFromCloud();
-                // Attempt to sync using the specific session user
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('email', session.user.email)
-                    .maybeSingle();
-                
-                if (profile) {
-                    setCurrentUser({
-                        id: profile.id,
-                        name: profile.name,
-                        email: profile.email,
-                        phone: profile.phone,
-                        avatar: profile.avatar_url,
-                        category: profile.category,
-                        member_group: profile.member_group,
-                        role: profile.role || 'Miembro',
-                        gender: profile.gender || 'Varon',
-                        status: profile.status || 'Activo',
-                        lastActive: profile.last_active || 'Hoy',
-                        privileges: profile.roles || [],
-                    } as any);
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session && !currentUser) {
+                    // Try to restore from cloud
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('email', session.user.email)
+                        .maybeSingle();
+                    
+                    if (profile) {
+                        setCurrentUser({
+                            id: profile.id,
+                            name: profile.name,
+                            email: profile.email,
+                            phone: profile.phone,
+                            avatar: profile.avatar_url,
+                            category: profile.category,
+                            member_group: profile.member_group,
+                            role: profile.role || 'Miembro',
+                            gender: profile.gender || 'Varon',
+                            status: profile.status || 'Activo',
+                            lastActive: profile.last_active || 'Hoy',
+                            privileges: profile.roles || [],
+                        } as any);
+                    }
                 }
+            } catch (err) {
+                console.error("Session check failed", err);
+            } finally {
+                setIsCheckingSession(false);
             }
         };
         checkSession();
-    }, [currentUser, loadMembersFromCloud, setCurrentUser]);
+    }, [currentUser, setCurrentUser]);
 
     const handleExportDirectoryPDF = async () => {
         setIsExporting(true);
@@ -408,16 +413,18 @@ export default function MinistroDashboard() {
 
     // --- SEGURIDAD: CONTROL DE ACCESO POR ROL (RBAC) ---
     useEffect(() => {
-        if (mounted && currentUser) {
+        if (!mounted || isCheckingSession) return;
+
+        if (currentUser) {
             // El Ministro SOLO puede estar aquí. Administradores o Miembros afuera.
             if (currentUser.role !== 'Ministro a Cargo') {
                 const target = currentUser.role === 'Administrador' ? '/admin' : '/dashboard/profile';
                 router.push(target);
             }
-        } else if (mounted && !currentUser) {
+        } else {
             router.push('/login?returnTo=/dashboard/ministro');
         }
-    }, [mounted, currentUser, router]);
+    }, [mounted, isCheckingSession, currentUser, router]);
 
     useEffect(() => {
         setMounted(true);
@@ -514,13 +521,11 @@ export default function MinistroDashboard() {
     const weekDays = useMemo(() => eachDayOfInterval({ start: weekStart, end: weekEnd }), [weekStart, weekEnd]);
 
     // PREVENCIÓN DE GHOST UI: Si no está montado no renderizar NADA estático del servidor
-    if (!mounted) {
+    if (!mounted || isCheckingSession || !currentUser) {
         return <div className="min-h-screen bg-[#060606] flex items-center justify-center">
             <motion.div animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/40 italic">Iniciando Consola Ministerial...</motion.div>
         </div>;
     }
-
-    if (!currentUser) return <div className="min-h-screen bg-[#060606]" />;
 
     return (
         <div className="min-h-screen text-foreground transition-colors duration-500">
