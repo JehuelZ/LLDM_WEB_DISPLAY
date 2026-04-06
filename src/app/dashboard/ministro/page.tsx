@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import {
     Settings, Calendar, Users, TrendingUp, BookOpen, Clock,
     Bell, Mail, ChevronLeft, ChevronRight, Activity, Star, Award,
-    MessageSquare, CheckCircle2, LayoutDashboard, Database,
+    MessageSquare, CheckCircle2, LayoutDashboard, Database, Church,
     Search, Filter, User, Phone, Camera, Save, ArrowLeft, Trash2, Reply, Send, CheckCircle, MessageCircle,
     X, Plus, Shield, ShieldAlert, Heart, Activity as ActivityIcon, FileDown
 } from 'lucide-react';
@@ -264,14 +264,19 @@ export default function MinistroDashboard() {
                             lastActive: profile.last_active || 'Hoy',
                             privileges: profile.roles || [],
                         } as any);
+                        console.log("MINISTRO_HYDRATION: User state updated.");
+                    } else {
+                        console.warn("MINISTRO_HYDRATION: Session exists but NO profile found for email:", session.user.email);
                     }
+                } else {
+                    console.log("MINISTRO_HYDRATION: No auth session found. Redirect logic will trigger.");
                 }
             } catch (err) {
                 console.error("Session check failed", err);
             } finally {
                 setIsCheckingSession(false);
                 setMounted(true);
-                console.log("MINISTRO_HYDRATION: Hydration sequence complete.");
+                console.log("MINISTRO_HYDRATION: Guard sequence finalized (Mounted=true, CheckingSession=false)");
             }
         };
         checkSession();
@@ -480,38 +485,28 @@ export default function MinistroDashboard() {
         };
     }, [members]);
 
-    // PREVENCIÓN DE GHOST UI: Bloqueo de renderizado estático del servidor
-    if (!mounted) {
+    // --- INTEGRATED HYDRATION & AUTH GUARD ---
+    if (!mounted || isCheckingSession) {
         return (
-            <div className="min-h-screen bg-[#060606] flex items-center justify-center font-[family-name:var(--font-poppins)]">
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0.2, 0.4, 0.2] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                    className="flex flex-col items-center gap-6"
-                >
-                    <div className="w-12 h-12 border-t-2 border-primary rounded-full animate-spin shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary/40 italic">Iniciando Consola Ministerial v3.0...</span>
-                </motion.div>
+            <div className="min-h-screen bg-[#020205] flex flex-col items-center justify-center p-4">
+                <div className="relative">
+                    <div className="w-24 h-24 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+                    <Church className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 text-primary animate-pulse" />
+                </div>
+                <div className="mt-8 text-center space-y-2">
+                    <h2 className="text-xl font-black italic tracking-tighter uppercase text-white">Iniciando Consola</h2>
+                    <p className="text-[10px] font-bold text-primary/60 uppercase tracking-[0.4em] animate-pulse">Sincronizando con la Nube...</p>
+                </div>
             </div>
         );
     }
 
-    // Si no hay usuario y no está cargando, redirigir es una opción, pero por ahora solo mostrar fondo
     if (!currentUser) {
         return (
-            <div className="min-h-screen bg-[#060606] flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground animate-pulse">Sincronizando Perfil Ministerial...</div>
-                    <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-[9px] font-black uppercase tracking-widest text-primary/40 hover:text-primary transition-all"
-                        onClick={() => router.push('/login')}
-                    >
-                        O Reintentar Inicio de Sesión
-                    </Button>
-                </div>
+            <div className="min-h-screen bg-[#020205] flex flex-col items-center justify-center p-4">
+                <ShieldAlert className="w-12 h-12 text-red-500 mb-4 animate-bounce" />
+                <h2 className="text-xl font-black italic tracking-tighter uppercase text-white">Sesión Requerida</h2>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-2">Redirigiendo al inicio de sesión...</p>
             </div>
         );
     }
@@ -521,17 +516,10 @@ export default function MinistroDashboard() {
     };
 
     // Horario de la semana para el Ministro
-    const today = useMemo(() => new Date(), []);
-    const weekStart = useMemo(() => startOfWeek(today, { weekStartsOn: 1 }), [today]);
-    const weekEnd = useMemo(() => endOfWeek(today, { weekStartsOn: 1 }), [today]);
-    const weekDays = useMemo(() => eachDayOfInterval({ start: weekStart, end: weekEnd }), [weekStart, weekEnd]);
-
-    // PREVENCIÓN DE GHOST UI: Si no está montado no renderizar NADA estático del servidor
-    if (!mounted || isCheckingSession || !currentUser) {
-        return <div className="min-h-screen bg-[#060606] flex items-center justify-center">
-            <motion.div animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/40 italic">Iniciando Consola Ministerial...</motion.div>
-        </div>;
-    }
+    const today = new Date();
+    const weekStart = startOfWeek(today, { weekStartsOn: 1 });
+    const weekEnd = endOfWeek(today, { weekStartsOn: 1 });
+    const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
     return (
         <div className="min-h-screen text-foreground transition-colors duration-500">
