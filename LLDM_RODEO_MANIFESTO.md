@@ -6,20 +6,15 @@
 
 ---
 
-## 🗣️ 1. VOCABULARIO Y CONCEPTOS DE LA COMUNIDAD (NUESTRO IDIOMA)
+## 🗣️ 1. VOCABULARIO Y PROTOCOLO DE LA COMUNIDAD
 
-Este proyecto no usa términos genéricos. Debemos respetar el lenguaje de la iglesia:
+> [!CAUTION]
+> **ESTE PROYECTO TIENE TÉRMINOS PROHIBIDOS.**
+> Los términos "Misa, Rezo, Misionero, Misiones, Congregación, Cátedra" están **ESTRICTAMENTE PROHIBIDOS**.
+> Cualquier IA o desarrollador debe consultar el glosario oficial antes de desplegar cambios:
+> [VOCABULARIO_COMUNIDAD.md](file:///Users/hardglobal/Documents/LLDM_RODEO_APP/VOCABULARIO_COMUNIDAD.md).
 
-*   **Cátedra / El Púlpito**: El lugar de honor. En el diseño (específicamente en el tema **Iglesia**), nos referimos a los controles de luz/oscuridad como "Estilo de Cátedra".
-*   **Consagración**: Servicio de oración y búsqueda espiritual (usualmente 5 AM o previo a la doctrina).
-*   **Doctrina**: El servicio principal de enseñanza (usualmente 9 AM o 6 PM).
-*   **Estudio**: Sesión de aprendizaje bíblico profundo.
-*   **Batallón**: Grupos de evangelización o misiones especiales.
-*   **Pizarras / Display**: No es solo un "monitor", es la "Pizarra de Anuncios y Horarios" que ve la iglesia.
-*   **Responsable / Encargado**: Líder de un grupo (Coro, Jóvenes, Niños, etc.).
-*   **Solos y Solas**: Grupo de hermanos y hermanas solteros, viudos o solos.
-*   **Casados / Matrimonios**: Servicio enfocado a parejas.
-*   **Reunión de Obreros**: Sesión administrativa/espiritual para líderes.
+Este proyecto respeta la identidad de la iglesia. Usamos términos como **Hermanos**, **Visita**, **Oraciones (5, 9, Tarde)**, **Doctrina** y **Servicio de Alabanzas**.
 
 ---
 

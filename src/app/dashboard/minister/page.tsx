@@ -16,17 +16,21 @@ import {
     MapPin,
     ArrowUpRight
 } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useAppStore } from '@/lib/store';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabaseClient';
 import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 import FervorPulse from '@/components/dashboard/minister/FervorPulse';
 import VigilanceRadar from '@/components/dashboard/minister/VigilanceRadar';
+import AgendaSantidad from '@/components/dashboard/minister/AgendaSantidad';
+import SoulIntercession from '@/components/dashboard/minister/SoulIntercession';
 import './MinisterStyles.css';
 
 export default function MinisterDashboard() {
     const [activeTab, setActiveTab] = useState<'pulse' | 'radar' | 'agenda' | 'intercession'>('pulse');
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [isLoaded, setIsLoaded] = useState(false);
     const router = useRouter();
     const { members, loadMembersFromCloud, showNotification } = useAppStore();
@@ -147,22 +151,55 @@ export default function MinisterDashboard() {
                         ))}
                     </div>
 
-                    <div className="tactile-card min-h-[500px]">
-                        {activeTab === 'radar' ? (
-                            <VigilanceRadar members={members.slice(0, 10).map(m => ({
-                                id: m.id,
-                                name: m.name,
-                                status: m.status,
-                                last_attendance: 'HACE 2 DÍAS',
-                                fervor: Math.random() > 0.7 ? 'low' : Math.random() > 0.4 ? 'medium' : 'high'
-                            }))} />
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-center opacity-20">
-                                <Zap className="w-20 h-20 mb-6 animate-pulse" />
-                                <h3 className="text-2xl font-black italic uppercase italic tracking-tighter">Módulo en Desarrollo</h3>
-                                <p className="text-[10px] font-bold uppercase tracking-[0.4em] mt-4">Sincronizando frecuencias espirituales...</p>
-                            </div>
-                        )}
+                    <div className="tactile-card min-h-[600px] flex flex-col">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeTab}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.3 }}
+                                className="flex-1"
+                            >
+                                {activeTab === 'radar' && (
+                                    <VigilanceRadar members={members.slice(0, 15).map(m => ({
+                                        id: m.id,
+                                        name: m.name,
+                                        status: m.status,
+                                        group: m.id.charCodeAt(0) % 2 === 0 ? 'GRUPO 1' : 'GRUPO 2',
+                                        last_attendance: 'HACE 2 DÍAS',
+                                        fervor: Math.random() > 0.7 ? 'low' : Math.random() > 0.4 ? 'medium' : 'high'
+                                    }))} />
+                                )}
+                                
+                                {activeTab === 'agenda' && (
+                                    <AgendaSantidad schedule={Array.from({ length: 7 }).map((_, i) => ({
+                                        date: addDays(new Date(), i - 1),
+                                        slots: {
+                                            '5am': { time: '05:00 AM', leaderName: 'HN. ZELAYA', type: 'PRIMICIAS', language: 'ES' },
+                                            '9am': { time: '09:00 AM', leaderName: 'HNAS. RODRIGUEZ', type: 'CONSAGRACIÓN', language: 'ES' },
+                                            'evening': { time: '07:00 PM', leaderName: 'MIN. JEHUEL', type: 'SERVICIO', language: 'ES' }
+                                        }
+                                    }))} />
+                                )}
+
+                                {activeTab === 'intercession' && (
+                                    <SoulIntercession requests={[
+                                        { id: '1', memberName: 'Lucía Nardone', group: 'GRUPO 1', content: 'Fortaleza espiritual tras cirugía.', status: 'urgent', category: 'Salud', createdAt: 'Hace 2h' },
+                                        { id: '2', memberName: 'Samuel Zelaya', group: 'GRUPO 2', content: 'Guía en decisión de estudios.', status: 'regular', category: 'Fortaleza', createdAt: 'Hace 5h' },
+                                        { id: '3', memberName: 'María López', group: 'GRUPO 1', content: 'Acción de gracias por sanidad.', status: 'answered', category: 'Acción de Gracias', createdAt: 'Ayer' }
+                                    ]} />
+                                )}
+
+                                {activeTab === 'pulse' && (
+                                    <div className="flex flex-col items-center justify-center h-full text-center opacity-20 py-12">
+                                        <Zap className="w-20 h-20 mb-6 animate-pulse" />
+                                        <h3 className="text-2xl font-black italic uppercase italic tracking-tighter text-white">Monitor de Salud en Línea</h3>
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.4em] mt-4 text-white">Escaneando censo espiritual en tiempo real...</p>
+                                    </div>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
 

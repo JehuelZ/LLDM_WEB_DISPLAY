@@ -48,7 +48,7 @@ export const DEFAULT_SLOT_LABELS: Record<string, { es: string, en: string }> = {
         en: 'Sunday School'
     },
     'evening_regular': {
-        es: 'Culto de Adoración',
+        es: 'Oración Regular',
         en: 'Evening Service'
     }
 };
@@ -70,16 +70,16 @@ export function getServiceTypeLabel(type: string, lang: 'es' | 'en' = 'es', is14
     }
 
     const labels: Record<string, { es: string, en: string }> = {
-        regular: { es: 'Culto de Adoración', en: 'Worship Service' },
+        regular: { es: 'Oración Regular', en: 'Worship Service' },
         youth: { es: 'Servicio de Jóvenes', en: 'Youth Service' },
         married: { es: 'Servicio de Casados', en: 'Married Couples Service' },
-        children: { es: 'Servicio de la Niñez', en: 'Children\'s Service' },
+        children: { es: 'Servicio de Niños', en: 'Children\'s Service' },
         solos: { es: 'Servicio de Solos y Solas', en: 'Singles Service' },
         praise: { es: 'Servicio de Alabanzas', en: 'Praise Service' },
         special: { es: 'Servicio Especial', en: 'Special Service' },
         youth_english: { es: 'Servicio de Jóvenes (En)', en: 'Youth Service (En)' },
-        consecration: { es: 'Servicio de Consagración', en: 'Consecration Service' },
-        doctrine: { es: 'Estudio de Doctrina', en: 'Doctrine Study' }
+        consecration: { es: 'Consagración', en: 'Consecration Service' },
+        doctrine: { es: 'Doctrina', en: 'Doctrine Study' }
     };
     return labels[type]?.[lang] || labels.regular[lang];
 }

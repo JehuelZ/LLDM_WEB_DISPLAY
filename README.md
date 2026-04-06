@@ -1,3 +1,12 @@
+# 📜 LLDM Rodeo Board - Admin Dashboard
+
+> [!IMPORTANT]
+> **DOCUMENTACIÓN MAESTRA (ABRIL 2026)**
+> Se ha consolidado toda la lógica y filosofía del proyecto en: [LLDM_RODEO_2026_MASTER.md](file:///Users/hardglobal/Documents/LLDM_RODEO_APP/LLDM_RODEO_2026_MASTER.md).
+> Este es el punto de partida obligatorio para cualquier desarrollo.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
