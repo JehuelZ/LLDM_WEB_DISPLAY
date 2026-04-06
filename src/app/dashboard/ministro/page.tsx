@@ -52,6 +52,7 @@ export default function MinistroDashboardPage() {
         monthlySchedule, 
         loadAllSchedulesFromCloud, 
         updateProfileInCloud,
+        saveRecurringScheduleToCloud,
         showNotification
     } = useAppStore();
 
@@ -100,63 +101,44 @@ export default function MinistroDashboardPage() {
     const updateDaySlot = async (date: Date, slot: string, data: any) => {
         const dateStr = format(date, 'yyyy-MM-dd');
         try {
-            const current = monthlySchedule[dateStr] || { slots: {} };
-            const updated = {
-                ...current,
-                slots: {
-                    ...current.slots,
-                    [slot]: {
-                        ...(current.slots[slot] || {}),
-                        ...data
-                    }
-                }
-            };
+            const current = (monthlySchedule as any)[dateStr] || { slots: {} };
+            const slotData = { ...(current.slots[slot] || {}), ...data };
             
+            // Map our memory-optimized format back to DB columns
+            const dbUpdate: any = { date: dateStr, updated_at: new Date().toISOString() };
+            
+            if (slot === '5am') {
+                if (slotData.leaderId !== undefined) dbUpdate.five_am_leader_id = slotData.leaderId;
+                if (slotData.time !== undefined) dbUpdate.five_am_time = slotData.time;
+                if (slotData.language !== undefined) dbUpdate.five_am_language = slotData.language;
+            } else if (slot === '9am') {
+                if (slotData.consecrationLeaderId !== undefined) dbUpdate.nine_am_consecration_leader_id = slotData.consecrationLeaderId;
+                if (slotData.doctrineLeaderId !== undefined) dbUpdate.nine_am_doctrine_leader_id = slotData.doctrineLeaderId;
+                if (slotData.sundayType !== undefined) dbUpdate.nine_am_sunday_type = slotData.sundayType;
+                if (slotData.topic !== undefined) dbUpdate.nine_am_topic = slotData.topic;
+                if (slotData.time !== undefined) dbUpdate.nine_am_time = slotData.time;
+                if (slotData.language !== undefined) dbUpdate.nine_am_language = slotData.language;
+            } else if (slot === 'evening') {
+                if (slotData.leaderIds !== undefined) dbUpdate.evening_leader_ids = slotData.leaderIds;
+                if (slotData.doctrineLeaderId !== undefined) dbUpdate.evening_doctrine_leader_id = slotData.doctrineLeaderId;
+                if (slotData.topic !== undefined) dbUpdate.evening_topic = slotData.topic;
+                if (slotData.type !== undefined) dbUpdate.evening_type = slotData.type;
+                if (slotData.time !== undefined) dbUpdate.evening_time = slotData.time;
+                if (slotData.language !== undefined) dbUpdate.evening_language = slotData.language;
+            }
+
             const { error } = await supabase
                 .from('schedule')
-                .upsert({ 
-                    date: dateStr, 
-                    ...updated.slots, // Wait, the store uses specific columns in 'schedule' table?
-                    // Let's check how the store saves it.
-                    updated_at: new Date().toISOString()
-                });
+                .upsert(dbUpdate);
 
             if (error) throw error;
             loadAllSchedulesFromCloud();
-            showNotification('Agenda actualizada', 'success');
+            showNotification('Agenda actualizada v3.6.1', 'success');
         } catch (err) {
-            showNotification('Error al actualizar agenda', 'error');
+            showNotification('Error al sincronizar agenda', 'error');
         }
     };
 
-    const saveRecurringScheduleToCloud = async (dateStr: string, slotKey: string, leaderId: string, type: 'next' | 'month') => {
-        // We'll use the store's action if possible, but it has different signature.
-        // For now, I'll keep the local logic but using correct table name 'schedule'.
-        try {
-            const date = parseISO(dateStr);
-            const datesToUpdate: string[] = [];
-            
-            if (type === 'next') {
-                datesToUpdate.push(format(addDays(date, 7), 'yyyy-MM-dd'));
-            } else {
-                const end = endOfMonth(date);
-                let current = addDays(date, 7);
-                while (current <= end) {
-                    datesToUpdate.push(format(current, 'yyyy-MM-dd'));
-                    current = addDays(current, 7);
-                }
-            }
-
-            for (const d of datesToUpdate) {
-                // This is a bit complex to do manually here because of column mapping.
-                // I should probably just call the store's action if I can map the slots.
-            }
-            
-            showNotification('Funcionalidad de recurrencia delegada al sistema central', 'info');
-        } catch (err) {
-            showNotification('Error en recurrencia', 'error');
-        }
-    };
 
     const handleUpdateBio = async (memberId: string, bio: string) => {
         try {
@@ -179,9 +161,9 @@ export default function MinistroDashboardPage() {
             const opt = {
                 margin: 5,
                 filename: `Directorio_Ministro_${format(new Date(), 'yyyy_MM_dd')}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
+                image: { type: 'jpeg' as const, quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-                jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' }
+                jsPDF: { unit: 'mm' as const, format: 'a3' as const, orientation: 'landscape' as const }
             };
             await html2pdf().set(opt).from(element).save();
             showNotification('PDF generado con éxito', 'success');
@@ -203,9 +185,9 @@ export default function MinistroDashboardPage() {
             const opt = {
                 margin: 0,
                 filename: `Ficha_${member.name.replace(/\s+/g, '_')}.pdf`,
-                image: { type: 'jpeg', quality: 1 },
+                image: { type: 'jpeg' as const, quality: 1 },
                 html2canvas: { scale: 3, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
             };
             await html2pdf().set(opt).from(element).save();
             showNotification('Ficha técnica generada', 'success');
@@ -332,7 +314,11 @@ export default function MinistroDashboardPage() {
                             monthDays={monthDays}
                             privilegedMembers={privilegedMembers}
                             updateDaySlot={updateDaySlot}
-                            saveRecurringScheduleToCloud={saveRecurringScheduleToCloud}
+                            saveRecurringScheduleToCloud={async (date, slot, leaderId, type) => {
+                                // Map simple slots to store's expected complex slots if necessary
+                                const mappedSlot = slot === '9am' ? '9am_consecration' : (slot as any);
+                                await saveRecurringScheduleToCloud(date, mappedSlot, leaderId, type);
+                            }}
                             showNotification={showNotification}
                         />
                     )}
