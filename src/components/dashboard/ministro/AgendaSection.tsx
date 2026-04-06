@@ -13,7 +13,8 @@ import {
     Star, 
     Activity 
 } from 'lucide-react';
-import { format, addDays, isSameDay, parseISO } from 'date-fns';
+import { format, addDays, isSameDay, parseISO, startOfWeek } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 interface AgendaSectionProps {
     selectedDate: Date;
@@ -97,6 +98,70 @@ export function AgendaSection({
                 </div>
             </div>
 
+            {/* --- RESUMEN SEMANAL (VISTA RÁPIDA) --- */}
+            <div className="grid grid-cols-1 md:grid-cols-7 gap-4 p-6 bg-white/[0.02] border border-white/5 rounded-[2.5rem]">
+                {(() => {
+                    const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
+                    return Array.from({ length: 7 }).map((_, i) => {
+                        const day = addDays(weekStart, i);
+                        const dStr = format(day, 'yyyy-MM-dd');
+                        const sched = monthlySchedule[dStr];
+                        const isToday = isSameDay(day, new Date());
+                        const isSel = isSameDay(day, selectedDate);
+                        
+                        return (
+                            <div 
+                                key={dStr}
+                                onClick={() => setSelectedDate(day)}
+                                className={cn(
+                                    "flex flex-col p-4 rounded-3xl border transition-all cursor-pointer hover:scale-105 active:scale-95 group relative overflow-hidden",
+                                    isSel ? "bg-primary border-primary shadow-[0_0_25px_rgba(239,68,68,0.3)]" : 
+                                    isToday ? "bg-primary/10 border-primary/30" : "bg-black/20 border-white/5 hover:border-white/20"
+                                )}
+                            >
+                                <div className="flex justify-between items-start mb-3">
+                                    <span className={cn(
+                                        "text-[10px] font-black uppercase tracking-widest",
+                                        isSel ? "text-black" : "text-muted-foreground/60"
+                                    )}>
+                                        {format(day, 'EEE', { locale: es })}
+                                    </span>
+                                    <span className={cn(
+                                        "text-lg font-black italic",
+                                        isSel ? "text-black" : "text-white"
+                                    )}>
+                                        {format(day, 'd')}
+                                    </span>
+                                </div>
+                                <div className="space-y-1.5 min-h-[40px]">
+                                    <div className="flex items-center gap-1.5">
+                                        <div className={cn("w-1.5 h-1.5 rounded-full", sched?.slots?.['5am']?.leaderId ? "bg-blue-400" : "bg-white/10")} />
+                                        <p className={cn("text-[9px] font-bold truncate uppercase", isSel ? "text-black/70" : "text-white/40")}>
+                                            {sched?.slots?.['5am']?.leaderId ? privilegedMembers.find(m => m.id === sched.slots['5am'].leaderId)?.name.split(' ')[0] : '---'}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <div className={cn("w-1.5 h-1.5 rounded-full", (sched?.slots?.['9am']?.leaderId || sched?.slots?.['9am']?.consecrationLeaderId) ? "bg-emerald-400" : "bg-white/10")} />
+                                        <p className={cn("text-[9px] font-bold truncate uppercase", isSel ? "text-black/70" : "text-white/40")}>
+                                            {(sched?.slots?.['9am']?.leaderId || sched?.slots?.['9am']?.consecrationLeaderId) ? 
+                                                privilegedMembers.find(m => m.id === (sched.slots['9am'].leaderId || sched.slots['9am'].consecrationLeaderId))?.name.split(' ')[0] : '---'}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <div className={cn("w-1.5 h-1.5 rounded-full", sched?.slots?.['evening']?.leaderIds?.[0] ? "bg-pink-400" : "bg-white/10")} />
+                                        <p className={cn("text-[9px] font-bold truncate uppercase", isSel ? "text-black/70" : "text-white/40")}>
+                                            {sched?.slots?.['evening']?.leaderIds?.[0] ? privilegedMembers.find(m => m.id === sched.slots['evening'].leaderIds[0])?.name.split(' ')[0] : '---'}
+                                        </p>
+                                    </div>
+                                </div>
+                                {isToday && <div className="absolute bottom-1 right-2 text-[8px] font-black text-primary animate-pulse">HOY</div>}
+                            </div>
+                        );
+                    });
+                })()}
+            </div>
+
+
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Navegador Mensual (Mini mapa) */}
                 <div className="lg:col-span-3">
@@ -110,6 +175,12 @@ export function AgendaSection({
                         </CardHeader>
                         <div className="grid grid-cols-7 gap-2">
                             {['D','L','M','X','J','V','S'].map(d => (<div key={d} className="text-center text-[9px] font-black text-muted-foreground/30 uppercase">{d}</div>))}
+                            
+                            {/* Spacers for first day of month alignment */}
+                            {Array.from({ length: monthDays[0].getDay() }).map((_, i) => (
+                                <div key={`spacer-${i}`} className="aspect-square" />
+                            ))}
+
                             {monthDays.map((day) => {
                                 const dStr = format(day, 'yyyy-MM-dd');
                                 const isSel = isSameDay(day, selectedDate);
