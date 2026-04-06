@@ -225,11 +225,7 @@ export default function MinistroDashboardPage() {
                         <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic leading-none drop-shadow-2xl">
                             Consola <span className="text-primary drop-shadow-[0_0_35px_rgba(239,68,68,0.5)]">Ministro</span>
                         </h1>
-                        <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 italic border-l border-white/10 pl-4">v3.6.1 • {BUILD_ID}</span>
                     </div>
-                    <p className="text-xs font-bold uppercase tracking-[0.6em] text-muted-foreground/60 max-w-2xl leading-relaxed italic">
-                        Sistema integral de supervisión espiritual y gestión de membresía de <span className="text-white">LLDM Rodeo</span>. Acceso exclusivo ministerial bajo protocolo de integridad.
-                    </p>
                </div>
 
                 <div className="flex flex-wrap gap-4 mb-16 p-2 bg-white/[0.02] border border-white/5 rounded-[2.5rem] w-fit">
