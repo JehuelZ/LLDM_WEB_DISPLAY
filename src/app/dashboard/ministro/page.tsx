@@ -1,9 +1,8 @@
 'use client';
 
 // FORCE DYNAMIC RENDER TO KILL GHOST UI CACHE
+// Build ID: FINAL_STABILIZATION_v9_APR_06_20_42
 export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-// Build ID: FINAL_STABILIZATION_v8_APR_06_19_30
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
