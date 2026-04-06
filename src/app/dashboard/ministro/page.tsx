@@ -3,7 +3,7 @@
 // FORCE DYNAMIC RENDER TO KILL GHOST UI CACHE
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
-// Build ID: FINAL_STABILIZATION_v6_APR_06_02_00
+// Build ID: FINAL_STABILIZATION_v8_APR_06_19_30
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
@@ -544,17 +544,23 @@ export default function MinistroDashboard() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                     >
-                        <div className="flex items-center gap-3 mb-3">
-                            <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full">
-                                <Activity className="w-3 h-3 text-primary animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Consola Ministerial v3.0</span>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+                            <div className="w-fit px-3 py-1 bg-primary/10 border border-primary/20 rounded-full flex items-center gap-2">
+                                <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-primary italic">Consola Actualizada v3.6 (Abril 06)</span>
                             </div>
+                            <button 
+                                onClick={() => window.location.reload()} 
+                                className="w-fit text-[8px] font-black uppercase text-muted-foreground hover:text-white transition-all underline underline-offset-8 decoration-primary/30"
+                            >
+                                ¿No ves los cambios? Forzar Actualización
+                            </button>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic text-foreground leading-none">
-                            Paz de Cristo, <span className="text-primary lg:not-italic">{currentUser.role === 'Administrador' ? 'Admin.' : 'Hno.'} {(currentUser.name || '').split(' ')[0]}</span>
+                            Paz de Cristo, <span className="text-primary lg:not-italic underline decoration-primary/20 underline-offset-8">{currentUser.role === 'Administrador' ? 'Admin.' : 'Hno.'} {(currentUser.name || '').split(' ')[0]}</span>
                         </h1>
-                        <p className="text-muted-foreground text-sm font-bold uppercase tracking-[0.15em] mt-3 opacity-80 flex items-center gap-2">
-                             Liderazgo Espiritual <span className="w-1.5 h-1.5 bg-primary rounded-full" /> Rodeo, California
+                        <p className="text-muted-foreground text-xs font-bold uppercase tracking-[0.2em] mt-4 opacity-50 flex items-center gap-2">
+                             SISTEMA INTEGRAL DE GESTIÓN PASTORAL <span className="w-1.5 h-1.5 bg-primary rounded-full" /> Rodeo, CA
                         </p>
                     </motion.div>
 
