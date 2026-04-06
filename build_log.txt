@@ -1,0 +1,28 @@
+
+> lldm-rodeo-board@0.2.0 build
+> next build
+
+   ▲ Next.js 15.1.9
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/23) ...
+   Generating static pages (5/23) 
+Error occurred prerendering page "/dashboard/ministro". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: Invalid revalidate value "function(){throw Error("Attempted to call revalidate() from the server but revalidate is on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.")}" on "/dashboard/ministro", must be a non-negative number or false
+    at /Users/hardglobal/Documents/LLDM_RODEO_APP/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:127:11188
+    at rI (/Users/hardglobal/Documents/LLDM_RODEO_APP/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:127:11368)
+    at async /Users/hardglobal/Documents/LLDM_RODEO_APP/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:127:12267
+    at async Promise.all (index 0)
+    at async rI (/Users/hardglobal/Documents/LLDM_RODEO_APP/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:127:12024)
+    at async /Users/hardglobal/Documents/LLDM_RODEO_APP/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:127:12267
+    at async Promise.all (index 0)
+    at async rI (/Users/hardglobal/Documents/LLDM_RODEO_APP/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:127:12024)
+    at async /Users/hardglobal/Documents/LLDM_RODEO_APP/node_modules/next/dist/compiled/next-server/app-page.runtime.prod.js:127:12267
+    at async Promise.all (index 0)
+Export encountered an error on /dashboard/ministro/page: /dashboard/ministro, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null

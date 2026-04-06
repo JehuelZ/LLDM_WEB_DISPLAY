@@ -1,0 +1,50 @@
+
+> lldm-rodeo-board@0.2.0 build
+> next build
+
+   ▲ Next.js 15.1.9
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/23) ...
+   Generating static pages (5/23) 
+   Generating static pages (11/23) 
+   Generating static pages (17/23) 
+ ✓ Generating static pages (23/23)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    12.4 kB         250 kB
+├ ○ /_not-found                          150 B           106 kB
+├ ○ /admin                               34.9 kB         282 kB
+├ ○ /admin/cloud                         3.52 kB         235 kB
+├ ○ /admin/members                       17.4 kB         238 kB
+├ ○ /admin/reports                       5.74 kB         226 kB
+├ ○ /auth/callback                       713 B           185 kB
+├ ○ /calendar                            6.94 kB         239 kB
+├ ○ /dashboard                           4.66 kB         236 kB
+├ ○ /dashboard/coro                      10.1 kB         242 kB
+├ ○ /dashboard/ministro                  23.7 kB         256 kB
+├ ○ /dashboard/monitor                   16.7 kB         248 kB
+├ ○ /dashboard/ninos                     5.12 kB         237 kB
+├ ○ /dashboard/profile                   12.4 kB         244 kB
+├ ○ /dashboard/responsable               597 B           106 kB
+├ ○ /dashboard/youth                     3.1 kB          235 kB
+├ ○ /directory                           3.79 kB         236 kB
+├ ○ /display                             6.54 kB         296 kB
+├ ○ /icon.png                            0 B                0 B
+├ ○ /login                               2.3 kB          229 kB
+└ ○ /tv                                  1.6 kB          291 kB
++ First Load JS shared by all            106 kB
+  ├ chunks/1517-223d8ef8985da7c8.js      50.7 kB
+  ├ chunks/4bd1b696-c8b67af90e705fb3.js  53 kB
+  └ other shared chunks (total)          2.04 kB
+
+
+○  (Static)  prerendered as static content
+
