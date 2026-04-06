@@ -236,20 +236,23 @@ export default function MinistroDashboard() {
     // FORCED SESSION RECOVERY FOR GHOST UI
     useEffect(() => {
         const checkSession = async () => {
+            console.log("MINISTRO_HYDRATION: Starting session check...");
             try {
                 const { data: { session } } = await supabase.auth.getSession();
+                console.log("MINISTRO_HYDRATION: Session found:", !!session);
                 if (session && !currentUser) {
-                    // Try to restore from cloud
-                    const { data: profile } = await supabase
+                    const { data: profile, error } = await supabase
                         .from('profiles')
                         .select('*')
                         .eq('email', session.user.email)
                         .maybeSingle();
                     
+                    console.log("MINISTRO_HYDRATION: Profile retrieved:", !!profile, error?.message || 'No error');
+                    
                     if (profile) {
                         setCurrentUser({
                             id: profile.id,
-                            name: profile.name,
+                            name: profile.name || 'Hno. LLDM',
                             email: profile.email,
                             phone: profile.phone,
                             avatar: profile.avatar_url,
@@ -267,6 +270,8 @@ export default function MinistroDashboard() {
                 console.error("Session check failed", err);
             } finally {
                 setIsCheckingSession(false);
+                setMounted(true);
+                console.log("MINISTRO_HYDRATION: Hydration sequence complete.");
             }
         };
         checkSession();
@@ -427,21 +432,22 @@ export default function MinistroDashboard() {
     }, [mounted, isCheckingSession, currentUser, router]);
 
     useEffect(() => {
-        setMounted(true);
-        loadMembersFromCloud();
-        loadAllSchedulesFromCloud();
-        loadCloudMessages();
-        
-        // Fetch and calculate real attendance rate
-        const getStats = async () => {
-            const statsRes = await loadMonthlyGlobalAttendanceStats();
-            if (statsRes && statsRes.length > 0) {
-                const avg = statsRes.reduce((acc, curr) => acc + curr.percentage, 0) / statsRes.length;
-                setAttendanceRate(`${Math.round(avg)}%`);
-            }
-        };
-        getStats();
-    }, []);
+        if (mounted) {
+            loadMembersFromCloud();
+            loadAllSchedulesFromCloud();
+            loadCloudMessages();
+            
+            // Fetch and calculate real attendance rate
+            const getStats = async () => {
+                const statsRes = await loadMonthlyGlobalAttendanceStats();
+                if (statsRes && statsRes.length > 0) {
+                    const avg = statsRes.reduce((acc, curr) => acc + curr.percentage, 0) / statsRes.length;
+                    setAttendanceRate(`${Math.round(avg)}%`);
+                }
+            };
+            getStats();
+        }
+    }, [mounted]);
 
     // Cálculo de estadísticas de la iglesia
     const stats = useMemo(() => {
@@ -557,7 +563,7 @@ export default function MinistroDashboard() {
                             </div>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic text-foreground leading-none">
-                            Paz de Cristo, <span className="text-primary lg:not-italic">{currentUser.role === 'Administrador' ? 'Admin.' : 'Hno.'} {currentUser.name.split(' ')[0]}</span>
+                            Paz de Cristo, <span className="text-primary lg:not-italic">{currentUser.role === 'Administrador' ? 'Admin.' : 'Hno.'} {(currentUser.name || '').split(' ')[0]}</span>
                         </h1>
                         <p className="text-muted-foreground text-sm font-bold uppercase tracking-[0.15em] mt-3 opacity-80 flex items-center gap-2">
                              Liderazgo Espiritual <span className="w-1.5 h-1.5 bg-primary rounded-full" /> Rodeo, California
