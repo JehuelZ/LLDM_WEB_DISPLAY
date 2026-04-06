@@ -222,7 +222,7 @@ export default function MinistroDashboardPage() {
             <main className="max-w-[1600px] mx-auto px-6 lg:px-12 py-12">
                <div className="flex flex-col mb-16">
                     <div className="flex flex-wrap items-baseline gap-4 mb-3">
-                        <h1 className="text-6xl md:text-8xl font-black tracking-tighter uppercase italic leading-none drop-shadow-2xl">
+                        <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic leading-none drop-shadow-2xl">
                             Consola <span className="text-primary drop-shadow-[0_0_35px_rgba(239,68,68,0.5)]">Ministro</span>
                         </h1>
                         <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 italic border-l border-white/10 pl-4">v3.6.1 • {BUILD_ID}</span>

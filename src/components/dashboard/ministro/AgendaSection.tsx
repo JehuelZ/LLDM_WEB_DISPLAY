@@ -98,8 +98,8 @@ export function AgendaSection({
                 </div>
             </div>
 
-            {/* --- RESUMEN SEMANAL (VISTA RÁPIDA) --- */}
-            <div className="grid grid-cols-1 md:grid-cols-7 gap-4 p-6 bg-white/[0.02] border border-white/5 rounded-[2.5rem]">
+            {/* --- AGENDA SEMANAL DETALLADA (ESTILO CLÁSICO RESTAURADO) --- */}
+            <div className="flex overflow-x-auto gap-4 pb-8 mb-4 no-scrollbar">
                 {(() => {
                     const weekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
                     return Array.from({ length: 7 }).map((_, i) => {
@@ -114,47 +114,52 @@ export function AgendaSection({
                                 key={dStr}
                                 onClick={() => setSelectedDate(day)}
                                 className={cn(
-                                    "flex flex-col p-4 rounded-3xl border transition-all cursor-pointer hover:scale-105 active:scale-95 group relative overflow-hidden",
-                                    isSel ? "bg-primary border-primary shadow-[0_0_25px_rgba(239,68,68,0.3)]" : 
-                                    isToday ? "bg-primary/10 border-primary/30" : "bg-black/20 border-white/5 hover:border-white/20"
+                                    "flex-shrink-0 w-[180px] flex flex-col p-5 rounded-[2rem] border transition-all cursor-pointer hover:shadow-xl group relative overflow-hidden",
+                                    isSel ? "bg-primary border-primary shadow-[0_0_30px_rgba(239,68,68,0.2)]" : 
+                                    isToday ? "bg-primary/10 border-primary/40" : "bg-white/[0.03] border-white/5 hover:border-white/20"
                                 )}
                             >
-                                <div className="flex justify-between items-start mb-3">
+                                <div className="flex justify-between items-baseline mb-4">
                                     <span className={cn(
-                                        "text-[10px] font-black uppercase tracking-widest",
+                                        "text-[10px] font-black uppercase tracking-tighter",
                                         isSel ? "text-black" : "text-muted-foreground/60"
                                     )}>
-                                        {format(day, 'EEE', { locale: es })}
+                                        {format(day, 'EEEE', { locale: es })}
                                     </span>
                                     <span className={cn(
-                                        "text-lg font-black italic",
+                                        "text-xl font-black italic",
                                         isSel ? "text-black" : "text-white"
                                     )}>
                                         {format(day, 'd')}
                                     </span>
                                 </div>
-                                <div className="space-y-1.5 min-h-[40px]">
-                                    <div className="flex items-center gap-1.5">
-                                        <div className={cn("w-1.5 h-1.5 rounded-full", sched?.slots?.['5am']?.leaderId ? "bg-blue-400" : "bg-white/10")} />
-                                        <p className={cn("text-[9px] font-bold truncate uppercase", isSel ? "text-black/70" : "text-white/40")}>
-                                            {sched?.slots?.['5am']?.leaderId ? privilegedMembers.find(m => m.id === sched.slots['5am'].leaderId)?.name.split(' ')[0] : '---'}
+
+                                <div className="space-y-3">
+                                    {/* Primicias */}
+                                    <div className="flex flex-col">
+                                        <span className={cn("text-[8px] font-black uppercase opacity-40", isSel ? "text-black" : "text-blue-400")}>5 AM</span>
+                                        <p className={cn("text-[10px] font-bold truncate", isSel ? "text-black/80" : "text-white")}>
+                                            {sched?.slots?.['5am']?.leaderId ? privilegedMembers.find(m => m.id === sched.slots['5am'].leaderId)?.name : '---'}
                                         </p>
                                     </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <div className={cn("w-1.5 h-1.5 rounded-full", (sched?.slots?.['9am']?.leaderId || sched?.slots?.['9am']?.consecrationLeaderId) ? "bg-emerald-400" : "bg-white/10")} />
-                                        <p className={cn("text-[9px] font-bold truncate uppercase", isSel ? "text-black/70" : "text-white/40")}>
+                                    {/* 9AM */}
+                                    <div className="flex flex-col">
+                                        <span className={cn("text-[8px] font-black uppercase opacity-40", isSel ? "text-black" : "text-emerald-400")}>9 AM</span>
+                                        <p className={cn("text-[10px] font-bold truncate", isSel ? "text-black/80" : "text-white")}>
                                             {(sched?.slots?.['9am']?.leaderId || sched?.slots?.['9am']?.consecrationLeaderId) ? 
-                                                privilegedMembers.find(m => m.id === (sched.slots['9am'].leaderId || sched.slots['9am'].consecrationLeaderId))?.name.split(' ')[0] : '---'}
+                                                privilegedMembers.find(m => m.id === (sched.slots['9am'].leaderId || sched.slots['9am'].consecrationLeaderId))?.name : '---'}
                                         </p>
                                     </div>
-                                    <div className="flex items-center gap-1.5">
-                                        <div className={cn("w-1.5 h-1.5 rounded-full", sched?.slots?.['evening']?.leaderIds?.[0] ? "bg-pink-400" : "bg-white/10")} />
-                                        <p className={cn("text-[9px] font-bold truncate uppercase", isSel ? "text-black/70" : "text-white/40")}>
-                                            {sched?.slots?.['evening']?.leaderIds?.[0] ? privilegedMembers.find(m => m.id === sched.slots['evening'].leaderIds[0])?.name.split(' ')[0] : '---'}
+                                    {/* Evening */}
+                                    <div className="flex flex-col">
+                                        <span className={cn("text-[8px] font-black uppercase opacity-40", isSel ? "text-black" : "text-pink-400")}>Noche</span>
+                                        <p className={cn("text-[10px] font-bold truncate", isSel ? "text-black/80" : "text-white")}>
+                                            {sched?.slots?.['evening']?.leaderIds?.[0] ? privilegedMembers.find(m => m.id === sched.slots['evening'].leaderIds[0])?.name : '---'}
                                         </p>
                                     </div>
                                 </div>
-                                {isToday && <div className="absolute bottom-1 right-2 text-[8px] font-black text-primary animate-pulse">HOY</div>}
+
+                                {isToday && <div className="absolute top-2 right-4 text-[7px] font-black text-primary px-2 py-0.5 rounded-full bg-primary/20 border border-primary/20">HOY</div>}
                             </div>
                         );
                     });
