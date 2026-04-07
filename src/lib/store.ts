@@ -1611,6 +1611,13 @@ export const useAppStore = create<AppState>()(
                     if (dbKey) {
                         dbUpdate[dbKey] = value;
                     }
+                    
+                    // SPECIAL: If they passed calendarStyles object partial
+                    if (key === 'calendarStyles' && value) {
+                        const cs = value as any;
+                        if (cs.template) dbUpdate['display_template'] = cs.template;
+                        if (cs.fontFamily) dbUpdate['display_font_family'] = cs.fontFamily;
+                    }
                 });
 
                 if (Object.keys(dbUpdate).length === 0) {
@@ -1618,8 +1625,27 @@ export const useAppStore = create<AppState>()(
                     return;
                 }
 
+                // Sincronizar calendarStyles top-level preventivamente para evitar parpadeo 'revert'
+                const partialState: any = { settings: updated };
+                
+                // If template is changing anywhere, keep them in sync
+                const newTpl = (newSettings as any).displayTemplate || (newSettings as any).calendarStyles?.template;
+                if (newTpl) {
+                    partialState.calendarStyles = {
+                        ...get().calendarStyles,
+                        template: newTpl as any
+                    };
+                }
+
+                if (newSettings.fontMain) {
+                    partialState.calendarStyles = {
+                        ...(partialState.calendarStyles || get().calendarStyles),
+                        fontFamily: newSettings.fontMain as any
+                    };
+                }
+
                 // Actualizar estado local inmediatamente para alta respuesta UI
-                set({ settings: updated });
+                set(partialState);
                 console.log('SYNC: Persisting partial app settings to cloud:', dbUpdate);
 
                 const { error } = await supabase.from('app_settings').update(dbUpdate).eq('id', 1);

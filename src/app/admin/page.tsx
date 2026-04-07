@@ -2579,7 +2579,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             ].map((theme) => (
                                                 <button
                                                     key={theme.id}
-                                                    onClick={() => setSettings({ displayTemplate: theme.id as any })}
+                                                    onClick={() => saveSettingsToCloud({ displayTemplate: theme.id as any })}
                                                     className={cn(
                                                         "flex flex-col items-center justify-center p-4 rounded-md border transition-all gap-2",
                                                         (settings.displayTemplate || 'nocturno') === theme.id 

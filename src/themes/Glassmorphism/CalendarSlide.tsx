@@ -136,6 +136,13 @@ export const GlassmorphismCalendar = () => {
                             </div>
 
                             <div className="flex-1 flex flex-col gap-3 overflow-y-auto px-4 pb-12 custom-scrollbar scroll-smooth">
+                                {(() => {
+                                    const firstDayOfMonthIdx = getDay(currentMonth);
+                                    if (dowIndex < firstDayOfMonthIdx) {
+                                        return <div className="w-full aspect-square opacity-0" />;
+                                    }
+                                    return null;
+                                })()}
                                 {daysInColumn.map((day, idx) => {
                                     const dateKey = format(day, 'yyyy-MM-dd');
                                     const sched = monthlySchedule[dateKey];

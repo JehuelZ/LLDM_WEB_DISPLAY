@@ -133,7 +133,6 @@ export const EstilosTab = ({
                     <button
                         key={themeOpt.id}
                         onClick={() => {
-                            setCalendarStyles({ template: themeOpt.id as any });
                             saveSettingsToCloud({ displayTemplate: themeOpt.id as any });
                         }}
                         className={cn(

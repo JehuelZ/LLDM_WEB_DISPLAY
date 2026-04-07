@@ -11,6 +11,7 @@ import { CountdownCard } from '@/components/CountdownCard';
 import { CeremonialCountdown } from '@/components/CeremonialCountdown';
 import { getTheme } from '@/themes';
 import { DisplayLock } from '@/components/display/DisplayLock';
+import { AdministrativeOverlay } from '@/components/display/AdministrativeOverlay';
 
 const FullscreenButton = () => {
     const toggleFullscreen = () => {
@@ -40,6 +41,8 @@ export default function DisplayPage() {
     const [now, setNow] = useState(() => new Date());
     const [unlocked, setUnlocked] = useState(false);
     const [autoScale, setAutoScale] = useState(1);
+    const [isAdminOverlayOpen, setIsAdminOverlayOpen] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     const loadAllSchedulesFromCloud = useAppStore((state) => state.loadAllSchedulesFromCloud);
     const loadAnnouncementsFromCloud = useAppStore((state) => state.loadAnnouncementsFromCloud);
@@ -71,8 +74,11 @@ export default function DisplayPage() {
         const now = Date.now();
         if (now - lastClickTime < 500) {
             const newCount = clickCount + 1;
-            if (newCount >= 3) {
+            
+            if (newCount === 3) {
                 togglePerfMode();
+            } else if (newCount >= 5) {
+                setIsAdminOverlayOpen(true);
                 setClickCount(0);
             } else {
                 setClickCount(newCount);
@@ -187,7 +193,9 @@ export default function DisplayPage() {
 
         // Slide rotation timer
         const rotationTimer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slides.length);
+            if (!isPaused) {
+                setCurrentSlide((prev) => (prev + 1) % slides.length);
+            }
         }, slideDuration * 1000);
 
         // ... rest of the timers ...
@@ -215,7 +223,7 @@ export default function DisplayPage() {
             clearInterval(refreshTimer);
             clearInterval(dateCheckTimer);
         };
-    }, [slides.length, settings?.iglesiaSlideDuration, settings?.displayTemplate, calendarStyles?.template]);
+    }, [slides.length, settings?.iglesiaSlideDuration, settings?.displayTemplate, calendarStyles?.template, isPaused]);
 
 
     if (!isMounted) return null;
@@ -380,6 +388,20 @@ export default function DisplayPage() {
             <div className="fixed bottom-10 right-10 z-[500] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
                 <FullscreenButton />
             </div>
+
+            <AdministrativeOverlay 
+                isOpen={isAdminOverlayOpen}
+                onClose={() => setIsAdminOverlayOpen(false)}
+                slides={slides}
+                currentSlide={currentSlide}
+                onSlideChange={(idx) => {
+                    setCurrentSlide(idx);
+                    setIsPaused(true);
+                }}
+                isPaused={isPaused}
+                onTogglePause={() => setIsPaused(!isPaused)}
+                settings={settings}
+            />
         </main>
     );
 }

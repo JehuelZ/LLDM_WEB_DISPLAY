@@ -2,9 +2,8 @@ import Background from './Background';
 import Clock from './Clock';
 import Progress from './Progress';
 import LunaPremiumSchedule from './LunaPremiumSchedule';
-// Using Glassmorphism components as temporary base for missing slides
-import { GlassmorphismCalendar } from '../Glassmorphism/CalendarSlide';
-import { GlassmorphismWeekly } from '../Glassmorphism/WeeklySlide';
+import LunaPremiumWeekly from './LunaPremiumWeekly';
+import LunaPremiumCalendar from './LunaPremiumCalendar';
 import { GlassmorphismAnnouncements } from '../Glassmorphism/AnnouncementsSlide';
 import { Theme } from '../index';
 
@@ -23,8 +22,8 @@ export const LunaPremiumTheme: Theme = {
     },
     slides: {
         Schedule: LunaPremiumSchedule,
-        Calendar: GlassmorphismCalendar,
-        Weekly: GlassmorphismWeekly,
+        Calendar: LunaPremiumCalendar,
+        Weekly: LunaPremiumWeekly,
         Announcements: GlassmorphismAnnouncements
     }
 };
