@@ -95,7 +95,13 @@ export default function VigilanceRadar({ members }: { members: Member[] }) {
             </div>
 
             <div className="flex-1 overflow-y-auto pr-4 no-scrollbar">
-                {viewMode === 'grid' ? (
+                {filtered.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center opacity-20 py-20 bg-white/[0.01] border border-white/5 rounded-[3rem] border-dashed">
+                        <Search className="w-16 h-16 mb-6 animate-pulse text-white/40" />
+                        <h3 className="text-xl font-black italic uppercase tracking-tighter text-white">Radar Despejado</h3>
+                        <p className="text-[9px] font-bold uppercase tracking-[0.4em] mt-4 text-white/60">No se encontraron miembros en este sector de vigilancia</p>
+                    </div>
+                ) : viewMode === 'grid' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                         <AnimatePresence mode="popLayout">
                             {filtered.map((member, idx) => (

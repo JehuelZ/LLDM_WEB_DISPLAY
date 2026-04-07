@@ -287,10 +287,10 @@ export default function MinisterDashboard() {
                                 .map(msg => (
                                     <div key={msg.id} className="p-4 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-all cursor-pointer group">
                                         <div className="flex justify-between items-start mb-2">
-                                            <span className="text-[9px] font-black uppercase tracking-widest opacity-30">{msg.senderName}</span>
+                                            <span className="text-[9px] font-black uppercase tracking-widest opacity-30">{msg.senderName || 'MIEMBRO'}</span>
                                             <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-40" />
                                         </div>
-                                        <p className="text-[10px] font-bold leading-relaxed mb-3 truncate">{msg.content}</p>
+                                        <p className="text-[10px] font-bold leading-relaxed mb-3 line-clamp-2">{msg.content}</p>
                                         <div className="flex items-center gap-2">
                                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
                                             <span className="text-[8px] font-black uppercase tracking-widest text-white/40">Recibido {format(new Date(msg.createdAt), 'HH:mm')}</span>
@@ -298,8 +298,8 @@ export default function MinisterDashboard() {
                                     </div>
                                 ))}
                             {realStats.prayersRequested === 0 && (
-                                <div className="py-12 text-center opacity-20">
-                                    <p className="text-[10px] font-black uppercase tracking-widest">Sin peticiones pendientes</p>
+                                <div className="py-12 text-center opacity-20 border border-white/5 border-dashed rounded-3xl">
+                                    <p className="text-[9px] font-black uppercase tracking-widest">Sin peticiones pendientes</p>
                                 </div>
                             )}
                         </div>
@@ -307,7 +307,7 @@ export default function MinisterDashboard() {
                             onClick={() => setActiveTab('intercession')}
                             className="w-full h-12 rounded-2xl border border-white/5 text-[9px] font-black uppercase tracking-widest mt-8 hover:bg-white/[0.03] transition-all"
                         >
-                            Ver Todas las Intercesiones
+                            Ver Buzón de Intercesión
                         </button>
                     </div>
 

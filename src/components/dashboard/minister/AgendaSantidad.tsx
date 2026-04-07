@@ -96,23 +96,27 @@ export default function AgendaSantidad({ schedule }: { schedule: DaySchedule[] }
                                         <User className="w-6 h-6 text-white/20" />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-black italic uppercase italic tracking-tight text-white group-hover:text-primary transition-colors">
-                                            {data?.leaderName || 'SIN ENCARGADO'}
-                                        </p>
-                                        <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em]">Responsable de Gracia</p>
-                                    </div>
-                                </div>
+                                <p className="text-sm font-black italic uppercase italic tracking-tight text-white group-hover:text-primary transition-colors">
+                                    {data?.leaderName || 'SIN ASIGNAR'}
+                                </p>
+                                <p className="text-[8px] font-bold text-white/20 uppercase tracking-[0.2em]">Responsable de Gracia</p>
+                            </div>
+                        </div>
 
-                                <div className="space-y-3">
-                                    <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                                        <span className="text-[8px] font-black uppercase tracking-widest text-white/30">Instrucción</span>
-                                        <span className="text-[9px] font-bold text-white/60 uppercase">{data?.type || 'REGULAR'}</span>
-                                    </div>
-                                    <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                                        <span className="text-[8px] font-black uppercase tracking-widest text-white/30">Idioma</span>
-                                        <span className="text-[9px] font-bold text-white/60 uppercase">{data?.language || 'ESPAÑOL'}</span>
-                                    </div>
-                                </div>
+                        <div className="space-y-3">
+                            <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                                <span className="text-[8px] font-black uppercase tracking-widest text-white/30">Instrucción</span>
+                                <span className={cn("text-[9px] font-bold uppercase", data?.type ? "text-white/60" : "text-white/10")}>
+                                    {data?.type || 'PENDIENTE'}
+                                </span>
+                            </div>
+                            <div className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                                <span className="text-[8px] font-black uppercase tracking-widest text-white/30">Idioma</span>
+                                <span className={cn("text-[9px] font-bold uppercase", data?.language ? "text-white/60" : "text-white/10")}>
+                                    {data?.language || 'N/A'}
+                                </span>
+                            </div>
+                        </div>
                             </div>
 
                             <button className="mt-8 flex items-center justify-between w-full p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-[9px] font-black uppercase tracking-widest text-white/40 hover:bg-white/[0.06] hover:text-white transition-all">

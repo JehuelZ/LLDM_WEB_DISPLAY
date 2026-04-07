@@ -62,8 +62,15 @@ export default function SoulIntercession({ requests }: { requests: IntercessionR
 
             {/* --- REQUESTS WALL --- */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 overflow-y-auto pr-4 no-scrollbar">
-                <AnimatePresence mode="popLayout">
-                    {filtered.map((req, idx) => (
+                {filtered.length === 0 ? (
+                    <div className="col-span-full flex flex-col items-center justify-center p-20 py-20 bg-white/[0.01] border border-white/5 rounded-[3rem] border-dashed text-center opacity-20">
+                        <MessageSquare className="w-16 h-16 mb-6 animate-pulse text-white/40" />
+                        <h3 className="text-xl font-black italic uppercase tracking-tighter text-white">Altar en Reposo</h3>
+                        <p className="text-[9px] font-bold uppercase tracking-[0.4em] mt-4 text-white/60">No hay peticiones de intercesión pendientes en este buzón</p>
+                    </div>
+                ) : (
+                    <AnimatePresence mode="popLayout">
+                        {filtered.map((req, idx) => (
                         <motion.div
                             key={req.id}
                             layout
@@ -119,6 +126,7 @@ export default function SoulIntercession({ requests }: { requests: IntercessionR
                         </motion.div>
                     ))}
                 </AnimatePresence>
+            )}
             </div>
 
             {/* --- QUICK ACTION BAR --- */}
