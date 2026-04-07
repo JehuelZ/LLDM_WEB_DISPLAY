@@ -196,14 +196,27 @@ export default function MinisterDashboard() {
                                 className="flex-1"
                             >
                                 {activeTab === 'radar' && (
-                                    <VigilanceRadar members={members.slice(0, 30).map(m => ({
-                                        id: m.id,
-                                        name: m.name,
-                                        status: m.status,
-                                        group: m.member_group || 'SIN GRUPO',
-                                        last_attendance: 'ACTIVO',
-                                        fervor: m.status === 'Activo' ? (Math.random() > 0.8 ? 'low' : 'high') : 'low'
-                                    }))} />
+                                    <VigilanceRadar members={members.slice(0, 40).map(m => {
+                                        const attendanceRatio = m.stats?.attendance 
+                                            ? m.stats.attendance.attended / (m.stats.attendance.total || 1) 
+                                            : 0;
+                                        
+                                        let fervor: 'high' | 'medium' | 'low' = 'medium';
+                                        if (m.status !== 'Activo') fervor = 'low';
+                                        else if (attendanceRatio >= 0.7) fervor = 'high';
+                                        else if (attendanceRatio < 0.3) fervor = 'low';
+
+                                        return {
+                                            id: m.id,
+                                            name: m.name,
+                                            status: m.status,
+                                            group: m.member_group || (m.category === 'Varon' ? 'VARONES' : 'HERMANAS'),
+                                            last_attendance: m.lastActive && m.lastActive !== 'Ahora' 
+                                                ? format(new Date(m.lastActive), 'dd MMM', { locale: es }).toUpperCase()
+                                                : 'HOY',
+                                            fervor
+                                        };
+                                    })} />
                                 )}
                                 
                                 {activeTab === 'agenda' && (
@@ -249,15 +262,18 @@ export default function MinisterDashboard() {
                                 {activeTab === 'intercession' && (
                                     <SoulIntercession requests={messages
                                         .filter(msg => msg.targetRole === 'Ministro a Cargo')
-                                        .map(msg => ({
-                                            id: msg.id,
-                                            memberName: msg.senderName || 'Anónimo',
-                                            group: 'CONGREGACIÓN',
-                                            content: msg.content,
-                                            status: msg.isRead ? 'answered' : (msg.subject?.toLowerCase().includes('urgent') ? 'urgent' : 'regular'),
-                                            category: (msg.subject || 'Intercesión') as any,
-                                            createdAt: format(new Date(msg.createdAt), 'dd MMM', { locale: es })
-                                        }))} 
+                                        .map(msg => {
+                                            const sender = members.find(m => m.id === msg.senderId);
+                                            return {
+                                                id: msg.id,
+                                                memberName: msg.senderName || 'Anónimo',
+                                                group: sender?.member_group || (sender?.category === 'Varon' ? 'VARÓN' : 'CONGREGACIÓN'),
+                                                content: msg.content,
+                                                status: msg.isRead ? 'answered' : (msg.subject?.toLowerCase().includes('urgent') ? 'urgent' : 'regular'),
+                                                category: (msg.subject || 'Intercesión') as any,
+                                                createdAt: format(new Date(msg.createdAt), 'dd MMM', { locale: es })
+                                            };
+                                        })} 
                                     />
                                 )}
 
