@@ -35,7 +35,26 @@ export default function MinisterDashboard() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [isLoaded, setIsLoaded] = useState(false);
     const router = useRouter();
-    const { members, loadMembersFromCloud, showNotification } = useAppStore();
+    const { 
+        members, 
+        loadMembersFromCloud, 
+        loadWeeklyAttendanceStats,
+        loadCloudMessages,
+        loadAllSchedulesFromCloud,
+        monthlySchedule,
+        messages,
+        showNotification 
+    } = useAppStore();
+
+    const [realStats, setRealStats] = useState({
+        totalAttendance: 0,
+        totalMembers: 0,
+        atRisk: 0,
+        newConvert: 0,
+        prayersRequested: 0
+    });
+
+    const [attendanceData, setAttendanceData] = useState<any[]>([]);
 
     useEffect(() => {
         const init = async () => {
@@ -44,11 +63,32 @@ export default function MinisterDashboard() {
                 router.push('/auth/login');
                 return;
             }
-            await loadMembersFromCloud();
+            
+            await Promise.all([
+                loadMembersFromCloud(),
+                loadCloudMessages(),
+                loadAllSchedulesFromCloud()
+            ]);
+            
+            const weeklyStats = await loadWeeklyAttendanceStats();
+            setAttendanceData(weeklyStats);
+
+            const activeMembers = members.filter(m => m.status === 'Activo');
+            const atRiskCount = members.filter(m => m.status === 'Inactivo' || (m.member_group as string) === 'Visitas').length;
+            const prayerRequests = messages.filter(msg => msg.targetRole === 'Ministro a Cargo' && !msg.isRead).length;
+
+            setRealStats({
+                totalAttendance: weeklyStats.length > 0 ? weeklyStats[weeklyStats.length - 1].attended : 0,
+                totalMembers: activeMembers.length,
+                atRisk: atRiskCount,
+                newConvert: members.filter(m => (m.member_group as string) === 'Nuevos').length,
+                prayersRequested: prayerRequests
+            });
+
             setIsLoaded(true);
         };
         init();
-    }, [router, loadMembersFromCloud]);
+    }, [router, loadMembersFromCloud, loadWeeklyAttendanceStats, loadCloudMessages, loadAllSchedulesFromCloud, messages.length]);
 
     if (!isLoaded) {
         return (
@@ -60,14 +100,6 @@ export default function MinisterDashboard() {
             </div>
         );
     }
-
-    const mockStats = {
-        totalAttendance: 142,
-        totalMembers: 168,
-        atRisk: 12,
-        newConvert: 5,
-        prayersRequested: 8
-    };
 
     return (
         <div className="minister-root no-scrollbar overflow-x-hidden">
@@ -112,16 +144,16 @@ export default function MinisterDashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <FervorPulse 
                             title="Fervor de Oración" 
-                            value={mockStats.totalAttendance} 
-                            total={mockStats.totalMembers} 
+                            value={realStats.totalAttendance} 
+                            total={realStats.totalMembers} 
                             icon={Heart} 
                             color="#10b981"
                             subtitle="Basado en la asistencia del último servicio de asamblea."
                         />
                         <FervorPulse 
                             title="Almas en Riesgo" 
-                            value={mockStats.atRisk} 
-                            total={mockStats.totalMembers} 
+                            value={realStats.atRisk} 
+                            total={realStats.totalMembers} 
                             icon={Activity} 
                             color="#ef4444"
                             unit="CRÍT"
@@ -164,39 +196,75 @@ export default function MinisterDashboard() {
                                 className="flex-1"
                             >
                                 {activeTab === 'radar' && (
-                                    <VigilanceRadar members={members.slice(0, 15).map(m => ({
+                                    <VigilanceRadar members={members.slice(0, 30).map(m => ({
                                         id: m.id,
                                         name: m.name,
                                         status: m.status,
-                                        group: m.id.charCodeAt(0) % 2 === 0 ? 'GRUPO 1' : 'GRUPO 2',
-                                        last_attendance: 'HACE 2 DÍAS',
-                                        fervor: Math.random() > 0.7 ? 'low' : Math.random() > 0.4 ? 'medium' : 'high'
+                                        group: m.member_group || 'SIN GRUPO',
+                                        last_attendance: 'ACTIVO',
+                                        fervor: m.status === 'Activo' ? (Math.random() > 0.8 ? 'low' : 'high') : 'low'
                                     }))} />
                                 )}
                                 
                                 {activeTab === 'agenda' && (
-                                    <AgendaSantidad schedule={Array.from({ length: 7 }).map((_, i) => ({
-                                        date: addDays(new Date(), i - 1),
-                                        slots: {
-                                            '5am': { time: '05:00 AM', leaderName: 'HN. ZELAYA', type: 'PRIMICIAS', language: 'ES' },
-                                            '9am': { time: '09:00 AM', leaderName: 'HNAS. RODRIGUEZ', type: 'CONSAGRACIÓN', language: 'ES' },
-                                            'evening': { time: '07:00 PM', leaderName: 'MIN. JEHUEL', type: 'SERVICIO', language: 'ES' }
-                                        }
-                                    }))} />
+                                    <AgendaSantidad 
+                                        schedule={Array.from({ length: 7 }).map((_, i) => {
+                                            const d = addDays(new Date(), i - 1);
+                                            const dateStr = format(d, 'yyyy-MM-dd');
+                                            const daySched = monthlySchedule[dateStr];
+                                            
+                                            const getMemberName = (id: string | null) => {
+                                                if (!id) return 'POR ASIGNAR';
+                                                const m = members.find(mem => mem.id === id);
+                                                return m ? m.name.split(' ')[0] : 'OFFLINE';
+                                            };
+
+                                            return {
+                                                date: d,
+                                                slots: {
+                                                    '5am': { 
+                                                        time: daySched?.slots?.['5am']?.time || '05:00 AM', 
+                                                        leaderName: getMemberName(daySched?.slots?.['5am']?.leaderId || null), 
+                                                        type: daySched?.slots?.['5am']?.customLabel || 'ORACIÓN', 
+                                                        language: daySched?.slots?.['5am']?.language || 'ES' 
+                                                    },
+                                                    '9am': { 
+                                                        time: daySched?.slots?.['9am']?.time || '09:00 AM', 
+                                                        leaderName: getMemberName(daySched?.slots?.['9am']?.doctrineLeaderId || null), 
+                                                        type: daySched?.slots?.['9am']?.customLabel || 'DOCTRINA', 
+                                                        language: daySched?.slots?.['9am']?.language || 'ES' 
+                                                    },
+                                                    'evening': { 
+                                                        time: daySched?.slots?.evening?.time || '07:00 PM', 
+                                                        leaderName: daySched?.slots?.evening?.leaderIds?.[0] ? getMemberName(daySched.slots.evening.leaderIds[0]) : 'POR ASIGNAR', 
+                                                        type: daySched?.slots?.evening?.type || 'SERVICIO', 
+                                                        language: daySched?.slots?.evening?.language || 'ES' 
+                                                    }
+                                                }
+                                            };
+                                        })} 
+                                    />
                                 )}
 
                                 {activeTab === 'intercession' && (
-                                    <SoulIntercession requests={[
-                                        { id: '1', memberName: 'Lucía Nardone', group: 'GRUPO 1', content: 'Fortaleza espiritual tras cirugía.', status: 'urgent', category: 'Salud', createdAt: 'Hace 2h' },
-                                        { id: '2', memberName: 'Samuel Zelaya', group: 'GRUPO 2', content: 'Guía en decisión de estudios.', status: 'regular', category: 'Fortaleza', createdAt: 'Hace 5h' },
-                                        { id: '3', memberName: 'María López', group: 'GRUPO 1', content: 'Acción de gracias por sanidad.', status: 'answered', category: 'Acción de Gracias', createdAt: 'Ayer' }
-                                    ]} />
+                                    <SoulIntercession requests={messages
+                                        .filter(msg => msg.targetRole === 'Ministro a Cargo')
+                                        .map(msg => ({
+                                            id: msg.id,
+                                            memberName: msg.senderName || 'Anónimo',
+                                            group: 'CONGREGACIÓN',
+                                            content: msg.content,
+                                            status: msg.isRead ? 'answered' : (msg.subject?.toLowerCase().includes('urgent') ? 'urgent' : 'regular'),
+                                            category: (msg.subject || 'Intercesión') as any,
+                                            createdAt: format(new Date(msg.createdAt), 'dd MMM', { locale: es })
+                                        }))} 
+                                    />
                                 )}
 
                                 {activeTab === 'pulse' && (
                                     <div className="flex flex-col items-center justify-center h-full text-center opacity-20 py-12">
                                         <Zap className="w-20 h-20 mb-6 animate-pulse" />
-                                        <h3 className="text-2xl font-black italic uppercase italic tracking-tighter text-white">Monitor de Salud en Línea</h3>
+                                        <h3 className="text-2xl font-black italic uppercase tracking-tighter text-white">Monitor de Salud en Línea</h3>
                                         <p className="text-[10px] font-bold uppercase tracking-[0.4em] mt-4 text-white">Escaneando censo espiritual en tiempo real...</p>
                                     </div>
                                 )}
@@ -210,24 +278,37 @@ export default function MinisterDashboard() {
                     <div className="tactile-card bg-emerald-500/[0.02]">
                         <h4 className="text-[11px] font-black uppercase tracking-widest text-emerald-500 mb-6 flex items-center justify-between">
                             Peticiones Urgentes
-                            <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[8px]">{mockStats.prayersRequested}</span>
+                            <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[8px]">{realStats.prayersRequested}</span>
                         </h4>
                         <div className="space-y-4">
-                            {[1, 2, 3].map(i => (
-                                <div key={i} className="p-4 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-all cursor-pointer group">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="text-[9px] font-black uppercase tracking-widest opacity-30">Petición Familiar</span>
-                                        <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-40" />
+                            {messages
+                                .filter(msg => msg.targetRole === 'Ministro a Cargo' && !msg.isRead)
+                                .slice(0, 3)
+                                .map(msg => (
+                                    <div key={msg.id} className="p-4 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-all cursor-pointer group">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <span className="text-[9px] font-black uppercase tracking-widest opacity-30">{msg.senderName}</span>
+                                            <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-40" />
+                                        </div>
+                                        <p className="text-[10px] font-bold leading-relaxed mb-3 truncate">{msg.content}</p>
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
+                                            <span className="text-[8px] font-black uppercase tracking-widest text-white/40">Recibido {format(new Date(msg.createdAt), 'HH:mm')}</span>
+                                        </div>
                                     </div>
-                                    <p className="text-[10px] font-bold leading-relaxed mb-3">Intercesión por salud de pariente del Hno. Zelaya.</p>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
-                                        <span className="text-[8px] font-black uppercase tracking-widest text-white/40">Recibido hace 2h</span>
-                                    </div>
+                                ))}
+                            {realStats.prayersRequested === 0 && (
+                                <div className="py-12 text-center opacity-20">
+                                    <p className="text-[10px] font-black uppercase tracking-widest">Sin peticiones pendientes</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
-                        <button className="w-full h-12 rounded-2xl border border-white/5 text-[9px] font-black uppercase tracking-widest mt-8 hover:bg-white/[0.03] transition-all">Ver Todas las Intercesiones</button>
+                        <button 
+                            onClick={() => setActiveTab('intercession')}
+                            className="w-full h-12 rounded-2xl border border-white/5 text-[9px] font-black uppercase tracking-widest mt-8 hover:bg-white/[0.03] transition-all"
+                        >
+                            Ver Todas las Intercesiones
+                        </button>
                     </div>
 
                     <div className="tactile-card overflow-hidden">
