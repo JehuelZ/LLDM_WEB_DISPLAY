@@ -2097,7 +2097,7 @@ export const useAppStore = create<AppState>()(
                 }).length;
 
                 return days.map(d => {
-                    const dailyRecords = data?.filter(r => r.date === d) || [];
+                    const dailyRecords = data?.filter(r => r.date && r.date.slice(0, 10) === d) || [];
 
                     const getCount = (session: string) => new Set(
                         dailyRecords.filter(r => r.session_type === session).map(r => r.member_id)

@@ -62,7 +62,7 @@ export default function MinistroDashboardPage() {
         const init = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
-                router.push('/auth/login');
+                router.push('/login');
                 return;
             }
             

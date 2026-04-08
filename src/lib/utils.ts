@@ -5,8 +5,21 @@ import { format } from "date-fns";
 
 import { Announcement } from "./types";
 
+import { es } from "date-fns/locale";
+
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
+}
+
+export function safeFormatDate(dateStr: any, fmt: string = 'dd MMM') {
+    if (!dateStr || dateStr === 'Hoy' || dateStr === 'Ahora') return 'HOY';
+    try {
+        const d = new Date(dateStr);
+        if (isNaN(d.getTime())) return 'OFFLINE';
+        return format(d, fmt, { locale: es }).toUpperCase();
+    } catch {
+        return 'OFFLINE';
+    }
 }
 
 export function getLocalDateString(date: Date = new Date()) {

@@ -73,7 +73,7 @@ export default function DashboardIndex() {
         {
             title: 'Consola Ministerial',
             description: 'Supervisión global de la iglesia y programación espiritual.',
-            href: '/dashboard/ministro',
+            href: '/dashboard/minister',
             icon: LayoutDashboard,
             color: 'text-emerald-500',
             bgColor: 'bg-emerald-500/10',
