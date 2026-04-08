@@ -331,14 +331,16 @@ export default function MembersPage() {
     });
 
     const statsForTabs = {
-        total: members.length,
-        ninos: members.filter(m => (m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => (m.member_group || '').toLowerCase().includes(v)))).length,
+        total: members.filter(m => !m.hide_from_membership_count).length,
+        ninos: members.filter(m => !m.hide_from_membership_count && (m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => (m.member_group || '').toLowerCase().includes(v)))).length,
         jovenes: members.filter(m => {
+            if (m.hide_from_membership_count) return false;
             const group = (m.member_group || '').toLowerCase();
             const isKid = m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
             return ['jovenes', 'jóvenes'].some(v => group.includes(v)) && !isKid;
         }).length,
         casados: members.filter(m => {
+            if (m.hide_from_membership_count) return false;
             const group = (m.member_group || '').toLowerCase();
             const isKid = m.category === 'Niño' || ['niños', 'niñas', 'ninos', 'ninas'].some(v => group.includes(v));
             return ['casados', 'casadas'].some(v => group.includes(v)) && !isKid;
@@ -346,7 +348,8 @@ export default function MembersPage() {
     };
 
     // Global Stats for Admin
-    const globalAttendance = members.length > 0 ? Math.round(members.reduce((acc, m) => {
+    const globalCount = members.filter(m => !m.hide_from_membership_count).length;
+    const globalAttendance = globalCount > 0 ? Math.round(members.filter(m => !m.hide_from_membership_count).reduce((acc, m) => {
         const total = m.stats?.attendance?.total || 0;
         const attended = m.stats?.attendance?.attended || 0;
         return acc + (total > 0 ? attended / total : 0);
@@ -1277,50 +1280,61 @@ export default function MembersPage() {
                                 </div>
 
                                 {/* Privileges Section Column */}
-                                <div className="space-y-6 border-l border-border/20 pl-8">
-                                    <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500 border-b border-emerald-500/20 pb-2">Privilegios</h4>
-                                    <div className="space-y-3">
-                                        {[
-                                            { id: 'monitor', label: 'Responsable de Asistencia', icon: ClipboardCheck, adultOnly: true },
-                                            { id: 'leader', label: 'Dirigente / Responsable', icon: Star, adultOnly: true },
-                                            { id: 'choir', label: 'Miembro de Coro Adulto', icon: Music, adultOnly: true },
-                                            { id: 'kids_choir', label: 'Responsable de Coro Niños', icon: Baby, adultOnly: true },
-                                            { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, adultOnly: true },
-                                            { id: 'youth_leader', label: 'Responsable de Jóvenes', icon: Users, adultOnly: true },
-                                            { id: 'kids_leader', label: 'Maestro / Dirigente de Niños', icon: Baby, adultOnly: true },
-                                            { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: Flame, adultOnly: true },
-                                        ].filter(priv => {
-                                            const isChild = memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas';
-                                            return isChild ? !priv.adultOnly : true;
-                                        }).map(priv => {
-                                            const hasPriv = memberModal.data.privileges.includes(priv.id as any);
-                                            return (
-                                                <button
-                                                    key={priv.id}
-                                                    onClick={() => {
-                                                        const newPrivs = hasPriv
-                                                            ? memberModal.data.privileges.filter(p => p !== priv.id)
-                                                            : [...memberModal.data.privileges, priv.id as any];
-                                                        setMemberModal({ ...memberModal, data: { ...memberModal.data, privileges: newPrivs } });
-                                                    }}
-                                                    className={cn(
-                                                        "w-full flex items-center gap-4 p-4 rounded-none border transition-all text-left font-[family-name:var(--font-poppins)]",
-                                                        hasPriv
-                                                            ? "bg-white/10 border-white/20 text-white"
-                                                            : "bg-white/[0.02] border-white/5 text-white/20 hover:border-white/20"
-                                                    )}
-                                                >
-                                                    <priv.icon className={cn("w-4 h-4", hasPriv ? "text-white" : "text-white/20")} />
-                                                    <span className="text-[10px] font-light uppercase tracking-[0.3em]">{priv.label.toLowerCase()}</span>
-                                                    {hasPriv && <CheckCircle2 className="w-3 h-3 ml-auto text-white/50" />}
-                                                </button>
-                                            );
-                                        })}
+                                    <div className="space-y-6 border-l border-border/20 pl-8 relative">
+                                        <h4 className="text-sm font-black uppercase tracking-widest text-emerald-500 border-b border-emerald-500/20 pb-2">Privilegios</h4>
+                                        
+                                        {(memberModal.data.hide_from_attendance || memberModal.data.hide_from_membership_count) ? (
+                                            <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-md text-center space-y-3">
+                                                <ShieldAlert className="w-8 h-8 text-red-500 mx-auto" />
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-red-400">Cuenta Restringida</p>
+                                                <p className="text-[9px] text-slate-500 uppercase font-medium leading-relaxed">
+                                                    Las cuentas compartidas o excluidas no pueden tener privilegios asignados ni gestionar oraciones.
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-3">
+                                                {[
+                                                    { id: 'monitor', label: 'Responsable de Asistencia', icon: ClipboardCheck, adultOnly: true },
+                                                    { id: 'leader', label: 'Dirigente / Responsable', icon: Star, adultOnly: true },
+                                                    { id: 'choir', label: 'Miembro de Coro Adulto', icon: Music, adultOnly: true },
+                                                    { id: 'kids_choir', label: 'Responsable de Coro Niños', icon: Baby, adultOnly: true },
+                                                    { id: 'married_choir', label: 'Responsable de Coro Casados', icon: Users, adultOnly: true },
+                                                    { id: 'youth_leader', label: 'Responsable de Jóvenes', icon: Users, adultOnly: true },
+                                                    { id: 'kids_leader', label: 'Maestro / Dirigente de Niños', icon: Baby, adultOnly: true },
+                                                    { id: 'kids_helper', label: 'Auxiliar / Seguridad Infantil', icon: Flame, adultOnly: true },
+                                                ].filter(priv => {
+                                                    const isChild = memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas';
+                                                    return isChild ? !priv.adultOnly : true;
+                                                }).map(priv => {
+                                                    const hasPriv = memberModal.data.privileges.includes(priv.id as any);
+                                                    return (
+                                                        <button
+                                                            key={priv.id}
+                                                            onClick={() => {
+                                                                const newPrivs = hasPriv
+                                                                    ? memberModal.data.privileges.filter(p => p !== priv.id)
+                                                                    : [...memberModal.data.privileges, priv.id as any];
+                                                                setMemberModal({ ...memberModal, data: { ...memberModal.data, privileges: newPrivs } });
+                                                            }}
+                                                            className={cn(
+                                                                "w-full flex items-center gap-4 p-4 rounded-none border transition-all text-left font-[family-name:var(--font-poppins)]",
+                                                                hasPriv
+                                                                    ? "bg-white/10 border-white/20 text-white"
+                                                                    : "bg-white/[0.02] border-white/5 text-white/20 hover:border-white/20"
+                                                            )}
+                                                        >
+                                                            <priv.icon className={cn("w-4 h-4", hasPriv ? "text-white" : "text-white/20")} />
+                                                            <span className="text-[10px] font-light uppercase tracking-[0.3em]">{priv.label.toLowerCase()}</span>
+                                                            {hasPriv && <CheckCircle2 className="w-3 h-3 ml-auto text-white/50" />}
+                                                        </button>
+                                                    );
+                                                })}
+                                                <p className="text-[9px] text-slate-600 uppercase font-medium leading-relaxed ">
+                                                    Asigne los puestos que el miembro desempeñará en la iglesia.
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
-                                    <p className="text-[9px] text-slate-600 uppercase font-medium leading-relaxed ">
-                                        Asigne los puestos que el miembro desempeñará en la iglesia.
-                                    </p>
-                                </div>
                             </div>
 
                             <div className="flex gap-4 pt-10">
@@ -1358,7 +1372,12 @@ export default function MembersPage() {
                                             });
                                         } else {
                                             // Para editar, usar UPDATE
-                                            success = await updateProfileInCloud(memberModal.data.id, memberModal.data);
+                                            const finalData = { ...memberModal.data };
+                                            if (finalData.hide_from_attendance || finalData.hide_from_membership_count) {
+                                                finalData.can_manage_prayers = false;
+                                                finalData.privileges = [];
+                                            }
+                                            success = await updateProfileInCloud(memberModal.data.id, finalData);
                                         }
                                         if (success) {
                                             await loadMembersFromCloud();

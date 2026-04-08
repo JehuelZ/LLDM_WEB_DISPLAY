@@ -493,7 +493,7 @@ const WeeklyAttendanceChart = ({ settings }: { settings: AppSettings }) => {
                 <div className="h-64 relative">
                     <TactileBarChart 
                         data={stats} 
-                        totalMembers={members.filter(m => m.status === 'Activo').length} 
+                        totalMembers={members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length} 
                     />
                 </div>
 
@@ -1103,7 +1103,9 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     // --- Pre-calculate Statistics ---
     const todayRecords = attendanceRecords[currentDate] || [];
     const attendedCount = demoMode ? (Math.round(members.length * 0.74) + demoFluctuation) : todayRecords.filter(r => r.present).length;
-    const totalMembersCount = members.filter(m => m.status === 'Activo').length;
+    const totalMembersCount = members.filter(m => {
+        return m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count;
+    }).length;
     const attendancePercentage = totalMembersCount > 0 ? Math.round((attendedCount / totalMembersCount) * 100) : 0;
     const pendingCount = totalMembersCount - attendedCount;
 
@@ -1156,7 +1158,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
             const groupMembers = members.filter(m => {
                 const mGroup = (m.member_group || '').toLowerCase();
                 const mCat = (m.category || '').toLowerCase();
-                return group.variants.some(v => mGroup.includes(v) || mCat.includes(v));
+                return group.variants.some(v => mGroup.includes(v) || mCat.includes(v)) && !m.hide_from_membership_count;
             });
 
             const activeGroupMembers = groupMembers.filter(m => m.status === 'Activo');
@@ -1314,7 +1316,9 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                      color={settings.adminTheme === 'primitivo' ? "#10b981" : "#10b981"} 
                                      isSmooth={true} 
                                      showHighlight={true} 
-                                     totalMembers={members.filter(m => m.status === 'Activo').length}
+                                     totalMembers={members.filter(m => {
+                                         return m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count;
+                                     }).length}
                                  />
                              </div>
                         </CardContent>
@@ -1758,6 +1762,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                             setCurrentDate={setCurrentDate}
                             members={members}
                             weeklyStats={weeklyStats}
+                            setShowAddMember={setShowAddMember}
                         />
                     </motion.div>
                 )
@@ -3031,7 +3036,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     className="h-12 px-6 text-[10px] font-black uppercase hover:bg-white/10 dark:bg-white/5 tracking-widest"
                                                     onClick={() => {
                                                         setShowAddMember(false);
-                                                        setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false });
+                                                        setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true });
                                                     }}
                                                 >
                                                     Descartar

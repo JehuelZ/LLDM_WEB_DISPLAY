@@ -141,7 +141,7 @@ export const AsistenciaTab = ({
                         </div>
                         <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-foreground/20" />
                         <span className="text-[10px] font-bold text-muted-foreground capitalize tracking-widest leading-none">
-                            {members.filter(m => !m.hide_from_attendance).length} Miembros en Lista
+                            {members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count).length} Miembros en Lista
                         </span>
                     </div>
                 </div>
@@ -178,12 +178,12 @@ export const AsistenciaTab = ({
             <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="admin-member-filters-bar flex-1 flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto scrollbar-hide w-full">
                     {[
-                        { id: 'all', label: 'TODOS', count: members.filter(m => !m.hide_from_attendance).length },
-                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => !m.hide_from_attendance && (m.role === 'Administrador' || m.member_group === 'Administración')).length },
-                        { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => !m.hide_from_attendance && (m.member_group === 'Casados' || m.member_group === 'Casadas')).length },
-                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => !m.hide_from_attendance && m.member_group === 'Solos y Solas').length },
-                        { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => !m.hide_from_attendance && m.member_group === 'Jovenes').length },
-                        { id: 'Niños', label: 'NIÑOS', count: members.filter(m => !m.hide_from_attendance && (m.member_group === 'Niños' || m.member_group === 'Niñas')).length },
+                        { id: 'all', label: 'TODOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count).length },
+                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && (m.role === 'Administrador' || m.member_group === 'Administración')).length },
+                        { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && (m.member_group === 'Casados' || m.member_group === 'Casadas')).length },
+                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && m.member_group === 'Solos y Solas').length },
+                        { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && m.member_group === 'Jovenes').length },
+                        { id: 'Niños', label: 'NIÑOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && (m.member_group === 'Niños' || m.member_group === 'Niñas')).length },
                     ].map(group => (
                         <button
                             key={group.id}
@@ -225,7 +225,7 @@ export const AsistenciaTab = ({
                         </div>
                         
                         <div className="flex-1 min-h-[150px] relative">
-                            <TactileBarChart data={weeklyStats} totalMembers={members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length} />
+                            <TactileBarChart data={weeklyStats} totalMembers={members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count).length} />
                         </div>
                     </div>
                 </TactileGlassCard>
@@ -296,8 +296,8 @@ export const AsistenciaTab = ({
 
                         if (!matchesSearch) return false;
                         
-                        // If searching, show even hidden members. If not searching, hide them as usual.
-                        if (m.hide_from_attendance && !searchTerm) return false;
+                        // Strict Exclusion: Restricted accounts never show up in attendance flow
+                        if (m.hide_from_attendance) return false;
 
                         if (memberFilter === 'all') return true;
                         if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';

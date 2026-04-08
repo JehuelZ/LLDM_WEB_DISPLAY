@@ -40,10 +40,15 @@ export function DirectorySection({
     itemsPerPage,
     onViewDetails
 }: DirectorySectionProps) {
-    const filtered = members.filter(m => 
-        m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        (m.member_group || '').toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filtered = members.filter(m => {
+        const matchesSearch = m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                             (m.member_group || '').toLowerCase().includes(searchTerm.toLowerCase());
+        
+        // Filter out restricted/shared accounts by default unless searching specifically
+        if (m.hide_from_membership_count && !searchTerm) return false;
+        
+        return matchesSearch;
+    });
     
     const totalPages = Math.ceil(filtered.length / itemsPerPage);
     const paginated = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);

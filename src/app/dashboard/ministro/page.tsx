@@ -76,20 +76,26 @@ export default function MinistroDashboardPage() {
     }, []);
 
     const attendanceData = useMemo(() => {
-        if (!members || !members.length) return [0, 0, 0, 0, 0];
+        const activeCongregation = members.filter(m => !m.hide_from_membership_count);
+        if (!activeCongregation || !activeCongregation.length) return [0, 0, 0, 0, 0];
         
-        const avg = members.reduce((acc, m) => {
+        const avg = activeCongregation.reduce((acc, m) => {
             const att = m.stats?.attendance;
             if (att && att.total > 0) return acc + (att.attended / att.total) * 100;
             return acc;
-        }, 0) / members.length;
+        }, 0) / activeCongregation.length;
         
         const base = Math.round(avg);
         return [base - 10, base - 5, base + 2, base - 3, base];
     }, [members]);
 
     const privilegedMembers = useMemo(() => 
-        members.filter(m => m.role !== 'Miembro' && m.status === 'Activo'), 
+        members.filter(m => 
+            m.role !== 'Miembro' && 
+            m.status === 'Activo' && 
+            !m.hide_from_attendance && 
+            !m.hide_from_membership_count
+        ), 
     [members]);
 
     const monthDays = useMemo(() => 
@@ -284,6 +290,7 @@ export default function MinistroDashboardPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                                     {members
                                         .filter(m => {
+                                            if (m.hide_from_attendance || m.hide_from_membership_count) return false;
                                             const att = m.stats?.attendance;
                                             return att && att.total > 0 && (att.attended / att.total) < 0.6;
                                         })

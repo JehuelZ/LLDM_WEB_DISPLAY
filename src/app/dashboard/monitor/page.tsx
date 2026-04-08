@@ -108,8 +108,11 @@ export default function AttendanceDashboard() {
     // Transform store members into attendance-ready members
     const members = useMemo(() => {
         const recordsForDay = attendanceRecords[selectedDate] || [];
+        const filteredStoreMembers = storeMembers.filter(m => {
+            return m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count;
+        });
 
-        return storeMembers.map(m => {
+        return filteredStoreMembers.map(m => {
             const getSessionData = (session: '5am' | '9am' | 'evening') => {
                 const record = recordsForDay.find(r => r.member_id === m.id && r.session_type === session);
                 const isPresent = (optimisticAttendance[m.id] && optimisticAttendance[m.id][session] !== undefined)
@@ -443,7 +446,7 @@ export default function AttendanceDashboard() {
 
                         <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
                             {/* Live Attendance Donut Mirror (from Admin Dashboard) */}
-                            <Card className="glass-card bg-white/[0.03] border-emerald-500/10 p-4 md:p-6 relative overflow-hidden group">
+                            <Card className="glass-card bg-white/[0.03] border-emerald-500/10 p-4 md:p-6 relative overflow-hidden group h-[300px] flex flex-col">
                                 <div className="flex items-center justify-between mb-4">
                                     <div className="flex items-center gap-2">
                                         <div className="relative">
@@ -504,7 +507,7 @@ export default function AttendanceDashboard() {
                                 </div>
                             </Card>
                             {/* Session Summary Stats (Replaces Selector) */}
-                            <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-4 md:p-6 relative overflow-hidden group">
+                            <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-4 md:p-6 relative overflow-hidden group h-[300px] flex flex-col">
                                 <div className="flex items-center gap-3 mb-6">
                                     <Clock className="h-4 w-4 md:h-5 md:w-5 text-emerald-500" />
                                     <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-400">Resumen de Oraciones</span>
@@ -542,7 +545,7 @@ export default function AttendanceDashboard() {
                             </Card>
 
                             {/* NEW: Session Pulse (Vertical Bars) */}
-                            <Card className="glass-card bg-indigo-500/5 border-indigo-500/20 p-5 md:p-6 flex flex-col">
+                            <Card className="glass-card bg-indigo-500/5 border-indigo-500/20 p-5 md:p-6 h-[300px] flex flex-col">
                                 <div className="flex items-center gap-2 mb-6">
                                     <BarChart3 className="h-4 w-4 text-indigo-400" />
                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-400">Actividad por Sesión</span>
@@ -574,7 +577,7 @@ export default function AttendanceDashboard() {
                             </Card>
 
                             {/* NEW: Morning Mountain Chart */}
-                            <Card className="glass-card bg-cyan-500/5 border-cyan-500/20 p-5 md:p-6 flex flex-col relative overflow-hidden group">
+                            <Card className="glass-card bg-cyan-500/5 border-cyan-500/20 p-5 md:p-6 h-[300px] flex flex-col relative overflow-hidden group">
                                 <div className="flex items-center gap-2 mb-4 relative z-10">
                                     <TrendingUp className="h-4 w-4 text-cyan-400" />
                                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">Rendimiento Matinal</span>
@@ -627,7 +630,7 @@ export default function AttendanceDashboard() {
                             </Card>
 
                             {/* Attendance Stats Chart (Based on session with most attendance) */}
-                            <Card className="glass-card bg-primary/5 border-primary/20 p-5 md:p-6 flex flex-col justify-center items-center gap-4 relative">
+                            <Card className="glass-card bg-primary/5 border-primary/20 p-5 md:p-6 h-[300px] flex flex-col justify-center items-center gap-4 relative">
                                 <div className="flex w-full justify-between items-start absolute top-4 px-4">
                                     <p className="text-[9px] font-black uppercase tracking-widest text-primary/80">Impacto Diario</p>
                                     <Users className="h-4 w-4 text-primary opacity-50" />
@@ -659,7 +662,7 @@ export default function AttendanceDashboard() {
 
                                             <div className="flex gap-4 text-[10px] font-bold uppercase tracking-tighter">
                                                 <div className="flex items-center gap-1.5"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> {maxAttendance} Max</div>
-                                                <div className="flex items-center gap-1.5 text-muted-foreground"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total} Total</div>
+                                                <div className="flex items-center gap-1.5 text-muted-foreground"><div className="w-2 h-2 rounded-full bg-foreground/20"></div> {stats.total} Sincronizados</div>
                                             </div>
                                         </>
                                     );
@@ -667,7 +670,7 @@ export default function AttendanceDashboard() {
                             </Card>
 
                             {/* Group Distribution (Mini Bars) */}
-                            <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-5 md:p-6 flex flex-col gap-4">
+                            <Card className="glass-card bg-emerald-500/5 border-emerald-500/20 p-5 md:p-6 h-[300px] flex flex-col gap-4">
                                 <div className="flex items-center gap-2 mb-1">
                                     <Users className="h-4 w-4 text-emerald-500" />
                                     <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Porcentaje por Grupo</span>
@@ -695,69 +698,70 @@ export default function AttendanceDashboard() {
                                     ))}
                                 </div>
                             </Card>
+ 
+                            {/* Historial Semanal (Gráfico de Barras con Límite de miembros) */}
+                            <Card className="glass-card bg-white/5 border-white/10 p-5 md:p-8 xl:col-span-2 h-[300px] flex flex-col">
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                                    <div>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <BarChart3 className="h-4 w-4 text-emerald-500" />
+                                            <h3 className="text-lg md:text-xl font-black uppercase italic tracking-tighter text-foreground">Tendencia de Asistencia Real</h3>
+                                        </div>
+                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Últimos 7 días • Basado en membresía real ({members.length})</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest">
+                                        <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-emerald-500/80"></div> Asistencia</div>
+                                        <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm border border-white/20 bg-white/5"></div> Capacidad Total</div>
+                                    </div>
+                                </div>
+ 
+                                <div className="grid grid-cols-7 gap-1 md:gap-4 items-end flex-1 min-h-[140px] mb-2">
+                                    {weeklyStats.map((day, idx) => {
+                                        const isToday = day.date === selectedDate;
+                                        return (
+                                            <div key={day.date} className="group relative flex flex-col items-center h-full w-full">
+                                                {/* Tooltip on hover */}
+                                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+                                                    <div className="bg-black/90 text-foreground text-[9px] px-2 py-1 rounded-md border border-white/10 whitespace-nowrap font-black">
+                                                        {day.attended} Hermanos ({Math.round(day.percentage)}%)
+                                                    </div>
+                                                </div>
+ 
+                                                {/* Background Bar (Total Capacity) */}
+                                                <div className="w-full h-full bg-white/5 border border-white/5 rounded-t-xl overflow-hidden relative flex items-end">
+                                                    {/* Filled Bar (Attendance) */}
+                                                    <motion.div
+                                                        initial={{ height: 0 }}
+                                                        animate={{ height: `${Math.max(day.percentage, 2)}%` }}
+                                                        transition={{ duration: 1.5, delay: idx * 0.1, ease: 'easeOut' }}
+                                                        className={cn(
+                                                            "w-full transition-all duration-500 relative",
+                                                            isToday
+                                                                ? "bg-gradient-to-t from-emerald-600 to-emerald-400"
+                                                                : "bg-gradient-to-t from-slate-700 to-slate-500 opacity-60 group-hover:opacity-100"
+                                                        )}
+                                                    >
+                                                        <div className="absolute top-2 left-0 w-full text-center text-[8px] md:text-[10px] font-black text-foreground mix-blend-overlay">
+                                                            {day.attended}
+                                                        </div>
+                                                    </motion.div>
+                                                </div>
+ 
+                                                {/* Date Label */}
+                                                <span className={cn(
+                                                    "text-[8px] md:text-[10px] font-bold mt-3 uppercase tracking-tighter truncate w-full text-center",
+                                                    isToday ? "text-emerald-500" : "text-muted-foreground"
+                                                )}>
+                                                    {format(parseISO(day.date), 'eee dd', { locale: es })}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </Card>
                         </div>
 
 
-                        {/* Historial Semanal (Gráfico de Barras con Límite de miembros) */}
-                        <Card className="glass-card bg-white/5 border-white/10 p-5 md:p-8">
-                            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <BarChart3 className="h-4 w-4 text-emerald-500" />
-                                        <h3 className="text-lg md:text-xl font-black uppercase italic tracking-tighter text-foreground">Tendencia de Asistencia Real</h3>
-                                    </div>
-                                    <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Últimos 7 días • Basado en el total de la membresía ({storeMembers.length})</p>
-                                </div>
-                                <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest">
-                                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm bg-emerald-500/80"></div> Asistencia</div>
-                                    <div className="flex items-center gap-2"><div className="w-3 h-3 rounded-sm border border-white/20 bg-white/5"></div> Capacidad Total</div>
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-7 gap-1 md:gap-4 items-end h-48 md:h-64 mb-4">
-                                {weeklyStats.map((day, idx) => {
-                                    const isToday = day.date === selectedDate;
-                                    return (
-                                        <div key={day.date} className="group relative flex flex-col items-center h-full w-full">
-                                            {/* Tooltip on hover */}
-                                            <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
-                                                <div className="bg-black/90 text-foreground text-[9px] px-2 py-1 rounded-md border border-white/10 whitespace-nowrap font-black">
-                                                    {day.attended} Hermanos ({Math.round(day.percentage)}%)
-                                                </div>
-                                            </div>
-
-                                            {/* Background Bar (Total Capacity) */}
-                                            <div className="w-full h-full bg-white/5 border border-white/5 rounded-t-xl overflow-hidden relative flex items-end">
-                                                {/* Filled Bar (Attendance) */}
-                                                <motion.div
-                                                    initial={{ height: 0 }}
-                                                    animate={{ height: `${Math.max(day.percentage, 2)}%` }}
-                                                    transition={{ duration: 1.5, delay: idx * 0.1, ease: 'easeOut' }}
-                                                    className={cn(
-                                                        "w-full transition-all duration-500 relative",
-                                                        isToday
-                                                            ? "bg-gradient-to-t from-emerald-600 to-emerald-400"
-                                                            : "bg-gradient-to-t from-slate-700 to-slate-500 opacity-60 group-hover:opacity-100"
-                                                    )}
-                                                >
-                                                    <div className="absolute top-2 left-0 w-full text-center text-[8px] md:text-[10px] font-black text-foreground mix-blend-overlay">
-                                                        {day.attended}
-                                                    </div>
-                                                </motion.div>
-                                            </div>
-
-                                            {/* Date Label */}
-                                            <span className={cn(
-                                                "text-[8px] md:text-[10px] font-bold mt-3 uppercase tracking-tighter truncate w-full text-center",
-                                                isToday ? "text-emerald-500" : "text-muted-foreground"
-                                            )}>
-                                                {format(parseISO(day.date), 'eee dd', { locale: es })}
-                                            </span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </Card>
 
                         {/* Primary Controls (Date Selector & Finalize) relocated for better context grouping */}
                         <div className="flex flex-col lg:flex-row items-center gap-4 w-full">

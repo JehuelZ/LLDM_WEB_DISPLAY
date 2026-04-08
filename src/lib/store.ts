@@ -722,11 +722,10 @@ export const useAppStore = create<AppState>()(
                 // Se verifica si el ID es un UUID válido. Si no lo es (ej. dev-admin-id o placeholders locales), 
                 // saltamos la llamada a Supabase para evitar errores de sintaxis y permitimos el éxito local.
                 const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(cleanId);
+                const isCustomSluggishId = cleanId.length > 5 && !cleanId.includes('placeholder') && !cleanId.includes('mock') && !cleanId.includes('test');
                 
-                if (!isUuid || cleanId.includes('placeholder') || cleanId.includes('mock')) {
-                    console.warn('UpdateProfile: Skipping cloud sync. Restricted to valid UUIDs. ID received:', cleanId);
-                    // Retornamos true para no mostrar notificaciones de error al usuario en desarrollo, 
-                    // pero persistimos la idea de éxito para que la UI no se bloquee.
+                if (!isUuid && !isCustomSluggishId) {
+                    console.warn('UpdateProfile: Skipping cloud sync. ID appears invalid or is a placeholder:', cleanId);
                     return true;
                 }
 
@@ -2093,7 +2092,9 @@ export const useAppStore = create<AppState>()(
 
                 if (error) return [];
 
-                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
+                const totalMembers = get().members.filter(m => {
+                    return m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count;
+                }).length;
 
                 return days.map(d => {
                     const dailyRecords = data?.filter(r => r.date === d) || [];
@@ -2131,7 +2132,9 @@ export const useAppStore = create<AppState>()(
 
                 if (error) return [];
 
-                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
+                const totalMembers = get().members.filter(m => {
+                    return m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count;
+                }).length;
 
                 return days.map(d => {
                     const dailyRecords = data?.filter(r => r.date === d) || [];
@@ -2158,7 +2161,9 @@ export const useAppStore = create<AppState>()(
                     return [];
                 }
 
-                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
+                const totalMembers = get().members.filter(m => {
+                    return m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count;
+                }).length;
 
                 return days.map(d => {
                     const dailyRecords = data?.filter(r => r.date === d) || [];
@@ -2191,23 +2196,28 @@ export const useAppStore = create<AppState>()(
                 const members = get().members;
                 const getMember = (category?: string, group?: string, privilege?: string) => {
                     // Try to find someone matching ALL criteria
-                    let filtered = members.filter(m =>
-                        (!category || m.category === category) &&
-                        (!group || m.member_group === group) &&
-                        (!privilege || m.privileges.includes(privilege as any))
-                    );
+                    let filtered = members.filter(m => {
+                        return (!category || m.category === category) &&
+                               (!group || m.member_group === group) &&
+                               (!privilege || m.privileges.includes(privilege as any)) &&
+                               !m.hide_from_attendance && !m.hide_from_membership_count;
+                    });
 
                     // Fallback 1: Match category and group
                     if (filtered.length === 0) {
-                        filtered = members.filter(m =>
-                            (!category || m.category === category) &&
-                            (!group || m.member_group === group)
-                        );
+                        filtered = members.filter(m => {
+                            return (!category || m.category === category) &&
+                                   (!group || m.member_group === group) &&
+                                   !m.hide_from_attendance && !m.hide_from_membership_count;
+                        });
                     }
 
                     // Fallback 2: Match just category
                     if (filtered.length === 0) {
-                        filtered = members.filter(m => !category || m.category === category);
+                        filtered = members.filter(m => {
+                            return (!category || m.category === category) &&
+                                   !m.hide_from_attendance && !m.hide_from_membership_count;
+                        });
                     }
 
                     if (filtered.length === 0) return null;
@@ -2267,7 +2277,7 @@ export const useAppStore = create<AppState>()(
                 }
             },
             seedAttendanceData: async () => {
-                const members = get().members.filter(m => m.status === 'Activo');
+                const members = get().members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count);
                 if (members.length === 0) {
                     get().showNotification("No hay miembros activos para generar asistencia.", 'warning');
                     return;
@@ -2500,7 +2510,9 @@ export const useAppStore = create<AppState>()(
                     return [];
                 }
 
-                const totalMembers = get().members.filter(m => m.status === 'Activo').length;
+                const totalMembers = get().members.filter(m => {
+                    return m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count;
+                }).length;
                 const daysInInterval = eachDayOfInterval({ start: startDate, end: endDate });
 
                 return daysInInterval.map((day, index) => {

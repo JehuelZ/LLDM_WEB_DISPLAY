@@ -55,7 +55,7 @@ export const MiembrosTab = ({
                 {[
                     { 
                         label: 'MEMBRESÍA TOTAL', 
-                        value: members.length, 
+                        value: members.filter(m => !m.hide_from_membership_count).length, 
                         sub: '+12 este mes',
                         icon: Users,
                         color: 'text-primary'
@@ -69,7 +69,7 @@ export const MiembrosTab = ({
                     },
                     { 
                         label: 'MINISTROS', 
-                        value: members.filter(m => m.role === 'Ministro a Cargo').length, 
+                        value: members.filter(m => m.role === 'Ministro a Cargo' && !m.hide_from_membership_count).length, 
                         sub: '3 en guardia',
                         icon: ShieldCheck,
                         color: 'text-emerald-500' 
@@ -105,9 +105,9 @@ export const MiembrosTab = ({
                     </div>
                     <div className="space-y-6">
                         {[
-                            { label: 'Hermanos Adultos', count: members.filter(m => m.gender === 'Varon' && m.category === 'Varon').length, total: Math.max(1, members.length), color: 'bg-primary' },
-                            { label: 'Hermanas Adultas', count: members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana').length, total: Math.max(1, members.length), color: 'bg-pink-500' },
-                            { label: 'Niños y Niñas', count: members.filter(m => m.category === 'Niño').length, total: Math.max(1, members.length), color: 'bg-emerald-500' },
+                            { label: 'Hermanos Adultos', count: members.filter(m => m.gender === 'Varon' && m.category === 'Varon' && !m.hide_from_membership_count).length, total: Math.max(1, members.filter(m => !m.hide_from_membership_count).length), color: 'bg-primary' },
+                            { label: 'Hermanas Adultas', count: members.filter(m => m.gender === 'Hermana' && m.category === 'Hermana' && !m.hide_from_membership_count).length, total: Math.max(1, members.filter(m => !m.hide_from_membership_count).length), color: 'bg-pink-500' },
+                            { label: 'Niños y Niñas', count: members.filter(m => m.category === 'Niño' && !m.hide_from_membership_count).length, total: Math.max(1, members.filter(m => !m.hide_from_membership_count).length), color: 'bg-emerald-500' },
                         ].map((bar, idx) => (
                             <div key={idx} className="space-y-2">
                                 <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
@@ -241,12 +241,12 @@ export const MiembrosTab = ({
             {/* Filters Bar */}
             <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                 {[
-                    { id: 'all', label: 'TODOS LOS MIEMBROS', count: members.length },
-                    { id: 'Administración', label: 'SIERVOS DE DIOS', count: members.filter(m => m.role === 'Administrador' || m.member_group === 'Administración').length },
-                    { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.member_group === 'Casados' || m.member_group === 'Casadas').length },
-                    { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.member_group === 'Solos y Solas').length },
-                    { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.member_group === 'Jovenes').length },
-                    { id: 'Niños', label: 'NIÑOS / NIÑAS', count: members.filter(m => m.member_group === 'Niños' || m.member_group === 'Niñas').length },
+                    { id: 'all', label: 'TODOS LOS MIEMBROS', count: members.filter(m => !m.hide_from_membership_count).length },
+                    { id: 'Administración', label: 'SIERVOS DE DIOS', count: members.filter(m => !m.hide_from_membership_count && (m.role === 'Administrador' || m.member_group === 'Administración')).length },
+                    { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => !m.hide_from_membership_count && (m.member_group === 'Casados' || m.member_group === 'Casadas')).length },
+                    { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => !m.hide_from_membership_count && m.member_group === 'Solos y Solas').length },
+                    { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => !m.hide_from_membership_count && m.member_group === 'Jovenes').length },
+                    { id: 'Niños', label: 'NIÑOS / NIÑAS', count: members.filter(m => !m.hide_from_membership_count && (m.member_group === 'Niños' || m.member_group === 'Niñas')).length },
                 ].map(group => (
                     <button
                         key={group.id}
@@ -275,11 +275,14 @@ export const MiembrosTab = ({
 
                         if (!matchesSearch) return false;
 
+                        // Shared/Restricted accounts: Only show if specifically searching by name
+                        if (m.hide_from_membership_count && !searchTerm) return false;
+
                         if (memberFilter === 'all') return true;
-                        if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';
-                        if (memberFilter === 'Casados') return m.member_group === 'Casados' || m.member_group === 'Casadas';
-                        if (memberFilter === 'Niños') return m.member_group === 'Niños' || m.member_group === 'Niñas';
-                        return m.member_group === memberFilter;
+                        if (memberFilter === 'Administración') return (m.role === 'Administrador' || m.member_group === 'Administración') && !m.hide_from_membership_count;
+                        if (memberFilter === 'Casados') return (m.member_group === 'Casados' || m.member_group === 'Casadas') && !m.hide_from_membership_count;
+                        if (memberFilter === 'Niños') return (m.member_group === 'Niños' || m.member_group === 'Niñas') && !m.hide_from_membership_count;
+                        return m.member_group === memberFilter && !m.hide_from_membership_count;
                     })
                     .map(member => {
                         const canViewFicha = member.status === 'Activo' && !member.hide_from_attendance && member.role !== 'Administrador';

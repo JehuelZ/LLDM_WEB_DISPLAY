@@ -73,15 +73,15 @@ export default function MinisterDashboard() {
             const weeklyStats = await loadWeeklyAttendanceStats();
             setAttendanceData(weeklyStats);
 
-            const activeMembers = members.filter(m => m.status === 'Activo');
-            const atRiskCount = members.filter(m => m.status === 'Inactivo' || (m.member_group as string) === 'Visitas').length;
+            const activeMembers = members.filter(m => m.status === 'Activo' && !m.hide_from_membership_count);
+            const atRiskCount = members.filter(m => (m.status === 'Inactivo' || (m.member_group as string) === 'Visitas') && !m.hide_from_membership_count).length;
             const prayerRequests = messages.filter(msg => msg.targetRole === 'Ministro a Cargo' && !msg.isRead).length;
 
             setRealStats({
                 totalAttendance: weeklyStats.length > 0 ? weeklyStats[weeklyStats.length - 1].attended : 0,
                 totalMembers: activeMembers.length,
                 atRisk: atRiskCount,
-                newConvert: members.filter(m => (m.member_group as string) === 'Nuevos').length,
+                newConvert: members.filter(m => (m.member_group as string) === 'Nuevos' && !m.hide_from_membership_count).length,
                 prayersRequested: prayerRequests
             });
 
@@ -196,7 +196,10 @@ export default function MinisterDashboard() {
                                 className="flex-1"
                             >
                                 {activeTab === 'radar' && (
-                                    <VigilanceRadar members={members.slice(0, 40).map(m => {
+                                    <VigilanceRadar members={members
+                                        .filter(m => !m.hide_from_attendance && !m.hide_from_membership_count)
+                                        .slice(0, 40)
+                                        .map(m => {
                                         const attendanceRatio = m.stats?.attendance 
                                             ? m.stats.attendance.attended / (m.stats.attendance.total || 1) 
                                             : 0;
@@ -261,7 +264,11 @@ export default function MinisterDashboard() {
 
                                 {activeTab === 'intercession' && (
                                     <SoulIntercession requests={messages
-                                        .filter(msg => msg.targetRole === 'Ministro a Cargo')
+                                        .filter(msg => {
+                                            const sender = members.find(m => m.id === msg.senderId);
+                                            const isRestricted = sender?.hide_from_attendance || sender?.hide_from_membership_count;
+                                            return msg.targetRole === 'Ministro a Cargo' && !isRestricted;
+                                        })
                                         .map(msg => {
                                             const sender = members.find(m => m.id === msg.senderId);
                                             return {
