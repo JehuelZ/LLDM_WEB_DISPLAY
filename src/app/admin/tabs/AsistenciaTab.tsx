@@ -184,6 +184,7 @@ export const AsistenciaTab = ({
                         { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group === 'Solos y Solas' || m.member_group === 'Solo y Sola')).length },
                         { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group?.toLowerCase().includes('joven') || m.member_group?.toLowerCase().includes('juvenil'))).length },
                         { id: 'Niños', label: 'NIÑOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group?.toLowerCase().includes('niñ') || m.member_group?.toLowerCase().includes('nin') || m.category === 'Niño')).length },
+                        { id: 'none', label: 'SIN GRUPO', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (!m.member_group || m.member_group === 'Sin Asignar' || m.member_group === 'None')).length },
                     ].map(group => (
                         <button
                             key={group.id}
@@ -301,7 +302,8 @@ export const AsistenciaTab = ({
 
                         // Compatibility: Include members in the list even if status is not active, but show them differently
                         // However, for attendance, we typically only want active or pending to be confirmed
-                        if (m.status === 'Inactivo') return false;
+                        // Removed strict hiding of 'Inactivo' to avoid "losing" members the user might want to re-activate
+                        if (m.status === 'Baja') return false;
 
                         if (memberFilter === 'all') return true;
                         
@@ -325,6 +327,10 @@ export const AsistenciaTab = ({
                         if (memberFilter === 'Jovenes') {
                             const groupLower = (m.member_group || '').toLowerCase();
                             return groupLower.includes('joven') || groupLower.includes('juvenil');
+                        }
+
+                        if (memberFilter === 'none') {
+                            return !m.member_group || m.member_group === 'Sin Asignar' || m.member_group === 'None';
                         }
                         
                         return m.member_group === memberFilter;
