@@ -697,7 +697,7 @@ function AdminLayoutContent({
                                     )}
                                 >
                                     <CalendarDays className="w-4 h-4 text-primary" />
-                                    <span>{currentDate ? format(parseISO(currentDate), 'dd MMM yyyy', { locale: es }) : 'CARGANDO...'}</span>
+                                    <span>{currentDate ? format(parseISO(currentDate.split(':')[0].split(' ')[0]), 'dd MMM yyyy', { locale: es }) : 'CARGANDO...'}</span>
                                 </button>
                                 
                                 <AnimatePresence>
