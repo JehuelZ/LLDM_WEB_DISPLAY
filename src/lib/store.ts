@@ -1423,7 +1423,9 @@ export const useAppStore = create<AppState>()(
             },
 
             loadKidsAssignmentsFromCloud: async (date) => {
-                const { data } = await supabase.from('kids_assignments').select('*').eq('date', date).single();
+                // Sanitizar fecha para evitar errores 406 (YYYY-MM-DD:0:0)
+                const sanitizedDate = date.split(':')[0].split(' ')[0];
+                const { data } = await supabase.from('kids_assignments').select('*').eq('date', sanitizedDate).single();
                 if (data) {
                     const updated = { ...get().kidsAssignments };
                     updated[date] = {
@@ -1944,10 +1946,12 @@ export const useAppStore = create<AppState>()(
             },
 
             loadAttendanceFromCloud: async (date) => {
+                // Sanitizar fecha para evitar errores 406
+                const sanitizedDate = date.split(':')[0].split(' ')[0];
                 const { data, error } = await supabase
                     .from('attendance')
                     .select('*')
-                    .eq('date', date)
+                    .eq('date', sanitizedDate)
                     .order('id', { ascending: false });
 
                 if (error) {
