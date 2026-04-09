@@ -655,7 +655,7 @@ function AdminLayoutContent({
 
                         <div className="hidden sm:flex flex-col">
                             <span className={cn("text-[10px] font-black uppercase tracking-[0.4em] opacity-40 leading-none", settings.themeMode === 'light' ? "text-slate-600" : "text-muted-foreground")}>Pizarra</span>
-                            <span className="text-[12px] font-black uppercase tracking-tighter text-foreground mt-1.5 font-sans">
+                            <span key={currentDate} className="text-[12px] font-black uppercase tracking-tighter text-foreground mt-1.5 font-sans animate-fade-in">
                                 {currentTab === 'dashboard' ? 'Principal' : currentTab}
                             </span>
                         </div>
@@ -733,6 +733,15 @@ function AdminLayoutContent({
                                     <span className="hidden lg:inline">Pizarra</span>
                                 </button>
                             </Link>
+
+                            {/* HIDDEN DATE PICKER FOR LEGACY BUTTONS */}
+                            <input 
+                                id="global-date-picker"
+                                type="date"
+                                className="sr-only"
+                                value={currentDate}
+                                onChange={(e) => setCurrentDate(e.target.value)}
+                            />
                         </div>
                         
                         <div className="hidden sm:block w-[1px] h-8 bg-white/5" />
@@ -751,7 +760,7 @@ function AdminLayoutContent({
                 </header>
 
                 {/* Content Area - Minimized Padding */}
-                <div className="flex-1 p-4 md:p-6 lg:p-8 pb-32 lg:pb-8 relative z-10 overflow-y-auto">
+                <div key={currentDate} className="flex-1 p-4 md:p-6 lg:p-8 pb-32 lg:pb-8 relative z-10 overflow-y-auto animate-fade-in">
                     {(settings.adminTheme as any) === 'luna' ? (
                         <LunaAdmin propTab={currentTab} isSubpage={pathname !== '/admin'}>
                             {children}
