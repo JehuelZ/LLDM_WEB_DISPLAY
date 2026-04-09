@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
     Sun, Type, Monitor, Upload, Save, User, Mail, Phone, Camera, 
     Church, Sparkles, Moon, BookOpen, Sunrise, Flame, Radio, 
-    ChevronUp, ChevronDown, ChevronLeft, ChevronRight, XCircle
+    ChevronUp, ChevronDown, ChevronLeft, ChevronRight, XCircle, Plus, Trash
 } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -43,6 +43,7 @@ export const AjustesTab = ({
 }: AjustesTabProps) => {
     const [isSaving, setIsSaving] = useState(false)
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: string } | null>(null)
+    const [newMissionName, setNewMissionName] = useState('')
 
     return (
         <motion.div
@@ -404,6 +405,70 @@ export const AjustesTab = ({
                         >
                             <Save className="w-4 h-4" /> {isSaving ? 'Guardando...' : 'Guardar Datos'}
                         </button>
+                    </div>
+                </TactileGlassCard>
+
+                <TactileGlassCard title="JERARQUÍA Y MISIONES (OBRAS)">
+                    <div className="space-y-6">
+                        <TactileInput
+                            label="NOMBRE DE IGLESIA PRINCIPAL"
+                            value={settings.mainChurchName || 'Rodeo CA'}
+                            onChange={(e: any) => setSettings({ ...settings, mainChurchName: e.target.value })}
+                            icon={Church}
+                            placeholder="Ej. Rodeo CA"
+                        />
+
+                        <div className="pt-4 border-t border-[var(--tactile-border)]">
+                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2 mb-4 block">
+                                MISIONES / OBRAS DEPENDIENTES
+                            </label>
+                            
+                            <div className="space-y-3 mb-4">
+                                {(settings.missions || []).map((mission: string, idx: number) => (
+                                    <div key={idx} className="flex gap-2">
+                                        <div className="flex-1 h-12 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md flex items-center px-4 text-[11px] font-bold text-foreground">
+                                            {mission}
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
+                                                setSettings({ ...settings, missions: filtered });
+                                                saveSettingsToCloud({ missions: filtered });
+                                            }}
+                                            className="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-md border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
+                                        >
+                                            <Trash className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex gap-2">
+                                <TactileInput
+                                    label="NUEVA OBRA"
+                                    value={newMissionName}
+                                    onChange={(e: any) => setNewMissionName(e.target.value)}
+                                    placeholder="Nombre de la misión..."
+                                    className="flex-1 !mb-0"
+                                />
+                                <button
+                                    onClick={() => {
+                                        if (!newMissionName.trim()) return;
+                                        const updated = [...(settings.missions || []), newMissionName.trim()];
+                                        setSettings({ ...settings, missions: updated });
+                                        saveSettingsToCloud({ missions: updated });
+                                        setNewMissionName('');
+                                        showNotification(`Misión "${newMissionName}" agregada.`, 'success');
+                                    }}
+                                    className="w-12 h-12 bg-primary text-foreground rounded-md shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center mt-6"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <p className="text-[8px] text-muted-foreground mt-4 leading-relaxed">
+                                * Las obras creadas aparecerán como opciones en la ficha de los miembros y en los filtros de asistencia.
+                            </p>
+                        </div>
                     </div>
                 </TactileGlassCard>
 

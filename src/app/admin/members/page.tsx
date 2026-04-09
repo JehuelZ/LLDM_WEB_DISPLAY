@@ -306,7 +306,8 @@ export default function MembersPage() {
         privileges: [],
         hide_from_attendance: false,
         hide_from_membership_count: false,
-        can_manage_prayers: true
+        can_manage_prayers: true,
+        assigned_church: 'Principal'
     };
 
     const filteredMembers = members.filter((m: Member) => {
@@ -1181,6 +1182,19 @@ export default function MembersPage() {
                                                 <option value="Niños">Niños / Niñas</option>
                                             </select>
                                         </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1">Congregación / Misión</label>
+                                            <select
+                                                className="w-full h-10 px-3 rounded-md bg-foreground/5 border border-border/40 text-sm focus:ring-primary/50 text-white font-bold"
+                                                value={memberModal.data.assigned_church || 'Principal'}
+                                                onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, assigned_church: e.target.value } })}
+                                            >
+                                                <option value="Principal">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                {(settings.missions || []).map((m: string) => (
+                                                    <option key={m} value={m}>{m}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                         {(memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas') && (
                                             <div className="space-y-2 col-span-2">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-cyan-400 ml-1">Nombre del Padre / Tutor</label>
@@ -1368,7 +1382,8 @@ export default function MembersPage() {
                                                 privileges: memberModal.data.privileges,
                                                 hide_from_attendance: memberModal.data.hide_from_attendance,
                                                 hide_from_membership_count: memberModal.data.hide_from_membership_count,
-                                                can_manage_prayers: memberModal.data.can_manage_prayers
+                                                can_manage_prayers: memberModal.data.can_manage_prayers,
+                                                assigned_church: memberModal.data.assigned_church || 'Principal'
                                             });
                                         } else {
                                             // Para editar, usar UPDATE

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { 
     Calendar, ClipboardCheck, Search, CalendarClock, 
     RefreshCw, CheckCircle2, TrendingUp, TrendingDown,
-    User, Check, Crown, UserPlus, Plus
+    User, Check, Crown, UserPlus, Plus, Church
 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -39,6 +39,7 @@ export const AsistenciaTab = ({
     const [currentAttendanceSession, setCurrentAttendanceSession] = useState<'5am' | '9am' | 'evening'>('5am')
     const [memberFilter, setMemberFilter] = useState('all')
     const [searchTerm, setSearchTerm] = useState('')
+    const [chosenChurch, setChosenChurch] = useState('all')
     const [optimisticAttendance, setOptimisticAttendance] = useState<Record<string, Record<string, boolean>>>({})
     const [processingToggles, setProcessingToggles] = useState<Record<string, boolean>>({})
     
@@ -212,6 +213,38 @@ export const AsistenciaTab = ({
                 </div>
             </div>
 
+            {/* Hierarchical Filter: Church / Mission selection */}
+            <div className="flex flex-col gap-4">
+                <div className="flex items-center gap-3 ml-2">
+                    <Church className="w-4 h-4 text-emerald-500" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Filtrar por Congregación:</span>
+                </div>
+                <div className="admin-member-filters-bar flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto scrollbar-hide w-full">
+                    {[
+                        { id: 'all', label: 'TODAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length },
+                        { id: 'Principal', label: settings.mainChurchName || 'Principal', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.assigned_church === 'Principal' || !m.assigned_church)).length },
+                        ...(settings.missions || []).map((m: string) => ({
+                            id: m,
+                            label: m,
+                            count: members.filter(p => p.status === 'Activo' && !p.hide_from_attendance && p.assigned_church === m).length
+                        }))
+                    ].map(church => (
+                        <button
+                            key={church.id}
+                            onClick={() => setChosenChurch(church.id)}
+                            className={cn(
+                                "flex-none px-6 py-3 rounded-md text-[10px] font-black uppercase tracking-[0.4em] transition-all duration-300 whitespace-nowrap",
+                                chosenChurch === church.id
+                                    ? "bg-emerald-500 text-black transform scale-[1.02] shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                            )}
+                        >
+                            {church.label} <span className="opacity-40 text-[9px] ml-2 tracking-normal">({church.count})</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <TactileGlassCard className="md:col-span-3">
                     <div className="flex flex-col h-full">
@@ -297,6 +330,15 @@ export const AsistenciaTab = ({
 
                         if (!matchesSearch) return false;
                         
+                        // 2. Filtrar por congregación/misión
+                        if (chosenChurch !== 'all') {
+                            if (chosenChurch === 'Principal') {
+                                if (m.assigned_church && m.assigned_church !== 'Principal') return false;
+                            } else {
+                                if (m.assigned_church !== chosenChurch) return false;
+                            }
+                        }
+
                         // Strict Exclusion: Restricted accounts never show up in attendance flow
                         if (m.hide_from_attendance) return false;
 

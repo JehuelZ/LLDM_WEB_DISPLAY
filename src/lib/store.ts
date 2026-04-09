@@ -90,6 +90,8 @@ export interface AppSettings {
     fontWeight?: string;
     calendarStyles?: CalendarStyles;
     intelligenceRange?: 7 | 15 | 30 | 'month';
+    mainChurchName?: string;
+    missions?: string[];
 }
 
 export interface UserProfile {
@@ -121,6 +123,7 @@ export interface UserProfile {
     hide_from_attendance?: boolean;
     hide_from_membership_count?: boolean;
     can_manage_prayers?: boolean;
+    assigned_church?: string;
 }
 
 export interface CalendarStyles {
@@ -258,7 +261,7 @@ interface AppState {
     loadMembersFromCloud: () => Promise<void>;
     updateProfileInCloud: (userId: string, updates: Partial<UserProfile>) => Promise<boolean>;
     deleteMemberFromCloud: (userId: string) => Promise<boolean>;
-    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean; can_manage_prayers?: boolean }) => Promise<boolean>;
+    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean; can_manage_prayers?: boolean; assigned_church?: string }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
     mergeProfiles: (pendingId: string, memberEmail: string, existingMemberId: string) => Promise<boolean>;
@@ -681,7 +684,8 @@ export const useAppStore = create<AppState>()(
                             bio: p.bio || '',
                             hide_from_attendance: p.hide_from_attendance || false,
                             hide_from_membership_count: p.hide_from_membership_count || false,
-                            can_manage_prayers: p.can_manage_prayers ?? true
+                            can_manage_prayers: p.can_manage_prayers ?? true,
+                            assigned_church: p.assigned_church || 'Principal'
                         }));
 
                         // Sincronizar estado del Ministro si se encuentra en la lista oficial
@@ -758,6 +762,7 @@ export const useAppStore = create<AppState>()(
                     if ('hide_from_attendance' in updates) dbUpdates.hide_from_attendance = updates.hide_from_attendance;
                     if ('hide_from_membership_count' in updates) dbUpdates.hide_from_membership_count = updates.hide_from_membership_count;
                     if ('can_manage_prayers' in updates) dbUpdates.can_manage_prayers = updates.can_manage_prayers;
+                    if ('assigned_church' in updates) dbUpdates.assigned_church = updates.assigned_church;
 
                     console.log('UpdateProfile: Final dbUpdates for Supabase:', dbUpdates);
 
@@ -1208,6 +1213,8 @@ export const useAppStore = create<AppState>()(
                 if (member.hide_from_attendance !== undefined) insertData.hide_from_attendance = member.hide_from_attendance;
                 if (member.hide_from_membership_count !== undefined) insertData.hide_from_membership_count = member.hide_from_membership_count;
                 if (member.can_manage_prayers !== undefined) insertData.can_manage_prayers = member.can_manage_prayers;
+                if ((member as any).assigned_church) insertData.assigned_church = (member as any).assigned_church;
+                else insertData.assigned_church = 'Principal';
 
                 console.log('Adding member:', insertData);
 
@@ -1516,6 +1523,8 @@ export const useAppStore = create<AppState>()(
                             weatherUnit: data.weather_unit || 'fahrenheit',
                             fontMain: data.display_font_family || 'Poppins',
                             fontWeight: data.display_font_weight || '400',
+                            mainChurchName: data.main_church_name || 'Rodeo CA',
+                            missions: data.missions || []
                         },
 
 

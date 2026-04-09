@@ -718,6 +718,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [monthlyStats, setMonthlyStats] = useState<{ label: string, value: number }[]>([]);
     
     const [intelligenceRange, setIntelligenceRange] = useState<'month' | 30 | 15 | 7>(7);
+    const [newMissionName, setNewMissionName] = useState('');
     
     // Attendance stats for AsistenciaTab
     const weeklyStats = useMemo(() => [
@@ -2542,20 +2543,103 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     <Button size="icon" className="w-10 h-10 rounded-md" onClick={() => document.getElementById('minister-photo-upload')?.click()}><Camera className="w-4 h-4" /></Button>
                                                 </div>
                                             </div>
-                                            <input id="minister-photo-upload" type="file" className="hidden" accept="image/*" onChange={handleMinisterAvatarChange} />
+                                            <input id="minister-photo-upload" type="file" className="hidden" accept="image/*" onChange={(e) => {
+                                                const file = e.target.files?.[0];
+                                                if (file) {
+                                                    const reader = new FileReader();
+                                                    reader.onload = (re) => {
+                                                        setImageToEdit({ source: re.target?.result as string, target: 'minister' });
+                                                    };
+                                                    reader.readAsDataURL(file);
+                                                }
+                                            }} />
                                         </div>
                                         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div className="space-y-4">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Nombre del Responsable</label>
-                                                <Input value={minister.name || ''} onChange={(e) => setMinister({ name: e.target.value })} className="h-14 bg-foreground/5 rounded-md" placeholder="Ej. P.E. Benjamín Rojas" />
+                                                <Input value={minister.name || ''} onChange={(e) => setMinister({ ...minister, name: e.target.value })} className="h-14 bg-foreground/5 rounded-md" placeholder="Ej. P.E. Benjamín Rojas" />
                                             </div>
                                             <div className="space-y-4">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Teléfono</label>
-                                                <Input value={minister.phone || ''} onChange={(e) => setMinister({ phone: e.target.value })} className="h-14 bg-foreground/5 rounded-md" />
+                                                <Input value={minister.phone || ''} onChange={(e) => setMinister({ ...minister, phone: e.target.value })} className="h-14 bg-foreground/5 rounded-md" />
                                             </div>
                                             <div className="md:col-span-2 space-y-4">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Correo Institucional</label>
-                                                <Input value={minister.email || ''} onChange={(e) => setMinister({ email: e.target.value })} className="h-14 bg-foreground/5 rounded-md" />
+                                                <Input value={minister.email || ''} onChange={(e) => setMinister({ ...minister, email: e.target.value })} className="h-14 bg-foreground/5 rounded-md" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 🏛️ JERARQUÍA Y MISIONES (OBRAS) */}
+                                <div className="p-10 rounded-md bg-white/[0.02] border border-white/10 relative overflow-hidden group shadow-lg space-y-8">
+                                    <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
+                                        <Church className="w-48 h-48 text-emerald-500" />
+                                    </div>
+                                    <div className="relative z-10">
+                                        <div className="flex items-center gap-4 mb-8">
+                                            <div className="p-3 bg-emerald-500/20 rounded-md border border-emerald-500/30">
+                                                <Church className="h-6 w-6 text-emerald-500" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-xl font-black uppercase tracking-tighter text-foreground">Jerarquía y Misiones</h3>
+                                                <p className="text-[9px] font-bold text-slate-600 uppercase tracking-widest leading-none">Gestión de Congregaciones y Obras</p>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Nombre de Iglesia Principal</label>
+                                                <Input 
+                                                    value={settings.mainChurchName || 'Rodeo CA'} 
+                                                    onChange={(e) => setSettings({ mainChurchName: e.target.value })} 
+                                                    className="h-14 bg-foreground/5 rounded-md text-sm font-bold" 
+                                                    placeholder="Ej. Rodeo CA" 
+                                                />
+                                                <p className="text-[8px] text-slate-500 uppercase font-bold tracking-widest px-2">* Este nombre aparecerá como la congregación base del sistema.</p>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-600">Misiones / Obras Dependientes</label>
+                                                <div className="flex gap-2">
+                                                    <Input 
+                                                        value={newMissionName} 
+                                                        onChange={(e) => setNewMissionName(e.target.value)} 
+                                                        className="h-14 bg-foreground/5 rounded-md text-sm font-bold flex-1" 
+                                                        placeholder="Nombre de la nueva obra..." 
+                                                    />
+                                                    <Button 
+                                                        onClick={() => {
+                                                            if (!newMissionName.trim()) return;
+                                                            const updated = [...(settings.missions || []), newMissionName.trim()];
+                                                            setSettings({ missions: updated });
+                                                            saveSettingsToCloud({ missions: updated });
+                                                            setNewMissionName('');
+                                                            showNotification(`Misión "${newMissionName}" agregada.`, 'success');
+                                                        }}
+                                                        className="h-14 w-14 bg-emerald-600 hover:bg-emerald-500 rounded-md"
+                                                    >
+                                                        <Plus className="w-6 h-6" />
+                                                    </Button>
+                                                </div>
+
+                                                <div className="space-y-2 mt-4 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                                                    {(settings.missions || []).map((mission: string, idx: number) => (
+                                                        <div key={idx} className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-md group/mission">
+                                                            <span className="text-xs font-bold uppercase tracking-tight text-white/70">{mission}</span>
+                                                            <button 
+                                                                onClick={() => {
+                                                                    const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
+                                                                    setSettings({ missions: filtered });
+                                                                    saveSettingsToCloud({ missions: filtered });
+                                                                }}
+                                                                className="p-2 text-rose-500/40 hover:text-rose-500 opacity-0 group-hover/mission:opacity-100 transition-all"
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
