@@ -105,6 +105,18 @@ export const AjustesTab = ({
                             icon={Type}
                         />
 
+                        <TactileSelect
+                            label="PANEL DE ADMINISTRACIÓN (TEMA)"
+                            value={settings.adminTheme || 'classic'}
+                            onChange={(val: any) => saveSettingsToCloud({ adminTheme: val })}
+                            options={[
+                                { value: 'primitivo', label: 'Plantilla Primitiva (Industrial)' },
+                                { value: 'classic', label: 'Plantilla Clásica (Tactile)' },
+                                { value: 'luna', label: 'Plantilla Luna (Premium)' },
+                            ]}
+                            icon={Monitor}
+                        />
+
                         <div className="space-y-4 pt-2">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">PESO Y GROSOR</label>
                             <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
