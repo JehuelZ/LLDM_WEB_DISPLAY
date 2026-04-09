@@ -178,12 +178,12 @@ export const AsistenciaTab = ({
             <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="admin-member-filters-bar flex-1 flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto scrollbar-hide w-full">
                     {[
-                        { id: 'all', label: 'TODOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count).length },
-                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && (m.role === 'Administrador' || m.member_group === 'Administración')).length },
-                        { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && (m.member_group === 'Casados' || m.member_group === 'Casadas')).length },
-                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && m.member_group === 'Solos y Solas').length },
-                        { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && m.member_group === 'Jovenes').length },
-                        { id: 'Niños', label: 'NIÑOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count && (m.member_group === 'Niños' || m.member_group === 'Niñas')).length },
+                        { id: 'all', label: 'TODOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length },
+                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.role === 'Administrador' || m.member_group === 'Administración' || m.member_group === 'Ministerio')).length },
+                        { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group === 'Casados' || m.member_group === 'Casadas' || m.member_group?.includes('Matrimonio'))).length },
+                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group === 'Solos y Solas' || m.member_group === 'Solo y Sola')).length },
+                        { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group?.toLowerCase().includes('joven') || m.member_group?.toLowerCase().includes('juvenil'))).length },
+                        { id: 'Niños', label: 'NIÑOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group?.toLowerCase().includes('niñ') || m.member_group?.toLowerCase().includes('nin') || m.category === 'Niño')).length },
                     ].map(group => (
                         <button
                             key={group.id}
@@ -225,7 +225,7 @@ export const AsistenciaTab = ({
                         </div>
                         
                         <div className="flex-1 min-h-[150px] relative">
-                            <TactileBarChart data={weeklyStats} totalMembers={members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && !m.hide_from_membership_count).length} />
+                            <TactileBarChart data={weeklyStats} totalMembers={members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length} />
                         </div>
                     </div>
                 </TactileGlassCard>
@@ -299,12 +299,33 @@ export const AsistenciaTab = ({
                         // Strict Exclusion: Restricted accounts never show up in attendance flow
                         if (m.hide_from_attendance) return false;
 
+                        // Compatibility: Include members in the list even if status is not active, but show them differently
+                        // However, for attendance, we typically only want active or pending to be confirmed
+                        if (m.status === 'Inactivo') return false;
+
                         if (memberFilter === 'all') return true;
-                        if (memberFilter === 'Administración') return m.role === 'Administrador' || m.member_group === 'Administración';
-                        if (memberFilter === 'Casados') return m.member_group === 'Casados' || m.member_group === 'Casadas';
-                        if (memberFilter === 'Niños') return m.member_group === 'Niños' || m.member_group === 'Niñas';
-                        if (memberFilter === 'Solos y Solas') return m.member_group === 'Solos y Solas';
-                        if (memberFilter === 'Jovenes') return m.member_group === 'Jovenes';
+                        
+                        if (memberFilter === 'Administración') {
+                            return m.role === 'Administrador' || m.member_group === 'Administración' || m.member_group === 'Ministerio';
+                        }
+                        
+                        if (memberFilter === 'Casados') {
+                            return (m.member_group === 'Casados' || m.member_group === 'Casadas' || m.member_group?.includes('Matrimonio'));
+                        }
+                        
+                        if (memberFilter === 'Niños') {
+                            const groupLower = (m.member_group || '').toLowerCase();
+                            return groupLower.includes('niñ') || groupLower.includes('nin') || m.category === 'Niño';
+                        }
+                        
+                        if (memberFilter === 'Solos y Solas') {
+                            return m.member_group === 'Solos y Solas' || m.member_group === 'Solo y Sola';
+                        }
+                        
+                        if (memberFilter === 'Jovenes') {
+                            const groupLower = (m.member_group || '').toLowerCase();
+                            return groupLower.includes('joven') || groupLower.includes('juvenil');
+                        }
                         
                         return m.member_group === memberFilter;
                     }).sort((a,b) => a.name.localeCompare(b.name)).map(member => {
