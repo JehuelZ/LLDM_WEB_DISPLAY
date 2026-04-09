@@ -17,6 +17,17 @@ import {
 } from 'date-fns';
 import { getLocalDateString } from './utils';
 
+export interface CongregationInfo {
+    id: string;
+    name: string;
+    description?: string;
+    imageUrl?: string;
+    address?: string;
+    phone?: string;
+    responsibleId?: string;
+    responsibleName?: string;
+}
+
 export interface AppSettings {
     themeMode: 'light' | 'dark' | 'system';
     churchIcon: 'church' | 'flame' | 'star' | 'heart' | 'custom';
@@ -91,7 +102,8 @@ export interface AppSettings {
     calendarStyles?: CalendarStyles;
     intelligenceRange?: 7 | 15 | 30 | 'month';
     mainChurchName?: string;
-    missions?: string[];
+    mainChurch?: CongregationInfo;
+    missions?: (string | CongregationInfo)[];
 }
 
 export interface UserProfile {
@@ -807,7 +819,8 @@ export const useAppStore = create<AppState>()(
                                 status: p.status || currentLocalUser.status,
                                 privileges: p.roles || currentLocalUser.privileges,
                                 bio: p.bio || currentLocalUser.bio,
-                                favorite_verse: p.favorite_verse || currentLocalUser.favorite_verse
+                                favorite_verse: p.favorite_verse || currentLocalUser.favorite_verse,
+                                assigned_church: p.assigned_church || currentLocalUser.assigned_church
                             }
                         });
                     }
@@ -906,6 +919,7 @@ export const useAppStore = create<AppState>()(
                         role: memberData.role,
                         category: memberData.category || 'Varon',
                         status: memberData.status || 'Activo',
+                        assigned_church: memberData.assigned_church || 'Principal',
                         avatar_url: memberData.avatar || 'https://via.placeholder.com/150',
                         bio: memberData.bio || ''
                     });
@@ -1524,7 +1538,10 @@ export const useAppStore = create<AppState>()(
                             fontMain: data.display_font_family || 'Poppins',
                             fontWeight: data.display_font_weight || '400',
                             mainChurchName: data.main_church_name || 'Rodeo CA',
-                            missions: data.missions || []
+                            mainChurch: data.main_church_obj || { id: 'main', name: data.main_church_name || 'Rodeo CA' },
+                            missions: (data.missions || []).map((m: any) => 
+                                typeof m === 'string' ? { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: m } : m
+                            )
                         },
 
 
@@ -1614,6 +1631,9 @@ export const useAppStore = create<AppState>()(
                     neonForgeVariant: 'neon_forge_variant',
                     aquaVariant: 'aqua_variant',
                     neonForgeCityData: 'neon_forge_city_data',
+                    mainChurchName: 'main_church_name',
+                    mainChurch: 'main_church_obj',
+                    missions: 'missions'
                 };
 
                 const dbUpdate: Record<string, any> = {};

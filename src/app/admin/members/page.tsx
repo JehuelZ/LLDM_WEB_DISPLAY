@@ -33,7 +33,8 @@ import {
     Edit2,
     Camera,
     EyeOff,
-    ShieldAlert
+    ShieldAlert,
+    Church
 } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { ImageEditor } from '@/components/ImageEditor';
@@ -604,6 +605,29 @@ export default function MembersPage() {
                                             <p className="text-[8px] text-muted-foreground uppercase font-black">Categoría</p>
                                             <p className="text-[10px]">{member.gender === 'Varon' ? 'VARON' : 'HERMANA'}</p>
                                         </div>
+                                        <div className="col-span-2 space-y-2 pt-2 border-t border-white/5">
+                                            <p className="text-[8px] text-emerald-500 uppercase font-black flex items-center gap-1">
+                                                <Church className="w-2 h-2" /> Congregación
+                                            </p>
+                                            <select
+                                                className="w-full bg-emerald-500/5 border border-emerald-500/20 rounded py-1.5 px-2 text-[10px] font-bold text-white outline-none"
+                                                value={member.assigned_church || 'Principal'}
+                                                onChange={async (e) => {
+                                                    const newChurch = e.target.value;
+                                                    const success = await updateProfileInCloud(member.id, { assigned_church: newChurch });
+                                                    if (success) {
+                                                        await loadMembersFromCloud();
+                                                        showNotification(`${member.name} movido a ${newChurch}`, 'success');
+                                                    }
+                                                }}
+                                            >
+                                                <option value="Principal" className="bg-slate-900">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                {(settings.missions || []).map((m: any, idx: number) => {
+                                                    const name = typeof m === 'string' ? m : m.name;
+                                                    return <option key={idx} value={name} className="bg-slate-900">{name}</option>;
+                                                })}
+                                            </select>
+                                        </div>
                                         <div className="col-span-2 flex gap-2">
                                             <Button 
                                                 variant="outline" 
@@ -805,6 +829,34 @@ export default function MembersPage() {
                                                                     <div className="flex items-center gap-2 text-xs text-muted-foreground uppercase font-bold text-[10px] tracking-widest mt-4">
                                                                         <span className="admin-badge-primitivo">Puesto:</span> 
                                                                         <span className="bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20">{member.role}</span>
+                                                                    </div>
+                                                                    
+                                                                    {/* Inline Congregation Selector */}
+                                                                    <div className="pt-4 border-t border-white/5 space-y-3">
+                                                                        <div className="flex items-center gap-2">
+                                                                            <Church className="w-4 h-4 text-emerald-400" />
+                                                                            <span className="text-[11px] font-black uppercase tracking-widest text-emerald-400">Congregación / Misión</span>
+                                                                        </div>
+                                                                        <select
+                                                                            className="w-full bg-emerald-500/5 border border-emerald-500/30 rounded-md py-2.5 px-3 text-[11px] font-bold text-white outline-none focus:ring-1 focus:ring-emerald-400/50 transition-all cursor-pointer shadow-lg"
+                                                                            value={member.assigned_church || 'Principal'}
+                                                                            onChange={async (e) => {
+                                                                                const newChurch = e.target.value;
+                                                                                setIsSaving(true);
+                                                                                const success = await updateProfileInCloud(member.id, { assigned_church: newChurch });
+                                                                                if (success) {
+                                                                                    await loadMembersFromCloud();
+                                                                                    showNotification(`${member.name} movido a ${newChurch}`, 'success');
+                                                                                }
+                                                                                setIsSaving(false);
+                                                                            }}
+                                                                        >
+                                                                            <option value="Principal" className="bg-slate-900">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                                            {(settings.missions || []).map((m: any, idx: number) => {
+                                                                                const name = typeof m === 'string' ? m : m.name;
+                                                                                return <option key={idx} value={name} className="bg-slate-900 uppercase">{name}</option>;
+                                                                            })}
+                                                                        </select>
                                                                     </div>
                                                                 </div>
                                                                 <Button
@@ -1158,6 +1210,20 @@ export default function MembersPage() {
                                             </select>
                                         </div>
                                         <div className="space-y-2">
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-emerald-500 ml-1">Congregación / Misión</label>
+                                            <select
+                                                className="w-full h-10 px-3 rounded-md bg-emerald-500/5 border border-emerald-500/20 text-sm focus:ring-emerald-500/50 text-white font-bold"
+                                                value={memberModal.data.assigned_church || 'Principal'}
+                                                onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, assigned_church: e.target.value } })}
+                                            >
+                                                <option value="Principal">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                {(settings.missions || []).map((m: any, idx: number) => {
+                                                    const name = typeof m === 'string' ? m : m.name;
+                                                    return <option key={idx} value={name}>{name}</option>;
+                                                })}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
                                             <label className="text-[10px] font-black uppercase tracking-widest text-slate-500 ml-1">Género</label>
                                             <select
                                                 className="w-full h-10 px-3 rounded-md bg-foreground/5 border border-border/40 text-sm focus:ring-primary/50 text-white"
@@ -1182,19 +1248,7 @@ export default function MembersPage() {
                                                 <option value="Niños">Niños / Niñas</option>
                                             </select>
                                         </div>
-                                        <div className="space-y-2">
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-primary ml-1">Congregación / Misión</label>
-                                            <select
-                                                className="w-full h-10 px-3 rounded-md bg-foreground/5 border border-border/40 text-sm focus:ring-primary/50 text-white font-bold"
-                                                value={memberModal.data.assigned_church || 'Principal'}
-                                                onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, assigned_church: e.target.value } })}
-                                            >
-                                                <option value="Principal">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
-                                                {(settings.missions || []).map((m: string) => (
-                                                    <option key={m} value={m}>{m}</option>
-                                                ))}
-                                            </select>
-                                        </div>
+                                        
                                         {(memberModal.data.member_group === 'Niños' || memberModal.data.member_group === 'Niñas') && (
                                             <div className="space-y-2 col-span-2">
                                                 <label className="text-[10px] font-black uppercase tracking-widest text-cyan-400 ml-1">Nombre del Padre / Tutor</label>

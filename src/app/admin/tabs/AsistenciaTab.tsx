@@ -222,12 +222,15 @@ export const AsistenciaTab = ({
                 <div className="admin-member-filters-bar flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto scrollbar-hide w-full">
                     {[
                         { id: 'all', label: 'TODAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length },
-                        { id: 'Principal', label: settings.mainChurchName || 'Principal', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.assigned_church === 'Principal' || !m.assigned_church)).length },
-                        ...(settings.missions || []).map((m: string) => ({
-                            id: m,
-                            label: m,
-                            count: members.filter(p => p.status === 'Activo' && !p.hide_from_attendance && p.assigned_church === m).length
-                        }))
+                        { id: 'Principal', label: settings.mainChurch?.name || settings.mainChurchName || 'Principal', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.assigned_church === 'Principal' || !m.assigned_church || m.assigned_church === (settings.mainChurch?.name || settings.mainChurchName))).length },
+                        ...(settings.missions || []).map((m: any) => {
+                            const name = typeof m === 'string' ? m : m.name;
+                            return {
+                                id: name,
+                                label: name,
+                                count: members.filter(p => p.status === 'Activo' && !p.hide_from_attendance && p.assigned_church === name).length
+                            };
+                        })
                     ].map(church => (
                         <button
                             key={church.id}
@@ -269,8 +272,40 @@ export const AsistenciaTab = ({
                         {(() => {
                             const date = currentDate;
                             const session = currentAttendanceSession;
-                            const count = (attendanceRecords[date] || []).filter(r => r.session_type === session && r.present).length;
-                            const totalEligible = members.filter(m => !m.hide_from_attendance).length;
+                            const recordList = attendanceRecords[date] || [];
+                            
+                            // 1. Filtrar registros por sesión y por congregación (usando m.assigned_church)
+                            const count = recordList.filter(r => {
+                                if (r.session_type !== session || !r.present) return false;
+                                
+                                // Encontrar el miembro para ver su congregación
+                                const m = members.find(p => p.id === r.member_id);
+                                if (!m || m.hide_from_attendance) return false;
+                                
+                                if (chosenChurch !== 'all') {
+                                    const mainName = settings.mainChurch?.name || settings.mainChurchName || 'Principal';
+                                    if (chosenChurch === 'Principal' || chosenChurch === mainName) {
+                                        if (m.assigned_church && m.assigned_church !== 'Principal' && m.assigned_church !== mainName) return false;
+                                    } else {
+                                        if (m.assigned_church !== chosenChurch) return false;
+                                    }
+                                }
+                                return true;
+                            }).length;
+
+                            // 2. Filtrar total elegible por congregación
+                            const totalEligible = members.filter(m => {
+                                if (m.hide_from_attendance) return false;
+                                if (chosenChurch !== 'all') {
+                                    const mainName = settings.mainChurch?.name || settings.mainChurchName || 'Principal';
+                                    if (chosenChurch === 'Principal' || chosenChurch === mainName) {
+                                        if (m.assigned_church && m.assigned_church !== 'Principal' && m.assigned_church !== mainName) return false;
+                                    } else {
+                                        if (m.assigned_church !== chosenChurch) return false;
+                                    }
+                                }
+                                return true;
+                            }).length;
                             const percent = Math.round((count / (totalEligible || 1)) * 100);
                             const displayPercent = Math.max(percent, 0.5);
 
@@ -299,7 +334,7 @@ export const AsistenciaTab = ({
                                             <div className="flex items-center gap-1 mt-1 px-2 py-0.5 bg-white/5 rounded-full border border-[var(--tactile-border-strong)]">
                                                 <span className="text-[8px] font-black text-muted-foreground/70">{count}</span>
                                                 <span className="text-[7px] font-bold text-muted-foreground/30">/</span>
-                                                <span className="text-[8px] font-black text-muted-foreground/70">{members.filter(m => !m.hide_from_attendance).length}</span>
+                                                <span className="text-[8px] font-black text-muted-foreground/70">{totalEligible}</span>
                                             </div>
                                         </div>
                                     </div>

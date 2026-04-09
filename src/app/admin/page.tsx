@@ -761,13 +761,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [newMember, setNewMember] = useState({
         name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '',
-        hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true
+        hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true, assigned_church: 'Principal'
     });
     const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
     const [editingRole, setEditingRole] = useState('Miembro');
     const [editingHideAttendance, setEditingHideAttendance] = useState(false);
     const [editingHideMembershipCount, setEditingHideMembershipCount] = useState(false);
     const [editingCanManagePrayers, setEditingCanManagePrayers] = useState(true);
+    const [editingAssignedChurch, setEditingAssignedChurch] = useState('Principal');
 
     const searchParams = useSearchParams();
     const [fontSearch, setFontSearch] = useState('');
@@ -2624,21 +2625,24 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                 </div>
 
                                                 <div className="space-y-2 mt-4 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                                                    {(settings.missions || []).map((mission: string, idx: number) => (
-                                                        <div key={idx} className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-md group/mission">
-                                                            <span className="text-xs font-bold uppercase tracking-tight text-white/70">{mission}</span>
-                                                            <button 
-                                                                onClick={() => {
-                                                                    const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
-                                                                    setSettings({ missions: filtered });
-                                                                    saveSettingsToCloud({ missions: filtered });
-                                                                }}
-                                                                className="p-2 text-rose-500/40 hover:text-rose-500 opacity-0 group-hover/mission:opacity-100 transition-all"
-                                                            >
-                                                                <Trash2 className="w-4 h-4" />
-                                                            </button>
-                                                        </div>
-                                                    ))}
+                                                    {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
+                                                        const name = typeof mission === 'string' ? mission : mission.name;
+                                                        return (
+                                                            <div key={idx} className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-md group/mission">
+                                                                <span className="text-xs font-bold uppercase tracking-tight text-white/70">{name}</span>
+                                                                <button 
+                                                                    onClick={() => {
+                                                                        const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
+                                                                        setSettings({ missions: filtered });
+                                                                        saveSettingsToCloud({ missions: filtered });
+                                                                    }}
+                                                                    className="p-2 text-rose-500/40 hover:text-rose-500 opacity-0 group-hover/mission:opacity-100 transition-all"
+                                                                >
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                </button>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
                                             </div>
                                         </div>
@@ -3120,7 +3124,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     className="h-12 px-6 text-[10px] font-black uppercase hover:bg-white/10 dark:bg-white/5 tracking-widest"
                                                     onClick={() => {
                                                         setShowAddMember(false);
-                                                        setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true });
+                                                        setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true, assigned_church: 'Principal' });
                                                     }}
                                                 >
                                                     Descartar
@@ -3135,7 +3139,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         setIsSaving(true);
                                                         const success = await addMemberToCloud(newMember);
                                                         if (success) {
-                                                            setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true });
+                                                            setNewMember({ name: '', email: '', phone: '', role: 'Miembro', gender: 'Varon', category: 'Varon', member_group: '', hide_from_attendance: false, hide_from_membership_count: false, can_manage_prayers: true, assigned_church: 'Principal' });
                                                             setShowAddMember(false);
                                                         }
                                                         setIsSaving(false);
@@ -3238,8 +3242,30 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         <option value="Dirigente Coro Niños" className="bg-background">DIRIGENTE CORO NIÑOS</option>
                                                         <option value="Responsable de Asistencia" className="bg-background">RESPONSABLE ASIST.</option>
                                                     </select>
-
                                                     <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3">
+                                                <label className="text-[10px] font-black uppercase tracking-widest text-emerald-500 ml-1 flex items-center gap-2">
+                                                    <Church className="w-3 h-3" /> Congregación / Misión
+                                                </label>
+                                                <div className="relative">
+                                                    <select
+                                                        value={newMember.assigned_church || 'Principal'}
+                                                        onChange={(e) => setNewMember({ ...newMember, assigned_church: e.target.value })}
+                                                        className={cn(
+                                                            "w-full bg-emerald-500/5 border border-emerald-500/20 rounded-md h-14 px-4 text-sm font-black text-white outline-none appearance-none transition-all",
+                                                            "focus:border-emerald-400/50 focus:bg-emerald-500/10"
+                                                        )}
+                                                    >
+                                                        <option value="Principal" className="bg-slate-900">{settings.mainChurch?.name || settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                        {(settings.missions || []).map((m: any, idx: number) => {
+                                                            const name = typeof m === 'string' ? m : m.name;
+                                                            return <option key={idx} value={name} className="bg-slate-900">{name}</option>;
+                                                        })}
+                                                    </select>
+                                                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-400 pointer-events-none" />
                                                 </div>
                                             </div>
 
@@ -3655,6 +3681,21 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                         <option value="Responsable de Asistencia" className="bg-[#0f172a]">RESPONSABLE ASIST.</option>
                                                                                     </select>
 
+                                                                                    <div className="flex items-center gap-1 border-l border-white/10 ml-1 pl-1">
+                                                                                        <Church className="w-2.5 h-2.5 text-slate-500" />
+                                                                                        <select
+                                                                                            value={editingAssignedChurch}
+                                                                                            onChange={(e) => setEditingAssignedChurch(e.target.value)}
+                                                                                            className="bg-transparent text-[9px] font-black text-emerald-500 outline-none px-1 cursor-pointer border-b border-white/[0.03] pb-0.5"
+                                                                                        >
+                                                                                            <option value="Principal" className="bg-[#0f172a]">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</option>
+                                                                                            {settings.missions?.map((m: any, idx: number) => {
+                                                                                                const name = typeof m === 'string' ? m : m.name;
+                                                                                                return <option key={idx} value={name} className="bg-[#0f172a] uppercase">{name}</option>;
+                                                                                            })}
+                                                                                        </select>
+                                                                                    </div>
+
                                                                                      <div className="flex items-center gap-2 px-2 border-l border-white/10 ml-2">
                                                                                          <button 
                                                                                             onClick={() => setEditingHideAttendance(!editingHideAttendance)}
@@ -3705,7 +3746,8 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                                      role: editingRole as any,
                                                                                                      hide_from_attendance: editingHideAttendance,
                                                                                                      hide_from_membership_count: editingHideMembershipCount,
-                                                                                                     can_manage_prayers: editingCanManagePrayers
+                                                                                                     can_manage_prayers: editingCanManagePrayers,
+                                                                                                     assigned_church: editingAssignedChurch
                                                                                                  });
                                                                                                 await loadMembersFromCloud();
                                                                                                 setEditingMemberId(null);
@@ -3731,6 +3773,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                                                              setEditingHideAttendance(m.hide_from_attendance || false);
                                                                                              setEditingHideMembershipCount(m.hide_from_membership_count || false);
                                                                                              setEditingCanManagePrayers(m.can_manage_prayers !== false);
+                                                                                             setEditingAssignedChurch(m.assigned_church || 'Principal');
                                                                                         }}
                                                                                         className="p-2 rounded-md bg-transparent text-muted-foreground hover:text-white transition-colors border border-white/[0.03]"
                                                                                     >

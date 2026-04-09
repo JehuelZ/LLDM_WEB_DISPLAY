@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
     Users, Activity, ShieldCheck, Flame, Search, Filter, 
-    ShieldAlert, User, Mail, Edit2, Power, Trash2, Crown
+    ShieldAlert, User, Mail, Edit2, Power, Trash2, Crown, Church
 } from 'lucide-react'
 import { useAppStore, UserProfile } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -34,7 +34,8 @@ export const MiembrosTab = ({
         updateProfileInCloud,
         deleteMemberFromCloud,
         loadMembersFromCloud,
-        showNotification
+        showNotification,
+        settings
     } = useAppStore()
 
     const [isSaving, setIsSaving] = useState(false)
@@ -332,6 +333,12 @@ export const MiembrosTab = ({
                                     </TactileBadge>
                                     <TactileBadge className="bg-slate-400/10 border-slate-400/20 text-gray-300">
                                         {member.member_group}
+                                    </TactileBadge>
+                                    <TactileBadge className="bg-emerald-500/5 border-emerald-500/20 text-emerald-400/80 flex items-center gap-1.5 px-2">
+                                        <Church className="w-2.5 h-2.5" />
+                                        {member.assigned_church === 'Principal' || !member.assigned_church 
+                                            ? (settings.mainChurchName || 'Principal')
+                                            : member.assigned_church}
                                     </TactileBadge>
                                 </div>
                             </div>

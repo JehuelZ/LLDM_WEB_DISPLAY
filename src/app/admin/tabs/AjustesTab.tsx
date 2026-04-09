@@ -13,6 +13,8 @@ import {
     TactileGlassCard, TactileSelect, TactileFontSelect, 
     TactileInput 
 } from '@/components/admin/TactileUI'
+import { CongregationEditModal } from '@/components/admin/CongregationEditModal'
+import { CongregationInfo, UserProfile } from '@/lib/store'
 
 interface AjustesTabProps {
     settings: any
@@ -43,7 +45,10 @@ export const AjustesTab = ({
 }: AjustesTabProps) => {
     const [isSaving, setIsSaving] = useState(false)
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: string } | null>(null)
-    const [newMissionName, setNewMissionName] = useState('')
+    const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo, index?: number } | null>(null)
+    
+    // Get members from store for picking responsible
+    const members = useAppStore(state => state.members)
 
     return (
         <motion.div
@@ -410,67 +415,132 @@ export const AjustesTab = ({
 
                 <TactileGlassCard title="JERARQUÍA Y MISIONES (OBRAS)">
                     <div className="space-y-6">
-                        <TactileInput
-                            label="NOMBRE DE IGLESIA PRINCIPAL"
-                            value={settings.mainChurchName || 'Rodeo CA'}
-                            onChange={(e: any) => setSettings({ ...settings, mainChurchName: e.target.value })}
-                            icon={Church}
-                            placeholder="Ej. Rodeo CA"
-                        />
-
-                        <div className="pt-4 border-t border-[var(--tactile-border)]">
-                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2 mb-4 block">
-                                MISIONES / OBRAS DEPENDIENTES
-                            </label>
-                            
-                            <div className="space-y-3 mb-4">
-                                {(settings.missions || []).map((mission: string, idx: number) => (
-                                    <div key={idx} className="flex gap-2">
-                                        <div className="flex-1 h-12 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md flex items-center px-4 text-[11px] font-bold text-foreground">
-                                            {mission}
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
-                                                setSettings({ ...settings, missions: filtered });
-                                                saveSettingsToCloud({ missions: filtered });
-                                            }}
-                                            className="w-12 h-12 bg-rose-500/10 text-rose-500 rounded-md border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
-                                        >
-                                            <Trash className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="flex gap-2">
-                                <TactileInput
-                                    label="NUEVA OBRA"
-                                    value={newMissionName}
-                                    onChange={(e: any) => setNewMissionName(e.target.value)}
-                                    placeholder="Nombre de la misión..."
-                                    className="flex-1 !mb-0"
-                                />
-                                <button
-                                    onClick={() => {
-                                        if (!newMissionName.trim()) return;
-                                        const updated = [...(settings.missions || []), newMissionName.trim()];
-                                        setSettings({ ...settings, missions: updated });
-                                        saveSettingsToCloud({ missions: updated });
-                                        setNewMissionName('');
-                                        showNotification(`Misión "${newMissionName}" agregada.`, 'success');
-                                    }}
-                                    className="w-12 h-12 bg-primary text-foreground rounded-md shadow-lg hover:scale-105 active:scale-95 transition-all flex items-center justify-center mt-6"
+                        <div className="p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 block">IGLESIA PRINCIPAL</label>
+                            <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                    {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
+                                        <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        <Church className="w-8 h-8 text-muted-foreground opacity-20" />
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-black uppercase truncate text-foreground">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</h4>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1 truncate">
+                                        {settings.mainChurch?.responsibleName || 'Sin responsable asignado'}
+                                    </p>
+                                </div>
+                                <button 
+                                    onClick={() => setEditingCongregation({ 
+                                        info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' } 
+                                    })}
+                                    className="px-4 h-11 bg-primary/20 text-primary rounded-md border border-primary/30 hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest"
                                 >
-                                    <Plus className="w-5 h-5" />
+                                    ADMINISTRAR
                                 </button>
                             </div>
-                            <p className="text-[8px] text-muted-foreground mt-4 leading-relaxed">
-                                * Las obras creadas aparecerán como opciones en la ficha de los miembros y en los filtros de asistencia.
+                        </div>
+
+                        <div className="pt-4 border-t border-[var(--tactile-border)]">
+                            <div className="flex items-center justify-between mb-6">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">MISIONES / OBRAS DEPENDIENTES</label>
+                                <button 
+                                    onClick={() => setEditingCongregation({ 
+                                        info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
+                                        index: -1 // New mission
+                                    })}
+                                    className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest"
+                                >
+                                    <Plus className="w-3 h-3" /> AGREGAR OBRA
+                                </button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 gap-4">
+                                {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
+                                    const m = typeof mission === 'string' ? { id: `leg-${idx}`, name: mission } : mission;
+                                    return (
+                                        <div key={m.id || idx} className="group relative p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md hover:border-primary/50 transition-all">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                                    {m.imageUrl ? (
+                                                        <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
+                                                    ) : (
+                                                        <div className="text-[10px] font-black text-muted-foreground opacity-20">{m.name.charAt(0)}</div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="text-[11px] font-black uppercase truncate text-foreground">{m.name}</h4>
+                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase opacity-60 truncate">
+                                                        {m.responsibleName || 'Sin responsable'}
+                                                    </p>
+                                                </div>
+                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button 
+                                                        onClick={() => setEditingCongregation({ info: m, index: idx })}
+                                                        className="w-10 h-10 bg-primary/10 text-primary rounded-md border border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center justify-center"
+                                                    >
+                                                        <Save className="w-4 h-4 scale-75" />
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => {
+                                                            const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
+                                                            setSettings({ ...settings, missions: filtered });
+                                                            saveSettingsToCloud({ missions: filtered });
+                                                            showNotification('Misión eliminada correctamente.', 'success');
+                                                        }}
+                                                        className="w-10 h-10 bg-rose-500/10 text-rose-500 rounded-md border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
+                                                    >
+                                                        <Trash className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                                {(!settings.missions || settings.missions.length === 0) && (
+                                    <div className="py-8 text-center border-2 border-dashed border-[var(--tactile-border)] rounded-md">
+                                        <p className="text-[10px] font-bold uppercase text-muted-foreground opacity-40">No hay misiones configuradas</p>
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-[8px] text-muted-foreground mt-6 leading-relaxed">
+                                * Las obras creadas permiten segmentar la asistencia y organizar la membresía por ubicación geográfica o administrativa.
                             </p>
                         </div>
                     </div>
                 </TactileGlassCard>
+
+                {/* MODALS */}
+                {editingCongregation && (
+                    <CongregationEditModal 
+                        isOpen={!!editingCongregation}
+                        congregation={editingCongregation.info}
+                        onClose={() => setEditingCongregation(null)}
+                        members={members}
+                        uploadAvatar={uploadAvatar}
+                        onSave={async (updated) => {
+                            if (updated.id === 'main') {
+                                // Save as main church
+                                await saveSettingsToCloud({ 
+                                    mainChurch: updated,
+                                    mainChurchName: updated.name // Sync legacy field
+                                });
+                                showNotification('Configuración de sede principal actualizada.', 'success');
+                            } else {
+                                // Save as mission
+                                let newMissions = [...(settings.missions || [])];
+                                if (editingCongregation.index === -1) {
+                                    newMissions.push(updated);
+                                } else if (editingCongregation.index !== undefined) {
+                                    newMissions[editingCongregation.index] = updated;
+                                }
+                                await saveSettingsToCloud({ missions: newMissions });
+                                showNotification(`Misión "${updated.name}" guardada.`, 'success');
+                            }
+                        }}
+                    />
+                )}
 
                 <TactileGlassCard title="SISTEMA VISUAL DEL DISPLAY (PIZARRA)">
                     <div className="space-y-8">
