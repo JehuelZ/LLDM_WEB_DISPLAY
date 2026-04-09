@@ -656,7 +656,7 @@ function AdminLayoutContent({
                         <div className="hidden sm:flex flex-col">
                             <span className={cn("text-[10px] font-black uppercase tracking-[0.4em] opacity-40 leading-none", settings.themeMode === 'light' ? "text-slate-600" : "text-muted-foreground")}>Pizarra</span>
                             <span key={currentDate} className="text-[12px] font-black uppercase tracking-tighter text-foreground mt-1.5 font-sans animate-fade-in">
-                                {currentTab === 'dashboard' ? 'Principal' : currentTab}
+                                {currentTab === 'dashboard' ? 'Principal' : currentTab === 'asistencia' ? 'Asistencia' : currentTab === 'horarios' ? 'Programación' : currentTab}
                             </span>
                         </div>
                     </div>

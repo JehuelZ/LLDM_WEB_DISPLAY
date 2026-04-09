@@ -470,8 +470,8 @@ export const useAppStore = create<AppState>()(
             },
 
             loadDayScheduleFromCloud: async (date) => {
-                // If date is not provided, use local today
-                const targetDate = date || getLocalDateString();
+                // Sanitizar fecha para evitar errores 406
+                const targetDate = (date || getLocalDateString()).split(':')[0].split(' ')[0];
                 const { data: data, error } = await supabase
                     .from('schedule')
                     .select('*')
@@ -1441,8 +1441,9 @@ export const useAppStore = create<AppState>()(
             },
 
             saveKidsAssignmentToCloud: async (date, assignment) => {
+                const cleanDate = date.split(':')[0].split(' ')[0];
                 const dbAss = {
-                    date,
+                    date: cleanDate,
                     monitor_id: assignment.monitorId,
                     reconciliation_leader_id: assignment.reconciliationLeaderId,
                     service_child_id: assignment.serviceChild,
@@ -1456,7 +1457,7 @@ export const useAppStore = create<AppState>()(
                     get().showNotification(`Error al guardar asignaciones: ${error.message}`, 'error');
                     return;
                 }
-                get().loadKidsAssignmentsFromCloud(date);
+                get().loadKidsAssignmentsFromCloud(cleanDate);
                 get().showNotification("Asignaciones guardadas correctamente", 'success');
             },
 
