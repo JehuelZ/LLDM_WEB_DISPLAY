@@ -1490,10 +1490,11 @@ export const useAppStore = create<AppState>()(
             },
 
             saveUniformForDateToCloud: async (date, uniformId) => {
+                const cleanDate = date.split(':')[0].split(' ')[0];
                 if (uniformId) {
-                    await supabase.from('uniform_schedule').upsert({ date, uniform_id: uniformId });
+                    await supabase.from('uniform_schedule').upsert({ date: cleanDate, uniform_id: uniformId });
                 } else {
-                    await supabase.from('uniform_schedule').delete().eq('date', date);
+                    await supabase.from('uniform_schedule').delete().eq('date', cleanDate);
                 }
                 get().loadUniformsFromCloud();
             },
