@@ -1539,9 +1539,19 @@ export const useAppStore = create<AppState>()(
                             fontWeight: data.display_font_weight || '400',
                             mainChurchName: data.main_church_name || 'Rodeo CA',
                             mainChurch: data.main_church_obj || { id: 'main', name: data.main_church_name || 'Rodeo CA' },
-                            missions: (data.missions || []).map((m: any) => 
-                                typeof m === 'string' ? { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: m } : m
-                            )
+                            missions: (data.missions || []).map((m: any) => {
+                                if (typeof m === 'string') {
+                                    if (m.trim().startsWith('{')) {
+                                        try {
+                                            return JSON.parse(m);
+                                        } catch (e) {
+                                            return { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: m };
+                                        }
+                                    }
+                                    return { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: m };
+                                }
+                                return m;
+                            })
                         },
 
 
