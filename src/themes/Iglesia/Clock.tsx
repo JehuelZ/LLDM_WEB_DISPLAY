@@ -99,6 +99,41 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                         {(settings as any)?.churchAddress || 'Sistema de Información Digital'}
                     </p>
                 </div>
+
+                {/* Central Theme Banner — Moved here to align with weather/header height */}
+                {!hideExtra && theme?.title && (
+                    <div style={{ 
+                        pointerEvents: 'auto', 
+                        marginTop: 15,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flex: 1
+                    }}>
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: 14,
+                            padding: '12px 32px', borderRadius: 28,
+                            background: isDark ? 'rgba(30,35,45,0.8)' : `${T.surface}CC`,
+                            backdropFilter: 'blur(10px)',
+                            boxShadow: isDark ? `8px 8px 20px rgba(0,0,0,0.5), -5px -5px 15px rgba(255,255,255,0.02)` : neuShadow(T, false, 'sm', isDark),
+                            border: `1.5px solid ${T.accent}33`,
+                            height: 'fit-content'
+                        }}>
+                            <BookOpen style={{ color: T.accent }} size={18} />
+                            <span style={{
+                                fontSize: 11,
+                                fontWeight: 800,
+                                color: T.accent,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.15em',
+                                fontFamily: T.fontMontserrat,
+                                whiteSpace: 'nowrap'
+                            }}>
+                                {themeLabel}: <span style={{ color: T.textPrimary, fontSize: 16, fontWeight: 700, marginLeft: 6 }}>{theme.title}</span>
+                            </span>
+                        </div>
+                    </div>
+                )}
+
                 <div style={{ pointerEvents: 'auto' }}>
                     {/* Unified Header Intelligence Box (Weather + Clock) */}
                     {!hideExtra && (() => {
@@ -264,35 +299,6 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
             </div>
 
             {/* Existing badge code continues... */}
-
-            {/* Bottom Static Weekly Theme Banner (Moved from top to avoid collision with weather) */}
-            {!hideExtra && theme?.title && (
-                <div style={{
-                    position: 'absolute', bottom: 82, left: '50%', transform: 'translateX(-50%)',
-                    zIndex: 20, textAlign: 'center', pointerEvents: 'none'
-                }}>
-                    <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 14,
-                        padding: '12px 32px', borderRadius: 28,
-                        background: isDark ? 'rgba(30,35,45,0.8)' : `${T.surface}CC`,
-                        backdropFilter: 'blur(10px)',
-                        boxShadow: `${neuShadow(T, true, 'sm', isDark)}, 0 0 20px ${T.accent}20`,
-                        border: `1.5px solid ${T.accent}33`
-                    }}>
-                        <BookOpen style={{ color: T.accent }} size={18} />
-                        <span style={{
-                            fontSize: 11,
-                            fontWeight: 800,
-                            color: T.accent,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.15em',
-                            fontFamily: T.fontMontserrat
-                        }}>
-                            {themeLabel}: <span style={{ color: T.textPrimary, fontSize: 16, fontWeight: 700, marginLeft: 6 }}>{theme.title}</span>
-                        </span>
-                    </div>
-                </div>
-            )}
 
             <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
