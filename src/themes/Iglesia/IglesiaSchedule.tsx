@@ -404,9 +404,6 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                             small={true}
                         />
                     </div>
-                    <p style={{ fontSize: 16, fontWeight: 400, color: T.textMuted, textTransform: 'capitalize', fontFamily: T.fontInter }}>
-                        {format(displayDate, "EEEE, d 'de' MMMM", { locale: es })} • {isSun ? 'Día del Señor' : `Día de Oración`} • {format(displayDate, 'yyyy')}
-                    </p>
                 </div>
 
                 <div style={{ display: 'flex', gap: 32, justifyContent: 'center', alignItems: 'center', width: '100%' }}>

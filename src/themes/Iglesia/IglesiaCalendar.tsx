@@ -104,17 +104,6 @@ export function IglesiaCalendar() {
                         isDark={isDark}
                         small={true}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 12 }}>
-                        <div style={{ height: 1, width: 40, background: T.accent, opacity: 0.3 }} />
-                        <h3 style={{
-                            fontSize: 16, fontWeight: 700, color: T.textSecondary,
-                            textTransform: 'uppercase', letterSpacing: '0.2em',
-                            fontFamily: T.fontMontserrat, margin: 0
-                        }}>
-                            {monthLabel}
-                        </h3>
-                        <div style={{ height: 1, width: 40, background: T.accent, opacity: 0.3 }} />
-                    </div>
                 </div>
             </div>
 
