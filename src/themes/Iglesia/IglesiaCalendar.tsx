@@ -102,6 +102,7 @@ export function IglesiaCalendar() {
                         icon={CalendarIcon}
                         T={T}
                         isDark={isDark}
+                        small={true}
                     />
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 12 }}>
                         <div style={{ height: 1, width: 40, background: T.accent, opacity: 0.3 }} />

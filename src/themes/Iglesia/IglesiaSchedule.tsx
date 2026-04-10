@@ -401,6 +401,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                             icon={Layout}
                             T={T}
                             isDark={isDark}
+                            small={true}
                         />
                     </div>
                     <p style={{ fontSize: 16, fontWeight: 400, color: T.textMuted, textTransform: 'capitalize', fontFamily: T.fontInter }}>
