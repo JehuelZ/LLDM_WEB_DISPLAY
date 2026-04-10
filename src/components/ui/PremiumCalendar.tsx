@@ -36,6 +36,18 @@ const PremiumCalendar: React.FC<PremiumCalendarProps> = ({
     const [currentMonth, setCurrentMonth] = useState(parseISO(selectedDate));
     const [direction, setDirection] = useState(0);
 
+    // Sincronizar el mes visible cuando cambia la fecha seleccionada externalmente
+    React.useEffect(() => {
+        try {
+            const nextDate = parseISO(selectedDate);
+            if (!isNaN(nextDate.getTime()) && !isSameMonth(nextDate, currentMonth)) {
+                setCurrentMonth(nextDate);
+            }
+        } catch (e) {
+            console.error("Error syncing calendar month:", e);
+        }
+    }, [selectedDate]);
+
     const nextMonth = () => {
         setDirection(1);
         setCurrentMonth(addMonths(currentMonth, 1));
@@ -156,7 +168,6 @@ const PremiumCalendar: React.FC<PremiumCalendarProps> = ({
                         onClick={() => handleDateClick(cloneDay)}
                     >
                         <motion.div 
-                            layoutId={isSelected ? "activeDay" : undefined}
                             className={innerStyle}
                         >
                             {formattedDate}
