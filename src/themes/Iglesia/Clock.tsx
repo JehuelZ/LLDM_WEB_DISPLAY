@@ -70,10 +70,10 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
     const unit = settings?.weatherUnit || 'fahrenheit';
     const isCelsius = unit === 'celsius';
 
-    // Weather Fetching
+    // Weather Fetching — Using unified settings from Admin
     const { weather } = useWeather(
-        settings?.neonForgeCityData?.lat || 24.341,
-        settings?.neonForgeCityData?.lon || -104.28,
+        settings?.weatherLat || 38.033, // Default to Vallejo/Rodeo CA if not set
+        settings?.weatherLng || -122.267,
         unit
     );
 
@@ -233,7 +233,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                     </div>
                                     <div>
                                         <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat, margin: 0 }}>
-                                            {settings?.neonForgeCityData?.name || (settings as any)?.city || 'Rodeo'}
+                                            {settings?.weatherCity || (settings as any)?.city || 'Rodeo'}
                                         </p>
                                         <p style={{ fontSize: 28, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0 }}>
                                             {weather ? `${weather.temp}°${isCelsius ? 'C' : 'F'}` : `--°${isCelsius ? 'C' : 'F'}`}
