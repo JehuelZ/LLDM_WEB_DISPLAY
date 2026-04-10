@@ -408,18 +408,20 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
 
                 <div style={{ display: 'flex', gap: 32, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                     {renderCard('5am', title5am, (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-                            <Avatar src={leader5am.avatar} size={240} T={T} isDark={isDark} />
-                            <AcademicButton
-                                label={leader5am.name || 'NO ASIGNADO'}
-                                icon={User}
-                                variant="reliefAura"
-                                T={T}
-                                isDark={isDark}
-                                isLive={isLive5am}
-                                isTomorrow={isTomorrow}
-                            />
-                            <RoleBadge label="Consagración" icon={Sunrise} T={T} isDark={isDark} />
+                        <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', gap: 24, width: '100%' }}>
+                            <Avatar src={leader5am.avatar} size={220} T={T} isDark={isDark} />
+                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
+                                <AcademicButton
+                                    label={leader5am.name || 'NO ASIGNADO'}
+                                    icon={User}
+                                    variant="reliefAura"
+                                    T={T}
+                                    isDark={isDark}
+                                    isLive={isLive5am}
+                                    isTomorrow={isTomorrow}
+                                />
+                                <RoleBadge label="Consagración" icon={Sunrise} T={T} isDark={isDark} />
+                            </div>
                         </div>
                     ), [], false)}
 
@@ -442,23 +444,23 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                 const docL = getMember(slot9am?.doctrineLeaderId);
 
                                 return (
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%' }}>
-                                        <Avatar src={minister.avatar} size={240} T={T} isDark={isDark} />
-                                        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                                    <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', gap: 24, width: '100%' }}>
+                                        <Avatar src={minister.avatar} size={220} T={T} isDark={isDark} />
+                                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
                                             <AcademicButton label={minister.name} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
                                             {slot9am?.topic && (
                                                 <div style={{ 
-                                                    background: 'rgba(255,255,255,0.05)', 
-                                                    padding: '10px 20px', 
-                                                    borderRadius: 15, 
+                                                    background: isDark ? 'rgba(51,136,255,0.05)' : 'rgba(51,136,255,0.03)', 
+                                                    padding: '12px 24px', 
+                                                    borderRadius: 20, 
                                                     color: T.secondary,
-                                                    fontSize: 22,
+                                                    fontSize: 24,
                                                     fontWeight: '900',
                                                     textTransform: 'uppercase',
                                                     letterSpacing: 1,
-                                                    border: `1px solid ${T.secondary}20`,
-                                                    textAlign: 'center',
-                                                    marginTop: 5
+                                                    border: `1.5px solid ${T.secondary}30`,
+                                                    textAlign: 'left',
+                                                    width: 'fit-content'
                                                 }}>
                                                     {slot9am.topic}
                                                 </div>
@@ -530,9 +532,9 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                                 if (!isSun && slot9am?.consecrationLeaderId === slot9am?.doctrineLeaderId && slot9am?.consecrationLeaderId) {
                                     // Unified view for single leader at 9 AM
                                     return (
-                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%' }}>
-                                            <Avatar src={cons9am.avatar} size={240} T={T} isDark={isDark} />
-                                            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                                        <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', gap: 24, width: '100%' }}>
+                                            <Avatar src={cons9am.avatar} size={220} T={T} isDark={isDark} />
+                                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
                                                 <AcademicButton label={cons9am.name || 'NO ASIGNADO'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLive9am} isTomorrow={isTomorrow} />
                                                 <RoleBadge label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={Sunrise} T={T} isDark={isDark} />
                                             </div>
@@ -623,10 +625,10 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                         } else {
                             // REGULAR PRAYER — 1 person carries both Consagración + Doctrina
                             return renderCard('evening', cardTitle, (
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-                                    <Avatar src={evLeaders[0]?.avatar} size={240} T={T} isDark={isDark} />
-                                    <AcademicButton label={evLeaders[0]?.name || 'NO ASIGNADO'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow} />
-                                    <div style={{ display: 'flex', gap: 12 }}>
+                                <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', gap: 24, width: '100%' }}>
+                                    <Avatar src={evLeaders[0]?.avatar} size={220} T={T} isDark={isDark} />
+                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
+                                        <AcademicButton label={evLeaders[0]?.name || 'NO ASIGNADO'} icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow} />
                                         <RoleBadge label={is14th ? "HISTORIA DE LA IGLESIA" : "Consagración y Doctrina"} icon={Sunrise} T={T} isDark={isDark} />
                                     </div>
                                 </div>
