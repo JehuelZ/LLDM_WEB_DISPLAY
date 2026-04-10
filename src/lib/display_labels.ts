@@ -17,8 +17,8 @@ export const DISPLAY_SLIDE_LABELS: Record<string, { es: string, en: string }> = 
         en: 'Monthly Calendar'
     },
     weekly_program: {
-        es: 'Programa Semanal',
-        en: 'Weekly Program'
+        es: 'Lista de Oraciones',
+        en: 'Prayer Schedule'
     },
     announcements: {
         es: 'Comunicados Oficiales',
@@ -57,8 +57,16 @@ export function getSlotLabel(slotId: string, lang: 'es' | 'en' = 'es'): string {
     return DEFAULT_SLOT_LABELS[slotId]?.[lang] || '';
 }
 
-export function getSlideSystemTitle(slideId: string, lang: 'es' | 'en' = 'es'): string {
-    return DISPLAY_SLIDE_LABELS[slideId]?.[lang] || 'Tema de la Semana';
+export function getSlideSystemTitle(slideId: string, lang: any = 'es'): string {
+    const l = (lang === 'en' || lang === 'es') ? lang : 'es';
+    const entry = DISPLAY_SLIDE_LABELS[slideId];
+    
+    if (!entry) {
+        // Fallback for missing keys (useful for debugging)
+        return slideId.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    }
+    
+    return entry[l] || entry['es'];
 }
 
 export function getServiceTypeLabel(type: string, lang: 'es' | 'en' = 'es', is14th: boolean = false): string {

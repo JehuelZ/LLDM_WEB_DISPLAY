@@ -207,6 +207,7 @@ export function IglesiaAnnouncements() {
                             icon={Bell}
                             T={T}
                             isDark={isDark}
+                            small={true}
                         />
                         <p style={{ fontSize: 10, fontWeight: 500, color: T.textMuted, fontFamily: T.fontInter, marginTop: 10, textAlign: 'center', opacity: 0.8 }}>Información Importante para la Membresía</p>
                     </div>
