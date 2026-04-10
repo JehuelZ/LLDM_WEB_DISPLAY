@@ -491,7 +491,8 @@ export const useAppStore = create<AppState>()(
             },
 
             loadUserResponsibilities: async (userId) => {
-                if (!userId) return;
+                const targetId = userId || get().currentUser?.id;
+                if (!targetId) return;
                 
                 // Cargar todas las responsabilidades del mes para este usuario
                 const now = new Date();
@@ -513,23 +514,23 @@ export const useAppStore = create<AppState>()(
                 data.forEach((entry: any) => {
                     const date = entry.date;
                     
-                    if (entry.five_am_leader_id === userId) {
+                    if (entry.five_am_leader_id === targetId) {
                         resps.push({ date, type: 'Oración 5 AM', status: 'pending', label: 'Titulado' });
                     }
-                    if (entry.nine_am_consecration_leader_id === userId) {
+                    if (entry.nine_am_consecration_leader_id === targetId) {
                         resps.push({ date, type: 'Consagración 9 AM', status: 'pending', label: 'Dirigente' });
                     }
-                    if (entry.nine_am_doctrine_leader_id === userId) {
+                    if (entry.nine_am_doctrine_leader_id === targetId) {
                         resps.push({ date, type: 'Doctrina 9 AM', status: 'pending', label: 'Expositor' });
                     }
-                    if (entry.noon_leader_id === userId) {
+                    if (entry.noon_leader_id === targetId) {
                         resps.push({ date, type: 'Oración 12 PM', status: 'pending', label: 'Titulado' });
                     }
-                    if (entry.evening_doctrine_leader_id === userId) {
+                    if (entry.evening_doctrine_leader_id === targetId) {
                         resps.push({ date, type: 'Culto Vespertino (Doctrina)', status: 'pending', label: 'Expositor' });
                     }
                     // Handle evening_leader_ids which is an array
-                    if (Array.isArray(entry.evening_leader_ids) && entry.evening_leader_ids.includes(userId)) {
+                    if (Array.isArray(entry.evening_leader_ids) && entry.evening_leader_ids.includes(targetId)) {
                         resps.push({ date, type: 'Culto Vespertino', status: 'pending', label: 'Dirigente' });
                     }
                 });
@@ -538,7 +539,7 @@ export const useAppStore = create<AppState>()(
                 resps.sort((a, b) => a.date.localeCompare(b.date));
                 
                 const current = get().currentUser;
-                if (current && current.id === userId) {
+                if (current && current.id === targetId) {
                     set({ currentUser: { ...current, responsibilities: resps } });
                 }
             },

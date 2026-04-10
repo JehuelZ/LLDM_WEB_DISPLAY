@@ -162,6 +162,7 @@ export default function Home() {
     loadDayScheduleFromCloud,
     loadThemeFromCloud,
     loadMembersFromCloud,
+    loadUserResponsibilities,
     updateProfileInCloud,
     uploadAvatar,
     showNotification
@@ -205,7 +206,8 @@ export default function Home() {
     loadDayScheduleFromCloud(currentDate);
     loadThemeFromCloud();
     loadMembersFromCloud();
-  }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadThemeFromCloud, loadMembersFromCloud]);
+    loadUserResponsibilities();
+  }, [currentDate, loadAnnouncementsFromCloud, loadDayScheduleFromCloud, loadThemeFromCloud, loadMembersFromCloud, loadUserResponsibilities]);
 
   const getMemberName = (id: any) => {
     if (!id) return '';
