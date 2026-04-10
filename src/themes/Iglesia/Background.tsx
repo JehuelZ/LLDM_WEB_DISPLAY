@@ -10,7 +10,7 @@ export function IglesiaBackground() {
     return (
         <div
             className="absolute inset-0 z-0 overflow-hidden transition-colors duration-700"
-            style={{ backgroundColor: isCustom ? '#000' : T.bg }}
+            style={{ backgroundColor: T.bg }}
         >
             {isCustom && settings.displayCustomBgUrl ? (
                 <div 
