@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useMemo, Suspense } from 'react';
+import { useEffect, useState, useMemo, Suspense, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -259,15 +259,81 @@ const CustomSelect = ({
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [focusedIndex, setFocusedIndex] = useState(0);
+    const listRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+
     const selectedOption = options.find(opt => opt.value === value);
 
     const filteredOptions = searchable
         ? options.filter(opt => normalizeText(opt.label).includes(normalizeText(searchQuery)))
         : options;
 
+    const getNextSelectable = (start: number, direction: 1 | -1) => {
+        let i = start + direction;
+        while (i >= 0 && i < filteredOptions.length) {
+            if (!filteredOptions[i].isHeader) return i;
+            i += direction;
+        }
+        return start;
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (!isOpen) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                setIsOpen(true);
+            }
+            return;
+        }
+
+        if (e.key === 'Escape') {
+            setIsOpen(false);
+            setSearchQuery('');
+            triggerRef.current?.focus();
+            return;
+        }
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setFocusedIndex(prev => getNextSelectable(prev, 1));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setFocusedIndex(prev => getNextSelectable(prev, -1));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            const opt = filteredOptions[focusedIndex];
+            if (opt && !opt.isHeader) {
+                onChange(opt.value);
+                setIsOpen(false);
+                setSearchQuery('');
+                triggerRef.current?.focus();
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (!isOpen) {
+            setSearchQuery('');
+        }
+        let first = 0;
+        while (first < filteredOptions.length && filteredOptions[first].isHeader) first++;
+        setFocusedIndex(first < filteredOptions.length ? first : 0);
+    }, [isOpen, searchQuery, options]);
+
+    useEffect(() => {
+        if (isOpen && listRef.current) {
+            const focusedEl = listRef.current.querySelector('[data-keyboard-focused="true"]');
+            if (focusedEl) {
+                focusedEl.scrollIntoView({ block: 'nearest' });
+            }
+        }
+    }, [focusedIndex, isOpen]);
+
     return (
-        <div className="relative">
+        <div className="relative" onKeyDown={handleKeyDown}>
             <button
+                ref={triggerRef}
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
                 className="premium-select-trigger"
@@ -298,7 +364,7 @@ const CustomSelect = ({
                                 </div>
                             </div>
                         )}
-                        <div className="overflow-y-auto custom-scrollbar p-1">
+                        <div ref={listRef} className="overflow-y-auto custom-scrollbar p-1">
                             {filteredOptions.length > 0 ? (
                                 filteredOptions.map((opt, i) => (
                                     opt.isHeader ? (
@@ -308,12 +374,15 @@ const CustomSelect = ({
                                     ) : (
                                         <div
                                             key={opt.value}
-                                            className="premium-option"
+                                            className={cn("premium-option", focusedIndex === i && "bg-primary/20 bg-emerald-500/10")}
                                             data-selected={value === opt.value}
+                                            data-keyboard-focused={focusedIndex === i}
+                                            onMouseEnter={() => setFocusedIndex(i)}
                                             onClick={() => {
                                                 onChange(opt.value);
                                                 setIsOpen(false);
                                                 setSearchQuery('');
+                                                triggerRef.current?.focus();
                                             }}
                                         >
                                             {opt.label}
