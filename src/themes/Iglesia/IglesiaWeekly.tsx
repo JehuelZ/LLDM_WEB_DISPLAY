@@ -322,7 +322,7 @@ export function IglesiaWeekly() {
     });
 
     return (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '24px 30px 180px 30px', gap: 20, fontFamily: T.fontFamily }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '160px 30px 180px 30px', gap: 20, fontFamily: T.fontFamily }}>
 
 
             {/* Title & Columns Section — Centered vertically between header & weather */}
