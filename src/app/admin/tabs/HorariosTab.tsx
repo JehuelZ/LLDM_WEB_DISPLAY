@@ -1,13 +1,11 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Sparkles, Save, User as UserIcon, Clock, Languages, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Flame, Crown, BookOpen, RefreshCw } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-    CalendarClock, Sparkles, User, Save, Flame, Crown, BookOpen, 
-    RefreshCw
-} from 'lucide-react'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, addDays, subDays } from 'date-fns'
 import { es } from 'date-fns/locale'
+import PremiumCalendar from '@/components/ui/PremiumCalendar'
 import { useAppStore, DailySchedule } from '@/lib/store'
 import { cn } from '@/lib/utils'
 import { TactileGlassCard, TactileSelect, TactileInput } from '@/components/admin/TactileUI'
@@ -27,17 +25,24 @@ export const HorariosTab = ({
         saveScheduleDayToCloud,
         saveRecurringScheduleToCloud,
         seedMonthSchedule,
-        showNotification
+        showNotification,
+        loadDayScheduleFromCloud
     } = useAppStore()
 
     const [isSaving, setIsSaving] = useState(false)
     const [isCalendarOpen, setIsCalendarOpen] = useState(false)
 
-    const isSun = parseISO(currentDate).getDay() === 0;
+    // Sincronizar datos al cambiar fecha
+    useEffect(() => {
+        loadDayScheduleFromCloud(currentDate);
+    }, [currentDate]);
+
+    const sanitizedDate = currentDate.split(':')[0].split(' ')[0];
+    const isSun = parseISO(sanitizedDate).getDay() === 0;
     
-    const currentDaySchedule: DailySchedule = monthlySchedule[currentDate] || {
+    const currentDaySchedule: DailySchedule = monthlySchedule[sanitizedDate] || {
         id: 'fallback',
-        date: currentDate,
+        date: sanitizedDate,
         slots: {
             '5am': { leaderId: '', time: '05:00 AM', endTime: '05:30 AM', language: 'es' },
             '9am': { 
@@ -86,7 +91,7 @@ export const HorariosTab = ({
                 }
             };
 
-            await saveScheduleDayToCloud(currentDate, updatedSchedule as any);
+            await saveScheduleDayToCloud(sanitizedDate, updatedSchedule as any);
             showNotification('Horario actualizado correctamente', 'success');
         } catch (error) {
             console.error("Error updating slot:", error);
@@ -104,24 +109,78 @@ export const HorariosTab = ({
             exit={{ opacity: 0, y: -20 }}
             className="space-y-8"
         >
-            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white/5 p-6 rounded-md border border-[var(--tactile-border)]">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white/5 p-6 rounded-md border border-[var(--tactile-border)] relative z-30">
                 <div className="flex flex-col md:flex-row items-baseline gap-3">
                     <h2 className="text-2xl font-black text-foreground capitalize tracking-tighter">Programación</h2>
-                    <span className="text-lg font-bold text-muted-foreground capitalize tracking-tight opacity-70">
-                        {(() => {
-                            try {
-                                return format(parseISO(currentDate), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
-                            } catch (e) {
-                                return currentDate;
-                            }
-                        })()}
-                    </span>
+                    <div className="relative">
+                        <button 
+                            onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                            className="text-lg font-bold text-emerald-400 hover:text-emerald-300 capitalize tracking-tight transition-colors flex items-center gap-2"
+                        >
+                            {(() => {
+                                try {
+                                    return format(parseISO(sanitizedDate), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
+                                } catch (e) {
+                                    return sanitizedDate;
+                                }
+                            })()}
+                            <CalendarIcon className="w-4 h-4 opacity-50" />
+                        </button>
+
+                        <AnimatePresence>
+                            {isCalendarOpen && (
+                                <div className="absolute top-full left-0 mt-4 z-[100] w-[350px]">
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                                        className="shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+                                    >
+                                        <PremiumCalendar 
+                                            selectedDate={sanitizedDate}
+                                            onDateSelect={(date) => {
+                                                setCurrentDate(date);
+                                                setIsCalendarOpen(false);
+                                            }}
+                                            theme="primitivo"
+                                        />
+                                    </motion.div>
+                                    <div 
+                                        className="fixed inset-0 z-[-1]" 
+                                        onClick={() => setIsCalendarOpen(false)}
+                                    />
+                                </div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
+                
                 <div className="flex items-center gap-3">
+                    <div className="flex items-center bg-black/20 rounded-lg p-1 border border-white/5 mr-2">
+                        <button 
+                            onClick={() => setCurrentDate(format(subDays(parseISO(sanitizedDate), 1), 'yyyy-MM-dd'))}
+                            className="p-2 hover:bg-white/10 rounded-md transition-colors text-white/60 hover:text-white"
+                        >
+                            <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        <button 
+                            onClick={() => setCurrentDate(format(new Date(), 'yyyy-MM-dd'))}
+                            className="px-3 py-1 text-[9px] font-black uppercase tracking-widest text-emerald-500 hover:bg-emerald-500/10 rounded-md transition-all"
+                        >
+                            HOY
+                        </button>
+                        <button 
+                            onClick={() => setCurrentDate(format(addDays(parseISO(sanitizedDate), 1), 'yyyy-MM-dd'))}
+                            className="p-2 hover:bg-white/10 rounded-md transition-colors text-white/60 hover:text-white"
+                        >
+                            <ChevronRight className="w-4 h-4" />
+                        </button>
+                    </div>
+
                     <div className="relative group">
                         <input
                             type="date"
-                            value={currentDate}
+                            value={sanitizedDate}
                             onChange={(e) => setCurrentDate(e.target.value)}
                             className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group border-primary/20 hover:border-primary/50 relative z-20 outline-none"
                         />
@@ -133,7 +192,7 @@ export const HorariosTab = ({
                         className="tactile-btn tactile-btn-glass text-[10px] px-6 h-10 group"
                     >
                         <Sparkles className="w-3.5 h-3.5 mr-2 group-hover:text-emerald-400 transition-colors" />
-                        POBLAR MES
+                        POBLAR
                     </button>
                 </div>
             </div>
