@@ -1337,12 +1337,12 @@ export const useAppStore = create<AppState>()(
                     throw new Error("No autorizado");
                 }
 
-                // 1. Fetch existing record to preserve other fields (topic, uniform_id, etc.)
+                const cleanDate = date.split(':')[0].split(' ')[0];
                 const { data: existing } = await supabase
                     .from('schedule')
                     .select('*')
-                    .eq('date', date)
-                    .single();
+                    .eq('date', cleanDate)
+                    .maybeSingle();
 
                 const cleanUuid = (id: string | null) => (id && id.length > 5) ? id : null;
                 const generateId = () => {
@@ -1351,7 +1351,7 @@ export const useAppStore = create<AppState>()(
                 };
 
                 const dbSchedule = {
-                    date,
+                    date: cleanDate,
                     five_am_leader_id: cleanUuid(slots['5am'].leaderId),
                     five_am_time: slots['5am'].time,
                     five_am_end_time: slots['5am'].endTime,
@@ -1490,10 +1490,11 @@ export const useAppStore = create<AppState>()(
             },
 
             saveUniformForDateToCloud: async (date, uniformId) => {
+                const cleanDate = date.split(':')[0].split(' ')[0];
                 if (uniformId) {
-                    await supabase.from('uniform_schedule').upsert({ date, uniform_id: uniformId });
+                    await supabase.from('uniform_schedule').upsert({ date: cleanDate, uniform_id: uniformId });
                 } else {
-                    await supabase.from('uniform_schedule').delete().eq('date', date);
+                    await supabase.from('uniform_schedule').delete().eq('date', cleanDate);
                 }
                 get().loadUniformsFromCloud();
             },
@@ -1501,7 +1502,7 @@ export const useAppStore = create<AppState>()(
             loadKidsAssignmentsFromCloud: async (date) => {
                 // Sanitizar fecha para evitar errores 406 (YYYY-MM-DD:0:0)
                 const sanitizedDate = date.split(':')[0].split(' ')[0];
-                const { data } = await supabase.from('kids_assignments').select('*').eq('date', sanitizedDate).single();
+                const { data } = await supabase.from('kids_assignments').select('*').eq('date', sanitizedDate).maybeSingle();
                 if (data) {
                     const updated = { ...get().kidsAssignments };
                     updated[date] = {
