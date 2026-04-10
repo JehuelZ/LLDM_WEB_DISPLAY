@@ -839,21 +839,13 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     useEffect(() => {
         setMounted(true);
 
-        // Ensure we start with TODAY's date for real-time data accuracy
-        const todayStr = getLocalDateString(new Date());
-        if (currentDate !== todayStr) {
-            setCurrentDate(todayStr);
-        }
-
-        loadDayScheduleFromCloud(currentDate);
+        // Solo cargar datos iniciales si no están cargados
         loadAllSchedulesFromCloud();
         loadThemeFromCloud();
         loadUniformsFromCloud();
-        loadKidsAssignmentsFromCloud(currentDate);
         loadSettingsFromCloud();
         loadMembersFromCloud();
         loadCloudMessages();
-        loadAttendanceFromCloud(currentDate);
 
         // Listeners for layout-specific events if any
         // Preload Google Fonts for the Selector Gallery (including weights)
@@ -883,7 +875,15 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
             unsubProfiles();
             window.removeEventListener('tab-change', handleTabSync);
         };
-    }, [currentDate, loadDayScheduleFromCloud, loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadKidsAssignmentsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
+    }, [loadAllSchedulesFromCloud, loadThemeFromCloud, loadUniformsFromCloud, loadSettingsFromCloud, loadMembersFromCloud, loadCloudMessages, subscribeToMessages]);
+
+    // Efecto reactivo solo para cuando cambia la fecha
+    useEffect(() => {
+        if (!mounted) return;
+        loadDayScheduleFromCloud(currentDate);
+        loadKidsAssignmentsFromCloud(currentDate);
+        loadAttendanceFromCloud(currentDate);
+    }, [currentDate, loadDayScheduleFromCloud, loadKidsAssignmentsFromCloud, loadAttendanceFromCloud, mounted]);
 
     const handleThemePDFUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
