@@ -88,7 +88,7 @@ export function IglesiaCalendar() {
         <div style={{
             position: 'absolute', inset: 0,
             display: 'flex', flexDirection: 'column',
-            padding: '110px 48px 120px 48px',
+            padding: '160px 48px 120px 48px',
             gap: 24, background: T.bg,
             fontFamily: T.fontFamily,
             overflow: 'hidden'

@@ -387,7 +387,7 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
     const eveningTitle = slotEvening?.customLabel || getServiceTypeLabel(slotEvening?.type || 'regular', settings?.language, is14th);
 
     return (
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '30px 40px 180px 40px', gap: 20, fontFamily: T.fontFamily }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '160px 40px 180px 40px', gap: 20, fontFamily: T.fontFamily }}>
 
 
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 40, justifyContent: 'center', alignItems: 'center', width: '100%', position: 'relative' }}>
