@@ -100,8 +100,8 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                     </p>
                 </div>
 
-                {/* Central Theme Banner — Moved here to align with weather/header height */}
-                {!hideExtra && theme?.title && (
+                {/* Central Theme Banner — ALWAYS VISIBLE */}
+                {theme?.title && (
                     <div style={{ 
                         pointerEvents: 'auto', 
                         marginTop: 15,
@@ -135,8 +135,8 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                 )}
 
                 <div style={{ pointerEvents: 'auto' }}>
-                    {/* Unified Header Intelligence Box (Weather + Clock) */}
-                    {!hideExtra && (() => {
+                    {/* Unified Header Intelligence Box (Weather + Clock) — ALWAYS VISIBLE */}
+                    {(() => {
                         const curMin = currentTime.getHours() * 60 + currentTime.getMinutes();
                         const isSunToday = currentTime.getDay() === 0;
                         const dateKey = format(currentTime, 'yyyy-MM-dd');
