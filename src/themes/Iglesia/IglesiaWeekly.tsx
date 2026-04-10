@@ -325,9 +325,9 @@ export function IglesiaWeekly() {
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '160px 30px 180px 30px', gap: 20, fontFamily: T.fontFamily }}>
 
 
-            {/* Title & Columns Section — Centered vertically between header & weather */}
+            {/* Title & Columns Section — Aligned left horizontally */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 20, minHeight: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <div style={{ width: 'fit-content', minWidth: 600 }}>
                         <BigAcademicTitle
                             label={getSlideSystemTitle('weekly_program', settings?.language)}

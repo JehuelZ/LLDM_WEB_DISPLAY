@@ -94,8 +94,8 @@ export function IglesiaCalendar() {
             overflow: 'hidden'
         }}>
 
-            {/* Header Section */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Header Section — Aligned Left */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                 <div style={{ width: 'fit-content', minWidth: 600 }}>
                     <BigAcademicTitle
                         label={getSlideSystemTitle('calendar', settings?.language)}

@@ -393,8 +393,8 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 40, justifyContent: 'center', alignItems: 'center', width: '100%', position: 'relative' }}>
 
 
-                {/* Centered Heading Layout with NEW Big Relief Title Style */}
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
+                {/* Left-Aligned Heading Layout with NEW Big Relief Title Style */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 24, width: '100%', maxWidth: '1780px' }}>
                     <div style={{ width: 'fit-content', minWidth: 600 }}>
                         <BigAcademicTitle
                             label={getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language)}
