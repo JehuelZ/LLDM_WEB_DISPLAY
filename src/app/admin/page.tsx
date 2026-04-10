@@ -1829,7 +1829,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             >
                                                 {(() => {
                                                     try {
-                                                        return format(parseISO(currentDate), "PPPP", { locale: es });
+                                                        return format(parseISO(currentDate + 'T12:00:00'), "PPPP", { locale: es });
                                                     } catch (e) {
                                                         return currentDate;
                                                     }
@@ -2309,7 +2309,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                         <Calendar className="w-3.5 h-3.5 text-cyan-500 opacity-50" />
                                         <span className="text-xs font-bold text-foreground uppercase ">{(() => {
                                             try {
-                                                return format(parseISO(currentDate), "PPP", { locale: es });
+                                                return format(parseISO(currentDate + 'T12:00:00'), "PPP", { locale: es });
                                             } catch (e) {
                                                 return currentDate;
                                             }
