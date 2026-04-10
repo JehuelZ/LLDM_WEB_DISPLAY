@@ -267,6 +267,7 @@ interface AppState {
 
     // Supabase Loaders
     loadAnnouncementsFromCloud: () => Promise<void>;
+    loadUserResponsibilities: (userId: string) => Promise<void>;
     loadDayScheduleFromCloud: (date: string) => Promise<void>;
     loadAllSchedulesFromCloud: () => Promise<void>;
     loadThemeFromCloud: () => Promise<void>;
@@ -417,7 +418,12 @@ export const useAppStore = create<AppState>()(
             isLoading: false,
             authSession: null,
 
-            setCurrentUser: (user) => set({ currentUser: user }),
+            setCurrentUser: (user) => {
+                set({ currentUser: user });
+                if (user?.id) {
+                    get().loadUserResponsibilities(user.id);
+                }
+            },
 
             setScheduleForDay: (date, schedule) =>
                 set((state) => ({
@@ -481,6 +487,59 @@ export const useAppStore = create<AppState>()(
                         expiresAt: ann.expires_at
                     }));
                     set({ announcements: mapped });
+                }
+            },
+
+            loadUserResponsibilities: async (userId) => {
+                if (!userId) return;
+                
+                // Cargar todas las responsabilidades del mes para este usuario
+                const now = new Date();
+                const start = format(startOfMonth(now), 'yyyy-MM-dd');
+                const end = format(endOfMonth(now), 'yyyy-MM-dd');
+                
+                const { data, error } = await supabase
+                    .from('schedule')
+                    .select('*')
+                    .gte('date', start)
+                    .lte('date', end);
+                    
+                if (error) {
+                    console.error("Error cargando responsabilidades:", error);
+                    return;
+                }
+                
+                const resps: any[] = [];
+                data.forEach((entry: any) => {
+                    const date = entry.date;
+                    
+                    if (entry.five_am_leader_id === userId) {
+                        resps.push({ date, type: 'Oración 5 AM', status: 'pending', label: 'Titulado' });
+                    }
+                    if (entry.nine_am_consecration_leader_id === userId) {
+                        resps.push({ date, type: 'Consagración 9 AM', status: 'pending', label: 'Dirigente' });
+                    }
+                    if (entry.nine_am_doctrine_leader_id === userId) {
+                        resps.push({ date, type: 'Doctrina 9 AM', status: 'pending', label: 'Expositor' });
+                    }
+                    if (entry.noon_leader_id === userId) {
+                        resps.push({ date, type: 'Oración 12 PM', status: 'pending', label: 'Titulado' });
+                    }
+                    if (entry.evening_doctrine_leader_id === userId) {
+                        resps.push({ date, type: 'Culto Vespertino (Doctrina)', status: 'pending', label: 'Expositor' });
+                    }
+                    // Handle evening_leader_ids which is an array
+                    if (Array.isArray(entry.evening_leader_ids) && entry.evening_leader_ids.includes(userId)) {
+                        resps.push({ date, type: 'Culto Vespertino', status: 'pending', label: 'Dirigente' });
+                    }
+                });
+                
+                // Ordenar por fecha
+                resps.sort((a, b) => a.date.localeCompare(b.date));
+                
+                const current = get().currentUser;
+                if (current && current.id === userId) {
+                    set({ currentUser: { ...current, responsibilities: resps } });
                 }
             },
 
@@ -805,23 +864,21 @@ export const useAppStore = create<AppState>()(
                     const currentLocalUser = get().currentUser;
                     if (currentLocalUser && currentLocalUser.id === cleanId && updatedData && updatedData[0]) {
                         const p = updatedData[0];
-                        set({
-                            currentUser: {
-                                ...currentLocalUser,
-                                name: p.name || currentLocalUser.name,
-                                email: p.email || currentLocalUser.email,
-                                phone: p.phone || currentLocalUser.phone,
-                                avatar: p.avatar_url || currentLocalUser.avatar,
-                                category: p.category || currentLocalUser.category,
-                                member_group: p.member_group || currentLocalUser.member_group,
-                                role: p.role || currentLocalUser.role,
-                                gender: p.gender || currentLocalUser.gender,
-                                status: p.status || currentLocalUser.status,
-                                privileges: p.roles || currentLocalUser.privileges,
-                                bio: p.bio || currentLocalUser.bio,
-                                favorite_verse: p.favorite_verse || currentLocalUser.favorite_verse,
-                                assigned_church: p.assigned_church || currentLocalUser.assigned_church
-                            }
+                        get().setCurrentUser({
+                            ...currentLocalUser,
+                            name: p.name || currentLocalUser.name,
+                            email: p.email || currentLocalUser.email,
+                            phone: p.phone || currentLocalUser.phone,
+                            avatar: p.avatar_url || currentLocalUser.avatar,
+                            category: p.category || currentLocalUser.category,
+                            member_group: p.member_group || currentLocalUser.member_group,
+                            role: p.role || currentLocalUser.role,
+                            gender: p.gender || currentLocalUser.gender,
+                            status: p.status || currentLocalUser.status,
+                            privileges: p.roles || currentLocalUser.privileges,
+                            bio: p.bio || currentLocalUser.bio,
+                            favorite_verse: p.favorite_verse || currentLocalUser.favorite_verse,
+                            assigned_church: p.assigned_church || currentLocalUser.assigned_church
                         });
                     }
 
@@ -1103,23 +1160,21 @@ export const useAppStore = create<AppState>()(
                         }
                     }
 
-                    set({
-                        currentUser: {
-                            id: existingProfile.id,
-                            name: existingProfile.name,
-                            email: existingProfile.email,
-                            phone: existingProfile.phone || '',
-                            avatar: (existingProfile.avatar_url === null) ? userAvatar : existingProfile.avatar_url,
-                            category: existingProfile.category || 'Varon',
-                            member_group: existingProfile.member_group,
-                            role: existingProfile.role || 'Miembro',
-                            gender: existingProfile.gender || 'Varon',
-                            status: existingProfile.status || 'Pendiente', // Seguro por defecto
-                            lastActive: new Date().toISOString(),
-                            stats: existingProfile.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
-                            privileges: existingProfile.roles || [],
-                            bio: existingProfile.bio || ''
-                        }
+                    get().setCurrentUser({
+                        id: existingProfile.id,
+                        name: existingProfile.name,
+                        email: existingProfile.email,
+                        phone: existingProfile.phone || '',
+                        avatar: (existingProfile.avatar_url === null) ? userAvatar : existingProfile.avatar_url,
+                        category: existingProfile.category || 'Varon',
+                        member_group: existingProfile.member_group,
+                        role: existingProfile.role || 'Miembro',
+                        gender: existingProfile.gender || 'Varon',
+                        status: existingProfile.status || 'Pendiente', // Seguro por defecto
+                        lastActive: new Date().toISOString(),
+                        stats: existingProfile.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
+                        privileges: existingProfile.roles || [],
+                        bio: existingProfile.bio || ''
                     });
                 } else {
                     // 2. Si NO existe el perfil, verificamos si es el Master Admin
@@ -1141,7 +1196,7 @@ export const useAppStore = create<AppState>()(
 
                         const { error: insertError } = await supabase.from('profiles').insert(newProfile);
                         if (!insertError) {
-                            set({ currentUser: { ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: newProfile.roles } as UserProfile });
+                        get().setCurrentUser({ ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: newProfile.roles } as UserProfile);
                         }
                     } else {
                         // USUARIO NUEVO O DESCONOCIDO: Creamos perfil 'Pendiente' para que el Admin lo vea y apruebe
@@ -1160,7 +1215,7 @@ export const useAppStore = create<AppState>()(
                         const { error: insertError } = await supabase.from('profiles').insert(newProfile);
                         
                         if (!insertError) {
-                            set({ currentUser: { ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: [] } as UserProfile });
+                            get().setCurrentUser({ ...INITIAL_USER, ...newProfile, id: authUserId, avatar: userAvatar, privileges: [] } as UserProfile);
                             
                             // Notificar al admin sobre la nueva solicitud
                             await supabase.from('attendance_messages').insert({
@@ -2523,7 +2578,7 @@ export const useAppStore = create<AppState>()(
                 }
 
                 if (member) {
-                    set({ currentUser: member });
+                    get().setCurrentUser(member);
                     return true;
                 }
                 return false;
