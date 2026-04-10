@@ -200,7 +200,7 @@ export function IglesiaAnnouncements() {
 
             {/* Main Content — Centered between header and weather */}
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 24, minHeight: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <div style={{ width: 'fit-content', minWidth: 600 }}>
                         <BigAcademicTitle
                             label={getSlideSystemTitle('announcements', settings?.language)}
