@@ -340,8 +340,8 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
 
         return (
             <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={isLive ? (settings.lowPerformanceMode ? { opacity: 1, y: 0, scale: 1 } : { opacity: 1, y: 0, scale: [1, 1.02, 1] }) : { opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={isLive ? (settings.lowPerformanceMode ? { opacity: 1, x: 0, scale: 1 } : { opacity: 1, x: 0, scale: [1, 1.02, 1] }) : { opacity: 1, x: 0, scale: 1 }}
                 transition={isLive ? (settings.lowPerformanceMode ? { duration: 0.5 } : { repeat: Infinity, duration: 4, ease: "easeInOut" }) : { duration: 1, ease: [0.4, 0, 0.2, 1] }}
                 style={{
                     flex: '0 1 540px', height: 'fit-content', borderRadius: 40, background: T.surface,
