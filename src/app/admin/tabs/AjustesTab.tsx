@@ -470,7 +470,9 @@ export const AjustesTab = ({
                             
                             <div className="grid grid-cols-1 gap-4">
                                 {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
-                                    const m = typeof mission === 'string' ? { id: `leg-${idx}`, name: mission } : mission;
+                                    const m = typeof mission === 'string' 
+                                        ? (mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission }) 
+                                        : mission;
                                     return (
                                         <div key={m.id || idx} className="group relative p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md hover:border-primary/50 transition-all">
                                             <div className="flex items-center gap-4">
