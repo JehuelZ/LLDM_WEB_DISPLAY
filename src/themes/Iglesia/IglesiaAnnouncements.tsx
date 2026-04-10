@@ -381,24 +381,24 @@ export function IglesiaAnnouncements() {
                                     padding: 32, borderRadius: 40, background: T.surface,
                                     boxShadow: neuShadow(T, false, 'md', isDark),
                                     border: isDark ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${T.border}`,
-                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24,
-                                    textAlign: 'center', position: 'relative', zIndex: 1,
+                                    display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 40,
+                                    textAlign: 'left', position: 'relative', zIndex: 1,
                                     width: '100%', maxWidth: 620, alignSelf: 'center'
                                 }}
                             >
-                                <div style={{ position: 'relative' }}>
+                                <div style={{ position: 'relative', flexShrink: 0 }}>
                                     {/* Relief Outer Ring (Pressed Effect) */}
                                     <div style={{
-                                        width: 150, height: 150, borderRadius: '50%',
+                                        width: 180, height: 180, borderRadius: '50%',
                                         background: T.surface,
                                         boxShadow: neuShadow(T, true, 'sm', isDark),
                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         position: 'relative'
                                     }}>
                                         <div style={{
-                                            width: 124, height: 124, borderRadius: '50%', overflow: 'hidden',
+                                            width: 154, height: 154, borderRadius: '50%', overflow: 'hidden',
                                             padding: 4, background: T.surface,
-                                            boxShadow: `0 8px 20px ${T.accent}25`,
+                                            boxShadow: `0 8px 25px ${T.accent}30`,
                                             border: `2px solid ${T.accent}`,
                                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                                         }}>
@@ -417,19 +417,19 @@ export function IglesiaAnnouncements() {
                                         </div>
                                     </div>
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
                                     {/* Name in RELIEF (Raised Plaque) */}
                                     <div style={{
-                                        padding: '8px 28px',
-                                        borderRadius: 16,
+                                        padding: '10px 32px',
+                                        borderRadius: 20,
                                         background: T.surface,
                                         boxShadow: neuShadow(T, false, 'sm', isDark),
                                         border: isDark ? '1px solid rgba(255,255,255,0.05)' : 'none',
                                         width: 'fit-content'
                                     }}>
-                                        <h4 style={{ fontSize: 22, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontMontserrat, margin: 0 }}>{minister.name}</h4>
+                                        <h4 style={{ fontSize: 26, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontMontserrat, margin: 0 }}>{minister.name}</h4>
                                     </div>
-                                    <p style={{ fontSize: 13, fontWeight: 800, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontMontserrat, margin: 0 }}>Ministro a Cargo</p>
+                                    <p style={{ fontSize: 13, fontWeight: 800, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontMontserrat, margin: 0, marginLeft: 12 }}>Ministro a Cargo</p>
 
                                     {/* Minister Contact Info (Added back for completeness) */}
                                     <div style={{ display: 'flex', gap: 16, alignItems: 'center', opacity: 0.9, marginTop: -4 }}>
