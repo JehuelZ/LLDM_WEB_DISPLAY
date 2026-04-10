@@ -22,29 +22,100 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
     const { settings, monthlySchedule, currentDate } = useAppStore();
     const isDark = settings.themeMode === 'dark';
 
-    // Dynamic weather data - Days are calculated based on current date
-    const [weather] = useState(() => {
-        const conditions = [
-            { dayOffset: 1, temp: 26, icon: Sun, condition: 'Soleado' },
-            { dayOffset: 2, temp: 22, icon: Cloud, condition: 'Nublado' },
-            { dayOffset: 3, temp: 19, icon: CloudRain, condition: 'Lluvia' },
-            { dayOffset: 4, temp: 21, icon: Cloud, condition: 'Parcial' },
-            { dayOffset: 5, temp: 25, icon: Sun, condition: 'Soleado' },
-        ];
+// Animated Weather Icons using Framer Motion + Lucide
+const AnimatedSun = ({ className }: { className?: string }) => (
+    <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        className={className}
+    >
+        <Sun className="w-full h-full text-yellow-400" />
+    </motion.div>
+);
 
-        return {
-            temp: 24,
-            condition: 'Despejado',
-            city: 'Rodeo',
-            icon: Sun,
-            forecast: conditions.map(c => ({
-                day: format(addDays(new Date(), c.dayOffset), 'eee', { locale: es }),
-                temp: c.temp,
-                icon: c.icon,
-                condition: c.condition
-            }))
+const AnimatedCloud = ({ className }: { className?: string }) => (
+    <motion.div
+        animate={{ y: [0, -3, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className={className}
+    >
+        <Cloud className="w-full h-full text-slate-300" />
+    </motion.div>
+);
+
+const AnimatedRain = ({ className }: { className?: string }) => (
+    <motion.div
+        animate={{ y: [0, 2, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        className={className}
+    >
+        <CloudRain className="w-full h-full text-blue-400" />
+    </motion.div>
+);
+
+// Map WMO Weather Codes to our Animated Icons and Text
+const getWeatherInfo = (code: number) => {
+    if (code === 0) return { icon: AnimatedSun, condition: 'Despejado' };
+    if (code >= 1 && code <= 3) return { icon: AnimatedCloud, condition: 'Nublado' };
+    if (code >= 45 && code <= 48) return { icon: AnimatedCloud, condition: 'Niebla' };
+    if ((code >= 51 && code <= 67) || (code >= 80 && code <= 82)) return { icon: AnimatedRain, condition: 'Lluvia' };
+    if (code >= 71 && code <= 77) return { icon: AnimatedCloud, condition: 'Nieve' }; // using cloud as fallback for snow if Snowflake not imported
+    if (code >= 95) return { icon: AnimatedRain, condition: 'Tormenta' };
+    return { icon: AnimatedSun, condition: 'Parcial' }; // fallback
+};
+
+// ... inside your component
+    // Dynamic weather data from Open-Meteo for Rodeo, CA
+    const [weather, setWeather] = useState<{
+        temp: number;
+        condition: string;
+        city: string;
+        icon: any;
+        forecast: any[];
+    } | null>(null);
+
+    useEffect(() => {
+        const fetchWeather = async () => {
+            try {
+                // Rodeo CA coords: 38.033, -122.267
+                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=38.033&longitude=-122.267&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max&timezone=America%2FLos_Angeles');
+                const data = await res.json();
+                
+                const currInfo = getWeatherInfo(data.current.weather_code);
+                
+                // create forecast array, skipping today (index 0) if you want next 5 days
+                const forecast = [];
+                for (let i = 1; i <= 5; i++) {
+                    const code = data.daily.weather_code[i];
+                    const tempMax = Math.round(data.daily.temperature_2m_max[i]);
+                    const timeStr = data.daily.time[i]; // "YYYY-MM-DD"
+                    const [y, m, d] = timeStr.split('-');
+                    const dateObj = new Date(parseInt(y), parseInt(m)-1, parseInt(d));
+                    
+                    forecast.push({
+                        day: format(dateObj, 'eee', { locale: es }),
+                        temp: tempMax,
+                        ...getWeatherInfo(code)
+                    });
+                }
+                
+                setWeather({
+                    temp: Math.round(data.current.temperature_2m),
+                    condition: currInfo.condition,
+                    city: 'Rodeo, CA',
+                    icon: currInfo.icon,
+                    forecast
+                });
+            } catch (err) {
+                console.error("Failed to fetch weather:", err);
+            }
         };
-    });
+
+        fetchWeather();
+        // Refresh weather every 15 mins
+        const interval = setInterval(fetchWeather, 15 * 60 * 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         const timer = setInterval(() => setTime(new Date()), 1000);
@@ -131,28 +202,38 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
             </div>
 
             {/* Main Weather Section */}
-            <div className={cn("flex items-center gap-4 pr-6 shrink-0 border-r", isDark ? "border-white/5" : "border-black/5")}>
-                <div className="p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 group-hover/weather:scale-110 transition-transform duration-500">
-                    <weather.icon className="w-5 h-5" />
-                </div>
-                <div className="flex flex-col">
-                    <div className="flex items-center gap-1.5 leading-none">
-                        <span className="text-xl font-black tracking-tighter tabular-nums">
-                            {settings.weatherUnit === 'fahrenheit' ? Math.round(weather.temp * 1.8 + 32) : weather.temp}°
-                        </span>
-                        <span className="text-[9px] font-black text-muted-foreground uppercase">
-                            {settings.weatherUnit === 'fahrenheit' ? 'F' : 'C'}
-                        </span>
+            {weather ? (
+                <div className={cn("flex items-center gap-4 pr-6 shrink-0 border-r", isDark ? "border-white/5" : "border-black/5")}>
+                    <div className="p-2.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 group-hover/weather:scale-110 transition-transform duration-500">
+                        <weather.icon className="w-5 h-5" />
                     </div>
-                    <div className="flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-1 opacity-60">
-                        {weather.city} • {weather.condition}
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-1.5 leading-none">
+                            <span className="text-xl font-black tracking-tighter tabular-nums">
+                                {settings.weatherUnit === 'fahrenheit' ? Math.round(weather.temp * 1.8 + 32) : weather.temp}°
+                            </span>
+                            <span className="text-[9px] font-black text-muted-foreground uppercase">
+                                {settings.weatherUnit === 'fahrenheit' ? 'F' : 'C'}
+                            </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-1 opacity-60">
+                            {weather.city} • {weather.condition}
+                        </div>
                     </div>
                 </div>
-            </div>
+            ) : (
+                <div className={cn("flex items-center gap-4 pr-6 shrink-0 border-r animate-pulse", isDark ? "border-white/5" : "border-black/5")}>
+                    <div className="w-10 h-10 rounded-md bg-emerald-500/10 border border-emerald-500/20" />
+                    <div className="flex flex-col gap-2">
+                        <div className="w-10 h-5 bg-emerald-500/10 rounded" />
+                        <div className="w-16 h-2 bg-emerald-500/5 rounded" />
+                    </div>
+                </div>
+            )}
 
             {/* 5-Day Forecast - HIDDEN ON MOBILE/TABLET */}
             <div className="hidden 2xl:flex items-center gap-2.5">
-                {weather.forecast.map((f, i) => (
+                {weather?.forecast.map((f: any, i: number) => (
                     <div 
                         key={i} 
                         className={cn(
@@ -164,7 +245,9 @@ const AdminClockWeather: React.FC<AdminClockWeatherProps> = ({
                     >
                         <div className="flex flex-col items-start leading-none gap-1">
                             <span className={cn("text-[7px] font-black uppercase tracking-[0.15em] leading-none", isDark ? "text-muted-foreground" : "text-slate-600")}>{f.day}</span>
-                            <span className="text-[11px] font-black tracking-tighter text-foreground tabular-nums leading-none">{f.temp}°</span>
+                            <span className="text-[11px] font-black tracking-tighter text-foreground tabular-nums leading-none">
+                                {settings.weatherUnit === 'fahrenheit' ? Math.round(f.temp * 1.8 + 32) : f.temp}°
+                            </span>
                         </div>
                         <f.icon className="w-3.5 h-3.5 text-emerald-500/60" />
                     </div>
