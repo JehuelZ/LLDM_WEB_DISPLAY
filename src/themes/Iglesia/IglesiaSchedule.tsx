@@ -578,17 +578,19 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
 
                     {/* 12 PM — Optional Prayer */}
                     {slot12pm?.leaderId && renderCard('12pm' as any, "Oración de 12", (
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
-                            <Avatar src={getMember(slot12pm.leaderId).avatar} size={240} T={T} isDark={isDark} />
-                            <AcademicButton
-                                label={getMember(slot12pm.leaderId).name || 'NO ASIGNADO'}
-                                icon={User}
-                                variant="reliefAura"
-                                T={T}
-                                isDark={isDark}
-                                isTomorrow={isTomorrow}
-                            />
-                            <RoleBadge label="Consagración" icon={Sun} T={T} isDark={isDark} />
+                        <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', justifyContent: 'center', gap: 24, width: '100%' }}>
+                            <Avatar src={getMember(slot12pm.leaderId).avatar} size={220} T={T} isDark={isDark} />
+                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
+                                <AcademicButton
+                                    label={getMember(slot12pm.leaderId).name || 'NO ASIGNADO'}
+                                    icon={User}
+                                    variant="reliefAura"
+                                    T={T}
+                                    isDark={isDark}
+                                    isTomorrow={isTomorrow}
+                                />
+                                <RoleBadge label="Consagración" icon={Sun} T={T} isDark={isDark} />
+                            </div>
                         </div>
                     ), [], false)}
 

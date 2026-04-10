@@ -208,7 +208,7 @@ function SlotBox({ label, color, leader, role, size = 32, T, isDark, isToday, bo
     }
     return (
         <div style={{
-            display: 'flex', alignItems: 'center', gap: 14,
+            display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 14,
             width: '100%',
             padding: '6px 0'
         }}>
@@ -401,7 +401,7 @@ export function IglesiaWeekly() {
                                                     transition={{ repeat: Infinity, duration: 2 }}
                                                     style={{
                                                         padding: '8px 10px',
-                                                        display: 'flex', alignItems: 'center', gap: 12,
+                                                        display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 12,
                                                         background: T.surface,
                                                         borderRadius: 20,
                                                         boxShadow: isActive ? `0 0 20px ${T.accent}30, ${neuShadow(T, true, 'sm', isDark)}` : neuShadow(T, true, 'sm', isDark),
@@ -412,7 +412,7 @@ export function IglesiaWeekly() {
                                                 >
                                                     <Avatar src={leader5am.avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${T.accent}` : `1.5px solid ${T.surface}`} />
 
-                                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ flex: 1, minWidth: 0, textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                         <p style={{ fontSize: 13, fontWeight: 800, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat, lineHeight: 1.1, marginBottom: 4 }}>
                                                             {leader5am.name}
                                                         </p>
@@ -599,7 +599,7 @@ export function IglesiaWeekly() {
                                                     transition={{ repeat: Infinity, duration: 2 }}
                                                     style={{
                                                         padding: '8px 10px',
-                                                        display: 'flex', alignItems: 'center', gap: 12,
+                                                        display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 12,
                                                         background: T.surface,
                                                         borderRadius: 20,
                                                         boxShadow: isActive ? `0 0 20px ${T.accent}30, ${neuShadow(T, true, 'sm', isDark)}` : neuShadow(T, true, 'sm', isDark),
@@ -608,7 +608,7 @@ export function IglesiaWeekly() {
                                                     }}
                                                 >
                                                     <Avatar src={leader12pm.avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${T.accent}` : `1.5px solid ${T.surface}`} />
-                                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ flex: 1, minWidth: 0, textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                         <p style={{ fontSize: 13, fontWeight: 800, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat, lineHeight: 1.1, marginBottom: 4 }}>
                                                             {leader12pm.name}
                                                         </p>
@@ -660,9 +660,9 @@ export function IglesiaWeekly() {
                                                     }}
                                                 >
                                                     {evLeaders.length === 1 ? (
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '2px 0' }}>
+                                                        <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 12, padding: '2px 0' }}>
                                                             <Avatar src={evLeaders[0]?.avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${T.accent}` : `1.5px solid ${T.surface}`} />
-                                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                            <div style={{ flex: 1, minWidth: 0, textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                                 <p style={{ fontSize: 13, fontWeight: 800, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat, lineHeight: 1.1, marginBottom: 4 }}>
                                                                     {evLeaders[0]?.name}
                                                                 </p>
