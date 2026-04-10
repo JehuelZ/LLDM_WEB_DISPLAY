@@ -330,6 +330,61 @@ export const AjustesTab = ({
                     </div>
                 </TactileGlassCard>
 
+                <TactileGlassCard title="SERVICIOS INTEGRADOS (CLIMA)">
+                    <div className="space-y-4">
+                        <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">UBICACIÓN Y COORDENADAS</label>
+                        <div className="flex gap-2 items-end">
+                            <div className="flex-1">
+                                <TactileInput
+                                    value={settings.weatherCity || ''}
+                                    onChange={(e: any) => setSettings({ ...settings, weatherCity: e.target.value })}
+                                    placeholder="Ej: Rodeo, CA o 94547"
+                                    icon={Sun}
+                                />
+                            </div>
+                            <button
+                                onClick={async () => {
+                                    if (!settings.weatherCity) return;
+                                    setIsSaving(true);
+                                    try {
+                                        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(settings.weatherCity)}&count=1&language=es&format=json`);
+                                        const data = await res.json();
+                                        if (data.results && data.results.length > 0) {
+                                            const loc = data.results[0];
+                                            let adminStr = loc.admin1 ? `, ${loc.admin1}` : '';
+                                            if (!loc.admin1 && loc.country) adminStr = `, ${loc.country}`;
+                                            const displayName = `${loc.name}${adminStr}`;
+                                            
+                                            const updates = { 
+                                                weatherCity: displayName, 
+                                                weatherLat: loc.latitude, 
+                                                weatherLng: loc.longitude 
+                                            };
+                                            
+                                            setSettings({ ...settings, ...updates });
+                                            await saveSettingsToCloud(updates);
+                                            showNotification(`Ubicación de clima actualizada a ${displayName}`, 'success');
+                                        } else {
+                                            showNotification('No se encontró la ubicación en el mapa. Intenta otro nombre.', 'error');
+                                        }
+                                    } catch (e) {
+                                        showNotification('Error buscando coordenadas geográficas.', 'error');
+                                    }
+                                    setIsSaving(false);
+                                }}
+                                className="h-12 px-6 bg-[var(--tactile-inner-bg)] text-[10px] font-black tracking-widest text-primary border border-[var(--tactile-border)] rounded-md hover:bg-primary/20 transition-colors"
+                            >
+                                UBICAR
+                            </button>
+                        </div>
+                        <p className="text-[8px] text-muted-foreground ml-2 leading-relaxed">
+                            * Presiona UBICAR para buscar automáticamente la Latitud y Longitud global. 
+                            Actual: Lat {settings.weatherLat !== undefined ? settings.weatherLat : '38.033'}, 
+                            Lng {settings.weatherLng !== undefined ? settings.weatherLng : '-122.267'}
+                        </p>
+                    </div>
+                </TactileGlassCard>
+
                 <button
                     onClick={async () => {
                         setIsSaving(true);

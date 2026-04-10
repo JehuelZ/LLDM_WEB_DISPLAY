@@ -65,7 +65,7 @@ const getWeatherInfo = (code: number) => {
 };
 
 // ... inside your component
-    // Dynamic weather data from Open-Meteo for Rodeo, CA
+    // Dynamic weather data from Open-Meteo
     const [weather, setWeather] = useState<{
         temp: number;
         condition: string;
@@ -77,8 +77,11 @@ const getWeatherInfo = (code: number) => {
     useEffect(() => {
         const fetchWeather = async () => {
             try {
-                // Rodeo CA coords: 38.033, -122.267
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=38.033&longitude=-122.267&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max&timezone=America%2FLos_Angeles');
+                // Default to Rodeo CA coords: 38.033, -122.267 if not set
+                const lat = settings.weatherLat ?? 38.033;
+                const lng = settings.weatherLng ?? -122.267;
+                
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max&timezone=America%2FLos_Angeles`);
                 const data = await res.json();
                 
                 const currInfo = getWeatherInfo(data.current.weather_code);
@@ -102,7 +105,7 @@ const getWeatherInfo = (code: number) => {
                 setWeather({
                     temp: Math.round(data.current.temperature_2m),
                     condition: currInfo.condition,
-                    city: 'Rodeo, CA',
+                    city: settings.weatherCity || 'Rodeo, CA',
                     icon: currInfo.icon,
                     forecast
                 });
@@ -115,7 +118,7 @@ const getWeatherInfo = (code: number) => {
         // Refresh weather every 15 mins
         const interval = setInterval(fetchWeather, 15 * 60 * 1000);
         return () => clearInterval(interval);
-    }, []);
+    }, [settings.weatherLat, settings.weatherLng, settings.weatherCity]);
 
     useEffect(() => {
         const timer = setInterval(() => setTime(new Date()), 1000);
