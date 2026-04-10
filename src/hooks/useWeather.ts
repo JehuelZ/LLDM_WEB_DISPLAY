@@ -57,8 +57,8 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
 
     useEffect(() => {
         fetchWeather();
-        // Refresh every 30 minutes
-        const timer = setInterval(fetchWeather, 30 * 60 * 1000);
+        // Refresh every 10 minutes (Improved responsiveness for live display)
+        const timer = setInterval(fetchWeather, 10 * 60 * 1000);
         return () => clearInterval(timer);
     }, [lat, lon, unit]);
 
