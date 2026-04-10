@@ -133,7 +133,7 @@ export const AsistenciaTab = ({
                             <span className="text-[10px] font-black capitalize text-primary text-center">
                                 {(() => {
                                     try {
-                                        return format(parseISO(currentDate), "EEEE, d 'de' MMMM", { locale: es });
+                                        return format(parseISO(currentDate + 'T12:00:00'), "EEEE, d 'de' MMMM", { locale: es });
                                     } catch (e) {
                                         return currentDate;
                                     }

@@ -38,7 +38,7 @@ export const HorariosTab = ({
     }, [currentDate]);
 
     const sanitizedDate = currentDate.split(':')[0].split(' ')[0];
-    const isSun = parseISO(sanitizedDate).getDay() === 0;
+    const isSun = parseISO(sanitizedDate + 'T12:00:00').getDay() === 0;
     
     const currentDaySchedule: DailySchedule = monthlySchedule[sanitizedDate] || {
         id: 'fallback',
@@ -119,7 +119,7 @@ export const HorariosTab = ({
                         >
                             {(() => {
                                 try {
-                                    return format(parseISO(sanitizedDate), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
+                                    return format(parseISO(sanitizedDate + 'T12:00:00'), "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
                                 } catch (e) {
                                     return sanitizedDate;
                                 }
@@ -158,7 +158,7 @@ export const HorariosTab = ({
                 <div className="flex items-center gap-3">
                     <div className="flex items-center bg-black/20 rounded-lg p-1 border border-white/5 mr-2">
                         <button 
-                            onClick={() => setCurrentDate(format(subDays(parseISO(sanitizedDate), 1), 'yyyy-MM-dd'))}
+                            onClick={() => setCurrentDate(format(subDays(parseISO(sanitizedDate + 'T12:00:00'), 1), 'yyyy-MM-dd'))}
                             className="p-2 hover:bg-white/10 rounded-md transition-colors text-white/60 hover:text-white"
                         >
                             <ChevronLeft className="w-4 h-4" />
@@ -170,7 +170,7 @@ export const HorariosTab = ({
                             HOY
                         </button>
                         <button 
-                            onClick={() => setCurrentDate(format(addDays(parseISO(sanitizedDate), 1), 'yyyy-MM-dd'))}
+                            onClick={() => setCurrentDate(format(addDays(parseISO(sanitizedDate + 'T12:00:00'), 1), 'yyyy-MM-dd'))}
                             className="p-2 hover:bg-white/10 rounded-md transition-colors text-white/60 hover:text-white"
                         >
                             <ChevronRight className="w-4 h-4" />
