@@ -172,7 +172,7 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
                     />
                 );
             case 'horarios':
-                return <HorariosTab currentDate={currentDate} setCurrentDate={setCurrentDate} />;
+                return <HorariosTab key={currentDate} currentDate={currentDate} setCurrentDate={setCurrentDate} />;
             case 'contenido':
             case 'temas':
                 return (
