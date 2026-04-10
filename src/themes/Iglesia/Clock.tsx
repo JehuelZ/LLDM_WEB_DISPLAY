@@ -31,8 +31,8 @@ export function IntegratedClock({ T, isDark }: { T: any; isDark: boolean }) {
                 </span>
             </div>
 
-            <div style={{ fontSize: 13, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.14em', fontFamily: T.fontMontserrat, marginTop: 4 }}>
-                {format(time, "EEEE d 'de' MMMM", { locale: es })}
+            <div style={{ fontSize: 13, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.14em', fontFamily: T.fontMontserrat, marginTop: 4, whiteSpace: 'nowrap' }}>
+                {format(time, "EEE d 'de' MMMM", { locale: es })}
             </div>
 
             {/* Progress indicator removed as requested */}
