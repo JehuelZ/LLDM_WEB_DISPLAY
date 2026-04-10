@@ -68,17 +68,83 @@ export const normalizeText = (text: string) => {
 export const TactileSelect = ({ label, value, onChange, options, icon: Icon, disabled, searchable = true }: any) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [focusedIndex, setFocusedIndex] = useState(0);
+    const listRef = React.useRef<HTMLDivElement>(null);
+    const triggerRef = React.useRef<HTMLButtonElement>(null);
+
     const selectedOption = options.find((opt: any) => opt.value === value);
 
     const filteredOptions = searchable
         ? options.filter((opt: any) => opt.isHeader || normalizeText(opt.label).includes(normalizeText(searchQuery)))
         : options;
 
+    const getNextSelectable = (start: number, direction: 1 | -1) => {
+        let i = start + direction;
+        while (i >= 0 && i < filteredOptions.length) {
+            if (!filteredOptions[i].isHeader) return i;
+            i += direction;
+        }
+        return start;
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (!isOpen) {
+            if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                setIsOpen(true);
+            }
+            return;
+        }
+
+        if (e.key === 'Escape') {
+            setIsOpen(false);
+            setSearchQuery('');
+            triggerRef.current?.focus();
+            return;
+        }
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            setFocusedIndex(prev => getNextSelectable(prev, 1));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            setFocusedIndex(prev => getNextSelectable(prev, -1));
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            const opt = filteredOptions[focusedIndex];
+            if (opt && !opt.isHeader) {
+                onChange(opt.value);
+                setIsOpen(false);
+                setSearchQuery('');
+                triggerRef.current?.focus();
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (!isOpen) {
+            setSearchQuery('');
+        }
+        let first = 0;
+        while (first < filteredOptions.length && filteredOptions[first].isHeader) first++;
+        setFocusedIndex(first < filteredOptions.length ? first : 0);
+    }, [isOpen, searchQuery, options]);
+
+    useEffect(() => {
+        if (isOpen && listRef.current) {
+            const focusedEl = listRef.current.querySelector('[data-keyboard-focused="true"]');
+            if (focusedEl) {
+                focusedEl.scrollIntoView({ block: 'nearest' });
+            }
+        }
+    }, [focusedIndex, isOpen]);
+
     return (
-        <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
+        <div className={cn("space-y-2 relative", disabled && "opacity-50 pointer-events-none")} onKeyDown={handleKeyDown}>
             {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">{label}</label>}
             <div className="relative group">
                 <button
+                    ref={triggerRef}
                     type="button"
                     onClick={() => !disabled && setIsOpen(!isOpen)}
                     className={cn(
@@ -125,7 +191,7 @@ export const TactileSelect = ({ label, value, onChange, options, icon: Icon, dis
                                         </div>
                                     </div>
                                 )}
-                                <div className="overflow-y-auto custom-scrollbar p-1">
+                                <div ref={listRef} className="overflow-y-auto custom-scrollbar p-1">
                                     {filteredOptions.length > 0 ? (
                                         filteredOptions.map((opt: any, i: number) => (
                                             opt.isHeader ? (
@@ -139,14 +205,18 @@ export const TactileSelect = ({ label, value, onChange, options, icon: Icon, dis
                                                 <button
                                                     key={opt.value}
                                                     type="button"
+                                                    data-keyboard-focused={focusedIndex === i}
+                                                    onMouseEnter={() => setFocusedIndex(i)}
                                                     className={cn(
                                                         "w-full px-4 py-2.5 text-xs font-bold text-left rounded-md transition-all flex items-center gap-3 group/opt",
-                                                        value === opt.value ? "bg-primary/10 text-primary" : "text-foreground/70 hover:bg-[var(--tactile-item-hover)] hover:text-foreground"
+                                                        value === opt.value ? "bg-primary/10 text-primary" : "text-foreground/70",
+                                                        focusedIndex === i && "bg-[var(--tactile-item-hover)] text-foreground bg-primary/20"
                                                     )}
                                                     onClick={() => {
                                                         onChange(opt.value);
                                                         setIsOpen(false);
                                                         setSearchQuery('');
+                                                        triggerRef.current?.focus();
                                                     }}
                                                 >
                                                     <div className="flex items-center gap-3 flex-1 min-w-0">
