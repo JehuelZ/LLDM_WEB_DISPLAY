@@ -173,7 +173,15 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                 {/* CENTER SEGMENT: Weekly Theme */}
                                 {theme?.title && (
                                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                                        <div style={{
+                                            display: 'flex', alignItems: 'center', gap: 14,
+                                            padding: '12px 28px',
+                                            borderRadius: 20,
+                                            background: T.surface,
+                                            boxShadow: isDark ? `inset 6px 6px 12px rgba(0,0,0,0.6), inset -4px -4px 10px rgba(255,255,255,0.03)` : `inset 4px 4px 10px rgba(0,0,0,0.05), inset -4px -4px 10px #FFFFFF`,
+                                            border: 'none',
+                                            transition: 'all 0.5s ease'
+                                        }}>
                                             <BookOpen style={{ color: T.accent }} size={18} />
                                             <span style={{
                                                 fontSize: 10,
