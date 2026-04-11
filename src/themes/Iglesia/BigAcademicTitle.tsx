@@ -54,19 +54,19 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
 
     return (
         <div style={{
-            padding: '12px 28px', borderRadius: 24,
+            padding: '18px 40px', borderRadius: 28,
             background: T.surface,
             boxShadow: shadow,
-            display: 'flex', alignItems: 'center', gap: 16,
+            display: 'flex', alignItems: 'center', gap: 20,
             border: 'none',
             width: 'fit-content'
         }}>
             {showLogo && (
                 <div style={{
-                    width: 34, height: 34, borderRadius: 10,
+                    width: 44, height: 44, borderRadius: 12,
                     background: `linear-gradient(135deg, ${T.accent}, ${T.accent}dd)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: `0 4px 12px ${T.accent}40`,
+                    boxShadow: `0 6px 16px ${T.accent}45`,
                     overflow: 'hidden'
                 }}>
                     <img 
@@ -82,11 +82,11 @@ export function ChurchHeaderBadge({ name, T, isDark, settings }: { name: string;
                 </div>
             )}
             <h2 style={{
-                fontSize: 18, fontWeight: 700, color: isDark ? '#FFFFFF' : T.textPrimary,
+                fontSize: 24, fontWeight: 700, color: isDark ? '#FFFFFF' : T.textPrimary,
                 letterSpacing: '-0.02em', fontFamily: T.fontMontserrat,
-                margin: 0, display: 'flex', gap: 6, alignItems: 'center'
+                margin: 0, display: 'flex', gap: 8, alignItems: 'center'
             }}>
-                {(name || '').toUpperCase() || 'LLDM'} <span style={{ color: T.accent, fontSize: 13, fontWeight: 800, letterSpacing: '0.1em', opacity: 0.9 }}>RODEO</span>
+                {(name || '').toUpperCase() || 'LLDM'} <span style={{ color: T.accent, fontSize: 16, fontWeight: 800, letterSpacing: '0.1em', opacity: 0.9 }}>RODEO</span>
             </h2>
         </div>
     );

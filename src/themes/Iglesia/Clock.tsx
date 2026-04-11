@@ -22,16 +22,16 @@ export function IntegratedClock({ T, isDark }: { T: any; isDark: boolean }) {
             display: 'flex', flexDirection: 'column', alignItems: 'flex-end',
             gap: 2, position: 'relative'
         }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, fontFamily: T.fontMono }}>
-                <span style={{ fontSize: 44, fontWeight: 700, color: T.textPrimary, letterSpacing: '-0.02em', lineHeight: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, fontFamily: T.fontMono }}>
+                <span style={{ fontSize: 56, fontWeight: 700, color: T.textPrimary, letterSpacing: '-0.02em', lineHeight: 1 }}>
                     {format(time, 'HH:mm')}
                 </span>
-                <span style={{ fontSize: 22, fontWeight: 700, color: T.accent, marginLeft: 2 }}>
+                <span style={{ fontSize: 26, fontWeight: 700, color: T.accent, marginLeft: 2 }}>
                     {format(time, 'ss')}
                 </span>
             </div>
 
-            <div style={{ fontSize: 13, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.14em', fontFamily: T.fontMontserrat, marginTop: 4, whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.16em', fontFamily: T.fontMontserrat, marginTop: 6, whiteSpace: 'nowrap' }}>
                 {format(time, "EEE d 'de' MMMM", { locale: es })}
             </div>
 
@@ -89,7 +89,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
         <>
             {/* Top Fixed Header (Global Static Dashboard) */}
             <div style={{
-                position: 'absolute', top: 30, left: 40, right: 40,
+                position: 'absolute', top: 30, left: 24, right: 24,
                 zIndex: 30, pointerEvents: 'none'
             }}>
                 <div style={{ pointerEvents: 'auto' }}>
@@ -146,25 +146,25 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                         return (
                             <div style={{
                                 display: 'flex', gap: 0, alignItems: 'stretch', justifyContent: 'space-between',
-                                padding: '0 32px', borderRadius: 32, background: isLive ? `${T.accent}08` : (isDark ? 'rgba(30,35,45,0.7)' : `${T.surface}CC`),
+                                padding: '0 40px', borderRadius: 40, background: isLive ? `${T.accent}08` : (isDark ? 'rgba(30,35,45,0.7)' : `${T.surface}CC`),
                                 backdropFilter: 'blur(15px)',
                                 boxShadow: isLive
-                                    ? `0 0 50px ${T.accent}20, ${neuShadow(T, false, 'md', isDark)}`
-                                    : (isDark ? '8px 8px 30px rgba(0,0,0,0.6), -5px -5px 20px rgba(255,255,255,0.02)' : neuShadow(T, false, 'lg', isDark)),
-                                border: isLive ? `3px solid ${T.accent}` : `1.5px solid ${T.accent}22`,
-                                height: 120,
+                                    ? `0 0 60px ${T.accent}25, ${neuShadow(T, false, 'md', isDark)}`
+                                    : (isDark ? '12px 12px 40px rgba(0,0,0,0.6), -5px -5px 25px rgba(255,255,255,0.02)' : neuShadow(T, false, 'xl', isDark)),
+                                border: isLive ? `3.5px solid ${T.accent}` : `1.5px solid ${T.accent}25`,
+                                height: 160,
                                 width: '100%',
                                 position: 'relative', overflow: 'hidden',
                                 transition: 'all 0.5s ease'
                             }}>
                                 {/* LEFT SEGMENT: Logo + Church Metadata */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 20, paddingRight: 32, borderRight: `1px solid ${T.borderAccent}` }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 24, paddingRight: 40, borderRight: `1px solid ${T.borderAccent}` }}>
                                     <ChurchHeaderBadge name={(settings as any)?.churchName || 'LLDM'} T={T} isDark={isDark} settings={settings} />
                                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                        <p style={{ fontSize: 11, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+                                        <p style={{ fontSize: 13, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
                                             {(settings as any)?.churchName || 'Iglesia del Dios Vivo'}
                                         </p>
-                                        <p style={{ fontSize: 10, fontWeight: 400, color: T.textMuted, fontFamily: T.fontInter, marginTop: 4, margin: 0 }}>
+                                        <p style={{ fontSize: 11, fontWeight: 400, color: T.textMuted, fontFamily: T.fontInter, marginTop: 4, margin: 0 }}>
                                             {(settings as any)?.churchAddress || 'Sistema de Información Digital'}
                                         </p>
                                     </div>
@@ -174,25 +174,25 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                 {theme?.title && (
                                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px' }}>
                                         <div style={{
-                                            display: 'flex', alignItems: 'center', gap: 14,
-                                            padding: '12px 28px',
-                                            borderRadius: 20,
+                                            display: 'flex', alignItems: 'center', gap: 20,
+                                            padding: '18px 48px',
+                                            borderRadius: 24,
                                             background: T.surface,
-                                            boxShadow: isDark ? `inset 6px 6px 12px rgba(0,0,0,0.6), inset -4px -4px 10px rgba(255,255,255,0.03)` : `inset 4px 4px 10px rgba(0,0,0,0.05), inset -4px -4px 10px #FFFFFF`,
+                                            boxShadow: isDark ? `inset 8px 8px 16px rgba(0,0,0,0.7), inset -5px -5px 12px rgba(255,255,255,0.04)` : `inset 5px 5px 12px rgba(0,0,0,0.06), inset -5px -5px 12px #FFFFFF`,
                                             border: 'none',
                                             transition: 'all 0.5s ease'
                                         }}>
                                             <BookOpen style={{ color: T.accent }} size={18} />
                                             <span style={{
-                                                fontSize: 10,
+                                                fontSize: 12,
                                                 fontWeight: 800,
                                                 color: T.accent,
                                                 textTransform: 'uppercase',
-                                                letterSpacing: '0.15em',
+                                                letterSpacing: '0.2em',
                                                 fontFamily: T.fontMontserrat,
                                                 whiteSpace: 'nowrap'
                                             }}>
-                                                {themeLabel}: <span style={{ color: T.textPrimary, fontSize: 18, fontWeight: 700, marginLeft: 8 }}>{theme.title}</span>
+                                                {themeLabel}: <span style={{ color: T.textPrimary, fontSize: 22, fontWeight: 700, marginLeft: 12 }}>{theme.title}</span>
                                             </span>
                                         </div>
                                     </div>
@@ -219,50 +219,49 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                     )}
 
                                     {/* Weather Lead Segment */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 24px', borderLeft: `1px solid ${T.borderAccent}`, background: isDark ? 'rgba(0,0,0,0.1)' : 'transparent' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '0 32px', borderLeft: `1px solid ${T.borderAccent}`, background: isDark ? 'rgba(0,0,0,0.1)' : 'transparent' }}>
                                         <div style={{
-                                            width: 54, height: 54, borderRadius: 18,
-                                            background: isDark ? 'rgba(51,154,240,0.15)' : 'rgba(30,135,240,0.08)',
+                                            width: 70, height: 70, borderRadius: 22,
+                                            background: isDark ? 'rgba(51,154,240,0.18)' : 'rgba(30,135,240,0.1)',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            boxShadow: isDark ? '0 4px 15px rgba(0,0,0,0.2)' : 'none'
+                                            boxShadow: isDark ? '0 6px 20px rgba(0,0,0,0.3)' : 'none'
                                         }}>
                                             {weather ? (
-                                                <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={30} />
+                                                <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={40} />
                                             ) : (
-                                                <Sunrise style={{ color: '#339AF0' }} size={30} />
+                                                <Sunrise style={{ color: '#339AF0' }} size={40} />
                                             )}
                                         </div>
                                         <div>
-                                            <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat, margin: 0 }}>
+                                            <p style={{ fontSize: 11, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontMontserrat, margin: 0 }}>
                                                 {settings?.weatherCity || (settings as any)?.city || 'Rodeo'}
                                             </p>
-                                            <p style={{ fontSize: 32, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0, letterSpacing: '-0.02em' }}>
+                                            <p style={{ fontSize: 42, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
                                                 {weather ? `${weather.temp}°${isCelsius ? 'C' : 'F'}` : `--°${isCelsius ? 'C' : 'F'}`}
                                             </p>
                                         </div>
                                     </div>
 
                                     {/* Forecast Strip */}
-                                    <div style={{ display: 'flex', gap: 4, padding: '0 20px', alignItems: 'center', borderLeft: `1px solid ${T.borderAccent}` }}>
+                                    <div style={{ display: 'flex', gap: 6, padding: '0 24px', alignItems: 'center', borderLeft: `1px solid ${T.borderAccent}` }}>
                                         {(weather?.forecast || [0, 1, 2, 3]).map((item: any, offset: number) => {
                                             const dayDate = addDays(currentTime, offset);
                                             const dayName = offset === 0 ? 'Hoy' : format(dayDate, 'EEE', { locale: es });
                                             const dIsToday = offset === 0;
-
                                             const temp = weather ? item.temp : (22 + offset);
                                             const iconCode = weather ? item.icon : (offset % 2 === 0 ? '0' : '1');
 
                                             return (
                                                 <div key={offset} style={{
-                                                    padding: '10px 16px', borderRadius: 18,
+                                                    padding: '12px 20px', borderRadius: 20,
                                                     background: dIsToday ? T.surfaceDeep : 'transparent',
-                                                    boxShadow: dIsToday ? (isDark ? 'inset 3px 3px 6px rgba(0,0,0,0.4)' : 'inset 3px 3px 6px rgba(0,0,0,0.05)') : 'none',
-                                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2
+                                                    boxShadow: dIsToday ? (isDark ? 'inset 4px 4px 8px rgba(0,0,0,0.45)' : 'inset 4px 4px 8px rgba(0,0,0,0.06)') : 'none',
+                                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4
                                                 }}>
-                                                    <span style={{ fontSize: 8, fontWeight: 800, color: dIsToday ? T.accent : T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat, opacity: 0.8 }}>{dayName}</span>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                                        <WeatherIcon code={iconCode} className={offset % 2 === 0 ? "text-emerald-400" : "text-blue-300"} size={14} />
-                                                        <span style={{ fontSize: 16, fontWeight: 600, color: T.textPrimary, fontFamily: T.fontInter }}>{temp}°</span>
+                                                    <span style={{ fontSize: 9, fontWeight: 900, color: dIsToday ? T.accent : T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat, opacity: 0.9 }}>{dayName}</span>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                        <WeatherIcon code={iconCode} className={offset % 2 === 0 ? "text-emerald-400" : "text-blue-300"} size={16} />
+                                                        <span style={{ fontSize: 18, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter }}>{temp}°</span>
                                                     </div>
                                                 </div>
                                             );
