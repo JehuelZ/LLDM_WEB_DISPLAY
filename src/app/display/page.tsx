@@ -361,29 +361,7 @@ export default function DisplayPage() {
                 onClick={handleSecretClick}
             />
 
-            {/* Performance Mode Indicator */}
-            <AnimatePresence>
-                {showIndicator && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.8 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        className="fixed bottom-10 left-10 z-[1100] flex items-center gap-3 px-6 py-3 rounded-md bg-black/80 border border-white/20 backdrop-blur-xl"
-                    >
-                        {settings?.lowPerformanceMode ? (
-                            <>
-                                <ZapOff className="w-5 h-5 text-emerald-500" />
-                                <span className="text-xs font-black uppercase tracking-widest text-white">MODO RENDIMIENTO: <span className="text-emerald-500 text-sm italic">OPTIMIZADO</span></span>
-                            </>
-                        ) : (
-                            <>
-                                <Zap className="w-5 h-5 text-primary" />
-                                <span className="text-xs font-black uppercase tracking-widest text-white">MODO RENDIMIENTO: <span className="text-primary text-sm italic">FLUIDO</span></span>
-                            </>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* Performance Mode Indicator removed as requested - Hidden but functional */}
 
             <div className="fixed bottom-10 right-10 z-[500] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
                 <FullscreenButton />
