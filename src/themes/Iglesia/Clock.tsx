@@ -22,16 +22,16 @@ export function IntegratedClock({ T, isDark }: { T: any; isDark: boolean }) {
             display: 'flex', flexDirection: 'column', alignItems: 'flex-end',
             gap: 2, position: 'relative'
         }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, fontFamily: T.fontMono }}>
-                <span style={{ fontSize: 56, fontWeight: 700, color: T.textPrimary, letterSpacing: '-0.02em', lineHeight: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, fontFamily: T.fontMono, lineHeight: 1.1 }}>
+                <span style={{ fontSize: 58, fontWeight: 700, color: T.textPrimary, letterSpacing: '-0.02em', lineHeight: 1 }}>
                     {format(time, 'HH:mm')}
                 </span>
-                <span style={{ fontSize: 26, fontWeight: 700, color: T.accent, marginLeft: 2 }}>
+                <span style={{ fontSize: 28, fontWeight: 700, color: T.accent, marginLeft: 2 }}>
                     {format(time, 'ss')}
                 </span>
             </div>
 
-            <div style={{ fontSize: 15, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.16em', fontFamily: T.fontMontserrat, marginTop: 6, whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.16em', fontFamily: T.fontMontserrat, marginTop: 4, whiteSpace: 'nowrap' }}>
                 {format(time, "EEE d 'de' MMMM", { locale: es })}
             </div>
 
@@ -158,9 +158,9 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                 transition: 'all 0.5s ease'
                             }}>
                                 {/* LEFT SEGMENT: Logo + Church Metadata */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 24, paddingRight: 40, borderRight: `1px solid ${T.borderAccent}` }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 24, paddingRight: 32, borderRight: `1px solid ${T.borderAccent}`, flexShrink: 0 }}>
                                     <ChurchHeaderBadge name={(settings as any)?.churchName || 'LLDM'} T={T} isDark={isDark} settings={settings} />
-                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', minWidth: 'fit-content' }}>
                                         <p style={{ fontSize: 13, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
                                             {(settings as any)?.churchName || 'Iglesia del Dios Vivo'}
                                         </p>
@@ -174,13 +174,14 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                 {theme?.title && (
                                     <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 40px' }}>
                                         <div style={{
-                                            display: 'flex', alignItems: 'center', gap: 20,
-                                            padding: '18px 48px',
+                                            display: 'flex', alignItems: 'center', gap: 16,
+                                            padding: '16px 36px',
                                             borderRadius: 24,
                                             background: T.surface,
                                             boxShadow: isDark ? `inset 8px 8px 16px rgba(0,0,0,0.7), inset -5px -5px 12px rgba(255,255,255,0.04)` : `inset 5px 5px 12px rgba(0,0,0,0.06), inset -5px -5px 12px #FFFFFF`,
                                             border: 'none',
-                                            transition: 'all 0.5s ease'
+                                            transition: 'all 0.5s ease',
+                                            overflow: 'hidden'
                                         }}>
                                             <BookOpen style={{ color: T.accent }} size={18} />
                                             <span style={{
@@ -269,7 +270,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                     </div>
 
                                     {/* Clock Segment */}
-                                    <div style={{ display: 'flex', alignItems: 'center', padding: '0 32px', borderLeft: `1px solid ${T.borderAccent}` }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', padding: '0 32px', borderLeft: `1px solid ${T.borderAccent}`, flexShrink: 0, minWidth: 'fit-content' }}>
                                         <IntegratedClock T={T} isDark={isDark} />
                                     </div>
                                 </div>
