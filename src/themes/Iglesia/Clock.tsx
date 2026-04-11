@@ -219,58 +219,35 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                         </div>
                                     )}
 
-                                    {/* Weather Lead Segment */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 20, padding: '0 32px', borderLeft: `1px solid ${T.borderAccent}`, background: isDark ? 'rgba(0,0,0,0.1)' : 'transparent' }}>
-                                        <div style={{
-                                            width: 70, height: 70, borderRadius: 22,
-                                            background: isDark ? 'rgba(51,154,240,0.18)' : 'rgba(30,135,240,0.1)',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            boxShadow: isDark ? '0 6px 20px rgba(0,0,0,0.3)' : 'none'
-                                        }}>
-                                            {weather ? (
-                                                <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={40} />
-                                            ) : (
-                                                <Sunrise style={{ color: '#339AF0' }} size={40} />
-                                            )}
+                                    {/* Weather + Clock Segment */}
+                                    <div style={{ 
+                                        display: 'flex', alignItems: 'center', gap: 20, padding: '0 32px', 
+                                        borderLeft: `1px solid ${T.borderAccent}`, flexShrink: 0, 
+                                        background: isDark ? 'rgba(0,0,0,0.1)' : 'transparent' 
+                                    }}>
+                                        {/* Weather Lite */}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                            <div style={{
+                                                width: 50, height: 50, borderRadius: 15,
+                                                background: isDark ? 'rgba(51,154,240,0.15)' : 'rgba(30,135,240,0.08)',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            }}>
+                                                {weather ? (
+                                                    <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={28} />
+                                                ) : (
+                                                    <Sunrise style={{ color: '#339AF0' }} size={28} />
+                                                )}
+                                            </div>
+                                            <div style={{ textAlign: 'right', paddingRight: 10 }}>
+                                                <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: T.fontMontserrat, margin: 0 }}>
+                                                    {settings?.weatherCity || (settings as any)?.city || 'Rodeo'}
+                                                </p>
+                                                <p style={{ fontSize: 32, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
+                                                    {weather ? `${weather.temp}°` : `--°`}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p style={{ fontSize: 11, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontMontserrat, margin: 0 }}>
-                                                {settings?.weatherCity || (settings as any)?.city || 'Rodeo'}
-                                            </p>
-                                            <p style={{ fontSize: 42, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                                                {weather ? `${weather.temp}°${isCelsius ? 'C' : 'F'}` : `--°${isCelsius ? 'C' : 'F'}`}
-                                            </p>
-                                        </div>
-                                    </div>
 
-                                    {/* Forecast Strip */}
-                                    <div style={{ display: 'flex', gap: 6, padding: '0 24px', alignItems: 'center', borderLeft: `1px solid ${T.borderAccent}` }}>
-                                        {(weather?.forecast || [0, 1, 2, 3]).map((item: any, offset: number) => {
-                                            const dayDate = addDays(currentTime, offset);
-                                            const dayName = offset === 0 ? 'Hoy' : format(dayDate, 'EEE', { locale: es });
-                                            const dIsToday = offset === 0;
-                                            const temp = weather ? item.temp : (22 + offset);
-                                            const iconCode = weather ? item.icon : (offset % 2 === 0 ? '0' : '1');
-
-                                            return (
-                                                <div key={offset} style={{
-                                                    padding: '12px 20px', borderRadius: 20,
-                                                    background: dIsToday ? T.surfaceDeep : 'transparent',
-                                                    boxShadow: dIsToday ? (isDark ? 'inset 4px 4px 8px rgba(0,0,0,0.45)' : 'inset 4px 4px 8px rgba(0,0,0,0.06)') : 'none',
-                                                    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4
-                                                }}>
-                                                    <span style={{ fontSize: 9, fontWeight: 900, color: dIsToday ? T.accent : T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat, opacity: 0.9 }}>{dayName}</span>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                        <WeatherIcon code={iconCode} className={offset % 2 === 0 ? "text-emerald-400" : "text-blue-300"} size={16} />
-                                                        <span style={{ fontSize: 18, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter }}>{temp}°</span>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {/* Clock Segment */}
-                                    <div style={{ display: 'flex', alignItems: 'center', padding: '0 32px', borderLeft: `1px solid ${T.borderAccent}`, flexShrink: 0, minWidth: 'fit-content' }}>
                                         <IntegratedClock T={T} isDark={isDark} />
                                     </div>
                                 </div>
