@@ -352,7 +352,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                 className="z-10 text-center mb-10"
             >
                 <p className="text-[10px] tracking-[0.5em] text-[#4F7FFF] uppercase font-bold mb-2">Sistema de Oraciones</p>
-                <h1 className="text-5xl font-black text-white tracking-tight">
+                <h1 className="text-3xl font-black text-white tracking-tight">
                     AGENDA <span className="text-[#A3FF57]">{isTomorrow ? 'DE MAÑANA' : 'DEL DÍA'}</span>
                 </h1>
                 {/* Date pill */}
@@ -519,7 +519,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                 <div className="px-6 text-center z-10">
                                     {type === 'local' && (
                                         <>
-                                            <h3 className="text-[28px] font-black text-white/90 uppercase tracking-[0.05em] leading-[1.1] drop-shadow-md">
+                                            <h3 className="text-[22px] font-black text-white/90 uppercase tracking-[0.05em] leading-[1.1] drop-shadow-md">
                                                 Escuela Dominical
                                             </h3>
                                             <p className={`text-[12px] font-bold mt-2 uppercase tracking-[0.2em] ${accentText.split(' ')[0]}`}>
@@ -529,7 +529,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                     )}
                                     {type === 'exchange' && (
                                         <>
-                                            <h3 className="text-[30px] font-black text-[#d8b4fe] uppercase tracking-[0.05em] leading-[1.1] drop-shadow-[0_2px_10px_rgba(216,180,254,0.3)]">
+                                            <h3 className="text-[24px] font-black text-[#d8b4fe] uppercase tracking-[0.05em] leading-[1.1] drop-shadow-[0_2px_10px_rgba(216,180,254,0.3)]">
                                                 Intercambio de Ministro
                                             </h3>
                                             {slot9am.churchOrigin && slot9am.churchOrigin !== 'Por Confirmar...' && (
@@ -541,7 +541,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                     )}
                                     {type === 'broadcast' && (
                                         <>
-                                            <h3 className="text-[32px] font-black text-white uppercase tracking-[0.05em] leading-[1.1] drop-shadow-[0_2px_15px_rgba(255,255,255,0.4)]">
+                                            <h3 className="text-[24px] font-black text-white uppercase tracking-[0.05em] leading-[1.1] drop-shadow-[0_2px_15px_rgba(255,255,255,0.4)]">
                                                 Transmisión
                                             </h3>
                                             <p className={`text-[12px] font-bold mt-2 uppercase tracking-[0.2em] ${accentText.split(' ')[0]}`}>
@@ -551,7 +551,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                     )}
                                     {type === 'visitors' && (
                                         <>
-                                            <h3 className="text-[28px] font-black text-[#6ee7b7] uppercase tracking-[0.05em] leading-[1.1] drop-shadow-[0_2px_10px_rgba(110,231,183,0.3)]">
+                                            <h3 className="text-[22px] font-black text-[#6ee7b7] uppercase tracking-[0.05em] leading-[1.1] drop-shadow-[0_2px_10px_rgba(110,231,183,0.3)]">
                                                 Dominical de Visitas
                                             </h3>
                                             <p className="text-[14px] font-bold mt-2 text-[#34d399] uppercase tracking-[0.2em]">

@@ -478,7 +478,7 @@ export function MidnightGlowWeekly() {
                 className="z-10 flex flex-col items-center justify-center pb-8 shrink-0 text-center"
             >
                 <p className="text-[10px] tracking-[0.5em] text-[#4F7FFF] uppercase font-bold mb-2">Vista Semanal</p>
-                <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">
+                <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-4">
                     PROGRAMA <span className="text-[#A3FF57]">SEMANAL</span>
                 </h1>
                 {/* Date range pill */}

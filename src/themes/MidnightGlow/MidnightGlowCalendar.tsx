@@ -378,7 +378,7 @@ export function MidnightGlowCalendar() {
                 className="z-10 flex flex-col items-center justify-center shrink-0 text-center pb-8"
             >
                 <p className="text-[10px] tracking-[0.5em] text-[#4F7FFF] uppercase font-bold mb-2">Vista General Organizacional</p>
-                <h1 className="text-5xl font-black text-white tracking-tight leading-none mb-4">
+                <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-4">
                     CALENDARIO <span className="text-[#A3FF57]">MENSUAL</span>
                 </h1>
 
