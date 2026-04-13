@@ -71,7 +71,7 @@ export const MidnightGlowAnnouncements = () => {
 
                                     {/* Title (Mimicking the HUGE time text block) */}
                                     <div className="flex items-end justify-center w-full px-6 text-center z-10 mt-2 mb-5">
-                                        <span className={`font-black text-white leading-[1.1] tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${ann.title.length > 20 ? 'text-4xl' : 'text-5xl md:text-[3.5rem]'}`}>
+                                        <span className={`font-black text-white leading-[1.1] tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${ann.title.length > 20 ? 'text-2xl' : 'text-3xl md:text-[2.25rem]'}`}>
                                             {ann.title}
                                         </span>
                                     </div>
@@ -85,7 +85,7 @@ export const MidnightGlowAnnouncements = () => {
 
                                     {/* Content Area */}
                                     <div className="px-6 flex-1 flex flex-col justify-start text-center z-10 mb-2">
-                                        <p className="text-[17px] text-white/70 leading-relaxed font-bold tracking-wide uppercase">
+                                        <p className="text-[15px] text-white/70 leading-relaxed font-bold tracking-wide uppercase">
                                             {ann.content}
                                         </p>
                                     </div>
@@ -182,8 +182,8 @@ export const MidnightGlowAnnouncements = () => {
                                 <motion.div
                                     className="mt-6 px-10 py-3 rounded-3xl bg-[#040D21]/95 border-2 border-[#A3FF57]/50 shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center"
                                 >
-                                    <span className="text-[12px] font-black text-[#A3FF57] uppercase tracking-[0.3em] mb-1 opacity-90 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">Ministro</span>
-                                    <span className="text-[24px] font-black text-white uppercase tracking-[0.05em] leading-none text-center">
+                                    <span className="text-[11px] font-black text-[#A3FF57] uppercase tracking-[0.3em] mb-1 opacity-90 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">Ministro</span>
+                                    <span className="text-[20px] font-black text-white uppercase tracking-[0.05em] leading-none text-center">
                                         {minister.name}
                                     </span>
                                 </motion.div>

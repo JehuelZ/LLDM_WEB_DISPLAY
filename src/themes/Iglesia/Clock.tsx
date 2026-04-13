@@ -219,7 +219,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                         </div>
                                     )}
 
-                                    {/* Weather Lite Segment (Stay in Header) */}
+                                    {/* Weather Lite Segment (Stay in Header) — RE-VERIFIED: NO FORECAST STRIP */}
                                     <div style={{ 
                                         display: 'flex', alignItems: 'center', gap: 20, padding: '0 40px', 
                                         borderLeft: `1px solid ${T.borderAccent}`, flexShrink: 0, 
