@@ -233,8 +233,8 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
 
             {/* Time */}
             <div className="flex items-end justify-center gap-2 mt-6 px-6">
-                <span className="text-[6.5rem] font-black text-white leading-none tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">{hour}</span>
-                <span className="text-3xl font-black text-white/30 mb-4">{period}</span>
+                <span className="text-[3.25rem] font-black text-white leading-none tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">{hour}</span>
+                <span className="text-xl font-black text-white/30 mb-2">{period}</span>
             </div>
             <p className="text-center text-[12px] tracking-[0.4em] text-white/50 uppercase font-black mb-6 px-4">{subtitle}</p>
 
@@ -563,8 +563,8 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
 
                                 {/* Timer / Base Info */}
                                 <div className="flex items-end justify-center gap-2 mt-8 px-6">
-                                    <span className="text-[6rem] font-black text-white leading-none tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">10:00</span>
-                                    <span className="text-3xl font-black text-white/30 mb-4">AM</span>
+                                    <span className="text-[3rem] font-black text-white leading-none tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">10:00</span>
+                                    <span className="text-xl font-black text-white/30 mb-2">AM</span>
                                 </div>
 
                                 <div className="mx-8 h-px bg-gradient-to-r from-transparent via-[#1E3A6E] to-transparent mb-6 opacity-60 mt-4" />
@@ -777,10 +777,10 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
 
                     {/* Time — neon green numbers */}
                     <div className="flex items-end justify-center gap-2 mt-8 px-6">
-                        <span className="text-[8rem] font-black text-[#A3FF57] leading-none tracking-tighter drop-shadow-[0_0_30px_rgba(163,255,87,0.6)]">
+                        <span className="text-[4rem] font-black text-[#A3FF57] leading-none tracking-tighter drop-shadow-[0_0_30px_rgba(163,255,87,0.6)]">
                             {slotEvening?.time ? slotEvening.time.split(' ')[0] : '18:00'}
                         </span>
-                        <span className="text-4xl font-black text-[#A3FF57]/40 mb-4">
+                        <span className="text-2xl font-black text-[#A3FF57]/40 mb-2">
                             {slotEvening?.time ? slotEvening.time.split(' ')[1] : 'PM'}
                         </span>
                     </div>

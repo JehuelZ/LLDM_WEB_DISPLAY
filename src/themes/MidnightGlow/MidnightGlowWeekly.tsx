@@ -446,10 +446,10 @@ export function MidnightGlowWeekly() {
 
                                                 {/* HUGE Time */}
                                                 <div className="flex items-baseline justify-center gap-1 mt-1.5 mb-1 relative">
-                                                    <span className={`text-[3.5rem] font-black leading-none tracking-tighter ${slot.timeAccent}`}>
+                                                    <span className={`text-[1.75rem] font-black leading-none tracking-tighter ${slot.timeAccent}`}>
                                                         {slot.hour.split(':')[0]}:<span className="tracking-tight">{slot.hour.split(':')[1]}</span>
                                                     </span>
-                                                    <span className={`text-[12px] font-black uppercase tracking-wider relative -top-6 text-white/40`}>
+                                                    <span className={`text-[9px] font-black uppercase tracking-wider relative -top-3 text-white/40`}>
                                                         {slot.period}
                                                     </span>
                                                 </div>
