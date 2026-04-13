@@ -219,27 +219,26 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                         </div>
                                     )}
 
-                                    {/* Weather + Clock Segment */}
+                                    {/* Weather Lite Segment (Stay in Header) */}
                                     <div style={{ 
-                                        display: 'flex', alignItems: 'center', gap: 20, padding: '0 32px', 
+                                        display: 'flex', alignItems: 'center', gap: 20, padding: '0 40px', 
                                         borderLeft: `1px solid ${T.borderAccent}`, flexShrink: 0, 
                                         background: isDark ? 'rgba(0,0,0,0.1)' : 'transparent' 
                                     }}>
-                                        {/* Weather Lite */}
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                             <div style={{
-                                                width: 50, height: 50, borderRadius: 15,
-                                                background: isDark ? 'rgba(51,154,240,0.15)' : 'rgba(30,135,240,0.08)',
+                                                width: 54, height: 54, borderRadius: 18,
+                                                background: isDark ? 'rgba(51,154,240,0.18)' : 'rgba(30,135,240,0.1)',
                                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                             }}>
                                                 {weather ? (
-                                                    <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={28} />
+                                                    <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={30} />
                                                 ) : (
-                                                    <Sunrise style={{ color: '#339AF0' }} size={28} />
+                                                    <Sunrise style={{ color: '#339AF0' }} size={30} />
                                                 )}
                                             </div>
-                                            <div style={{ textAlign: 'right', paddingRight: 10 }}>
-                                                <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: T.fontMontserrat, margin: 0 }}>
+                                            <div>
+                                                <p style={{ fontSize: 9, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.12em', fontFamily: T.fontMontserrat, margin: 0 }}>
                                                     {settings?.weatherCity || (settings as any)?.city || 'Rodeo'}
                                                 </p>
                                                 <p style={{ fontSize: 32, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter, margin: 0, letterSpacing: '-0.02em', lineHeight: 1 }}>
@@ -247,8 +246,6 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                                 </p>
                                             </div>
                                         </div>
-
-                                        <IntegratedClock T={T} isDark={isDark} />
                                     </div>
                                 </div>
                             </div>
@@ -271,6 +268,24 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                             boxShadow: i === currentSlide ? `0 4px 12px ${T.accent}33` : 'none'
                         }} />
                     ))}
+                </div>
+            </div>
+
+            {/* FLOATING CLOCK: Bottom Right Corner */}
+            <div style={{
+                position: 'absolute', bottom: 40, right: 50,
+                zIndex: 40, pointerEvents: 'auto'
+            }}>
+                <div style={{
+                    padding: '16px 32px',
+                    borderRadius: 32,
+                    background: isDark ? 'rgba(30,35,45,0.7)' : `${T.surface}EE`,
+                    backdropFilter: 'blur(20px)',
+                    boxShadow: isDark ? '12px 12px 40px rgba(0,0,0,0.6), -5px -5px 25px rgba(255,255,255,0.02)' : neuShadow(T, false, 'lg', isDark),
+                    border: `1.5px solid ${T.accent}20`,
+                    transition: 'all 0.5s ease'
+                }}>
+                    <IntegratedClock T={T} isDark={isDark} />
                 </div>
             </div>
         </>
