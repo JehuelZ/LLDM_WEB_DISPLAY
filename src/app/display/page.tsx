@@ -355,9 +355,9 @@ export default function DisplayPage() {
                 <Progress slides={slides} currentSlide={currentSlide} />
             </div>
 
-            {/* Secret Toggle Area (Bottom Left) */}
+            {/* Secret Toggle Area (Bottom Left) - Optimized to be truly invisible */}
             <div 
-                className="fixed bottom-0 left-0 w-32 h-32 z-[1000] cursor-pointer"
+                className="fixed bottom-0 left-0 w-2 h-2 z-[1000] cursor-none opacity-0"
                 onClick={handleSecretClick}
             />
 
