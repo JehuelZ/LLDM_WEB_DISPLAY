@@ -262,7 +262,7 @@ export function MidnightGlowWeekly() {
 
                             {/* Huge Day Number */}
                             <div className="flex items-end justify-center gap-1 mt-2 px-2 z-10 shrink-0 mb-4">
-                                <span className={`text-[3.5rem] font-black leading-none tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${isActive ? 'text-[#A3FF57]' : 'text-white'}`}>
+                                <span className={`text-[2rem] font-black leading-none tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${isActive ? 'text-[#A3FF57]' : 'text-white'}`}>
                                     {dayNum}
                                 </span>
                             </div>
