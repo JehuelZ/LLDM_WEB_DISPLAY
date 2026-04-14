@@ -445,12 +445,21 @@ export function MidnightGlowWeekly() {
                                                 )}
 
                                                 {/* HUGE Time */}
-                                                <div className="flex items-baseline justify-center gap-1 mt-1.5 mb-1 relative">
+                                                <div className="flex items-baseline justify-center gap-1 mt-4 mb-2 relative">
                                                     <span className={`text-[1.75rem] font-black leading-none tracking-tighter ${slot.timeAccent}`}>
                                                         {slot.hour.split(':')[0]}:<span className="tracking-tight">{slot.hour.split(':')[1]}</span>
                                                     </span>
                                                     <span className={`text-[9px] font-black uppercase tracking-wider relative -top-3 text-white/40`}>
                                                         {slot.period}
+                                                    </span>
+                                                </div>
+
+                                                <div className="mx-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4 opacity-50" />
+
+                                                {/* Member Name */}
+                                                <div className="flex-1 flex flex-col justify-center px-4 mb-4">
+                                                    <span className={`text-[12px] font-black uppercase text-center leading-tight tracking-wide ${isActive ? 'text-white' : 'text-white/80'}`}>
+                                                        {slot.leaderName || 'SIN ASIGNAR'}
                                                     </span>
                                                 </div>
 
