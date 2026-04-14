@@ -138,7 +138,7 @@ export default function DisplayPage() {
 
     // Theme engine: choose the correct theme based on settings
     const activeTheme = useMemo(() => {
-        const themeId = settings?.displayTemplate || calendarStyles?.template || 'nocturno';
+        const themeId = settings?.displayTemplate || 'nocturno';
         const theme = getTheme(themeId);
 
         // --- ULTIMATE FONT OVERRIDE ---
@@ -193,7 +193,7 @@ export default function DisplayPage() {
     useEffect(() => {
         if (slides.length === 0) return;
 
-        const themeId = settings?.displayTemplate || calendarStyles?.template || 'nocturno';
+        const themeId = settings?.displayTemplate || 'nocturno';
         const durationKey = `${themeId}SlideDuration` as keyof typeof settings;
         const slideDuration = (settings[durationKey] as number) || 12;
 
