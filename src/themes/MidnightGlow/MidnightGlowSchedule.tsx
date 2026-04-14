@@ -795,9 +795,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                         <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#A3FF57]/40" />
                     </div>
 
-                    <div className="absolute bottom-3 right-4 text-[8px] tracking-[0.2em] text-[#A3FF57]/10 font-mono uppercase select-none">
-                        LLDM · OVERDRIVE
-                    </div>
+                    {/* Evening watermark removed */}
                 </motion.div>
 
                 {/* OPTIONAL — 12PM Noon Prayer */}
