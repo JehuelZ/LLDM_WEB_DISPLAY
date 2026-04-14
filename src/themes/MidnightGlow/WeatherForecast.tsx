@@ -56,13 +56,13 @@ export const WeatherForecast = () => {
                             </div>
                         </div>
 
-                        {/* DATA RIGHT */}
-                        <div className="flex flex-col">
-                            <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] leading-none mb-1">
+                        {/* DATA RIGHT: Now side-by-side (a la par) */}
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] leading-none">
                                 {format(parseISO(day.date), 'EEEE', { locale: es }).substring(0, 3)}
                             </span>
-                            <div className="flex items-start gap-0.5">
-                                <span className="text-[14px] font-black text-white leading-none tracking-tighter">{day.temp}</span>
+                            <div className="flex items-start gap-0.5 border-l border-white/10 pl-2">
+                                <span className="text-[15px] font-black text-white leading-none tracking-tighter">{day.temp}</span>
                                 <span className="text-[8px] font-bold text-[#A3FF57] mt-0.5">°</span>
                             </div>
                         </div>
