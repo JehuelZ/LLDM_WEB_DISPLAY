@@ -80,7 +80,7 @@ export function NeonForgeCalendar() {
             style={{ fontFamily: 'var(--font-sora, ui-sans-serif)' }}>
 
             {/* ── HEADER ── */}
-            <div className="shrink-0 pt-16 pl-64 pr-10 pb-3 z-10">
+            <div className="shrink-0 pt-16 pl-72 pr-10 pb-3 z-10">
                 <motion.div
                     initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }}
                     className="flex items-end justify-between"
@@ -135,7 +135,7 @@ export function NeonForgeCalendar() {
             </div>
 
             {/* ── DAYS OF WEEK HEADER ── */}
-            <div className="grid grid-cols-7 gap-[6px] pl-64 pr-10 mb-1 z-10">
+            <div className="grid grid-cols-7 gap-[6px] pl-72 pr-10 mb-1 z-10">
                 {DAYS_OF_WEEK.map((day, i) => (
                     <div key={day} className="text-center py-1">
                         <span className="text-[10px] font-black tracking-[0.35em] uppercase"
@@ -151,7 +151,7 @@ export function NeonForgeCalendar() {
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1, duration: 0.5 }}
-                className="flex-1 grid grid-cols-7 gap-[6px] pl-64 pr-10 pb-14 z-10 min-h-0"
+                className="flex-1 grid grid-cols-7 gap-[6px] pl-72 pr-10 pb-14 z-10 min-h-0"
                 style={{ gridAutoRows: '1fr' }}
             >
                 {/* Blank cells */}
@@ -355,7 +355,7 @@ export function NeonForgeCalendar() {
             {/* ── Bottom title bar ── */}
             <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
-                className="absolute bottom-4 left-64 right-10 z-10 flex items-center justify-center gap-3"
+                className="absolute bottom-4 left-72 right-10 z-10 flex items-center justify-center gap-3"
             >
                 <div className="h-px flex-1" style={{ background: `linear-gradient(90deg, transparent, ${A}20, transparent)` }} />
                 <span className="text-[8px] font-black uppercase tracking-[0.4em]"
