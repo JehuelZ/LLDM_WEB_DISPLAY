@@ -13,7 +13,11 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = isMounted ? circumference - (now.getSeconds() / 60) * circumference : circumference;
 
-    const { weather, loading } = useWeather(24.34, -104.28);
+    const { weather, loading } = useWeather(
+        settings.neonForgeCityData?.lat || 24.34, 
+        settings.neonForgeCityData?.lon || -104.28,
+        settings.weatherUnit || 'celsius'
+    );
 
     const getWeatherIcon = (code: string) => {
         const c = parseInt(code);
