@@ -85,7 +85,7 @@ export const MidnightGlowAnnouncements = () => {
 
                                     {/* Content Area */}
                                     <div className="px-6 flex-1 flex flex-col justify-start text-center z-10 mb-2">
-                                        <p className="text-[15px] text-white/70 leading-relaxed font-bold tracking-wide uppercase">
+                                        <p className="text-[12px] text-white/70 leading-relaxed font-bold tracking-wide uppercase">
                                             {ann.content}
                                         </p>
                                     </div>
