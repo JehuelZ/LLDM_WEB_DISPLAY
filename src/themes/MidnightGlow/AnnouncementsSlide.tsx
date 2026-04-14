@@ -180,14 +180,14 @@ export const MidnightGlowAnnouncements = () => {
                                     className="mt-6 px-10 py-3 rounded-3xl bg-[#040D21]/95 border-2 border-[#A3FF57]/50 shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center"
                                 >
                                     <span className="text-[11px] font-black text-[#A3FF57] uppercase tracking-[0.3em] mb-1 opacity-90 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">
-                                        {minister.role || 'Ministro'}
+                                        {minister.role || 'Ministro a Cargo'}
                                     </span>
                                     <span className="text-[20px] font-black text-white uppercase tracking-[0.05em] leading-none text-center">
                                         {minister.name}
                                     </span>
                                     <div className="mt-2 flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
                                         <Church className="w-3 h-3 text-[#4F7FFF]" />
-                                        <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest">{settings.mainChurchName || 'Congregación Local'}</span>
+                                        <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest">{settings.mainChurchName || 'Iglesia Local'}</span>
                                     </div>
                                 </motion.div>
                             </div>
