@@ -5,7 +5,6 @@ import { Bell, User, Phone, Mail, Church } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn, getActiveAnnouncements } from '@/lib/utils';
 import { CountdownCard } from '@/components/CountdownCard';
-import { WeatherForecast } from './WeatherForecast';
 
 export const MidnightGlowAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
@@ -125,11 +124,6 @@ export const MidnightGlowAnnouncements = () => {
                             );
                         })}
                     </AnimatePresence>
-                </div>
-
-                {/* ── WEATHER FORECAST: Aligned with clock ── */}
-                <div className="flex justify-end z-10 pr-6">
-                    <WeatherForecast />
                 </div>
 
                 {/* ── BOTTOM HEADER ── */}

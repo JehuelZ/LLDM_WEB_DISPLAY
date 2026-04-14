@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { Flame, Church, BookOpen, Star, Heart } from 'lucide-react';
+import { Flame, Church, BookOpen, Star, Heart, Sun, Cloud, CloudRain, CloudLightning, Snowflake, CloudFog } from 'lucide-react';
+import { useWeather } from '@/hooks/useWeather';
+import { parseISO } from 'date-fns';
 
 export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isMounted: boolean, settings: any }) => {
     // Circumference of the circle for the seconds ring
@@ -11,17 +13,58 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = isMounted ? circumference - (now.getSeconds() / 60) * circumference : circumference;
 
+    const { weather, loading } = useWeather(24.34, -104.28);
+
+    const getWeatherIcon = (code: string) => {
+        const c = parseInt(code);
+        if (c === 0 || c === 1) return <Sun size={14} className="text-yellow-400" />;
+        if (c === 2 || c === 3) return <Cloud size={14} className="text-blue-300" />;
+        if (c === 45 || c === 48) return <CloudFog size={14} className="text-gray-400" />;
+        if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(c)) return <CloudRain size={14} className="text-blue-500" />;
+        if (c === 95) return <CloudLightning size={14} className="text-purple-500" />;
+        if ([71, 73, 75].includes(c)) return <Snowflake size={14} className="text-white" />;
+        return <Sun size={14} className="text-yellow-400" />;
+    };
+
     return (
         <div className="fixed bottom-10 right-10 z-[200] scale-75 origin-bottom-right pointer-events-none">
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 80, damping: 20 }}
-                className="flex items-center bg-[#071020]/95 backdrop-blur-3xl border border-white/10 rounded-full shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(79,127,255,0.1)] p-2 pr-10 relative overflow-hidden"
+                className="flex items-center bg-[#071020]/95 backdrop-blur-3xl border border-white/10 rounded-full shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(79,127,255,0.1)] p-2 pl-8 pr-10 relative overflow-hidden"
             >
 
                 {/* Subtle background glow inside the pill */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#1E3A6E]/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1E3A6E]/20 via-transparent to-transparent pointer-events-none" />
+
+                {/* ── WEATHER SECTION ── */}
+                {weather && isMounted && (
+                    <div className="flex items-center gap-4 mr-8 border-r border-white/10 pr-8">
+                        {weather.forecast.map((day, idx) => (
+                            <div key={day.date} className="flex items-center gap-2">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-current blur-md opacity-20 scale-125" style={{ color: 'inherit' }} />
+                                    <div className="relative z-10">
+                                        {getWeatherIcon(day.icon)}
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.1em]">
+                                        {format(parseISO(day.date), 'EEE', { locale: es })}
+                                    </span>
+                                    <div className="flex items-start">
+                                        <span className="text-[13px] font-black text-white/80 leading-none tracking-tighter">{day.temp}</span>
+                                        <span className="text-[7px] font-bold text-[#A3FF57]">°</span>
+                                    </div>
+                                </div>
+                                {idx < weather.forecast.length - 1 && (
+                                    <div className="w-[1px] h-3 bg-white/5 ml-2" />
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
 
                 {/* Circular Logo & Seconds Ring */}
                 <div className="relative w-20 h-20 flex-shrink-0">
