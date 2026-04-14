@@ -141,6 +141,8 @@ export function MidnightGlowCalendar() {
                     const key = format(day, 'yyyy-MM-dd');
                     const sched = monthlySchedule[key];
                     const isSunday = getDay(day) === 0;
+                    const isThursday = getDay(day) === 4;
+                    const isServiceDay = isSunday || isThursday;
                     const isSaturday = getDay(day) === 6;
                     const isWeekend = isSunday || isSaturday;
 
@@ -297,7 +299,7 @@ export function MidnightGlowCalendar() {
                                         </span>
                                         <div className={`mt-0.5 px-2 py-[2px] rounded-full border ml-2 ${isToday ? 'border-[#FF6B00]/50 bg-[#FF6B00]/20 backdrop-blur-md' : 'border-[#FF6B00]/30 bg-[#040D21]/40'} shadow-sm relative`}>
                                             <span className={`text-[8px] tracking-[0.2em] font-black uppercase leading-none block pt-[1px] ${isToday ? 'text-[#FF6B00]' : 'text-[#FF6B00]/70'}`}>
-                                                {isSunday ? 'VESPERTINO' : 'SERVICIO'}
+                                                {isServiceDay ? 'SERVICIO' : 'ORACIÓN'}
                                             </span>
                                             {sched?.slots?.evening?.language === 'en' && (
                                                 <div className="absolute -right-3 top-0 px-1 py-[1px] bg-[#FF6B00] rounded-sm shadow-sm ring-1 ring-white/20">
@@ -322,7 +324,7 @@ export function MidnightGlowCalendar() {
                                                 </span>
                                                 <div className={`mt-0.5 px-1.5 py-[2px] rounded-full border ${isToday ? 'border-[#FF6B00]/50 bg-[#FF6B00]/20 backdrop-blur-md' : 'border-[#FF6B00]/30 bg-[#040D21]/40'} shadow-sm max-w-full overflow-hidden relative`}>
                                                     <span className={`text-[6px] tracking-[0.1em] truncate font-black uppercase leading-none block pt-[1px] ${isToday ? 'text-[#FF6B00]' : 'text-[#FF6B00]/70'}`}>
-                                                        {isSunday ? 'VESP.' : 'SERV.'}
+                                                        {isServiceDay ? 'SERV.' : 'ORACIÓN'}
                                                     </span>
                                                     {sched?.slots?.evening?.language === 'en' && (
                                                         <div className="absolute -right-1 top-0 px-0.5 py-[0.5px] bg-[#FF6B00] rounded-[1px] shadow-sm ring-1 ring-white/10">
