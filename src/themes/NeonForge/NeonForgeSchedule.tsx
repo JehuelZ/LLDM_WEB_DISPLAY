@@ -215,7 +215,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                 pt-20 → room for clock + weather widget (both absolute z-50)
                 Weather widget is at left:220px top:14px via Background.tsx
             ──────────────────────────────────────────────────────────── */}
-            <div className="shrink-0 pt-20 px-14 pb-4">
+            <div className="shrink-0 pt-20 pl-72 pr-14 pb-4">
                 {/* Tiny breadcrumb */}
                 <motion.p
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 }}
@@ -263,7 +263,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                 THREE SQUARE CARDS — centered, large gap, bg visible around
             ──────────────────────────────────────────────────────────── */}
             <div
-                className="flex-1 flex items-center justify-center gap-8 px-12 pb-10 min-h-0"
+                className="flex-1 flex items-center justify-center gap-8 pl-72 pr-12 pb-10 min-h-0"
             >
 
                 {/* ══ CARD 1 — 5 AM ══ */}
