@@ -193,15 +193,8 @@ export const MidnightGlowAnnouncements = () => {
                             </div>
                         </div>
 
-                        {/* Title badge */}
-                        <div className="mb-6 z-10 text-center">
-                            <span className="text-[12px] uppercase font-black tracking-[0.4em] text-[#4F7FFF] border-2 border-[#4F7FFF]/40 px-8 py-2 rounded-full bg-[#0D1B3E]/90 backdrop-blur-md shadow-[0_0_20px_rgba(79,127,255,0.15)]">
-                                MINISTERIO
-                            </span>
-                        </div>
-
                         {/* Divider with dot */}
-                        <div className="mx-10 flex items-center gap-4 my-8 z-10 w-full px-12 opacity-80">
+                        <div className="mx-10 flex items-center gap-4 mt-2 mb-8 z-10 w-full px-12 opacity-80">
                             <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#4F7FFF]/50" />
                             <div className="w-2 h-2 rounded-full bg-[#4F7FFF] shadow-[0_0_10px_#4F7FFF]" />
                             <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#4F7FFF]/50" />
