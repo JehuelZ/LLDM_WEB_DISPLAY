@@ -113,6 +113,7 @@ export function MidnightGlowWeekly() {
 
     const getSlots = (sched: any, dayName: string): ServiceSlot[] => {
         const isSunday = dayName.toUpperCase() === 'DOM' || dayName.toUpperCase() === 'DOMINGO';
+        const isThursday = dayName.toUpperCase() === 'JUE' || dayName.toUpperCase() === 'JUEVES';
 
         const slots: ServiceSlot[] = [
             {
@@ -189,12 +190,12 @@ export function MidnightGlowWeekly() {
             id: 'evening',
             hour: '06:00', period: 'PM',
             label: 'Principal',
-            title: 'CULTO PRINCIPAL',
-            subtitle: 'SERVICIO VESPERTINO',
+            title: (isSunday || isThursday) ? 'SERVICIO ADORACIÓN' : 'ORACIÓN VESPERTINA',
+            subtitle: (isSunday || isThursday) ? 'CULTO PRINCIPAL' : 'CONSAGRACIÓN',
             icon: <Church className="w-3.5 h-3.5" />,
-            accent: 'green',
+            accent: (isSunday || isThursday) ? 'green' : 'blue',
             timeAccent: 'text-[#A3FF57] drop-shadow-[0_0_15px_rgba(163,255,87,0.8)]',
-            roles: ['SERVICIO', 'DOCTRINA'],
+            roles: (isSunday || isThursday) ? ['SERVICIO', 'DOCTRINA'] : ['CONSAGRACIÓN', 'DOCTRINA'],
             language: slotEv?.language || 'es',
             leaderIds: [
                 slotEv?.leaderIds?.[0] || null,

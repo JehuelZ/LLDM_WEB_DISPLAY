@@ -52,6 +52,9 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
     const schedule = monthlySchedule[targetDateStr];
     const displayDate = baseDate;
     const is14th = displayDate.getDate() === 14;
+    const isSunday = displayDate.getDay() === 0;
+    const isThursday = displayDate.getDay() === 4;
+    const isServiceDay = isSunday || isThursday;
 
     const getMemberDetail = (id: string | null) => {
         if (!id) return { name: '', avatar: null };
@@ -786,7 +789,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     </div>
 
                     <p className="text-center text-[14px] tracking-[0.4em] text-white/50 uppercase font-black mb-8 px-4">
-                        Servicio Vespertino
+                        {isServiceDay ? 'Servicio Vespertino' : 'Oración Vespertina'}
                     </p>
 
                     {/* Divider with dot */}
