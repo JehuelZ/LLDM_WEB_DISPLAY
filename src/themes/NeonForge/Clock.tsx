@@ -1,6 +1,7 @@
 'use client';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { motion } from 'framer-motion';
 
 // ─────────────────────────────────────────────
 // Clock — NeonForge theme

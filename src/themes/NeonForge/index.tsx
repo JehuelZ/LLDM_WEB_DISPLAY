@@ -1,3 +1,4 @@
+import React from 'react';
 import { NeonForgeBackground } from './Background';
 import { NeonForgeClock } from './Clock';
 import { NeonForgeProgress } from './Progress';
