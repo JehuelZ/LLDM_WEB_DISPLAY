@@ -159,7 +159,7 @@ export function NeonForgeAnnouncements() {
                                 }
                             </div>
                             <div className="mt-4 text-center">
-                                <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Ministro</span>
+                                <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Ministro a Cargo</span>
                                 <p className="text-xl font-black mt-0.5 leading-tight" style={{ color: T.white }}>{minister.name}</p>
                             </div>
                         </div>
@@ -194,11 +194,7 @@ export function NeonForgeAnnouncements() {
                 </div>
             )}
 
-            {/* Footer */}
-            <div className="absolute bottom-3 right-6 text-[8px] uppercase tracking-widest select-none"
-                style={{ color: T.textMuted, opacity: 0.3 }}>
-                LLDM · NF-ANN
-            </div>
+            {/* Footer watermark removed */}
         </div>
     );
 }
