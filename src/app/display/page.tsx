@@ -15,22 +15,28 @@ import { AdministrativeOverlay } from '@/components/display/AdministrativeOverla
 
 const FullscreenButton = () => {
     const toggleFullscreen = () => {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-            });
+        const element = document.documentElement as any;
+        if (!document.fullscreenElement && !(document as any).webkitFullscreenElement && !(document as any).mozFullScreenElement && !(document as any).msFullscreenElement) {
+            if (element.requestFullscreen) element.requestFullscreen();
+            else if (element.webkitRequestFullscreen) element.webkitRequestFullscreen();
+            else if (element.mozRequestFullScreen) element.mozRequestFullScreen();
+            else if (element.msRequestFullscreen) element.msRequestFullscreen();
         } else {
-            document.exitFullscreen();
+            const doc = document as any;
+            if (doc.exitFullscreen) doc.exitFullscreen();
+            else if (doc.webkitExitFullscreen) doc.webkitExitFullscreen();
+            else if (doc.mozCancelFullScreen) doc.mozCancelFullScreen();
+            else if (doc.msExitFullscreen) doc.msExitFullscreen();
         }
     };
 
     return (
         <button
             onClick={toggleFullscreen}
-            className="fixed bottom-4 right-4 z-[999] p-4 rounded-full bg-black/40 border border-white/10 text-white/50 hover:text-white hover:border-white/40 hover:bg-black/80 hover:scale-110 transition-all duration-300 backdrop-blur-xl group cursor-pointer opacity-40 hover:opacity-100"
+            className="p-4 rounded-full bg-black/60 border border-white/20 text-white shadow-[0_0_30px_rgba(0,0,0,0.5)] hover:bg-black/90 hover:scale-110 transition-all duration-300 backdrop-blur-xl group cursor-pointer opacity-60 hover:opacity-100"
             title="Pantalla Completa"
         >
-            <Maximize className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
+            <Maximize className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
         </button>
     );
 };
@@ -236,8 +242,7 @@ export default function DisplayPage() {
         <main
             className={cn(
                 "fixed inset-0 text-slate-50 overflow-hidden select-none",
-                settings?.fontMain ? "" : activeTheme.fonts.primary,
-                "cursor-none"
+                settings?.fontMain ? "" : activeTheme.fonts.primary
             )}
         >
             {/* Inject Google Font if configured */}
