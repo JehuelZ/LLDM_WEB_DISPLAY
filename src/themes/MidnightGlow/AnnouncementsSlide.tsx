@@ -34,7 +34,7 @@ export const MidnightGlowAnnouncements = () => {
             <div className="absolute top-0 left-1/4 w-[700px] h-[400px] bg-[#4F7FFF]/10 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-[#A3FF57]/5 blur-[100px] rounded-full pointer-events-none" />
 
-            <div className="flex-1 flex flex-col min-w-0 px-10 pt-8 pb-16 z-10 w-full h-full justify-center">
+            <div className="flex-1 flex flex-col min-w-0 px-10 pt-8 pb-10 z-10 w-full h-full justify-center">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 shrink-0 overflow-visible px-6 mt-2">
                     <AnimatePresence mode="popLayout">
                         {announcements.map((ann, idx) => {
