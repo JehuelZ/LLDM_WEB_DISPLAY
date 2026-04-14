@@ -233,7 +233,7 @@ export function MidnightGlowWeekly() {
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-[#A3FF57]/5 blur-[100px] rounded-full pointer-events-none" />
 
             {/* ── 7 COLUMNS ── */}
-            <div className="z-10 flex-1 flex gap-5 px-5 pb-2 pt-10 min-h-0 w-full">
+            <div className="z-10 flex-1 flex gap-5 px-5 pb-2 pt-2 min-h-0 w-full">
                 {daysProgram.map(({ dateKey, dayName, dayNum, sched, isToday }, colIdx) => {
                     const slots = getSlots(sched, dayName);
                     const isActive = isToday;
@@ -274,7 +274,7 @@ export function MidnightGlowWeekly() {
                             )}
 
                             {/* Service slots perfectly matching mockup */}
-                            <div className="flex flex-col gap-28 px-1 pb-6 flex-1 min-h-0 z-10 w-full mt-2">
+                            <div className="flex flex-col gap-12 px-1 pb-6 flex-1 min-h-0 z-10 w-full mt-2">
                                 {slots.map((slot, sIdx) => {
                                     const leaders = (slot.leaderIds || [])
                                         .map(id => getMemberDetail(id))
@@ -307,7 +307,7 @@ export function MidnightGlowWeekly() {
                                     const showLiveRed = isSlotActive(dateKey, slot.id);
 
                                     return (
-                                        <div key={`${dateKey}-${sIdx}`} className={`relative flex flex-col justify-end w-full min-h-[250px] rounded-[1.5rem] border-2 transition-all duration-300 ${bgClass} ${borderClass} ${customShadow}
+                                        <div key={`${dateKey}-${sIdx}`} className={`relative flex flex-col justify-end w-full min-h-[180px] rounded-[1.5rem] border-2 transition-all duration-300 ${bgClass} ${borderClass} ${customShadow}
                                                 ${!isAssigned && 'opacity-60'}
                                             `}>
                                             {/* Horizontal Separator Line crossing the whole screen (Drawn once per row) */}
@@ -445,7 +445,7 @@ export function MidnightGlowWeekly() {
                                                 )}
 
                                                 {/* HUGE Time */}
-                                                <div className="flex items-baseline justify-center gap-1 mt-4 mb-2 relative">
+                                                <div className="flex items-baseline justify-center gap-1 mt-2 mb-1 relative">
                                                     <span className={`text-[1.75rem] font-black leading-none tracking-tighter ${slot.timeAccent}`}>
                                                         {slot.hour.split(':')[0]}:<span className="tracking-tight">{slot.hour.split(':')[1]}</span>
                                                     </span>
@@ -454,10 +454,10 @@ export function MidnightGlowWeekly() {
                                                     </span>
                                                 </div>
 
-                                                <div className="mx-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-4 opacity-50" />
+                                                <div className="mx-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-2 opacity-50" />
 
                                                 {/* Member Name */}
-                                                <div className="flex-1 flex flex-col justify-center px-4 mb-4">
+                                                <div className="flex-1 flex flex-col justify-center px-4 mb-2">
                                                     <span className={`text-[12px] font-black uppercase text-center leading-tight tracking-wide ${isActive ? 'text-white' : 'text-white/80'}`}>
                                                         {slot.leaderName || 'SIN ASIGNAR'}
                                                     </span>
@@ -484,7 +484,7 @@ export function MidnightGlowWeekly() {
             <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="z-10 flex flex-col items-center justify-center pb-8 shrink-0 text-center"
+                className="z-10 flex flex-col items-center justify-center pb-2 shrink-0 text-center"
             >
                 <p className="text-[10px] tracking-[0.5em] text-[#4F7FFF] uppercase font-bold mb-2">Vista Semanal</p>
                 <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-4">
