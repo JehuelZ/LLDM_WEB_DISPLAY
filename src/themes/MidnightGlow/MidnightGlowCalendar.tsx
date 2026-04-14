@@ -126,8 +126,8 @@ export function MidnightGlowCalendar() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="z-10 flex-1 grid grid-cols-7 gap-10 w-[94%] mx-auto pb-7 min-h-0"
-                style={{ gridAutoRows: '1fr' }}
+                className="z-10 grid grid-cols-7 gap-4 w-[85%] mx-auto pb-10 min-h-0 place-content-center flex-1"
+                style={{ gridAutoRows: 'min-content' }}
             >
                 {/* Blank cells for day offset */}
                 {blanks.map((b) => (
@@ -173,6 +173,7 @@ export function MidnightGlowCalendar() {
                             transition={{ delay: 0.02 * idx, duration: 0.3 }}
                             className={`
                                 relative flex flex-col rounded-2xl overflow-hidden border transition-all duration-300
+                                aspect-[1.1/1]
                                 ${isToday
                                     ? 'border-2 border-[#A3FF57]/70 bg-[#0D1B3E] shadow-[0_0_40px_rgba(163,255,87,0.3),inset_0_0_20px_rgba(163,255,87,0.05)]'
                                     : is14th
