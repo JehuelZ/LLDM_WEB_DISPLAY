@@ -175,7 +175,7 @@ export function MidnightGlowCalendar() {
                             transition={{ delay: 0.02 * idx, duration: 0.3 }}
                             className={`
                                 relative flex flex-col rounded-2xl overflow-hidden border transition-all duration-300
-                                aspect-[1.1/1]
+                                aspect-square
                                 ${isToday
                                     ? 'border-2 border-[#A3FF57]/70 bg-[#0D1B3E] shadow-[0_0_40px_rgba(163,255,87,0.3),inset_0_0_20px_rgba(163,255,87,0.05)]'
                                     : is14th
@@ -206,7 +206,7 @@ export function MidnightGlowCalendar() {
                             </div>
 
                             {/* Text Schedule inside cell */}
-                            <div className="flex-1 flex flex-col px-2 pb-1 gap-1 min-h-0 overflow-hidden justify-start mt-0.5">
+                            <div className="flex-1 flex flex-col px-2 pb-0 gap-1 min-h-0 overflow-hidden justify-center mt-0.5">
                                 {/* 5 AM - Matutina */}
                                 {leader5am.name && (
                                     <div className="relative flex flex-col items-center justify-center w-full mt-1">
