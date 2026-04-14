@@ -454,7 +454,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                                 )}
                                             </motion.div>
                                             <motion.div className={`mt-3 px-6 py-2 rounded-xl bg-[#1A0C00] border border-[#3A1D04] ${accentText} flex flex-col items-center`}>
-                                                <span className="text-[12px] font-black uppercase tracking-[0.2em]">{minister?.name || 'Ministro Local'}</span>
+                                                <span className="text-[12px] font-black uppercase tracking-[0.2em]">{minister?.name || 'Ministro a Cargo'}</span>
                                             </motion.div>
                                             
                                             {/* Additional Assignments */}
