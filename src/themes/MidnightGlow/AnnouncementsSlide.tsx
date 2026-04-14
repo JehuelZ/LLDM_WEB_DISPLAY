@@ -34,8 +34,8 @@ export const MidnightGlowAnnouncements = () => {
             <div className="absolute top-0 left-1/4 w-[700px] h-[400px] bg-[#4F7FFF]/10 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-[#A3FF57]/5 blur-[100px] rounded-full pointer-events-none" />
 
-            <div className="flex-1 flex flex-col min-w-0 px-10 pt-16 pb-8 z-10 w-full h-full">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-14 flex-1 overflow-visible px-6 pb-20 mt-4">
+            <div className="flex-1 flex flex-col min-w-0 px-10 pt-8 pb-4 z-10 w-full h-full justify-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 shrink-0 overflow-visible px-6 mt-2">
                     <AnimatePresence mode="popLayout">
                         {announcements.map((ann, idx) => {
                             const isUrgent = ann.priority > 0;
@@ -149,11 +149,11 @@ export const MidnightGlowAnnouncements = () => {
             </div>
 
             {settings.showMinisterOnDisplay && (
-                <div className="w-[480px] shrink-0 flex flex-col px-6 pt-8 pb-8 z-10">
+                <div className="w-[480px] shrink-0 flex flex-col px-6 pt-8 pb-8 z-10 justify-center">
                     <motion.div
                         animate={{ y: [0, -10, 0] }}
                         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                        className="flex flex-col items-center justify-start pb-12 mb-16 rounded-[3.5rem] border-2 border-[#1E3A6E] bg-[#071020] shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative mt-20 transition-all duration-500 hover:border-[#4F7FFF]/50 hover:bg-[#0D1B3E] group"
+                        className="flex flex-col items-center justify-start pb-12 rounded-[3.5rem] border-2 border-[#1E3A6E] bg-[#071020] shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative transition-all duration-500 hover:border-[#4F7FFF]/50 hover:bg-[#0D1B3E] group"
                     >
                         {/* Top Accent Line */}
                         <div className="absolute top-0 left-0 right-0 h-[4px] bg-gradient-to-r from-transparent via-[#A3FF57] to-transparent rounded-t-[3.5rem] z-20 opacity-80" />
