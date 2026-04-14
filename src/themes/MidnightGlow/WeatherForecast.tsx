@@ -39,27 +39,32 @@ export const WeatherForecast = () => {
                 </div>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4">
                 {weather.forecast.map((day, idx) => (
                     <motion.div 
                         key={day.date}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="flex flex-col items-center gap-1.5"
+                        className="flex items-center gap-3 bg-[#1E3A6E]/20 px-4 py-2.5 rounded-2xl border border-white/5 hover:border-[#4F7FFF]/30 transition-colors group"
                     >
-                        <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">
-                            {format(parseISO(day.date), 'EEE', { locale: es })}
-                        </span>
-                        <div className="relative group">
-                            <div className="absolute inset-0 bg-current blur-lg opacity-20 scale-150 transition-transform group-hover:scale-200" style={{ color: 'inherit' }} />
-                            <div className="relative z-10 w-8 h-8 flex items-center justify-center">
+                        {/* ICON LEFT */}
+                        <div className="relative">
+                            <div className="absolute inset-0 bg-current blur-md opacity-20 scale-125" style={{ color: 'inherit' }} />
+                            <div className="relative z-10 w-7 h-7 flex items-center justify-center">
                                 {getWeatherIcon(day.icon)}
                             </div>
                         </div>
-                        <div className="flex items-start gap-0.5">
-                            <span className="text-[15px] font-black text-white leading-none tracking-tighter">{day.temp}</span>
-                            <span className="text-[8px] font-bold text-[#A3FF57] mt-0.5">°</span>
+
+                        {/* DATA RIGHT */}
+                        <div className="flex flex-col">
+                            <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em] leading-none mb-1">
+                                {format(parseISO(day.date), 'EEEE', { locale: es }).substring(0, 3)}
+                            </span>
+                            <div className="flex items-start gap-0.5">
+                                <span className="text-[14px] font-black text-white leading-none tracking-tighter">{day.temp}</span>
+                                <span className="text-[8px] font-bold text-[#A3FF57] mt-0.5">°</span>
+                            </div>
                         </div>
                     </motion.div>
                 ))}
