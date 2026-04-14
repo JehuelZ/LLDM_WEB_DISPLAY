@@ -4,6 +4,7 @@ import { NeonForgeClock } from './Clock';
 import { NeonForgeProgress } from './Progress';
 import { NeonForgeSchedule } from './NeonForgeSchedule';
 import { NeonForgeAnnouncements } from './NeonForgeAnnouncements';
+import { NeonForgeCalendar } from './NeonForgeCalendar';
 import type { Theme } from '../index';
 
 // NeonForge slide rotation:
@@ -37,7 +38,7 @@ export const NeonForgeTheme: Theme = {
     },
     slides: {
         Schedule: ScheduleToday,       // used by display's 'schedule' and 'schedule_tomorrow' slots
-        Calendar: ScheduleToday,       // 'calendar' slot → agenda hoy
+        Calendar: NeonForgeCalendar,       // 'calendar' slot → Agenda Mensual
         Weekly: ScheduleTomorrow,    // 'weekly_program' slot → agenda mañana
         Announcements: NeonForgeAnnouncements,
     },
