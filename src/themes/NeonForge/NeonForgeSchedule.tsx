@@ -325,7 +325,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                         {isSunday ? (
                             <>
                                 {sundayType === 'local' && minister?.name ? (
-                                    <PersonRow label="Ministro Local" name={minister.name} avatar={minister.avatar}
+                                    <PersonRow label="Ministro a Cargo" name={minister.name} avatar={minister.avatar}
                                         icon={<Church />} accent={sundayInfo.color} stacked={true} />
                                 ) : (
                                     <div className="flex flex-col items-center gap-4 py-6">
@@ -382,7 +382,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                             {isActive('evening') && <LivePill T={T} />}
                         </div>
                         <p className="text-[9px] font-black uppercase tracking-widest" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                            Servicio Vespertino
+                            {isSunday || baseDate.getDay() === 4 ? 'Servicio Vespertino' : 'Oración Vespertina'}
                         </p>
                         <div className="flex items-end gap-1.5">
                             <p className="text-[42px] font-black leading-none mt-0.5"
