@@ -212,7 +212,7 @@ export function MidnightGlowCalendar() {
                                             {isSlotActive(key, '5am') && <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse shadow-[0_0_5px_red]" />}
                                             <span className={`text-[6.5px] font-black tracking-tighter block pt-[1px] ${isSlotActive(key, '5am') ? 'text-white' : (isToday ? 'text-white' : 'text-[#4F7FFF]/90')}`}>{time5am}</span>
                                         </div>
-                                        <span className={`text-[15px] font-bold uppercase leading-tight truncate w-full text-center pl-3 ${isToday ? 'text-white' : 'text-white/80'}`}>
+                                        <span className={`text-[8px] font-bold uppercase leading-tight truncate w-full text-center pl-3 ${isToday ? 'text-white' : 'text-white/80'}`}>
                                             {leader5am.name}
                                         </span>
                                         <div className={`mt-0.5 px-2 py-[2px] rounded-full border ml-2 ${isToday ? 'border-[#4F7FFF]/50 bg-[#4F7FFF]/20 backdrop-blur-md' : 'border-[#4F7FFF]/30 bg-[#040D21]/40'} shadow-sm`}>
@@ -236,7 +236,7 @@ export function MidnightGlowCalendar() {
                                                 {isSlotActive(key, '9am') && <div className="w-1 h-1 rounded-full bg-red-500 animate-pulse shadow-[0_0_5px_red]" />}
                                                 <span className={`text-[6.5px] font-black tracking-tighter block pt-[1px] ${isSlotActive(key, '9am') ? 'text-white' : (isToday ? 'text-white' : 'text-[#A3FF57]/90')}`}>{time9am}</span>
                                             </div>
-                                            <span className={`text-[15px] font-bold uppercase leading-tight truncate w-full text-center pl-3 ${isToday ? 'text-white' : 'text-white/80'}`}>
+                                            <span className={`text-[8px] font-bold uppercase leading-tight truncate w-full text-center pl-3 ${isToday ? 'text-white' : 'text-white/80'}`}>
                                                 {leader9amCons.name}
                                             </span>
                                             <div className={`mt-0.5 px-2 py-[2px] rounded-full border ml-2 ${isToday ? 'border-[#A3FF57]/50 bg-[#A3FF57]/20 backdrop-blur-md' : 'border-[#A3FF57]/30 bg-[#040D21]/40'} shadow-sm`}>
@@ -255,7 +255,7 @@ export function MidnightGlowCalendar() {
                                         <div className="flex flex-1 flex-row pl-5 gap-1 w-full">
                                             {leader9amCons.name && (
                                                 <div className="flex flex-1 flex-col items-center justify-center min-w-0">
-                                                    <span className={`text-[13px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
+                                                    <span className={`text-[7px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
                                                         {leader9amCons.name}
                                                     </span>
                                                     <div className={`mt-0.5 px-1.5 py-[2px] rounded-full border ${isToday ? 'border-[#A3FF57]/50 bg-[#A3FF57]/20 backdrop-blur-md' : 'border-[#A3FF57]/30 bg-[#040D21]/40'} shadow-sm max-w-full overflow-hidden`}>
@@ -265,7 +265,7 @@ export function MidnightGlowCalendar() {
                                             )}
                                             {leader9amDoc.name && (
                                                 <div className="flex flex-1 flex-col items-center justify-center min-w-0">
-                                                    <span className={`text-[13px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
+                                                    <span className={`text-[7px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
                                                         {leader9amDoc.name}
                                                     </span>
                                                     <div className={`mt-0.5 px-1.5 py-[2px] rounded-full border ${isToday ? 'border-[#A3FF57]/50 bg-[#A3FF57]/20 backdrop-blur-md' : 'border-[#A3FF57]/30 bg-[#040D21]/40'} shadow-sm max-w-full overflow-hidden`}>
@@ -292,7 +292,7 @@ export function MidnightGlowCalendar() {
                                             <span className={`text-[6.5px] font-black tracking-tighter block pt-[1px] ${isSlotActive(key, 'evening') ? 'text-white' : (isToday ? 'text-white' : 'text-[#FF6B00]/90')}`}>{timeEvening}</span>
                                         </div>
 
-                                        <span className={`text-[15px] font-bold uppercase leading-tight truncate w-full text-center pl-3 ${isToday ? 'text-white' : 'text-white/80'}`}>
+                                        <span className={`text-[8px] font-bold uppercase leading-tight truncate w-full text-center pl-3 ${isToday ? 'text-white' : 'text-white/80'}`}>
                                             {leaderEvening1.name}
                                         </span>
                                         <div className={`mt-0.5 px-2 py-[2px] rounded-full border ml-2 ${isToday ? 'border-[#FF6B00]/50 bg-[#FF6B00]/20 backdrop-blur-md' : 'border-[#FF6B00]/30 bg-[#040D21]/40'} shadow-sm relative`}>
@@ -317,7 +317,7 @@ export function MidnightGlowCalendar() {
                                         </div>
                                         <div className="flex flex-1 flex-row pl-5 gap-1 w-full">
                                             <div className="flex flex-1 flex-col items-center justify-center min-w-0">
-                                                <span className={`text-[13px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
+                                                <span className={`text-[7px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
                                                     {leaderEvening1.name}
                                                 </span>
                                                 <div className={`mt-0.5 px-1.5 py-[2px] rounded-full border ${isToday ? 'border-[#FF6B00]/50 bg-[#FF6B00]/20 backdrop-blur-md' : 'border-[#FF6B00]/30 bg-[#040D21]/40'} shadow-sm max-w-full overflow-hidden relative`}>
@@ -332,7 +332,7 @@ export function MidnightGlowCalendar() {
                                                 </div>
                                             </div>
                                             <div className="flex flex-1 flex-col items-center justify-center min-w-0">
-                                                <span className={`text-[13px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
+                                                <span className={`text-[7px] font-bold uppercase leading-tight truncate w-full text-center ${isToday ? 'text-white' : 'text-white/80'}`}>
                                                     {leaderEvening2.name}
                                                 </span>
                                                 <div className={`mt-0.5 px-1.5 py-[2px] rounded-full border ${isToday ? 'border-[#FF6B00]/50 bg-[#FF6B00]/20 backdrop-blur-md' : 'border-[#FF6B00]/30 bg-[#040D21]/40'} shadow-sm max-w-full overflow-hidden relative`}>
