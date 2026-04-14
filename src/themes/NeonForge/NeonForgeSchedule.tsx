@@ -222,7 +222,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                     className="text-[10px] font-black uppercase tracking-[0.3em] mb-2"
                     style={{ color: 'rgba(255,255,255,0.22)' }}
                 >
-                    Sistema de Oraciones · Neon Forge
+                    Información Oficial
                 </motion.p>
 
                 {/* Main title — centered under the widgets */}
