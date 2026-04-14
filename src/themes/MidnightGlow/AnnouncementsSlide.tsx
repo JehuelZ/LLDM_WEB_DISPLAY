@@ -127,8 +127,8 @@ export const MidnightGlowAnnouncements = () => {
                     </AnimatePresence>
                 </div>
 
-                {/* ── WEATHER FORECAST: New Integration ── */}
-                <div className="flex justify-center z-10">
+                {/* ── WEATHER FORECAST: Aligned with clock ── */}
+                <div className="flex justify-end z-10 pr-6">
                     <WeatherForecast />
                 </div>
 
