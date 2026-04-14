@@ -387,12 +387,12 @@ export function MidnightGlowWeekly() {
                                             </div>
 
                                             {/* Names row as encapsulated premium pill(s) */}
-                                            <div className="absolute top-[2.4rem] inset-x-0 w-full flex items-center justify-center z-30 px-1">
-                                                <div className="flex items-center justify-center gap-1.5 w-full relative pt-2">
+                                            <div className="relative mt-8 mb-2 w-full flex items-center justify-center z-30 px-1 shrink-0">
+                                                <div className="flex items-center justify-center gap-1.5 w-full relative">
                                                     {isAssigned ? leaders.map((leader, lIdx) => (
-                                                        <div key={lIdx} className="flex flex-col items-center min-w-[70px] max-w-[95%] z-30 pt-1">
+                                                        <div key={lIdx} className="flex flex-col items-center min-w-[70px] max-w-[95%] z-30">
                                                             <span
-                                                                className="text-[6px] font-black uppercase tracking-[0.3em] mb-1.5 drop-shadow-[0_0_8px_currentColor]"
+                                                                className="text-[6px] font-black uppercase tracking-[0.3em] mb-1 drop-shadow-[0_0_8px_currentColor]"
                                                                 style={{ color: topBorder }}
                                                             >
                                                                 {slot.roles[lIdx] || 'SERVICIO'}
@@ -402,7 +402,7 @@ export function MidnightGlowWeekly() {
                                                             </span>
                                                         </div>
                                                     )) : (
-                                                        <div className="flex flex-col items-center pt-1">
+                                                        <div className="flex flex-col items-center">
                                                             <span className="text-[10px] leading-none font-bold uppercase tracking-widest text-white/30 italic drop-shadow-md bg-black/40 px-4 py-1.5 rounded-[0.6rem] border border-white/5 backdrop-blur-xl">
                                                                 VACANTE
                                                             </span>
@@ -412,7 +412,7 @@ export function MidnightGlowWeekly() {
                                             </div>
 
                                             {/* Inner Content matching Mockup precisely */}
-                                            <div className="pt-5 pb-5 px-1 flex flex-col items-center justify-center text-center w-full z-10">
+                                            <div className="pb-5 px-1 flex flex-col items-center justify-center text-center w-full z-10">
 
                                                 {/* Titles perfectly matched to pill vs typography */}
                                                 {slot.sundayType ? (
