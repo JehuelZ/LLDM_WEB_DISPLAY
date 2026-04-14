@@ -13,8 +13,8 @@ import type { Theme } from '../index';
 
 // Weather now lives as a floating widget in the Background (not a slide)
 
-const ScheduleToday = (props: any) => NeonForgeSchedule({ isTomorrow: false, ...props });
-const ScheduleTomorrow = (props: any) => NeonForgeSchedule({ isTomorrow: true, ...props });
+const ScheduleToday = (props: any) => <NeonForgeSchedule isTomorrow={false} {...props} />;
+const ScheduleTomorrow = (props: any) => <NeonForgeSchedule isTomorrow={true} {...props} />;
 
 export const NeonForgeTheme: Theme = {
     name: 'Neon',

@@ -170,9 +170,9 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
         return cur >= s && cur <= e;
     };
 
-    const slot5 = schedule?.slots['5am'];
-    const slot9 = schedule?.slots['9am'];
-    const slotEve = schedule?.slots['evening'];
+    const slot5 = schedule?.slots?.['5am'];
+    const slot9 = schedule?.slots?.['9am'];
+    const slotEve = schedule?.slots?.['evening'];
 
     const leader5 = getMember(slot5?.leaderId);
     const cons9 = getMember(slot9?.consecrationLeaderId);

@@ -54,7 +54,7 @@ export function NeonForgeClock({ now, isMounted, settings }: { now: Date; isMoun
                     
                     {/* Compact Seconds Indicator */}
                     <div className="flex flex-col items-center mb-1">
-                        <span className="text-[12px] font-black tabular-nums" style={{ color: '#white' }}>
+                        <span className="text-[12px] font-black tabular-nums" style={{ color: 'white' }}>
                             {seconds}
                         </span>
                         <div className="w-1 h-4 rounded-full overflow-hidden bg-white/10 mt-1">
