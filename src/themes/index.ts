@@ -35,13 +35,16 @@ export const ALL_THEMES: Record<string, Theme> = {
     'cristal': GlassmorphismTheme,
     'minimal': DarkMinimalTheme,
     'nocturno': MidnightGlowTheme,
+    'midnightglow': MidnightGlowTheme, // Alias
     'neon': NeonForgeTheme,
+    'neonforge': NeonForgeTheme,      // Alias
     'luna': LunaPremiumTheme,
     'primitivo': IglesiaTheme,
 };
 
 
-export const getTheme = (id: string): Theme => {
-    return ALL_THEMES[id] || ALL_THEMES['nocturno'];
+export const getTheme = (id: string = ''): Theme => {
+    const normalizedId = String(id || '').toLowerCase().trim();
+    return ALL_THEMES[normalizedId] || ALL_THEMES['nocturno'];
 };
 
