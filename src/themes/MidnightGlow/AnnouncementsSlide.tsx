@@ -71,7 +71,7 @@ export const MidnightGlowAnnouncements = () => {
 
                                     {/* Title (Mimicking the HUGE time text block) */}
                                     <div className="flex items-end justify-center w-full px-6 text-center z-10 mt-2 mb-5">
-                                        <span className={`font-black text-white leading-[1.1] tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${ann.title.length > 20 ? 'text-lg' : 'text-xl md:text-2xl'}`}>
+                                        <span className={`font-black text-white leading-tight uppercase tracking-wider drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] ${ann.title.length > 18 ? 'text-base' : 'text-lg md:text-xl'}`}>
                                             {ann.title}
                                         </span>
                                     </div>
