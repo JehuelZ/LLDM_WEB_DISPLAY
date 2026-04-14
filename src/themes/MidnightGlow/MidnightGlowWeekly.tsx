@@ -466,7 +466,7 @@ export function MidnightGlowWeekly() {
 
                                                 {/* Bottom subtitle if not orange */}
                                                 {slot.accent !== 'orange' ? (
-                                                    <p className="text-[8.5px] font-black tracking-[0.2em] uppercase -mt-1 text-white/50 z-10">{slot.subtitle}</p>
+                                                    <p className="text-[8.5px] font-black tracking-[0.2em] uppercase mt-1 text-white/50 z-10">{slot.subtitle}</p>
                                                 ) : null}
 
                                                 {/* Empty spacer for RED glow if needed */}
