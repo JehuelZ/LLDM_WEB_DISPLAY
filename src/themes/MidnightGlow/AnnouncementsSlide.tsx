@@ -71,7 +71,7 @@ export const MidnightGlowAnnouncements = () => {
 
                                     {/* Title (Mimicking the HUGE time text block) */}
                                     <div className="flex items-end justify-center w-full px-6 text-center z-10 mt-2 mb-5">
-                                        <span className={`font-black text-white leading-[1.1] tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${ann.title.length > 20 ? 'text-xl' : 'text-2xl md:text-[1.75rem]'}`}>
+                                        <span className={`font-black text-white leading-[1.1] tracking-tight uppercase drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)] ${ann.title.length > 20 ? 'text-lg' : 'text-xl md:text-2xl'}`}>
                                             {ann.title}
                                         </span>
                                     </div>
@@ -133,7 +133,7 @@ export const MidnightGlowAnnouncements = () => {
                     className="z-10 flex flex-col items-center justify-center shrink-0 text-center mt-2"
                 >
                     <p className="text-[10px] tracking-[0.5em] text-[#4F7FFF] uppercase font-bold mb-2">Tablón de Información</p>
-                    <h1 className="text-3xl uppercase text-white tracking-tight leading-none mb-4">
+                    <h1 className="text-2xl uppercase text-white tracking-tight leading-none mb-4">
                         <span className="font-thin opacity-50">ANUNCIOS</span> <span className="font-black text-[#A3FF57]">IMPORTANTES</span>
                     </h1>
                     {/* Glowing Top Badge (now Bottom) */}
