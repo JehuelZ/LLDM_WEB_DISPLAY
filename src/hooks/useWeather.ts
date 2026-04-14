@@ -40,7 +40,7 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
                 temp: Math.round(data.current_weather.temperature),
                 condition: weatherCodeMap[data.current_weather.weathercode] || 'Despejado',
                 icon: data.current_weather.weathercode.toString(),
-                forecast: data.daily.time.slice(0, 4).map((time: string, i: number) => ({
+                forecast: data.daily.time.slice(0, 5).map((time: string, i: number) => ({
                     date: time,
                     temp: Math.round(data.daily.temperature_2m_max[i]),
                     icon: data.daily.weathercode[i].toString()
