@@ -192,7 +192,7 @@ export function MidnightGlowCalendar() {
 
                             {/* Day number */}
                             <div className="flex items-center justify-between px-3 pt-2">
-                                <span className={`text-[18px] font-black leading-none ${isToday ? 'text-[#A3FF57] drop-shadow-[0_0_8px_rgba(163,255,87,0.6)]' :
+                                <span className={`text-[14px] font-black leading-none ${isToday ? 'text-[#A3FF57] drop-shadow-[0_0_8px_rgba(163,255,87,0.6)]' :
                                     isWeekend ? 'text-[#4F7FFF]/50' : 'text-white/60'
                                     }`}>
                                     {format(day, 'd')}
