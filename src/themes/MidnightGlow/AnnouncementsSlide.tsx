@@ -179,10 +179,16 @@ export const MidnightGlowAnnouncements = () => {
                                 <motion.div
                                     className="mt-6 px-10 py-3 rounded-3xl bg-[#040D21]/95 border-2 border-[#A3FF57]/50 shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center"
                                 >
-                                    <span className="text-[11px] font-black text-[#A3FF57] uppercase tracking-[0.3em] mb-1 opacity-90 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">Ministro</span>
+                                    <span className="text-[11px] font-black text-[#A3FF57] uppercase tracking-[0.3em] mb-1 opacity-90 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">
+                                        {minister.role || 'Ministro'}
+                                    </span>
                                     <span className="text-[20px] font-black text-white uppercase tracking-[0.05em] leading-none text-center">
                                         {minister.name}
                                     </span>
+                                    <div className="mt-2 flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                                        <Church className="w-3 h-3 text-[#4F7FFF]" />
+                                        <span className="text-[9px] font-bold text-white/50 uppercase tracking-widest">{settings.mainChurchName || 'Congregación Local'}</span>
+                                    </div>
                                 </motion.div>
                             </div>
                         </div>
@@ -201,15 +207,21 @@ export const MidnightGlowAnnouncements = () => {
                             <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#4F7FFF]/50" />
                         </div>
 
-                        <div className="flex flex-col gap-4 w-full text-[12px] font-bold text-[#4F7FFF] tracking-[0.2em] uppercase z-10 px-4">
+                        <div className="flex flex-col gap-3 w-full text-[12px] font-bold text-white/80 tracking-[0.2em] uppercase z-10 px-6">
                             {minister.phone && (
-                                <div className="p-4 bg-[#040D21]/95 rounded-2xl border-2 border-[#1E3A6E]/50 text-center flex items-center justify-center gap-3 shadow-lg">
-                                    <Phone className="w-4 h-4 text-[#A3FF57]" /> {minister.phone}
+                                <div className="p-3.5 bg-[#040D21]/95 rounded-2xl border border-[#1E3A6E]/50 flex items-center gap-4 shadow-lg hover:border-[#4F7FFF]/30 transition-colors">
+                                    <div className="w-8 h-8 rounded-lg bg-[#A3FF57]/10 flex items-center justify-center">
+                                        <Phone className="w-4 h-4 text-[#A3FF57]" />
+                                    </div>
+                                    <span className="truncate">{minister.phone}</span>
                                 </div>
                             )}
                             {minister.email && (
-                                <div className="p-4 bg-[#040D21]/95 rounded-2xl border-2 border-[#1E3A6E]/50 text-center truncate flex items-center justify-center gap-3 shadow-lg">
-                                    <Mail className="w-4 h-4 text-[#A3FF57]" /> {minister.email}
+                                <div className="p-3.5 bg-[#040D21]/95 rounded-2xl border border-[#1E3A6E]/50 flex items-center gap-4 shadow-lg hover:border-[#4F7FFF]/30 transition-colors">
+                                    <div className="w-8 h-8 rounded-lg bg-[#4F7FFF]/10 flex items-center justify-center">
+                                        <Mail className="w-4 h-4 text-[#4F7FFF]" />
+                                    </div>
+                                    <span className="truncate text-[10px]">{minister.email}</span>
                                 </div>
                             )}
                         </div>
