@@ -27,10 +27,10 @@ const FullscreenButton = () => {
     return (
         <button
             onClick={toggleFullscreen}
-            className="fixed bottom-10 right-10 z-[500] p-4 rounded-full bg-black/40 border border-white/20 text-white hover:text-primary hover:border-primary hover:bg-black/60 hover:scale-110 transition-all duration-300 backdrop-blur-xl group cursor-pointer"
+            className="fixed bottom-4 right-4 z-[999] p-4 rounded-full bg-black/40 border border-white/10 text-white/50 hover:text-white hover:border-white/40 hover:bg-black/80 hover:scale-110 transition-all duration-300 backdrop-blur-xl group cursor-pointer opacity-40 hover:opacity-100"
             title="Pantalla Completa"
         >
-            <Maximize className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
+            <Maximize className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
         </button>
     );
 };
@@ -363,7 +363,7 @@ export default function DisplayPage() {
 
             {/* Performance Mode Indicator removed as requested - Hidden but functional */}
 
-            <div className="fixed bottom-10 right-10 z-[500] flex gap-4 opacity-0 hover:opacity-100 transition-opacity">
+            <div className="fixed bottom-4 right-4 z-[999] flex gap-4">
                 <FullscreenButton />
             </div>
 
