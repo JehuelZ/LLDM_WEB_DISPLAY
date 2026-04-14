@@ -113,7 +113,7 @@ export function MidnightGlowCalendar() {
             <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-[#A3FF57]/5 blur-[80px] rounded-full pointer-events-none" />
 
             {/* ── MAIN CONTENT WRAPPER: Centered vertically ── */}
-            <div className="z-10 flex-1 flex flex-col justify-center gap-2">
+            <div className="z-10 flex-1 flex flex-col justify-center gap-2 pb-16">
 
                 {/* ── DAYS OF WEEK HEADER ── */}
                 <div className="grid grid-cols-7 gap-10 w-[94%] mx-auto mb-2 shrink-0">
@@ -366,7 +366,7 @@ export function MidnightGlowCalendar() {
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="z-10 flex flex-col items-center justify-center shrink-0 text-center pb-8"
+                    className="z-10 flex flex-col items-center justify-center shrink-0 text-center mt-2 pb-12"
                 >
                     <p className="text-[10px] tracking-[0.5em] text-[#4F7FFF] uppercase font-bold mb-2">Vista General Organizacional</p>
                     <h1 className="text-3xl font-black text-white tracking-tight leading-none mb-4">
