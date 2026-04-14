@@ -386,9 +386,7 @@ export function MidnightGlowCalendar() {
 
             </div>
 
-            <div className="absolute bottom-4 right-10 text-[8px] tracking-[0.5em] text-white/10 font-mono uppercase select-none">
-                LLDM · TC-OVERDRIVE V3
-            </div>
+            {/* Branding removed */}
 
         </div >
     );

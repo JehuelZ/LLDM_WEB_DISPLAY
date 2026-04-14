@@ -90,10 +90,7 @@ export const MidnightGlowAnnouncements = () => {
                                         </p>
                                     </div>
 
-                                    {/* Bottom corner watermark */}
-                                    <div className="absolute bottom-4 right-6 text-[10px] tracking-[0.3em] text-white/20 font-mono uppercase select-none">
-                                        LLDM · TC-ANN
-                                    </div>
+                                    {/* Watermark removed */}
 
                                     {/* LIVE Bottom Glow for Attention Announcements */}
                                     {isUrgent && (

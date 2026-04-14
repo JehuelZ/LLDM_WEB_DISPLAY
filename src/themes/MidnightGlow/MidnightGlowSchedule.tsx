@@ -254,9 +254,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
             </div>
 
             {/* Bottom corner */}
-            <div className="absolute bottom-4 right-6 text-[10px] tracking-[0.3em] text-white/20 font-mono uppercase select-none">
-                LLDM · TC-OVERDRIVE V3
-            </div>
+            {/* Bottom corner watermark removed */}
         </motion.div>
     );
 
@@ -577,9 +575,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                     {/* (Contenido limpio) */}
                                 </div>
 
-                                <div className="absolute bottom-4 right-6 text-[10px] tracking-[0.3em] text-white/20 font-mono uppercase select-none">
-                                    LLDM · {type.toUpperCase()} V3
-                                </div>
+                                {/* Bottom corner watermark removed */}
                             </motion.div>
                         );
                     }
@@ -836,7 +832,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                 transition={{ delay: 0.8 }}
                 className="z-10 mt-10 text-[9px] tracking-[0.6em] text-white/10 uppercase font-mono select-none"
             >
-                LLDM · RODEO · TECH CORPORATE THEME V3
+                {/* Footer branding removed */}
             </motion.p >
         </div >
     );
