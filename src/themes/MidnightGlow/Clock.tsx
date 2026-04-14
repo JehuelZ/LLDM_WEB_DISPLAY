@@ -45,7 +45,25 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                 {/* ── WEATHER SECTION ── */}
                 {weather && isMounted && (
                     <div className="flex items-center gap-4 mr-8 border-r border-white/10 pr-8">
-                        {weather.forecast.map((day, idx) => (
+                        {/* Current Weather Highlight */}
+                        <div className="flex items-center gap-3 mr-4 border-r border-white/5 pr-4">
+                            <div className="relative">
+                                <div className="absolute inset-0 bg-[#A3FF57] blur-md opacity-20 scale-150" />
+                                <div className="relative z-10 scale-125">
+                                    {getWeatherIcon(weather.icon)}
+                                </div>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-[7px] font-black text-[#A3FF57] uppercase tracking-[0.2em] -mb-1 opacity-80">Ahora</span>
+                                <div className="flex items-start">
+                                    <span className="text-[18px] font-black text-white leading-none tracking-tighter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{weather.temp}</span>
+                                    <span className="text-[10px] font-bold text-[#A3FF57]">°</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Future Forecast (Next 4 days) */}
+                        {weather.forecast.slice(1, 5).map((day, idx) => (
                             <div key={day.date} className="flex items-center gap-2">
                                 <div className="relative">
                                     <div className="absolute inset-0 bg-current blur-md opacity-20 scale-125" style={{ color: 'inherit' }} />
@@ -62,7 +80,7 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                                         <span className="text-[7px] font-bold text-[#A3FF57]">°</span>
                                     </div>
                                 </div>
-                                {idx < weather.forecast.length - 1 && (
+                                {idx < 3 && (
                                     <div className="w-[1px] h-3 bg-white/5 ml-2" />
                                 )}
                             </div>
