@@ -61,12 +61,12 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                 {/* Time Display */}
                 <div className="flex flex-col justify-center">
                     <div className="flex items-end gap-3 -mb-1">
-                        <span className="text-[5.5rem] leading-[0.85] font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        <span className="text-[2.75rem] leading-[0.85] font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
                             {isMounted ? format(now, 'HH:mm') : '--:--'}
                         </span>
 
                         <div className="flex flex-col pb-1">
-                            <span className="text-3xl font-black text-[#A3FF57] leading-none tracking-widest drop-shadow-[0_0_15px_rgba(163,255,87,0.5)]">
+                            <span className="text-xl font-black text-[#A3FF57] leading-none tracking-widest drop-shadow-[0_0_15px_rgba(163,255,87,0.5)]">
                                 {isMounted ? format(now, 'ss') : '--'}
                             </span>
                             <span className="text-sm font-black text-[#4F7FFF] uppercase tracking-[0.2em] mt-1 drop-shadow-md">
