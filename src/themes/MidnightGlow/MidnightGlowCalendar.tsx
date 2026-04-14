@@ -113,10 +113,10 @@ export function MidnightGlowCalendar() {
             <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-[#A3FF57]/5 blur-[80px] rounded-full pointer-events-none" />
 
             {/* ── DAYS OF WEEK HEADER ── */}
-            <div className="z-10 grid grid-cols-7 gap-10 w-[94%] mx-auto pt-16 mb-2 shrink-0">
+            <div className="z-10 grid grid-cols-7 gap-10 w-[94%] mx-auto pt-6 mb-2 shrink-0">
                 {DAYS_OF_WEEK.map((day) => (
                     <div key={day} className="text-center py-1.5">
-                        <span className="text-[10px] font-black tracking-[0.3em] text-[#4F7FFF] uppercase">{day}</span>
+                        <span className="text-[12px] font-black tracking-[0.3em] text-[#4F7FFF] uppercase">{day}</span>
                     </div>
                 ))}
             </div>
@@ -126,7 +126,7 @@ export function MidnightGlowCalendar() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.15 }}
-                className="z-10 grid grid-cols-7 gap-4 w-[85%] mx-auto pb-10 min-h-0 place-content-center flex-1"
+                className="z-10 grid grid-cols-7 gap-4 w-[85%] mx-auto pb-2 min-h-0 place-content-center flex-1"
                 style={{ gridAutoRows: 'min-content' }}
             >
                 {/* Blank cells for day offset */}
@@ -175,7 +175,7 @@ export function MidnightGlowCalendar() {
                             transition={{ delay: 0.02 * idx, duration: 0.3 }}
                             className={`
                                 relative flex flex-col rounded-2xl overflow-hidden border transition-all duration-300
-                                aspect-square
+                                aspect-[1.4/1]
                                 ${isToday
                                     ? 'border-2 border-[#A3FF57]/70 bg-[#0D1B3E] shadow-[0_0_40px_rgba(163,255,87,0.3),inset_0_0_20px_rgba(163,255,87,0.05)]'
                                     : is14th
