@@ -353,22 +353,7 @@ export function MidnightGlowCalendar() {
                                 )}
                             </div>
 
-                            {/* Subtle schedule indicator dots */}
-                            {
-                                sched && (
-                                    <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-0.5">
-                                        {sched.slots?.['5am']?.leaderId && (
-                                            <div className="w-1 h-1 rounded-full bg-[#4F7FFF]/60" />
-                                        )}
-                                        {sched.slots?.['9am']?.consecrationLeaderId && (
-                                            <div className="w-1 h-1 rounded-full bg-[#4F7FFF]/40" />
-                                        )}
-                                        {sched.slots?.evening?.leaderIds?.[0] && (
-                                            <div className={`w-1 h-1 rounded-full ${isToday ? 'bg-[#A3FF57]/80' : 'bg-[#4F7FFF]/60'}`} />
-                                        )}
-                                    </div>
-                                )
-                            }
+
                         </motion.div>
                     );
                 })}
