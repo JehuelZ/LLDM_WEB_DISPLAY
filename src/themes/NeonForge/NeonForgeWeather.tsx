@@ -102,8 +102,8 @@ export function NeonForgeWeather() {
         <div className="h-full w-full flex overflow-hidden relative pt-20 pb-6"
             style={{ background: T.bg, fontFamily: 'var(--font-sora, ui-sans-serif)' }}>
 
-            {/* ── LEFT PANEL — fills full height minus padding ── */}
-            <div className="flex flex-col px-10 gap-5 min-h-0" style={{ width: '40%' }}>
+            {/* ── LEFT PANEL — shifted for vertical dashboard compatibility ── */}
+            <div className="flex flex-col pl-72 pr-10 gap-5 min-h-0" style={{ width: '50%' }}>
 
                 {/* Header — shrink-0 */}
                 <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} className="shrink-0">

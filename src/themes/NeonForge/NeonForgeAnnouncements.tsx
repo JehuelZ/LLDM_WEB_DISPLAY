@@ -24,7 +24,7 @@ export function NeonForgeAnnouncements() {
             style={{ background: T.bg, fontFamily: 'var(--font-sora, ui-sans-serif)' }}>
 
             {/* Left — main content */}
-            <div className="flex-1 flex flex-col px-10 pt-20 pb-8 min-w-0 z-10">
+            <div className="flex-1 flex flex-col pl-72 pr-10 pt-20 pb-8 min-w-0 z-10">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -12 }}
