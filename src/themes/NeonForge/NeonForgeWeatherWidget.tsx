@@ -168,89 +168,101 @@ export function NeonForgeWeatherWidget() {
                 style={{ top: '240px', left: '24px' }}
             >
                 <div style={{
-                    width: '200px',
-                    background: 'linear-gradient(150deg, rgba(15,15,15,0.95) 0%, rgba(5,5,5,0.98) 100%)',
-                    backdropFilter: 'blur(32px)',
+                    width: '180px',
+                    background: 'rgba(10, 10, 10, 0.8)',
+                    backdropFilter: 'blur(40px)',
                     border: `1.5px solid ${A}30`,
-                    borderRadius: '24px',
-                    boxShadow: `0 12px 60px rgba(0,0,0,0.7), 0 0 40px ${A}10`,
+                    borderRadius: '28px',
+                    boxShadow: `0 20px 80px rgba(0,0,0,0.8), 0 0 40px ${A}10`,
                     overflow: 'hidden',
-                    position: 'relative'
+                    display: 'flex',
+                    flexDirection: 'column'
                 }}>
-                    {/* Top neon stripe */}
-                    <div style={{
-                        position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
-                        background: `linear-gradient(90deg, transparent 0%, ${A}CC 40%, ${A}CC 60%, transparent 100%)`,
-                    }} />
+                    {/* ── TOP SECTION: Main Focus ── */}
+                    <div style={{ 
+                        padding: '24px 20px 16px', 
+                        background: `linear-gradient(180deg, ${A}08 0%, transparent 100%)`,
+                        borderBottom: `1px solid ${A}15`
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '12px' }}>
+                            <MapPin style={{ width: '12px', height: '12px', color: A }} />
+                            <p style={{ fontSize: '10px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.15em', color: '#fff', opacity: 0.6 }}>
+                                {cityData.name}
+                            </p>
+                        </div>
 
-                    {/* ── TOP SECTION: City & Current Temp ── */}
-                    <div style={{ padding: '16px 16px 8px' }}>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <MapPin style={{ width: '10px', height: '10px', color: A }} />
-                                <p style={{ fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#fff', opacity: 0.6 }}>
-                                    {cityData.name}
-                                </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ width: '64px', height: '64px', margin: '4px 0' }}>
+                                {info?.icon}
                             </div>
-
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <div style={{ display: 'flex', alignItems: 'baseline' }}>
-                                    <span style={{ fontSize: '36px', fontWeight: 900, lineHeight: 1, color: A, textShadow: `0 0 20px ${A}40`, fontFamily: 'var(--font-sora, ui-sans-serif)' }}>
-                                        {current ? `${current.temp > 0 ? '+' : ''}${current.temp}` : '--'}
-                                    </span>
-                                    <span style={{ fontSize: '14px', fontWeight: 800, color: `${A}80`, marginLeft: '2px' }}>°{isCelsius ? 'C' : 'F'}</span>
-                                </div>
-                                <div style={{ width: '44px', height: '44px' }}>{info?.icon}</div>
-                            </div>
-                            
-                            {info && (
-                                <span style={{ fontSize: '8px', fontWeight: 900, color: A, letterSpacing: '0.1em', textTransform: 'uppercase', opacity: 0.8 }}>
-                                    {info.label}
+                            <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                                <span style={{ fontSize: '48px', fontWeight: 900, lineHeight: 1, color: A, textShadow: `0 0 30px ${A}50`, fontFamily: 'var(--font-sora, ui-sans-serif)' }}>
+                                    {current ? (current.temp > 0 ? `+${current.temp}` : current.temp) : '--'}
                                 </span>
-                            )}
+                                <span style={{ fontSize: '16px', fontWeight: 800, color: `${A}80`, marginLeft: '4px' }}>°{isCelsius ? 'C' : 'F'}</span>
+                            </div>
+                            <span style={{ fontSize: '9px', fontWeight: 900, color: A, letterSpacing: '0.2em', textTransform: 'uppercase' }}>
+                                {info?.label}
+                            </span>
                         </div>
                     </div>
 
-                    {/* ── STATS GRID ── */}
-                    {current && (
-                        <div style={{ padding: '0 16px 12px' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', background: 'rgba(255,255,255,0.03)', padding: '8px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <Droplets style={{ width: '10px', height: '10px', color: '#60A5FA' }} />
-                                    <p style={{ fontSize: '10px', fontWeight: 900, color: '#FFFFFF' }}>{current.humidity}%</p>
-                                </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                    <Wind style={{ width: '10px', height: '10px', color: '#34D399' }} />
-                                    <p style={{ fontSize: '10px', fontWeight: 900, color: '#FFFFFF' }}>{current.wind}</p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Divider */}
-                    <div style={{ height: '1px', margin: '0 16px', background: `linear-gradient(90deg, transparent, ${A}30, transparent)` }} />
-
-                    {/* ── VERTICAL FORECAST ── */}
-                    <div style={{ display: 'flex', flexDirection: 'column', padding: '12px', gap: '4px' }}>
+                    {/* ── VERTICAL FORECAST (THE FOCUS) ── */}
+                    <div style={{ display: 'flex', flexDirection: 'column', padding: '16px 12px', gap: '6px' }}>
+                        <p style={{ fontSize: '8px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.3)', marginBottom: '4px', paddingLeft: '8px' }}>
+                            Pronóstico 5 Días
+                        </p>
                         {forecast.map((day, i) => {
                             const dayInfo = getWeatherInfo(day.code);
                             const isToday = i === 0;
                             return (
-                                <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 10px', borderRadius: '10px', background: isToday ? `${A}12` : 'transparent', border: isToday ? `1px solid ${A}20` : 'none' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <p style={{ fontSize: '8px', fontWeight: 900, textTransform: 'uppercase', width: '28px', color: isToday ? A : 'rgba(255,255,255,0.4)' }}>
-                                            {DAYS_ES[day.date.getDay()]}
-                                        </p>
-                                        <span style={{ fontSize: '14px' }}>{dayInfo.mini}</span>
+                                <motion.div 
+                                    key={i} 
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    style={{ 
+                                        display: 'flex', 
+                                        alignItems: 'center', 
+                                        justifyContent: 'space-between', 
+                                        padding: '8px 12px', 
+                                        borderRadius: '16px', 
+                                        background: isToday ? `${A}12` : 'rgba(255,255,255,0.03)', 
+                                        border: isToday ? `1px solid ${A}30` : '1px solid rgba(255,255,255,0.05)',
+                                        boxShadow: isToday ? `0 0 20px ${A}10` : 'none'
+                                    }}
+                                >
+                                    <p style={{ fontSize: '9px', fontWeight: 900, textTransform: 'uppercase', width: '32px', color: isToday ? A : 'rgba(255,255,255,0.5)' }}>
+                                        {DAYS_ES[day.date.getDay()]}
+                                    </p>
+                                    <span style={{ fontSize: '16px' }}>{dayInfo.mini}</span>
+                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', minWidth: '35px', justifyContent: 'flex-end' }}>
+                                        <p style={{ fontSize: '11px', fontWeight: 900, color: isToday ? A : '#fff' }}>{day.tempMax}°</p>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                        <p style={{ fontSize: '10px', fontWeight: 900, color: isToday ? A : '#fff' }}>{day.tempMax}°</p>
-                                        <p style={{ fontSize: '7px', color: 'rgba(255,255,255,0.2)' }}>{day.tempMin}°</p>
-                                    </div>
-                                </div>
+                                </motion.div>
                             );
                         })}
                     </div>
+
+                    {/* ── MINIMAL FOOTER STATS ── */}
+                    {current && (
+                        <div style={{ 
+                            padding: '12px 16px', 
+                            background: 'rgba(0,0,0,0.2)', 
+                            borderTop: '1px solid rgba(255,255,255,0.05)',
+                            display: 'flex',
+                            justifyContent: 'space-between'
+                        }}>
+                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Droplets style={{ width: '10px', height: '10px', color: '#60A5FA' }} />
+                                <p style={{ fontSize: '9px', fontWeight: 800, color: 'rgba(255,255,255,0.6)' }}>{current.humidity}%</p>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Wind style={{ width: '10px', height: '10px', color: '#34D399' }} />
+                                <p style={{ fontSize: '9px', fontWeight: 800, color: 'rgba(255,255,255,0.6)' }}>{current.wind} km/h</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </motion.div>
         </AnimatePresence>
