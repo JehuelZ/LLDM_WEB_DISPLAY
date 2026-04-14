@@ -87,12 +87,13 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
 
     return (
         <>
+            {/* Top Fixed Header (Global Static Dashboard) */}
             <div style={{
                 position: 'absolute', top: 30, left: 24, right: 24,
                 zIndex: 30, pointerEvents: 'none'
             }}>
                 <div style={{ pointerEvents: 'auto' }}>
-                    {/* Unified Header Mega-Box */}
+                    {/* Unified Header Mega-Box (Logo + Theme + Weather + Clock) — ALWAYS VISIBLE */}
                     {(() => {
                         const curMin = currentTime.getHours() * 60 + currentTime.getMinutes();
                         const isSunToday = currentTime.getDay() === 0;
@@ -218,7 +219,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                         </div>
                                     )}
 
-                                    {/* Weather Lite Segment (Stay in Header) */}
+                                    {/* Weather Lite Segment (Stay in Header) — RE-VERIFIED: NO FORECAST STRIP */}
                                     <div style={{ 
                                         display: 'flex', alignItems: 'center', gap: 20, padding: '0 40px', 
                                         borderLeft: `1px solid ${T.borderAccent}`, flexShrink: 0, 
@@ -252,46 +253,6 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                     })()}
                 </div>
             </div>
-
-            {/* VERTICAL WEATHER FORECAST (Sidebar Style) */}
-            {weather?.forecast && (
-                <div style={{
-                    position: 'absolute', top: 220, left: 24,
-                    zIndex: 40, width: 140,
-                    display: 'flex', flexDirection: 'column', gap: 10,
-                    pointerEvents: 'auto'
-                }}>
-                    {weather.forecast.slice(1, 6).map((day, i) => {
-                        const dateNum = new Date(day.date + 'T12:00:00');
-                        return (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                style={{
-                                    background: isDark ? 'rgba(30,35,45,0.7)' : `${T.surface}EE`,
-                                    backdropFilter: 'blur(20px)',
-                                    borderRadius: 24, padding: '12px 16px',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                                    boxShadow: isDark ? '8px 8px 20px rgba(0,0,0,0.4)' : neuShadow(T, false, 'sm', isDark),
-                                    border: `1px solid ${T.accent}15`
-                                }}
-                            >
-                                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                    <span style={{ fontSize: 10, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase' }}>
-                                        {format(dateNum, 'EEE', { locale: es })}
-                                    </span>
-                                    <WeatherIcon code={day.icon} className="text-[#339AF0] mt-1" size={16} />
-                                </div>
-                                <span style={{ fontSize: 16, fontWeight: 700, color: T.textPrimary }}>
-                                    {day.temp}°
-                                </span>
-                            </motion.div>
-                        );
-                    })}
-                </div>
-            )}
 
             <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
