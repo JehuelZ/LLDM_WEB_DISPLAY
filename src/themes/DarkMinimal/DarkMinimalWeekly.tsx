@@ -164,12 +164,12 @@ export function DarkMinimalWeekly() {
                         <div className="flex flex-col leading-tight min-w-0">
                             <span
                                 className={`font-black leading-none break-words ${color}`}
-                                style={{ fontSize: 'clamp(15px, 2.2vw, 22px)' }}
+                                style={{ fontSize: 'clamp(12px, 1.2vw, 15px)' }}
                             >
                                 {displayName(name)}
                             </span>
                             {role && (
-                                <span className="text-[9px] font-bold uppercase tracking-widest text-[#4B5563] mt-[3px]">
+                                <span className="text-[7.5px] font-bold uppercase tracking-[0.2em] text-[#4B5563] mt-[2px]">
                                     {role}
                                 </span>
                             )}
@@ -218,7 +218,7 @@ export function DarkMinimalWeekly() {
                             <div className="flex flex-col flex-1 min-h-0 divide-y divide-[#1E1F28] overflow-hidden">
 
                                 {/* 5 AM */}
-                                <div className="px-3 py-3 flex flex-col gap-2 min-h-0">
+                                <div className="px-3 py-1.5 flex flex-col gap-2 min-h-0">
                                     <div className="flex items-center justify-between">
                                         <span className="text-[7px] font-bold uppercase tracking-widest text-[#4B5563]">05 AM</span>
                                         {isSlotActive(dateKey, '5am') && (
@@ -234,7 +234,7 @@ export function DarkMinimalWeekly() {
                                             <BigName
                                                 name={leader5am.name}
                                                 color={isToday ? 'text-white' : 'text-[#D1D5DB]'}
-                                                role={slot5am?.customLabel || 'Consagración'}
+                                                role={slot5am?.customLabel || 'Oración'}
                                             />
                                         </div>
                                     ) : (
@@ -243,7 +243,7 @@ export function DarkMinimalWeekly() {
                                 </div>
 
                                 {/* 9 AM / Sunday */}
-                                <div className="px-3 py-3 flex flex-col gap-2 min-h-0">
+                                <div className="px-3 py-1.5 flex flex-col gap-2 min-h-0">
                                     <div className="flex items-center justify-between">
                                         <span className="text-[7px] font-bold uppercase tracking-widest text-[#4B5563]">
                                             {isSunday ? '10 AM' : '09 AM'}
@@ -260,7 +260,7 @@ export function DarkMinimalWeekly() {
                                             <Crown className="w-4 h-4 text-[#F59E0B] shrink-0" />
                                             <span
                                                 className="font-bold text-[#F59E0B] break-words leading-tight"
-                                                style={{ fontSize: 'clamp(13px, 1.7vw, 18px)' }}
+                                                style={{ fontSize: 'clamp(11px, 1.1vw, 14px)' }}
                                             >
                                                 {sundayLabel}
                                             </span>
@@ -273,7 +273,7 @@ export function DarkMinimalWeekly() {
                                                     <BigName
                                                         name={leader9amCons.name || leader9amDoc.name}
                                                         color={isToday ? 'text-[#3B82F6]' : 'text-[#D1D5DB]'}
-                                                        role={leader9amCons.name && leader9amDoc.name ? "Consagración y Doctrina" : (leader9amCons.name ? "Consagración" : "Doctrina")}
+                                                        role={leader9amCons.name && leader9amDoc.name ? "Oración y Doctrina" : (leader9amCons.name ? "Oración" : "Doctrina")}
                                                     />
                                                 </div>
                                             ) : (
@@ -284,7 +284,7 @@ export function DarkMinimalWeekly() {
                                                             <BigName
                                                                 name={leader9amCons.name}
                                                                 color={isToday ? 'text-white' : 'text-[#D1D5DB]'}
-                                                                role="Consagración"
+                                                                role="Oración"
                                                             />
                                                         </div>
                                                     )}
@@ -307,7 +307,7 @@ export function DarkMinimalWeekly() {
                                 </div>
 
                                 {/* Evening — flex-1, avatar más grande */}
-                                <div className="px-3 py-3 flex flex-col gap-2 flex-1 min-h-0">
+                                <div className="px-3 py-1.5 flex flex-col gap-2 flex-1 min-h-0">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <span className={`text-[7px] font-bold uppercase tracking-widest ${isToday ? 'text-[#3B82F6]' : 'text-[#4B5563]'}`}>
@@ -337,7 +337,7 @@ export function DarkMinimalWeekly() {
                                                     <BigName
                                                         name={leaderEv1.name}
                                                         color={isToday ? 'text-[#3B82F6]' : 'text-[#D1D5DB]'}
-                                                        role={slotEv?.customLabel || (isSunday ? 'Director' : 'Consagración y Doctrina')}
+                                                        role={slotEv?.customLabel || (isSunday ? 'Director' : 'Oración y Doctrina')}
                                                     />
                                                 </div>
                                             ) : (
@@ -367,14 +367,6 @@ export function DarkMinimalWeekly() {
                                 </div>
                             </div>
 
-                            {/* Bottom dot indicators */}
-                            {hasAnyData && (
-                                <div className={`px-3 py-1.5 shrink-0 border-t ${isToday ? 'border-[#3B82F6]/20' : 'border-[#1E1F28]'} flex items-center gap-1`}>
-                                    {sched?.slots?.['5am']?.leaderId && <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]/50" />}
-                                    {(sched?.slots?.['9am']?.consecrationLeaderId || sched?.slots?.['9am']?.sundayType) && <div className="w-1.5 h-1.5 rounded-full bg-[#60A5FA]/40" />}
-                                    {sched?.slots?.evening?.leaderIds?.[0] && <div className={`w-1.5 h-1.5 rounded-full ${isToday ? 'bg-[#3B82F6]' : 'bg-[#3B82F6]/50'}`} />}
-                                </div>
-                            )}
                         </motion.div>
                     );
                 })}

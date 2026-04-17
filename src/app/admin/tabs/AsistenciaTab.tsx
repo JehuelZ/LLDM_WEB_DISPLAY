@@ -217,7 +217,7 @@ export const AsistenciaTab = ({
             <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-3 ml-2">
                     <Church className="w-4 h-4 text-emerald-500" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Filtrar por Congregación:</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Filtrar por Iglesia:</span>
                 </div>
                 <div className="admin-member-filters-bar flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto scrollbar-hide w-full">
                     {[

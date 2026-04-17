@@ -480,7 +480,7 @@ export const AjustesTab = ({
                     </div>
                 </TactileGlassCard>
 
-                <TactileGlassCard title="JERARQUÍA Y MISIONES (OBRAS)">
+                <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
                     <div className="space-y-6">
                         <div className="p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 block">IGLESIA PRINCIPAL</label>
@@ -511,7 +511,7 @@ export const AjustesTab = ({
 
                         <div className="pt-4 border-t border-[var(--tactile-border)]">
                             <div className="flex items-center justify-between mb-6">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">MISIONES / OBRAS DEPENDIENTES</label>
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">IGLESIAS / OBRAS DEPENDIENTES</label>
                                 <button 
                                     onClick={() => setEditingCongregation({ 
                                         info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
@@ -556,7 +556,7 @@ export const AjustesTab = ({
                                                             const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
                                                             setSettings({ ...settings, missions: filtered });
                                                             saveSettingsToCloud({ missions: filtered });
-                                                            showNotification('Misión eliminada correctamente.', 'success');
+                                                            showNotification('Obra eliminada correctamente.', 'success');
                                                         }}
                                                         className="w-10 h-10 bg-rose-500/10 text-rose-500 rounded-md border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
                                                     >
@@ -605,7 +605,7 @@ export const AjustesTab = ({
                                     newMissions[editingCongregation.index] = updated;
                                 }
                                 await saveSettingsToCloud({ missions: newMissions });
-                                showNotification(`Misión "${updated.name}" guardada.`, 'success');
+                                showNotification(`Obra "${updated.name}" guardada.`, 'success');
                             }
                         }}
                     />
@@ -615,7 +615,7 @@ export const AjustesTab = ({
                     <div className="space-y-8">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {[
-                                { id: 'iglesia', label: 'Cátedra Oficial', icon: Church, desc: 'Diseño institucional tradicional.' },
+                                { id: 'iglesia', label: 'Estilo Institucional', icon: Church, desc: 'Diseño institucional tradicional.' },
                                 { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Efectos de vidrio y modernismo.' },
                                 { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia y colores sólidos.' },
                                 { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Resplandores suaves nocturnos.' },

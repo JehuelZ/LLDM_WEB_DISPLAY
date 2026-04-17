@@ -85,7 +85,7 @@ const MessagesPanel = ({
                                 settings.adminTheme === 'primitivo' ? "bg-gradient-to-r from-foreground/10 via-foreground/5 to-transparent" : "bg-gradient-to-r from-[var(--tactile-border-strong)] via-[var(--tactile-border)] to-transparent"
                             )} />
                         </CardTitle>
-                        <CardDescription className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mt-3 ml-1">comunicaciones de la congregación</CardDescription>
+                        <CardDescription className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mt-3 ml-1">comunicaciones de la iglesia</CardDescription>
                     </div>
                 </div>
             </CardHeader>
