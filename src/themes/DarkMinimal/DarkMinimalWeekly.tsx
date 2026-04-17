@@ -137,7 +137,7 @@ export function DarkMinimalWeekly() {
             </motion.div>
 
             {/* ── 7 COLUMNS ── */}
-            <div className="z-10 flex-1 flex gap-2 px-5 pb-5 min-h-0 w-full">
+            <div className="z-10 flex-1 flex gap-2 px-5 pb-5 min-h-0 w-full justify-center items-center">
                 {daysProgram.map(({ dateKey, dayName, dayNum, sched, isToday }, colIdx) => {
                     const isSunday = dayName === 'DOM' || dayName === 'DOMINGO';
 
@@ -182,7 +182,7 @@ export function DarkMinimalWeekly() {
                             initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.05 * colIdx, type: 'spring', stiffness: 100 }}
-                            className={`flex-1 flex flex-col rounded-2xl border overflow-hidden transition-all duration-300
+                            className={`flex flex-col rounded-2xl border overflow-hidden transition-all duration-300 w-full
                                 ${isToday
                                     ? 'border-[#3B82F6] bg-[#1C1E2C]'
                                     : 'border-[#1E1F28] bg-[#16171F]'
@@ -215,7 +215,7 @@ export function DarkMinimalWeekly() {
                             </div>
 
                             {/* ── SERVICE ROWS — avatar + big name ── */}
-                            <div className="flex flex-col flex-1 min-h-0 divide-y divide-[#1E1F28] overflow-hidden">
+                            <div className="flex flex-col min-h-0 divide-y divide-[#1E1F28] overflow-hidden">
 
                                 {/* 5 AM */}
                                 <div className="px-3 py-1.5 flex flex-col gap-2 min-h-0">
@@ -307,7 +307,7 @@ export function DarkMinimalWeekly() {
                                 </div>
 
                                 {/* Evening — flex-1, avatar más grande */}
-                                <div className="px-3 py-1.5 flex flex-col gap-2 flex-1 min-h-0">
+                                <div className="px-3 py-1.5 flex flex-col gap-2 min-h-0">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-2">
                                             <span className={`text-[7px] font-bold uppercase tracking-widest ${isToday ? 'text-[#3B82F6]' : 'text-[#4B5563]'}`}>
