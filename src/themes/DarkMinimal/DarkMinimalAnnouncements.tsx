@@ -7,8 +7,16 @@ import { useAppStore } from '@/lib/store';
 export const DarkMinimalAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
     const settings = useAppStore((state) => state.settings);
-    const minister = useAppStore((state) => state.minister);
+    const ministerStore = useAppStore((state) => state.minister);
     const announcements = useMemo(() => allAnnouncements.filter(a => a.active), [allAnnouncements]);
+
+    // Priority: Settings (Admin inputs) > Store object (Official Profile)
+    const displayMinister = {
+        name: settings.ministerName || ministerStore.name,
+        phone: settings.ministerPhone || ministerStore.phone,
+        email: settings.ministerEmail || ministerStore.email,
+        avatar: settings.ministerAvatar || ministerStore.avatar,
+    };
 
     return (
         <div
@@ -128,14 +136,14 @@ export const DarkMinimalAnnouncements = () => {
                         {/* Avatar */}
                         <div className="flex flex-col items-center pt-8 pb-4 px-6">
                             <div className="w-32 h-32 rounded-2xl overflow-hidden border-2 border-[#3B82F6]/40 bg-[#16171F] flex items-center justify-center shadow-[0_8px_32px_rgba(59,130,246,0.15)]">
-                                {minister.avatar
-                                    ? <img src={minister.avatar} className="w-full h-full object-cover" alt="" />
+                                {displayMinister.avatar
+                                    ? <img src={displayMinister.avatar} className="w-full h-full object-cover" alt="" />
                                     : <Church className="w-12 h-12 text-[#3B82F6]/40" />
                                 }
                             </div>
                             <div className="mt-4 text-center">
                                 <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4B5563]">Ministro</span>
-                                <p className="text-lg font-bold text-white mt-0.5 leading-tight">{minister.name}</p>
+                                <p className="text-lg font-bold text-white mt-0.5 leading-tight">{displayMinister.name}</p>
                             </div>
                         </div>
 
@@ -145,20 +153,20 @@ export const DarkMinimalAnnouncements = () => {
                         {/* Contact info */}
                         <div className="flex flex-col gap-3 p-5">
                             <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4B5563]">Ministerio</span>
-                            {minister.phone && (
+                            {displayMinister.phone && (
                                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0F1117] border border-[#23242F]">
                                     <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center flex-shrink-0">
                                         <Phone className="w-4 h-4 text-[#3B82F6]" />
                                     </div>
-                                    <span className="text-[13px] font-medium text-[#9CA3AF] truncate">{minister.phone}</span>
+                                    <span className="text-[13px] font-medium text-[#9CA3AF] truncate">{displayMinister.phone}</span>
                                 </div>
                             )}
-                            {minister.email && (
+                            {displayMinister.email && (
                                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0F1117] border border-[#23242F]">
                                     <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center flex-shrink-0">
                                         <Mail className="w-4 h-4 text-[#3B82F6]" />
                                     </div>
-                                    <span className="text-[12px] font-medium text-[#9CA3AF] truncate">{minister.email}</span>
+                                    <span className="text-[12px] font-medium text-[#9CA3AF] truncate">{displayMinister.email}</span>
                                 </div>
                             )}
                         </div>
