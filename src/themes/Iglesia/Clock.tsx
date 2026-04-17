@@ -254,8 +254,6 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                 </div>
             </div>
 
-            {/* Existing badge code continues... */}
-
             <div style={{ position: 'absolute', bottom: 30, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20 }}>
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
                     {[...Array(total)].map((_, i) => (

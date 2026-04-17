@@ -1,3 +1,4 @@
+'use client';
 import { useAppStore } from '@/lib/store';
 import { NeonForgeWeatherWidget } from './NeonForgeWeatherWidget';
 

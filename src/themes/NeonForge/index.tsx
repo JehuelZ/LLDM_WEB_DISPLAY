@@ -1,8 +1,10 @@
+import React from 'react';
 import { NeonForgeBackground } from './Background';
 import { NeonForgeClock } from './Clock';
 import { NeonForgeProgress } from './Progress';
 import { NeonForgeSchedule } from './NeonForgeSchedule';
 import { NeonForgeAnnouncements } from './NeonForgeAnnouncements';
+import { NeonForgeCalendar } from './NeonForgeCalendar';
 import type { Theme } from '../index';
 
 // NeonForge slide rotation:
@@ -13,8 +15,8 @@ import type { Theme } from '../index';
 
 // Weather now lives as a floating widget in the Background (not a slide)
 
-const ScheduleToday = (props: any) => NeonForgeSchedule({ isTomorrow: false, ...props });
-const ScheduleTomorrow = (props: any) => NeonForgeSchedule({ isTomorrow: true, ...props });
+const ScheduleToday = (props: any) => <NeonForgeSchedule isTomorrow={false} {...props} />;
+const ScheduleTomorrow = (props: any) => <NeonForgeSchedule isTomorrow={true} {...props} />;
 
 export const NeonForgeTheme: Theme = {
     name: 'Neon',
@@ -36,7 +38,7 @@ export const NeonForgeTheme: Theme = {
     },
     slides: {
         Schedule: ScheduleToday,       // used by display's 'schedule' and 'schedule_tomorrow' slots
-        Calendar: ScheduleToday,       // 'calendar' slot → agenda hoy
+        Calendar: NeonForgeCalendar,       // 'calendar' slot → Agenda Mensual
         Weekly: ScheduleTomorrow,    // 'weekly_program' slot → agenda mañana
         Announcements: NeonForgeAnnouncements,
     },
