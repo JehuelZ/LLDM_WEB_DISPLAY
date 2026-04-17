@@ -45,7 +45,13 @@ const LangBadge = ({ lang }: { lang?: 'es' | 'en' }) => {
 };
 
 export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boolean } = {}) {
-    const { monthlySchedule: scheduleMap, members, minister, settings } = useAppStore((state: any) => state);
+    const { monthlySchedule: scheduleMap, members, minister: ministerStore, settings } = useAppStore((state: any) => state);
+
+    // Consolidated Minister Info (Priority: Settings > Store)
+    const displayMinister = {
+        name: settings.ministerName || ministerStore.name,
+        avatar: settings.ministerAvatar || ministerStore.avatar,
+    };
 
     const now = new Date();
     const baseDate = new Date(now);
@@ -428,14 +434,14 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                     {type === 'local' ? (
                         <div className="flex flex-col items-center text-center gap-5">
                             <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-[#F59E0B]/40 flex-shrink-0 flex items-center justify-center bg-[#0F1117] shadow-[0_12px_32px_rgba(0,0,0,0.5)]">
-                                {minister?.avatar
-                                    ? <img src={minister.avatar} alt="Ministro" className="w-full h-full object-cover" />
+                                {displayMinister?.avatar
+                                    ? <img src={displayMinister.avatar} alt="Ministro" className="w-full h-full object-cover" />
                                     : <Church className="w-10 h-10 text-[#4B5563]" />
                                 }
                             </div>
                             <div className="flex flex-col items-center">
                                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#F59E0B] mb-2">Ministro Local</span>
-                                <p className="text-[22px] font-black text-white leading-tight">{minister?.name || 'NO ASIGNADO'}</p>
+                                <p className="text-[22px] font-black text-white leading-tight">{displayMinister?.name || 'NO ASIGNADO'}</p>
                             </div>
                         </div>
                     ) : (
