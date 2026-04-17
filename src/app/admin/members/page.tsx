@@ -372,7 +372,7 @@ export default function MembersPage() {
                         <Users className="h-10 w-10 text-primary" />
                         gestión de <span className="underline underline-offset-8 decoration-primary/30">miembros</span>
                     </h1>
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground mt-4 ml-1 opacity-70">administración de la congregación</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground mt-4 ml-1 opacity-70">administración de la iglesia</p>
                 </div>
                 <Button
                     className={cn(
@@ -607,7 +607,7 @@ export default function MembersPage() {
                                         </div>
                                         <div className="col-span-2 space-y-2 pt-2 border-t border-white/5">
                                             <p className="text-[8px] text-emerald-500 uppercase font-black flex items-center gap-1">
-                                                <Church className="w-2 h-2" /> Congregación
+                                                <Church className="w-2 h-2" /> Iglesia / Obra
                                             </p>
                                             <select
                                                 className="w-full bg-emerald-500/5 border border-emerald-500/20 rounded py-1.5 px-2 text-[10px] font-bold text-white outline-none"

@@ -88,7 +88,7 @@ export const DarkMinimalAnnouncements = () => {
 
                                             {/* Title */}
                                             <h2 className={`font-bold text-white leading-tight tracking-tight
-                                                ${ann.title.length > 25 ? 'text-xl' : 'text-2xl'}
+                                                ${ann.title.length > 25 ? 'text-lg' : 'text-xl'}
                                             `}>
                                                 {ann.title}
                                             </h2>
@@ -135,7 +135,7 @@ export const DarkMinimalAnnouncements = () => {
                             </div>
                             <div className="mt-4 text-center">
                                 <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4B5563]">Ministro</span>
-                                <p className="text-xl font-bold text-white mt-0.5 leading-tight">{minister.name}</p>
+                                <p className="text-lg font-bold text-white mt-0.5 leading-tight">{minister.name}</p>
                             </div>
                         </div>
 

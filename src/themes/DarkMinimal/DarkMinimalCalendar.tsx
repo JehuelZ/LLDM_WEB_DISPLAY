@@ -40,36 +40,40 @@ const SlotEntry = ({
 
         {paired && secondary ? (
             // ── PAIRED MODE: both names on same line separated by & ──
-            <>
-                <span className={`text-[13px] font-black leading-tight break-words ${nameColor}`}>
-                    {name} <span className="text-[#4B5563] font-normal">&</span> {secondary}
-                </span>
-                <span className={`text-[8px] font-semibold uppercase tracking-wider leading-none ${roleColor} mb-[1px]`}>
-                    {role}
-                </span>
-            </>
+            <div className="flex flex-col min-w-0">
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                    <span className={`text-[11px] font-black leading-tight break-words ${nameColor}`}>
+                        {name} <span className="text-[#4B5563] font-normal">&</span> {secondary}
+                    </span>
+                    <span className={`text-[7px] font-bold uppercase tracking-widest leading-none ${roleColor}`}>
+                        {role}
+                    </span>
+                </div>
+            </div>
         ) : (
             // ── STACKED MODE: primary + optional secondary below ──
-            <>
-                <span className={`text-[15px] font-black leading-tight break-words ${nameColor}`}>
-                    {name}
-                </span>
-                <span className={`text-[8px] font-semibold uppercase tracking-wider leading-none ${roleColor} mb-[3px]`}>
-                    {role}
-                </span>
+            <div className="flex flex-col min-w-0">
+                <div className="flex items-baseline gap-1.5 flex-wrap">
+                    <span className={`text-[13px] font-black leading-tight break-words ${nameColor}`}>
+                        {name}
+                    </span>
+                    <span className={`text-[7.5px] font-bold uppercase tracking-widest leading-none ${roleColor}`}>
+                        {role}
+                    </span>
+                </div>
                 {secondary && (
-                    <>
-                        <span className={`text-[14px] font-bold leading-tight break-words ${secondaryColor || nameColor}`}>
+                    <div className="flex items-baseline gap-1.5 flex-wrap mt-0.5">
+                        <span className={`text-[12px] font-bold leading-tight break-words ${secondaryColor || nameColor}`}>
                             {secondary}
                         </span>
                         {secondaryRole && (
-                            <span className={`text-[8px] font-semibold uppercase tracking-wider leading-none ${roleColor}`}>
+                            <span className={`text-[7px] font-bold uppercase tracking-widest leading-none ${roleColor}`}>
                                 {secondaryRole}
                             </span>
                         )}
-                    </>
+                    </div>
                 )}
-            </>
+            </div>
         )}
     </div>
 );
@@ -162,7 +166,7 @@ export function DarkMinimalCalendar() {
                     const hasData = name5am || has9am || nameEv1;
 
                     // Labels from admin customLabel, fallback to default
-                    const label5am = sched?.slots?.['5am']?.customLabel || 'Consagración';
+                    const label5am = sched?.slots?.['5am']?.customLabel || 'Oración';
                     const labelEv = sched?.slots?.evening?.customLabel || 'Oración';
 
                     return (
@@ -200,7 +204,7 @@ export function DarkMinimalCalendar() {
                             </div>
 
                             {/* Schedule block */}
-                            <div className="flex-1 flex flex-col px-1.5 pb-1.5 gap-1.5 min-h-0 mt-1">
+                            <div className="flex-1 flex flex-col px-1.5 pb-0 gap-1.5 min-h-0 mt-1">
 
                                 {/* 5 AM */}
                                 {name5am && (
@@ -236,7 +240,7 @@ export function DarkMinimalCalendar() {
                                         timeLabel="9 AM"
                                         timeColor="text-[#3B82F6]/80"
                                         name={nameCons || nameDoc}
-                                        role="Consagración"
+                                        role="Oración"
                                         nameColor={isToday ? 'text-white' : 'text-[#E5E7EB]'}
                                         roleColor="text-[#4B5563]"
                                         secondary={nameCons && nameDoc ? nameDoc : undefined}
@@ -279,14 +283,6 @@ export function DarkMinimalCalendar() {
                                 })()}
                             </div>
 
-                            {/* Dot indicators */}
-                            {hasData && (
-                                <div className="absolute bottom-0.5 left-0 right-0 flex justify-center gap-0.5">
-                                    {name5am && <div className="w-[5px] h-[2px] rounded-full bg-[#3B82F6]/50" />}
-                                    {has9am && <div className="w-[5px] h-[2px] rounded-full bg-[#3B82F6]/35" />}
-                                    {nameEv1 && <div className={`w-[5px] h-[2px] rounded-full ${isToday ? 'bg-[#3B82F6]' : 'bg-[#3B82F6]/50'}`} />}
-                                </div>
-                            )}
                         </motion.div>
                     );
                 })}

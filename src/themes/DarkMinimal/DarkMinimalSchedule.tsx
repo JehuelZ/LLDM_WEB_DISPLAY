@@ -170,7 +170,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                         </div>
                         <div className="flex flex-col items-center">
                             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#3B82F6] mb-1">{roleName}</span>
-                            <span className="text-[22px] font-bold text-white leading-tight">{memberName || 'NO ASIGNADO'}</span>
+                            <span className="text-[17px] font-bold text-white leading-tight">{memberName || 'NO ASIGNADO'}</span>
                         </div>
                         {isActive && <div className="flex items-center gap-2 mt-2 px-3 py-1 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/30">
                             <Check className="w-3 h-3 text-[#3B82F6]" />
@@ -190,7 +190,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4B5563]">{roleName}</span>
-                                    <span className="text-[15px] font-semibold text-white truncate">{memberName || 'NO ASIGNADO'}</span>
+                                    <span className="text-[14px] font-semibold text-white truncate">{memberName || 'NO ASIGNADO'}</span>
                                 </div>
                                 {isActive && <Check className="w-4 h-4 text-[#3B82F6] ml-auto flex-shrink-0" />}
                             </div>
@@ -206,7 +206,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                 </div>
                                 <div className="flex flex-col min-w-0">
                                     <span className="text-[9px] font-semibold uppercase tracking-widest text-[#4B5563]">{roleName2}</span>
-                                    <span className="text-[15px] font-semibold text-white truncate">{memberName2 || 'NO ASIGNADO'}</span>
+                                    <span className="text-[14px] font-semibold text-white truncate">{memberName2 || 'NO ASIGNADO'}</span>
                                 </div>
                             </div>
                         )}
@@ -319,7 +319,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             {[0, 1].map((i) => {
                                 const detail = getMemberDetail(leaderIds[i] || null);
                                 const roles = type === 'children'
-                                    ? ['Consagración', 'Doctrina']
+                                    ? ['Oración', 'Doctrina']
                                     : ['Director', 'Asistente'];
                                 return (
                                     <div key={i} className="flex-1 flex items-center gap-3 p-3 rounded-xl bg-[#0F1117] border border-[#23242F]">
@@ -347,8 +347,8 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                 }
                             </div>
                             <div className="flex flex-col items-center">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#60A5FA] mb-2">Consagración y Doctrina</span>
-                                <span className="text-[28px] font-black text-white leading-tight">{getMemberDetail(leaderIds.filter(Boolean)[0]).name || 'NO ASIGNADO'}</span>
+                                <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#60A5FA] mb-2">Oración y Doctrina</span>
+                                <span className="text-[21px] font-black text-white leading-tight">{getMemberDetail(leaderIds.filter(Boolean)[0]).name || 'NO ASIGNADO'}</span>
                             </div>
                             {isActive && (
                                 <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#3B82F6] text-white">
@@ -435,7 +435,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             </div>
                             <div className="flex flex-col items-center">
                                 <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#F59E0B] mb-2">Ministro Local</span>
-                                <p className="text-[26px] font-black text-white leading-tight">{minister?.name || 'NO ASIGNADO'}</p>
+                                <p className="text-[22px] font-black text-white leading-tight">{minister?.name || 'NO ASIGNADO'}</p>
                             </div>
                         </div>
                     ) : (
@@ -450,7 +450,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                                 <span className="text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: cfg.accent }}>
                                     {type === 'broadcast' ? 'Internacional' : type === 'exchange' ? 'Intercambio' : 'Abierto'}
                                 </span>
-                                <p className="text-[22px] font-bold text-white leading-tight">
+                                <p className="text-[17px] font-bold text-white leading-tight">
                                     {type === 'broadcast' ? 'Señal en Vivo' : type === 'exchange' ? 'Ministro Invitante' : 'Puertas Abiertas'}
                                 </p>
                             </div>
@@ -500,12 +500,12 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                     icon={<Sunrise className="w-5 h-5 text-[#4B5563]" />}
                     avatarUrl={getMemberDetail(slot5am?.leaderId || null).avatar}
                     memberName={getMemberDetail(slot5am?.leaderId || null).name}
-                    roleName="Consagración"
+                    roleName="Oración"
                     label={slot5am?.customLabel || getSlotLabel('5am', settings.language)}
                     language={slot5am?.language}
                     hour="05:00"
                     period="AM"
-                    subtitle="Consagración Matutina"
+                    subtitle="Oración de 5"
                     delay={0.1}
                     isActive={isSlotActive('5am')}
                 />
@@ -518,7 +518,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             icon={<Sun className="w-5 h-5 text-[#4B5563]" />}
                             avatarUrl={getMemberDetail(slot9am?.consecrationLeaderId || null).avatar}
                             memberName={getMemberDetail(slot9am?.consecrationLeaderId || null).name}
-                            roleName={slot9am?.consecrationLeaderId === slot9am?.doctrineLeaderId ? "Consagración y Doctrina" : "Consagración"}
+                            roleName={slot9am?.consecrationLeaderId === slot9am?.doctrineLeaderId ? "Oración y Doctrina" : "Oración"}
                             avatarUrl2={slot9am?.consecrationLeaderId !== slot9am?.doctrineLeaderId ? getMemberDetail(slot9am?.doctrineLeaderId || null).avatar : null}
                             memberName2={slot9am?.consecrationLeaderId !== slot9am?.doctrineLeaderId ? getMemberDetail(slot9am?.doctrineLeaderId || null).name : null}
                             roleName2="Doctrina"
@@ -526,7 +526,7 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                             language={slot9am?.language}
                             hour={slot9am?.time ? slot9am.time.split(' ')[0] : '09:00'}
                             period={slot9am?.time ? slot9am.time.split(' ')[1] : 'AM'}
-                            subtitle="Oración Intermedia"
+                            subtitle="Oración de 9"
                             delay={0.15}
                             isActive={isSlotActive('9am')}
                         />
@@ -542,12 +542,12 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                         icon={<Sun className="w-5 h-5 text-[#4B5563]" />}
                         avatarUrl={getMemberDetail(slot12pm.leaderId).avatar}
                         memberName={getMemberDetail(slot12pm.leaderId).name}
-                        roleName="Consagración"
-                        label={slot12pm.customLabel || 'Consagración de 12'}
+                        roleName="Oración"
+                        label={slot12pm.customLabel || 'Oración de 12'}
                         language={slot12pm.language}
                         hour={slot12pm.time ? slot12pm.time.split(' ')[0] : '12:00'}
                         period={slot12pm.time ? slot12pm.time.split(' ')[1] : 'PM'}
-                        subtitle="Consagración del Mediodía"
+                        subtitle="Oración del Mediodía"
                         delay={0.3}
                         isActive={isSlotActive('12pm')}
                     />

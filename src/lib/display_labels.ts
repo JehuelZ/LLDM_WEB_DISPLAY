@@ -36,11 +36,11 @@ export const DISPLAY_SLIDE_LABELS: Record<string, { es: string, en: string }> = 
 
 export const DEFAULT_SLOT_LABELS: Record<string, { es: string, en: string }> = {
     '5am': {
-        es: 'Oración de Cinco',
+        es: 'Oración de 5',
         en: '5 AM Prayer'
     },
     '9am_regular': {
-        es: 'Oración de Nueve',
+        es: 'Oración de 9',
         en: '9 AM Prayer'
     },
     '9am_sunday': {

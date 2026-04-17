@@ -67,8 +67,8 @@ export const CongregationEditModal: React.FC<Props> = ({
                                 <MapPin className="w-6 h-6 text-primary" />
                             </div>
                             <div>
-                                <h3 className="text-2xl font-black uppercase tracking-tighter text-foreground">Gestionar <span className="text-primary">Congregación</span></h3>
-                                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] mt-1">Configuración detallada de misiones y sede principal</p>
+                                <h3 className="text-2xl font-black uppercase tracking-tighter text-foreground">Gestionar <span className="text-primary">Iglesia / Obra</span></h3>
+                                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] mt-1">Configuración detallada de obras y sede principal</p>
                             </div>
                         </div>
                         <button 
@@ -85,7 +85,7 @@ export const CongregationEditModal: React.FC<Props> = ({
                             
                             {/* Image Selection */}
                             <div className="lg:col-span-4 space-y-6">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">IMAGEN DE LA CONGREGACIÓN</label>
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">IMAGEN DEL LUGAR / IGLESIA</label>
                                 <div 
                                     className="relative group aspect-[4/3] rounded-md border-2 border-dashed border-[var(--tactile-border-strong)] bg-[var(--tactile-inner-bg-alt)] overflow-hidden cursor-pointer"
                                     onClick={() => document.getElementById('cong-image-upload')?.click()}
