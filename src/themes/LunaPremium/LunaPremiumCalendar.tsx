@@ -36,7 +36,7 @@ const LunaPremiumCalendar: React.FC = () => {
     };
 
     return (
-        <div className="flex w-full h-full bg-transparent text-white font-[300] pl-[260px] overflow-hidden" 
+        <div className="flex w-full h-full bg-transparent text-white font-[300] pl-[220px] overflow-hidden" 
              style={{ fontFamily: "'Saira', sans-serif" }}>
             
             {/* MAIN CONTENT: CALENDAR */}

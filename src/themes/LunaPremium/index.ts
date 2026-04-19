@@ -4,7 +4,7 @@ import Progress from './Progress';
 import LunaPremiumSchedule from './LunaPremiumSchedule';
 import LunaPremiumWeekly from './LunaPremiumWeekly';
 import LunaPremiumCalendar from './LunaPremiumCalendar';
-import { GlassmorphismAnnouncements } from '../Glassmorphism/AnnouncementsSlide';
+import { LunaAnnouncements } from './LunaAnnouncements';
 import { Theme } from '../index';
 
 export const LunaPremiumTheme: Theme = {
@@ -24,6 +24,6 @@ export const LunaPremiumTheme: Theme = {
         Schedule: LunaPremiumSchedule,
         Calendar: LunaPremiumCalendar,
         Weekly: LunaPremiumWeekly,
-        Announcements: GlassmorphismAnnouncements
+        Announcements: LunaAnnouncements
     }
 };

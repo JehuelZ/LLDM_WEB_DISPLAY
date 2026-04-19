@@ -42,7 +42,7 @@ const Sidebar: React.FC = () => {
         <motion.aside 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="fixed inset-y-0 left-0 w-[260px] h-full flex flex-col bg-white/[0.03] backdrop-blur-3xl border-r border-white/5 p-8 pt-24 z-[50]"
+            className="fixed inset-y-0 left-0 w-[220px] h-full flex flex-col bg-white/[0.03] backdrop-blur-3xl border-r border-white/5 p-6 pt-24 z-[50]"
             style={{ fontFamily: "'Saira', sans-serif" }}
         >
             {/* Subtle vertical glow edge */}
