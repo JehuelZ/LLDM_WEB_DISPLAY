@@ -88,10 +88,10 @@ const LunaPremiumWeekly: React.FC = () => {
                                             <span className={`text-[8px] font-[300] tracking-widest lowercase ${slot.color} opacity-60`}>
                                                 {slot.id}
                                             </span>
-                                            {slot.lead && <div className="w-1 h-1 rounded-full bg-primary animate-pulse" />}
+                                            {slot.lead && <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />}
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-lg overflow-hidden bg-white/5 flex-shrink-0 border border-white/10 grayscale group-hover/slot:grayscale-0 transition-all">
+                                            <div className="w-6 h-6 rounded-sm overflow-hidden bg-white/5 flex-shrink-0 border border-white/10 grayscale group-hover/slot:grayscale-0 transition-all">
                                                 {slot.lead?.avatar ? (
                                                     <img src={slot.lead.avatar} className="w-full h-full object-cover" alt="" />
                                                 ) : (
@@ -108,7 +108,7 @@ const LunaPremiumWeekly: React.FC = () => {
 
                             {isToday && (
                                 <div className="absolute top-4 right-4">
-                                    <div className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[8px] font-[300] tracking-widest border border-primary/30 lowercase">hoy</div>
+                                    <div className="px-2 py-0.5 rounded-none bg-primary/20 text-primary text-[8px] font-[300] tracking-widest border border-primary/30 lowercase">hoy</div>
                                 </div>
                             )}
                         </div>

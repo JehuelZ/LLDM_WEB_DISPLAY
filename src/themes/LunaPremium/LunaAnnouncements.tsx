@@ -43,7 +43,7 @@ export const LunaAnnouncements = () => {
                                 )}
                             >
                                 <div className="flex items-center gap-5 mb-6">
-                                    <div className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
+                                    <div className="w-12 h-12 rounded-sm border border-white/10 flex items-center justify-center opacity-40 group-hover:opacity-100 transition-opacity">
                                         <Bell className="w-5 h-5" />
                                     </div>
                                     <h3 className="text-2xl font-[200] lowercase tracking-tight">
@@ -71,10 +71,10 @@ export const LunaAnnouncements = () => {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex-1 flex flex-col items-center p-12 rounded-[5rem] border border-white/5 bg-white/[0.03] backdrop-blur-xl relative overflow-hidden"
+                        className="flex-1 flex flex-col items-center p-12 rounded-sm border border-white/5 bg-white/[0.03] backdrop-blur-xl relative overflow-hidden"
                     >
                         <div className="relative w-72 h-96 mb-12">
-                            <div className="w-full h-full rounded-[4rem] overflow-hidden border border-white/10 shadow-2xl grayscale transition-all duration-700 hover:grayscale-0">
+                            <div className="w-full h-full rounded-sm overflow-hidden border border-white/10 shadow-2xl grayscale transition-all duration-700 hover:grayscale-0">
                                 {minister.avatar ? (
                                     <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
                                 ) : (

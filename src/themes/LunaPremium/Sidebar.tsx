@@ -64,7 +64,7 @@ const Sidebar: React.FC = () => {
 
             {/* 1. LOGO ARRIBA */}
             <div className="flex flex-col items-center mb-10">
-                <div className="w-16 h-16 rounded-[2rem] bg-white/[0.05] border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl group transition-all duration-700 hover:scale-110 p-2">
+                <div className="w-16 h-16 rounded-sm bg-white/[0.05] border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl group transition-all duration-700 hover:scale-110 p-2">
                     {settings?.churchLogoUrl || settings?.displayCustomBgUrl ? (
                         <img 
                             src={settings?.churchLogoUrl || settings?.displayCustomBgUrl} 
@@ -87,7 +87,7 @@ const Sidebar: React.FC = () => {
                         clima actual
                     </span>
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center">
                             <WeatherIcon code={weather?.icon || "0"} className="w-5 h-5 text-white/70" />
                         </div>
                         <div className="flex flex-col">
@@ -101,7 +101,7 @@ const Sidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1.5">
                     <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 mb-1 lowercase">
                         pronóstico
                     </span>
@@ -111,13 +111,13 @@ const Sidebar: React.FC = () => {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.1 + (i * 0.1) }}
-                            className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5"
+                            className="flex items-center justify-between p-2.5 rounded-sm bg-white/[0.02] border border-white/5"
                         >
                             <div className="flex items-center gap-3">
                                 <span className="text-[9px] font-[300] text-white/20 w-6 lowercase tracking-widest">
                                     {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 2).toLowerCase()}
                                 </span>
-                                <WeatherIcon code={f.icon} className="w-3 h-3 text-white/40" />
+                                <WeatherIcon code={f.icon} className="w-3.5 h-3.5 text-white/40" />
                             </div>
                             <span className="text-md font-[100]">
                                 {f.temp}°

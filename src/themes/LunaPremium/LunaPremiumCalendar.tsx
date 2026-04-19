@@ -11,6 +11,7 @@ import { getChurchNow } from '@/lib/time';
 // LUNA PREMIUM THEME: CALENDAR SLIDE
 // Aesthetic: Strict Lowercase, font-300, Saira
 // Layout: Adaptive with Persistent Sidebar
+// NO CIRCLES: Industrial Square Design
 // ─────────────────────────────────────────────
 
 const LunaPremiumCalendar: React.FC = () => {
@@ -81,7 +82,7 @@ const LunaPremiumCalendar: React.FC = () => {
                             <motion.div 
                                 key={key}
                                 variants={itemVariants}
-                                className={`aspect-square rounded-full border flex flex-col items-center justify-center transition-all duration-700 relative overflow-hidden ${
+                                className={`aspect-square rounded-sm border flex flex-col items-center justify-center transition-all duration-700 relative overflow-hidden ${
                                     active 
                                     ? 'bg-white text-black border-white shadow-[0_0_40px_rgba(255,255,255,0.15)] z-10' 
                                     : 'bg-white/[0.01] border-white/5 hover:bg-white/[0.03]'
@@ -93,7 +94,7 @@ const LunaPremiumCalendar: React.FC = () => {
                                 
                                 {hasData && !active && (
                                     <div className="absolute bottom-3 flex gap-1">
-                                        <div className="w-[3px] h-[3px] rounded-full bg-white opacity-20" />
+                                        <div className="w-[3px] h-[3px] rounded-none bg-white opacity-20" />
                                     </div>
                                 )}
                             </motion.div>
@@ -104,20 +105,20 @@ const LunaPremiumCalendar: React.FC = () => {
                 {/* Footer Legend */}
                 <footer className="flex items-center gap-8 opacity-10">
                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full border border-white" />
+                        <div className="w-1.5 h-1.5 rounded-none border border-white" />
                         <span className="text-[8px] tracking-[0.2em] font-[300] lowercase">actividad</span>
                      </div>
                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                        <div className="w-1.5 h-1.5 rounded-none bg-white" />
                         <span className="text-[8px] tracking-[0.2em] font-[300] lowercase">hoy</span>
                      </div>
                 </footer>
             </main>
 
-            {/* Atmosphere lines */}
+            {/* Atmosphere grid (rectangles instead of dots) */}
             <div className="fixed inset-0 pointer-events-none opacity-[0.01]" 
                  style={{ 
-                     backgroundImage: 'radial-gradient(circle, white 0.5px, transparent 0.5px)', 
+                     backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)', 
                      backgroundSize: '30px 30px' 
                  }} />
         </div>
