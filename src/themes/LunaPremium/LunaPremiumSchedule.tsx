@@ -158,10 +158,10 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                         <span className="text-[10px] tracking-[0.4em] text-primary font-[300] mb-1 opacity-60 lowercase">
                                             responsables
                                         </span>
-                                        <span className="text-lg font-[300] text-on-surface truncate lowercase">
-                                            {m1?.name?.toLowerCase() || (m2 ? '' : 'pendiente')}
+                                        <span className="text-lg font-[300] text-on-surface truncate capitalize">
+                                            {m1?.name || (m2 ? '' : 'pendiente')}
                                             {m1 && m2 && ' / '}
-                                            {m2?.name?.toLowerCase()}
+                                            {m2?.name}
                                         </span>
                                         <span className="text-xs text-on-surface-variant opacity-60 font-[300] lowercase">
                                             {m1 ? m1.group?.toLowerCase() || 'ministerio' : ''}

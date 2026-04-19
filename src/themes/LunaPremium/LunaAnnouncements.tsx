@@ -89,8 +89,8 @@ export const LunaAnnouncements = () => {
                             <span className="text-[10px] lowercase font-[300] tracking-[0.4em] text-white/40 mb-4">
                                 {minister.role?.toLowerCase() || 'ministro local'}
                             </span>
-                            <h2 className="text-3xl font-[200] lowercase tracking-tighter mb-8 text-center">
-                                {minister.name.toLowerCase()}
+                            <h2 className="text-3xl font-[200] capitalize tracking-tighter mb-8 text-center">
+                                {minister.name}
                             </h2>
                         </div>
 
