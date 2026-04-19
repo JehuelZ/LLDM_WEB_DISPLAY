@@ -117,8 +117,8 @@ const LunaPremiumCalendar: React.FC = () => {
                                 )}
                                 
                                 {/* Day Number */}
-                                <span className={`text-4xl font-[100] tracking-tighter mb-4 ${
-                                    active ? 'text-white' : 'text-white/20'
+                                <span className={`text-3xl font-[100] tracking-tighter transition-all duration-700 mb-4 ${
+                                    active ? 'text-white' : 'text-white/30 group-hover:text-white/40'
                                 }`}>
                                     {format(date, 'd')}
                                 </span>
