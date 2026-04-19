@@ -252,159 +252,162 @@ export default function DisplayPage() {
 
     if (!isMounted) return null;
 
-    if (!unlocked) {
-        return <DisplayLock onUnlock={() => setUnlocked(true)} />;
-    }
-
     return (
-        <main
-            className={cn(
-                "fixed inset-0 text-slate-50 overflow-hidden select-none",
-                settings?.fontMain ? "" : activeTheme.fonts.primary
-            )}
-        >
-            {/* Inject Google Font if configured */}
-            {settings?.fontMain && (
-                <link
-                    rel="stylesheet"
-                    href={`https://fonts.googleapis.com/css2?family=${settings.fontMain.replace(/ /g, '+')}:wght@400;700;800;900&display=swap`}
-                />
-            )}
-            
-            <Background />
+        <div className="fixed inset-0 overflow-hidden bg-black select-none">
+            {/* 1. LAYER: MAIN CONTENT OR LOCK */}
+            {!unlocked ? (
+                <DisplayLock onUnlock={() => setUnlocked(true)} />
+            ) : (
+                <main
+                    className={cn(
+                        "fixed inset-0 text-slate-50 overflow-hidden",
+                        settings?.fontMain ? "" : activeTheme.fonts.primary
+                    )}
+                >
+                    {/* Inject Google Font if configured */}
+                    {settings?.fontMain && (
+                        <link
+                            rel="stylesheet"
+                            href={`https://fonts.googleapis.com/css2?family=${settings.fontMain.replace(/ /g, '+')}:wght@400;700;800;900&display=swap`}
+                        />
+                    )}
+                    
+                    <Background />
 
-            {/* MAIN CONTENT STAGE WITH AUTO-SCALING FOR TVS */}
-            <div
-                key={`${activeTheme.id}-${settings?.fontMain}`}
-                className="absolute z-10 flex items-center justify-center p-0 overflow-hidden w-[1920px] h-[1080px]"
-                style={{
-                    transform: `translate(calc(-50% + ${settings?.displayOffsetX || 0}px), calc(-50% + ${settings?.displayOffsetY || 0}px)) scale(${autoScale * (settings?.displayScale || 1.0)})`,
-                    left: '50%',
-                    top: '50%',
-                    transformOrigin: 'center center',
-                    fontFamily: settings?.fontMain ? `'${settings.fontMain}', sans-serif` : 'inherit',
-                    fontWeight: settings?.fontWeight ? Number(settings.fontWeight) : 'inherit'
-                }}
-            >
-                <AnimatePresence mode="popLayout" initial={false}>
-                    {(() => {
-                        const isLowPerf = settings?.lowPerformanceMode;
-                        const animationType = settings?.animationType || settings?.iglesiaAnimation || 'metro';
-                        const speed = (settings?.animationSpeed || settings?.iglesiaAnimationSpeed || 2.4) as number;
+                    {/* MAIN CONTENT STAGE WITH AUTO-SCALING FOR TVS */}
+                    <div
+                        key={`${activeTheme.id}-${settings?.fontMain}`}
+                        className="absolute z-10 flex items-center justify-center p-0 overflow-hidden w-[1920px] h-[1080px]"
+                        style={{
+                            transform: `translate(calc(-50% + ${settings?.displayOffsetX || 0}px), calc(-50% + ${settings?.displayOffsetY || 0}px)) scale(${autoScale * (settings?.displayScale || 1.0)})`,
+                            left: '50%',
+                            top: '50%',
+                            transformOrigin: 'center center',
+                            fontFamily: settings?.fontMain ? `'${settings.fontMain}', sans-serif` : 'inherit',
+                            fontWeight: settings?.fontWeight ? Number(settings.fontWeight) : 'inherit'
+                        }}
+                    >
+                        <AnimatePresence mode="popLayout" initial={false}>
+                            {(() => {
+                                const isLowPerf = settings?.lowPerformanceMode;
+                                const animationType = settings?.animationType || settings?.iglesiaAnimation || 'metro';
+                                const speed = (settings?.animationSpeed || settings?.iglesiaAnimationSpeed || 2.4) as number;
 
-                        let variants: any = {
-                            initial: { opacity: 0, x: '-100%' },
-                            animate: { opacity: 1, x: 0 },
-                            exit: { opacity: 0, x: '100%' }
-                        };
+                                let variants: any = {
+                                    initial: { opacity: 0, x: '-100%' },
+                                    animate: { opacity: 1, x: 0 },
+                                    exit: { opacity: 0, x: '100%' }
+                                };
 
-                        let transition: any = {
-                            duration: settings.transitionsEnabled === false ? 0 : speed,
-                            ease: [0.4, 0, 0.2, 1],
-                            opacity: { duration: settings.transitionsEnabled === false ? 0 : speed * 0.5 }
-                        };
+                                let transition: any = {
+                                    duration: settings.transitionsEnabled === false ? 0 : speed,
+                                    ease: [0.4, 0, 0.2, 1],
+                                    opacity: { duration: settings.transitionsEnabled === false ? 0 : speed * 0.5 }
+                                };
 
-                        if (animationType === 'metro') {
-                            // Right to Left flow like a train line
-                            variants = {
-                                initial: {
-                                    opacity: 0,
-                                    x: (isLowPerf ? '20%' : '100%'),
-                                    filter: isLowPerf ? 'none' : 'blur(20px)',
-                                    scale: isLowPerf ? 1 : 1.05
-                                },
-                                animate: {
-                                    opacity: 1,
-                                    x: 0,
-                                    filter: isLowPerf ? 'none' : 'blur(0px)',
-                                    scale: 1
-                                },
-                                exit: {
-                                    opacity: 0,
-                                    x: (isLowPerf ? '-20%' : '-100%'),
-                                    filter: isLowPerf ? 'none' : 'blur(20px)',
-                                    scale: isLowPerf ? 1 : 0.95
+                                if (animationType === 'metro') {
+                                    // Right to Left flow like a train line
+                                    variants = {
+                                        initial: {
+                                            opacity: 0,
+                                            x: (isLowPerf ? '20%' : '100%'),
+                                            filter: isLowPerf ? 'none' : 'blur(20px)',
+                                            scale: isLowPerf ? 1 : 1.05
+                                        },
+                                        animate: {
+                                            opacity: 1,
+                                            x: 0,
+                                            filter: isLowPerf ? 'none' : 'blur(0px)',
+                                            scale: 1
+                                        },
+                                        exit: {
+                                            opacity: 0,
+                                            x: (isLowPerf ? '-20%' : '-100%'),
+                                            filter: isLowPerf ? 'none' : 'blur(20px)',
+                                            scale: isLowPerf ? 1 : 0.95
+                                        }
+                                    } as any;
+                                    transition = {
+                                        duration: isLowPerf ? speed * 0.5 : speed,
+                                        ease: isLowPerf ? 'easeInOut' : [0.16, 1, 0.3, 1],
+                                        opacity: { duration: speed * 0.5 }
+                                    } as any;
+                                } else if (animationType === 'breathing') {
+                                    // Subtle scale pulse with fade
+                                    variants = {
+                                        initial: { opacity: 0, scale: isLowPerf ? 1 : 1.1, filter: isLowPerf ? 'none' : 'blur(10px)' },
+                                        animate: { opacity: 1, scale: 1, filter: isLowPerf ? 'none' : 'blur(0px)' },
+                                        exit: { opacity: 0, scale: isLowPerf ? 1 : 0.9, filter: isLowPerf ? 'none' : 'blur(10px)' }
+                                    } as any;
+                                    transition = {
+                                        duration: isLowPerf ? speed * 0.5 : speed,
+                                        ease: 'easeInOut',
+                                        opacity: { duration: speed * 0.75 }
+                                    } as any;
+                                } else if (animationType === 'fade') {
+                                    // Pure elegant fade
+                                    variants = {
+                                        initial: { opacity: 0 },
+                                        animate: { opacity: 1 },
+                                        exit: { opacity: 0 }
+                                    } as any;
+                                    transition = {
+                                        duration: isLowPerf ? speed * 0.5 : speed,
+                                        ease: 'linear',
+                                        opacity: { duration: speed }
+                                    } as any;
                                 }
-                            } as any;
-                            transition = {
-                                duration: isLowPerf ? speed * 0.5 : speed,
-                                ease: isLowPerf ? 'easeInOut' : [0.16, 1, 0.3, 1],
-                                opacity: { duration: speed * 0.5 }
-                            } as any;
-                        } else if (animationType === 'breathing') {
-                            // Subtle scale pulse with fade
-                            variants = {
-                                initial: { opacity: 0, scale: isLowPerf ? 1 : 1.1, filter: isLowPerf ? 'none' : 'blur(10px)' },
-                                animate: { opacity: 1, scale: 1, filter: isLowPerf ? 'none' : 'blur(0px)' },
-                                exit: { opacity: 0, scale: isLowPerf ? 1 : 0.9, filter: isLowPerf ? 'none' : 'blur(10px)' }
-                            } as any;
-                            transition = {
-                                duration: isLowPerf ? speed * 0.5 : speed,
-                                ease: 'easeInOut',
-                                opacity: { duration: speed * 0.75 }
-                            } as any;
-                        } else if (animationType === 'fade') {
-                            // Pure elegant fade
-                            variants = {
-                                initial: { opacity: 0 },
-                                animate: { opacity: 1 },
-                                exit: { opacity: 0 }
-                            } as any;
-                            transition = {
-                                duration: isLowPerf ? speed * 0.5 : speed,
-                                ease: 'linear',
-                                opacity: { duration: speed }
-                            } as any;
-                        }
 
-                        return (
-                            <motion.div
-                                key={slides[currentSlide]?.id || 'empty'}
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
-                                variants={variants}
-                                transition={transition}
-                                style={{ width: '100%', height: '100%', position: 'absolute' }}
-                            >
-                                {slides[currentSlide]?.component}
-                            </motion.div>
-                        );
-                    })()}
-                </AnimatePresence>
+                                return (
+                                    <motion.div
+                                        key={slides[currentSlide]?.id || 'empty'}
+                                        initial="initial"
+                                        animate="animate"
+                                        exit="exit"
+                                        variants={variants}
+                                        transition={transition}
+                                        style={{ width: '100%', height: '100%', position: 'absolute' }}
+                                    >
+                                        {slides[currentSlide]?.component}
+                                    </motion.div>
+                                );
+                            })()}
+                        </AnimatePresence>
 
-                {/* SHARED OVERLAYS (Now inside the scaled stage to avoid TV clipping) */}
-                <Clock now={now} isMounted={isMounted} settings={settings} />
-                <Progress slides={slides} currentSlide={currentSlide} />
-            </div>
+                        {/* SHARED OVERLAYS */}
+                        <Clock now={now} isMounted={isMounted} settings={settings} />
+                        <Progress slides={slides} currentSlide={currentSlide} />
+                    </div>
 
-            {/* Secret Toggle Area (Bottom Left) - Optimized to be truly invisible */}
-            <div 
-                className="fixed bottom-0 left-0 w-2 h-2 z-[1000] cursor-none opacity-0"
-                onClick={handleSecretClick}
-            />
+                    <AdministrativeOverlay 
+                        isOpen={isAdminOverlayOpen}
+                        onClose={() => setIsAdminOverlayOpen(false)}
+                        slides={slides}
+                        currentSlide={currentSlide}
+                        onSlideChange={(idx) => {
+                            setCurrentSlide(idx);
+                            setIsPaused(true);
+                        }}
+                        isPaused={isPaused}
+                        onTogglePause={() => setIsPaused(!isPaused)}
+                        settings={settings}
+                    />
+                </main>
+            )}
 
-            {/* Performance Mode Indicator removed as requested - Hidden but functional */}
-
-            <div className="fixed bottom-4 right-4 z-[999] flex gap-4">
+            {/* 2. LAYER: ALWAYS ACCESSIBLE TECH CONTROLS (HIGH Z-INDEX) */}
+            <div className="fixed bottom-4 right-4 z-[9999] flex gap-4">
                 <FullscreenButton />
             </div>
 
-            <AdministrativeOverlay 
-                isOpen={isAdminOverlayOpen}
-                onClose={() => setIsAdminOverlayOpen(false)}
-                slides={slides}
-                currentSlide={currentSlide}
-                onSlideChange={(idx) => {
-                    setCurrentSlide(idx);
-                    setIsPaused(true);
-                }}
-                isPaused={isPaused}
-                onTogglePause={() => setIsPaused(!isPaused)}
-                settings={settings}
+            {/* Secret Toggle Area (Bottom Left) */}
+            <div 
+                className="fixed bottom-0 left-0 w-8 h-8 z-[9999] cursor-none opacity-0"
+                onClick={handleSecretClick}
             />
-        </main>
+        </div>
     );
+}
 }
 
 // Fixed Placeholder slides for missing or shared functionality
