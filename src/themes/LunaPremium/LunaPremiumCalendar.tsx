@@ -93,20 +93,21 @@ const LunaPremiumCalendar: React.FC = () => {
                         // 1. Slot: 5 AM (Consecración)
                         const lead5am = getMember(sched?.slots?.['5am']?.leaderId);
                         
-                        // 2. Slot: 9 AM (Can have BOTH Consecración AND Doctrina/School)
+                        // 2. Slot: 9 AM (Joined by pipe if dual)
                         const lead9amCons = getMember(sched?.slots?.['9am']?.consecrationLeaderId);
                         const lead9amDoc = getMember(sched?.slots?.['9am']?.doctrineLeaderId);
+                        const nineAmText = [lead9amCons?.name, lead9amDoc?.name].filter(Boolean).join(' | ');
                         
-                        // 3. Slot: Evening
+                        // 3. Slot: Evening (Joined by pipe)
                         const eveningSlot = sched?.slots?.['evening'];
                         const eveningLeaders = (eveningSlot?.leaderIds || [])
                             .map((id: string) => getMember(id))
                             .filter(Boolean);
-                        // Fallback to legacy leaderId if leaderIds is empty
                         if (eveningLeaders.length === 0 && eveningSlot?.leaderId) {
                             const fallback = getMember(eveningSlot.leaderId);
                             if (fallback) eveningLeaders.push(fallback);
                         }
+                        const eveningText = eveningLeaders.map(l => l.name).join(' | ');
 
                         const colIndex = (padding.length + idx) % 7;
                         const isLastCol = colIndex === 6;
@@ -134,43 +135,29 @@ const LunaPremiumCalendar: React.FC = () => {
                                     {format(date, 'd')}
                                 </span>
                                 
-                                {/* Data Stack - Three Daily Slots */}
+                                {/* Data Stack - Three Daily Slots with pipe formatting */}
                                 <div className="flex flex-col gap-2.5 mt-auto pb-4">
                                     {/* Slot 1: 5am */}
                                     {lead5am && (
                                         <div className="flex items-baseline gap-1.5 overflow-hidden">
-                                            <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead5am.name}</span>
+                                            <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[120px]">{lead5am.name}</span>
                                             <span className="px-1 py-0.5 bg-blue-500/10 border border-blue-500/20 text-[4.5px] text-blue-400/60 tracking-[0.1em] lowercase shrink-0">cons</span>
                                         </div>
                                     )}
 
-                                    {/* Slot 2: 9am (Can be double) */}
-                                    {(lead9amCons || lead9amDoc) && (
-                                        <div className="flex flex-col gap-1.5">
-                                            {lead9amCons && (
-                                                <div className="flex items-baseline gap-1.5 overflow-hidden">
-                                                    <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead9amCons.name}</span>
-                                                    <span className="px-1 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[4.5px] text-emerald-400/60 tracking-[0.1em] lowercase shrink-0">{isSunday ? 'escuela' : 'cons'}</span>
-                                                </div>
-                                            )}
-                                            {lead9amDoc && (
-                                                <div className="flex items-baseline gap-1.5 overflow-hidden">
-                                                    <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead9amDoc.name}</span>
-                                                    <span className="px-1 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[4.5px] text-emerald-400/60 tracking-[0.1em] lowercase shrink-0">doctrina</span>
-                                                </div>
-                                            )}
+                                    {/* Slot 2: 9am (Pipe formatted) */}
+                                    {nineAmText && (
+                                        <div className="flex items-baseline gap-1.5 overflow-hidden">
+                                            <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[120px]">{nineAmText}</span>
+                                            <span className="px-1 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[4.5px] text-emerald-400/60 tracking-[0.1em] lowercase shrink-0">{isSunday ? 'escuela' : 'c | d'}</span>
                                         </div>
                                     )}
 
-                                    {/* Slot 3: Evening */}
-                                    {eveningLeaders.length > 0 && (
-                                        <div className="flex flex-col gap-1.5">
-                                            {eveningLeaders.map((lead, lIdx) => (
-                                                <div key={lIdx} className="flex items-baseline gap-1.5 overflow-hidden">
-                                                    <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead.name}</span>
-                                                    <span className="px-1 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[4.5px] text-amber-400/60 tracking-[0.1em] lowercase shrink-0">oración</span>
-                                                </div>
-                                            ))}
+                                    {/* Slot 3: Evening (Pipe formatted) */}
+                                    {eveningText && (
+                                        <div className="flex items-baseline gap-1.5 overflow-hidden">
+                                            <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[120px]">{eveningText}</span>
+                                            <span className="px-1 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[4.5px] text-amber-400/60 tracking-[0.1em] lowercase shrink-0">oración</span>
                                         </div>
                                     )}
                                 </div>
