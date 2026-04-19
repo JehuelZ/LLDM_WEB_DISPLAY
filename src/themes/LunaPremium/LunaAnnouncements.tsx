@@ -12,7 +12,7 @@ export const LunaAnnouncements = () => {
     const minister = useAppStore((state) => state.minister);
 
     return (
-        <div className="h-full flex flex-col md:flex-row px-4 py-8 pt-24 gap-12 overflow-hidden bg-transparent relative pl-[220px]" 
+        <div className="h-full flex flex-col md:flex-row px-0 py-8 pt-24 gap-12 overflow-hidden bg-transparent relative pl-[220px]" 
              style={{ fontFamily: "'Saira', sans-serif" }}>
             
             {/* 1. LEFT PILLAR: ANNOUNCEMENTS */}
