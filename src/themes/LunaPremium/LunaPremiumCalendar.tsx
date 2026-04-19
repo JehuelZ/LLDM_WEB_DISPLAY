@@ -81,7 +81,7 @@ const LunaPremiumCalendar: React.FC = () => {
                     className="grid grid-cols-7 flex-1"
                 >
                     {padding.map((_, i) => (
-                        <div key={`pad-${i}`} className="relative border-r border-white/[0.01]" />
+                        <div key={`pad-${i}`} className="relative" />
                     ))}
 
                     {days.map((date, idx) => {
@@ -90,13 +90,24 @@ const LunaPremiumCalendar: React.FC = () => {
                         const active = isSameDay(date, churchNow);
                         const isSunday = date.getDay() === 0;
 
-                        // Get responsibly names
+                        // 1. Slot: 5 AM (Consecración)
                         const lead5am = getMember(sched?.slots?.['5am']?.leaderId);
-                        const lead9am = isSunday 
-                            ? getMember(sched?.slots?.['9am']?.doctrineLeaderId)
-                            : getMember(sched?.slots?.['9am']?.consecrationLeaderId);
-                        const lead7pm = getMember(sched?.slots?.['evening']?.leaderIds?.[0]);
                         
+                        // 2. Slot: 9 AM (Can have BOTH Consecración AND Doctrina/School)
+                        const lead9amCons = getMember(sched?.slots?.['9am']?.consecrationLeaderId);
+                        const lead9amDoc = getMember(sched?.slots?.['9am']?.doctrineLeaderId);
+                        
+                        // 3. Slot: Evening
+                        const eveningSlot = sched?.slots?.['evening'];
+                        const eveningLeaders = (eveningSlot?.leaderIds || [])
+                            .map((id: string) => getMember(id))
+                            .filter(Boolean);
+                        // Fallback to legacy leaderId if leaderIds is empty
+                        if (eveningLeaders.length === 0 && eveningSlot?.leaderId) {
+                            const fallback = getMember(eveningSlot.leaderId);
+                            if (fallback) eveningLeaders.push(fallback);
+                        }
+
                         const colIndex = (padding.length + idx) % 7;
                         const isLastCol = colIndex === 6;
 
@@ -123,31 +134,44 @@ const LunaPremiumCalendar: React.FC = () => {
                                     {format(date, 'd')}
                                 </span>
                                 
-                                {/* Data Stack */}
-                                <div className="flex flex-col gap-3 mt-auto pb-4">
-                                    {(lead5am || lead9am || lead7pm) ? (
-                                        <>
-                                            {lead5am && (
-                                                <div className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead5am.name}</span>
-                                                    <span className="inline-block px-1.5 py-0.5 bg-blue-500/10 border border-blue-500/20 text-[5px] text-blue-400/60 tracking-[0.1em] lowercase rounded-none">consagración</span>
+                                {/* Data Stack - Three Daily Slots */}
+                                <div className="flex flex-col gap-2.5 mt-auto pb-4">
+                                    {/* Slot 1: 5am */}
+                                    {lead5am && (
+                                        <div className="flex items-baseline gap-1.5 overflow-hidden">
+                                            <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead5am.name}</span>
+                                            <span className="px-1 py-0.5 bg-blue-500/10 border border-blue-500/20 text-[4.5px] text-blue-400/60 tracking-[0.1em] lowercase shrink-0">cons</span>
+                                        </div>
+                                    )}
+
+                                    {/* Slot 2: 9am (Can be double) */}
+                                    {(lead9amCons || lead9amDoc) && (
+                                        <div className="flex flex-col gap-1.5">
+                                            {lead9amCons && (
+                                                <div className="flex items-baseline gap-1.5 overflow-hidden">
+                                                    <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead9amCons.name}</span>
+                                                    <span className="px-1 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[4.5px] text-emerald-400/60 tracking-[0.1em] lowercase shrink-0">{isSunday ? 'escuela' : 'cons'}</span>
                                                 </div>
                                             )}
-                                            {lead9am && (
-                                                <div className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead9am.name}</span>
-                                                    <span className="inline-block px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[5px] text-emerald-400/60 tracking-[0.1em] lowercase rounded-none">doctrina</span>
+                                            {lead9amDoc && (
+                                                <div className="flex items-baseline gap-1.5 overflow-hidden">
+                                                    <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead9amDoc.name}</span>
+                                                    <span className="px-1 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[4.5px] text-emerald-400/60 tracking-[0.1em] lowercase shrink-0">doctrina</span>
                                                 </div>
                                             )}
-                                            {lead7pm && (
-                                                <div className="flex items-baseline gap-2">
-                                                    <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead7pm.name}</span>
-                                                    <span className="inline-block px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[5px] text-amber-400/60 tracking-[0.1em] lowercase rounded-none">oración</span>
+                                        </div>
+                                    )}
+
+                                    {/* Slot 3: Evening */}
+                                    {eveningLeaders.length > 0 && (
+                                        <div className="flex flex-col gap-1.5">
+                                            {eveningLeaders.map((lead, lIdx) => (
+                                                <div key={lIdx} className="flex items-baseline gap-1.5 overflow-hidden">
+                                                    <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[80px]">{lead.name}</span>
+                                                    <span className="px-1 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[4.5px] text-amber-400/60 tracking-[0.1em] lowercase shrink-0">oración</span>
                                                 </div>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <div className="h-1 w-4 bg-white/[0.02]" />
+                                            ))}
+                                        </div>
                                     )}
                                 </div>
                             </motion.div>

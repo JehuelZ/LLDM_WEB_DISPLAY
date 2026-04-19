@@ -158,7 +158,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                         <span className="text-[10px] tracking-[0.4em] text-primary font-[300] mb-1 opacity-60 lowercase">
                                             responsables
                                         </span>
-                                        <span className="text-lg font-[300] text-on-surface truncate capitalize">
+                                        <span className="text-lg font-[400] text-on-surface truncate capitalize">
                                             {m1?.name || (m2 ? '' : 'pendiente')}
                                             {m1 && m2 && ' / '}
                                             {m2?.name}

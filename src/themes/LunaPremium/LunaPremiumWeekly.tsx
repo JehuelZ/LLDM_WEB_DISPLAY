@@ -98,8 +98,8 @@ const LunaPremiumWeekly: React.FC = () => {
                                                    <User size={12} className="m-auto opacity-20" />
                                                 )}
                                             </div>
-                                            <span className="text-[10px] font-[300] text-on-surface truncate leading-tight lowercase">
-                                                {slot.lead?.name.split(' ')[0].toLowerCase() || '---'}
+                                            <span className="text-[10px] font-[400] text-on-surface truncate leading-tight capitalize">
+                                                {slot.lead?.name || '---'}
                                             </span>
                                         </div>
                                     </div>
