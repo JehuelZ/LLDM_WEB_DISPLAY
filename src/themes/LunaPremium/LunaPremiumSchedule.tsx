@@ -58,6 +58,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
 
     const slideTitle = getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language)?.toLowerCase();
 
+    return (
         <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 px-0 py-8 pt-32 pb-32 pl-[220px]"
              style={{ fontFamily: "'Saira', sans-serif" }}>
             {/* High-Tech Section Header */}
@@ -159,7 +160,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                         </span>
                                         <span className="text-lg font-[400] text-on-surface truncate capitalize">
                                             {m1?.name || (m2 ? '' : 'pendiente')}
-                                            {m1 && m2 && ' / '}
+                                            {m1 && m2 && ' | '}
                                             {m2?.name}
                                         </span>
                                         <span className="text-xs text-on-surface-variant opacity-60 font-[300] lowercase">

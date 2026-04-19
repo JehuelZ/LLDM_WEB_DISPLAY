@@ -30,6 +30,7 @@ const LunaPremiumWeekly: React.FC = () => {
 
     const slideTitle = getSlideSystemTitle('weekly_program', settings?.language);
 
+    return (
         <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 px-0 py-8 pt-32 pb-32 pl-[220px]"
              style={{ fontFamily: "'Saira', sans-serif" }}>
             {/* Header */}
@@ -98,7 +99,11 @@ const LunaPremiumWeekly: React.FC = () => {
                                                 )}
                                             </div>
                                             <span className="text-[10px] font-[400] text-on-surface truncate leading-tight capitalize">
-                                                {slot.lead?.name || '---'}
+                                                {sched?.slots?.[slot.id]?.consecrationLeaderId || sched?.slots?.[slot.id]?.doctrineLeaderId ? (
+                                                    [getMember(sched?.slots?.[slot.id]?.consecrationLeaderId)?.name, getMember(sched?.slots?.[slot.id]?.doctrineLeaderId)?.name].filter(Boolean).join(' | ')
+                                                ) : (
+                                                    (slot.id === 'evening' && (sched?.slots?.['evening']?.leaderIds || []).map((id: any) => getMember(id)?.name).filter(Boolean).join(' | ')) || slot.lead?.name || '---'
+                                                )}
                                             </span>
                                         </div>
                                     </div>
