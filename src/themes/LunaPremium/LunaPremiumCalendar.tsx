@@ -141,7 +141,7 @@ const LunaPremiumCalendar: React.FC = () => {
                                     {lead5am && (
                                         <div className="flex items-baseline gap-1.5 overflow-hidden">
                                             <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[120px]">{lead5am.name}</span>
-                                            <span className="px-1 py-0.5 bg-blue-500/10 border border-blue-500/20 text-[4.5px] text-blue-400/60 tracking-[0.1em] lowercase shrink-0">cons</span>
+                                            <span className="px-1.5 py-0.5 bg-blue-500/10 border border-blue-500/20 text-[5px] text-blue-400/60 tracking-[0.05em] lowercase shrink-0">consagración</span>
                                         </div>
                                     )}
 
@@ -149,7 +149,9 @@ const LunaPremiumCalendar: React.FC = () => {
                                     {nineAmText && (
                                         <div className="flex items-baseline gap-1.5 overflow-hidden">
                                             <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[120px]">{nineAmText}</span>
-                                            <span className="px-1 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[4.5px] text-emerald-400/60 tracking-[0.1em] lowercase shrink-0">{isSunday ? 'escuela' : 'c | d'}</span>
+                                            <span className="px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[5px] text-emerald-400/60 tracking-[0.05em] lowercase shrink-0">
+                                                {isSunday ? 'escuela dominical' : (lead9amCons && lead9amDoc ? 'consagración | doctrina' : (lead9amDoc ? 'doctrina' : 'consagración'))}
+                                            </span>
                                         </div>
                                     )}
 
@@ -157,7 +159,7 @@ const LunaPremiumCalendar: React.FC = () => {
                                     {eveningText && (
                                         <div className="flex items-baseline gap-1.5 overflow-hidden">
                                             <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[120px]">{eveningText}</span>
-                                            <span className="px-1 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[4.5px] text-amber-400/60 tracking-[0.1em] lowercase shrink-0">oración</span>
+                                            <span className="px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[5px] text-amber-400/60 tracking-[0.05em] lowercase shrink-0">oración</span>
                                         </div>
                                     )}
                                 </div>
