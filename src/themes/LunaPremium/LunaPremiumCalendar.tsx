@@ -10,8 +10,8 @@ import { getChurchNow } from '@/lib/time';
 // ─────────────────────────────────────────────
 // LUNA PREMIUM THEME: CALENDAR SLIDE
 // Aesthetic: Strict Lowercase, font-300, Saira
-// Layout: Adaptive with Persistent Sidebar
-// NO CIRCLES: Industrial Square Design
+// Layout: Minimal Grid Division
+// NO BOXES: Only faint dividing lines
 // ─────────────────────────────────────────────
 
 const LunaPremiumCalendar: React.FC = () => {
@@ -28,12 +28,12 @@ const LunaPremiumCalendar: React.FC = () => {
 
     const containerVariants = {
         hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.03 } }
+        visible: { opacity: 1, transition: { staggerChildren: 0.02 } }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, scale: 0.9 },
-        visible: { opacity: 1, scale: 1 }
+        hidden: { opacity: 0 },
+        visible: { opacity: 1 }
     };
 
     return (
@@ -43,33 +43,32 @@ const LunaPremiumCalendar: React.FC = () => {
             {/* MAIN CONTENT: CALENDAR */}
             <main className="flex-1 h-full flex flex-col p-16 pt-32 z-10 relative">
                 {/* Header */}
-                <header className="flex flex-col mb-12">
+                <header className="flex flex-col mb-16">
                     <div className="flex items-baseline gap-4 mb-2">
-                        <h1 className="text-6xl font-[300] tracking-tighter lowercase leading-none">
+                        <h1 className="text-6xl font-[100] tracking-tighter lowercase leading-none">
                             {format(churchNow, 'MMMM', { locale: es }).toLowerCase()}
                         </h1>
                         <span className="text-2xl font-[100] text-white/30 lowercase">
                             {format(churchNow, 'yyyy')}
                         </span>
                     </div>
-                    <div className="h-[1px] w-20 bg-white/20 mt-4" />
                 </header>
 
-                {/* Calendar Grid */}
+                {/* Calendar Grid - Minimalist Divide */}
                 <motion.div 
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
-                    className="grid grid-cols-7 gap-4 flex-1 pb-10"
+                    className="grid grid-cols-7 flex-1 border-t border-l border-white/5"
                 >
                     {['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'].map(d => (
-                        <div key={d} className="text-center text-[9px] font-[300] tracking-[0.4em] text-white/10 pb-4 lowercase">
+                        <div key={d} className="text-center text-[9px] font-[300] tracking-[0.4em] text-white/10 py-5 lowercase border-r border-b border-white/5">
                             {d}
                         </div>
                     ))}
                     
                     {padding.map((_, i) => (
-                        <div key={`pad-${i}`} className="aspect-square opacity-0" />
+                        <div key={`pad-${i}`} className="border-r border-b border-white/[0.02]" />
                     ))}
 
                     {days.map(date => {
@@ -82,20 +81,20 @@ const LunaPremiumCalendar: React.FC = () => {
                             <motion.div 
                                 key={key}
                                 variants={itemVariants}
-                                className={`aspect-square rounded-sm border flex flex-col items-center justify-center transition-all duration-700 relative overflow-hidden ${
-                                    active 
-                                    ? 'bg-white text-black border-white shadow-[0_0_40px_rgba(255,255,255,0.15)] z-10' 
-                                    : 'bg-white/[0.01] border-white/5 hover:bg-white/[0.03]'
+                                className={`flex flex-col items-center justify-center transition-all duration-700 relative border-r border-b border-white/5 hover:bg-white/[0.02] ${
+                                    active ? 'bg-white/[0.05]' : ''
                                 }`}
                             >
-                                <span className={`text-2xl font-[100] tracking-tighter ${active ? 'text-black' : 'text-white'}`}>
+                                {active && (
+                                    <div className="absolute top-2 left-2 px-1.5 py-0.5 bg-white/20 text-white text-[7px] font-[300] lowercase tracking-widest">hoy</div>
+                                )}
+                                
+                                <span className={`text-4xl font-[100] tracking-tighter ${active ? 'text-white' : 'text-white/40'}`}>
                                     {format(date, 'd')}
                                 </span>
                                 
-                                {hasData && !active && (
-                                    <div className="absolute bottom-3 flex gap-1">
-                                        <div className="w-[3px] h-[3px] rounded-none bg-white opacity-20" />
-                                    </div>
+                                {hasData && (
+                                    <div className="absolute bottom-4 w-1 h-1 bg-white/10" />
                                 )}
                             </motion.div>
                         );
@@ -103,23 +102,23 @@ const LunaPremiumCalendar: React.FC = () => {
                 </motion.div>
 
                 {/* Footer Legend */}
-                <footer className="flex items-center gap-8 opacity-10">
+                <footer className="mt-8 flex items-center gap-8 opacity-10">
                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-none border border-white" />
+                        <div className="w-1.5 h-1.5 border border-white" />
                         <span className="text-[8px] tracking-[0.2em] font-[300] lowercase">actividad</span>
                      </div>
                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-none bg-white" />
+                        <div className="w-1.5 h-1.5 bg-white" />
                         <span className="text-[8px] tracking-[0.2em] font-[300] lowercase">hoy</span>
                      </div>
                 </footer>
             </main>
 
-            {/* Atmosphere grid (rectangles instead of dots) */}
+            {/* Atmosphere grid layout */}
             <div className="fixed inset-0 pointer-events-none opacity-[0.01]" 
                  style={{ 
                      backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)', 
-                     backgroundSize: '30px 30px' 
+                     backgroundSize: '40px 40px' 
                  }} />
         </div>
     );
