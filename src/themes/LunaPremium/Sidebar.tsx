@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { motion } from 'framer-motion';
+import { motion } from ' fmxer-motion';
 import { 
     Cloud, 
     Sun, 
@@ -13,11 +13,8 @@ import {
     CloudSnow, 
     Wind,
     Thermometer,
-    Bell, 
-    User, 
-    Phone, 
-    Mail, 
-    Building2 
+    Building2,
+    MapPin
 } from 'lucide-react';
 import { useWeather } from '@/hooks/useWeather';
 
@@ -43,7 +40,7 @@ const Sidebar: React.FC = () => {
         return () => clearInterval(timer);
     }, []);
 
-    // Weather Data
+    // Weather Data from Admin Settings
     const { weather } = useWeather(
         settings?.weatherLat ?? 34.0522, 
         settings?.weatherLng ?? -118.2437,
@@ -59,14 +56,14 @@ const Sidebar: React.FC = () => {
         <motion.aside 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="fixed inset-y-0 left-0 w-[220px] h-full flex flex-col bg-white/[0.03] backdrop-blur-3xl border-r border-white/5 p-6 py-12 z-[50]"
+            className="fixed inset-y-0 left-0 w-[220px] h-full flex flex-col bg-white/[0.03] backdrop-blur-3xl border-r border-white/5 p-5 py-12 z-[50]"
             style={{ fontFamily: "'Saira', sans-serif" }}
         >
             {/* Subtle vertical glow edge */}
             <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
 
             {/* 1. LOGO ARRIBA */}
-            <div className="flex flex-col items-center mb-16">
+            <div className="flex flex-col items-center mb-10">
                 <div className="w-16 h-16 rounded-[2rem] bg-white/[0.05] border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl group transition-all duration-700 hover:scale-110">
                     {settings?.churchAvatar ? (
                         <img src={settings.churchAvatar} className="w-10 h-10 object-contain brightness-0 invert opacity-60" alt="Logo" />
@@ -74,42 +71,60 @@ const Sidebar: React.FC = () => {
                         <Building2 className="w-8 h-8 text-white/20" />
                     )}
                 </div>
-                <span className="text-[10px] font-bold tracking-[0.4em] text-white/20 mt-4 lowercase">
+                <span className="text-[10px] font-bold tracking-[0.4em] text-white/20 mt-4 lowercase truncate max-w-full">
                     {settings?.churchShortName || 'r o d e o'}
                 </span>
             </div>
 
-            {/* 2. CLIMA SIGUIENTE (Central) */}
-            <div className="flex-1 flex flex-col items-center justify-center">
-                <div className="flex flex-col items-center gap-2 mb-10">
-                    <div className="w-20 h-20 rounded-full bg-white/[0.02] border border-white/5 flex items-center justify-center mb-4">
-                        <WeatherIcon code={weather?.icon || "0"} className="w-10 h-10 text-white/80" />
-                    </div>
-                    <span className="text-5xl font-[100] tracking-tighter leading-none">
-                        {weather?.temp ?? '--'}°
+            {/* 2. CLIMA SIGUIENTE (Regresar al estilo anterior de lista vertical) */}
+            <div className="flex-1 flex flex-col overflow-hidden px-1">
+                <div className="flex flex-col mb-8">
+                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/10 mb-4 lowercase">
+                        clima actual
                     </span>
-                    <span className="text-[10px] font-light text-white/30 lowercase tracking-[0.2em] text-center px-4">
-                        {weather?.condition || 'cargando...'}
-                    </span>
-                </div>
-
-                {/* Vertical Forecast Line */}
-                <div className="flex flex-col gap-4">
-                    {weather?.forecast.slice(1, 4).map((f, i) => (
-                        <div key={i} className="flex flex-col items-center opacity-40">
-                            <span className="text-[9px] font-bold text-white/40 lowercase mb-1">
-                                {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 2)}
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                            <WeatherIcon code={weather?.icon || "0"} className="w-5 h-5 text-white/70" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-3xl font-[100] tracking-tighter leading-none">
+                                {weather?.temp ?? '--'}°
                             </span>
-                            <span className="text-sm font-[100]">
-                                {f.temp}°
+                            <span className="text-[10px] font-light text-white/30 lowercase truncate max-w-[100px]">
+                                {weather?.condition || 'cargando...'}
                             </span>
                         </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/10 mb-1 lowercase">
+                        pronóstico
+                    </span>
+                    {weather?.forecast.slice(1, 6).map((f, i) => (
+                        <motion.div 
+                            key={f.date}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 + (i * 0.1) }}
+                            className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5"
+                        >
+                            <div className="flex items-center gap-3">
+                                <span className="text-[9px] font-bold text-white/20 w-6 lowercase tracking-widest">
+                                    {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 2)}
+                                </span>
+                                <WeatherIcon code={f.icon} className="w-3 h-3 text-white/40" />
+                            </div>
+                            <span className="text-md font-[200]">
+                                {f.temp}°
+                            </span>
+                        </motion.div>
                     ))}
                 </div>
             </div>
 
             {/* 3. ABAJO HORA */}
-            <div className="mt-auto pt-10 border-t border-white/5 flex flex-col items-center">
+            <div className="mt-auto pt-8 border-t border-white/5 flex flex-col items-center">
                 <div className="flex items-baseline gap-2 mb-1">
                     <span className="text-5xl font-[200] tracking-tighter leading-none">
                         {formattedTime}
@@ -119,7 +134,7 @@ const Sidebar: React.FC = () => {
                     </span>
                 </div>
                 <div className="flex flex-col items-center opacity-40">
-                    <span className="text-[10px] font-bold tracking-widest lowercase">
+                    <span className="text-[10px] font-bold tracking-widest lowercase leading-tight">
                         {dayName}
                     </span>
                     <span className="text-[10px] font-light lowercase">
