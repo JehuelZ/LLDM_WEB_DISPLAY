@@ -130,19 +130,19 @@ const LunaPremiumCalendar: React.FC = () => {
                                             {lead5am && (
                                                 <div className="flex items-baseline gap-2">
                                                     <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead5am.name}</span>
-                                                    <span className="inline-block px-1.5 py-0.5 bg-white/5 border border-white/5 text-[5px] text-white/40 tracking-[0.1em] lowercase uppercase-first">consagración</span>
+                                                    <span className="inline-block px-1.5 py-0.5 bg-blue-500/10 border border-blue-500/20 text-[5px] text-blue-400/60 tracking-[0.1em] lowercase rounded-none">consagración</span>
                                                 </div>
                                             )}
                                             {lead9am && (
                                                 <div className="flex items-baseline gap-2">
                                                     <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead9am.name}</span>
-                                                    <span className="inline-block px-1.5 py-0.5 bg-white/5 border border-white/5 text-[5px] text-white/40 tracking-[0.1em] lowercase">doctrina</span>
+                                                    <span className="inline-block px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-[5px] text-emerald-400/60 tracking-[0.1em] lowercase rounded-none">doctrina</span>
                                                 </div>
                                             )}
                                             {lead7pm && (
                                                 <div className="flex items-baseline gap-2">
                                                     <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead7pm.name}</span>
-                                                    <span className="inline-block px-1.5 py-0.5 bg-white/5 border border-white/5 text-[5px] text-white/40 tracking-[0.1em] lowercase">oración</span>
+                                                    <span className="inline-block px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[5px] text-amber-400/60 tracking-[0.1em] lowercase rounded-none">oración</span>
                                                 </div>
                                             )}
                                         </>
