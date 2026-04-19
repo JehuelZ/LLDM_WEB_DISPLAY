@@ -71,7 +71,7 @@ export const LunaAnnouncements = () => {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex-1 flex flex-col items-center p-12 rounded-sm border border-white/5 bg-white/[0.03] backdrop-blur-xl relative overflow-hidden"
+                        className="flex-1 flex flex-col items-center p-12 relative overflow-hidden"
                     >
                         <div className="relative w-72 h-96 mb-12">
                             <div className="w-full h-full rounded-sm overflow-hidden border border-white/10 shadow-2xl grayscale transition-all duration-700 hover:grayscale-0">

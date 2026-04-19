@@ -56,11 +56,11 @@ const Sidebar: React.FC = () => {
         <motion.aside 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="fixed inset-y-0 left-0 w-[220px] h-full flex flex-col bg-white/[0.03] backdrop-blur-3xl border-r border-white/5 p-5 py-12 z-[50]"
+            className="fixed inset-y-0 left-0 w-[220px] h-full flex flex-col bg-transparent p-5 py-12 z-[50]"
             style={{ fontFamily: "'Saira', sans-serif" }}
         >
             {/* Subtle vertical glow edge */}
-            <div className="absolute inset-y-0 right-0 w-[1px] bg-gradient-to-b from-transparent via-white/10 to-transparent" />
+            {/* No dividers between column and background */}
 
             {/* 1. LOGO ARRIBA */}
             <div className="flex flex-col items-center mb-10">
