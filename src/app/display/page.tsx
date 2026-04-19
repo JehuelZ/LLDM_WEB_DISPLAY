@@ -99,7 +99,25 @@ export default function DisplayPage() {
 
     useEffect(() => {
         setIsMounted(true);
-        const timer = setInterval(() => setNow(new Date()), 1000);
+        
+        const updateNow = () => {
+            const date = new Date();
+            if (settings?.weatherTimezone) {
+                try {
+                    // Convert local time to church time
+                    const churchTimeStr = date.toLocaleString("en-US", { timeZone: settings.weatherTimezone });
+                    setNow(new Date(churchTimeStr));
+                } catch (e) {
+                    console.error("Error setting church timezone:", e);
+                    setNow(date);
+                }
+            } else {
+                setNow(date);
+            }
+        };
+
+        updateNow();
+        const timer = setInterval(updateNow, 1000);
 
         // Auto-scaling for TVs (assume target 1080p)
         const checkScale = () => {

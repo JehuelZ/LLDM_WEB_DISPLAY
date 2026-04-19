@@ -81,9 +81,14 @@ const getWeatherInfo = (code: number) => {
                 const lat = settings.weatherLat ?? 38.033;
                 const lng = settings.weatherLng ?? -122.267;
                 
-                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max&timezone=America%2FLos_Angeles`);
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,weather_code&daily=weather_code,temperature_2m_max&timezone=auto`);
                 const data = await res.json();
                 
+                // If timezone changed, save it to settings
+                if (data.timezone && data.timezone !== settings.weatherTimezone) {
+                    useAppStore.getState().saveSettingsToCloud({ weatherTimezone: data.timezone });
+                }
+
                 const currInfo = getWeatherInfo(data.current.weather_code);
                 
                 // create forecast array, skipping today (index 0) if you want next 5 days
@@ -121,9 +126,23 @@ const getWeatherInfo = (code: number) => {
     }, [settings.weatherLat, settings.weatherLng, settings.weatherCity]);
 
     useEffect(() => {
-        const timer = setInterval(() => setTime(new Date()), 1000);
+        const updateNow = () => {
+            const date = new Date();
+            if (settings?.weatherTimezone) {
+                try {
+                    const churchTimeStr = date.toLocaleString("en-US", { timeZone: settings.weatherTimezone });
+                    setTime(new Date(churchTimeStr));
+                } catch (e) {
+                    setTime(date);
+                }
+            } else {
+                setTime(date);
+            }
+        };
+        updateNow();
+        const timer = setInterval(updateNow, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [settings.weatherTimezone]);
 
     // Live Session Detection Logic
     const parseTimeStr = (t?: string) => {

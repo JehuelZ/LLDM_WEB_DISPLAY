@@ -355,11 +355,22 @@ export const AjustesTab = ({
                                             if (!loc.admin1 && loc.country) adminStr = `, ${loc.country}`;
                                             const displayName = `${loc.name}${adminStr}`;
                                             
-                                            const updates = { 
+                                            const updates: any = { 
                                                 weatherCity: displayName, 
                                                 weatherLat: loc.latitude, 
                                                 weatherLng: loc.longitude 
                                             };
+
+                                            // Also fetch timezone and add to updates
+                                            try {
+                                                const tzRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&timezone=auto&current_weather=true`);
+                                                const tzData = await tzRes.json();
+                                                if (tzData.timezone) {
+                                                    updates.weatherTimezone = tzData.timezone;
+                                                }
+                                            } catch (err) {
+                                                console.error("Error fetching timezone identifier:", err);
+                                            }
                                             
                                             setSettings({ ...settings, ...updates });
                                             await saveSettingsToCloud(updates);
@@ -382,6 +393,47 @@ export const AjustesTab = ({
                             Actual: Lat {settings.weatherLat !== undefined ? settings.weatherLat : '38.033'}, 
                             Lng {settings.weatherLng !== undefined ? settings.weatherLng : '-122.267'}
                         </p>
+
+                        <div className="py-4 border-t border-[var(--tactile-border)] space-y-4">
+                            <div className="flex items-center justify-between ml-2">
+                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground">MOSTRAR CLIMA EN DISPLAY</label>
+                                <button
+                                    onClick={() => {
+                                        const newValue = settings.minimalShowWeather !== true;
+                                        setSettings({ ...settings, minimalShowWeather: newValue });
+                                        saveSettingsToCloud({ minimalShowWeather: newValue });
+                                    }}
+                                    className={cn(
+                                        "w-12 h-6 rounded-full relative transition-colors border",
+                                        settings.minimalShowWeather === true ? "bg-primary/40 border-primary/40" : "bg-black/40 border-white/10"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "absolute top-1 w-4 h-4 rounded-full transition-all shadow-lg",
+                                        settings.minimalShowWeather === true ? "right-1 bg-white" : "left-1 bg-tactile-text-sub"
+                                    )} />
+                                </button>
+                            </div>
+                            <div className="flex items-center justify-between ml-2">
+                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground">PRONÓSTICO 5 DÍAS</label>
+                                <button
+                                    onClick={() => {
+                                        const newValue = settings.minimalShowForecast !== true;
+                                        setSettings({ ...settings, minimalShowForecast: newValue });
+                                        saveSettingsToCloud({ minimalShowForecast: newValue });
+                                    }}
+                                    className={cn(
+                                        "w-12 h-6 rounded-full relative transition-colors border",
+                                        settings.minimalShowForecast === true ? "bg-primary/40 border-primary/40" : "bg-black/40 border-white/10"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "absolute top-1 w-4 h-4 rounded-full transition-all shadow-lg",
+                                        settings.minimalShowForecast === true ? "right-1 bg-white" : "left-1 bg-tactile-text-sub"
+                                    )} />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </TactileGlassCard>
 
