@@ -104,6 +104,9 @@ export interface AppSettings {
     mainChurchName?: string;
     mainChurch?: CongregationInfo;
     missions?: (string | CongregationInfo)[];
+    minimalShowWeather?: boolean;
+    minimalShowForecast?: boolean;
+    weatherTimezone?: string;
 }
 
 export interface UserProfile {
@@ -390,7 +393,9 @@ export const useAppStore = create<AppState>()(
                 customLogo1: '',
                 customLogo2: '',
                 customLogo3: '',
-                customLogo4: ''
+                customLogo4: '',
+                minimalShowWeather: true,
+                minimalShowForecast: true,
             },
             currentUser: null,
             minister: {

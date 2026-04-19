@@ -10,6 +10,7 @@ export interface WeatherData {
         temp: number;
         icon: string;
     }[];
+    timezone?: string;
 }
 
 export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'celsius' | 'fahrenheit' = 'celsius') {
@@ -44,7 +45,8 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
                     date: time,
                     temp: Math.round(data.daily.temperature_2m_max[i]),
                     icon: data.daily.weathercode[i].toString()
-                }))
+                })),
+                timezone: data.timezone
             };
 
             setWeather(mappedWeather);
