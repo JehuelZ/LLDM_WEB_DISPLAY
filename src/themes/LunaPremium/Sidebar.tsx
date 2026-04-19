@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { motion } from ' fmxer-motion';
+import { motion } from 'framer-motion';
 import { 
     Cloud, 
     Sun, 
