@@ -31,8 +31,8 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
     const slots = [
         {
             id: '5am',
-            title: schedule?.slots?.['5am']?.customLabel || getSlotLabel('5am', settings?.language),
-            time: schedule?.slots?.['5am']?.time || '05:00 AM',
+            title: (schedule?.slots?.['5am']?.customLabel || getSlotLabel('5am', settings?.language))?.toLowerCase(),
+            time: schedule?.slots?.['5am']?.time || '05:00 am',
             ministerId: schedule?.slots?.['5am']?.leaderId,
             type: 'consecration'
         },
@@ -41,44 +41,44 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
             title: isSunday 
                 ? (schedule?.slots?.['9am']?.customLabel || schedule?.slots?.['9am']?.topic || getSlotLabel('9am_sunday', settings?.language))
                 : (schedule?.slots?.['9am']?.customLabel || getSlotLabel('9am_regular', settings?.language)),
-            time: schedule?.slots?.['9am']?.time || (isSunday ? '10:00 AM' : '09:00 AM'),
+            time: schedule?.slots?.['9am']?.time || (isSunday ? '10:00 am' : '09:00 am'),
             ministerId: schedule?.slots?.['9am']?.consecrationLeaderId,
             minister2Id: schedule?.slots?.['9am']?.doctrineLeaderId,
             type: isSunday ? 'special' : 'doctrine'
         },
         {
             id: 'evening',
-            title: schedule?.slots?.['evening']?.customLabel || (isSunday ? 'Servicio Vespertino' : getSlotLabel('evening_regular', settings?.language)),
-            time: schedule?.slots?.['evening']?.time || '07:00 PM',
+            title: (schedule?.slots?.['evening']?.customLabel || (isSunday ? 'servicio vespertino' : getSlotLabel('evening_regular', settings?.language)))?.toLowerCase(),
+            time: schedule?.slots?.['evening']?.time || '07:00 pm',
             ministerId: schedule?.slots?.['evening']?.leaderIds?.[0],
             minister2Id: schedule?.slots?.['evening']?.doctrineLeaderId || schedule?.slots?.['evening']?.leaderIds?.[1],
             type: schedule?.slots?.['evening']?.type || 'regular'
         }
     ].filter(s => s.ministerId || s.minister2Id || !isTomorrow);
 
-    const slideTitle = getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language);
+    const slideTitle = getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language)?.toLowerCase();
 
     return (
-        <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 p-12 pt-40 pb-32 pl-[220px]">
+        <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 p-12 pt-40 pb-32 pl-[220px]"
+             style={{ fontFamily: "'Saira', sans-serif" }}>
             {/* High-Tech Section Header */}
             <div className="flex items-center justify-between px-8 py-6 bg-surface-container-high/40 backdrop-blur-3xl rounded-3xl border-l-[4px] border-primary shadow-[0_32px_64px_rgba(0,0,0,0.4)] ring-1 ring-white/5">
                 <div className="flex flex-col">
                     <span 
-                        className="text-4xl font-light text-on-surface tracking-tight"
-                        style={{ fontFamily: fonts?.primary || 'Manrope, sans-serif' }}
+                        className="text-4xl font-[300] text-on-surface tracking-tight lowercase"
                     >
                         {slideTitle}
                     </span>
-                    <span className="text-[12px] uppercase font-bold tracking-[0.4em] text-primary mt-2 opacity-80">
-                        SISTEMA DE GESTIÓN ESPIRITUAL • {format(targetDate, 'dd MMMM yyyy', { locale: es })}
+                    <span className="text-[12px] font-[300] tracking-[0.4em] text-primary mt-2 opacity-80 lowercase">
+                        sistema de gestión espiritual • {format(targetDate, 'dd MMMM yyyy', { locale: es }).toLowerCase()}
                     </span>
                 </div>
                 <div className="flex items-center gap-8">
                     <div className="flex flex-col items-end">
-                        <span className="text-[11px] text-on-surface-variant uppercase tracking-widest font-black opacity-40">Modo de Visualización</span>
-                        <span className="text-md font-medium text-secondary flex items-center gap-2">
+                        <span className="text-[11px] text-on-surface-variant tracking-widest font-[300] opacity-40 lowercase">modo de visualización</span>
+                        <span className="text-md font-[300] text-secondary flex items-center gap-2 lowercase">
                             <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse shadow-[0_0_10px_#339af0]" />
-                            TIEMPO REAL
+                            tiempo real
                         </span>
                     </div>
                 </div>
@@ -93,29 +93,26 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                     return (
                         <div 
                             key={slot.id}
-                            className="group flex flex-col gap-6 p-8 bg-surface-container/30 backdrop-blur-2xl rounded-3xl hover:bg-surface-bright/20 transition-all duration-700 relative overflow-hidden ring-1 ring-white/5 shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
+                            className="group flex flex-col gap-6 p-8 bg-white/[0.03] backdrop-blur-2xl rounded-[3rem] hover:bg-white/[0.05] transition-all duration-700 relative overflow-hidden border border-white/5 shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
                         >
-                            {/* High-Chroma Gradient Highlight */}
-                            <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-primary via-primary to-primary-container opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
+                            <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-primary to-primary-container opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
 
                             <div className="flex items-center justify-between relative z-10 gap-12">
                                 {/* Time & Day Module */}
                                 <div className="flex items-center gap-8 min-w-[280px]">
-                                    <div className="w-16 h-16 bg-surface-container-high rounded-2xl flex items-center justify-center text-primary font-bold shadow-lg ring-1 ring-white/10 group-hover:scale-110 transition-transform duration-500">
+                                    <div className="w-16 h-16 bg-white/5 rounded-[1.5rem] border border-white/10 flex items-center justify-center text-primary font-[300] shadow-lg group-hover:scale-110 transition-transform duration-500">
                                         <Clock size={32} />
                                     </div>
                                     <div className="flex flex-col">
                                         <span 
-                                            className="text-[11px] uppercase tracking-[0.3em] text-on-surface-variant font-black opacity-40"
-                                            style={{ fontFamily: fonts?.secondary || 'Inter' }}
+                                            className="text-[11px] tracking-[0.3em] text-on-surface-variant font-[300] opacity-40 lowercase"
                                         >
-                                            INICIO PROGRAMADO
+                                            inicio programado
                                         </span>
                                         <span 
-                                            className="text-4xl font-light text-on-surface"
-                                            style={{ fontFamily: fonts?.primary || 'Manrope' }}
+                                            className="text-4xl font-[100] text-on-surface lowercase"
                                         >
-                                            {slot.time}
+                                            {slot.time.toLowerCase()}
                                         </span>
                                     </div>
                                 </div>
@@ -123,20 +120,19 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                 {/* Service Identity Module */}
                                 <div className="flex-1">
                                     <span 
-                                        className="text-3xl font-light text-on-surface leading-tight transition-all duration-500 group-hover:text-primary tracking-tight"
-                                        style={{ fontFamily: fonts?.primary || 'Manrope' }}
+                                        className="text-3xl font-[300] text-on-surface leading-tight transition-all duration-500 group-hover:text-primary tracking-tight lowercase"
                                     >
-                                        {slot.title}
+                                        {slot.title?.toLowerCase()}
                                     </span>
                                     <div className="flex items-center gap-8 mt-3">
-                                        <div className="flex items-center gap-2.5 text-[12px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">
+                                        <div className="flex items-center gap-2.5 text-[12px] tracking-widest text-on-surface-variant font-[300] opacity-60 lowercase">
                                             <MapPin size={16} className="text-secondary" />
-                                            SANTUARIO PRINCIPAL
+                                            santuario principal
                                         </div>
                                         <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-                                        <div className="flex items-center gap-2.5 text-[12px] uppercase tracking-widest text-on-surface-variant font-bold opacity-60">
+                                        <div className="flex items-center gap-2.5 text-[12px] tracking-widest text-on-surface-variant font-[300] opacity-60 lowercase">
                                             <Sunrise size={16} className="text-primary" />
-                                            {getServiceTypeLabel(slot.type, settings?.language)}
+                                            {getServiceTypeLabel(slot.type, settings?.language)?.toLowerCase()}
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +142,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                     <div className="flex -space-x-4">
                                         {[m1, m2].filter(Boolean).map((m: any, idx) => (
                                             <div key={idx} className="relative group/avatar">
-                                                <div className="w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-surface shadow-2xl relative transition-transform duration-500 group-hover/avatar:scale-110">
+                                                <div className="w-20 h-20 rounded-[1.5rem] overflow-hidden border-4 border-surface shadow-2xl relative transition-transform duration-500 group-hover/avatar:scale-110 grayscale group-hover:grayscale-0">
                                                     {m.avatar || m.avatarUrl ? (
                                                         <img src={m.avatar || m.avatarUrl} className="w-full h-full object-cover" alt={m.name} />
                                                     ) : (
@@ -159,16 +155,16 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                         ))}
                                     </div>
                                     <div className="flex flex-col min-w-[200px]">
-                                        <span className="text-[10px] uppercase tracking-[0.4em] text-primary font-black mb-1 opacity-60">
-                                            RESPONSABLES
+                                        <span className="text-[10px] tracking-[0.4em] text-primary font-[300] mb-1 opacity-60 lowercase">
+                                            responsables
                                         </span>
-                                        <span className="text-lg font-bold text-on-surface truncate" style={{ fontFamily: fonts?.primary }}>
-                                            {m1?.name || (m2 ? '' : 'PENDIENTE')}
+                                        <span className="text-lg font-[300] text-on-surface truncate lowercase">
+                                            {m1?.name?.toLowerCase() || (m2 ? '' : 'pendiente')}
                                             {m1 && m2 && ' / '}
-                                            {m2?.name}
+                                            {m2?.name?.toLowerCase()}
                                         </span>
-                                        <span className="text-xs text-on-surface-variant opacity-60 font-medium">
-                                            {m1 ? m1.group || 'MINISTERIO' : ''}
+                                        <span className="text-xs text-on-surface-variant opacity-60 font-[300] lowercase">
+                                            {m1 ? m1.group?.toLowerCase() || 'ministerio' : ''}
                                         </span>
                                     </div>
                                 </div>
@@ -176,7 +172,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                 {/* Interactive Indicator */}
                                 <div className="flex items-center gap-6">
                                     <div className="h-16 w-[1px] bg-white/5" />
-                                    <div className="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                                    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
                                         <ChevronRight size={24} className="text-primary" />
                                     </div>
                                 </div>
@@ -190,9 +186,6 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                     );
                 })}
             </div>
-
-            {/* Atmospheric Observatory Detail - Soft diffused light */}
-            <div className="absolute -bottom-40 -left-40 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[160px] pointer-events-none" />
         </div>
     );
 };

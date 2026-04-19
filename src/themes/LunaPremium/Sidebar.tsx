@@ -69,21 +69,21 @@ const Sidebar: React.FC = () => {
                         <img 
                             src={settings?.churchLogoUrl || settings?.displayCustomBgUrl} 
                             className="w-full h-full object-contain brightness-0 invert opacity-80" 
-                            alt="Logo" 
+                            alt="logo" 
                         />
                     ) : (
                         <Building2 className="w-8 h-8 text-white/20" />
                     )}
                 </div>
-                <span className="text-[10px] font-bold tracking-[0.4em] text-white/20 mt-4 lowercase truncate max-w-full px-2">
-                    {settings?.churchShortName || 'r o d e o'}
+                <span className="text-[10px] font-[300] tracking-[0.4em] text-white/20 mt-4 lowercase truncate max-w-full px-2">
+                    {settings?.churchShortName?.toLowerCase() || 'r o d e o'}
                 </span>
             </div>
 
-            {/* 2. CLIMA SIGUIENTE (Regresar al estilo anterior de lista vertical) */}
+            {/* 2. CLIMA SIGUIENTE */}
             <div className="flex-1 flex flex-col overflow-hidden px-1">
                 <div className="flex flex-col mb-8">
-                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/10 mb-4 lowercase">
+                    <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 mb-4 lowercase">
                         clima actual
                     </span>
                     <div className="flex items-center gap-3">
@@ -94,15 +94,15 @@ const Sidebar: React.FC = () => {
                             <span className="text-3xl font-[100] tracking-tighter leading-none">
                                 {weather?.temp ?? '--'}°
                             </span>
-                            <span className="text-[10px] font-light text-white/30 lowercase truncate max-w-[100px]">
-                                {weather?.condition || 'cargando...'}
+                            <span className="text-[10px] font-[300] text-white/30 lowercase truncate max-w-[100px]">
+                                {weather?.condition?.toLowerCase() || 'cargando...'}
                             </span>
                         </div>
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/10 mb-1 lowercase">
+                    <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 mb-1 lowercase">
                         pronóstico
                     </span>
                     {weather?.forecast.slice(1, 6).map((f, i) => (
@@ -114,12 +114,12 @@ const Sidebar: React.FC = () => {
                             className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.02] border border-white/5"
                         >
                             <div className="flex items-center gap-3">
-                                <span className="text-[9px] font-bold text-white/20 w-6 lowercase tracking-widest">
-                                    {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 2)}
+                                <span className="text-[9px] font-[300] text-white/20 w-6 lowercase tracking-widest">
+                                    {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 2).toLowerCase()}
                                 </span>
                                 <WeatherIcon code={f.icon} className="w-3 h-3 text-white/40" />
                             </div>
-                            <span className="text-md font-[200]">
+                            <span className="text-md font-[100]">
                                 {f.temp}°
                             </span>
                         </motion.div>
@@ -130,18 +130,18 @@ const Sidebar: React.FC = () => {
             {/* 3. ABAJO HORA */}
             <div className="mt-auto pt-8 border-t border-white/5 flex flex-col items-center">
                 <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-5xl font-[200] tracking-tighter leading-none">
+                    <span className="text-5xl font-[100] tracking-tighter leading-none">
                         {formattedTime}
                     </span>
-                    <span className="text-xs font-bold text-white/20 uppercase">
+                    <span className="text-xs font-[300] text-white/20 lowercase">
                         {ampm}
                     </span>
                 </div>
                 <div className="flex flex-col items-center opacity-40">
-                    <span className="text-[10px] font-bold tracking-widest lowercase leading-tight">
+                    <span className="text-[10px] font-[300] tracking-widest lowercase leading-tight">
                         {dayName}
                     </span>
-                    <span className="text-[10px] font-light lowercase">
+                    <span className="text-[10px] font-[300] lowercase">
                         {fullDate}
                     </span>
                 </div>

@@ -44,7 +44,7 @@ const LunaPremiumCalendar: React.FC = () => {
                 {/* Header */}
                 <header className="flex flex-col mb-12">
                     <div className="flex items-baseline gap-4 mb-2">
-                        <h1 className="text-6xl font-[200] tracking-tighter lowercase leading-none">
+                        <h1 className="text-6xl font-[300] tracking-tighter lowercase leading-none">
                             {format(churchNow, 'MMMM', { locale: es }).toLowerCase()}
                         </h1>
                         <span className="text-2xl font-[100] text-white/30 lowercase">
@@ -62,7 +62,7 @@ const LunaPremiumCalendar: React.FC = () => {
                     className="grid grid-cols-7 gap-4 flex-1 pb-10"
                 >
                     {['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'].map(d => (
-                        <div key={d} className="text-center text-[9px] font-bold tracking-[0.4em] text-white/10 pb-4 lowercase">
+                        <div key={d} className="text-center text-[9px] font-[300] tracking-[0.4em] text-white/10 pb-4 lowercase">
                             {d}
                         </div>
                     ))}
@@ -105,11 +105,11 @@ const LunaPremiumCalendar: React.FC = () => {
                 <footer className="flex items-center gap-8 opacity-10">
                      <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full border border-white" />
-                        <span className="text-[8px] tracking-[0.2em] font-bold lowercase">actividad</span>
+                        <span className="text-[8px] tracking-[0.2em] font-[300] lowercase">actividad</span>
                      </div>
                      <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                        <span className="text-[8px] tracking-[0.2em] font-bold lowercase">hoy</span>
+                        <span className="text-[8px] tracking-[0.2em] font-[300] lowercase">hoy</span>
                      </div>
                 </footer>
             </main>

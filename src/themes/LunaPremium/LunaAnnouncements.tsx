@@ -55,7 +55,7 @@ export const LunaAnnouncements = () => {
                                     {ann.content.toLowerCase()}
                                 </p>
 
-                                <div className="mt-auto pt-8 flex items-center justify-between text-[10px] font-bold text-white/10 lowercase tracking-[0.2em]">
+                                <div className="mt-auto pt-8 flex items-center justify-between text-[10px] font-[300] text-white/10 lowercase tracking-[0.2em]">
                                     <span>canal oficial</span>
                                     <span>#{String(idx + 1).padStart(2, '0')}</span>
                                 </div>
@@ -86,7 +86,7 @@ export const LunaAnnouncements = () => {
                         </div>
 
                         <div className="flex flex-col items-center">
-                            <span className="text-[10px] lowercase font-bold tracking-[0.4em] text-white/40 mb-4">
+                            <span className="text-[10px] lowercase font-[300] tracking-[0.4em] text-white/40 mb-4">
                                 {minister.role?.toLowerCase() || 'ministro local'}
                             </span>
                             <h2 className="text-3xl font-[200] lowercase tracking-tighter mb-8 text-center">
@@ -101,7 +101,7 @@ export const LunaAnnouncements = () => {
                             </div>
                             <div className="flex items-center gap-6 text-white/10 truncate">
                                 <Mail className="w-5 h-5 flex-shrink-0" />
-                                <span className="text-[12px] font-bold lowercase tracking-wide truncate">{minister.email}</span>
+                                <span className="text-[12px] font-[300] lowercase tracking-wide truncate">{minister.email?.toLowerCase()}</span>
                             </div>
                         </div>
 
