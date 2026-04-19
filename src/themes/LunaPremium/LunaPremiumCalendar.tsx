@@ -128,21 +128,21 @@ const LunaPremiumCalendar: React.FC = () => {
                                     {(lead5am || lead9am || lead7pm) ? (
                                         <>
                                             {lead5am && (
-                                                <div className="flex flex-col">
-                                                    <span className="inline-block self-start px-1.5 py-0.5 bg-white/5 border border-white/5 text-[6px] text-white/40 tracking-[0.2em] lowercase mb-1">consagración</span>
-                                                    <span className="text-[9px] text-white/40 truncate capitalize">{lead5am.name}</span>
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead5am.name}</span>
+                                                    <span className="inline-block px-1.5 py-0.5 bg-white/5 border border-white/5 text-[5px] text-white/40 tracking-[0.1em] lowercase uppercase-first">consagración</span>
                                                 </div>
                                             )}
                                             {lead9am && (
-                                                <div className="flex flex-col">
-                                                    <span className="inline-block self-start px-1.5 py-0.5 bg-white/5 border border-white/5 text-[6px] text-white/40 tracking-[0.2em] lowercase mb-1">doctrina</span>
-                                                    <span className="text-[9px] text-white/40 truncate capitalize">{lead9am.name}</span>
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead9am.name}</span>
+                                                    <span className="inline-block px-1.5 py-0.5 bg-white/5 border border-white/5 text-[5px] text-white/40 tracking-[0.1em] lowercase">doctrina</span>
                                                 </div>
                                             )}
                                             {lead7pm && (
-                                                <div className="flex flex-col">
-                                                    <span className="inline-block self-start px-1.5 py-0.5 bg-white/5 border border-white/5 text-[6px] text-white/40 tracking-[0.2em] lowercase mb-1">oración</span>
-                                                    <span className="text-[9px] text-white/40 truncate capitalize">{lead7pm.name}</span>
+                                                <div className="flex items-baseline gap-2">
+                                                    <span className="text-[9px] text-white/40 truncate capitalize shrink-0 max-w-[120px]">{lead7pm.name}</span>
+                                                    <span className="inline-block px-1.5 py-0.5 bg-white/5 border border-white/5 text-[5px] text-white/40 tracking-[0.1em] lowercase">oración</span>
                                                 </div>
                                             )}
                                         </>
