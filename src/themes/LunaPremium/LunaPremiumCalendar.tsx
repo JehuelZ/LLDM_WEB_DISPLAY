@@ -129,19 +129,19 @@ const LunaPremiumCalendar: React.FC = () => {
                                         <>
                                             {lead5am && (
                                                 <div className="flex flex-col">
-                                                    <span className="text-[7px] text-white/10 tracking-widest lowercase">consagración</span>
+                                                    <span className="inline-block self-start px-1.5 py-0.5 bg-white/5 border border-white/5 text-[6px] text-white/40 tracking-[0.2em] lowercase mb-1">consagración</span>
                                                     <span className="text-[9px] text-white/40 truncate capitalize">{lead5am.name}</span>
                                                 </div>
                                             )}
                                             {lead9am && (
                                                 <div className="flex flex-col">
-                                                    <span className="text-[7px] text-white/10 tracking-widest lowercase">doctrina</span>
+                                                    <span className="inline-block self-start px-1.5 py-0.5 bg-white/5 border border-white/5 text-[6px] text-white/40 tracking-[0.2em] lowercase mb-1">doctrina</span>
                                                     <span className="text-[9px] text-white/40 truncate capitalize">{lead9am.name}</span>
                                                 </div>
                                             )}
                                             {lead7pm && (
                                                 <div className="flex flex-col">
-                                                    <span className="text-[7px] text-white/10 tracking-widest lowercase">oración</span>
+                                                    <span className="inline-block self-start px-1.5 py-0.5 bg-white/5 border border-white/5 text-[6px] text-white/40 tracking-[0.2em] lowercase mb-1">oración</span>
                                                     <span className="text-[9px] text-white/40 truncate capitalize">{lead7pm.name}</span>
                                                 </div>
                                             )}
