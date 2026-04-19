@@ -117,6 +117,13 @@ Sustituido en Abril 2026 para garantizar que la pizarra sea una "ventana" fiel a
 - **Acceso Previsión**: El botón de pantalla completa debe ser accesible **ANTES** de desbloquear la pantalla con el PIN. Se prohíbe ocultar controles de hardware detrás del `DisplayLock`.
 - **Transparencia**: Los triggers de administración deben ser invisibles para la congregación pero detectables al tacto/clic por el personal autorizado.
 
+### 🚫 PROHIBICIÓN DE DATOS INVENTADOS Y LOCALES (REGLA DE ORO)
+- **Origen de Datos Único**: ABSOLUTAMENTE TODOS los datos reflejados en pantallas (Display), Dashboard de Miembros, Consola del Ministro, Responsables de Coro y Administrador deben proceder de la base de datos de Supabase o de la configuración del sistema.
+- **Prohibido Inventar**: No se permite el uso de datos de "relleno" o placeholders. Si un dato no existe en el sistema, se debe dejar vacío o mostrar un estado de "Pendiente", pero jamás inventar nombres o cifras.
+- **Independencia del Dispositivo**: Se prohíbe usar la hora, fecha o configuración regional del dispositivo físico (Laptop, Tablet o TV) como fuente de información. 
+    - *Ejemplo*: Las horas de las oraciones en los dashboards de miembros deben calcularse según la zona horaria de la iglesia guardada en el sistema, no según el reloj del teléfono del hermano.
+- **Sincronización**: Toda lógica de "tiempo real" debe pasar por el filtro de sincronización geográfica establecido en este documento.
+
 ---
 _Última actualización: 19 de Abril, 2026_
 _Autor: Antigravity (IA) & LLDM Rodeo Team_
