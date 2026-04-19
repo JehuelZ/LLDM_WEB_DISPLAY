@@ -10,11 +10,11 @@ import { getChurchNow } from '@/lib/time';
 // ─────────────────────────────────────────────
 // LUNA PREMIUM THEME: CALENDAR SLIDE
 // Aesthetic: Ultra-Minimalist Industrial
-// NO BOXES, NO DIVISIONS: Only tiny subtle markers
+// NO BOXES, NO DIVISIONS: Minimal Information Layer
 // ─────────────────────────────────────────────
 
 const LunaPremiumCalendar: React.FC = () => {
-    const { monthlySchedule, settings } = useAppStore();
+    const { monthlySchedule, settings, members } = useAppStore();
     const churchNow = getChurchNow(settings);
     
     const start = startOfMonth(churchNow);
@@ -24,6 +24,11 @@ const LunaPremiumCalendar: React.FC = () => {
     // Add prefix padding for the first day of month (Sunday start)
     const firstDay = start.getDay();
     const padding = Array.from({ length: firstDay });
+
+    const getMember = (id?: string) => {
+        if (!id) return null;
+        return members?.find((m: any) => m.id?.toString().toLowerCase() === id.trim().toLowerCase());
+    };
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -54,7 +59,7 @@ const LunaPremiumCalendar: React.FC = () => {
                 </header>
 
                 {/* Day Labels - With tiny dividers */}
-                <div className="grid grid-cols-7 mb-8">
+                <div className="grid grid-cols-7 mb-4">
                     {['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'].map((d, i) => (
                         <div key={d} className="relative text-center">
                             <span className="text-[10px] font-[300] tracking-[0.6em] text-white/20 lowercase">
@@ -68,7 +73,7 @@ const LunaPremiumCalendar: React.FC = () => {
                     ))}
                 </div>
 
-                {/* Calendar Grid - Ultra Clean */}
+                {/* Calendar Grid - Ultra Clean / Data Rich */}
                 <motion.div 
                     variants={containerVariants}
                     initial="hidden"
@@ -76,17 +81,21 @@ const LunaPremiumCalendar: React.FC = () => {
                     className="grid grid-cols-7 flex-1"
                 >
                     {padding.map((_, i) => (
-                        <div key={`pad-${i}`} className="relative">
-                             {/* Vertical guide line - Extremely faint */}
-                             <div className="absolute inset-y-0 right-0 w-[1px] bg-white/[0.02]" />
-                        </div>
+                        <div key={`pad-${i}`} className="relative border-r border-white/[0.01]" />
                     ))}
 
                     {days.map((date, idx) => {
                         const key = format(date, 'yyyy-MM-dd');
                         const sched = monthlySchedule?.[key];
                         const active = isSameDay(date, churchNow);
-                        const hasData = sched?.slots?.['5am']?.leaderId || sched?.slots?.['9am']?.consecrationLeaderId || sched?.slots?.['evening']?.leaderIds?.length;
+                        const isSunday = date.getDay() === 0;
+
+                        // Get responsibly names
+                        const lead5am = getMember(sched?.slots?.['5am']?.leaderId);
+                        const lead9am = isSunday 
+                            ? getMember(sched?.slots?.['9am']?.doctrineLeaderId)
+                            : getMember(sched?.slots?.['9am']?.consecrationLeaderId);
+                        const lead7pm = getMember(sched?.slots?.['evening']?.leaderIds?.[0]);
                         
                         const colIndex = (padding.length + idx) % 7;
                         const isLastCol = colIndex === 6;
@@ -95,30 +104,52 @@ const LunaPremiumCalendar: React.FC = () => {
                             <motion.div 
                                 key={key}
                                 variants={itemVariants}
-                                className="flex flex-col items-center justify-center relative group"
+                                className="flex flex-col p-4 relative group"
                             >
-                                {/* Vertical Column Divider - Faint line */}
+                                {/* Vertical Column Divider */}
                                 {!isLastCol && (
                                     <div className="absolute inset-y-0 -right-[1px] w-[1px] bg-white/[0.02]" />
                                 )}
 
-                                {/* Active State Indicator - Minimalist */}
+                                {/* Today Indicator */}
                                 {active && (
-                                    <motion.div 
-                                        layoutId="luna_active_bg"
-                                        className="absolute inset-4 border border-white/10 rounded-sm"
-                                    />
+                                    <div className="absolute inset-2 border border-white/10 opacity-30" />
                                 )}
                                 
-                                <span className={`text-6xl font-[100] tracking-tighter transition-all duration-700 ${
-                                    active ? 'text-white scale-110' : 'text-white/30 group-hover:text-white/50'
+                                {/* Day Number */}
+                                <span className={`text-4xl font-[100] tracking-tighter mb-4 ${
+                                    active ? 'text-white' : 'text-white/20'
                                 }`}>
                                     {format(date, 'd')}
                                 </span>
                                 
-                                {hasData && (
-                                    <div className="absolute bottom-6 w-0.5 h-3 bg-white/10" />
-                                )}
+                                {/* Data Stack */}
+                                <div className="flex flex-col gap-3 mt-auto pb-4">
+                                    {(lead5am || lead9am || lead7pm) ? (
+                                        <>
+                                            {lead5am && (
+                                                <div className="flex flex-col">
+                                                    <span className="text-[7px] text-white/10 tracking-widest lowercase">consagración</span>
+                                                    <span className="text-[9px] text-white/40 truncate lowercase">{lead5am.name.split(' ')[0]}</span>
+                                                </div>
+                                            )}
+                                            {lead9am && (
+                                                <div className="flex flex-col">
+                                                    <span className="text-[7px] text-white/10 tracking-widest lowercase">doctrina</span>
+                                                    <span className="text-[9px] text-white/40 truncate lowercase">{lead9am.name.split(' ')[0]}</span>
+                                                </div>
+                                            )}
+                                            {lead7pm && (
+                                                <div className="flex flex-col">
+                                                    <span className="text-[7px] text-white/10 tracking-widest lowercase">oración</span>
+                                                    <span className="text-[9px] text-white/40 truncate lowercase">{lead7pm.name.split(' ')[0]}</span>
+                                                </div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <div className="h-1 w-4 bg-white/[0.02]" />
+                                    )}
+                                </div>
                             </motion.div>
                         );
                     })}
@@ -137,7 +168,7 @@ const LunaPremiumCalendar: React.FC = () => {
                 </footer>
             </main>
 
-            {/* Atmosphere column layout (vertical lines only) */}
+            {/* Atmosphere background column guides */}
             <div className="fixed inset-0 pointer-events-none opacity-[0.01]" 
                  style={{ 
                      backgroundImage: 'linear-gradient(to right, white 1px, transparent 1px)', 
