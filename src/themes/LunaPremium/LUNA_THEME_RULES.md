@@ -10,6 +10,7 @@ Este es el documento constitucional para el tema Luna Premium. Estas reglas DEBE
 
 ## 2. 🧱 Layout y Geometría
 - **Dashboard**: Una única fila de **4 Columnas** (`lg:grid-cols-4`).
+- **Display Layout**: Columna vertical de **clima** a la izquierda (`w-[380px]`), abarcando de arriba a abajo. El contenido principal fluye a la derecha.
 - **Cajas**: Solo se permiten 4 cajas maestras: `asistencia semanal`, `asistencia anual`, `node registry` y `active density`.
 - **Minimalismo**: ELIMINADOS los textos de `logo`, `branding`, `administrator` o `status`. Solo iconos.
 - **Bordes**: Todas las barras y botones deben ser **`rounded-full`** (cápsulas).
