@@ -40,14 +40,14 @@ const LunaPremiumCalendar: React.FC = () => {
              style={{ fontFamily: "'Saira', sans-serif" }}>
             
             {/* MAIN CONTENT: CALENDAR */}
-            <main className="flex-1 h-full flex flex-col p-16 pt-32 z-10 relative">
+            <main className="flex-1 h-full flex flex-col p-16 pt-12 z-10 relative">
                 {/* Header */}
-                <header className="flex flex-col mb-20">
+                <header className="flex flex-col mb-12">
                     <div className="flex items-baseline gap-4 mb-2">
-                        <h1 className="text-7xl font-[100] tracking-tighter lowercase leading-none opacity-80">
+                        <h1 className="text-2xl font-[100] tracking-[0.4em] lowercase leading-none opacity-40">
                             {format(churchNow, 'MMMM', { locale: es }).toLowerCase()}
                         </h1>
-                        <span className="text-3xl font-[100] text-white/10 lowercase">
+                        <span className="text-xs font-[100] text-white/10 lowercase tracking-widest">
                             {format(churchNow, 'yyyy')}
                         </span>
                     </div>
