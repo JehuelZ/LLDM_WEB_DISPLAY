@@ -67,7 +67,7 @@ const LunaPremiumCalendar: React.FC = () => {
                             </span>
                             {/* Tiny vertical divider marker between labels */}
                             {i < 6 && (
-                                <div className="absolute top-1/2 -right-[1px] -translate-y-1/2 w-[1px] h-3 bg-white/5" />
+                                <div className="absolute top-1/2 -right-[1px] -translate-y-1/2 w-[1px] h-3 bg-amber-500/20" />
                             )}
                         </div>
                     ))}
@@ -120,7 +120,7 @@ const LunaPremiumCalendar: React.FC = () => {
                             >
                                 {/* Vertical Column Divider */}
                                 {!isLastCol && (
-                                    <div className="absolute inset-y-0 -right-[1px] w-[1px] bg-white/[0.02]" />
+                                    <div className="absolute inset-y-0 -right-[1px] w-[1px] bg-amber-500/10" />
                                 )}
 
                                 {/* Today Indicator */}
