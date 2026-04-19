@@ -58,8 +58,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
 
     const slideTitle = getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language)?.toLowerCase();
 
-    return (
-        <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 p-12 pt-40 pb-32 pl-[220px]"
+        <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 px-4 py-8 pt-32 pb-32 pl-[220px]"
              style={{ fontFamily: "'Saira', sans-serif" }}>
             {/* High-Tech Section Header */}
             <div className="flex items-center justify-between px-8 py-6 bg-surface-container-high/40 backdrop-blur-3xl rounded-3xl border-l-[4px] border-primary shadow-[0_32px_64px_rgba(0,0,0,0.4)] ring-1 ring-white/5">
@@ -93,7 +92,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                     return (
                         <div 
                             key={slot.id}
-                            className="group flex flex-col gap-6 p-8 bg-white/[0.03] backdrop-blur-2xl rounded-[3rem] hover:bg-white/[0.05] transition-all duration-700 relative overflow-hidden border border-white/5 shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
+                            className="group flex flex-col gap-6 px-6 py-8 bg-white/[0.03] backdrop-blur-2xl rounded-[3rem] hover:bg-white/[0.05] transition-all duration-700 relative overflow-hidden border border-white/5 shadow-[0_16px_48px_rgba(0,0,0,0.3)]"
                         >
                             <div className="absolute top-0 left-0 w-1.5 h-full bg-gradient-to-b from-primary to-primary-container opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
 
