@@ -102,5 +102,21 @@ Al trabajar en LLDM Rodeo, te comprometes a:
 3. **Respeto Litúrgico**: El sistema debe reflejar la solemnidad de la iglesia en cada transición.
 
 ---
-_Última actualización: 6 de Abril, 2026_
+
+## ⚙️ 7. REGLAS DE TIEMPO Y ACCESO (INTEGRIDAD VISUAL)
+
+Sustituido en Abril 2026 para garantizar que la pizarra sea una "ventana" fiel a la iglesia, sin importar la ubicación del hardware:
+
+### 🕒 Sincronización Horaria Geográfica
+- **Fuente de Verdad**: La hora mostrada en los displays (pizarras) **NUNCA** debe depender del reloj interno de la computadora o TV.
+- **Reloj Maestro**: El sistema debe convertir la hora UTC a la zona horaria definida en `settings.weatherTimezone` (detectada automáticamente por la ubicación del clima).
+- **Consistencia de Oración**: Si un servicio está programado a las 5:00 AM, la pizarra debe mostrar las 5:00 AM de la ubicación de la iglesia, aunque el dispositivo físico esté en otra zona horaria.
+
+### 🖥️ Interfaz de Usuario y Accesibilidad Técnica
+- **Capa Superior (Z-Index)**: Los controles técnicos críticos (Botón de Pantalla Completa, Triggers Secretos) deben residir en la capa **z-[9999]**.
+- **Acceso Previsión**: El botón de pantalla completa debe ser accesible **ANTES** de desbloquear la pantalla con el PIN. Se prohíbe ocultar controles de hardware detrás del `DisplayLock`.
+- **Transparencia**: Los triggers de administración deben ser invisibles para la congregación pero detectables al tacto/clic por el personal autorizado.
+
+---
+_Última actualización: 19 de Abril, 2026_
 _Autor: Antigravity (IA) & LLDM Rodeo Team_
