@@ -1,7 +1,7 @@
 'use client';
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, User, Phone, Mail, Church } from 'lucide-react';
+import { Bell, User, Phone, Mail, Building2 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn, getActiveAnnouncements } from '@/lib/utils';
 
@@ -79,7 +79,7 @@ export const LunaAnnouncements = () => {
                                     <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
                                 ) : (
                                     <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                                        <Church className="w-24 h-24 text-white/10" />
+                                        <Building2 className="w-24 h-24 text-white/10" />
                                     </div>
                                 )}
                             </div>

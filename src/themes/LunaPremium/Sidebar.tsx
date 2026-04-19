@@ -13,7 +13,11 @@ import {
     CloudSnow, 
     Wind,
     Thermometer,
-    Church
+    Bell, 
+    User, 
+    Phone, 
+    Mail, 
+    Building2 
 } from 'lucide-react';
 import { useWeather } from '@/hooks/useWeather';
 
@@ -67,7 +71,7 @@ const Sidebar: React.FC = () => {
                     {settings?.churchAvatar ? (
                         <img src={settings.churchAvatar} className="w-10 h-10 object-contain brightness-0 invert opacity-60" alt="Logo" />
                     ) : (
-                        <Church className="w-8 h-8 text-white/20" />
+                        <Building2 className="w-8 h-8 text-white/20" />
                     )}
                 </div>
                 <span className="text-[10px] font-bold tracking-[0.4em] text-white/20 mt-4 lowercase">
