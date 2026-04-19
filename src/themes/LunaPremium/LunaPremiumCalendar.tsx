@@ -147,7 +147,7 @@ const LunaPremiumCalendar: React.FC = () => {
                 <header className="flex flex-col mb-16">
                     <div className="flex items-baseline gap-4 mb-2">
                         <h1 className="text-6xl font-[200] tracking-tighter lowercase leading-none">
-                            {format(churchNow, 'MMMM', { locale: es })}
+                            {format(churchNow, 'MMMM', { locale: es }).toLowerCase()}
                         </h1>
                         <span className="text-2xl font-[100] text-white/30 lowercase">
                             {format(churchNow, 'yyyy')}

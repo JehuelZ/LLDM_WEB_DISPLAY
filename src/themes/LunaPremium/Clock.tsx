@@ -53,15 +53,15 @@ const Clock: React.FC<ClockProps> = ({ isVertical, now: externalNow, settings: e
     const formatTime = (date: Date) => {
         const hours = date.getHours();
         const minutes = date.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const ampm = hours >= 12 ? 'pm' : 'am';
         const formattedHours = hours % 12 || 12;
         const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
         return { display: `${formattedHours}:${formattedMinutes}`, ampm };
     };
 
     const { display, ampm } = formatTime(time);
-    const day = time.toLocaleDateString('es-ES', { weekday: 'long' });
-    const fullDate = time.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' });
+    const day = time.toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
+    const fullDate = time.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }).toLowerCase();
 
     return (
         <div className="absolute top-12 left-12 right-12 flex justify-between items-start z-[100] pointer-events-none">
