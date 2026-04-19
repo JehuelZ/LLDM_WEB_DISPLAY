@@ -1661,7 +1661,6 @@ export const useAppStore = create<AppState>()(
                             template: (data.display_template || get().calendarStyles.template) as any,
                             fontFamily: (data.display_font_family || get().calendarStyles.fontFamily) as any
                         }
-                        }
                     });
 
                     // SYNC Data Integrity: Load rehearsals if not loaded

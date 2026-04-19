@@ -408,7 +408,6 @@ export default function DisplayPage() {
         </div>
     );
 }
-}
 
 // Fixed Placeholder slides for missing or shared functionality
 function CountdownSlide() {
