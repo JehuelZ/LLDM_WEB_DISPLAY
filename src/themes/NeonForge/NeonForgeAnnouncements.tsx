@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Phone, Mail, Church, AlertTriangle, Info, Zap } from 'lucide-react';
+import { Bell, Phone, Mail, Church, AlertTriangle, Info, Zap, Shield } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { getVariantTokens } from './tokens';
 import { useMemo } from 'react';
@@ -159,17 +159,19 @@ export function NeonForgeAnnouncements() {
                                 }
                             </div>
                             <div className="mt-4 text-center">
-                                <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Ministro a Cargo</span>
-                                <p className="text-xl font-black mt-0.5 leading-tight" style={{ color: T.white }}>{minister.name}</p>
+                                <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Responsabilidad Ministerial</span>
+                                <p className="text-xl font-black mt-0.5 leading-tight uppercase italic" style={{ color: minister.name === 'Por asignar' ? T.textMuted : T.white }}>
+                                    {minister.name}
+                                </p>
                             </div>
                         </div>
 
                         {/* Divider */}
-                        <div className="h-px mx-5" style={{ background: T.border }} />
+                        {minister.name !== 'Por asignar' && <div className="h-px mx-5" style={{ background: T.border }} />}
 
                         {/* Contact */}
                         <div className="flex flex-col gap-2.5 p-5">
-                            {minister.phone && (
+                            {minister.phone && minister.name !== 'Por asignar' && (
                                 <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
                                     style={{ background: T.bg, border: `1px solid ${T.border}` }}>
                                     <div className="w-7 h-7 rounded-lg flex items-center justify-center"
@@ -179,7 +181,7 @@ export function NeonForgeAnnouncements() {
                                     <span className="text-[12px] font-medium" style={{ color: T.textSecondary }}>{minister.phone}</span>
                                 </div>
                             )}
-                            {minister.email && (
+                            {minister.email && minister.name !== 'Por asignar' && (
                                 <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl"
                                     style={{ background: T.bg, border: `1px solid ${T.border}` }}>
                                     <div className="w-7 h-7 rounded-lg flex items-center justify-center"
@@ -187,6 +189,12 @@ export function NeonForgeAnnouncements() {
                                         <Mail className="w-3.5 h-3.5" style={{ color: T.accent }} />
                                     </div>
                                     <span className="text-[11px] font-medium" style={{ color: T.textSecondary }}>{minister.email}</span>
+                                </div>
+                            )}
+                            {minister.name === 'Por asignar' && (
+                                <div className="flex flex-col items-center gap-2 opacity-20 py-4">
+                                    <Shield className="w-8 h-8" style={{ color: T.textMuted }} />
+                                    <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: T.textMuted }}>Información Pendiente</span>
                                 </div>
                             )}
                         </div>

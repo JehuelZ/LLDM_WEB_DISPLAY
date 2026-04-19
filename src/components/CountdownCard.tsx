@@ -7,6 +7,7 @@ import { CalendarDays, Sparkles, Clock, Target } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, parseISO } from 'date-fns';
+import { getChurchNow } from '@/lib/time';
 
 export function CountdownCard() {
     const { settings, saveSettingsToCloud } = useAppStore();
@@ -17,8 +18,8 @@ export function CountdownCard() {
 
         const checkCountdown = () => {
             const target = parseISO(settings.countdownDate!);
-            const now = new Date();
-            const diff = target.getTime() - now.getTime();
+            const churchNow = getChurchNow(settings);
+            const diff = target.getTime() - churchNow.getTime();
 
             if (diff <= 0) {
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -28,10 +29,10 @@ export function CountdownCard() {
             }
 
             setTimeLeft({
-                days: differenceInDays(target, now),
-                hours: differenceInHours(target, now) % 24,
-                minutes: differenceInMinutes(target, now) % 60,
-                seconds: differenceInSeconds(target, now) % 60,
+                days: differenceInDays(target, churchNow),
+                hours: differenceInHours(target, churchNow) % 24,
+                minutes: differenceInMinutes(target, churchNow) % 60,
+                seconds: differenceInSeconds(target, churchNow) % 60,
             });
             return false;
         };
