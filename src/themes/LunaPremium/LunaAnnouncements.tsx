@@ -11,8 +11,7 @@ export const LunaAnnouncements = () => {
     const announcements = useMemo(() => getActiveAnnouncements(allAnnouncements), [allAnnouncements]);
     const minister = useAppStore((state) => state.minister);
 
-    return (
-        <div className="h-full flex flex-col md:flex-row px-0 py-8 pt-24 gap-12 overflow-hidden bg-transparent relative pl-[220px]" 
+        <div className="h-full flex flex-col md:flex-row pl-[252px] pr-4 py-8 pt-24 gap-12 overflow-hidden bg-transparent relative" 
              style={{ fontFamily: "'Saira', sans-serif" }}>
             
             {/* 1. LEFT PILLAR: ANNOUNCEMENTS */}

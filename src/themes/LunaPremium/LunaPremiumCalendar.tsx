@@ -45,7 +45,7 @@ const LunaPremiumCalendar: React.FC = () => {
              style={{ fontFamily: "'Saira', sans-serif" }}>
             
             {/* MAIN CONTENT: CALENDAR */}
-            <main className="flex-1 h-full flex flex-col px-0 py-8 pt-12 z-10 relative">
+            <main className="flex-1 h-full flex flex-col pl-8 pr-4 py-8 pt-12 z-10 relative">
                 {/* Header */}
                 <header className="flex flex-col mb-12">
                     <div className="flex items-baseline gap-4 mb-2">
