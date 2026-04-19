@@ -17,7 +17,15 @@ export function CountdownCard() {
         if (!settings.showCountdown || !settings.countdownDate) return;
 
         const checkCountdown = () => {
-            const target = parseISO(settings.countdownDate!);
+            if (!settings.countdownDate) return false;
+            let target;
+            try {
+                target = parseISO(settings.countdownDate);
+                if (isNaN(target.getTime())) throw new Error("Invalid date");
+            } catch (e) {
+                console.error("Countdown Date Error:", e);
+                return false;
+            }
             const churchNow = getChurchNow(settings);
             const diff = target.getTime() - churchNow.getTime();
 
