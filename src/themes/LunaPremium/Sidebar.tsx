@@ -64,14 +64,18 @@ const Sidebar: React.FC = () => {
 
             {/* 1. LOGO ARRIBA */}
             <div className="flex flex-col items-center mb-10">
-                <div className="w-16 h-16 rounded-[2rem] bg-white/[0.05] border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl group transition-all duration-700 hover:scale-110">
-                    {settings?.churchAvatar ? (
-                        <img src={settings.churchAvatar} className="w-10 h-10 object-contain brightness-0 invert opacity-60" alt="Logo" />
+                <div className="w-16 h-16 rounded-[2rem] bg-white/[0.05] border border-white/10 flex items-center justify-center overflow-hidden shadow-2xl group transition-all duration-700 hover:scale-110 p-2">
+                    {settings?.churchLogoUrl || settings?.displayCustomBgUrl ? (
+                        <img 
+                            src={settings?.churchLogoUrl || settings?.displayCustomBgUrl} 
+                            className="w-full h-full object-contain brightness-0 invert opacity-80" 
+                            alt="Logo" 
+                        />
                     ) : (
                         <Building2 className="w-8 h-8 text-white/20" />
                     )}
                 </div>
-                <span className="text-[10px] font-bold tracking-[0.4em] text-white/20 mt-4 lowercase truncate max-w-full">
+                <span className="text-[10px] font-bold tracking-[0.4em] text-white/20 mt-4 lowercase truncate max-w-full px-2">
                     {settings?.churchShortName || 'r o d e o'}
                 </span>
             </div>
