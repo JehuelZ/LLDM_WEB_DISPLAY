@@ -48,11 +48,15 @@ const LunaPremiumCalendar: React.FC = () => {
             <main className="flex-1 h-full flex flex-col pl-8 pr-4 py-8 pt-12 z-10 relative">
                 {/* Header */}
                 <header className="flex flex-col mb-12">
-                    <div className="flex items-center gap-6 mb-2">
-                        <h2 className="text-6xl font-[100] lowercase leading-none tracking-tight">
-                            {format(churchNow, 'MMMM', { locale: es })}
-                        </h2>
-                        <div className="px-4 py-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[11px] font-[500] tracking-[0.4em] uppercase self-end mb-2">
+                    <div className="flex items-center gap-6 mb-4">
+                        <div className="flex flex-col">
+                            <h2 className="text-5xl font-[100] lowercase leading-none tracking-tight">
+                                {format(churchNow, 'MMMM', { locale: es })}
+                            </h2>
+                            {/* Month Flare Underline */}
+                            <div className="h-[1px] w-full bg-gradient-to-r from-amber-500/80 via-amber-500 to-transparent mt-3 shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+                        </div>
+                        <div className="px-4 py-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[11px] font-[500] tracking-[0.4em] uppercase self-end mb-4">
                             2026
                         </div>
                     </div>
