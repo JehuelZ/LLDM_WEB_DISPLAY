@@ -10,7 +10,7 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 ## 🎨 Decisiones de Diseño & UX
 - **Temas:**
     - **Primitivo:** Estética industrial oscura, restaurada recientemente.
-    - **Luna:** Estética moderna y fluida.
+    - **Luna:** Estética moderna y fluida. Jerarquía de clima centrada en Termómetro gigante e iconos flotantes. *Cloud Master Protocol*: Las pantallas en producción no usan la fecha ni ubicación del hardware, sino que consumen estrictamente el Timezone y las Coordenadas definidas en el Admin Panel de Supabase.
     - **Catedral:** Consolidación de clima en el header y reloj flotante neomórfico en la esquina inferior derecha.
 - **Interactividad:** Favicon dinámico que cambia de color según el tema activo.
 - **Reportes:** Capacidad de exportar "Fichas Personales" de miembros a PDF usando `html2pdf.js`.
