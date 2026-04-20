@@ -227,14 +227,14 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                                             <div style={{
-                                                width: 54, height: 54, borderRadius: 18,
+                                                width: 72, height: 72, borderRadius: 24,
                                                 background: isDark ? 'rgba(51,154,240,0.18)' : 'rgba(30,135,240,0.1)',
                                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                             }}>
                                                 {weather ? (
-                                                    <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={30} />
+                                                    <WeatherIcon code={weather.icon} className="text-[#339AF0]" size={44} />
                                                 ) : (
-                                                    <Sunrise style={{ color: '#339AF0' }} size={30} />
+                                                    <Sunrise style={{ color: '#339AF0' }} size={44} />
                                                 )}
                                             </div>
                                             <div>

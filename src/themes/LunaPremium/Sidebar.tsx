@@ -56,7 +56,7 @@ const Sidebar: React.FC = () => {
         <motion.aside 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="fixed inset-y-0 left-0 w-[220px] h-full flex flex-col bg-transparent p-5 py-12 z-[50]"
+            className="absolute inset-y-0 left-0 w-[420px] h-full flex flex-col bg-transparent p-16 py-20 z-[50]"
             style={{ fontFamily: "'Saira', sans-serif" }}
         >
             {/* Subtle vertical glow edge */}
@@ -86,23 +86,23 @@ const Sidebar: React.FC = () => {
                     <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 mb-4 lowercase">
                         clima actual
                     </span>
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center">
-                            <WeatherIcon code={weather?.icon || "0"} className="w-5 h-5 text-white/70" />
+                    <div className="flex items-center gap-8">
+                        <div className="w-32 h-32 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                            <WeatherIcon code={weather?.icon || "0"} className="w-24 h-24 text-white/70" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-3xl font-[100] tracking-tighter leading-none">
+                            <span className="text-8xl font-[100] tracking-tighter leading-none mb-2">
                                 {weather?.temp ?? '--'}°
                             </span>
-                            <span className="text-[10px] font-[300] text-white/30 lowercase truncate max-w-[100px]">
+                            <span className="text-[14px] font-[300] text-white/30 lowercase tracking-[0.2em] truncate max-w-[200px]">
                                 {weather?.condition?.toLowerCase() || 'cargando...'}
                             </span>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 mb-1 lowercase">
+                <div className="flex flex-col gap-3">
+                    <span className="text-[10px] font-[300] tracking-[0.4em] text-white/10 mb-4 lowercase">
                         pronóstico
                     </span>
                     {weather?.forecast.slice(1, 6).map((f, i) => (
@@ -111,15 +111,15 @@ const Sidebar: React.FC = () => {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.1 + (i * 0.1) }}
-                            className="flex items-center justify-between p-2.5 rounded-sm bg-white/[0.02] border border-white/5"
+                            className="flex items-center justify-between p-4 rounded-sm bg-white/[0.02] border border-white/5"
                         >
-                            <div className="flex items-center gap-3">
-                                <span className="text-[9px] font-[300] text-white/20 w-6 lowercase tracking-widest">
-                                    {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 2).toLowerCase()}
+                            <div className="flex items-center gap-6">
+                                <span className="text-[12px] font-[300] text-white/20 w-10 lowercase tracking-widest">
+                                    {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 3).toLowerCase()}
                                 </span>
-                                <WeatherIcon code={f.icon} className="w-3.5 h-3.5 text-white/40" />
+                                <WeatherIcon code={f.icon} className="w-10 h-10 text-white/40" />
                             </div>
-                            <span className="text-md font-[100]">
+                            <span className="text-3xl font-[100]">
                                 {f.temp}°
                             </span>
                         </motion.div>

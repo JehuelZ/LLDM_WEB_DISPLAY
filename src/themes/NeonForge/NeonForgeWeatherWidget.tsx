@@ -192,7 +192,7 @@ export function NeonForgeWeatherWidget() {
                         </div>
 
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-                            <div style={{ width: '64px', height: '64px' }}>
+                            <div style={{ width: '80px', height: '80px' }}>
                                 {info?.icon || <div className="w-full h-full animate-pulse bg-white/5 rounded-full" />}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'baseline', marginTop: '8px' }}>
@@ -256,7 +256,7 @@ export function NeonForgeWeatherWidget() {
                                         <span style={{ fontSize: '10px', fontWeight: 900, color: 'rgba(255,255,255,0.6)', width: '35px' }}>
                                             {DAYS_ES[day.date.getDay()]}
                                         </span>
-                                        <span style={{ fontSize: '18px' }}>{dayInfo.mini}</span>
+                                        <span style={{ fontSize: '24px' }}>{dayInfo.mini}</span>
                                         <span style={{ fontSize: '14px', fontWeight: 900, color: '#fff', textAlign: 'right', width: '35px' }}>
                                             {day.tempMax}°
                                         </span>
