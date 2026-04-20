@@ -14,7 +14,8 @@ import {
     Wind,
     Thermometer,
     Building2,
-    MapPin
+    MapPin,
+    Droplet
 } from 'lucide-react';
 import { useWeather } from '@/hooks/useWeather';
 
@@ -94,27 +95,32 @@ const Sidebar: React.FC = () => {
                     </div>
                     <div className="flex items-center gap-10">
                         <div className="w-32 h-32 flex items-center justify-center shrink-0">
-                            <Thermometer className="w-24 h-24 text-white/70" strokeWidth={1} />
+                            <WeatherIcon code={weather?.icon || "0"} className="w-24 h-24 text-white/70" />
                         </div>
                         <div className="flex flex-col">
-                            <div className="flex items-start">
+                            <div className="flex items-start gap-4">
                                 <span className="text-8xl font-[100] tracking-tighter leading-none">
                                     {weather?.temp ?? '--'}
                                 </span>
-                                <span className="text-4xl font-[300] text-white/20 ml-2 mt-2">
-                                    °{settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
-                                </span>
+                                <div className="flex flex-col items-center mt-3">
+                                    <Thermometer className="w-10 h-10 text-white/20" strokeWidth={1} />
+                                    <span className="text-[12px] font-[300] text-white/10 uppercase tracking-widest leading-none mt-1">
+                                        °{settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
+                                    </span>
+                                </div>
                             </div>
                             <div className="flex flex-col gap-1 mt-6">
                                 <span className="text-[16px] font-[300] text-white/40 lowercase tracking-[0.2em]">
                                     {weather?.condition?.toLowerCase() || 'cargando...'}
                                 </span>
                                 {weather?.humidity !== undefined && (
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-1 h-1 rounded-full bg-blue-500/50" />
-                                        <span className="text-[12px] font-[300] text-white/20 tracking-[0.3em] lowercase">
-                                            humedad: {weather.humidity}%
-                                        </span>
+                                    <div className="flex items-center gap-3">
+                                        <div className="flex items-center gap-2">
+                                            <Droplet className="w-3 h-3 text-blue-500/40" />
+                                            <span className="text-[12px] font-[300] text-white/20 tracking-[0.3em] lowercase">
+                                                humedad: {weather.humidity}%
+                                            </span>
+                                        </div>
                                     </div>
                                 )}
                             </div>
