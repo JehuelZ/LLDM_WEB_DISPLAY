@@ -21,13 +21,13 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
 
     const getWeatherIcon = (code: string) => {
         const c = parseInt(code);
-        if (c === 0 || c === 1) return <Sun size={14} className="text-yellow-400" />;
-        if (c === 2 || c === 3) return <Cloud size={14} className="text-blue-300" />;
-        if (c === 45 || c === 48) return <CloudFog size={14} className="text-gray-400" />;
-        if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(c)) return <CloudRain size={14} className="text-blue-500" />;
-        if (c === 95) return <CloudLightning size={14} className="text-purple-500" />;
-        if ([71, 73, 75].includes(c)) return <Snowflake size={14} className="text-white" />;
-        return <Sun size={14} className="text-yellow-400" />;
+        if (c === 0 || c === 1) return <Sun size={20} className="text-yellow-400" />;
+        if (c === 2 || c === 3) return <Cloud size={20} className="text-blue-300" />;
+        if (c === 45 || c === 48) return <CloudFog size={20} className="text-gray-400" />;
+        if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(c)) return <CloudRain size={20} className="text-blue-500" />;
+        if (c === 95) return <CloudLightning size={20} className="text-purple-500" />;
+        if ([71, 73, 75].includes(c)) return <Snowflake size={20} className="text-white" />;
+        return <Sun size={20} className="text-yellow-400" />;
     };
 
     return (
@@ -49,7 +49,7 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                         <div className="flex items-center gap-3 mr-4 border-r border-white/5 pr-4">
                             <div className="relative">
                                 <div className="absolute inset-0 bg-[#A3FF57] blur-md opacity-20 scale-150" />
-                                <div className="relative z-10 scale-125">
+                                <div className="relative z-10 scale-150">
                                     {getWeatherIcon(weather.icon)}
                                 </div>
                             </div>

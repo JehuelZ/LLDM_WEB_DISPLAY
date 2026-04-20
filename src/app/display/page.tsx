@@ -379,6 +379,11 @@ export default function DisplayPage() {
                         {/* SHARED OVERLAYS */}
                         <Clock now={now} isMounted={isMounted} settings={settings} />
                         <Progress slides={slides} currentSlide={currentSlide} />
+
+                        {/* THEME SPECIFIC OVERLAYS (Like Luna Sidebar) */}
+                        {activeTheme.components.Sidebar && (
+                            <activeTheme.components.Sidebar />
+                        )}
                     </div>
 
                     <AdministrativeOverlay 

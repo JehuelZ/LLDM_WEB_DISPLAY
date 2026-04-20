@@ -1,6 +1,7 @@
 import Background from './Background';
 import Clock from './Clock';
 import Progress from './Progress';
+import Sidebar from './Sidebar';
 import LunaPremiumSchedule from './LunaPremiumSchedule';
 import LunaPremiumWeekly from './LunaPremiumWeekly';
 import LunaPremiumCalendar from './LunaPremiumCalendar';
@@ -18,7 +19,8 @@ export const LunaPremiumTheme: Theme = {
     components: {
         Background,
         Clock,
-        Progress
+        Progress,
+        Sidebar
     },
     slides: {
         Schedule: LunaPremiumSchedule,

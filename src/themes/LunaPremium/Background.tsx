@@ -19,8 +19,7 @@ const Background = () => {
                      style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }} />
             </div>
 
-            {/* Persistent Luna Sidebar (Visible across all slides) */}
-            <Sidebar />
+            {/* Persistent Luna Sidebar is now handled by DisplayPage stage for better 4K alignment */}
         </>
     );
 };
