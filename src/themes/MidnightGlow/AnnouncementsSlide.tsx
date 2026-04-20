@@ -177,12 +177,12 @@ export const MidnightGlowAnnouncements = () => {
                                 </motion.div>
 
                                 <motion.div
-                                    className="mt-6 px-10 py-3 rounded-3xl bg-[#040D21]/95 border-2 border-[#A3FF57]/50 shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center"
+                                    className="mt-6 px-10 py-3 rounded-3xl bg-[#040D21]/95 border-2 border-[#A3FF57]/50 shadow-[0_20px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center min-w-[280px]"
                                 >
                                     <span className="text-[11px] font-black text-[#A3FF57] uppercase tracking-[0.3em] mb-1 opacity-90 drop-shadow-[0_0_8px_rgba(163,255,87,0.5)]">
-                                        {minister.role || 'Ministro a Cargo'}
+                                        Responsabilidad Ministerial
                                     </span>
-                                    <span className="text-[20px] font-black text-white uppercase tracking-[0.05em] leading-none text-center">
+                                    <span className={cn("text-[20px] font-black uppercase tracking-[0.05em] leading-none text-center", minister.name === 'Por asignar' ? 'text-white/30 italic' : 'text-white')}>
                                         {minister.name}
                                     </span>
                                     <div className="mt-2 flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
@@ -194,14 +194,16 @@ export const MidnightGlowAnnouncements = () => {
                         </div>
 
                         {/* Divider with dot */}
-                        <div className="mx-10 flex items-center gap-4 mt-2 mb-8 z-10 w-full px-12 opacity-80">
-                            <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#4F7FFF]/50" />
-                            <div className="w-2 h-2 rounded-full bg-[#4F7FFF] shadow-[0_0_10px_#4F7FFF]" />
-                            <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#4F7FFF]/50" />
-                        </div>
+                        {minister.name !== 'Por asignar' && (
+                            <div className="mx-10 flex items-center gap-4 mt-2 mb-8 z-10 w-full px-12 opacity-80">
+                                <div className="flex-1 h-px bg-gradient-to-r from-transparent to-[#4F7FFF]/50" />
+                                <div className="w-2 h-2 rounded-full bg-[#4F7FFF] shadow-[0_0_10px_#4F7FFF]" />
+                                <div className="flex-1 h-px bg-gradient-to-l from-transparent to-[#4F7FFF]/50" />
+                            </div>
+                        )}
 
                         <div className="flex flex-col gap-3 w-full text-[12px] font-bold text-white/80 tracking-[0.2em] uppercase z-10 px-6">
-                            {minister.phone && (
+                            {minister.phone && minister.name !== 'Por asignar' && (
                                 <div className="p-3.5 bg-[#040D21]/95 rounded-2xl border border-[#1E3A6E]/50 flex items-center gap-4 shadow-lg hover:border-[#4F7FFF]/30 transition-colors">
                                     <div className="w-8 h-8 rounded-lg bg-[#A3FF57]/10 flex items-center justify-center">
                                         <Phone className="w-4 h-4 text-[#A3FF57]" />
@@ -209,12 +211,18 @@ export const MidnightGlowAnnouncements = () => {
                                     <span className="truncate">{minister.phone}</span>
                                 </div>
                             )}
-                            {minister.email && (
+                            {minister.email && minister.name !== 'Por asignar' && (
                                 <div className="p-3.5 bg-[#040D21]/95 rounded-2xl border border-[#1E3A6E]/50 flex items-center gap-4 shadow-lg hover:border-[#4F7FFF]/30 transition-colors">
                                     <div className="w-8 h-8 rounded-lg bg-[#4F7FFF]/10 flex items-center justify-center">
                                         <Mail className="w-4 h-4 text-[#4F7FFF]" />
                                     </div>
                                     <span className="truncate text-[10px]">{minister.email}</span>
+                                </div>
+                            )}
+                            {minister.name === 'Por asignar' && (
+                                <div className="flex flex-col items-center py-6 opacity-10">
+                                    <Bell className="w-12 h-12 text-[#A3FF57]" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest mt-2">Dato no proporcionado</span>
                                 </div>
                             )}
                         </div>

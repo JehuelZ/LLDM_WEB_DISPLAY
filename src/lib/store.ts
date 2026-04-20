@@ -400,10 +400,10 @@ export const useAppStore = create<AppState>()(
             currentUser: null,
             minister: {
                 id: 'minister-placeholder',
-                name: 'Ministro Local',
+                name: 'Por asignar',
                 email: '',
                 phone: '',
-                avatar: 'https://ui-avatars.com/api/?name=Ministro+Local&background=random',
+                avatar: '',
                 category: 'Varon',
                 role: 'Ministro a Cargo',
                 gender: 'Varon',
@@ -499,46 +499,75 @@ export const useAppStore = create<AppState>()(
                 const targetId = userId || get().currentUser?.id;
                 if (!targetId) return;
                 
-                // Cargar todas las responsabilidades del mes para este usuario
+                // Cargar todas las responsabilidades del mes actual Y el siguiente para este usuario
                 const now = new Date();
                 const start = format(startOfMonth(now), 'yyyy-MM-dd');
-                const end = format(endOfMonth(now), 'yyyy-MM-dd');
+                const end = format(endOfMonth(addMonths(now, 1)), 'yyyy-MM-dd'); // Cargar hasta fin del próximo mes
                 
-                const { data, error } = await supabase
+                // 1. Consultar tabla 'schedule' (Pizarras generales)
+                const { data: scheduleData, error: scheduleError } = await supabase
                     .from('schedule')
                     .select('*')
                     .gte('date', start)
                     .lte('date', end);
+                
+                // 2. Consultar tabla 'kids_assignments' (Asignaciones de niños)
+                const { data: kidsData, error: kidsError } = await supabase
+                    .from('kids_assignments')
+                    .select('*')
+                    .gte('date', start)
+                    .lte('date', end);
                     
-                if (error) {
-                    console.error("Error cargando responsabilidades:", error);
+                if (scheduleError && kidsError) {
+                    console.error("Error cargando responsabilidades:", scheduleError || kidsError);
                     return;
                 }
                 
                 const resps: any[] = [];
-                data.forEach((entry: any) => {
-                    const date = entry.date;
-                    
-                    if (entry.five_am_leader_id === targetId) {
-                        resps.push({ date, type: 'Oración 5 AM', status: 'pending', label: 'Titulado' });
-                    }
-                    if (entry.nine_am_consecration_leader_id === targetId) {
-                        resps.push({ date, type: 'Consagración 9 AM', status: 'pending', label: 'Dirigente' });
-                    }
-                    if (entry.nine_am_doctrine_leader_id === targetId) {
-                        resps.push({ date, type: 'Doctrina 9 AM', status: 'pending', label: 'Expositor' });
-                    }
-                    if (entry.noon_leader_id === targetId) {
-                        resps.push({ date, type: 'Oración 12 PM', status: 'pending', label: 'Titulado' });
-                    }
-                    if (entry.evening_doctrine_leader_id === targetId) {
-                        resps.push({ date, type: 'Culto Vespertino (Doctrina)', status: 'pending', label: 'Expositor' });
-                    }
-                    // Handle evening_leader_ids which is an array
-                    if (Array.isArray(entry.evening_leader_ids) && entry.evening_leader_ids.includes(targetId)) {
-                        resps.push({ date, type: 'Culto Vespertino', status: 'pending', label: 'Dirigente' });
-                    }
-                });
+                
+                // Procesar Schedule General
+                if (scheduleData) {
+                    scheduleData.forEach((entry: any) => {
+                        const date = entry.date;
+                        if (entry.five_am_leader_id === targetId) {
+                            resps.push({ date, type: 'Oración 5 AM', status: 'pending', label: 'Titulado' });
+                        }
+                        if (entry.nine_am_consecration_leader_id === targetId) {
+                            resps.push({ date, type: 'Consagración 9 AM', status: 'pending', label: 'Dirigente' });
+                        }
+                        if (entry.nine_am_doctrine_leader_id === targetId) {
+                            resps.push({ date, type: 'Doctrina 9 AM', status: 'pending', label: 'Expositor' });
+                        }
+                        if (entry.noon_leader_id === targetId) {
+                            resps.push({ date, type: 'Oración 12 PM', status: 'pending', label: 'Titulado' });
+                        }
+                        if (entry.evening_doctrine_leader_id === targetId) {
+                            resps.push({ date, type: 'Culto Vespertino (Doctrina)', status: 'pending', label: 'Expositor' });
+                        }
+                        if (Array.isArray(entry.evening_leader_ids) && entry.evening_leader_ids.includes(targetId)) {
+                            resps.push({ date, type: 'Culto Vespertino', status: 'pending', label: 'Dirigente' });
+                        }
+                    });
+                }
+
+                // Procesar Asignaciones de Niños
+                if (kidsData) {
+                    kidsData.forEach((entry: any) => {
+                        const date = entry.date;
+                        if (entry.monitor_id === targetId) {
+                            resps.push({ date, type: 'Monitor de Niños', status: 'pending', label: 'Vigilancia' });
+                        }
+                        if (entry.reconciliation_leader_id === targetId) {
+                            resps.push({ date, type: 'Reconciliación Niños', status: 'pending', label: 'Dirigente' });
+                        }
+                        if (entry.service_child_id === targetId) {
+                            resps.push({ date, type: 'Participación (Niño)', status: 'pending', label: 'Servicio' });
+                        }
+                        if (entry.doctrine_child_id === targetId) {
+                            resps.push({ date, type: 'Doctrina (Niño)', status: 'pending', label: 'Expositor' });
+                        }
+                    });
+                }
                 
                 // Ordenar por fecha
                 resps.sort((a, b) => a.date.localeCompare(b.date));
@@ -1633,6 +1662,11 @@ export const useAppStore = create<AppState>()(
                             fontFamily: (data.display_font_family || get().calendarStyles.fontFamily) as any
                         }
                     });
+
+                    // SYNC Data Integrity: Load rehearsals if not loaded
+                    if (get().rehearsals.length === 0) {
+                        get().loadRehearsalsFromCloud();
+                    }
                 }
             },
 

@@ -290,7 +290,9 @@ export default function DisplayPage() {
                         <AnimatePresence mode="popLayout" initial={false}>
                             {(() => {
                                 const isLowPerf = settings?.lowPerformanceMode;
-                                const animationType = settings?.animationType || settings?.iglesiaAnimation || 'metro';
+                                // FORCE FADE for Luna theme as per design constitutional rules
+                                const isLuna = activeTheme.id === 'luna';
+                                const animationType = isLuna ? 'fade' : (settings?.animationType || settings?.iglesiaAnimation || 'metro');
                                 const speed = (settings?.animationSpeed || settings?.iglesiaAnimationSpeed || 2.4) as number;
 
                                 let variants: any = {
@@ -407,7 +409,6 @@ export default function DisplayPage() {
             />
         </div>
     );
-}
 }
 
 // Fixed Placeholder slides for missing or shared functionality

@@ -32,24 +32,38 @@ export default function NiñosDashboard() {
     const nextAssignmentDate = Object.keys(kidsAssignments).sort().find(d => new Date(d) >= new Date()) || getLocalDateString();
     const assignment = kidsAssignments[nextAssignmentDate];
     const assignmentUniform = uniforms.find(u => u.id === assignment?.uniformId);
+    const members = useAppStore(state => state.members);
+
+    // Resolve Names for assignments
+    const resolveName = (id: string | null) => {
+        if (!id) return 'Por asignar';
+        const member = members.find(m => m.id === id);
+        return member ? member.name : 'Por asignar';
+    };
 
     const responsibilities = [
         {
             part: 'Primera Parte',
-            child: assignment?.serviceChild || 'Por asignar',
+            child: resolveName(assignment?.serviceChild),
             role: 'Dirigente',
             description: 'Llevar el orden de los cantos y la oración inicial.'
         },
         {
             part: 'Segunda Parte',
-            child: assignment?.doctrineChild || 'Por asignar',
+            child: resolveName(assignment?.doctrineChild),
             role: 'Expositor',
             description: 'Explicar el tema semanal.'
         }
     ];
 
+    // RESOLVE CHOIR LEADER FROM ROLES
+    const choirLeader = members.find(m => 
+        m.role?.includes('Dirigente Coro Niños') || 
+        m.privileges?.includes('Dirigente Coro Niños')
+    );
+
     const choirInfo = {
-        responsable: 'Responsable de Coro',
+        responsable: choirLeader ? choirLeader.name : 'Por asignar',
         nextRehearsal: 'Por definir',
         songs: [],
     };
