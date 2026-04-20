@@ -53,8 +53,8 @@ const LunaPremiumCalendar: React.FC = () => {
                             <h2 className="text-5xl font-[100] lowercase leading-none tracking-tight">
                                 {format(churchNow, 'MMMM', { locale: es })}
                             </h2>
-                            {/* Month Flare Underline */}
-                            <div className="h-[1px] w-full bg-gradient-to-r from-amber-500/80 via-amber-500 to-transparent mt-3 shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+                            {/* Month Flare Underline (Synchronized with Vertical Flares) */}
+                            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-amber-300 to-transparent mt-3 shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
                         </div>
                         <div className="px-4 py-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[11px] font-[500] tracking-[0.4em] uppercase self-end mb-4">
                             2026
