@@ -101,25 +101,20 @@ const Sidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-3">
-                    <span className="text-[10px] font-[300] tracking-[0.4em] text-white/10 mb-4 lowercase">
-                        pronóstico
-                    </span>
+                <div className="grid grid-cols-2 gap-4">
                     {weather?.forecast.slice(1, 6).map((f, i) => (
                         <motion.div 
                             key={f.date}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.1 + (i * 0.1) }}
-                            className="flex items-center justify-between p-4 rounded-sm bg-white/[0.02] border border-white/5"
+                            className="aspect-square flex flex-col items-center justify-center gap-2 rounded-sm bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all"
                         >
-                            <div className="flex items-center gap-6">
-                                <span className="text-[12px] font-[300] text-white/20 w-10 lowercase tracking-widest">
-                                    {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 3).toLowerCase()}
-                                </span>
-                                <WeatherIcon code={f.icon} className="w-10 h-10 text-white/40" />
-                            </div>
-                            <span className="text-3xl font-[100]">
+                            <span className="text-[11px] font-[300] text-white/20 uppercase tracking-[0.3em]">
+                                {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 3).toLowerCase()}
+                            </span>
+                            <WeatherIcon code={f.icon} className="w-12 h-12 text-white/40" />
+                            <span className="text-3xl font-[100] tracking-tighter">
                                 {f.temp}°
                             </span>
                         </motion.div>
@@ -128,20 +123,20 @@ const Sidebar: React.FC = () => {
             </div>
 
             {/* 3. ABAJO HORA */}
-            <div className="mt-auto pt-8 border-t border-white/5 flex flex-col items-center">
-                <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-5xl font-[100] tracking-tighter leading-none">
+            <div className="mt-auto pt-10 border-t border-white/5 flex flex-col items-center">
+                <div className="flex items-baseline gap-4 mb-2">
+                    <span className="text-7xl font-[100] tracking-tighter leading-none">
                         {formattedTime}
                     </span>
-                    <span className="text-xs font-[300] text-white/20 lowercase">
+                    <span className="text-xl font-[300] text-white/20 lowercase">
                         {ampm}
                     </span>
                 </div>
-                <div className="flex flex-col items-center opacity-40">
-                    <span className="text-[10px] font-[300] tracking-widest lowercase leading-tight">
+                <div className="flex flex-col items-center opacity-40 gap-1">
+                    <span className="text-[12px] font-[300] tracking-[0.5em] lowercase">
                         {dayName}
                     </span>
-                    <span className="text-[10px] font-[300] lowercase">
+                    <span className="text-[12px] font-[300] lowercase">
                         {fullDate}
                     </span>
                 </div>
