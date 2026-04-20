@@ -65,9 +65,9 @@ const LunaPremiumCalendar: React.FC = () => {
                             <span className="text-[10px] font-[300] tracking-[0.6em] text-white/20 lowercase">
                                 {d}
                             </span>
-                            {/* Tiny vertical divider marker between labels (Electric Flare) */}
+                            {/* Tiny vertical divider marker (Enhanced Electric Flare) */}
                             {i < 6 && (
-                                <div className="absolute top-1/2 -right-[1px] -translate-y-1/2 w-[0.5px] h-3 bg-gradient-to-b from-transparent via-amber-500/60 to-transparent shadow-[0_0_3px_rgba(245,158,11,0.4)]" />
+                                <div className="absolute top-1/2 -right-[1px] -translate-y-1/2 w-[1px] h-3 bg-gradient-to-b from-transparent via-amber-500/80 to-transparent shadow-[0_0_6px_rgba(245,158,11,0.6)]" />
                             )}
                         </div>
                     ))}
@@ -118,9 +118,9 @@ const LunaPremiumCalendar: React.FC = () => {
                                 variants={itemVariants}
                                 className="flex flex-col p-4 relative group"
                             >
-                                {/* Vertical Column Divider (Electric Flare) */}
+                                {/* Vertical Column Divider (Electric Flare - Enhanced for 4K visibility) */}
                                 {!isLastCol && (
-                                    <div className="absolute inset-y-0 -right-[1px] w-[0.5px] bg-gradient-to-b from-transparent via-amber-500/40 to-transparent shadow-[0_0_4px_rgba(245,158,11,0.3)]" />
+                                    <div className="absolute inset-y-0 -right-[1px] w-[1px] bg-gradient-to-b from-transparent via-amber-500/80 to-transparent shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
                                 )}
 
                                 {/* Today Indicator */}
