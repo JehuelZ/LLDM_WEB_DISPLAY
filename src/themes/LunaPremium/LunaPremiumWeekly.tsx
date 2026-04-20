@@ -33,19 +33,21 @@ const LunaPremiumWeekly: React.FC = () => {
     return (
         <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 pl-[252px] pr-4 py-8 pt-32 pb-32 relative"
              style={{ fontFamily: "'Saira', sans-serif" }}>
-            {/* Header */}
-            <div className="flex items-center justify-between px-8 py-6 bg-white/[0.03] backdrop-blur-3xl rounded-[2.5rem] border-l-[4px] border-secondary shadow-[0_32px_64px_rgba(0,0,0,0.4)] border border-white/5">
-                <div className="flex flex-col">
-                    <span 
-                        className="text-4xl font-[100] text-on-surface tracking-tight lowercase"
-                    >
-                        {slideTitle?.toLowerCase()}
-                    </span>
-                    <span className="text-[12px] font-[300] tracking-[0.4em] text-secondary mt-2 opacity-80 lowercase">
-                        planificación semanal • semana del {format(start, 'dd', { locale: es })} al {format(addDays(start, 6), 'dd MMMM', { locale: es }).toLowerCase()}
-                    </span>
+            {/* Header (Synchronized Flare Style) */}
+            <header className="flex flex-col mb-16">
+                <div className="flex items-center gap-6">
+                    <div className="flex flex-col">
+                        <h2 className="text-5xl font-[100] lowercase leading-none tracking-tight">
+                            {slideTitle?.toLowerCase()}
+                        </h2>
+                        {/* Title Flare Underline */}
+                        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-amber-300 to-transparent mt-3 shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
+                    </div>
+                    <div className="px-4 py-1.5 bg-secondary/10 border border-secondary/30 text-secondary text-[10px] font-[500] tracking-[0.3em] uppercase self-end mb-4">
+                        semana del {format(start, 'dd', { locale: es })} al {format(addDays(start, 6), 'dd MMMM', { locale: es }).toLowerCase()}
+                    </div>
                 </div>
-            </div>
+            </header>
 
             {/* Weekly Grid */}
             <div className="grid grid-cols-7 gap-4 flex-1 min-h-0">

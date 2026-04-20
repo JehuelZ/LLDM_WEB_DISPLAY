@@ -17,16 +17,20 @@ export const LunaAnnouncements = () => {
             
             {/* 1. LEFT PILLAR: ANNOUNCEMENTS */}
             <div className="flex-1 flex flex-col min-w-0">
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col mb-12"
-                >
-                    <h2 className="text-6xl font-[200] lowercase leading-none tracking-tighter">
-                        anuncios <span className="text-white/20">importantes</span>
-                    </h2>
-                    <div className="h-[1px] w-40 bg-white/10 mt-6" />
-                </motion.div>
+                <header className="flex flex-col mb-16">
+                    <div className="flex items-center gap-6">
+                        <div className="flex flex-col">
+                            <h2 className="text-5xl font-[100] lowercase leading-none tracking-tight">
+                                anuncios <span className="text-white/20">importantes</span>
+                            </h2>
+                            {/* Title Flare Underline */}
+                            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-amber-300 to-transparent mt-3 shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
+                        </div>
+                        <div className="px-4 py-1.5 bg-primary/10 border border-primary/30 text-primary text-[10px] font-[500] tracking-[0.3em] uppercase self-end mb-4">
+                            comunicación oficial
+                        </div>
+                    </div>
+                </header>
 
                 {/* Notices Container */}
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden">

@@ -61,28 +61,21 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
     return (
         <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 pl-[252px] pr-4 py-8 pt-32 pb-32 relative"
              style={{ fontFamily: "'Saira', sans-serif" }}>
-            {/* High-Tech Section Header */}
-            <div className="flex items-center justify-between px-8 py-6 bg-surface-container-high/40 backdrop-blur-3xl rounded-3xl border-l-[4px] border-primary shadow-[0_32px_64px_rgba(0,0,0,0.4)] ring-1 ring-white/5">
-                <div className="flex flex-col">
-                    <span 
-                        className="text-4xl font-[300] text-on-surface tracking-tight lowercase"
-                    >
-                        {slideTitle}
-                    </span>
-                    <span className="text-[12px] font-[300] tracking-[0.4em] text-primary mt-2 opacity-80 lowercase">
-                        sistema de gestión espiritual • {format(targetDate, 'dd MMMM yyyy', { locale: es }).toLowerCase()}
-                    </span>
-                </div>
-                <div className="flex items-center gap-8">
-                    <div className="flex flex-col items-end">
-                        <span className="text-[11px] text-on-surface-variant tracking-widest font-[300] opacity-40 lowercase">modo de visualización</span>
-                        <span className="text-md font-[300] text-secondary flex items-center gap-2 lowercase">
-                            <span className="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse shadow-[0_0_10px_#339af0]" />
-                            tiempo real
-                        </span>
+            {/* High-Tech Section Header (Synchronized Flare Style) */}
+            <header className="flex flex-col mb-16">
+                <div className="flex items-center gap-6">
+                    <div className="flex flex-col">
+                        <h2 className="text-5xl font-[100] lowercase leading-none tracking-tight">
+                            {slideTitle}
+                        </h2>
+                        {/* Title Flare Underline */}
+                        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-amber-300 to-transparent mt-3 shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
+                    </div>
+                    <div className="px-4 py-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[10px] font-[500] tracking-[0.3em] uppercase self-end mb-4">
+                        {format(targetDate, 'dd MMMM yyyy', { locale: es }).toLowerCase()}
                     </div>
                 </div>
-            </div>
+            </header>
 
             {/* Kinetic Table - Daily Slots */}
             <div className="grid grid-cols-1 gap-6 px-2 overflow-y-auto custom-scrollbar pr-4">
