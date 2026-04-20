@@ -48,10 +48,33 @@ const Sidebar: React.FC = () => {
         settings?.weatherUnit ?? 'fahrenheit'
     );
 
-    const formattedTime = format(now, 'h:mm');
-    const ampm = format(now, 'a').toLowerCase();
-    const dayName = format(now, 'EEEE', { locale: es }).toLowerCase();
-    const fullDate = format(now, 'd MMMM', { locale: es }).toLowerCase();
+    const tz = weather?.timezone || settings?.weatherTimezone || 'America/Mexico_City';
+
+    // Safe formatting bound to Admin timezone
+    let formattedTime = '--:--';
+    let ampm = '--';
+    let dayName = '--';
+    let fullDate = '--';
+
+    try {
+        const timeOptions: Intl.DateTimeFormatOptions = { timeZone: tz, hour: 'numeric', minute: '2-digit', hour12: true };
+        const timeString = now.toLocaleTimeString('en-US', timeOptions);
+        const [timePart, ampmPart] = timeString.split(' ');
+        formattedTime = timePart;
+        ampm = ampmPart ? ampmPart.toLowerCase() : '';
+
+        const dayString = now.toLocaleDateString('es-ES', { timeZone: tz, weekday: 'long' });
+        dayName = dayString.toLowerCase();
+
+        const dateString = now.toLocaleDateString('es-ES', { timeZone: tz, day: 'numeric', month: 'long' });
+        fullDate = dateString.toLowerCase();
+    } catch (e) {
+        // Fallback if timezone string is invalid
+        formattedTime = format(now, 'h:mm');
+        ampm = format(now, 'a').toLowerCase();
+        dayName = format(now, 'EEEE', { locale: es }).toLowerCase();
+        fullDate = format(now, 'd MMMM', { locale: es }).toLowerCase();
+    }
 
     return (
         <motion.aside 
