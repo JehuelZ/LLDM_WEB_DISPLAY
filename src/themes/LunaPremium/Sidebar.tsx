@@ -42,13 +42,14 @@ const Sidebar: React.FC = () => {
     }, []);
 
     // Weather Data from Admin Settings
+    // Weather Data from Admin Settings
     const { weather } = useWeather(
-        settings?.weatherLat ?? 25.1761, 
-        settings?.weatherLng ?? -104.5630,
+        settings?.weatherLat ?? 38.033, 
+        settings?.weatherLng ?? -122.266,
         settings?.weatherUnit ?? 'fahrenheit'
     );
 
-    const tz = weather?.timezone || settings?.weatherTimezone || 'America/Mexico_City';
+    const tz = weather?.timezone || settings?.weatherTimezone || 'America/Los_Angeles';
 
     // Safe formatting bound to Admin timezone
     let formattedTime = '--:--';
@@ -112,26 +113,28 @@ const Sidebar: React.FC = () => {
                             clima actual
                         </span>
                     </div>
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-6">
                         <div className="w-20 h-20 flex items-center justify-center shrink-0">
-                            <WeatherIcon code={weather?.icon || "0"} className="w-16 h-16 text-white/50" />
+                            <Thermometer className="w-16 h-16 text-white/50" strokeWidth={1} />
                         </div>
                         <div className="flex flex-col">
-                            <div className="flex items-start gap-3">
+                            <div className="flex items-start gap-2">
                                 <span className="text-6xl font-[100] tracking-tighter leading-none">
                                     {weather?.temp ?? '--'}°
                                 </span>
-                                <div className="flex flex-col items-center mt-2">
-                                    <Thermometer className="w-6 h-6 text-white/20" strokeWidth={1} />
-                                    <span className="text-[10px] font-[300] text-white/10 uppercase tracking-widest leading-none mt-1">
-                                        °{settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
+                                <div className="flex flex-col items-center mt-1">
+                                    <span className="text-[14px] font-[300] text-white/20 uppercase tracking-widest leading-none">
+                                        {settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-1 mt-4">
-                                <span className="text-[14px] font-[300] text-white/30 lowercase tracking-[0.2em]">
-                                    {weather?.condition?.toLowerCase() || 'cargando...'}
-                                </span>
+                            <div className="flex flex-col gap-2 mt-4">
+                                <div className="flex items-center gap-2">
+                                    <WeatherIcon code={weather?.icon || "0"} className="w-5 h-5 text-white/30" />
+                                    <span className="text-[14px] font-[300] text-white/50 lowercase tracking-[0.1em]">
+                                        {weather?.condition?.toLowerCase() || 'cargando...'}
+                                    </span>
+                                </div>
                                 {weather?.humidity !== undefined && (
                                     <div className="flex items-center gap-2">
                                         <Droplet className="w-2.5 h-2.5 text-blue-500/30" />
