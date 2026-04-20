@@ -22,7 +22,7 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
         try {
             // Fetch current weather and 3-day forecast using Open-Meteo (Free, no API key)
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&current_weather=true&daily=temperature_2m_max,weather_code&timezone=auto&temperature_unit=${unit}`;
-            const response = await fetch(url);
+            const response = await fetch(url, { cache: 'no-store' });
             const data = await response.json();
 
             const weatherCodeMap: Record<number, string> = {

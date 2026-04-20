@@ -148,22 +148,24 @@ const Sidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                    {weather?.forecast.slice(1, 6).map((f, i) => (
+                <div className="grid grid-cols-2 gap-4">
+                    {weather?.forecast.slice(1, 5).map((f, i) => (
                         <motion.div 
                             key={f.date}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.1 + (i * 0.1) }}
-                            className="aspect-square flex flex-col items-center justify-center gap-2 transition-all opacity-80"
+                            className="aspect-square flex flex-col bg-white/[0.02] border border-white/5 rounded-[4px] p-4 justify-between transition-all opacity-90 hover:bg-white/[0.04]"
                         >
-                            <span className="text-[10px] font-[300] text-white/10 uppercase tracking-[0.3em]">
+                            <span className="text-[10px] font-[300] text-white/20 uppercase tracking-[0.3em] w-full text-left">
                                 {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 3).toLowerCase()}
                             </span>
-                            <WeatherIcon code={f.icon} className="w-10 h-10 text-white/20" />
-                            <span className="text-3xl font-[100] tracking-tighter text-white/40">
-                                {f.temp}
-                            </span>
+                            <div className="flex items-end justify-between w-full mt-auto">
+                                <WeatherIcon code={f.icon} className="w-8 h-8 text-white/30" />
+                                <span className="text-3xl font-[100] tracking-tighter text-white/50 leading-none">
+                                    {f.temp}°
+                                </span>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
