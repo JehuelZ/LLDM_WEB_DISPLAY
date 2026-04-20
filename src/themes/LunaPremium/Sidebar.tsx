@@ -84,14 +84,10 @@ const Sidebar: React.FC = () => {
             {/* 2. CLIMA SIGUIENTE */}
             <div className="flex-1 flex flex-col overflow-hidden px-1">
                 <div className="flex flex-col mb-12">
-                    <div className="flex items-center gap-3 mb-4">
+                    <div className="flex items-center mb-4">
                         <span className="text-[10px] font-[300] tracking-[0.4em] text-white/10 lowercase">
                             clima actual
                         </span>
-                        <div className="flex items-center gap-2 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="text-[8px] font-[500] text-emerald-500 tracking-[0.2em] uppercase">en vivo</span>
-                        </div>
                     </div>
                     <div className="flex items-center gap-10">
                         <div className="w-32 h-32 flex items-center justify-center shrink-0">
