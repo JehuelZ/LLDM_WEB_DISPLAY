@@ -82,12 +82,18 @@ const Sidebar: React.FC = () => {
 
             {/* 2. CLIMA SIGUIENTE */}
             <div className="flex-1 flex flex-col overflow-hidden px-1">
-                <div className="flex flex-col mb-8">
-                    <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 mb-4 lowercase">
-                        clima actual
-                    </span>
+                <div className="flex flex-col mb-12">
+                    <div className="flex items-center gap-3 mb-4">
+                        <span className="text-[10px] font-[300] tracking-[0.4em] text-white/10 lowercase">
+                            clima actual
+                        </span>
+                        <div className="flex items-center gap-2 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="text-[8px] font-[500] text-emerald-500 tracking-[0.2em] uppercase">en vivo</span>
+                        </div>
+                    </div>
                     <div className="flex items-center gap-10">
-                        <div className="w-32 h-32 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
+                        <div className="w-32 h-32 flex items-center justify-center shrink-0">
                             <Thermometer className="w-24 h-24 text-white/70" strokeWidth={1} />
                         </div>
                         <div className="flex flex-col">
@@ -99,27 +105,37 @@ const Sidebar: React.FC = () => {
                                     °{settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
                                 </span>
                             </div>
-                            <span className="text-[14px] font-[300] text-white/30 lowercase tracking-[0.2em] truncate max-w-[200px] mt-4">
-                                {weather?.condition?.toLowerCase() || 'cargando...'}
-                            </span>
+                            <div className="flex flex-col gap-1 mt-6">
+                                <span className="text-[16px] font-[300] text-white/40 lowercase tracking-[0.2em]">
+                                    {weather?.condition?.toLowerCase() || 'cargando...'}
+                                </span>
+                                {weather?.humidity !== undefined && (
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1 h-1 rounded-full bg-blue-500/50" />
+                                        <span className="text-[12px] font-[300] text-white/20 tracking-[0.3em] lowercase">
+                                            humedad: {weather.humidity}%
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-8">
                     {weather?.forecast.slice(1, 6).map((f, i) => (
                         <motion.div 
                             key={f.date}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.1 + (i * 0.1) }}
-                            className="aspect-square flex flex-col items-center justify-center gap-2 rounded-sm bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all"
+                            className="aspect-square flex flex-col items-center justify-center gap-3 transition-all"
                         >
-                            <span className="text-[11px] font-[300] text-white/20 uppercase tracking-[0.3em]">
+                            <span className="text-[12px] font-[300] text-white/10 uppercase tracking-[0.4em]">
                                 {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 3).toLowerCase()}
                             </span>
-                            <WeatherIcon code={f.icon} className="w-12 h-12 text-white/40" />
-                            <span className="text-3xl font-[100] tracking-tighter">
+                            <WeatherIcon code={f.icon} className="w-14 h-14 text-white/30" />
+                            <span className="text-4xl font-[100] tracking-tighter text-white/60">
                                 {f.temp}
                             </span>
                         </motion.div>

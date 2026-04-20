@@ -5,6 +5,7 @@ export interface WeatherData {
     temp: number;
     condition: string;
     icon: string;
+    humidity?: number;
     forecast: {
         date: string;
         temp: number;
@@ -20,7 +21,7 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
     const fetchWeather = async () => {
         try {
             // Fetch current weather and 3-day forecast using Open-Meteo (Free, no API key)
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,weathercode&timezone=auto&temperature_unit=${unit}`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,weather_code&timezone=auto&temperature_unit=${unit}`;
             const response = await fetch(url);
             const data = await response.json();
 
@@ -38,13 +39,14 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
             };
 
             const mappedWeather: WeatherData = {
-                temp: Math.round(data.current_weather.temperature),
-                condition: weatherCodeMap[data.current_weather.weathercode] || 'Despejado',
-                icon: data.current_weather.weathercode.toString(),
+                temp: Math.round(data.current.temperature_2m),
+                condition: weatherCodeMap[data.current.weather_code] || 'Despejado',
+                icon: data.current.weather_code.toString(),
+                humidity: data.current.relative_humidity_2m,
                 forecast: data.daily.time.slice(0, 5).map((time: string, i: number) => ({
                     date: time,
                     temp: Math.round(data.daily.temperature_2m_max[i]),
-                    icon: data.daily.weathercode[i].toString()
+                    icon: data.daily.weather_code[i].toString()
                 })),
                 timezone: data.timezone
             };
