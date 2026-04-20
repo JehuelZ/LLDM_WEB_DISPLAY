@@ -21,7 +21,7 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
     const fetchWeather = async () => {
         try {
             // Fetch current weather and 3-day forecast using Open-Meteo (Free, no API key)
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&daily=temperature_2m_max,weather_code&timezone=auto&temperature_unit=${unit}`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&current_weather=true&daily=temperature_2m_max,weather_code&timezone=auto&temperature_unit=${unit}`;
             const response = await fetch(url);
             const data = await response.json();
 
@@ -38,15 +38,21 @@ export function useWeather(lat: number = 24.341, lon: number = -104.28, unit: 'c
                 95: 'Tormenta eléctrica',
             };
 
+            // Enhanced mapping for reliability
+            const currentObj = data.current || data.current_weather || {};
+            const code = currentObj.weather_code ?? currentObj.weathercode ?? 0;
+            const temp = Math.round(currentObj.temperature_2m ?? currentObj.temperature ?? 0);
+            const humidity = data.current?.relative_humidity_2m;
+
             const mappedWeather: WeatherData = {
-                temp: Math.round(data.current.temperature_2m),
-                condition: weatherCodeMap[data.current.weather_code] || 'Despejado',
-                icon: data.current.weather_code.toString(),
-                humidity: data.current.relative_humidity_2m,
-                forecast: data.daily.time.slice(0, 5).map((time: string, i: number) => ({
+                temp,
+                condition: weatherCodeMap[code] || 'Despejado',
+                icon: code.toString(),
+                humidity,
+                forecast: (data.daily?.time || []).slice(0, 5).map((time: string, i: number) => ({
                     date: time,
                     temp: Math.round(data.daily.temperature_2m_max[i]),
-                    icon: data.daily.weather_code[i].toString()
+                    icon: (data.daily.weather_code?.[i] ?? data.daily.weathercode?.[i] ?? 0).toString()
                 })),
                 timezone: data.timezone
             };
