@@ -107,6 +107,9 @@ export interface AppSettings {
     minimalShowWeather?: boolean;
     minimalShowForecast?: boolean;
     weatherTimezone?: string;
+    weatherLat?: number;
+    weatherLng?: number;
+    weatherCity?: string;
 }
 
 export interface UserProfile {
@@ -1628,6 +1631,10 @@ export const useAppStore = create<AppState>()(
                             weatherUnit: data.weather_unit || 'fahrenheit',
                             fontMain: data.display_font_family || 'Poppins',
                             fontWeight: data.display_font_weight || '400',
+                            weatherLat: data.weather_lat,
+                            weatherLng: data.weather_lng,
+                            weatherCity: data.weather_city,
+                            weatherTimezone: data.weather_timezone,
                             mainChurchName: data.main_church_name || 'Rodeo CA',
                             mainChurch: data.main_church_obj || { id: 'main', name: data.main_church_name || 'Rodeo CA' },
                             missions: (data.missions || []).map((m: any) => {
@@ -1734,6 +1741,10 @@ export const useAppStore = create<AppState>()(
                     weatherUnit: 'weather_unit',
                     fontMain: 'display_font_family',
                     fontWeight: 'display_font_weight',
+                    weatherLat: 'weather_lat',
+                    weatherLng: 'weather_lng',
+                    weatherCity: 'weather_city',
+                    weatherTimezone: 'weather_timezone',
                     neonForgeVariant: 'neon_forge_variant',
                     aquaVariant: 'aqua_variant',
                     neonForgeCityData: 'neon_forge_city_data',
