@@ -91,10 +91,18 @@ const Sidebar: React.FC = () => {
                             <WeatherIcon code={weather?.icon || "0"} className="w-24 h-24 text-white/70" />
                         </div>
                         <div className="flex flex-col">
-                            <span className="text-8xl font-[100] tracking-tighter leading-none mb-2">
-                                {weather?.temp ?? '--'}°
-                            </span>
-                            <span className="text-[14px] font-[300] text-white/30 lowercase tracking-[0.2em] truncate max-w-[200px]">
+                            <div className="flex items-start gap-4">
+                                <span className="text-8xl font-[100] tracking-tighter leading-none">
+                                    {weather?.temp ?? '--'}
+                                </span>
+                                <div className="flex flex-col items-center mt-3">
+                                    <Thermometer className="w-10 h-10 text-white/20" strokeWidth={1} />
+                                    <span className="text-[12px] font-[300] text-white/10 uppercase tracking-widest leading-none mt-1">
+                                        {settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
+                                    </span>
+                                </div>
+                            </div>
+                            <span className="text-[14px] font-[300] text-white/30 lowercase tracking-[0.2em] truncate max-w-[200px] mt-2">
                                 {weather?.condition?.toLowerCase() || 'cargando...'}
                             </span>
                         </div>
@@ -115,7 +123,7 @@ const Sidebar: React.FC = () => {
                             </span>
                             <WeatherIcon code={f.icon} className="w-12 h-12 text-white/40" />
                             <span className="text-3xl font-[100] tracking-tighter">
-                                {f.temp}°
+                                {f.temp}
                             </span>
                         </motion.div>
                     ))}
