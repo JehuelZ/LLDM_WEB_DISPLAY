@@ -34,5 +34,13 @@ Este es el documento constitucional para el tema Luna Premium. Estas reglas DEBE
 - Este archivo es la ÚNICA referencia de estilo para Luna Premium.
 - Evitar clases de Tailwind que no cumplan con el grosor 300 o el redondeo total.
 
+## 5. ☁️ Sincronización de Nube (Admin vs Display)
+- **Principio de Aislamiento de Display**: La terminal pública (Display) es CIEGA. Bajo ninguna circunstancia el display debe extraer la hora local o la ubicación local del dispositivo (TV, Chromecast) donde se abra.
+- **Dictadura del Administrador**: El reloj y el clima deben obedecer al 100% las coordenadas (`settings.weatherLat`/`Lng`) y el Timezone configurado en Supabase a través del panel Administrativo.
+- **Jerarquía Climatológica**:
+    1. Icono Gigante: **Termómetro** (Nunca de clima). Indica que el número principal es la temperatura térmica general.
+    2. Temperatura: Tamaño mediano-grande (ej. `6xl`), limpio, con su símbolo de grado `°` estético pegado al número.
+    3. Icono Secundario de Estado y Humedad: El icono tradicional de clima (nube/sol) se relega al nivel del texto auxiliar en la parte baja junto con la humedad y las gotas, reduciendo su escala y eliminando fondos (diseño flotante libre).
+
 ---
-*V10.0: El Observatorio de Datos Absoluto.*
+*V10.1: Cero fallbacks al dispositivo local; Cloud Master Protocol.*
