@@ -96,7 +96,7 @@ const Sidebar: React.FC = () => {
                         <div className="flex flex-col">
                             <div className="flex items-start gap-3">
                                 <span className="text-6xl font-[100] tracking-tighter leading-none">
-                                    {weather?.temp ?? '--'}
+                                    {weather?.temp ?? '--'}°
                                 </span>
                                 <div className="flex flex-col items-center mt-2">
                                     <Thermometer className="w-6 h-6 text-white/20" strokeWidth={1} />
