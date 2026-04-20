@@ -81,7 +81,7 @@ const Sidebar: React.FC = () => {
         <motion.aside 
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="absolute inset-y-0 left-0 w-[420px] h-full flex flex-col bg-transparent p-12 py-16 z-[50]"
+            className="absolute inset-y-0 left-0 w-[320px] h-full flex flex-col bg-transparent p-10 py-16 z-[50]"
             style={{ fontFamily: "'Saira', sans-serif" }}
         >
             {/* Subtle vertical glow edge */}
@@ -107,19 +107,19 @@ const Sidebar: React.FC = () => {
 
             {/* 2. CLIMA SIGUIENTE */}
             <div className="flex-1 flex flex-col overflow-hidden px-1">
-                <div className="flex flex-col mb-10">
+                <div className="flex flex-col mb-10 items-center">
                     <div className="flex items-center mb-3">
                         <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 lowercase">
                             clima actual
                         </span>
                     </div>
-                    <div className="flex items-center gap-6">
+                    <div className="flex flex-col items-center gap-4">
                         <div className="w-20 h-20 flex items-center justify-center shrink-0">
                             <Thermometer className="w-16 h-16 text-white/50" strokeWidth={1} />
                         </div>
-                        <div className="flex flex-col">
-                            <div className="flex items-start gap-2">
-                                <span className="text-6xl font-[100] tracking-tighter leading-none">
+                        <div className="flex flex-col items-center">
+                            <div className="flex items-start gap-1">
+                                <span className="text-6xl font-[100] tracking-tighter leading-none ml-2">
                                     {weather?.temp ?? '--'}°
                                 </span>
                                 <div className="flex flex-col items-center mt-1">
@@ -128,7 +128,7 @@ const Sidebar: React.FC = () => {
                                     </span>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-2 mt-4">
+                            <div className="flex flex-col items-center gap-2 mt-4">
                                 <div className="flex items-center gap-2">
                                     <WeatherIcon code={weather?.icon || "0"} className="w-5 h-5 text-white/30" />
                                     <span className="text-[14px] font-[300] text-white/50 lowercase tracking-[0.1em]">
@@ -148,20 +148,20 @@ const Sidebar: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col gap-3 px-2">
                     {weather?.forecast.slice(1, 5).map((f, i) => (
                         <motion.div 
                             key={f.date}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.1 + (i * 0.1) }}
-                            className="aspect-square flex flex-col bg-white/[0.02] border border-white/5 rounded-[4px] p-4 justify-between transition-all opacity-90 hover:bg-white/[0.04]"
+                            className="w-full flex flex-col bg-white/[0.02] border border-white/5 rounded-[4px] px-5 py-3 transition-all opacity-80 hover:bg-white/[0.05]"
                         >
-                            <span className="text-[10px] font-[300] text-white/20 uppercase tracking-[0.3em] w-full text-left">
-                                {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 3).toLowerCase()}
+                            <span className="text-[10px] font-[300] text-white/30 uppercase tracking-[0.4em] mb-2 w-full text-center">
+                                {format(new Date(f.date + 'T12:00:00'), 'EEEE', { locale: es }).toLowerCase()}
                             </span>
-                            <div className="flex items-end justify-between w-full mt-auto">
-                                <WeatherIcon code={f.icon} className="w-8 h-8 text-white/30" />
+                            <div className="flex items-center justify-between w-full px-2">
+                                <WeatherIcon code={f.icon} className="w-6 h-6 text-white/30" />
                                 <span className="text-3xl font-[100] tracking-tighter text-white/50 leading-none">
                                     {f.temp}°
                                 </span>
