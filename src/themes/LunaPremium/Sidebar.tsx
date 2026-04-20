@@ -140,7 +140,7 @@ const Sidebar: React.FC = () => {
                             <span className="text-[12px] font-[300] text-white/10 uppercase tracking-[0.4em]">
                                 {format(new Date(f.date + 'T12:00:00'), 'eee', { locale: es }).slice(0, 3).toLowerCase()}
                             </span>
-                            <WeatherIcon code={f.icon} className="w-14 h-14 text-white/30" />
+                            <WeatherIcon code={f.icon} className="w-12 h-12 text-white/30" />
                             <span className="text-4xl font-[100] tracking-tighter text-white/60">
                                 {f.temp}
                             </span>
