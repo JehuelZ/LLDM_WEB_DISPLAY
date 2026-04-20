@@ -86,23 +86,20 @@ const Sidebar: React.FC = () => {
                     <span className="text-[9px] font-[300] tracking-[0.4em] text-white/10 mb-4 lowercase">
                         clima actual
                     </span>
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-10">
                         <div className="w-32 h-32 rounded-sm bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                            <WeatherIcon code={weather?.icon || "0"} className="w-24 h-24 text-white/70" />
+                            <Thermometer className="w-24 h-24 text-white/70" strokeWidth={1} />
                         </div>
                         <div className="flex flex-col">
-                            <div className="flex items-start gap-4">
+                            <div className="flex items-start">
                                 <span className="text-8xl font-[100] tracking-tighter leading-none">
                                     {weather?.temp ?? '--'}
                                 </span>
-                                <div className="flex flex-col items-center mt-3">
-                                    <Thermometer className="w-10 h-10 text-white/20" strokeWidth={1} />
-                                    <span className="text-[12px] font-[300] text-white/10 uppercase tracking-widest leading-none mt-1">
-                                        {settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
-                                    </span>
-                                </div>
+                                <span className="text-4xl font-[300] text-white/20 ml-2 mt-2">
+                                    °{settings?.weatherUnit === 'fahrenheit' ? 'f' : 'c'}
+                                </span>
                             </div>
-                            <span className="text-[14px] font-[300] text-white/30 lowercase tracking-[0.2em] truncate max-w-[200px] mt-2">
+                            <span className="text-[14px] font-[300] text-white/30 lowercase tracking-[0.2em] truncate max-w-[200px] mt-4">
                                 {weather?.condition?.toLowerCase() || 'cargando...'}
                             </span>
                         </div>
