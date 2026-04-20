@@ -31,7 +31,7 @@ const LunaPremiumWeekly: React.FC = () => {
     const slideTitle = getSlideSystemTitle('weekly_program', settings?.language);
 
     return (
-        <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 pl-[420px] pr-4 py-8 pt-32 pb-32 relative"
+        <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 pl-[320px] pr-4 py-8 pt-32 pb-32 relative"
              style={{ fontFamily: "'Saira', sans-serif" }}>
             {/* Header (Synchronized Flare Style) */}
             <header className="flex flex-col mb-16">
