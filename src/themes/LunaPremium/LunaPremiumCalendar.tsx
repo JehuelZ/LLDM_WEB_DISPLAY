@@ -49,7 +49,7 @@ const LunaPremiumCalendar: React.FC = () => {
                 {/* Header */}
                 <header className="flex flex-col mb-12">
                     <div className="flex items-center gap-6 mb-2">
-                        <h2 className="text-7xl font-[100] lowercase leading-none tracking-tighter">
+                        <h2 className="text-6xl font-[100] lowercase leading-none tracking-tight">
                             {format(churchNow, 'MMMM', { locale: es })}
                         </h2>
                         <div className="px-4 py-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[11px] font-[500] tracking-[0.4em] uppercase self-end mb-2">
