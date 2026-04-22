@@ -204,14 +204,26 @@ export const GlassmorphismCalendar = () => {
                                             </span>
                                         </div>
 
-                                        {/* 9 AM */}
+                                        {/* 9 AM / 10 AM (Domingo) */}
                                         <div className={cn("flex items-start gap-1.5 transition-colors", active9am && "text-emerald-400")}>
                                             <div className="flex items-center gap-1.5 mt-[1px]">
                                                 {active9am && <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />}
-                                                <span className={cn("text-[7px] font-black uppercase w-7 flex-shrink-0", active9am ? "text-emerald-400" : "text-orange-400/60")}>9 AM</span>
+                                                <span className={cn("text-[7px] font-black uppercase w-7 flex-shrink-0", active9am ? "text-emerald-400" : "text-orange-400/60")}>
+                                                    {dayIsSunday ? "10 AM" : "9 AM"}
+                                                </span>
                                             </div>
                                             <div className={cn("text-[10px] font-black uppercase tracking-tight flex flex-col min-w-0 flex-1 leading-tight", active9am ? "text-emerald-400" : "text-white/90")}>
-                                                {(() => {
+                                                {dayIsSunday ? (() => {
+                                                    const name = getMemberDetail(sched?.slots?.['9am']?.consecrationLeaderId).name;
+                                                    const type = sched?.slots?.['9am']?.sundayType;
+                                                    const label = type === 'exchange' ? 'INTERCAMBIO' : type === 'visitors' ? 'VISITAS' : 'DOMINICAL';
+                                                    return (
+                                                        <>
+                                                            <span className="truncate w-full">{name || '---'}</span>
+                                                            <span className={cn("truncate w-full text-[8.5px]", active9am ? "text-emerald-500/80" : "text-white/50")}>{label}</span>
+                                                        </>
+                                                    );
+                                                })() : (() => {
                                                     const l1 = getMemberDetail(sched?.slots?.['9am']?.consecrationLeaderId).name;
                                                     const l2 = getMemberDetail(sched?.slots?.['9am']?.doctrineLeaderId).name;
                                                     if (l1 && l2 && l1 !== l2) return (
