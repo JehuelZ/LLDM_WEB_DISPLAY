@@ -138,31 +138,36 @@ export const GlassmorphismWeekly = () => {
                                         return parts.length > 1 ? `${parts[0]} ${parts[1][0]}.` : name;
                                     };
 
-                                    let shortName = '';
+                                    let shortNames: string[] = [];
                                     if (day.dayNum === '14') {
-                                        shortName = settings.language === 'es' ? 'RECORDACIÓN: HISTORIA' : 'REMEMBRANCE: HISTORY';
+                                        shortNames = [settings.language === 'es' ? 'RECORDACIÓN: HISTORIA' : 'REMEMBRANCE: HISTORY'];
                                     } else if (slotKey === '5am') {
-                                        shortName = formatShortName(getMemberDetail(slot.leaderId).name);
+                                        shortNames = [formatShortName(getMemberDetail(slot.leaderId).name)];
                                     } else if (slotKey === '9am') {
                                         const l1 = getMemberDetail(slot.consecrationLeaderId).name;
                                         const l2 = getMemberDetail(slot.doctrineLeaderId).name;
-                                        if (l1 && l2 && l1.toLowerCase() !== l2.toLowerCase()) {
-                                            shortName = `${formatShortName(l1)} | ${formatShortName(l2)}`;
+                                        if (isSunday) {
+                                            const sName = l1 || l2;
+                                            shortNames = sName ? [formatShortName(sName)] : [];
                                         } else {
-                                            shortName = formatShortName(l1 || l2);
+                                            if (l1 && l2 && l1.toLowerCase() !== l2.toLowerCase()) {
+                                                shortNames = [formatShortName(l1), formatShortName(l2)];
+                                            } else {
+                                                shortNames = [formatShortName(l1 || l2)];
+                                            }
                                         }
                                     } else if (slotKey === 'evening') {
                                         const ids = slot.leaderIds || [];
                                         const l1Name = getMemberDetail(ids[0]).name;
                                         const l2Name = getMemberDetail(slot.doctrineLeaderId || ids[1]).name;
                                         if (l1Name && l2Name && l1Name.toLowerCase() !== l2Name.toLowerCase()) {
-                                            shortName = `${formatShortName(l1Name)} | ${formatShortName(l2Name)}`;
+                                            shortNames = [formatShortName(l1Name), formatShortName(l2Name)];
                                         } else {
-                                            shortName = formatShortName(l1Name || l2Name);
+                                            shortNames = [formatShortName(l1Name || l2Name)];
                                         }
                                     }
 
-                                    if (!shortName) return null;
+                                    if (shortNames.length === 0 || !shortNames[0]) return null;
 
                                     const isVertical = true; // Uniform vertical style for all slots
                                     const l1 = getMemberDetail(slotKey === '5am' ? slot.leaderId : (slotKey === '9am' ? slot.consecrationLeaderId : slot.leaderIds?.[0]));
@@ -223,13 +228,16 @@ export const GlassmorphismWeekly = () => {
                                                 )}
                                             </div>
 
-                                            <div className="flex flex-col items-center min-w-0">
+                                            <div className="flex flex-col items-center min-w-0 w-full mt-1">
                                                 <span className={cn(
                                                     "text-[10px] font-black uppercase tracking-[0.1em] leading-none mb-1 opacity-80",
                                                     isActive ? 'text-emerald-400' : (slotKey === '5am' ? 'text-blue-400' : slotKey === '9am' ? 'text-orange-400' : 'text-purple-400')
                                                 )}>
                                                     {slotKey === '5am' ? 'CONSAGRACIÓN' :
-                                                        slotKey === '9am' ? (isSunday ? 'DOMINICAL' : 'CONS. | DOCTRINA') :
+                                                        slotKey === '9am' ? (isSunday ? (() => {
+                                                            const type = slot.sundayType;
+                                                            return type === 'exchange' ? 'INTERCAMBIO' : type === 'visitors' ? 'VISITAS' : 'DOMINICAL';
+                                                        })() : 'CONS. | DOCTRINA') :
                                                             (() => {
                                                                 const sOut = (day.sched?.slots as any)?.evening;
                                                                 if (sOut?.customLabel) return (sOut.customLabel || '').toUpperCase();
@@ -245,9 +253,16 @@ export const GlassmorphismWeekly = () => {
                                                                 }
                                                             })()}
                                                 </span>
-                                                <span className="font-black text-white leading-tight uppercase truncate w-full text-[14px]">
-                                                    {shortName}
-                                                </span>
+                                                <div className="flex flex-col w-full items-center">
+                                                    {shortNames.map((name, i) => (
+                                                        <span key={i} className={cn(
+                                                            "font-black uppercase truncate w-full text-center leading-tight",
+                                                            i === 0 ? "text-white text-[14px]" : "text-white/60 text-[10.5px] mt-0.5"
+                                                        )}>
+                                                            {name}
+                                                        </span>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </motion.div>
                                     );
