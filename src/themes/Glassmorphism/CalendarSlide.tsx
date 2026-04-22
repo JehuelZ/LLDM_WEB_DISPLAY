@@ -205,33 +205,36 @@ export const GlassmorphismCalendar = () => {
                                         </div>
 
                                         {/* 9 AM */}
-                                        <div className={cn("flex items-center gap-1.5 truncate transition-colors", active9am && "text-emerald-400")}>
-                                            {active9am && <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />}
-                                            <span className={cn("text-[7px] font-black uppercase w-7 flex-shrink-0", active9am ? "text-emerald-400" : "text-orange-400/60")}>9 AM</span>
-                                            <div className={cn("text-[10px] font-black truncate uppercase tracking-tight flex items-center gap-1.5", active9am ? "text-emerald-400" : "text-white/90")}>
+                                        <div className={cn("flex items-start gap-1.5 transition-colors", active9am && "text-emerald-400")}>
+                                            <div className="flex items-center gap-1.5 mt-[1px]">
+                                                {active9am && <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />}
+                                                <span className={cn("text-[7px] font-black uppercase w-7 flex-shrink-0", active9am ? "text-emerald-400" : "text-orange-400/60")}>9 AM</span>
+                                            </div>
+                                            <div className={cn("text-[10px] font-black uppercase tracking-tight flex flex-col min-w-0 flex-1 leading-tight", active9am ? "text-emerald-400" : "text-white/90")}>
                                                 {(() => {
-                                                    const l1 = detail9am.name;
+                                                    const l1 = getMemberDetail(sched?.slots?.['9am']?.consecrationLeaderId).name;
                                                     const l2 = getMemberDetail(sched?.slots?.['9am']?.doctrineLeaderId).name;
                                                     if (l1 && l2 && l1 !== l2) return (
                                                         <>
-                                                            <span>{l1}</span>
-                                                            <div className={cn("w-[2px] h-3 rounded-full", active9am ? "bg-emerald-500/40" : "bg-orange-500/30")} />
-                                                            <span>{l2}</span>
+                                                            <span className="truncate w-full">{l1}</span>
+                                                            <span className={cn("truncate w-full text-[8.5px]", active9am ? "text-emerald-500/80" : "text-white/50")}>{l2}</span>
                                                         </>
                                                     );
-                                                    return <span>{l1 || l2 || '---'}</span>;
+                                                    return <span className="truncate w-full">{l1 || l2 || '---'}</span>;
                                                 })()}
                                             </div>
                                         </div>
 
                                         {/* 7 PM */}
-                                        <div className={cn("flex items-center gap-1.5 truncate transition-colors", activeEv && "text-emerald-400")}>
-                                            {activeEv && <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />}
-                                            <span className={cn("text-[7px] font-black uppercase w-7 flex-shrink-0", activeEv ? "text-emerald-400" : "text-purple-400/60")}>19 PM</span>
+                                        <div className={cn("flex items-start gap-1.5 transition-colors", activeEv && "text-emerald-400")}>
+                                            <div className="flex items-center gap-1.5 mt-[1px]">
+                                                {activeEv && <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />}
+                                                <span className={cn("text-[7px] font-black uppercase w-7 flex-shrink-0", activeEv ? "text-emerald-400" : "text-purple-400/60")}>19 PM</span>
+                                            </div>
                                             {sched?.slots?.evening?.language === 'en' && (
-                                                <span className="text-[6px] font-black text-blue-400 bg-blue-400/10 px-1 py-[0.5px] rounded-[2px] border border-blue-400/20 leading-none">EN</span>
+                                                <span className="text-[6px] font-black text-blue-400 bg-blue-400/10 px-1 py-[0.5px] rounded-[2px] border border-blue-400/20 leading-none mt-[1px]">EN</span>
                                             )}
-                                            <div className={cn("text-[10px] font-black truncate uppercase tracking-tight flex items-center gap-1.5", activeEv ? "text-emerald-400" : "text-white/90")}>
+                                            <div className={cn("text-[10px] font-black uppercase tracking-tight flex flex-col min-w-0 flex-1 leading-tight", activeEv ? "text-emerald-400" : "text-white/90")}>
                                                 {(() => {
                                                     const ids = sched?.slots?.['evening']?.leaderIds || [];
                                                     if (ids.length > 1) {
@@ -239,13 +242,12 @@ export const GlassmorphismCalendar = () => {
                                                         const n2 = getMemberDetail(ids[1]).name;
                                                         return (
                                                             <>
-                                                                <span>{n1}</span>
-                                                                <div className={cn("w-[2px] h-3 rounded-full", activeEv ? "bg-emerald-500/40" : "bg-purple-500/30")} />
-                                                                <span>{n2}</span>
+                                                                <span className="truncate w-full">{n1}</span>
+                                                                <span className={cn("truncate w-full text-[8.5px]", activeEv ? "text-emerald-500/80" : "text-white/50")}>{n2}</span>
                                                             </>
                                                         );
                                                     }
-                                                    return <span>{detailEv.name || '---'}</span>;
+                                                    return <span className="truncate w-full">{detailEv.name || '---'}</span>;
                                                 })()}
                                             </div>
                                         </div>
