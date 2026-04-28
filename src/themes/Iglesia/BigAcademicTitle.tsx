@@ -3,25 +3,25 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { neuShadow } from './tokens';
 
-export function BigAcademicTitle({ label, icon: Icon, T, isDark, small = false }: { label: string; icon: any; T: any; isDark: boolean; small?: boolean }) {
+export function BigAcademicTitle({ label, icon: Icon, T, isDark, small = false, micro = false }: { label: string; icon: any; T: any; isDark: boolean; small?: boolean; micro?: boolean }) {
     const shadow = isDark
         ? `12px 12px 25px rgba(0, 0, 0, 0.4), -10px -10px 25px rgba(255, 255, 255, 0.03)`
         : `10px 10px 20px rgba(0, 0, 0, 0.04), -10px -10px 25px #FFFFFF`;
 
     return (
         <div style={{
-            width: '100%', height: small ? 60 : 80, borderRadius: small ? 20 : 28,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: small ? 14 : 20,
+            width: '100%', height: micro ? 50 : (small ? 60 : 80), borderRadius: micro ? 16 : (small ? 20 : 28),
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: micro ? 10 : (small ? 14 : 20),
             background: T.surface,
             boxShadow: shadow,
             border: 'none',
-            padding: small ? '0 24px' : '0 40px',
+            padding: micro ? '0 20px' : (small ? '0 24px' : '0 40px'),
             position: 'relative',
             zIndex: 10
         }}>
-            {Icon && <Icon style={{ width: small ? 24 : 32, height: small ? 24 : 32, color: isDark ? '#FFFFFF' : T.secondary }} />}
+            {Icon && <Icon style={{ width: micro ? 20 : (small ? 24 : 32), height: micro ? 20 : (small ? 24 : 32), color: isDark ? '#FFFFFF' : T.secondary }} />}
             <span style={{
-                fontSize: small ? 24 : 32,
+                fontSize: micro ? 18 : (small ? 24 : 32),
                 fontWeight: 700,
                 color: isDark ? '#FFFFFF' : T.textPrimary,
                 letterSpacing: '0.08em',
