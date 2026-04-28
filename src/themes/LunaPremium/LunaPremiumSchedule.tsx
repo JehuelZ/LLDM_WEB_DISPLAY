@@ -62,23 +62,25 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
         <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 pl-[320px] pr-4 py-8 pt-32 pb-32 relative"
              style={{ fontFamily: "'Saira', sans-serif" }}>
             {/* High-Tech Section Header (Synchronized Flare Style) */}
-            <header className="flex flex-col mb-16">
-                <div className="flex items-center gap-6">
+            <header className="flex flex-col mb-8">
+                <div className="flex items-center gap-4">
                     <div className="flex flex-col">
-                        <h2 className="text-5xl font-[100] lowercase leading-none tracking-tight">
+                        <h2 className="text-3xl font-[100] lowercase leading-none tracking-tight">
                             {slideTitle}
                         </h2>
                         {/* Title Flare Underline */}
-                        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-amber-300 to-transparent mt-3 shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
+                        <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-amber-300 to-transparent mt-2 shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
                     </div>
-                    <div className="px-4 py-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[10px] font-[500] tracking-[0.3em] uppercase self-end mb-4">
+                    
+                    {/* Date Badge */}
+                    <div className="px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[9px] font-[500] tracking-[0.3em] uppercase self-end mb-2">
                         {format(targetDate, 'dd MMMM yyyy', { locale: es }).toLowerCase()}
                     </div>
                     
                     {theme && theme.title && (
-                        <div className="px-5 py-2.5 bg-white/[0.03] border border-amber-500/30 rounded-full backdrop-blur-md flex items-center gap-3 self-end mb-3 ml-auto">
-                            <BookOpen size={16} className="text-amber-500" />
-                            <span className="text-[10px] tracking-[0.3em] uppercase text-amber-500/80 font-black">Tema Semanal:</span>
+                        <div className="px-4 py-1.5 bg-white/[0.03] border border-amber-500/30 rounded-full backdrop-blur-md flex items-center gap-2 self-end mb-1 ml-auto">
+                            <BookOpen size={14} className="text-amber-500" />
+                            <span className="text-[9px] tracking-[0.3em] uppercase text-amber-500/80 font-black">Tema Semanal:</span>
                             <span className="text-[11px] tracking-widest uppercase text-white/90 font-[400]">{theme.title}</span>
                         </div>
                     )}
