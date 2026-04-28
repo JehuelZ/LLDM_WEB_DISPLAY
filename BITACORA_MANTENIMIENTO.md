@@ -115,3 +115,14 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 ---
 
 *Documento actualizado por Antigravity (IA)*
+
+### 🛡️ Resolución de Sincronización de Base de Datos (28 de Abril, 2026)
+
+#### 11. Columnas Faltantes en `app_settings` (Clima y Zona Horaria)
+- **Problema:** El panel de administración arrojaba un error de fallo de sincronización al intentar configurar la ciudad del clima, indicando que faltaba la columna `weather_city`.
+- **Causa:** En actualizaciones recientes se añadió funcionalidad para detección automática de clima y zona horaria (para que la proyección dependa de la ubicación global de la iglesia y no de la hora local del dispositivo), pero estas columnas (`weather_lat`, `weather_lng`, `weather_city`, `weather_timezone`) no fueron agregadas al schema en producción.
+- **Solución:**
+    - Se actualizó el archivo maestro de reconstrucción `MEGA_FIX_DATABASE.sql` incluyendo las sentencias `ADD COLUMN IF NOT EXISTS` para estas propiedades.
+    - Se proveyó el fragmento de código SQL necesario para ejecutarse directamente en el SQL Editor de Supabase y resolver la incidencia de forma inmediata.
+- **Archivos Afectados:**
+    - `MEGA_FIX_DATABASE.sql`

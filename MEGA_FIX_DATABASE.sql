@@ -51,7 +51,12 @@ ADD COLUMN IF NOT EXISTS display_font_family TEXT DEFAULT 'Outfit',
 ADD COLUMN IF NOT EXISTS display_font_weight TEXT DEFAULT '400',
 ADD COLUMN IF NOT EXISTS aqua_variant TEXT DEFAULT 'teal',
 ADD COLUMN IF NOT EXISTS neon_forge_variant TEXT DEFAULT 'lime',
-ADD COLUMN IF NOT EXISTS neon_forge_city_data JSONB DEFAULT '{}';
+ADD COLUMN IF NOT EXISTS neon_forge_city_data JSONB DEFAULT '{}',
+ADD COLUMN IF NOT EXISTS weather_lat NUMERIC,
+ADD COLUMN IF NOT EXISTS weather_lng NUMERIC,
+ADD COLUMN IF NOT EXISTS weather_city TEXT,
+ADD COLUMN IF NOT EXISTS weather_timezone TEXT,
+ADD COLUMN IF NOT EXISTS clock_format TEXT DEFAULT '12h';
 
 -- Asegurar que existe el registro único con ID=1
 INSERT INTO app_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;

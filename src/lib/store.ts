@@ -110,6 +110,7 @@ export interface AppSettings {
     weatherLat?: number;
     weatherLng?: number;
     weatherCity?: string;
+    clockFormat?: '12h' | '24h';
 }
 
 export interface UserProfile {
@@ -1635,6 +1636,7 @@ export const useAppStore = create<AppState>()(
                             weatherLng: data.weather_lng,
                             weatherCity: data.weather_city,
                             weatherTimezone: data.weather_timezone,
+                            clockFormat: data.clock_format || '12h',
                             mainChurchName: data.main_church_name || 'Rodeo CA',
                             mainChurch: data.main_church_obj || { id: 'main', name: data.main_church_name || 'Rodeo CA' },
                             missions: (data.missions || []).map((m: any) => {
@@ -1745,6 +1747,7 @@ export const useAppStore = create<AppState>()(
                     weatherLng: 'weather_lng',
                     weatherCity: 'weather_city',
                     weatherTimezone: 'weather_timezone',
+                    clockFormat: 'clock_format',
                     neonForgeVariant: 'neon_forge_variant',
                     aquaVariant: 'aqua_variant',
                     neonForgeCityData: 'neon_forge_city_data',

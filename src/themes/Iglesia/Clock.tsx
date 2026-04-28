@@ -26,15 +26,17 @@ export function IntegratedClock({ T, isDark }: { T: any; isDark: boolean }) {
         }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, fontFamily: T.fontMono, lineHeight: 1.1 }}>
                 <span style={{ fontSize: 58, fontWeight: 700, color: T.textPrimary, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                    {format(time, 'hh:mm')}
+                    {format(time, settings?.clockFormat === '24h' ? 'HH:mm' : 'hh:mm')}
                 </span>
                 <div style={{ display: 'flex', flexDirection: 'column', paddingBottom: 2 }}>
                     <span style={{ fontSize: 24, fontWeight: 700, color: T.accent, lineHeight: 1 }}>
                         {format(time, 'ss')}
                     </span>
-                    <span style={{ fontSize: 12, fontWeight: 900, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: 4, lineHeight: 1 }}>
-                        {format(time, 'a')}
-                    </span>
+                    {settings?.clockFormat !== '24h' && (
+                        <span style={{ fontSize: 12, fontWeight: 900, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: 4, lineHeight: 1 }}>
+                            {format(time, 'a')}
+                        </span>
+                    )}
                 </div>
             </div>
 
