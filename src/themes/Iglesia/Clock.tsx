@@ -221,6 +221,34 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                                         </div>
                                     )}
 
+                                    {/* Forecast Segment inside Header */}
+                                    {weather?.forecast && weather.forecast.length > 0 && (
+                                        <div style={{
+                                            display: 'flex', alignItems: 'center', gap: 12, padding: '0 24px',
+                                            borderLeft: `1px solid ${T.borderAccent}`, flexShrink: 0
+                                        }}>
+                                            {weather.forecast.slice(1, 5).map((day: any, idx: number) => {
+                                                const d = new Date(day.date + 'T12:00:00');
+                                                return (
+                                                    <div key={idx} style={{
+                                                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                                                        padding: '6px 10px',
+                                                        borderRadius: 12,
+                                                        background: isDark ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.02)',
+                                                    }}>
+                                                        <span style={{ fontSize: 8, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat }}>
+                                                            {format(d, 'EEE', { locale: es })}
+                                                        </span>
+                                                        <WeatherIcon code={day.icon} className="text-[#339AF0]" size={16} />
+                                                        <span style={{ fontSize: 11, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter }}>
+                                                            {day.temp}°
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
                                     {/* Weather Lite Segment (Stay in Header) — RE-VERIFIED: NO FORECAST STRIP */}
                                     <div style={{ 
                                         display: 'flex', alignItems: 'center', gap: 16, padding: '0 24px', 
@@ -288,42 +316,6 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
                     <IntegratedClock T={T} isDark={isDark} />
                 </div>
             </div>
-            {/* FLOATING FORECAST: Bottom Left Corner */}
-            {weather?.forecast && weather.forecast.length > 0 && (
-                <div style={{
-                    position: 'absolute', bottom: 40, left: 50,
-                    zIndex: 40, pointerEvents: 'auto',
-                    display: 'flex', gap: 12,
-                    padding: '12px 24px',
-                    borderRadius: 32,
-                    background: isDark ? 'rgba(30,35,45,0.7)' : `${T.surface}EE`,
-                    backdropFilter: 'blur(20px)',
-                    boxShadow: isDark ? '12px 12px 40px rgba(0,0,0,0.6), -5px -5px 25px rgba(255,255,255,0.02)' : neuShadow(T, false, 'lg', isDark),
-                    border: `1.5px solid ${T.accent}20`,
-                    transition: 'all 0.5s ease'
-                }}>
-                    {weather.forecast.slice(1, 5).map((day: any, idx: number) => {
-                        const d = new Date(day.date + 'T12:00:00');
-                        return (
-                            <div key={idx} style={{
-                                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-                                padding: '8px 16px',
-                                borderRadius: 16,
-                                background: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.02)',
-                                boxShadow: isDark ? 'inset 2px 2px 5px rgba(0,0,0,0.5)' : 'inset 2px 2px 5px rgba(0,0,0,0.05)',
-                            }}>
-                                <span style={{ fontSize: 10, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', fontFamily: T.fontMontserrat }}>
-                                    {format(d, 'EEE', { locale: es })}
-                                </span>
-                                <WeatherIcon code={day.icon} className="text-[#339AF0]" size={20} />
-                                <span style={{ fontSize: 14, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontInter }}>
-                                    {day.temp}°
-                                </span>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
         </>
     );
 }
