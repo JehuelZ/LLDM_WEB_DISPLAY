@@ -497,37 +497,37 @@ export function IglesiaAnnouncements() {
                                     <div style={{
                                         display: 'grid',
                                         gridTemplateColumns: 'repeat(2, 1fr)',
-                                        gap: '24px 30px'
+                                        gap: '20px 24px'
                                     }}>
                                         {teamData.map((item, i) => (
-                                            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                                            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                                                 <div style={{
-                                                    width: 44, height: 44, borderRadius: 12,
+                                                    width: 36, height: 36, borderRadius: 10,
                                                     background: `${item.color}15`,
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                     border: `1px solid ${item.color}20`,
                                                     marginTop: 2, flexShrink: 0
                                                 }}>
-                                                    <item.icon size={20} style={{ color: item.color }} />
+                                                    <item.icon size={16} style={{ color: item.color }} />
                                                 </div>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
                                                     <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                        <span style={{ fontSize: 9, fontWeight: 800, color: item.color, textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: T.fontMontserrat }}>{item.label}</span>
-                                                        <span style={{ fontSize: 14, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontMontserrat, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        <span style={{ fontSize: 8, fontWeight: 800, color: item.color, textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: T.fontMontserrat }}>{item.label}</span>
+                                                        <span style={{ fontSize: 11, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontMontserrat, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                             {item.member.name}
                                                         </span>
                                                     </div>
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 2, opacity: 0.8 }}>
                                                         {item.member.phone && (
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                <Phone size={10} style={{ color: T.textMuted }} />
-                                                                <span style={{ fontSize: 10, fontWeight: 500, color: T.textSecondary, fontFamily: T.fontInter }}>{item.member.phone}</span>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                                                <Phone size={9} style={{ color: T.textMuted }} />
+                                                                <span style={{ fontSize: 9, fontWeight: 500, color: T.textSecondary, fontFamily: T.fontInter }}>{item.member.phone}</span>
                                                             </div>
                                                         )}
                                                         {item.member.email && (
-                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                                <Mail size={10} style={{ color: T.textMuted }} />
-                                                                <span style={{ fontSize: 10, fontWeight: 500, color: T.textSecondary, fontFamily: T.fontInter, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.member.email}</span>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                                                <Mail size={9} style={{ color: T.textMuted }} />
+                                                                <span style={{ fontSize: 9, fontWeight: 500, color: T.textSecondary, fontFamily: T.fontInter, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{item.member.email}</span>
                                                             </div>
                                                         )}
                                                     </div>
