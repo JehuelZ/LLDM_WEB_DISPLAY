@@ -102,7 +102,7 @@ export function IglesiaCalendar() {
                         icon={CalendarIcon}
                         T={T}
                         isDark={isDark}
-                        small={true}
+                        micro={true}
                     />
                 </div>
             </div>

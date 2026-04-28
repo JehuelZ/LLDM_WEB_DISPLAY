@@ -13,8 +13,8 @@ export const DISPLAY_SLIDE_LABELS: Record<string, { es: string, en: string }> = 
         en: 'Tomorrow\'s Agenda'
     },
     calendar: {
-        es: 'Calendario Mensual',
-        en: 'Monthly Calendar'
+        es: 'Lista de Oraciones Mensual',
+        en: 'Monthly Prayer List'
     },
     weekly_program: {
         es: 'Lista de Oraciones',
