@@ -79,7 +79,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                         <div className="px-5 py-2.5 bg-white/[0.03] border border-amber-500/30 rounded-full backdrop-blur-md flex items-center gap-3 self-end mb-3 ml-auto">
                             <BookOpen size={16} className="text-amber-500" />
                             <span className="text-[10px] tracking-[0.3em] uppercase text-amber-500/80 font-black">Tema Semanal:</span>
-                            <span className="text-[14px] tracking-widest uppercase text-white font-[500]">{theme.title}</span>
+                            <span className="text-[11px] tracking-widest uppercase text-white/90 font-[400]">{theme.title}</span>
                         </div>
                     )}
                 </div>
