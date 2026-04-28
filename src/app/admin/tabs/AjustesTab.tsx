@@ -433,6 +433,25 @@ export const AjustesTab = ({
                                     )} />
                                 </button>
                             </div>
+                            <div className="flex items-center justify-between ml-2 mt-4">
+                                <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground">FORMATO DE HORA (24H)</label>
+                                <button
+                                    onClick={() => {
+                                        const newValue = settings.clockFormat === '24h' ? '12h' : '24h';
+                                        setSettings({ ...settings, clockFormat: newValue });
+                                        saveSettingsToCloud({ clockFormat: newValue });
+                                    }}
+                                    className={cn(
+                                        "w-12 h-6 rounded-full relative transition-colors border",
+                                        settings.clockFormat === '24h' ? "bg-primary/40 border-primary/40" : "bg-black/40 border-white/10"
+                                    )}
+                                >
+                                    <div className={cn(
+                                        "absolute top-1 w-4 h-4 rounded-full transition-all shadow-lg",
+                                        settings.clockFormat === '24h' ? "right-1 bg-white" : "left-1 bg-tactile-text-sub"
+                                    )} />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </TactileGlassCard>
