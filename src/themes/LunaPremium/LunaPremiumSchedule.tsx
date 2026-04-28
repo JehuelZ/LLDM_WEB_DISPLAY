@@ -15,7 +15,7 @@ interface ScheduleProps {
 
 const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) => {
     const { fonts } = useFont();
-    const { monthlySchedule, members, settings } = useAppStore();
+    const { monthlySchedule, members, settings, theme } = useAppStore();
     
     // Get target date
     const targetDate = isTomorrow ? addDays(new Date(), 1) : new Date();
@@ -76,6 +76,16 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                     </div>
                 </div>
             </header>
+
+            {theme && theme.title && (
+                <div className="flex items-center gap-4 mb-8 -mt-6">
+                    <div className="px-5 py-2.5 bg-white/[0.03] border border-amber-500/30 rounded-full backdrop-blur-md flex items-center gap-3">
+                        <BookOpen size={16} className="text-amber-500" />
+                        <span className="text-[10px] tracking-[0.3em] uppercase text-amber-500/80 font-black">Tema Semanal:</span>
+                        <span className="text-[14px] tracking-widest uppercase text-white font-[500]">{theme.title}</span>
+                    </div>
+                </div>
+            )}
 
             {/* Kinetic Table - Daily Slots */}
             <div className="grid grid-cols-1 gap-6 px-2 overflow-y-auto custom-scrollbar pr-4">
