@@ -8,14 +8,16 @@ import { useAppStore } from '@/lib/store';
 import { getIglesiaTokens, neuShadow } from './tokens';
 import { getSlideSystemTitle } from '@/lib/display_labels';
 import { ChurchHeaderBadge } from './BigAcademicTitle';
+import { getChurchNow } from '@/lib/time';
 
 export function IntegratedClock({ T, isDark }: { T: any; isDark: boolean }) {
-    const [time, setTime] = useState(new Date());
+    const settings = useAppStore((s: any) => s.settings);
+    const [time, setTime] = useState(() => getChurchNow(settings));
 
     useEffect(() => {
-        const timer = setInterval(() => setTime(new Date()), 1000);
+        const timer = setInterval(() => setTime(getChurchNow(settings)), 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [settings]);
 
     return (
         <div style={{
@@ -79,7 +81,7 @@ export function IglesiaProgress({ slides, currentSlide, isPaused }: { slides?: a
 
     const total = slides?.length || 0;
     const hideExtra = slides?.[currentSlide]?.id === 'calendar';
-    const currentTime = new Date();
+    const currentTime = getChurchNow(settings);
 
     const themeLabel = getSlideSystemTitle('weekly_theme_label', settings?.language || 'es');
 

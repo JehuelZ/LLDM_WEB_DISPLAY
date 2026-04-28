@@ -8,6 +8,7 @@ import { Calendar as CalendarIcon, Star, Info } from 'lucide-react';
 import { BigAcademicTitle } from './BigAcademicTitle';
 import { getIglesiaTokens, neuShadow } from './tokens';
 import { getSlideSystemTitle } from '@/lib/display_labels';
+import { getChurchNow } from '@/lib/time';
 
 const DAY_HEADERS = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 
@@ -17,12 +18,12 @@ const DAY_HEADERS = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 
 export function IglesiaCalendar() {
     const { monthlySchedule, members, settings } = useAppStore((s: any) => s);
-    const [currentTime, setCurrentTime] = React.useState(new Date());
+    const [currentTime, setCurrentTime] = React.useState(() => getChurchNow(settings));
 
     React.useEffect(() => {
-        const timer = setInterval(() => setCurrentTime(new Date()), 30000);
+        const timer = setInterval(() => setCurrentTime(getChurchNow(settings)), 30000);
         return () => clearInterval(timer);
-    }, []);
+    }, [settings]);
 
     const iglesiaVariant = settings?.iglesiaVariant || 'light';
     const isDark = iglesiaVariant === 'dark';
@@ -70,7 +71,7 @@ export function IglesiaCalendar() {
         return curMin >= start && curMin <= end;
     };
 
-    const today = new Date();
+    const today = currentTime;
     const monthStart = startOfMonth(today);
     const monthEnd = endOfMonth(today);
     const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
