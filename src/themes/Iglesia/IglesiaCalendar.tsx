@@ -278,7 +278,7 @@ export function IglesiaCalendar() {
                                                     }}
                                                 />
                                                 <p style={{
-                                                    fontSize: 13,
+                                                    fontSize: 11,
                                                     fontWeight: slot.active ? 900 : 700,
                                                     color: textColor,
                                                     whiteSpace: 'nowrap',
