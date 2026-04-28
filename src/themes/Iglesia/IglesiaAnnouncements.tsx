@@ -420,16 +420,16 @@ export function IglesiaAnnouncements() {
                                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 12 }}>
                                     {/* Name in RELIEF (Raised Plaque) */}
                                     <div style={{
-                                        padding: '10px 32px',
-                                        borderRadius: 20,
+                                        padding: '8px 24px',
+                                        borderRadius: 16,
                                         background: T.surface,
                                         boxShadow: neuShadow(T, false, 'sm', isDark),
                                         border: isDark ? '1px solid rgba(255,255,255,0.05)' : 'none',
                                         width: 'fit-content'
                                     }}>
-                                        <h4 style={{ fontSize: 26, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontMontserrat, margin: 0 }}>{minister.name}</h4>
+                                        <h4 style={{ fontSize: 20, fontWeight: 700, color: T.textPrimary, fontFamily: T.fontMontserrat, margin: 0 }}>{minister.name}</h4>
                                     </div>
-                                    <p style={{ fontSize: 13, fontWeight: 800, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontMontserrat, margin: 0, marginLeft: 12 }}>Ministro a Cargo</p>
+                                    <p style={{ fontSize: 11, fontWeight: 800, color: T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontMontserrat, margin: 0, marginLeft: 12 }}>Ministro a Cargo</p>
 
                                     {/* Minister Contact Info (Added back for completeness) */}
                                     <div style={{ display: 'flex', gap: 16, alignItems: 'center', opacity: 0.9, marginTop: -4 }}>
