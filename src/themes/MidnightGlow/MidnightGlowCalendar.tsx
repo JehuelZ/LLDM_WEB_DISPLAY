@@ -9,10 +9,13 @@ import { User, Star } from 'lucide-react';
 // THEME: Tech Corporate — Calendar View
 // Paleta: navy #040D21 · card #0D1B3E · neon-green #A3FF57 · blue-bright #4F7FFF
 
+import { getChurchNow } from '@/lib/time';
+
 const DAYS_OF_WEEK = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
 
 export function MidnightGlowCalendar() {
-    const today = new Date();
+    const settings = useAppStore((state: any) => state.settings);
+    const today = getChurchNow(settings);
     const currentMonth = startOfMonth(today);
     const endOfCurrentMonth = endOfMonth(today);
     const days = eachDayOfInterval({ start: currentMonth, end: endOfCurrentMonth });
@@ -37,7 +40,7 @@ export function MidnightGlowCalendar() {
         const sched = monthlySchedule[dateKey];
         if (!sched) return false;
 
-        const now = new Date();
+        const now = getChurchNow(settings);
         const curMin = now.getHours() * 60 + now.getMinutes();
         const todayKey = format(now, 'yyyy-MM-dd');
 
