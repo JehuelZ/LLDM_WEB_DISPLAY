@@ -448,7 +448,15 @@ export const HorariosTab = ({
                                     onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
                                     disabled={isSaving}
                                     options={privilegedMemberOptions}
-                                    icon={User}
+                                    icon={UserIcon}
+                                />
+                                <TactileSelect
+                                    label="CONSAGRACIÓN"
+                                    value={currentDaySchedule.slots['evening'].consecrationLeaderId || ''}
+                                    onChange={(val: string) => updateSlot('evening', { consecrationLeaderId: val })}
+                                    disabled={isSaving}
+                                    options={privilegedMemberOptions}
+                                    icon={Flame}
                                 />
                                 <TactileSelect
                                     label="DOCTRINA"

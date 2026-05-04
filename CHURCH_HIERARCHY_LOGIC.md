@@ -22,14 +22,16 @@ Cada miembro tiene un campo `assigned_church` que determina su pertenencia:
 *   Si no se especifica, el sistema asigna "Principal" por defecto.
 *   Un miembro solo puede pertenecer a **una** congregación a la vez.
 
-## 4. Control de Asistencia
+## 4. Control de Asistencia y Privilegios
 
-El sistema de asistencia integra filtros jerárquicos:
+El sistema integra filtros jerárquicos y reglas de participación:
 *   **Filtro por Congregación**: Permite segmentar la lista de pase de lista por Iglesia Principal u Obras específicas.
-*   **Intersección de Filtros**: Los filtros de congregación funcionan en conjunto con los filtros de categoría (Varones, Niños, Jóvenes, etc.).
-    *   *Ejemplo*: Se puede filtrar por "Obra XYZ" + "Niños" para pasar lista solo a los niños de esa misión específica.
+*   **División de Privilegios (Servicios Especiales)**:
+    *   Para servicios de **Niños**, **Jóvenes** o **Alabanza**, el sistema soporta hasta 3 responsables simultáneos (Dirige, Consagración, Doctrina).
+    *   Esta estructura responde a la necesidad de mayor participación de la membresía en servicios autorizados por el Ministro.
 
 ## 5. Reglas de Integridad de Datos
 
 1.  **Eliminación de Misiones**: Si se elimina una misión de la lista de ajustes, los miembros asignados a ella **no** se eliminan, pero su filtro en asistencia dejará de aparecer. Se recomienda reasignarlos a la Iglesia Principal antes de borrar la misión.
 2.  **Migración Retroactiva**: Todos los miembros creados antes de esta actualización han sido migrados automáticamente a la "Iglesia Principal" para asegurar que sigan apareciendo en las listas de asistencia globales.
+3.  **Unicidad de Fechas**: El sistema de programación (`schedule`) impone una restricción única por fecha para evitar duplicados en la base de datos.
