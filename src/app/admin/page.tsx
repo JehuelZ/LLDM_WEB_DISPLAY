@@ -655,8 +655,11 @@ const ThemeQuickEditor = ({ theme, setTheme, onSave, settings }: { theme: any, s
                     <Button 
                         onClick={async () => {
                             setIsSavingLocal(true);
-                            await onSave();
-                            setIsSavingLocal(false);
+                            try {
+                                await onSave();
+                            } finally {
+                                setIsSavingLocal(false);
+                            }
                         }}
                         className={cn(
                             "px-10 h-10 font-black uppercase tracking-[0.2em] text-[9px] transition-all",
@@ -775,10 +778,11 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     // --- SEGURIDAD: CONTROL DE ACCESO POR ROL (RBAC) ---
     useEffect(() => {
         if (mounted && currentUser) {
-            // Solo Administrador aquí.
-            if (currentUser.role !== 'Administrador') {
-                const target = currentUser.role === 'Ministro a Cargo' ? '/dashboard/ministro' : '/dashboard/profile';
-                router.push(target);
+            const hasAdminPrivilege = currentUser.role === 'Administrador' || currentUser.role === 'Admin' || (currentUser.roles && currentUser.roles.includes('admin'));
+            const isMinister = currentUser.role === 'Ministro a Cargo';
+            
+            if (!hasAdminPrivilege && !isMinister) {
+                router.push('/dashboard/profile');
             }
         } else if (mounted && !currentUser) {
             router.push('/login?returnTo=/admin');

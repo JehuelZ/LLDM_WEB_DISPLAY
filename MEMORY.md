@@ -2,10 +2,12 @@
 
 Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actual del proyecto, decisiones críticas de diseño y tareas pendientes.
 
-## 📌 Estado Actual del Proyecto (Abril 2026)
-- **Tema Activo en Desarrollo:** "Catedral" (Enfoque en estética neomórfica, premium y limpia).
-- **Última Estabilización:** Se resolvieron errores de `RangeError` en fechas y se consolidaron las tablas de base de datos (`attendance_messages`, `kids_assignments`).
-- **Arquitectura:** Migración completada hacia un modelo de jerarquía de iglesia basado en objetos (`CongregationInfo`).
+## 📌 Estado Actual del Proyecto (Mayo 2026)
+- **Automatización de Mayo:** Calendario de mayo 2026 completado y cargado en Supabase (`schedule`).
+- **Seguridad & Acceso:** 
+    - Se habilitó el acceso administrativo para el rol **"Ministro a Cargo"** (E.E. Eliab Aguilar) mediante la actualización de políticas RLS.
+    - Se corrigió el "Hanging" en la UI mediante bloques `try...finally` y mejoras en el manejo de bloqueos del navegador (`Navigator LockManager`).
+- **Lógica de Privilegios (Niños):** Se implementó la división de servicios de alabanza de niños en 3 roles (Dirige, Consagración, Doctrina) para los sábados, respondiendo al incremento de participación infantil.
 
 ## 🎨 Decisiones de Diseño & UX
 - **Temas:**
@@ -14,15 +16,17 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
     - **Catedral:** Consolidación de clima en el header y reloj flotante neomórfico en la esquina inferior derecha.
 - **Interactividad:** Favicon dinámico que cambia de color según el tema activo.
 - **Reportes:** Capacidad de exportar "Fichas Personales" de miembros a PDF usando `html2pdf.js`.
+- **Gestión de Horarios:** Soporte para hasta 3 responsables en servicios especiales (Niños/Jóvenes).
 
 ## 🛠️ Especificaciones Técnicas
 - **Frontend:** Next.js (src/app architecture).
 - **Backend/DB:** Supabase con políticas RLS (Row Level Security) estrictas.
-- **Estado Dinámico:** Uso de Stores para manejar configuraciones globales (tema, congregación activa).
+- **Control de Acceso:** RBAC expandido para incluir `Ministro a Cargo` con permisos de escritura en temas y avisos.
+- **Prevención de Duplicados:** Implementación de restricción única (`UNIQUE constraint`) en la tabla `schedule` y `weekly_themes` para evitar colisiones de fechas.
 
 ## 🚀 Próximos Pasos (Pendientes)
-- [ ] Verificación final del header en el tema "Catedral".
-- [ ] Asegurar que el trigger de "admin stealth" sea invisible pero funcional.
+- [ ] Monitorear la respuesta de la UI en dispositivos Smart TV tras el parche de `LockManager`.
+- [ ] Validar la visualización de los 3 responsables de niños en los temas Luna y Primitivo (Pantallas de Proyección).
 - [ ] Auditoría de seguridad de políticas RLS para nuevas tablas.
 - [ ] Optimización de la carga de "Member Profiles" con grandes volumenes de datos.
 
@@ -34,4 +38,4 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 5. **Estética Premium:** Todo componente nuevo debe cumplir con estándares visuales modernos (micro-animaciones, sombras suaves, tipografía cuidada).
 
 ---
-*Última actualización: 13 de abril de 2026*
+*Última actualización: 4 de mayo de 2026*

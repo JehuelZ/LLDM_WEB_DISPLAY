@@ -68,6 +68,7 @@ export interface DailySchedule {
             type: ServiceType;
             leaderIds: string[]; // Can be 1 or multiple (e.g. 2 brothers, 2 sisters)
             doctrineLeaderId?: string; // New: Doctrine leader for youth/regular services
+            consecrationLeaderId?: string; // New: Consecration leader for divided services
             topic?: string; // Specific topic if overridden
             language?: 'es' | 'en'; // Service language (Spanish/English)
             customLabel?: string;

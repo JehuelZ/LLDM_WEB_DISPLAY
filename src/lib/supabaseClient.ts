@@ -16,13 +16,20 @@ if (typeof globalThis !== 'undefined' && typeof globalThis.navigator !== 'undefi
         const originalRequest = nav.locks.request.bind(nav.locks);
         nav.locks.request = async (name: string, optionsOrCallback: any, maybeCallback?: any) => {
             const callback = typeof optionsOrCallback === 'function' ? optionsOrCallback : maybeCallback;
-            // If this is a Supabase auth lock, bypass the lock and just run the callback
+            const options = typeof optionsOrCallback === 'object' ? optionsOrCallback : {};
+
+            // Supabase auth lock bypass for problematic environments (Smart TVs / Multiple Tabs)
             if (name && name.includes('sb-') && name.includes('auth-token')) {
                 if (typeof callback === 'function') {
-                    return await callback({ name, mode: 'exclusive' });
+                    console.log('[SUPABASE] Bypassing lock for:', name);
+                    try {
+                        return await callback({ name, mode: options.mode || 'exclusive' });
+                    } catch (e) {
+                        console.error('[SUPABASE] Lock bypass error:', e);
+                        throw e;
+                    }
                 }
             }
-            // For non-Supabase locks, use the original implementation
             return originalRequest(name, optionsOrCallback, maybeCallback);
         };
     }

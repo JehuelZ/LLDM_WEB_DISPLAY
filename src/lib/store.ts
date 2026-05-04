@@ -636,6 +636,7 @@ export const useAppStore = create<AppState>()(
                                         language: data.evening_service_language || 'es',
                                         leaderIds: data.evening_leader_ids || [],
                                         doctrineLeaderId: data.evening_doctrine_leader_id || '',
+                                        consecrationLeaderId: data.evening_consecration_leader_id || '',
                                         topic: data.topic && data.topic.includes('|') ? data.topic.split('|')[1] : (data.topic && !data.topic.startsWith('dominical:') ? data.topic : ''),
                                         customLabel: data.evening_custom_label
                                     }
@@ -1415,6 +1416,7 @@ export const useAppStore = create<AppState>()(
                     evening_service_language: (slots.evening as any).language || 'es',
                     evening_leader_ids: slots.evening.leaderIds.map(cleanUuid).filter(Boolean),
                     evening_doctrine_leader_id: cleanUuid(slots.evening.doctrineLeaderId || null),
+                    evening_consecration_leader_id: cleanUuid(slots.evening.consecrationLeaderId || null),
                     evening_custom_label: slots.evening.customLabel,
 
                     topic: (slots['9am'] as any).topic || slots.evening.topic || ''
@@ -1464,17 +1466,23 @@ export const useAppStore = create<AppState>()(
                     file_url: theme.fileUrl
                 };
 
+                console.log('[STORE] Iniciando guardado de tema en la nube...', dbTheme);
                 try {
-                    let savedData;
-                    if (theme.id && theme.id !== 'initial-theme') {
-                        const { data, error } = await supabase.from('weekly_themes').update(dbTheme).eq('id', theme.id).select().single();
-                        if (error) throw error;
-                        savedData = data;
-                    } else {
-                        const { data, error } = await supabase.from('weekly_themes').insert(dbTheme).select().single();
-                        if (error) throw error;
-                        savedData = data;
+                    const { data, error } = await supabase
+                        .from('weekly_themes')
+                        .upsert(dbTheme, { 
+                            onConflict: 'start_date,end_date',
+                            ignoreDuplicates: false 
+                        })
+                        .select()
+                        .single();
+                    
+                    if (error) {
+                        console.error('[STORE] Error de Supabase al guardar tema:', error);
+                        throw error;
                     }
+                    console.log('[STORE] Tema guardado exitosamente:', data);
+                    const savedData = data;
 
                     if (savedData) {
                         set({
@@ -1811,7 +1819,6 @@ export const useAppStore = create<AppState>()(
                     if (errorCode !== 'PGRST204') {
                         set({ settings: current });
                     }
-                    
                     get().showNotification(`Falla de sincronización: ${errorMsg}. Por favor, ejecute el script MEGA_FIX en Supabase.`, 'error');
                 } else {
                     console.log('SYNC SUCCESS: App settings saved to cloud.');
