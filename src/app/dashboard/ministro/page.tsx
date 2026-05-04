@@ -35,7 +35,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { useAppStore } from '@/lib/store';
 
 const itemsPerPage = 8;
-const BUILD_ID = "FINAL_STABILIZATION_v10_APR_06_22_18_MODULAR_v3";
+const BUILD_ID = "FINAL_STABILIZATION_v10_MAY_04_23_45_MODULAR_v4.0.5";
 
 export default function MinistroDashboardPage() {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -215,7 +215,7 @@ export default function MinistroDashboardPage() {
                         <Shield className="absolute inset-0 m-auto w-10 h-10 text-primary animate-pulse" />
                     </div>
                     <div className="text-center">
-                        <p className="text-[10px] font-black uppercase tracking-[0.6em] text-primary mb-2">Iniciando Dashboard v3.6.1</p>
+                        <p className="text-[10px] font-black uppercase tracking-[0.6em] text-primary mb-2">Iniciando Dashboard v4.0.5</p>
                         <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Sincronizando seguridad ministerial...</p>
                     </div>
                 </div>

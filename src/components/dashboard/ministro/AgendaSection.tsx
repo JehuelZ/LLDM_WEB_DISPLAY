@@ -445,18 +445,32 @@ export function AgendaSection({
                                         {privilegedMembers.map(m => (<option key={m.id} value={m.id} className="bg-[#0c0c0c]">{m.name.toUpperCase()}</option>))}
                                     </select>
                                 </div>
+
                                 {['youth', 'praise', 'children'].includes(monthlySchedule[format(selectedDate, 'yyyy-MM-dd')]?.slots?.['evening']?.type || '') && (
-                                    <div className="space-y-2">
-                                        <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Doctrina</label>
-                                        <select 
-                                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 h-12 text-[11px] font-bold text-white outline-none appearance-none"
-                                            value={monthlySchedule[format(selectedDate, 'yyyy-MM-dd')]?.slots?.['evening']?.doctrineLeaderId || ''}
-                                            onChange={(e) => updateDaySlot(selectedDate, 'evening', { doctrineLeaderId: e.target.value })}
-                                        >
-                                            <option value="" className="bg-[#0c0c0c]">PENDIENTE</option>
-                                            {privilegedMembers.map(m => (<option key={m.id} value={m.id} className="bg-[#0c0c0c]">{m.name.toUpperCase()}</option>))}
-                                        </select>
-                                    </div>
+                                    <>
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Consagración</label>
+                                            <select 
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 h-12 text-[11px] font-bold text-white outline-none appearance-none"
+                                                value={monthlySchedule[format(selectedDate, 'yyyy-MM-dd')]?.slots?.['evening']?.consecrationLeaderId || ''}
+                                                onChange={(e) => updateDaySlot(selectedDate, 'evening', { consecrationLeaderId: e.target.value })}
+                                            >
+                                                <option value="" className="bg-[#0c0c0c]">PENDIENTE</option>
+                                                {privilegedMembers.map(m => (<option key={m.id} value={m.id} className="bg-[#0c0c0c]">{m.name.toUpperCase()}</option>))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest ml-1">Doctrina</label>
+                                            <select 
+                                                className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 h-12 text-[11px] font-bold text-white outline-none appearance-none"
+                                                value={monthlySchedule[format(selectedDate, 'yyyy-MM-dd')]?.slots?.['evening']?.doctrineLeaderId || ''}
+                                                onChange={(e) => updateDaySlot(selectedDate, 'evening', { doctrineLeaderId: e.target.value })}
+                                            >
+                                                <option value="" className="bg-[#0c0c0c]">PENDIENTE</option>
+                                                {privilegedMembers.map(m => (<option key={m.id} value={m.id} className="bg-[#0c0c0c]">{m.name.toUpperCase()}</option>))}
+                                            </select>
+                                        </div>
+                                    </>
                                 )}
                             </div>
 

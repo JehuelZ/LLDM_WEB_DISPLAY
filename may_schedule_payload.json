@@ -1,0 +1,367 @@
+[
+  {
+    "date": "2026-05-01",
+    "five_am_leader_id": "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+    "nine_am_consecration_leader_id": "ab6e287f-2986-4644-8114-f31d18c906dd",
+    "nine_am_doctrine_leader_id": null,
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "be4d631c-34f7-4405-bc4c-c800c8381cb4"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-02",
+    "five_am_leader_id": "75e197b1-19a9-41e2-9d32-d8dd2d7fd44d",
+    "nine_am_consecration_leader_id": "3220ac06-4b9b-417f-adc7-a726fac26657",
+    "nine_am_doctrine_leader_id": "93764c38-3160-4b85-b0af-328969d708cd",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "75e197b1-19a9-41e2-9d32-d8dd2d7fd44d"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-03",
+    "five_am_leader_id": "ac5c4c67-4999-4244-b895-09cf1d62bd54",
+    "nine_am_consecration_leader_id": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+    "nine_am_doctrine_leader_id": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [],
+    "topic": "Dominical",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-04",
+    "five_am_leader_id": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+    "nine_am_consecration_leader_id": "1bef514e-8dd1-4ad1-b37b-16386cf2729c",
+    "nine_am_doctrine_leader_id": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-05",
+    "five_am_leader_id": "00db7500-7397-4580-b81d-e0055f1249a7",
+    "nine_am_consecration_leader_id": "255351e3-4196-44ee-a292-e11880caff25",
+    "nine_am_doctrine_leader_id": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "ac5c4c67-4999-4244-b895-09cf1d62bd54"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-06",
+    "five_am_leader_id": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+    "nine_am_consecration_leader_id": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+    "nine_am_doctrine_leader_id": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-07",
+    "five_am_leader_id": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+    "nine_am_consecration_leader_id": "e1f36e1d-6869-49c8-84cf-91ccf8fe4dbd",
+    "nine_am_doctrine_leader_id": "ac5c4c67-4999-4244-b895-09cf1d62bd54",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "f10453d9-6ecd-4fa5-ab91-f182a7a1a65d"
+    ],
+    "topic": "Servicio/Doctrina",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-08",
+    "five_am_leader_id": "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+    "nine_am_consecration_leader_id": "93764c38-3160-4b85-b0af-328969d708cd",
+    "nine_am_doctrine_leader_id": null,
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "75e197b1-19a9-41e2-9d32-d8dd2d7fd44d"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-09",
+    "five_am_leader_id": "41d36c06-5a5c-4770-b6cf-03cdeecd3f9e",
+    "nine_am_consecration_leader_id": "738f3741-9832-4fab-bef9-12da1e3cc165",
+    "nine_am_doctrine_leader_id": "105ffc65-7124-46da-913d-809d8e4c14dd",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "d0851fdf-bcdc-4e1a-bbfa-38678cbf98f6"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-10",
+    "five_am_leader_id": "ac5c4c67-4999-4244-b895-09cf1d62bd54",
+    "nine_am_consecration_leader_id": null,
+    "nine_am_doctrine_leader_id": null,
+    "evening_service_type": "consecration",
+    "evening_leader_ids": [
+      "f10453d9-6ecd-4fa5-ab91-f182a7a1a65d"
+    ],
+    "topic": "Consagraci\u00f3n 8 PM",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-11",
+    "five_am_leader_id": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+    "nine_am_consecration_leader_id": "1bef514e-8dd1-4ad1-b37b-16386cf2729c",
+    "nine_am_doctrine_leader_id": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "293e5cbf-fe74-4b79-8b16-a90b16dad8f0"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-12",
+    "five_am_leader_id": "00db7500-7397-4580-b81d-e0055f1249a7",
+    "nine_am_consecration_leader_id": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+    "nine_am_doctrine_leader_id": "255351e3-4196-44ee-a292-e11880caff25",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "ac5c4c67-4999-4244-b895-09cf1d62bd54"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-13",
+    "five_am_leader_id": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+    "nine_am_consecration_leader_id": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+    "nine_am_doctrine_leader_id": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "a09ba6cd-a8ea-4b6e-868c-db540b7d577a"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-14",
+    "five_am_leader_id": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+    "nine_am_consecration_leader_id": "e1f36e1d-6869-49c8-84cf-91ccf8fe4dbd",
+    "nine_am_doctrine_leader_id": "657efb04-836d-42d7-8b11-8d749221df98",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "55d5ccdf-073b-491e-b34c-fd091eb06bb1"
+    ],
+    "topic": "Servicio Ingles/Doctrina",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-15",
+    "five_am_leader_id": "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+    "nine_am_consecration_leader_id": "ab6e287f-2986-4644-8114-f31d18c906dd",
+    "nine_am_doctrine_leader_id": null,
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "f10453d9-6ecd-4fa5-ab91-f182a7a1a65d",
+      "3968c3be-b475-46db-91e2-3d180007a552"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-16",
+    "five_am_leader_id": "657efb04-836d-42d7-8b11-8d749221df98",
+    "nine_am_consecration_leader_id": "c04cd5fc-5c31-47ce-b3dc-c73e2ed6a306",
+    "nine_am_doctrine_leader_id": "42e55c48-4cef-4a8b-9705-ab6b5d15c515",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "e6c98339-f601-4460-b593-b8c349a8b145"
+    ],
+    "topic": "Servicio Ni\u00f1os/Doctrina",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-17",
+    "five_am_leader_id": "ac5c4c67-4999-4244-b895-09cf1d62bd54",
+    "nine_am_consecration_leader_id": "54a438dd-afbd-4f06-90a7-6936c9aaedb3",
+    "nine_am_doctrine_leader_id": "0668528d-37a9-4864-964f-ab2a6166cda4",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [],
+    "topic": "Dominical",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-18",
+    "five_am_leader_id": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+    "nine_am_consecration_leader_id": "1bef514e-8dd1-4ad1-b37b-16386cf2729c",
+    "nine_am_doctrine_leader_id": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-19",
+    "five_am_leader_id": "00db7500-7397-4580-b81d-e0055f1249a7",
+    "nine_am_consecration_leader_id": "255351e3-4196-44ee-a292-e11880caff25",
+    "nine_am_doctrine_leader_id": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "ac5c4c67-4999-4244-b895-09cf1d62bd54"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-20",
+    "five_am_leader_id": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+    "nine_am_consecration_leader_id": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+    "nine_am_doctrine_leader_id": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "a5fb1fa4-9910-4a9a-aa8a-4fd88ccd7b9b"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-21",
+    "five_am_leader_id": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+    "nine_am_consecration_leader_id": "e1f36e1d-6869-49c8-84cf-91ccf8fe4dbd",
+    "nine_am_doctrine_leader_id": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "41d36c06-5a5c-4770-b6cf-03cdeecd3f9e"
+    ],
+    "topic": "Servicio/Doctrina",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-22",
+    "five_am_leader_id": "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+    "nine_am_consecration_leader_id": "93764c38-3160-4b85-b0af-328969d708cd",
+    "nine_am_doctrine_leader_id": null,
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "75e197b1-19a9-41e2-9d32-d8dd2d7fd44d"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-23",
+    "five_am_leader_id": "983fd2bd-4997-433b-b6ee-c71fe16f36ba",
+    "nine_am_consecration_leader_id": "f539f33f-7977-4766-afe9-837d9eb29dbb",
+    "nine_am_doctrine_leader_id": "5b95d9a5-24dc-443c-854f-eba9c3c4ba23",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "00db7500-7397-4580-b81d-e0055f1249a7"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-24",
+    "five_am_leader_id": "ac5c4c67-4999-4244-b895-09cf1d62bd54",
+    "nine_am_consecration_leader_id": "00cd3461-bb0c-47ac-8dc8-d84b97d858a1",
+    "nine_am_doctrine_leader_id": "3968c3be-b475-46db-91e2-3d180007a552",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [],
+    "topic": "Dominical",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-25",
+    "five_am_leader_id": "9c8af082-f9ba-4bef-840e-b53d22b21b49",
+    "nine_am_consecration_leader_id": "1bef514e-8dd1-4ad1-b37b-16386cf2729c",
+    "nine_am_doctrine_leader_id": "aea97ce6-654f-4bd4-b4ac-257de893118c",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "293e5cbf-fe74-4b79-8b16-a90b16dad8f0"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-26",
+    "five_am_leader_id": "00db7500-7397-4580-b81d-e0055f1249a7",
+    "nine_am_consecration_leader_id": "a7118d7d-f7eb-4c75-b7be-eb94e3ac06fa",
+    "nine_am_doctrine_leader_id": "255351e3-4196-44ee-a292-e11880caff25",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "ac5c4c67-4999-4244-b895-09cf1d62bd54"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-27",
+    "five_am_leader_id": "2d0ceeb0-9421-4797-9aba-33a2d751916d",
+    "nine_am_consecration_leader_id": "b6fa5af6-9888-41c8-9927-09196f6d70cc",
+    "nine_am_doctrine_leader_id": "c581eb3c-cb8c-4ac6-afff-0e32039654ca",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "a09ba6cd-a8ea-4b6e-868c-db540b7d577a"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-28",
+    "five_am_leader_id": "293e5cbf-fe74-4b79-8b16-a90b16dad8f0",
+    "nine_am_consecration_leader_id": "e1f36e1d-6869-49c8-84cf-91ccf8fe4dbd",
+    "nine_am_doctrine_leader_id": "55d5ccdf-073b-491e-b34c-fd091eb06bb1",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "657efb04-836d-42d7-8b11-8d749221df98"
+    ],
+    "topic": "Servicio Ingles/Doctrina",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-29",
+    "five_am_leader_id": "035044e4-e2f4-4fa3-a2f6-3507cf2a1a30",
+    "nine_am_consecration_leader_id": "ab6e287f-2986-4644-8114-f31d18c906dd",
+    "nine_am_doctrine_leader_id": null,
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "be4d631c-34f7-4405-bc4c-c800c8381cb4"
+    ],
+    "topic": "",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-30",
+    "five_am_leader_id": "f10453d9-6ecd-4fa5-ab91-f182a7a1a65d",
+    "nine_am_consecration_leader_id": "997ce433-c5d2-416a-9810-5cce133dcac0",
+    "nine_am_doctrine_leader_id": "98325dd2-dace-40da-92b8-264292a73dcf",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [
+      "3fa5fa52-f02e-4827-a18f-19fda514794c"
+    ],
+    "topic": "Servicio Ni\u00f1os/Doctrina/Consagraci\u00f3n",
+    "evening_custom_label": ""
+  },
+  {
+    "date": "2026-05-31",
+    "five_am_leader_id": "ac5c4c67-4999-4244-b895-09cf1d62bd54",
+    "nine_am_consecration_leader_id": "0668528d-37a9-4864-964f-ab2a6166cda4",
+    "nine_am_doctrine_leader_id": "75e197b1-19a9-41e2-9d32-d8dd2d7fd44d",
+    "evening_service_type": "regular",
+    "evening_leader_ids": [],
+    "topic": "Dominical",
+    "evening_custom_label": ""
+  }
+]

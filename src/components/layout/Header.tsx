@@ -54,7 +54,7 @@ export function Header() {
                         "font-black inline-block text-[15px] sm:text-xl tracking-tighter uppercase italic group-hover:text-primary transition-colors text-foreground",
                         settings.adminTheme === 'primitivo' && "tracking-[-0.05em]"
                     )}>
-                        LLDM <span className="text-emerald-500 italic uppercase">RODEO v4.0.0</span>
+                        LLDM <span className="text-emerald-500 italic uppercase">RODEO v4.0.5</span>
                     </span>
                 </Link>
 
