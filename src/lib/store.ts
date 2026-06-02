@@ -1106,12 +1106,22 @@ export const useAppStore = create<AppState>()(
                 const userAvatar = authUser.user_metadata?.avatar_url || '';
                 const MASTER_ADMIN_EMAIL = 'jairojehuel@gmail.com';
 
-                // 1. Intentar buscar perfil existente por email (insensible a mayúsculas)
+                // 1. Intentar buscar perfil existente por auth_user_id (el vínculo directo de sesión)
                 let { data: existingProfile } = await supabase
                     .from('profiles')
                     .select('*')
-                    .ilike('email', userEmail || '')
+                    .eq('auth_user_id', authUser.id)
                     .maybeSingle();
+
+                // 1b. Si no hay por auth_user_id, intentamos buscar por email (insensible a mayúsculas)
+                if (!existingProfile) {
+                    const emailRes = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .ilike('email', userEmail || '')
+                        .maybeSingle();
+                    existingProfile = emailRes.data;
+                }
 
                 // 1b. PROTOCOLO DE INTELIGENCIA: Si no hay por email, buscamos por NOMBRE en pre-registrados
                 // Esto es crucial para usuarios que el administrador registró sin saber su correo
