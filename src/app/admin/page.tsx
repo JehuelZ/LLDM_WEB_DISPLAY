@@ -636,6 +636,22 @@ const ThemeQuickEditor = ({ theme, setTheme, onSave, settings }: { theme: any, s
                             placeholder="Ej: La Perseverancia del Cristiano"
                         />
                     </div>
+
+                    <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Categoría / Tipo de Tema</label>
+                        <CustomSelect
+                            value={theme.type || 'orthodoxy'}
+                            onChange={(val) => setTheme({ ...theme, type: val as any })}
+                            options={[
+                                { value: 'apostolic_presentation', label: 'Presentación Apostólica' },
+                                { value: 'apostolic_letter', label: 'Carta Apostólica' },
+                                { value: 'orthodoxy', label: 'Sana Doctrina' },
+                                { value: 'exchange', label: 'Intercambio de Ministro' },
+                                { value: 'free', label: 'Tema Libre / Ministerial' }
+                            ]}
+                            searchable={false}
+                        />
+                    </div>
                     
                     <div className="space-y-2">
                         <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground ml-1">Resumen / Descripción</label>
