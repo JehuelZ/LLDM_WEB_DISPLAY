@@ -601,6 +601,40 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                             ['married', 'youth', 'children', 'youth_english', 'special'].includes(slotEvening?.type || '');
                         const cardTitle = isPraise ? 'Servicio de Alabanzas' : (isSun ? 'Servicio de Adoración' : eveningTitle);
 
+                        const hasThreeLeaders = slotEvening?.type === 'children' || 
+                            (slotEvening?.consecrationLeaderId && slotEvening?.doctrineLeaderId && (slotEvening?.leaderIds?.[0] || slotEvening?.leaderId));
+
+                        if (hasThreeLeaders) {
+                            const l1 = getMember(slotEvening?.leaderIds?.[0] || slotEvening?.leaderId);
+                            const l2 = getMember(slotEvening?.consecrationLeaderId);
+                            const l3 = getMember(slotEvening?.doctrineLeaderId);
+
+                            return renderCard('evening', cardTitle, (
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 15, width: '100%' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 5 }}>
+                                        <Avatar src={l1.avatar} size={170} T={T} isDark={isDark} />
+                                        <div style={{ marginLeft: -40 }}>
+                                            <Avatar src={l2.avatar} size={170} T={T} isDark={isDark} />
+                                        </div>
+                                        <div style={{ marginLeft: -40 }}>
+                                            <Avatar src={l3.avatar} size={170} T={T} isDark={isDark} />
+                                        </div>
+                                    </div>
+                                    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+                                        <AcademicButton
+                                            label={`${l1.name || 'NO ASIGNADO'} | ${l2.name || 'NO ASIGNADO'} | ${l3.name || 'NO ASIGNADO'}`}
+                                            icon={User} variant="reliefAura" T={T} isDark={isDark} isLive={isLiveEvening} isTomorrow={isTomorrow}
+                                        />
+                                        <div style={{ display: 'flex', gap: 12 }}>
+                                            <RoleBadge label="Dirige" icon={Sunrise} T={T} isDark={isDark} />
+                                            <RoleBadge label={slotEvening?.thirdLeaderRole || (slotEvening?.type === 'children' ? 'Consagración' : 'Privilegio')} icon={Sunrise} T={T} isDark={isDark} />
+                                            <RoleBadge label={is14th ? "HISTORIA" : "Doctrina"} icon={BookOpen} T={T} isDark={isDark} />
+                                        </div>
+                                    </div>
+                                </div>
+                            ), [], false);
+                        }
+
                         if (isSpecialService) {
                             return renderCard('evening', cardTitle, (
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 15, width: '100%' }}>

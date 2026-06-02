@@ -39,6 +39,7 @@ export const HorariosTab = ({
 
     const sanitizedDate = currentDate.split(':')[0].split(' ')[0];
     const isSun = parseISO(sanitizedDate + 'T12:00:00').getDay() === 0;
+    const isThu = parseISO(sanitizedDate + 'T12:00:00').getDay() === 3;
     
     const currentDaySchedule: DailySchedule = monthlySchedule[sanitizedDate] || {
         id: 'fallback',
@@ -440,43 +441,47 @@ export const HorariosTab = ({
                             icon={Sparkles}
                         />
 
-                        {['youth', 'praise', 'children'].includes(currentDaySchedule.slots['evening'].type) ? (
-                            <div className="grid grid-cols-1 gap-4">
-                                <TactileSelect
-                                    label="DIRIGE"
-                                    value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
-                                    onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
+                        <div className="grid grid-cols-1 gap-4">
+                            <TactileSelect
+                                label={['youth', 'praise', 'children'].includes(currentDaySchedule.slots['evening'].type) || isSun || isThu ? "DIRIGE" : "ENCARGADO"}
+                                value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
+                                onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
+                                disabled={isSaving}
+                                options={privilegedMemberOptions}
+                                icon={UserIcon}
+                            />
+                            <TactileSelect
+                                label="DOCTRINA"
+                                value={currentDaySchedule.slots['evening'].doctrineLeaderId || ''}
+                                onChange={(val: string) => updateSlot('evening', { doctrineLeaderId: val })}
+                                disabled={isSaving}
+                                options={privilegedMemberOptions}
+                                icon={BookOpen}
+                            />
+                        </div>
+
+                        {/* Optional Third Privilege */}
+                        <div className="border-t border-slate-700/50 pt-4 mt-2">
+                            <h4 className="text-xs font-bold text-[#A3FF57]/80 uppercase tracking-widest mb-3">Tercer Privilegio (Opcional)</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <TactileInput
+                                    label="Cargo / Privilegio"
+                                    placeholder="Ej. Consagración, Coro, Ofrenda..."
+                                    value={currentDaySchedule.slots['evening'].thirdLeaderRole || ''}
+                                    onChange={(e: any) => updateSlot('evening', { thirdLeaderRole: e.target.value })}
                                     disabled={isSaving}
-                                    options={privilegedMemberOptions}
-                                    icon={UserIcon}
+                                    icon={Sparkles}
                                 />
                                 <TactileSelect
-                                    label="CONSAGRACIÓN"
+                                    label="Encargado"
                                     value={currentDaySchedule.slots['evening'].consecrationLeaderId || ''}
                                     onChange={(val: string) => updateSlot('evening', { consecrationLeaderId: val })}
                                     disabled={isSaving}
                                     options={privilegedMemberOptions}
                                     icon={Flame}
                                 />
-                                <TactileSelect
-                                    label="DOCTRINA"
-                                    value={currentDaySchedule.slots['evening'].doctrineLeaderId || ''}
-                                    onChange={(val: string) => updateSlot('evening', { doctrineLeaderId: val })}
-                                    disabled={isSaving}
-                                    options={privilegedMemberOptions}
-                                    icon={BookOpen}
-                                />
                             </div>
-                        ) : (
-                            <TactileSelect
-                                label="ENCARGADO"
-                                value={currentDaySchedule.slots['evening'].leaderIds[0] || ''}
-                                onChange={(val: string) => updateSlot('evening', { leaderIds: [val] })}
-                                disabled={isSaving}
-                                options={privilegedMemberOptions}
-                                icon={User}
-                            />
-                        )}
+                        </div>
                         <TactileInput
                             label="TEMA / ESTUDIO"
                             placeholder="Ej. El Arrepentimiento..."

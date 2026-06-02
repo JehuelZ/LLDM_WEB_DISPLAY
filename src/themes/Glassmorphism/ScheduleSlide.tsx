@@ -126,32 +126,40 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     isHistoryDay={is14th}
                 />
 
-                <ScheduleBlock
-                    time="7:00 PM"
-                    title={(() => {
-                        const slot = schedule?.slots?.['evening'];
-                        if (slot?.customLabel) return (slot.customLabel || '').toUpperCase();
-                        if (slot?.topic) return (slot.topic || '').toUpperCase();
-                        return (getServiceTypeLabel(slot?.type || 'regular', settings.language, is14th) || '').toUpperCase();
-                    })()}
-                    leaderId={schedule?.slots?.['evening']?.leaderIds?.[0]}
-                    secondaryLeaderId={schedule?.slots?.['evening']?.doctrineLeaderId || schedule?.slots?.['evening']?.leaderIds?.[1]}
-                    members={members}
-                    colorClass="bg-purple-600"
-                    icon={<ClockIcon className="w-10 h-10" />}
-                    language={schedule?.slots?.['evening']?.language}
-                    isActive={isSlotActive('evening')}
-                    lowPerf={settings.lowPerformanceMode}
-                    isHistoryDay={is14th}
-                    isApostolic={theme?.type === 'apostolic_presentation'}
-                />
+                {(() => {
+                    const slot = schedule?.slots?.['evening'];
+                    const hasThree = slot?.type === 'children' || (slot?.consecrationLeaderId && slot?.doctrineLeaderId && slot?.leaderIds?.[0]);
+                    return (
+                        <ScheduleBlock
+                            time="7:00 PM"
+                            title={(() => {
+                                if (slot?.customLabel) return (slot.customLabel || '').toUpperCase();
+                                if (slot?.topic) return (slot.topic || '').toUpperCase();
+                                return (getServiceTypeLabel(slot?.type || 'regular', settings.language, is14th) || '').toUpperCase();
+                            })()}
+                            leaderId={slot?.leaderIds?.[0]}
+                            secondaryLeaderId={hasThree ? slot?.consecrationLeaderId : (slot?.doctrineLeaderId || slot?.leaderIds?.[1])}
+                            thirdLeaderId={hasThree ? slot?.doctrineLeaderId : undefined}
+                            thirdLeaderRole={slot?.thirdLeaderRole}
+                            members={members}
+                            colorClass="bg-purple-600"
+                            icon={<ClockIcon className="w-10 h-10" />}
+                            language={slot?.language}
+                            isActive={isSlotActive('evening')}
+                            lowPerf={settings.lowPerformanceMode}
+                            isHistoryDay={is14th}
+                            isApostolic={theme?.type === 'apostolic_presentation'}
+                            isChildren={slot?.type === 'children'}
+                        />
+                    );
+                })()}
             </div>
 
         </div>
     );
 };
 
-const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colorClass, icon, language, isTiny, minimal, isActive, lowPerf, isHistoryDay, isApostolic }: any) => {
+const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, thirdLeaderId, thirdLeaderRole, isChildren, members, colorClass, icon, language, isTiny, minimal, isActive, lowPerf, isHistoryDay, isApostolic }: any) => {
     return (
         <motion.div
             initial={{ y: 50, opacity: 0 }}
@@ -222,28 +230,65 @@ const ScheduleBlock = ({ time, title, leaderId, secondaryLeaderId, members, colo
             </div>
 
             <div className="flex-1 flex flex-col items-center justify-center relative z-10 py-4 gap-6">
-                <LeaderProfile
-                    leaderId={leaderId}
-                    responsibility={secondaryLeaderId ? "Consagración" : title}
-                    colorClass={colorClass}
-                    size={isTiny ? "tiny" : (secondaryLeaderId ? "small" : "large")}
-                    members={members}
-                    minimal={minimal}
-                />
-                {secondaryLeaderId && (
-                    <div className="w-full flex justify-center">
-                        <div className="w-16 h-px bg-white/10 my-2" />
-                    </div>
-                )}
-                {secondaryLeaderId && (
-                    <LeaderProfile
-                        leaderId={secondaryLeaderId}
-                        responsibility="Doctrina"
-                        colorClass={colorClass}
-                        size={isTiny ? "tiny" : "small"}
-                        members={members}
-                        minimal={minimal}
-                    />
+                {thirdLeaderId !== undefined ? (
+                    <>
+                        <LeaderProfile
+                            leaderId={leaderId}
+                            responsibility="Dirige"
+                            colorClass={colorClass}
+                            size="tiny"
+                            members={members}
+                            minimal={minimal}
+                        />
+                        <div className="w-full flex justify-center">
+                            <div className="w-16 h-px bg-white/10 my-1" />
+                        </div>
+                        <LeaderProfile
+                            leaderId={secondaryLeaderId}
+                            responsibility={thirdLeaderRole || (isChildren ? 'Consagración' : 'Privilegio')}
+                            colorClass={colorClass}
+                            size="tiny"
+                            members={members}
+                            minimal={minimal}
+                        />
+                        <div className="w-full flex justify-center">
+                            <div className="w-16 h-px bg-white/10 my-1" />
+                        </div>
+                        <LeaderProfile
+                            leaderId={thirdLeaderId}
+                            responsibility="Doctrina"
+                            colorClass={colorClass}
+                            size="tiny"
+                            members={members}
+                            minimal={minimal}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <LeaderProfile
+                            leaderId={leaderId}
+                            responsibility={secondaryLeaderId ? "Consagración" : title}
+                            colorClass={colorClass}
+                            size={isTiny ? "tiny" : (secondaryLeaderId ? "small" : "large")}
+                            members={members}
+                            minimal={minimal}
+                        />
+                        {secondaryLeaderId && (
+                            <div className="w-full flex justify-center">
+                                <div className="w-16 h-px bg-white/10 my-2" />
+                            </div>
+                        )}
+                        {secondaryLeaderId && (
+                            <LeaderProfile
+                                leaderId={secondaryLeaderId}
+                                responsibility="Doctrina"
+                                colorClass={colorClass}
+                                size={isTiny ? "tiny" : "small"}
+                                members={members}
+                                minimal={minimal}
+                            />
+                        )}
+                    </>
                 )}
             </div>
         </motion.div>

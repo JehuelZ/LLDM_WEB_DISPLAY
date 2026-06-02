@@ -75,6 +75,9 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
     const slotEvening = slotEveningRaw ? {
         ...slotEveningRaw,
         leaderIds: (() => {
+            if (slotEveningRaw.type === 'children' || (slotEveningRaw.consecrationLeaderId && slotEveningRaw.doctrineLeaderId)) {
+                return slotEveningRaw.leaderIds || [];
+            }
             const ids = [...(slotEveningRaw.leaderIds || [])].slice(0, 2);
             if (slotEveningRaw.doctrineLeaderId) {
                 if (ids.length === 0) {
@@ -633,10 +636,83 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     {/* Top glow accent */}
                     <div className="absolute -top-[2px] left-1/4 right-1/4 h-[4px] bg-gradient-to-r from-transparent via-[#A3FF57] to-transparent blur-sm" />
 
-                    {/* Member Avatars */}
                     <div className="relative -mt-24 mb-6 z-50 w-full px-6 flex justify-center items-end min-h-[220px]">
-                        {slotEvening?.leaderIds && slotEvening.leaderIds.length > 0 ? (
-                            slotEvening.type === 'married' ? (
+                        {(slotEvening?.leaderIds && slotEvening.leaderIds.length > 0) || slotEvening?.type === 'children' ? (
+                            (slotEvening.type === 'children' || (slotEvening.consecrationLeaderId && slotEvening.doctrineLeaderId && slotEvening.leaderIds?.[0])) ? (
+                                /* THREE LEADERS LAYOUT FOR CHILDREN'S SERVICE */
+                                <div className="flex flex-col items-center w-full">
+                                    <div className="flex justify-center items-end gap-2 relative z-10 w-full px-2">
+                                        {/* Leader 1: Servicio (Dirige) - Left */}
+                                        <div className="flex flex-col items-center">
+                                            <motion.div
+                                                whileHover={{ scale: 1.05 }}
+                                                className="relative w-32 h-32 rounded-full bg-[#0D1B3E] border-4 border-[#1E3A6E] flex items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(79,127,255,0.2)] overflow-visible"
+                                            >
+                                                <div className="absolute inset-0 rounded-full border-2 border-[#4F7FFF]/20 border-dashed animate-spin-slow" />
+                                                {getMemberDetail(slotEvening.leaderIds[0]).avatar ? (
+                                                    <img src={getMemberDetail(slotEvening.leaderIds[0]).avatar!} alt="" className="w-full h-full rounded-full object-cover" />
+                                                ) : (
+                                                    <Flame className="w-12 h-12 text-[#4F7FFF]/50" />
+                                                )}
+                                            </motion.div>
+                                            <motion.div className="mt-4 px-3 py-1.5 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#4F7FFF]/50 shadow-xl backdrop-blur-xl flex flex-col items-center min-w-[120px] max-w-[155px]">
+                                                <span className="text-[8px] font-black text-[#4F7FFF] uppercase tracking-[0.2em] mb-0.5 opacity-80">
+                                                    Dirige
+                                                </span>
+                                                <span className="text-[13px] font-black text-white uppercase tracking-[0.05em] truncate w-full text-center">
+                                                    {getMemberDetail(slotEvening.leaderIds[0]).name}
+                                                </span>
+                                            </motion.div>
+                                        </div>
+
+                                        {/* Leader 2: Consagración - Center */}
+                                        <div className="flex flex-col items-center">
+                                            <motion.div
+                                                whileHover={{ scale: 1.05 }}
+                                                className="relative w-32 h-32 rounded-full bg-[#0D1B3E] border-4 border-[#1E3A6E] flex items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(163,255,87,0.25)] overflow-visible"
+                                            >
+                                                <div className="absolute inset-0 rounded-full border-2 border-[#A3FF57]/20 border-dashed animate-spin-slow" />
+                                                {getMemberDetail(slotEvening.consecrationLeaderId).avatar ? (
+                                                    <img src={getMemberDetail(slotEvening.consecrationLeaderId).avatar!} alt="" className="w-full h-full rounded-full object-cover" />
+                                                ) : (
+                                                    <Flame className="w-12 h-12 text-[#A3FF57]/50" />
+                                                )}
+                                            </motion.div>
+                                            <motion.div className="mt-4 px-3 py-1.5 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-xl backdrop-blur-xl flex flex-col items-center min-w-[120px] max-w-[155px]">
+                                                <span className="text-[8px] font-black text-[#A3FF57] uppercase tracking-[0.2em] mb-0.5 opacity-80">
+                                                    {slotEvening.thirdLeaderRole || (slotEvening.type === 'children' ? 'Consagración' : 'Privilegio')}
+                                                </span>
+                                                <span className="text-[13px] font-black text-white uppercase tracking-[0.05em] truncate w-full text-center">
+                                                    {getMemberDetail(slotEvening.consecrationLeaderId).name}
+                                                </span>
+                                            </motion.div>
+                                        </div>
+
+                                        {/* Leader 3: Doctrina - Right */}
+                                        <div className="flex flex-col items-center">
+                                            <motion.div
+                                                whileHover={{ scale: 1.05 }}
+                                                className="relative w-32 h-32 rounded-full bg-[#0D1B3E] border-4 border-[#1E3A6E] flex items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_30px_rgba(163,255,87,0.25)] overflow-visible"
+                                            >
+                                                <div className="absolute inset-0 rounded-full border-2 border-[#A3FF57]/20 border-dashed animate-spin-slow" />
+                                                {getMemberDetail(slotEvening.doctrineLeaderId).avatar ? (
+                                                    <img src={getMemberDetail(slotEvening.doctrineLeaderId).avatar!} alt="" className="w-full h-full rounded-full object-cover" />
+                                                ) : (
+                                                    <Flame className="w-12 h-12 text-[#A3FF57]/50" />
+                                                )}
+                                            </motion.div>
+                                            <motion.div className="mt-4 px-3 py-1.5 rounded-2xl bg-[#0D1B3E]/95 border-2 border-[#A3FF57]/50 shadow-xl backdrop-blur-xl flex flex-col items-center min-w-[120px] max-w-[155px]">
+                                                <span className="text-[8px] font-black text-[#A3FF57] uppercase tracking-[0.2em] mb-0.5 opacity-80">
+                                                    Doctrina
+                                                </span>
+                                                <span className="text-[13px] font-black text-white uppercase tracking-[0.05em] truncate w-full text-center">
+                                                    {getMemberDetail(slotEvening.doctrineLeaderId).name}
+                                                </span>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : slotEvening.type === 'married' ? (
                                 /* OVERLAPPING MARRIAGE LAYOUT */
                                 <div className="flex flex-col items-center">
                                     <div className="flex -space-x-8 z-10 items-end">

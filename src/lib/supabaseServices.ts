@@ -75,12 +75,56 @@ export const getActiveTheme = async () => {
 };
 
 export const saveWeeklyTheme = async (theme: any) => {
-    const { data, error } = await supabase
-        .from('weekly_themes')
-        .upsert(theme);
+    const sd = theme.start_date || theme.startDate;
+    const ed = theme.end_date || theme.endDate;
+    const title = theme.title;
+    const description = theme.description;
+    const type = theme.type;
+    const file_url = theme.file_url || theme.fileUrl;
 
-    if (error) throw error;
-    return data;
+    const dbTheme: any = {
+        start_date: sd,
+        end_date: ed,
+        title,
+        description,
+        type,
+        file_url
+    };
+
+    // Consultar si ya existe un tema con la misma start_date y end_date
+    const { data: existingThemes, error: checkError } = await supabase
+        .from('weekly_themes')
+        .select('id')
+        .eq('start_date', sd)
+        .eq('end_date', ed)
+        .limit(1);
+
+    if (checkError) {
+        console.error('Error al buscar tema existente por fechas en saveWeeklyTheme:', checkError);
+        throw checkError;
+    }
+
+    if (existingThemes && existingThemes.length > 0) {
+        const existingId = existingThemes[0].id;
+        console.log(`[saveWeeklyTheme] Tema existente encontrado con ID ${existingId}, actualizando...`);
+        const { data, error } = await supabase
+            .from('weekly_themes')
+            .update(dbTheme)
+            .eq('id', existingId)
+            .select();
+
+        if (error) throw error;
+        return data;
+    } else {
+        console.log('[saveWeeklyTheme] No se encontró tema existente para estas fechas, insertando nuevo...');
+        const { data, error } = await supabase
+            .from('weekly_themes')
+            .insert(dbTheme)
+            .select();
+
+        if (error) throw error;
+        return data;
+    }
 };
 
 // --- PERFILES ---

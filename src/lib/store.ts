@@ -638,7 +638,8 @@ export const useAppStore = create<AppState>()(
                                         doctrineLeaderId: data.evening_doctrine_leader_id || '',
                                         consecrationLeaderId: data.evening_consecration_leader_id || '',
                                         topic: data.topic && data.topic.includes('|') ? data.topic.split('|')[1] : (data.topic && !data.topic.startsWith('dominical:') ? data.topic : ''),
-                                        customLabel: data.evening_custom_label
+                                        customLabel: (data.evening_custom_label || '').split('|')[0] || '',
+                                        thirdLeaderRole: (data.evening_custom_label || '').split('|')[1] || ''
                                     }
                                 }
                             }
@@ -700,8 +701,10 @@ export const useAppStore = create<AppState>()(
                                     language: entry.evening_service_language || 'es',
                                     leaderIds: entry.evening_leader_ids || [],
                                     doctrineLeaderId: entry.evening_doctrine_leader_id || '',
+                                    consecrationLeaderId: entry.evening_consecration_leader_id || '',
                                     topic: entry.topic && entry.topic.includes('|') ? entry.topic.split('|')[1] : (entry.topic && !entry.topic.startsWith('dominical:') ? entry.topic : ''),
-                                    customLabel: entry.evening_custom_label
+                                    customLabel: (entry.evening_custom_label || '').split('|')[0] || '',
+                                    thirdLeaderRole: (entry.evening_custom_label || '').split('|')[1] || ''
                                 }
                             }
                         };
@@ -1417,7 +1420,9 @@ export const useAppStore = create<AppState>()(
                     evening_leader_ids: slots.evening.leaderIds.map(cleanUuid).filter(Boolean),
                     evening_doctrine_leader_id: cleanUuid(slots.evening.doctrineLeaderId || null),
                     evening_consecration_leader_id: cleanUuid(slots.evening.consecrationLeaderId || null),
-                    evening_custom_label: slots.evening.customLabel,
+                    evening_custom_label: slots.evening.thirdLeaderRole 
+                        ? `${slots.evening.customLabel || ''}|${slots.evening.thirdLeaderRole}`
+                        : slots.evening.customLabel,
 
                     topic: (slots['9am'] as any).topic || slots.evening.topic || ''
                 } as any;
@@ -1468,15 +1473,44 @@ export const useAppStore = create<AppState>()(
 
                 console.log('[STORE] Iniciando guardado de tema en la nube...', dbTheme);
                 try {
-                    const { data, error } = await supabase
+                    // Consultar si ya existe un tema con la misma start_date y end_date para evitar error de upsert sin restricción única
+                    const { data: existingThemes, error: checkError } = await supabase
                         .from('weekly_themes')
-                        .upsert(dbTheme, { 
-                            onConflict: 'start_date,end_date',
-                            ignoreDuplicates: false 
-                        })
-                        .select()
-                        .single();
-                    
+                        .select('id')
+                        .eq('start_date', sd)
+                        .eq('end_date', ed)
+                        .limit(1);
+
+                    if (checkError) {
+                        console.error('[STORE] Error al buscar tema existente por fechas:', checkError);
+                        throw checkError;
+                    }
+
+                    let data;
+                    let error;
+
+                    if (existingThemes && existingThemes.length > 0) {
+                        const existingId = existingThemes[0].id;
+                        console.log(`[STORE] Tema existente encontrado con ID ${existingId}, actualizando...`);
+                        const updateRes = await supabase
+                            .from('weekly_themes')
+                            .update(dbTheme)
+                            .eq('id', existingId)
+                            .select()
+                            .single();
+                        data = updateRes.data;
+                        error = updateRes.error;
+                    } else {
+                        console.log('[STORE] No se encontró tema existente para estas fechas, insertando nuevo...');
+                        const insertRes = await supabase
+                            .from('weekly_themes')
+                            .insert(dbTheme)
+                            .select()
+                            .single();
+                        data = insertRes.data;
+                        error = insertRes.error;
+                    }
+
                     if (error) {
                         console.error('[STORE] Error de Supabase al guardar tema:', error);
                         throw error;

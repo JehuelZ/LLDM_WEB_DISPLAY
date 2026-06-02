@@ -51,10 +51,15 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
             title: (schedule?.slots?.['evening']?.customLabel || (isSunday ? 'servicio vespertino' : getSlotLabel('evening_regular', settings?.language)))?.toLowerCase(),
             time: schedule?.slots?.['evening']?.time || '07:00 pm',
             ministerId: schedule?.slots?.['evening']?.leaderIds?.[0],
-            minister2Id: schedule?.slots?.['evening']?.doctrineLeaderId || schedule?.slots?.['evening']?.leaderIds?.[1],
+            minister2Id: (schedule?.slots?.['evening']?.type === 'children' || (schedule?.slots?.['evening']?.consecrationLeaderId && schedule?.slots?.['evening']?.doctrineLeaderId && schedule?.slots?.['evening']?.leaderIds?.[0]))
+                ? schedule?.slots?.['evening']?.consecrationLeaderId
+                : (schedule?.slots?.['evening']?.doctrineLeaderId || schedule?.slots?.['evening']?.leaderIds?.[1]),
+            minister3Id: (schedule?.slots?.['evening']?.type === 'children' || (schedule?.slots?.['evening']?.consecrationLeaderId && schedule?.slots?.['evening']?.doctrineLeaderId && schedule?.slots?.['evening']?.leaderIds?.[0]))
+                ? schedule?.slots?.['evening']?.doctrineLeaderId
+                : undefined,
             type: schedule?.slots?.['evening']?.type || 'regular'
         }
-    ].filter(s => s.ministerId || s.minister2Id || !isTomorrow);
+    ].filter(s => s.ministerId || s.minister2Id || (s as any).minister3Id || !isTomorrow);
 
     const slideTitle = getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language)?.toLowerCase();
 
@@ -92,6 +97,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                 {slots.map((slot, index) => {
                     const m1 = getMember(slot.ministerId);
                     const m2 = getMember(slot.minister2Id);
+                    const m3 = slot.id === 'evening' ? getMember((slot as any).minister3Id) : null;
                     
                     return (
                         <div 
@@ -143,7 +149,7 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                 {/* Ministers Module */}
                                 <div className="flex items-center gap-6">
                                     <div className="flex -space-x-4">
-                                        {[m1, m2].filter(Boolean).map((m: any, idx) => (
+                                        {[m1, m2, m3].filter(Boolean).map((m: any, idx) => (
                                             <div key={idx} className="relative group/avatar">
                                                 <div className="w-20 h-20 rounded-[1.5rem] overflow-hidden border-4 border-surface shadow-2xl relative transition-transform duration-500 group-hover/avatar:scale-110 grayscale group-hover:grayscale-0">
                                                     {m.avatar || m.avatarUrl ? (
@@ -162,9 +168,11 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                             responsables
                                         </span>
                                         <span className="text-lg font-[400] text-on-surface truncate capitalize">
-                                            {m1?.name || (m2 ? '' : 'pendiente')}
+                                            {m1?.name || (m2 || m3 ? '' : 'pendiente')}
                                             {m1 && m2 && ' | '}
                                             {m2?.name}
+                                            {(m1 || m2) && m3 && ' | '}
+                                            {m3?.name}
                                         </span>
                                         <span className="text-xs text-on-surface-variant opacity-60 font-[300] lowercase">
                                             {m1 ? m1.group?.toLowerCase() || 'ministerio' : ''}

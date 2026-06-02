@@ -66,6 +66,10 @@ ALTER TABLE IF EXISTS announcements ADD COLUMN IF NOT EXISTS expires_at TIMESTAM
 ALTER TABLE IF EXISTS profiles ADD COLUMN IF NOT EXISTS bio TEXT;
 ALTER TABLE IF EXISTS profiles ADD COLUMN IF NOT EXISTS favorite_verse TEXT;
 
+-- Soporte para 3 responsables en servicios de niños/especiales
+ALTER TABLE IF EXISTS schedule 
+ADD COLUMN IF NOT EXISTS evening_consecration_leader_id UUID REFERENCES profiles(id);
+
 -- 3. CONFIGURACIÓN DE STORAGE (BUCKETS)
 -- Crear los buckets necesarios si no existen
 INSERT INTO storage.buckets (id, name, public)
