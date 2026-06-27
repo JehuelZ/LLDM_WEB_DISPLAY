@@ -7,14 +7,14 @@ El sistema gestiona la programación en bloques semanales que inician los doming
 
 1.  **Presentación Apostólica** (`apostolic_presentation`): Es el momento de **máxima reverencia e importancia**. Ocurre cuando el Ungido de Dios se presenta y habla a la Iglesia Universal a través de transmisiones oficiales. El tema es dispuesto exclusivamente por él y este evento **prevalece sobre cualquier otra programación**.
 2.  **Carta Apostólica** (`apostolic_letter`): Es el tema de **mayor peso cotidiano**, ya que proviene directamente de la Autoridad Apostólica para la edificación del cuerpo de Cristo a nivel mundial.
-3.  **Sana Doctrina** (`orthodoxy`): Corresponde a los estudios de **Ortodoxia** enviados por la institución para ser impartidos de manera uniforme en todas las congregaciones del mundo.
+3.  **Ortodoxia** (`orthodoxy`): Corresponde a los estudios de **Ortodoxia** enviados por la institución para ser impartidos de manera uniforme en todas las congregaciones del mundo.
 4.  **Intercambio de Ministro** (`exchange`): Se aplica cuando se recibe a un colaborador del Ministerio (Intercambio). El ministro visitante trae un tema específico para impartir a la iglesia local.
 5.  **Tema Libre / Ministerial** (`free`): Es el tema que el **Ministro Local o Encargado** decide impartir basándose en su discernimiento de la **necesidad espiritual actual** de la iglesia a su cargo.
 
 ## 2. La Recordación del Día 14 (Historia de la Iglesia)
 El sistema posee una lógica inteligente para el **día 14 de cada mes**:
 
-*   **Prioridad de Recordación**: Independientemente del tema semanal que esté corriendo (ej. Sana Doctrina o Intercambio), el sistema identificará automáticamente el día 14 como **"Recordación: Historia de la Iglesia"**.
+*   **Prioridad de Recordación**: Independientemente del tema semanal que esté corriendo (ej. Ortodoxia o Intercambio), el sistema identificará automáticamente el día 14 como **"Recordación: Historia de la Iglesia"**.
 *   **Visibilidad Automática**: En el tablero público (`/display`), los servicios de ese día (especialmente el de la tarde) mostrarán automáticamente la etiqueta de Historia, honrando la memoria de la Iglesia.
 *   **Sin Interrupción**: La recordación es diaria; el tema de la semana no cambia, permitiendo que el sistema retome el flujo normal el día 15 sin intervención del administrador.
 

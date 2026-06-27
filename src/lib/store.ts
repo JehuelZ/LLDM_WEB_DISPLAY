@@ -13,7 +13,8 @@ import {
     parseISO,
     addWeeks,
     isSameDay,
-    subDays
+    subDays,
+    addMonths
 } from 'date-fns';
 import { getLocalDateString } from './utils';
 
@@ -102,6 +103,7 @@ export interface AppSettings {
     calendarStyles?: CalendarStyles;
     intelligenceRange?: 7 | 15 | 30 | 'month';
     mainChurchName?: string;
+    churchShortName?: string;
     mainChurch?: CongregationInfo;
     missions?: (string | CongregationInfo)[];
     minimalShowWeather?: boolean;
@@ -274,7 +276,7 @@ interface AppState {
 
     // Supabase Loaders
     loadAnnouncementsFromCloud: () => Promise<void>;
-    loadUserResponsibilities: (userId: string) => Promise<void>;
+    loadUserResponsibilities: (userId?: string) => Promise<void>;
     loadDayScheduleFromCloud: (date: string) => Promise<void>;
     loadAllSchedulesFromCloud: () => Promise<void>;
     loadThemeFromCloud: () => Promise<void>;
@@ -1364,7 +1366,7 @@ export const useAppStore = create<AppState>()(
                     title: ann.title,
                     content: ann.content,
                     category: ann.category,
-                    priority: ann.priority,
+                    priority: ann.category === 'urgent' ? 1 : 0,
                     image_url: ann.imageUrl,
                     is_active: ann.active ?? true,
                     expires_at: ann.expiresAt

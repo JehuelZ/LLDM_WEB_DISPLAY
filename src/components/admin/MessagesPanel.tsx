@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { AppSettings } from '@/lib/store';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const MessagesPanel = ({
     messages,

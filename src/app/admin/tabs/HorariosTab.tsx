@@ -234,7 +234,7 @@ export const HorariosTab = ({
                             onChange={(val: string) => updateSlot('5am', { leaderId: val })}
                             disabled={isSaving}
                             options={privilegedMemberOptions}
-                            icon={User}
+                            icon={UserIcon}
                         />
 
                         <div className="flex gap-3">
@@ -326,7 +326,7 @@ export const HorariosTab = ({
                                     onChange={(val: string) => updateSlot('9am', { consecrationLeaderId: val })}
                                     disabled={isSaving}
                                     options={privilegedMemberOptions}
-                                    icon={User}
+                                    icon={UserIcon}
                                 />
                                 <TactileSelect
                                     label="DOCTRINA"
@@ -381,7 +381,7 @@ export const HorariosTab = ({
                             onChange={(val: string) => updateSlot('12pm', { leaderId: val })}
                             disabled={isSaving}
                             options={privilegedMemberOptions}
-                            icon={User}
+                            icon={UserIcon}
                         />
                         <button
                             onClick={() => updateSlot('12pm', {})}

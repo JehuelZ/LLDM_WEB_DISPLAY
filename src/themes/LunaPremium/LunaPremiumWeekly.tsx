@@ -101,8 +101,8 @@ const LunaPremiumWeekly: React.FC = () => {
                                                 )}
                                             </div>
                                             <span className="text-[10px] font-[400] text-on-surface truncate leading-tight capitalize">
-                                                {sched?.slots?.[slot.id]?.consecrationLeaderId || sched?.slots?.[slot.id]?.doctrineLeaderId ? (
-                                                    [getMember(sched?.slots?.[slot.id]?.consecrationLeaderId)?.name, getMember(sched?.slots?.[slot.id]?.doctrineLeaderId)?.name].filter(Boolean).join(' | ')
+                                                {(sched?.slots as any)?.[slot.id]?.consecrationLeaderId || (sched?.slots as any)?.[slot.id]?.doctrineLeaderId ? (
+                                                    [getMember((sched?.slots as any)?.[slot.id]?.consecrationLeaderId)?.name, getMember((sched?.slots as any)?.[slot.id]?.doctrineLeaderId)?.name].filter(Boolean).join(' | ')
                                                 ) : (
                                                     (slot.id === 'evening' && (sched?.slots?.['evening']?.leaderIds || []).map((id: any) => getMember(id)?.name).filter(Boolean).join(' | ')) || slot.lead?.name || '---'
                                                 )}

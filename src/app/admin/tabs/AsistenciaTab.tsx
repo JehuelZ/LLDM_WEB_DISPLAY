@@ -180,12 +180,12 @@ export const AsistenciaTab = ({
                 <div className="admin-member-filters-bar flex-1 flex flex-row items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-x-auto scrollbar-hide w-full">
                     {[
                         { id: 'all', label: 'TODOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance).length },
-                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.role === 'Administrador' || m.member_group === 'Administración' || m.member_group === 'Ministerio')).length },
+                        { id: 'Administración', label: 'SIERVOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.role === 'Administrador' || m.member_group === 'Administración' || (m.member_group as any) === 'Ministerio')).length },
                         { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group === 'Casados' || m.member_group === 'Casadas' || m.member_group?.includes('Matrimonio'))).length },
-                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group === 'Solos y Solas' || m.member_group === 'Solo y Sola')).length },
+                        { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group === 'Solos y Solas' || (m.member_group as any) === 'Solo y Sola')).length },
                         { id: 'Jovenes', label: 'JÓVENES', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group?.toLowerCase().includes('joven') || m.member_group?.toLowerCase().includes('juvenil'))).length },
                         { id: 'Niños', label: 'NIÑOS', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (m.member_group?.toLowerCase().includes('niñ') || m.member_group?.toLowerCase().includes('nin') || m.category === 'Niño')).length },
-                        { id: 'none', label: 'SIN GRUPO', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (!m.member_group || m.member_group === 'Sin Asignar' || m.member_group === 'None')).length },
+                        { id: 'none', label: 'SIN GRUPO', count: members.filter(m => m.status === 'Activo' && !m.hide_from_attendance && (!m.member_group || (m.member_group as any) === 'Sin Asignar' || (m.member_group as any) === 'None')).length },
                     ].map(group => (
                         <button
                             key={group.id}
@@ -380,12 +380,12 @@ export const AsistenciaTab = ({
                         // Compatibility: Include members in the list even if status is not active, but show them differently
                         // However, for attendance, we typically only want active or pending to be confirmed
                         // Removed strict hiding of 'Inactivo' to avoid "losing" members the user might want to re-activate
-                        if (m.status === 'Baja') return false;
+                        if ((m.status as string) === 'Baja') return false;
 
                         if (memberFilter === 'all') return true;
                         
                         if (memberFilter === 'Administración') {
-                            return m.role === 'Administrador' || m.member_group === 'Administración' || m.member_group === 'Ministerio';
+                            return m.role === 'Administrador' || m.member_group === 'Administración' || (m.member_group as any) === 'Ministerio';
                         }
                         
                         if (memberFilter === 'Casados') {
@@ -398,7 +398,7 @@ export const AsistenciaTab = ({
                         }
                         
                         if (memberFilter === 'Solos y Solas') {
-                            return m.member_group === 'Solos y Solas' || m.member_group === 'Solo y Sola';
+                            return m.member_group === 'Solos y Solas' || (m.member_group as any) === 'Solo y Sola';
                         }
                         
                         if (memberFilter === 'Jovenes') {
@@ -407,7 +407,7 @@ export const AsistenciaTab = ({
                         }
 
                         if (memberFilter === 'none') {
-                            return !m.member_group || m.member_group === 'Sin Asignar' || m.member_group === 'None';
+                            return !m.member_group || (m.member_group as any) === 'Sin Asignar' || (m.member_group as any) === 'None';
                         }
                         
                         return m.member_group === memberFilter;

@@ -223,70 +223,72 @@ export function IglesiaAnnouncements() {
                                     transition={{ duration: 0.8 }}
                                     style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
                                 >
-                                    {list.map((ann: any, idx: number) => (
-                                        <motion.div
-                                            key={ann.id}
-                                            initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: idx * 0.2, duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
-                                            style={{
-                                                position: 'relative', padding: '24px 32px', borderRadius: 28,
-                                                background: T.surface, border: isDark ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${T.border}`,
-                                                boxShadow: neuShadow(T, false, 'md', isDark),
-                                                display: 'flex', gap: 24, overflow: 'hidden'
-                                            }}
-                                        >
-                                            {/* Left Accent Bar */}
-                                            <div style={{
-                                                position: 'absolute', left: 0, top: 0, bottom: 0, width: 6,
-                                                background: ann.priority === 'urgent' ? T.accent : T.secondary
-                                            }} />
+                                    {list.map((ann: any, idx: number) => {
+                                        const isUrgent = ann.priority === 'urgent' || (typeof ann.priority === 'number' && ann.priority > 0);
+                                        return (
+                                            <motion.div
+                                                key={ann.id}
+                                                initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: idx * 0.2, duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
+                                                style={{
+                                                    position: 'relative', padding: '24px 32px', borderRadius: 28,
+                                                    background: T.surface, border: isDark ? '1px solid rgba(255,255,255,0.05)' : `1px solid ${T.border}`,
+                                                    boxShadow: neuShadow(T, false, 'md', isDark),
+                                                    display: 'flex', gap: 24, overflow: 'hidden'
+                                                }}
+                                            >
+                                                {/* Left Accent Bar */}
+                                                <div style={{
+                                                    position: 'absolute', left: 0, top: 0, bottom: 0, width: 6,
+                                                    background: isUrgent ? T.accent : T.secondary
+                                                }} />
 
-                                            {/* Icon / Image */}
-                                            <div style={{
-                                                width: 50, height: 50, borderRadius: 12, flexShrink: 0,
-                                                background: ann.priority === 'urgent' ? `${T.accent}15` : `${T.secondary}15`,
-                                                display: 'flex', alignItems: 'center', justifyContent: 'center'
-                                            }}>
-                                                {ann.imageUrl ? (
-                                                    <img src={ann.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12 }} />
-                                                ) : (
-                                                    ann.priority === 'urgent' ? <AlertCircle style={{ color: T.accent }} /> : <Info style={{ color: T.secondary }} />
-                                                )}
-                                            </div>
-
-                                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    {/* Title in RELIEF (Raised) */}
-                                                    <div style={{
-                                                        padding: '10px 30px',
-                                                        borderRadius: 18,
-                                                        background: T.surface,
-                                                        boxShadow: neuShadow(T, false, 'sm', isDark),
-                                                        width: 'fit-content',
-                                                        border: isDark ? '1px solid rgba(255,255,255,0.05)' : 'none'
-                                                    }}>
-                                                        <h3 style={{
-                                                            fontSize: 22,
-                                                            fontWeight: 700,
-                                                            color: T.textPrimary,
-                                                            fontFamily: T.fontMontserrat,
-                                                            letterSpacing: '-0.01em',
-                                                            margin: 0
-                                                        }}>
-                                                            {ann.title}
-                                                        </h3>
-                                                    </div>
-
-                                                    {ann.priority === 'urgent' && (
-                                                        <span style={{
-                                                            fontSize: 10, fontWeight: 800, color: '#FFF',
-                                                            background: T.accent, padding: '4px 12px', borderRadius: 12,
-                                                            textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: T.fontMontserrat
-                                                        }}>
-                                                            Urgente
-                                                        </span>
+                                                {/* Icon / Image */}
+                                                <div style={{
+                                                    width: 50, height: 50, borderRadius: 12, flexShrink: 0,
+                                                    background: isUrgent ? `${T.accent}15` : `${T.secondary}15`,
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                                }}>
+                                                    {ann.imageUrl ? (
+                                                        <img src={ann.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12 }} />
+                                                    ) : (
+                                                        isUrgent ? <AlertCircle style={{ color: T.accent }} /> : <Info style={{ color: T.secondary }} />
                                                     )}
                                                 </div>
+
+                                                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        {/* Title in RELIEF (Raised Plaque) */}
+                                                        <div style={{
+                                                            padding: '10px 30px',
+                                                            borderRadius: 18,
+                                                            background: T.surface,
+                                                            boxShadow: neuShadow(T, false, 'sm', isDark),
+                                                            width: 'fit-content',
+                                                            border: isDark ? '1px solid rgba(255,255,255,0.05)' : 'none'
+                                                        }}>
+                                                            <h3 style={{
+                                                                fontSize: 22,
+                                                                fontWeight: 700,
+                                                                color: T.textPrimary,
+                                                                fontFamily: T.fontMontserrat,
+                                                                letterSpacing: '-0.01em',
+                                                                margin: 0
+                                                            }}>
+                                                                {ann.title}
+                                                            </h3>
+                                                        </div>
+
+                                                        {isUrgent && (
+                                                            <span style={{
+                                                                fontSize: 10, fontWeight: 800, color: '#FFF',
+                                                                background: T.accent, padding: '4px 12px', borderRadius: 12,
+                                                                textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: T.fontMontserrat
+                                                            }}>
+                                                                Urgente
+                                                            </span>
+                                                        )}
+                                                    </div>
 
                                                 {/* Message in DEPTH (Pressed/Inset) */}
                                                 <div style={{
@@ -341,9 +343,10 @@ export function IglesiaAnnouncements() {
                                                         </span>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
                                 </motion.div>
                             ) : (
                                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, opacity: 0.5 }}>

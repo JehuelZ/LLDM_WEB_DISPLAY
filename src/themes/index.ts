@@ -20,7 +20,7 @@ export interface Theme {
         Background: any;
         Clock: any;
         Progress: any;
-        Sidebar: any;
+        Sidebar?: any;
     };
     slides: {
         Schedule: any;

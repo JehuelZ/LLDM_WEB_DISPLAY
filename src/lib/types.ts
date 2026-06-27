@@ -94,7 +94,7 @@ export interface Announcement {
     title: string;
     content: string;
     timestamp: string;
-    category?: 'general' | 'choir' | 'kids' | 'important';
+    category?: 'general' | 'choir' | 'kids' | 'important' | 'urgent';
     imageUrl?: string;
     active: boolean;
     priority: number;

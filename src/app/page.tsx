@@ -28,7 +28,7 @@ const StatDoughnut = ({
   label: string;
   value: number | string;
   total?: number | string;
-  color?: 'primary' | 'secondary' | 'accent' | 'emerald' | 'emerald' | 'cyan';
+  color?: 'primary' | 'secondary' | 'accent' | 'emerald' | 'orange' | 'cyan';
   size?: number;
 }) => {
   const radius = 40;
@@ -42,7 +42,7 @@ const StatDoughnut = ({
     secondary: "grad-purple",
     accent: "grad-pink",
     emerald: "grad-green",
-    emerald: "grad-orange",
+    orange: "grad-orange",
     cyan: "grad-cyan"
   };
 
@@ -51,7 +51,7 @@ const StatDoughnut = ({
     secondary: "rgba(168, 85, 247, 0.5)",
     accent: "rgba(236, 72, 153, 0.5)",
     emerald: "rgba(16, 185, 129, 0.5)",
-    emerald: "rgba(245, 158, 11, 0.5)",
+    orange: "rgba(245, 158, 11, 0.5)",
     cyan: "rgba(6, 182, 212, 0.5)"
   };
 

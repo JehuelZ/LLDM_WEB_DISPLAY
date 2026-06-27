@@ -35,7 +35,7 @@ export default function NiñosDashboard() {
     const members = useAppStore(state => state.members);
 
     // Resolve Names for assignments
-    const resolveName = (id: string | null) => {
+    const resolveName = (id: string | null | undefined) => {
         if (!id) return 'Por asignar';
         const member = members.find(m => m.id === id);
         return member ? member.name : 'Por asignar';
@@ -59,7 +59,7 @@ export default function NiñosDashboard() {
     // RESOLVE CHOIR LEADER FROM ROLES
     const choirLeader = members.find(m => 
         m.role?.includes('Dirigente Coro Niños') || 
-        m.privileges?.includes('Dirigente Coro Niños')
+        (m.privileges as any)?.includes('Dirigente Coro Niños')
     );
 
     const choirInfo = {

@@ -25,7 +25,7 @@ interface AjustesTabProps {
     uploadAvatar: (name: string, file: File) => Promise<string | null>
     minister: any
     setMinister: (minister: any) => void
-    updateProfileInCloud: (id: string, profile: any) => Promise<void>
+    updateProfileInCloud: (id: string, profile: any) => Promise<any>
     showNotification: (msg: string, type: 'success' | 'error') => void
     handleCustomLogoUpload: (e: React.ChangeEvent<HTMLInputElement>, slot: 1 | 2 | 3 | 4) => Promise<void>
 }

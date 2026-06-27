@@ -460,7 +460,7 @@ export function MidnightGlowWeekly() {
                                                 {/* Member Name */}
                                                 <div className="flex-1 flex flex-col justify-center px-4 mb-2">
                                                     <span className={`text-[12px] font-black uppercase text-center leading-tight tracking-wide ${isActive ? 'text-white' : 'text-white/80'}`}>
-                                                        {slot.leaderName || 'SIN ASIGNAR'}
+                                                        {leaders.map(l => l.name).join(' | ') || 'SIN ASIGNAR'}
                                                     </span>
                                                 </div>
 

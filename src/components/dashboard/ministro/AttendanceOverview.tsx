@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Card } from '@/components/ui/button'; // Wait, the original used Card from shadcn but imported as Card.
 // Actually, I should check the original imports. 
 // Original code at 485: <Card ... p-8 md:p-12 ...>
 // Imports were: import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";

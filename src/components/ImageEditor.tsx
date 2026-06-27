@@ -7,6 +7,8 @@ import { ZoomIn, X, Check, RotateCw, Grid3X3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+const MotionImg = (motion as any).img;
+
 /**
  * MIRROR AUDIT V20: THE UNIFIED COLOR AUDIT
  * - Entire Modal Base: EXACT #0a0a0a (per "color de todo" and "tarjeta de perfil").
@@ -140,7 +142,7 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                             dragMomentum={false}
                             className="absolute inset-0 flex items-center justify-center shadow-none"
                         >
-                            <motion.img
+                            <MotionImg
                                 ref={imageRef}
                                 src={image}
                                 animate={{

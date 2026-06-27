@@ -104,14 +104,14 @@ const LunaPremiumCalendar: React.FC = () => {
                         
                         // 3. Slot: Evening (Joined by pipe)
                         const eveningSlot = sched?.slots?.['evening'];
-                        const eveningLeaders = (eveningSlot?.leaderIds || [])
+                        const eveningLeaders = ((eveningSlot?.leaderIds || [])
                             .map((id: string) => getMember(id))
-                            .filter(Boolean);
-                        if (eveningLeaders.length === 0 && eveningSlot?.leaderId) {
-                            const fallback = getMember(eveningSlot.leaderId);
+                            .filter(Boolean) as any[]);
+                        if (eveningLeaders.length === 0 && (eveningSlot as any)?.leaderId) {
+                            const fallback = getMember((eveningSlot as any).leaderId);
                             if (fallback) eveningLeaders.push(fallback);
                         }
-                        const eveningText = eveningLeaders.map(l => l.name).join(' | ');
+                        const eveningText = eveningLeaders.map((l: any) => l?.name).filter(Boolean).join(' | ');
 
                         const colIndex = (padding.length + idx) % 7;
                         const isLastCol = colIndex === 6;

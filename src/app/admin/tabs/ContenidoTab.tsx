@@ -84,7 +84,7 @@ export const ContenidoTab = ({
                             options={[
                                 { value: 'apostolic_presentation', label: 'Presentación Apostólica' },
                                 { value: 'apostolic_letter', label: 'Carta Apostólica' },
-                                { value: 'orthodoxy', label: 'Sana Doctrina' },
+                                { value: 'orthodoxy', label: 'Ortodoxia' },
                                 { value: 'exchange', label: 'Intercambio de Ministro' },
                                 { value: 'free', label: 'Tema Libre / Ministerial' }
                             ]}

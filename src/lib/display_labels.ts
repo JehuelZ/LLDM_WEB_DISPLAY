@@ -58,7 +58,7 @@ export function getSlotLabel(slotId: string, lang: 'es' | 'en' = 'es'): string {
 }
 
 export function getSlideSystemTitle(slideId: string, lang: any = 'es'): string {
-    const l = (lang === 'en' || lang === 'es') ? lang : 'es';
+    const l: 'es' | 'en' = (lang === 'en' || lang === 'es') ? lang : 'es';
     const entry = DISPLAY_SLIDE_LABELS[slideId];
     
     if (!entry) {
@@ -96,7 +96,7 @@ export function getThemeLabel(type: string, lang: 'es' | 'en' = 'es'): string {
     const labels: Record<string, { es: string, en: string }> = {
         apostolic_presentation: { es: 'Presentación Apostólica', en: 'Apostolic Presentation' },
         apostolic_letter: { es: 'Carta Apostólica', en: 'Apostolic Letter' },
-        orthodoxy: { es: 'Sana Doctrina', en: 'Sound Doctrine' },
+        orthodoxy: { es: 'Ortodoxia', en: 'Orthodoxy' },
         exchange: { es: 'Intercambio de Ministro', en: 'Minister Exchange' },
         free: { es: 'Tema Ministerial / Libre', en: 'Special Theme' }
     };

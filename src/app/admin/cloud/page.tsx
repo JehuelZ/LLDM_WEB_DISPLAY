@@ -228,7 +228,7 @@ export default function SimpleAdmin() {
                                         >
                                             <option value="apostolic_presentation">Presentación Apostólica</option>
                                             <option value="apostolic_letter">Carta Apostólica</option>
-                                            <option value="orthodoxy">Sana Doctrina</option>
+                                            <option value="orthodoxy">Ortodoxia</option>
                                             <option value="exchange">Intercambio de Ministro</option>
                                             <option value="free">Tema Ministerial / Libre</option>
                                         </select>

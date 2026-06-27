@@ -41,6 +41,10 @@ export default function DirectoryPage() {
     });
 
     const handleMessage = async (member: any) => {
+        if (!currentUser) {
+            showNotification('Debes iniciar sesión para enviar mensajes', 'warning');
+            return;
+        }
         const content = prompt(`Enviar mensaje a ${member.name}:`);
         if (content) {
             await sendCloudMessage({

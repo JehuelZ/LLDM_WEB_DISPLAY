@@ -150,15 +150,7 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
             case 'dashboard':
                 return (
                     <DashboardTab 
-                        isSaving={isSaving}
-                        setIsSaving={setIsSaving}
-                        activeTab={activeTab}
                         setActiveTab={setActiveTab}
-                        intelligenceRange={intelligenceRange}
-                        setIntelligenceRange={setIntelligenceRange}
-                        attendanceTrend={attendanceTrend}
-                        monthlyIntelligence={monthlyIntelligence}
-                        weeklyStats={weeklyStats}
                     />
                 );
             case 'asistencia':
@@ -260,20 +252,23 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
                         saveSettingsToCloud={saveSettingsToCloud}
                         calendarStyles={settings.calendarStyles || {}}
                         setCalendarStyles={(styles: any) => saveSettingsToCloud({ calendarStyles: styles })}
-                        showNotification={showNotification}
+                        handleCustomLogoUpload={async (e, slot) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                setIsSaving(true);
+                                const url = await uploadAvatar(`custom-logo-${slot}`, file);
+                                if (url) {
+                                    await saveSettingsToCloud({ [`customLogo${slot}`]: url });
+                                    showNotification('Logo actualizado', 'success');
+                                }
+                                setIsSaving(false);
+                            }
+                        }}
                     />
                 );
             default:
                 return <DashboardTab 
-                    isSaving={isSaving}
-                    setIsSaving={setIsSaving}
-                    activeTab={activeTab}
                     setActiveTab={setActiveTab}
-                    intelligenceRange={intelligenceRange}
-                    setIntelligenceRange={setIntelligenceRange}
-                    attendanceTrend={attendanceTrend}
-                    monthlyIntelligence={monthlyIntelligence}
-                    weeklyStats={weeklyStats}
                 />;
         }
     };

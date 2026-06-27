@@ -645,7 +645,7 @@ const ThemeQuickEditor = ({ theme, setTheme, onSave, settings }: { theme: any, s
                             options={[
                                 { value: 'apostolic_presentation', label: 'Presentación Apostólica' },
                                 { value: 'apostolic_letter', label: 'Carta Apostólica' },
-                                { value: 'orthodoxy', label: 'Sana Doctrina' },
+                                { value: 'orthodoxy', label: 'Ortodoxia' },
                                 { value: 'exchange', label: 'Intercambio de Ministro' },
                                 { value: 'free', label: 'Tema Libre / Ministerial' }
                             ]}
@@ -794,7 +794,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
     // --- SEGURIDAD: CONTROL DE ACCESO POR ROL (RBAC) ---
     useEffect(() => {
         if (mounted && currentUser) {
-            const hasAdminPrivilege = currentUser.role === 'Administrador' || currentUser.role === 'Admin' || (currentUser.roles && currentUser.roles.includes('admin'));
+            const hasAdminPrivilege = currentUser.role === 'Administrador' || (currentUser.privileges && currentUser.privileges.includes('admin'));
             const isMinister = currentUser.role === 'Ministro a Cargo';
             
             if (!hasAdminPrivilege && !isMinister) {
