@@ -36,6 +36,7 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 3. **Cero Placeholders:** Prohibido el uso de datos genéricos. Si no hay datos, usar "Empty States" elegantes.
 4. **Resiliencia en Fechas:** Manejo estricto de fechas para evitar `RangeError`. Validar siempre antes de renderizar calendarios o métricas.
 5. **Estética Premium:** Todo componente nuevo debe cumplir con estándares visuales modernos (micro-animaciones, sombras suaves, tipografía cuidada).
+6. **Consistencia de Terminología Ministerial:** El tipo de tema `orthodoxy` (técnico en Supabase) debe etiquetarse en la interfaz pública y el panel de administración como **"Ortodoxia"** (o "Estudio de Ortodoxia"). No se debe utilizar la etiqueta "Sana Doctrina" ya que es un término poco familiar para visitas y miembros según retroalimentación directa recibida en junio de 2026.
 
 ---
-*Última actualización: 4 de mayo de 2026*
+*Última actualización: 26 de junio de 2026*
