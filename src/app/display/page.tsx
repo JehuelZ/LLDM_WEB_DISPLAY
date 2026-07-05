@@ -12,6 +12,7 @@ import { CeremonialCountdown } from '@/components/CeremonialCountdown';
 import { getTheme } from '@/themes';
 import { DisplayLock } from '@/components/display/DisplayLock';
 import { AdministrativeOverlay } from '@/components/display/AdministrativeOverlay';
+import { QROverlay } from '@/components/display/QROverlay';
 
 const FullscreenButton = () => {
     const toggleFullscreen = () => {
@@ -402,7 +403,12 @@ export default function DisplayPage() {
                 </main>
             )}
 
-            {/* 2. LAYER: ALWAYS ACCESSIBLE TECH CONTROLS (HIGH Z-INDEX) */}
+            {/* 2. LAYER: QR CODES — visible when unlocked, above slides */}
+            {unlocked && (
+                <QROverlay />
+            )}
+
+            {/* 3. LAYER: ALWAYS ACCESSIBLE TECH CONTROLS (HIGH Z-INDEX) */}
             <div className="fixed bottom-4 right-4 z-[9999] flex gap-4">
                 <FullscreenButton />
             </div>

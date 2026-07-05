@@ -335,6 +335,10 @@ interface AppState {
     setAuthSession: (session: any) => void;
     createTestAccounts: () => Promise<void>;
 
+    // Portal del Miembro
+    enablePortalAccess: (memberId: string, enabled: boolean) => Promise<boolean>;
+    generateInviteToken: (memberId: string) => Promise<string | null>;
+
     notification: { message: string, type: 'success' | 'error' | 'warning' | 'info' } | null;
     showNotification: (message: string, type?: 'success' | 'error' | 'warning' | 'info') => void;
     hideNotification: () => void;
@@ -1312,6 +1316,48 @@ export const useAppStore = create<AppState>()(
                 get().showNotification("Perfil vinculado y activado correctamente", 'success');
                 return true;
             },
+
+            // ── Portal del Miembro ──────────────────────────────────────────
+            enablePortalAccess: async (memberId: string, enabled: boolean) => {
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({ portal_habilitado: enabled })
+                    .eq('id', memberId);
+
+                if (error) {
+                    get().showNotification('Error al actualizar acceso al portal', 'error');
+                    return false;
+                }
+
+                await get().loadMembersFromCloud();
+                get().showNotification(
+                    enabled ? 'Acceso al portal habilitado' : 'Acceso al portal deshabilitado',
+                    'success'
+                );
+                return true;
+            },
+
+            generateInviteToken: async (memberId: string) => {
+                const token = crypto.randomUUID();
+                const expires = new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString();
+
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({
+                        portal_invite_token: token,
+                        portal_invite_expires: expires,
+                        portal_habilitado: true, // Auto-habilitar al generar invitación
+                    })
+                    .eq('id', memberId);
+
+                if (error) {
+                    get().showNotification('Error al generar link de invitación', 'error');
+                    return null;
+                }
+
+                return token;
+            },
+            // ───────────────────────────────────────────────────────────────
 
             addMemberToCloud: async (member) => {
                 const currentUser = get().currentUser;

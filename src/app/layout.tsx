@@ -71,6 +71,13 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://lldmrodeo.org"),
   title: "LLDM RODEO - Tablero Digital",
   description: "Sistema de proyección y control para la iglesia LLDM RODEO",
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'LLDM Rodeo',
+  },
+  formatDetection: { telephone: false },
 };
 
 export const viewport = {

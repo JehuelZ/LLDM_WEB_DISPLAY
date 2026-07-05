@@ -4,7 +4,8 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
     Users, Activity, ShieldCheck, Flame, Search, Filter, 
-    ShieldAlert, User, Mail, Edit2, Power, Trash2, Crown, Church
+    ShieldAlert, User, Mail, Edit2, Power, Trash2, Crown, Church,
+    Link2, Globe, ToggleLeft, ToggleRight
 } from 'lucide-react'
 import { useAppStore, UserProfile } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -35,7 +36,9 @@ export const MiembrosTab = ({
         deleteMemberFromCloud,
         loadMembersFromCloud,
         showNotification,
-        settings
+        settings,
+        enablePortalAccess,
+        generateInviteToken,
     } = useAppStore()
 
     const [isSaving, setIsSaving] = useState(false)
@@ -348,6 +351,7 @@ export const MiembrosTab = ({
                                 <button 
                                     onClick={() => { setEditingMember(member); setShowAddMember(true); }}
                                     className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-foreground/40 hover:text-foreground transition-all border border-[var(--tactile-border)]"
+                                    title="Editar miembro"
                                 >
                                     <Edit2 className="w-3.5 h-3.5" />
                                 </button>
@@ -361,8 +365,46 @@ export const MiembrosTab = ({
                                         setIsSaving(false);
                                     }}
                                     className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-foreground/40 hover:text-foreground"
+                                    title={member.status === 'Activo' ? 'Desactivar' : 'Activar'}
                                 >
                                     <Power className="w-3.5 h-3.5" />
+                                </button>
+                                {/* ── Portal Access Toggle ── */}
+                                <button
+                                    onClick={async () => {
+                                        setIsSaving(true);
+                                        await enablePortalAccess(member.id, !(member as any).portal_habilitado);
+                                        setIsSaving(false);
+                                    }}
+                                    className={cn(
+                                        "w-8 h-8 rounded-full flex items-center justify-center transition-all border",
+                                        (member as any).portal_habilitado
+                                            ? "bg-orange-500/15 border-orange-500/30 text-orange-400 hover:bg-orange-500/25"
+                                            : "bg-white/5 border-[var(--tactile-border)] text-foreground/30 hover:text-orange-400"
+                                    )}
+                                    title={(member as any).portal_habilitado ? 'Portal Activo — clic para deshabilitar' : 'Habilitar Portal del Miembro'}
+                                >
+                                    {(member as any).portal_habilitado
+                                        ? <ToggleRight className="w-3.5 h-3.5" />
+                                        : <ToggleLeft className="w-3.5 h-3.5" />
+                                    }
+                                </button>
+                                {/* ── Generate Invite Link ── */}
+                                <button
+                                    onClick={async () => {
+                                        setIsSaving(true);
+                                        const token = await generateInviteToken(member.id);
+                                        setIsSaving(false);
+                                        if (token) {
+                                            const url = `${window.location.origin}/activar?token=${token}`;
+                                            await navigator.clipboard.writeText(url);
+                                            showNotification('Link de invitación copiado al portapapeles (válido 48h)', 'success');
+                                        }
+                                    }}
+                                    className="w-8 h-8 rounded-full bg-white/5 border border-[var(--tactile-border)] flex items-center justify-center text-foreground/30 hover:text-sky-400 hover:border-sky-400/30 transition-all"
+                                    title="Generar link de invitación (48h)"
+                                >
+                                    <Link2 className="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                     onClick={async () => {
@@ -374,6 +416,7 @@ export const MiembrosTab = ({
                                         }
                                     }}
                                     className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-foreground/40 hover:bg-red-600 hover:text-white"
+                                    title="Eliminar miembro"
                                 >
                                     <Trash2 className="w-3.5 h-3.5" />
                                 </button>

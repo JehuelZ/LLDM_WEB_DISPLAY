@@ -1,0 +1,43 @@
+{
+  "name": "LLDM Rodeo — Portal del Miembro",
+  "short_name": "LLDM Rodeo",
+  "description": "Panel personal para miembros de La Luz del Mundo Rodeo",
+  "start_url": "/portal",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#f97316",
+  "orientation": "portrait-primary",
+  "lang": "es",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mis Privilegios",
+      "short_name": "Privilegios",
+      "description": "Ver mis privilegios y responsabilidades",
+      "url": "/portal",
+      "icons": [{ "src": "/icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Pantalla de la Iglesia",
+      "short_name": "Pantalla",
+      "description": "Ver la pizarra de la iglesia",
+      "url": "/display",
+      "icons": [{ "src": "/icon.png", "sizes": "192x192" }]
+    }
+  ]
+}
