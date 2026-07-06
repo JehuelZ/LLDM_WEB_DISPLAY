@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 live_profiles_new.json
 *report.json
+scripts/check_settings.js

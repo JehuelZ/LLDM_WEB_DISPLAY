@@ -15,7 +15,7 @@ export function QROverlay({ baseUrl }: QROverlayProps) {
 
   return (
     <div
-      className="absolute bottom-6 right-32 z-50 flex gap-3 items-end"
+      className="absolute bottom-6 left-12 z-[250] flex gap-3 items-end"
       style={{ pointerEvents: 'none' }}
     >
       {/* QR: Ver pantalla en tu celular */}

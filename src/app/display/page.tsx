@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Maximize, Zap, ZapOff } from 'lucide-react';
+import { Maximize, Minimize, Zap, ZapOff } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
@@ -15,6 +15,24 @@ import { AdministrativeOverlay } from '@/components/display/AdministrativeOverla
 import { QROverlay } from '@/components/display/QROverlay';
 
 const FullscreenButton = () => {
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!(document.fullscreenElement || (document as any).webkitFullscreenElement || (document as any).mozFullScreenElement || (document as any).msFullscreenElement));
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+        document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+        return () => {
+            document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+        };
+    }, []);
+
     const toggleFullscreen = () => {
         const element = document.documentElement as any;
         if (!document.fullscreenElement && !(document as any).webkitFullscreenElement && !(document as any).mozFullScreenElement && !(document as any).msFullscreenElement) {
@@ -35,9 +53,13 @@ const FullscreenButton = () => {
         <button
             onClick={toggleFullscreen}
             className="p-4 rounded-full bg-black/60 border border-white/20 text-white shadow-[0_0_30px_rgba(0,0,0,0.5)] hover:bg-black/90 hover:scale-110 transition-all duration-300 backdrop-blur-xl group cursor-pointer opacity-60 hover:opacity-100"
-            title="Pantalla Completa"
+            title={isFullscreen ? "Salir de Pantalla Completa" : "Pantalla Completa"}
         >
-            <Maximize className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
+            {isFullscreen ? (
+                <Minimize className="w-6 h-6 group-hover:scale-90 transition-transform duration-500" />
+            ) : (
+                <Maximize className="w-6 h-6 group-hover:rotate-90 transition-transform duration-500" />
+            )}
         </button>
     );
 };

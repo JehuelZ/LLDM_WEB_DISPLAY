@@ -234,7 +234,7 @@ export function MidnightGlowWeekly() {
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-[#A3FF57]/5 blur-[100px] rounded-full pointer-events-none" />
 
             {/* ── 7 COLUMNS ── */}
-            <div className="z-10 flex-1 flex gap-5 px-5 pb-2 pt-2 min-h-0 w-full">
+            <div className="z-10 flex-1 flex gap-2 px-2 pb-2 pt-2 min-h-0 w-full">
                 {daysProgram.map(({ dateKey, dayName, dayNum, sched, isToday }, colIdx) => {
                     const slots = getSlots(sched, dayName);
                     const isActive = isToday;
@@ -247,7 +247,7 @@ export function MidnightGlowWeekly() {
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: 0.1 * colIdx, type: 'spring', stiffness: 100 }}
-                            className="flex-1 flex flex-col items-center relative transition-all duration-500"
+                            className="flex-1 flex flex-col items-center relative transition-all duration-500 min-w-0"
                         >
                             {/* Top ambient glow - Attached to the whole day area slightly */}
                             <div className="absolute top-0 left-0 right-0 h-40 opacity-30 mix-blend-screen pointer-events-none"
