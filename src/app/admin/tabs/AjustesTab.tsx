@@ -337,7 +337,12 @@ export const AjustesTab = ({
                             <div className="flex-1">
                                 <TactileInput
                                     value={settings.weatherCity || ''}
-                                    onChange={(e: any) => setSettings({ ...settings, weatherCity: e.target.value })}
+                                    onChange={(e: any) => setSettings({ 
+                                        ...settings, 
+                                        weatherCity: e.target.value,
+                                        weatherLat: null,
+                                        weatherLng: null
+                                    })}
                                     placeholder="Ej: Rodeo, CA o 94547"
                                     icon={Sun}
                                 />
@@ -459,7 +464,36 @@ export const AjustesTab = ({
                 <button
                     onClick={async () => {
                         setIsSaving(true);
-                        await saveSettingsToCloud(settings);
+                        let finalSettings = { ...settings };
+                        if (settings.weatherCity && (settings.weatherLat === null || settings.weatherLat === undefined || settings.weatherLng === null || settings.weatherLng === undefined)) {
+                            try {
+                                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(settings.weatherCity)}&count=1&language=es&format=json`);
+                                const data = await res.json();
+                                if (data.results && data.results.length > 0) {
+                                    const loc = data.results[0];
+                                    let adminStr = loc.admin1 ? `, ${loc.admin1}` : '';
+                                    if (!loc.admin1 && loc.country) adminStr = `, ${loc.country}`;
+                                    const displayName = `${loc.name}${adminStr}`;
+                                    
+                                    finalSettings.weatherCity = displayName;
+                                    finalSettings.weatherLat = loc.latitude;
+                                    finalSettings.weatherLng = loc.longitude;
+                                    
+                                    try {
+                                        const tzRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&timezone=auto&current_weather=true`);
+                                        const tzData = await tzRes.json();
+                                        if (tzData.timezone) {
+                                            finalSettings.weatherTimezone = tzData.timezone;
+                                        }
+                                    } catch (tzErr) {
+                                        console.error("Error fetching timezone identifier during auto-save geocode:", tzErr);
+                                    }
+                                }
+                            } catch (e) {
+                                console.error("Error auto-geocoding city during save:", e);
+                            }
+                        }
+                        await saveSettingsToCloud(finalSettings);
                         setIsSaving(false);
                     }}
                     className="w-full h-12 bg-orange-500 text-white rounded-md flex items-center justify-center gap-3 text-sm font-black tracking-widest hover:bg-orange-600 transition-colors shadow-xl"
