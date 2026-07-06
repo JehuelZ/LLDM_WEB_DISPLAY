@@ -337,6 +337,11 @@ export const MiembrosTab = ({
                                     <TactileBadge className="bg-slate-400/10 border-slate-400/20 text-gray-300">
                                         {member.member_group}
                                     </TactileBadge>
+                                    {member.portal_habilitado && (
+                                        <TactileBadge className="bg-orange-500/10 border-orange-500/20 text-orange-400 flex items-center gap-1">
+                                            <Globe className="w-2.5 h-2.5" /> PORTAL
+                                        </TactileBadge>
+                                    )}
                                     <TactileBadge className="bg-emerald-500/5 border-emerald-500/20 text-emerald-400/80 flex items-center gap-1.5 px-2">
                                         <Church className="w-2.5 h-2.5" />
                                         {member.assigned_church === 'Principal' || !member.assigned_church 

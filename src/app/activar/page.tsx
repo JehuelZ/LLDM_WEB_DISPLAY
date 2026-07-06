@@ -51,30 +51,23 @@ function ActivarContent() {
     setError('');
     try {
       const { data, error: dbError } = await supabase
-        .from('profiles')
-        .select('id, name, phone, email, portal_habilitado, auth_user_id, portal_invite_token, portal_invite_expires')
-        .eq('portal_invite_token', inviteToken)
-        .single();
+        .rpc('verify_invite_token', { p_token: inviteToken });
 
-      if (dbError || !data) {
-        setError('Este link de invitación no es válido o ya fue usado.');
+      if (dbError || !data || data.length === 0) {
+        setError('Este link de invitación no es válido, ha expirado o ya fue usado.');
         return;
       }
 
-      // Verificar expiración
-      if (data.portal_invite_expires && new Date(data.portal_invite_expires) < new Date()) {
-        setError('Este link de invitación ha expirado. Pide uno nuevo a tu líder.');
-        return;
-      }
-
-      // Ya tiene cuenta activa
-      if (data.auth_user_id) {
-        setError('Ya tienes una cuenta activa. Ve a /login para ingresar.');
-        return;
-      }
-
-      setMemberFound(data as MemberFound);
-      if (data.email) setEmail(data.email);
+      const member = data[0];
+      setMemberFound({
+        id: member.id,
+        name: member.name,
+        email: member.email,
+        phone: '',
+        portal_habilitado: member.portal_habilitado,
+        auth_user_id: null
+      });
+      if (member.email) setEmail(member.email);
       setStep('crear_cuenta');
     } catch {
       setError('Ocurrió un error al verificar el link. Intenta de nuevo.');
@@ -93,12 +86,9 @@ function ActivarContent() {
     setError('');
 
     try {
-      // Buscar miembro por nombre parcial + teléfono exacto + portal habilitado
+      // Buscar miembro por nombre parcial + teléfono exacto usando RPC segura
       const { data, error: dbError } = await supabase
-        .from('profiles')
-        .select('id, name, phone, email, portal_habilitado, auth_user_id')
-        .ilike('name', `%${nombre.trim()}%`)
-        .eq('phone', telefono.trim());
+        .rpc('verify_member_for_activation', { p_name: nombre.trim(), p_phone: telefono.trim() });
 
       if (dbError) throw dbError;
 
@@ -107,19 +97,21 @@ function ActivarContent() {
         return;
       }
 
-      const member = data[0] as MemberFound;
+      const member = data[0];
 
       if (!member.portal_habilitado) {
         setError('Tu acceso al portal aún no ha sido habilitado. Habla con un líder para activarlo.');
         return;
       }
 
-      if (member.auth_user_id) {
-        setError('Ya tienes una cuenta activa. Ve a /login para ingresar.');
-        return;
-      }
-
-      setMemberFound(member);
+      setMemberFound({
+        id: member.id,
+        name: member.name,
+        phone: member.phone,
+        email: member.email,
+        portal_habilitado: member.portal_habilitado,
+        auth_user_id: null
+      });
       if (member.email) setEmail(member.email);
       setStep('crear_cuenta');
     } catch {
@@ -141,7 +133,16 @@ function ActivarContent() {
     setError('');
 
     try {
-      // 1. Crear cuenta en Supabase Auth
+      // 1. Reclamar el portal (asociar correo vía RPC de forma segura antes de sign up)
+      const { data: claimSuccess, error: claimError } = await supabase
+        .rpc('claim_member_portal', { p_profile_id: memberFound.id, p_email: email.trim() });
+
+      if (claimError || !claimSuccess) {
+        setError('No se pudo verificar el reclamo de la cuenta. Asegúrate de que tu acceso esté habilitado.');
+        return;
+      }
+
+      // 2. Crear cuenta en Supabase Auth
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -161,24 +162,8 @@ function ActivarContent() {
 
       if (!authData.user) { setError('No se pudo crear la cuenta. Intenta de nuevo.'); return; }
 
-      // 2. Vincular auth_user_id con el perfil pre-registrado
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({
-          auth_user_id: authData.user.id,
-          email: email.trim(),
-          status: 'Activo',
-          is_pre_registered: false,
-          portal_invite_token: null,     // Invalidar token usado
-          portal_invite_expires: null,
-        })
-        .eq('id', memberFound.id);
-
-      if (updateError) {
-        console.error('Error vinculando perfil:', updateError);
-        // La cuenta se creó pero no se vinculó — problema menor, el admin puede hacer merge
-      }
-
+      // Nota: Al iniciar sesión por primera vez, syncUserWithCloud de Zustand
+      // se encargará de vincular auth_user_id en el perfil automáticamente.
       setStep('exito');
     } catch {
       setError('Ocurrió un error inesperado. Intenta de nuevo.');

@@ -61,7 +61,7 @@ export const GlassmorphismCalendar = () => {
     const getMemberDetail = (id: string | null) => {
         if (!id) return { name: '', avatar: null };
         const cleanId = id.trim().toLowerCase();
-        const member = members.find((m: any) => m.id.toLowerCase() === cleanId);
+        const member = (members || []).find((m: any) => m.id?.toLowerCase() === cleanId);
         return {
             name: member ? member.name : (id.length > 20 ? 'HERMANO ASIGNADO' : (id || 'NO ASIGNADO')),
             avatar: member?.avatar || null,

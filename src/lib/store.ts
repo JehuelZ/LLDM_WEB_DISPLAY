@@ -145,6 +145,9 @@ export interface UserProfile {
     hide_from_membership_count?: boolean;
     can_manage_prayers?: boolean;
     assigned_church?: string;
+    portal_habilitado?: boolean;
+    portal_invite_token?: string;
+    portal_invite_expires?: string;
 }
 
 export interface CalendarStyles {
@@ -805,7 +808,10 @@ export const useAppStore = create<AppState>()(
                             hide_from_attendance: p.hide_from_attendance || false,
                             hide_from_membership_count: p.hide_from_membership_count || false,
                             can_manage_prayers: p.can_manage_prayers ?? true,
-                            assigned_church: p.assigned_church || 'Principal'
+                            assigned_church: p.assigned_church || 'Principal',
+                            portal_habilitado: p.portal_habilitado || false,
+                            portal_invite_token: p.portal_invite_token || '',
+                            portal_invite_expires: p.portal_invite_expires || ''
                         }));
 
                         // Sincronizar estado del Ministro si se encuentra en la lista oficial
@@ -1233,7 +1239,10 @@ export const useAppStore = create<AppState>()(
                         lastActive: new Date().toISOString(),
                         stats: existingProfile.stats || { attendance: { attended: 0, total: 1 }, participation: { led: 0, total: 1 }, punctuality: 0 },
                         privileges: existingProfile.roles || [],
-                        bio: existingProfile.bio || ''
+                        bio: existingProfile.bio || '',
+                        portal_habilitado: existingProfile.portal_habilitado || false,
+                        portal_invite_token: existingProfile.portal_invite_token || '',
+                        portal_invite_expires: existingProfile.portal_invite_expires || ''
                     });
                 } else {
                     // 2. Si NO existe el perfil, verificamos si es el Master Admin

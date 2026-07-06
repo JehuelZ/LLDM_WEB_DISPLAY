@@ -91,7 +91,7 @@ export function DarkMinimalCalendar() {
     const getMember = (id: string | null): string => {
         if (!id) return '';
         const cleanId = id.trim().toLowerCase();
-        const m = members.find((x: any) => x.id.toLowerCase() === cleanId);
+        const m = (members || []).find((x: any) => x.id?.toLowerCase() === cleanId);
         return m ? m.name : (id.length > 20 ? '' : id);
     };
 
