@@ -35,8 +35,8 @@ const Clock: React.FC<ClockProps> = ({ isVertical, now: externalNow, settings: e
 
     // Weather Fetching
     const { weather } = useWeather(
-        settings?.weatherLat || 34.0522,
-        settings?.weatherLng || -118.2437,
+        settings?.weatherLat || 38.033,
+        settings?.weatherLng || -122.273,
         unit
     );
 

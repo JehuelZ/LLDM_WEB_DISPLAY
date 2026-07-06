@@ -14,8 +14,8 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
     const strokeDashoffset = isMounted ? circumference - (now.getSeconds() / 60) * circumference : circumference;
 
     const { weather, loading } = useWeather(
-        settings.neonForgeCityData?.lat || 24.34, 
-        settings.neonForgeCityData?.lon || -104.28,
+        settings.weatherLat || 38.033, 
+        settings.weatherLng || -122.273,
         settings.weatherUnit || 'celsius'
     );
 
