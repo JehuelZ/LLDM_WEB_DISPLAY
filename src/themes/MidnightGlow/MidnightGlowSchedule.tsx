@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Flame } from 'lucide-react';
+import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Flame, Clock } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -238,9 +238,10 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
             </div>
 
             {/* Time */}
-            <div className="flex items-end justify-center gap-2 mt-6 px-6">
+            <div className="flex items-center justify-center gap-2 mt-6 px-6">
+                <Clock className={`w-8 h-8 ${accentText.split(' ')[0]} opacity-80 mr-1.5`} />
                 <span className="text-[3.25rem] font-black text-white leading-none tracking-tight drop-shadow-[0_5px_15px_rgba(0,0,0,0.5)]">{hour}</span>
-                <span className="text-xl font-black text-white/30 mb-2">{period}</span>
+                <span className="text-xl font-black text-white/30 self-end mb-1">{period}</span>
             </div>
             <p className="text-center text-[12px] tracking-[0.4em] text-white/50 uppercase font-black mb-6 px-4">{subtitle}</p>
 
