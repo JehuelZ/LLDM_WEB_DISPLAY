@@ -196,7 +196,7 @@ export default function PortalPage() {
     // Unread messages for this user
     const myMessages = useMemo(() => {
         return (messages || [])
-            .filter(m => !m.read_at || !m.read_at)
+            .filter(m => !m.isRead)
             .slice(0, 4);
     }, [messages]);
 

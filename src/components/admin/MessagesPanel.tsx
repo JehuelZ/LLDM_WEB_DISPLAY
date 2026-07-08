@@ -74,13 +74,23 @@ export const MessagesPanel = ({
                             <p className="text-[10px] font-black uppercase tracking-[0.4em] text-center">bandeja de entrada vacía</p>
                         </div>
                     ) : (
-                        messages.map(msg => (
-                            <div key={msg.id} className={cn(
-                                "group/msg p-6 border transition-all duration-500 relative overflow-hidden",
-                                settings.adminTheme === 'primitivo'
-                                    ? "bg-white/[0.02] border-white/5 rounded-md hover:bg-white/[0.04] scroll-m-2"
-                                    : "bg-black/20 border-white/5 rounded-none hover:border-emerald-500/20 shadow-inner"
-                            )}>
+                        messages.map(msg => {
+                            const isUnread = !(msg.isRead ?? msg.read);
+                            return (
+                                <div key={msg.id} className={cn(
+                                    "group/msg p-6 border transition-all duration-500 relative overflow-hidden",
+                                    settings.adminTheme === 'primitivo'
+                                        ? cn(
+                                            "border-white/5 rounded-md scroll-m-2",
+                                            isUnread ? "bg-white/[0.05] border-white/15" : "bg-white/[0.02] hover:bg-white/[0.04]"
+                                          )
+                                        : cn(
+                                            "rounded-none shadow-inner",
+                                            isUnread 
+                                                ? "bg-emerald-500/10 border-emerald-500/35 hover:border-emerald-500/45 shadow-[inset_0_0_15px_rgba(16,185,129,0.05)]" 
+                                                : "bg-black/20 border-white/5 hover:border-emerald-500/20"
+                                          )
+                                )}>
                                 <div className="flex justify-between items-start mb-4 relative z-10">
                                     <div className="flex items-center gap-4">
                                         <div className={cn(
@@ -134,6 +144,7 @@ export const MessagesPanel = ({
                                             initial={{ height: 0, opacity: 0 }}
                                             animate={{ height: 'auto', opacity: 1 }}
                                             exit={{ height: 0, opacity: 0 }}
+                                            transition={{ duration: 0.3, ease: "easeInOut" }}
                                             className="mt-4 pt-4 border-t border-white/5 overflow-hidden"
                                         >
                                             <textarea
@@ -168,8 +179,9 @@ export const MessagesPanel = ({
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
-                            </div>
-                        ))
+                                </div>
+                            );
+                        })
                     )}
                 </div>
             </CardContent>

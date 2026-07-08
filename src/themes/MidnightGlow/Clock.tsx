@@ -31,7 +31,7 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
     };
 
     return (
-        <div className="fixed bottom-10 right-10 z-[200] scale-75 origin-bottom-right pointer-events-none">
+        <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[200] scale-60 sm:scale-75 md:scale-90 lg:scale-100 origin-bottom-right pointer-events-none transition-all duration-500">
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
