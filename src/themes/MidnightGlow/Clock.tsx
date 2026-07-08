@@ -31,12 +31,12 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
     };
 
     return (
-        <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[200] scale-60 sm:scale-75 md:scale-90 lg:scale-100 origin-bottom-right pointer-events-none transition-all duration-500">
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-[200] scale-60 sm:scale-75 md:scale-90 lg:scale-100 origin-bottom-right pointer-events-none transition-all duration-500">
             <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 80, damping: 20 }}
-                className="flex items-center bg-[#071020]/95 backdrop-blur-3xl border border-white/10 rounded-full shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(79,127,255,0.1)] p-2 pl-8 pr-10 relative overflow-hidden"
+                className="flex items-center bg-[#071020]/95 backdrop-blur-3xl border border-white/10 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.85),0_0_30px_rgba(79,127,255,0.08)] p-1.5 pl-6 pr-8 relative overflow-hidden"
             >
 
                 {/* Subtle background glow inside the pill */}
@@ -44,44 +44,44 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
 
                 {/* ── WEATHER SECTION ── */}
                 {weather && isMounted && (
-                    <div className="flex items-center gap-4 mr-8 border-r border-white/10 pr-8">
+                    <div className="flex items-center gap-3 mr-5 border-r border-white/10 pr-5">
                         {/* Current Weather Highlight */}
-                        <div className="flex items-center gap-3 mr-4 border-r border-white/5 pr-4">
+                        <div className="flex items-center gap-2 mr-3 border-r border-white/5 pr-3">
                             <div className="relative">
-                                <div className="absolute inset-0 bg-[#A3FF57] blur-md opacity-20 scale-150" />
-                                <div className="relative z-10 scale-150">
+                                <div className="absolute inset-0 bg-[#A3FF57] blur-md opacity-20 scale-125" />
+                                <div className="relative z-10 scale-110">
                                     {getWeatherIcon(weather.icon)}
                                 </div>
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-[7px] font-black text-[#A3FF57] uppercase tracking-[0.2em] -mb-1 opacity-80">Ahora</span>
                                 <div className="flex items-start">
-                                    <span className="text-[18px] font-black text-white leading-none tracking-tighter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{weather.temp}</span>
-                                    <span className="text-[10px] font-bold text-[#A3FF57]">°</span>
+                                    <span className="text-[15px] font-black text-white leading-none tracking-tighter drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">{weather.temp}</span>
+                                    <span className="text-[8px] font-bold text-[#A3FF57]">°</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Future Forecast (Next 4 days) */}
                         {weather.forecast.slice(1, 5).map((day, idx) => (
-                            <div key={day.date} className="flex items-center gap-2">
+                            <div key={day.date} className="flex items-center gap-1.5">
                                 <div className="relative">
-                                    <div className="absolute inset-0 bg-current blur-md opacity-20 scale-125" style={{ color: 'inherit' }} />
-                                    <div className="relative z-10">
+                                    <div className="absolute inset-0 bg-current blur-md opacity-20 scale-100" style={{ color: 'inherit' }} />
+                                    <div className="relative z-10 scale-90">
                                         {getWeatherIcon(day.icon)}
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-1">
-                                    <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.1em]">
+                                <div className="flex items-center gap-0.5">
+                                    <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.1em]">
                                         {format(parseISO(day.date), 'EEE', { locale: es })}
                                     </span>
                                     <div className="flex items-start">
-                                        <span className="text-[13px] font-black text-white/80 leading-none tracking-tighter">{day.temp}</span>
-                                        <span className="text-[7px] font-bold text-[#A3FF57]">°</span>
+                                        <span className="text-[11px] font-black text-white/80 leading-none tracking-tighter">{day.temp}</span>
+                                        <span className="text-[6px] font-bold text-[#A3FF57]">°</span>
                                     </div>
                                 </div>
                                 {idx < 3 && (
-                                    <div className="w-[1px] h-3 bg-white/5 ml-2" />
+                                    <div className="w-[1px] h-2.5 bg-white/5 ml-1.5" />
                                 )}
                             </div>
                         ))}
@@ -89,8 +89,8 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                 )}
 
                 {/* Circular Logo & Seconds Ring */}
-                <div className="relative w-20 h-20 flex-shrink-0">
-                    <svg className="absolute inset-0 w-full h-full -rotate-90 drop-shadow-[0_0_10px_rgba(163,255,87,0.4)]" viewBox="0 0 100 100">
+                <div className="relative w-14 h-14 flex-shrink-0">
+                    <svg className="absolute inset-0 w-full h-full -rotate-90 drop-shadow-[0_0_8px_rgba(163,255,87,0.3)]" viewBox="0 0 100 100">
                         {/* Background track */}
                         <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="4" />
                         {/* Animated progress ring */}
@@ -108,12 +108,12 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                         />
                     </svg>
 
-                    <div className="absolute inset-2 rounded-full bg-[#0D1B3E] border-[2px] border-[#4F7FFF]/30 flex items-center justify-center shadow-[inset_0_0_20px_rgba(79,127,255,0.3),0_0_20px_rgba(79,127,255,0.2)]">
+                    <div className="absolute inset-1.5 rounded-full bg-[#0D1B3E] border border-[#4F7FFF]/30 flex items-center justify-center shadow-[inset_0_0_15px_rgba(79,127,255,0.25),0_0_15px_rgba(79,127,255,0.15)]">
                         <div className="absolute inset-0 bg-gradient-to-br from-[#4F7FFF]/20 to-transparent rounded-full" />
-                        <div className="w-10 h-10 relative z-10 flex items-center justify-center filter drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+                        <div className="w-7 h-7 relative z-10 flex items-center justify-center filter drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">
                             <img 
                                 src={settings.churchLogoUrl ?? "/flama-oficial.svg"} 
-                                className="w-full h-full object-contain brightness-0 invert filter drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]" 
+                                className="w-full h-full object-contain brightness-0 invert filter drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" 
                                 alt="Church" 
                             />
                         </div>
@@ -121,28 +121,28 @@ export const MidnightGlowClock = ({ now, isMounted, settings }: { now: Date, isM
                 </div>
 
                 {/* Elegant Separator */}
-                <div className="w-px h-12 bg-gradient-to-b from-transparent via-[#4F7FFF]/40 to-transparent mx-6" />
+                <div className="w-px h-8 bg-gradient-to-b from-transparent via-[#4F7FFF]/40 to-transparent mx-4" />
 
                 {/* Time Display */}
                 <div className="flex flex-col justify-center">
-                    <div className="flex items-end gap-3 -mb-1">
-                        <span className="text-[2.25rem] leading-[0.85] font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                    <div className="flex items-end gap-2 -mb-0.5">
+                        <span className="text-[1.75rem] leading-[0.85] font-black text-white tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.15)]">
                             {isMounted ? format(now, 'hh:mm') : '--:--'}
                         </span>
 
-                        <div className="flex flex-col pb-1">
-                            <span className="text-lg font-black text-[#A3FF57] leading-none tracking-widest drop-shadow-[0_0_15px_rgba(163,255,87,0.5)]">
+                        <div className="flex flex-col pb-0.5">
+                            <span className="text-sm font-black text-[#A3FF57] leading-none tracking-widest drop-shadow-[0_0_10px_rgba(163,255,87,0.4)]">
                                 {isMounted ? format(now, 'ss') : '--'}
                             </span>
-                            <span className="text-[10px] font-black text-[#4F7FFF] uppercase tracking-[0.2em] mt-1 drop-shadow-md">
+                            <span className="text-[8px] font-black text-[#4F7FFF] uppercase tracking-[0.2em] mt-0.5 drop-shadow-md">
                                 {isMounted ? format(now, 'a') : '--'}
                             </span>
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3 mt-2 pl-2">
-                        <div className="h-[2px] w-6 bg-[#A3FF57] rounded-full shadow-[0_0_8px_#A3FF57]" />
-                        <span className="text-[11px] font-black text-white/50 uppercase tracking-[0.3em]">
+                    <div className="flex items-center gap-2 mt-1 pl-1">
+                        <div className="h-[1.5px] w-4 bg-[#A3FF57] rounded-full shadow-[0_0_6px_#A3FF57]" />
+                        <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.2em]">
                             {isMounted ? format(now, 'EEEE, d MMMM', { locale: es }) : '---'}
                         </span>
                     </div>
