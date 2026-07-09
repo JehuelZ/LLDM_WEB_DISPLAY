@@ -85,28 +85,22 @@ export const GlassmorphismAnnouncements = () => {
 
             {/* Right Pillar: Minister Info */}
             {settings.showMinisterOnDisplay && (
-                <div className="w-[450px] shrink-0 flex flex-col h-full">
+                <div className="w-[450px] shrink-0 flex flex-col h-full justify-center">
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={cn(
-                            "flex-grow flex flex-col items-center border border-white/[0.05] bg-black/20 shadow-2xl relative overflow-hidden justify-center gap-4",
-                            settings.mainChurch?.supervisorName ? "rounded-[2.5rem] p-6" : "pt-12 pb-16 px-10 rounded-[4rem]"
-                        )}
+                        className="flex-grow flex flex-col items-center justify-center gap-8 py-6 w-full relative"
                     >
                         {/* Minister Section */}
-                        <div className={cn(
-                            "w-full flex flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] shadow-xl relative overflow-hidden group/minister",
-                            settings.mainChurch?.supervisorName ? "rounded-[2rem] p-4 flex-1" : "rounded-[3.5rem] p-8 flex-1"
-                        )}>
+                        <div className="w-full flex flex-col items-center justify-center relative overflow-hidden group/minister">
                             <div className={cn(
                                 "relative mb-4",
-                                settings.mainChurch?.supervisorName ? "w-28 h-36 mb-3" : "w-64 h-80 mb-10"
+                                settings.mainChurch?.supervisorName ? "w-36 h-36" : "w-56 h-56"
                             )}>
                                 <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-0 group-hover/minister:opacity-100 transition-opacity duration-700" />
                                 <div className={cn(
-                                    "w-full h-full overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/minister:scale-105",
-                                    settings.mainChurch?.supervisorName ? "rounded-[1.5rem]" : "rounded-[3rem]"
+                                    "w-full h-full overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/minister:scale-105 aspect-square",
+                                    settings.mainChurch?.supervisorName ? "rounded-[1.5rem]" : "rounded-[2rem]"
                                 )}>
                                     {minister.avatar ? (
                                         <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
@@ -119,37 +113,33 @@ export const GlassmorphismAnnouncements = () => {
                             </div>
 
                             <div className={cn(
-                                "rounded-full border border-blue-500/30 bg-blue-500/10 font-black uppercase text-blue-400 text-center",
-                                settings.mainChurch?.supervisorName ? "px-3 py-1 text-[8px] tracking-[0.2em] mb-2" : "px-6 py-2 text-[10px] tracking-[0.3em] mb-6"
+                                "rounded-full border border-blue-500/30 bg-blue-500/10 font-black uppercase text-blue-400 text-center px-4 py-1 text-[8px] tracking-[0.2em] mb-2"
                             )}>
                                 {minister.role || 'MINISTRO LOCAL'}
                             </div>
 
                             <h2 className={cn(
                                 "font-black text-white italic tracking-tight uppercase leading-none text-center px-4",
-                                settings.mainChurch?.supervisorName ? "text-lg mb-3" : "text-2xl mb-6"
+                                settings.mainChurch?.supervisorName ? "text-xl mb-3" : "text-3xl mb-6"
                             )}>
                                 {minister.name}
                             </h2>
 
-                            <div className={cn(
-                                "w-full border-t border-white/5",
-                                settings.mainChurch?.supervisorName ? "space-y-2 pt-3" : "space-y-4 pt-8"
-                            )}>
+                            <div className="w-full border-t border-white/5 space-y-2 pt-3">
                                 {minister.phone && (
-                                    <div className="flex items-center gap-4 text-white/60">
-                                        <div className={cn("bg-white/10 rounded-2xl group-hover/minister:bg-blue-500/20 transition-colors", settings.mainChurch?.supervisorName ? "p-2 rounded-xl" : "p-3")}>
-                                            <Phone className={settings.mainChurch?.supervisorName ? "w-4 h-4" : "w-6 h-6"} />
+                                    <div className="flex items-center gap-4 text-white/60 justify-center">
+                                        <div className="p-2 bg-white/10 rounded-xl group-hover/minister:bg-blue-500/20 transition-colors">
+                                            <Phone className="w-4 h-4" />
                                         </div>
-                                        <span className={cn("font-black italic tracking-widest", settings.mainChurch?.supervisorName ? "text-sm" : "text-xl")}>{minister.phone}</span>
+                                        <span className="font-black italic tracking-widest text-sm">{minister.phone}</span>
                                     </div>
                                 )}
                                 {minister.email && (
-                                    <div className="flex items-center gap-4 text-white/30">
-                                        <div className={cn("bg-white/10 rounded-2xl group-hover/minister:bg-blue-500/20 transition-colors", settings.mainChurch?.supervisorName ? "p-2 rounded-xl" : "p-3")}>
-                                            <Mail className={settings.mainChurch?.supervisorName ? "w-4 h-4" : "w-6 h-6"} />
+                                    <div className="flex items-center gap-4 text-white/30 justify-center">
+                                        <div className="p-2 bg-white/10 rounded-xl group-hover/minister:bg-blue-500/20 transition-colors">
+                                            <Mail className="w-4 h-4" />
                                         </div>
-                                        <span className={cn("font-bold tracking-tight truncate", settings.mainChurch?.supervisorName ? "text-xs" : "text-lg")}>{minister.email.toLowerCase()}</span>
+                                        <span className="font-bold tracking-tight truncate text-xs">{minister.email.toLowerCase()}</span>
                                     </div>
                                 )}
                             </div>
@@ -157,17 +147,15 @@ export const GlassmorphismAnnouncements = () => {
 
                         {/* Divider */}
                         {settings.mainChurch?.supervisorName && (
-                            <div className="h-[1px] w-full bg-white/[0.05] my-2" />
+                            <div className="h-[1px] w-full bg-white/[0.05] my-1" />
                         )}
 
                         {/* Supervisor Section */}
                         {settings.mainChurch?.supervisorName && (
-                            <div className={cn(
-                                "w-full flex flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] rounded-[2rem] p-4 flex-1 shadow-xl relative overflow-hidden group/supervisor"
-                            )}>
-                                <div className="relative w-32 h-40 mb-3">
+                            <div className="w-full flex flex-col items-center justify-center relative overflow-hidden group/supervisor">
+                                <div className="relative w-36 h-36 mb-4">
                                     <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-0 group-hover/supervisor:opacity-100 transition-opacity duration-700" />
-                                    <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/supervisor:scale-105">
+                                    <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/supervisor:scale-105 aspect-square">
                                         {settings.mainChurch.supervisorAvatar ? (
                                             <img src={settings.mainChurch.supervisorAvatar} className="w-full h-full object-cover" alt="Supervisor" />
                                         ) : (
@@ -182,13 +170,13 @@ export const GlassmorphismAnnouncements = () => {
                                     Supervisor de Distrito
                                 </div>
 
-                                <h2 className="text-lg font-black text-white italic tracking-tight uppercase leading-none mb-3 text-center px-4">
+                                <h2 className="text-xl font-black text-white italic tracking-tight uppercase leading-none mb-3 text-center px-4">
                                     {settings.mainChurch.supervisorName}
                                 </h2>
 
                                 <div className="w-full space-y-2 pt-3 border-t border-white/5">
                                     {settings.mainChurch.supervisorPhone && (
-                                        <div className="flex items-center gap-4 text-white/60">
+                                        <div className="flex items-center gap-4 text-white/60 justify-center">
                                             <div className="p-2 bg-white/10 rounded-xl group-hover/supervisor:bg-blue-500/20 transition-colors">
                                                 <Phone className="w-4 h-4" />
                                             </div>
@@ -196,7 +184,7 @@ export const GlassmorphismAnnouncements = () => {
                                         </div>
                                     )}
                                     {settings.mainChurch.supervisorEmail && (
-                                        <div className="flex items-center gap-4 text-white/30">
+                                        <div className="flex items-center gap-4 text-white/30 justify-center">
                                             <div className="p-2 bg-white/10 rounded-xl group-hover/supervisor:bg-blue-500/20 transition-colors">
                                                 <Mail className="w-4 h-4" />
                                             </div>

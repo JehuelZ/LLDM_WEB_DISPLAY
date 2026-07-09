@@ -134,22 +134,13 @@ export function NeonForgeAnnouncements() {
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex flex-col rounded-2xl overflow-hidden h-full gap-4 relative"
-                        style={{
-                            background: T.card,
-                            border: `1px solid ${T.accent}40`,
-                            boxShadow: `0 0 30px ${T.accentGlow}`,
-                        }}
+                        className="flex flex-col h-full gap-8 relative items-center justify-center w-full"
                     >
-                        {/* Top glow bar */}
-                        <div className="h-[2px] shrink-0"
-                            style={{ background: `linear-gradient(to right, ${T.secondary}, ${T.accent})` }} />
-
                         {/* Minister Section */}
                         <div className="flex flex-col items-center w-full">
                             {/* Avatar */}
-                            <div className={cn("flex flex-col items-center px-5", settings.mainChurch?.supervisorName ? "pt-4 pb-2" : "pt-8 pb-4")}>
-                                <div className={cn("rounded-2xl overflow-hidden flex items-center justify-center", settings.mainChurch?.supervisorName ? "w-20 h-20" : "w-28 h-28")}
+                            <div className="flex flex-col items-center w-full mb-3">
+                                <div className={cn("rounded-2xl overflow-hidden flex items-center justify-center aspect-square", settings.mainChurch?.supervisorName ? "w-36 h-36" : "w-44 h-44")}
                                     style={{
                                         border: `2px solid ${T.accent}50`,
                                         boxShadow: `0 0 30px ${T.accent}20`,
@@ -162,23 +153,23 @@ export function NeonForgeAnnouncements() {
                                 </div>
                                 <div className="mt-2 text-center">
                                     <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>{minister.role || 'Ministro Local'}</span>
-                                    <p className={cn("font-black mt-0.5 leading-tight uppercase italic", settings.mainChurch?.supervisorName ? "text-sm" : "text-xl")} style={{ color: minister.name === 'Por asignar' ? T.textMuted : T.white }}>
+                                    <p className={cn("font-black mt-0.5 leading-tight uppercase italic", settings.mainChurch?.supervisorName ? "text-base" : "text-xl")} style={{ color: minister.name === 'Por asignar' ? T.textMuted : T.white }}>
                                         {minister.name}
                                     </p>
                                 </div>
                             </div>
 
                             {/* Contact */}
-                            <div className={cn("flex flex-col gap-2.5 px-5 w-full", settings.mainChurch?.supervisorName ? "pb-2 pt-1 gap-1.5" : "p-5")}>
+                            <div className="flex flex-col gap-1.5 w-full">
                                 {minister.phone && minister.name !== 'Por asignar' && (
-                                    <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
+                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
                                         style={{ background: T.bg, border: `1px solid ${T.border}` }}>
                                         <Phone className="w-3 h-3 flex-shrink-0" style={{ color: T.accent }} />
                                         <span className="text-[10px] font-medium truncate" style={{ color: T.textSecondary }}>{minister.phone}</span>
                                     </div>
                                 )}
                                 {minister.email && minister.name !== 'Por asignar' && (
-                                    <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
+                                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl"
                                         style={{ background: T.bg, border: `1px solid ${T.border}` }}>
                                         <Mail className="w-3 h-3 flex-shrink-0" style={{ color: T.accent }} />
                                         <span className="text-[9px] font-medium truncate" style={{ color: T.textSecondary }}>{minister.email.toLowerCase()}</span>
@@ -189,14 +180,14 @@ export function NeonForgeAnnouncements() {
 
                         {/* Divider */}
                         {settings.mainChurch?.supervisorName && (
-                            <div className="h-px mx-5" style={{ background: T.border }} />
+                            <div className="h-px w-full" style={{ background: T.border }} />
                         )}
 
                         {/* Supervisor Section */}
                         {settings.mainChurch?.supervisorName && (
                             <div className="flex flex-col items-center w-full">
-                                <div className="flex flex-col items-center px-5 pt-2 pb-2">
-                                    <div className="w-20 h-20 rounded-2xl overflow-hidden flex items-center justify-center"
+                                <div className="flex flex-col items-center w-full mb-3">
+                                    <div className="w-36 h-36 rounded-2xl overflow-hidden flex items-center justify-center aspect-square"
                                         style={{
                                             border: `2px solid ${T.accent}50`,
                                             boxShadow: `0 0 30px ${T.accent}20`,
@@ -209,13 +200,13 @@ export function NeonForgeAnnouncements() {
                                     </div>
                                     <div className="mt-2 text-center">
                                         <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Supervisor de Distrito</span>
-                                        <p className="text-sm font-black mt-0.5 leading-tight uppercase italic" style={{ color: T.white }}>
+                                        <p className="text-base font-black mt-0.5 leading-tight uppercase italic" style={{ color: T.white }}>
                                             {settings.mainChurch.supervisorName}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-1.5 px-5 pb-4 pt-1 w-full">
+                                <div className="flex flex-col gap-1.5 w-full">
                                     {settings.mainChurch.supervisorPhone && (
                                         <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
                                             style={{ background: T.bg, border: `1px solid ${T.border}` }}>
@@ -236,8 +227,6 @@ export function NeonForgeAnnouncements() {
                     </motion.div>
                 </div>
             )}
-
-            {/* Footer watermark removed */}
         </div>
     );
 }
