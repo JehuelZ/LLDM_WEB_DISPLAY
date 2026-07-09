@@ -85,56 +85,130 @@ export const GlassmorphismAnnouncements = () => {
 
             {/* Right Pillar: Minister Info */}
             {settings.showMinisterOnDisplay && (
-                <div className="w-[450px] shrink-0 flex flex-col h-full">
+                <div className="w-[450px] shrink-0 flex flex-col h-full gap-6 justify-center pb-6">
+                    {/* Minister Card */}
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex-1 flex flex-col items-center pt-12 pb-16 px-10 rounded-[4rem] border border-white/[0.05] bg-black/20 shadow-2xl relative overflow-hidden"
+                        className={cn(
+                            "flex flex-col items-center border border-white/[0.05] bg-black/20 shadow-2xl relative overflow-hidden",
+                            settings.mainChurch?.supervisorName ? "flex-1 rounded-[2.5rem] p-6 justify-center" : "flex-1 rounded-[4rem] pt-12 pb-16 px-10"
+                        )}
                     >
                         {/* Internal Card Frame */}
-                        <div className="w-full flex-1 flex flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] rounded-[3.5rem] p-8 shadow-xl relative overflow-hidden group/minister">
-                            <div className="relative w-64 h-80 mb-10">
+                        <div className={cn(
+                            "w-full flex flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] shadow-xl relative overflow-hidden group/minister",
+                            settings.mainChurch?.supervisorName ? "rounded-[2rem] p-4 flex-1" : "rounded-[3.5rem] p-8 flex-1"
+                        )}>
+                            <div className={cn(
+                                "relative mb-4",
+                                settings.mainChurch?.supervisorName ? "w-32 h-40 mb-3" : "w-64 h-80 mb-10"
+                            )}>
                                 <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-0 group-hover/minister:opacity-100 transition-opacity duration-700" />
-                                <div className="w-full h-full rounded-[3rem] overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/minister:scale-105">
+                                <div className={cn(
+                                    "w-full h-full overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/minister:scale-105",
+                                    settings.mainChurch?.supervisorName ? "rounded-[1.5rem]" : "rounded-[3rem]"
+                                )}>
                                     {minister.avatar ? (
                                         <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
                                     ) : (
                                         <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                                            <Church className="w-24 h-24 text-white/10" />
+                                            <Church className={settings.mainChurch?.supervisorName ? "w-10 h-10 text-white/10" : "w-24 h-24 text-white/10"} />
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="px-6 py-2 rounded-full border border-blue-500/30 bg-blue-500/10 mb-6 font-black text-[10px] uppercase tracking-[0.3em] text-blue-400">
+                            <div className={cn(
+                                "rounded-full border border-blue-500/30 bg-blue-500/10 font-black uppercase text-blue-400 text-center",
+                                settings.mainChurch?.supervisorName ? "px-3 py-1 text-[8px] tracking-[0.2em] mb-2" : "px-6 py-2 text-[10px] tracking-[0.3em] mb-6"
+                            )}>
                                 {minister.role || 'MINISTRO LOCAL'}
                             </div>
 
-                            <h2 className="text-2xl font-black text-white italic tracking-tight uppercase leading-none mb-6 text-center px-6">
+                            <h2 className={cn(
+                                "font-black text-white italic tracking-tight uppercase leading-none text-center px-4",
+                                settings.mainChurch?.supervisorName ? "text-lg mb-3" : "text-2xl mb-6"
+                            )}>
                                 {minister.name}
                             </h2>
 
-                            <div className="w-full space-y-4 pt-8 border-t border-white/5">
-                                <div className="flex items-center gap-4 text-white/60">
-                                    <div className="p-3 bg-white/10 rounded-2xl group-hover/minister:bg-blue-500/20 transition-colors">
-                                        <Phone className="w-6 h-6" />
+                            <div className={cn(
+                                "w-full border-t border-white/5",
+                                settings.mainChurch?.supervisorName ? "space-y-2 pt-3" : "space-y-4 pt-8"
+                            )}>
+                                {minister.phone && (
+                                    <div className="flex items-center gap-4 text-white/60">
+                                        <div className={cn("bg-white/10 rounded-2xl group-hover/minister:bg-blue-500/20 transition-colors", settings.mainChurch?.supervisorName ? "p-2 rounded-xl" : "p-3")}>
+                                            <Phone className={settings.mainChurch?.supervisorName ? "w-4 h-4" : "w-6 h-6"} />
+                                        </div>
+                                        <span className={cn("font-black italic tracking-widest", settings.mainChurch?.supervisorName ? "text-sm" : "text-xl")}>{minister.phone}</span>
                                     </div>
-                                    <span className="text-xl font-black italic tracking-widest">{minister.phone}</span>
-                                </div>
-                                <div className="flex items-center gap-4 text-white/30">
-                                    <div className="p-3 bg-white/10 rounded-2xl group-hover/minister:bg-blue-500/20 transition-colors">
-                                        <Mail className="w-6 h-6" />
+                                )}
+                                {minister.email && (
+                                    <div className="flex items-center gap-4 text-white/30">
+                                        <div className={cn("bg-white/10 rounded-2xl group-hover/minister:bg-blue-500/20 transition-colors", settings.mainChurch?.supervisorName ? "p-2 rounded-xl" : "p-3")}>
+                                            <Mail className={settings.mainChurch?.supervisorName ? "w-4 h-4" : "w-6 h-6"} />
+                                        </div>
+                                        <span className={cn("font-bold tracking-tight truncate", settings.mainChurch?.supervisorName ? "text-xs" : "text-lg")}>{minister.email.toLowerCase()}</span>
                                     </div>
-                                    <span className="text-lg font-bold tracking-tight truncate">{minister.email}</span>
-                                </div>
+                                )}
                             </div>
                         </div>
-
-                        <div className="mt-8 flex items-center gap-3 opacity-20 uppercase tracking-[0.5em] text-[10px] font-black italic">
-                            <User className="w-4 h-4" />
-                            <span>Contacto</span>
-                        </div>
                     </motion.div>
+
+                    {/* Supervisor Card */}
+                    {settings.mainChurch?.supervisorName && (
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.15 }}
+                            className="flex flex-col items-center border border-white/[0.05] bg-black/20 shadow-2xl relative overflow-hidden flex-1 rounded-[2.5rem] p-6 justify-center"
+                        >
+                            {/* Internal Card Frame */}
+                            <div className="w-full flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] rounded-[2rem] p-4 flex-1 shadow-xl relative overflow-hidden group/supervisor">
+                                <div className="relative w-32 h-40 mb-3">
+                                    <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-0 group-hover/supervisor:opacity-100 transition-opacity duration-700" />
+                                    <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/supervisor:scale-105">
+                                        {settings.mainChurch.supervisorAvatar ? (
+                                            <img src={settings.mainChurch.supervisorAvatar} className="w-full h-full object-cover" alt="Supervisor" />
+                                        ) : (
+                                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                                                <Church className="w-10 h-10 text-white/10" />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/10 mb-2 font-black text-[8px] uppercase tracking-[0.2em] text-blue-400 text-center">
+                                    Supervisor de Distrito
+                                </div>
+
+                                <h2 className="text-lg font-black text-white italic tracking-tight uppercase leading-none mb-3 text-center px-4">
+                                    {settings.mainChurch.supervisorName}
+                                </h2>
+
+                                <div className="w-full space-y-2 pt-3 border-t border-white/5">
+                                    {settings.mainChurch.supervisorPhone && (
+                                        <div className="flex items-center gap-4 text-white/60">
+                                            <div className="p-2 bg-white/10 rounded-xl group-hover/supervisor:bg-blue-500/20 transition-colors">
+                                                <Phone className="w-4 h-4" />
+                                            </div>
+                                            <span className="text-sm font-black italic tracking-widest">{settings.mainChurch.supervisorPhone}</span>
+                                        </div>
+                                    )}
+                                    {settings.mainChurch.supervisorEmail && (
+                                        <div className="flex items-center gap-4 text-white/30">
+                                            <div className="p-2 bg-white/10 rounded-xl group-hover/supervisor:bg-blue-500/20 transition-colors">
+                                                <Mail className="w-4 h-4" />
+                                            </div>
+                                            <span className="text-xs font-bold tracking-tight truncate">{settings.mainChurch.supervisorEmail.toLowerCase()}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
             )}
         </div>
