@@ -49,8 +49,10 @@ export async function compressImage(file: File, maxWidth = 1000, maxHeight = 100
         return file;
     }
 
-    // If the file is already small, don't bother
-    if (file.size < 200 * 1024) return file;
+    // If the file is already a small WebP, don't bother compressing again
+    if (file.type === 'image/webp' && file.size < 100 * 1024) {
+        return file;
+    }
 
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -82,27 +84,23 @@ export async function compressImage(file: File, maxWidth = 1000, maxHeight = 100
 
                 canvas.toBlob((blob) => {
                     if (blob) {
-                        // Maintain the original file extension if possible, or use the appropriate one
                         let newName = file.name;
-                        const targetType = file.type || 'image/jpeg';
-                        
-                        // If we are forcing a conversion technically, but here we want to preserve type
-                        // Only change extension if it's not a common image extension
-                        const hasExt = /\.(jpg|jpeg|png|webp|svg)$/i.test(newName);
-                        if (!hasExt) {
-                            const ext = targetType.split('/')[1] || 'jpg';
-                            newName = `${newName}.${ext}`;
+                        const dotIndex = newName.lastIndexOf('.');
+                        if (dotIndex !== -1) {
+                            newName = newName.substring(0, dotIndex) + '.webp';
+                        } else {
+                            newName = newName + '.webp';
                         }
 
                         const newFile = new File([blob], newName, {
-                            type: targetType,
+                            type: 'image/webp',
                             lastModified: Date.now(),
                         });
                         resolve(newFile);
                     } else {
                         resolve(file); // Fallback to original
                     }
-                }, file.type || 'image/jpeg', quality);
+                }, 'image/webp', quality);
             };
             img.onerror = () => resolve(file);
         };
