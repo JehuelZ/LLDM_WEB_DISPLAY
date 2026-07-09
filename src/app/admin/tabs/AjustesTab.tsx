@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
     Sun, Type, Monitor, Upload, Save, User, Mail, Phone, Camera, 
     Church, Sparkles, Moon, BookOpen, Sunrise, Flame, Radio, 
-    ChevronUp, ChevronDown, ChevronLeft, ChevronRight, XCircle, Plus, Trash
+    ChevronUp, ChevronDown, ChevronLeft, ChevronRight, XCircle, Plus, Trash,
+    SunMoon, Layers, Tv, AtSign, UserCircle2, CheckCircle2, Shield, Palette, Check
 } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -56,41 +57,83 @@ export const AjustesTab = ({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="grid grid-cols-1 md:grid-cols-12 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8"
         >
-            <div className="col-span-1 md:col-span-12">
+            <div className="col-span-1 lg:col-span-12">
                 <h2 className="text-4xl font-black capitalize tracking-tighter mb-8 text-[var(--tactile-text)]">Preferencias del <span className="text-primary">Sistema</span></h2>
             </div>
 
-            <div className="col-span-1 md:col-span-6 space-y-8">
+            {/* COLUMNA 1: APARIENCIA VISUAL & JERARQUÍA Y OBRAS */}
+            <div className="col-span-1 lg:col-span-4 space-y-6">
                 <TactileGlassCard title="APARIENCIA VISUAL">
-                    <div className="space-y-6">
-                        <TactileSelect
-                            label="MODO DE INTERFAZ"
-                            value={settings.themeMode}
-                            onChange={(val: any) => saveSettingsToCloud({ themeMode: val })}
-                            options={[
-                                { value: 'light', label: 'Modo Claro' },
-                                { value: 'dark', label: 'Modo Oscuro' },
-                                { value: 'system', label: 'Sincronizar con Sistema' },
-                            ]}
-                            icon={Sun}
-                        />
+                    <div className="space-y-5">
+                        {/* ── Modo de Interfaz: tarjetas neón compactas ── */}
+                        <div className="space-y-2">
+                            <label className="text-[9px] font-black tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
+                                <SunMoon className="w-3 h-3" /> MODO DE INTERFAZ
+                            </label>
+                            <div className="grid grid-cols-3 gap-2">
+                                {([
+                                    { value: 'light',  label: 'Claro',   icon: Sun },
+                                    { value: 'dark',   label: 'Oscuro',  icon: Moon },
+                                    { value: 'system', label: 'Sistema', icon: Monitor },
+                                ] as const).map((opt) => {
+                                    const active = (settings.themeMode || 'dark') === opt.value;
+                                    return (
+                                        <button
+                                            key={opt.value}
+                                            onClick={() => saveSettingsToCloud({ themeMode: opt.value })}
+                                            className={cn(
+                                                "flex flex-col items-center gap-2 py-3 px-2 rounded-lg border-2 transition-all duration-300 group",
+                                                active
+                                                    ? "bg-[var(--tactile-inner-bg)] border-primary text-primary shadow-[0_0_12px_rgba(var(--primary-rgb),0.35),inset_0_0_8px_rgba(var(--primary-rgb),0.04)]"
+                                                    : "bg-[var(--tactile-inner-bg)] border-[var(--tactile-border)] text-muted-foreground hover:border-[var(--tactile-border-strong)] hover:text-foreground"
+                                            )}
+                                        >
+                                            <div className={cn(
+                                                "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300",
+                                                active
+                                                    ? "bg-primary/15"
+                                                    : "bg-[var(--tactile-bg)] group-hover:bg-[var(--tactile-item-hover)]"
+                                            )}>
+                                                <opt.icon className={cn("w-4 h-4 transition-all duration-300", active && "drop-shadow-[0_0_4px_currentColor]")} />
+                                            </div>
+                                            <span className={cn("text-[9px] font-black tracking-[0.12em] uppercase transition-colors", active && "drop-shadow-[0_0_4px_currentColor]")}>{opt.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
 
-                        <div className="space-y-4">
-                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">COLOR PRIMARIO</label>
-                            <div className="grid grid-cols-5 gap-3">
-                                {['#3b82f6', '#10b981', '#10b981', '#ef4444', '#8b5cf6'].map(color => (
-                                    <button
-                                        key={color}
-                                        onClick={() => saveSettingsToCloud({ primaryColor: color })}
-                                        className={cn(
-                                            "aspect-square rounded-md border-4 transition-all scale-90 hover:scale-100 shadow-lg",
-                                            settings.primaryColor === color ? "border-white shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-100" : "border-transparent"
-                                        )}
-                                        style={{ backgroundColor: color }}
-                                    />
-                                ))}
+                        {/* ── Color Primario: chips circulares ── */}
+                        <div className="space-y-2">
+                            <label className="text-[9px] font-black tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
+                                <Palette className="w-3 h-3" /> COLOR PRIMARIO
+                            </label>
+                            <div className="flex items-center gap-2 pl-1">
+                                {[
+                                    { hex: '#3b82f6', name: 'Zafiro' },
+                                    { hex: '#10b981', name: 'Esmeralda' },
+                                    { hex: '#f59e0b', name: 'Ámbar' },
+                                    { hex: '#ef4444', name: 'Rojo' },
+                                    { hex: '#8b5cf6', name: 'Violeta' },
+                                ].map(({ hex, name }) => {
+                                    const active = settings.primaryColor === hex;
+                                    return (
+                                        <button
+                                            key={hex}
+                                            title={name}
+                                            onClick={() => saveSettingsToCloud({ primaryColor: hex })}
+                                            className={cn(
+                                                "w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 shadow-md",
+                                                active ? "ring-2 ring-white ring-offset-2 ring-offset-[var(--tactile-bg)] scale-110" : "opacity-70 hover:opacity-100 hover:scale-105"
+                                            )}
+                                            style={{ backgroundColor: hex }}
+                                        >
+                                            {active && <Check className="w-3.5 h-3.5 text-white" strokeWidth={3} />}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
@@ -105,17 +148,43 @@ export const AjustesTab = ({
                             icon={Type}
                         />
 
-                        <TactileSelect
-                            label="PANEL DE ADMINISTRACIÓN (TEMA)"
-                            value={settings.adminTheme || 'classic'}
-                            onChange={(val: any) => saveSettingsToCloud({ adminTheme: val })}
-                            options={[
-                                { value: 'primitivo', label: 'Plantilla Primitiva (Industrial)' },
-                                { value: 'classic', label: 'Plantilla Clásica (Tactile)' },
-                                { value: 'luna', label: 'Plantilla Luna (Premium)' },
-                            ]}
-                            icon={Monitor}
-                        />
+                        {/* ── Tema del Panel Admin: tarjetas neón compactas ── */}
+                        <div className="space-y-2">
+                            <label className="text-[9px] font-black tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
+                                <Layers className="w-3 h-3" /> TEMA DEL PANEL
+                            </label>
+                            <div className="grid grid-cols-3 gap-2">
+                                {([
+                                    { value: 'primitivo', label: 'Industrial', icon: Layers },
+                                    { value: 'classic',   label: 'Tactile',    icon: Monitor },
+                                    { value: 'luna',      label: 'Premium',    icon: Tv },
+                                ] as const).map((opt) => {
+                                    const active = (settings.adminTheme || 'classic') === opt.value;
+                                    return (
+                                        <button
+                                            key={opt.value}
+                                            onClick={() => saveSettingsToCloud({ adminTheme: opt.value })}
+                                            className={cn(
+                                                "flex flex-col items-center gap-2 py-3 px-2 rounded-lg border-2 transition-all duration-300 group",
+                                                active
+                                                    ? "bg-[var(--tactile-inner-bg)] border-primary text-primary shadow-[0_0_12px_rgba(var(--primary-rgb),0.35),inset_0_0_8px_rgba(var(--primary-rgb),0.04)]"
+                                                    : "bg-[var(--tactile-inner-bg)] border-[var(--tactile-border)] text-muted-foreground hover:border-[var(--tactile-border-strong)] hover:text-foreground"
+                                            )}
+                                        >
+                                            <div className={cn(
+                                                "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300",
+                                                active
+                                                    ? "bg-primary/15"
+                                                    : "bg-[var(--tactile-bg)] group-hover:bg-[var(--tactile-item-hover)]"
+                                            )}>
+                                                <opt.icon className={cn("w-4 h-4 transition-all duration-300", active && "drop-shadow-[0_0_4px_currentColor]")} />
+                                            </div>
+                                            <span className={cn("text-[9px] font-black tracking-[0.12em] uppercase transition-colors", active && "drop-shadow-[0_0_4px_currentColor]")}>{opt.label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
 
                         <div className="space-y-4 pt-2">
                             <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">PESO Y GROSOR</label>
@@ -236,6 +305,259 @@ export const AjustesTab = ({
                     </div>
                 </TactileGlassCard>
 
+                <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
+                    <div className="space-y-6">
+                        <div className="p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 block">IGLESIA PRINCIPAL</label>
+                            <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                    {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
+                                        <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        <Church className="w-8 h-8 text-muted-foreground opacity-20" />
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-black uppercase truncate text-foreground">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</h4>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1 truncate">
+                                        {settings.mainChurch?.responsibleName || 'Sin responsable asignado'}
+                                    </p>
+                                </div>
+                                <button 
+                                    onClick={() => setEditingCongregation({ 
+                                        info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' } 
+                                    })}
+                                    className="px-4 h-11 bg-primary/20 text-primary rounded-md border border-primary/30 hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest"
+                                >
+                                    ADMINISTRAR
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="pt-4 border-t border-[var(--tactile-border)]">
+                            <div className="flex items-center justify-between mb-6">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">IGLESIAS / OBRAS DEPENDIENTES</label>
+                                <button 
+                                    onClick={() => setEditingCongregation({ 
+                                        info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
+                                        index: -1 // New mission
+                                    })}
+                                    className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest"
+                                >
+                                    <Plus className="w-3 h-3" /> AGREGAR OBRA
+                                </button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 gap-4">
+                                {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
+                                    const m = typeof mission === 'string' 
+                                        ? (mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission }) 
+                                        : mission;
+                                    return (
+                                        <div key={m.id || idx} className="group relative p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md hover:border-primary/50 transition-all">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                                    {m.imageUrl ? (
+                                                        <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
+                                                    ) : (
+                                                        <div className="text-[10px] font-black text-muted-foreground opacity-20">{m.name.charAt(0)}</div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="text-[11px] font-black uppercase truncate text-foreground">{m.name}</h4>
+                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase opacity-60 truncate">
+                                                        {m.responsibleName || 'Sin responsable'}
+                                                    </p>
+                                                </div>
+                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button 
+                                                        onClick={() => setEditingCongregation({ info: m, index: idx })}
+                                                        className="w-10 h-10 bg-primary/10 text-primary rounded-md border border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center justify-center"
+                                                    >
+                                                        <Save className="w-4 h-4 scale-75" />
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => {
+                                                            const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
+                                                            setSettings({ ...settings, missions: filtered });
+                                                            saveSettingsToCloud({ missions: filtered });
+                                                            showNotification('Obra eliminada correctamente.', 'success');
+                                                        }}
+                                                        className="w-10 h-10 bg-rose-500/10 text-rose-500 rounded-md border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
+                                                    >
+                                                        <Trash className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                                {(!settings.missions || settings.missions.length === 0) && (
+                                    <div className="py-8 text-center border-2 border-dashed border-[var(--tactile-border)] rounded-md">
+                                        <p className="text-[10px] font-bold uppercase text-muted-foreground opacity-40">No hay misiones configuradas</p>
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-[8px] text-muted-foreground mt-6 leading-relaxed">
+                                * Las obras creadas permiten segmentar la asistencia y organizar la membresía por ubicación geográfica o administrativa.
+                            </p>
+                        </div>
+                    </div>
+                </TactileGlassCard>
+            </div>
+
+            {/* COLUMNA 2: MINISTRO RESPONSABLE & SISTEMA VISUAL DEL DISPLAY (PIZARRA) */}
+            <div className="col-span-1 lg:col-span-4 space-y-6">
+                <TactileGlassCard title="MINISTRO RESPONSABLE">
+                    <div className="space-y-5">
+                        {/* ── Avatar con anillo de degradado ── */}
+                        <div className="flex flex-col items-center gap-2 pt-2">
+                            <div
+                                className="relative cursor-pointer group"
+                                onClick={() => document.getElementById('minister-avatar-upload')?.click()}
+                            >
+                                {/* Anillo de degradado animado */}
+                                <div className="w-[88px] h-[88px] rounded-full p-[2px] bg-gradient-to-br from-primary via-primary/40 to-transparent animate-[spin_6s_linear_infinite]" />
+                                <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[var(--tactile-bg)]">
+                                    <img
+                                        src={settings.ministerAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(settings.ministerName || 'M')}&background=random&bold=true&size=128`}
+                                        className="w-full h-full object-cover rounded-full"
+                                        alt="Ministro"
+                                    />
+                                    <div className="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Camera className="w-6 h-6 text-white" />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Badge de rol */}
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                                <Shield className="w-3 h-3 text-primary" />
+                                <span className="text-[9px] font-black tracking-widest uppercase text-primary">Pastor Principal</span>
+                            </div>
+                            <button
+                                onClick={() => document.getElementById('minister-avatar-upload')?.click()}
+                                className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                            >
+                                Cambiar fotografía
+                            </button>
+                            <input
+                                type="file"
+                                id="minister-avatar-upload"
+                                className="hidden"
+                                accept="image/*,.svg"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        setIsSaving(true);
+                                        const url = await uploadAvatar(`minister-${Date.now()}`, file);
+                                        if (url) {
+                                            await saveSettingsToCloud({ ministerAvatar: url });
+                                            setMinister({ ...minister, avatar: url });
+                                            showNotification("Avatar ministerial actualizado correctamente.", 'success');
+                                        }
+                                        setIsSaving(false);
+                                    }
+                                }}
+                            />
+                        </div>
+
+                        {/* ── Campos de datos con iconos modernos ── */}
+                        <div className="space-y-3">
+                            <TactileInput
+                                label="NOMBRE"
+                                value={settings.ministerName || ''}
+                                onChange={(e: any) => setSettings({ ...settings, ministerName: e.target.value })}
+                                icon={UserCircle2}
+                            />
+                            <TactileInput
+                                label="EMAIL"
+                                value={settings.ministerEmail || ''}
+                                onChange={(e: any) => setSettings({ ...settings, ministerEmail: e.target.value })}
+                                icon={AtSign}
+                            />
+                            <TactileInput
+                                label="TELÉFONO"
+                                value={settings.ministerPhone || ''}
+                                onChange={(e: any) => setSettings({ ...settings, ministerPhone: e.target.value })}
+                                icon={Phone}
+                            />
+                        </div>
+
+                        {/* ── Botón guardar con gradiente ── */}
+                        <button
+                            onClick={async () => {
+                                setIsSaving(true);
+                                await saveSettingsToCloud({
+                                    ministerName: settings.ministerName,
+                                    ministerEmail: settings.ministerEmail,
+                                    ministerPhone: settings.ministerPhone
+                                });
+                                setMinister({
+                                    ...minister,
+                                    name: settings.ministerName,
+                                    email: settings.ministerEmail,
+                                    phone: settings.ministerPhone
+                                });
+                                showNotification("Datos del ministro actualizados exitosamente.", 'success');
+                                setIsSaving(false);
+                            }}
+                            className="w-full h-11 rounded-lg flex items-center justify-center gap-2 text-[11px] font-black tracking-widest text-white transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg"
+                            style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)' }}
+                        >
+                            {isSaving
+                                ? <><span className="animate-spin w-4 h-4 border-2 border-white/40 border-t-white rounded-full" /> GUARDANDO...</>
+                                : <><CheckCircle2 className="w-4 h-4" /> GUARDAR DATOS</>
+                            }
+                        </button>
+                    </div>
+                </TactileGlassCard>
+
+                <TactileGlassCard title="SISTEMA VISUAL DEL DISPLAY (PIZARRA)">
+                    <div className="space-y-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {[
+                                { id: 'iglesia', label: 'Carbón & Moka', icon: BookOpen, desc: 'Relieves neumórficos en tonos moka y carbón mate.' },
+                                { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Efectos de vidrio y modernismo.' },
+                                { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia y colores sólidos.' },
+                                { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Resplandores suaves nocturnos.' },
+                                { id: 'neon', label: 'Neon Forge', icon: Flame, desc: 'Futurista y de alto impacto.' },
+                                { id: 'luna', label: 'Luna Premium', icon: Sunrise, desc: 'Diseño industrial robusto.' },
+                            ].map((theme) => {
+                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id || 
+                                    (theme.id === 'iglesia' && settings.displayTemplate === 'primitivo');
+                                return (
+                                    <button
+                                        key={theme.id}
+                                        onClick={() => saveSettingsToCloud({ displayTemplate: theme.id as any })}
+                                        className={cn(
+                                            "group relative p-4 rounded-md border transition-all duration-500 text-left overflow-hidden",
+                                            isActive 
+                                                ? "bg-primary/20 border-primary/50" 
+                                                : settings.themeMode === 'light'
+                                                    ? "bg-black/[0.03] border-slate-200 hover:bg-black/[0.08]"
+                                                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.08]"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className={cn(
+                                                "p-2 rounded-md transition-colors",
+                                                isActive ? "bg-primary text-white" : "bg-white/[0.08] text-muted-foreground group-hover:bg-white/20"
+                                            )}>
+                                                <theme.icon className="w-4 h-4" />
+                                            </div>
+                                            <span className={cn("text-xs font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}>{theme.label}</span>
+                                        </div>
+                                        <p className="text-[8px] text-muted-foreground/60 leading-relaxed group-hover:text-muted-foreground/80 transition-colors">{theme.desc}</p>
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </TactileGlassCard>
+            </div>
+
+            {/* COLUMNA 3: FONDO DE PROYECCIÓN & SERVICIOS INTEGRADOS (CLIMA) & BOTÓN GUARDAR */}
+            <div className="col-span-1 lg:col-span-4 space-y-6">
                 <TactileGlassCard title="FONDO DE PROYECCIÓN">
                     <div className="space-y-6">
                         <TactileSelect
@@ -461,6 +783,7 @@ export const AjustesTab = ({
                     </div>
                 </TactileGlassCard>
 
+                {/* BOTÓN GUARDAR PREFERENCIAS */}
                 <button
                     onClick={async () => {
                         setIsSaving(true);
@@ -502,263 +825,34 @@ export const AjustesTab = ({
                 </button>
             </div>
 
-            <div className="col-span-1 md:col-span-6 space-y-6">
-                <TactileGlassCard title="MINISTRO RESPONSABLE">
-                    <div className="space-y-6">
-                        <div className="flex flex-col items-center py-4">
-                            <div
-                                className="w-32 h-32 rounded-full border-4 border-primary/30 p-1 relative group cursor-pointer"
-                                onClick={() => document.getElementById('minister-avatar-upload')?.click()}
-                            >
-                                <img src={settings.ministerAvatar || `https://ui-avatars.com/api/?name=${settings.ministerName || 'Ministro'}&background=random`} className="w-full h-full object-cover rounded-full" alt="Ministro" />
-                                <div className="absolute inset-0 bg-black/80 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <Camera className="w-8 h-8 text-white" />
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => document.getElementById('minister-avatar-upload')?.click()}
-                                className="text-[10px] font-black capitalize text-primary mt-4 tracking-widest hover:underline"
-                            >
-                                Cambiar Fotografía
-                            </button>
-                            <input
-                                type="file"
-                                id="minister-avatar-upload"
-                                className="hidden"
-                                accept="image/*,.svg"
-                                onChange={async (e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                        setIsSaving(true);
-                                        const url = await uploadAvatar(`minister-${Date.now()}`, file);
-                                        if (url) {
-                                            await saveSettingsToCloud({ ministerAvatar: url });
-                                            setMinister({ ...minister, avatar: url });
-                                            showNotification("Avatar ministerial actualizado correctamente.", 'success');
-                                        }
-                                        setIsSaving(false);
-                                    }
-                                }}
-                            />
-                        </div>
-
-                        <TactileInput
-                            label="NOMBRE DEL MINISTRO"
-                            value={settings.ministerName || ''}
-                            onChange={(e: any) => setSettings({ ...settings, ministerName: e.target.value })}
-                            icon={User}
-                        />
-                        <TactileInput
-                            label="EMAIL DE CONTACTO"
-                            value={settings.ministerEmail || ''}
-                            onChange={(e: any) => setSettings({ ...settings, ministerEmail: e.target.value })}
-                            icon={Mail}
-                        />
-                        <TactileInput
-                            label="TELÉFONO"
-                            value={settings.ministerPhone || ''}
-                            onChange={(e: any) => setSettings({ ...settings, ministerPhone: e.target.value })}
-                            icon={Phone}
-                        />
-
-                        <button
-                            onClick={async () => {
-                                setIsSaving(true);
-                                await saveSettingsToCloud({
-                                    ministerName: settings.ministerName,
-                                    ministerEmail: settings.ministerEmail,
-                                    ministerPhone: settings.ministerPhone
-                                });
-                                setMinister({
-                                    ...minister,
-                                    name: settings.ministerName,
-                                    email: settings.ministerEmail,
-                                    phone: settings.ministerPhone
-                                });
-                                showNotification("Datos del ministro actualizados exitosamente.", 'success');
-                                setIsSaving(false);
-                            }}
-                            className="w-full h-12 bg-orange-500 text-white rounded-md flex items-center justify-center gap-3 font-black capitalize tracking-widest hover:bg-orange-600 transition-colors"
-                        >
-                            <Save className="w-4 h-4" /> {isSaving ? 'Guardando...' : 'Guardar Datos'}
-                        </button>
-                    </div>
-                </TactileGlassCard>
-
-                <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
-                    <div className="space-y-6">
-                        <div className="p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 block">IGLESIA PRINCIPAL</label>
-                            <div className="flex items-center gap-4">
-                                <div className="w-16 h-16 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
-                                    {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
-                                        <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
-                                    ) : (
-                                        <Church className="w-8 h-8 text-muted-foreground opacity-20" />
-                                    )}
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <h4 className="text-sm font-black uppercase truncate text-foreground">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</h4>
-                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1 truncate">
-                                        {settings.mainChurch?.responsibleName || 'Sin responsable asignado'}
-                                    </p>
-                                </div>
-                                <button 
-                                    onClick={() => setEditingCongregation({ 
-                                        info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' } 
-                                    })}
-                                    className="px-4 h-11 bg-primary/20 text-primary rounded-md border border-primary/30 hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest"
-                                >
-                                    ADMINISTRAR
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="pt-4 border-t border-[var(--tactile-border)]">
-                            <div className="flex items-center justify-between mb-6">
-                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">IGLESIAS / OBRAS DEPENDIENTES</label>
-                                <button 
-                                    onClick={() => setEditingCongregation({ 
-                                        info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
-                                        index: -1 // New mission
-                                    })}
-                                    className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest"
-                                >
-                                    <Plus className="w-3 h-3" /> AGREGAR OBRA
-                                </button>
-                            </div>
-                            
-                            <div className="grid grid-cols-1 gap-4">
-                                {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
-                                    const m = typeof mission === 'string' 
-                                        ? (mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission }) 
-                                        : mission;
-                                    return (
-                                        <div key={m.id || idx} className="group relative p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md hover:border-primary/50 transition-all">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
-                                                    {m.imageUrl ? (
-                                                        <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
-                                                    ) : (
-                                                        <div className="text-[10px] font-black text-muted-foreground opacity-20">{m.name.charAt(0)}</div>
-                                                    )}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <h4 className="text-[11px] font-black uppercase truncate text-foreground">{m.name}</h4>
-                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase opacity-60 truncate">
-                                                        {m.responsibleName || 'Sin responsable'}
-                                                    </p>
-                                                </div>
-                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button 
-                                                        onClick={() => setEditingCongregation({ info: m, index: idx })}
-                                                        className="w-10 h-10 bg-primary/10 text-primary rounded-md border border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center justify-center"
-                                                    >
-                                                        <Save className="w-4 h-4 scale-75" />
-                                                    </button>
-                                                    <button 
-                                                        onClick={() => {
-                                                            const filtered = settings.missions.filter((_: any, i: number) => i !== idx);
-                                                            setSettings({ ...settings, missions: filtered });
-                                                            saveSettingsToCloud({ missions: filtered });
-                                                            showNotification('Obra eliminada correctamente.', 'success');
-                                                        }}
-                                                        className="w-10 h-10 bg-rose-500/10 text-rose-500 rounded-md border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
-                                                    >
-                                                        <Trash className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                                {(!settings.missions || settings.missions.length === 0) && (
-                                    <div className="py-8 text-center border-2 border-dashed border-[var(--tactile-border)] rounded-md">
-                                        <p className="text-[10px] font-bold uppercase text-muted-foreground opacity-40">No hay misiones configuradas</p>
-                                    </div>
-                                )}
-                            </div>
-                            <p className="text-[8px] text-muted-foreground mt-6 leading-relaxed">
-                                * Las obras creadas permiten segmentar la asistencia y organizar la membresía por ubicación geográfica o administrativa.
-                            </p>
-                        </div>
-                    </div>
-                </TactileGlassCard>
-
-                {/* MODALS */}
-                {editingCongregation && (
-                    <CongregationEditModal 
-                        isOpen={!!editingCongregation}
-                        congregation={editingCongregation.info}
-                        onClose={() => setEditingCongregation(null)}
-                        members={members}
-                        uploadAvatar={uploadAvatar}
-                        onSave={async (updated) => {
-                            if (updated.id === 'main') {
-                                // Save as main church
-                                await saveSettingsToCloud({ 
-                                    mainChurch: updated,
-                                    mainChurchName: updated.name // Sync legacy field
-                                });
-                                showNotification('Configuración de sede principal actualizada.', 'success');
-                            } else {
-                                // Save as mission
-                                let newMissions = [...(settings.missions || [])];
-                                if (editingCongregation.index === -1) {
-                                    newMissions.push(updated);
-                                } else if (editingCongregation.index !== undefined) {
-                                    newMissions[editingCongregation.index] = updated;
-                                }
-                                await saveSettingsToCloud({ missions: newMissions });
-                                showNotification(`Obra "${updated.name}" guardada.`, 'success');
+            {/* RENDER DE MODALES */}
+            {editingCongregation && (
+                <CongregationEditModal 
+                    isOpen={!!editingCongregation}
+                    congregation={editingCongregation.info}
+                    onClose={() => setEditingCongregation(null)}
+                    members={members}
+                    uploadAvatar={uploadAvatar}
+                    onSave={async (updated) => {
+                        if (updated.id === 'main') {
+                            await saveSettingsToCloud({ 
+                                mainChurch: updated,
+                                mainChurchName: updated.name
+                            });
+                            showNotification('Configuración de sede principal actualizada.', 'success');
+                        } else {
+                            let newMissions = [...(settings.missions || [])];
+                            if (editingCongregation.index === -1) {
+                                newMissions.push(updated);
+                            } else if (editingCongregation.index !== undefined) {
+                                newMissions[editingCongregation.index] = updated;
                             }
-                        }}
-                    />
-                )}
-
-                <TactileGlassCard title="SISTEMA VISUAL DEL DISPLAY (PIZARRA)">
-                    <div className="space-y-8">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {[
-                                { id: 'iglesia', label: 'Carbón & Moka', icon: BookOpen, desc: 'Relieves neumórficos en tonos moka y carbón mate.' },
-                                { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Efectos de vidrio y modernismo.' },
-                                { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia y colores sólidos.' },
-                                { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Resplandores suaves nocturnos.' },
-                                { id: 'neon', label: 'Neon Forge', icon: Flame, desc: 'Futurista y de alto impacto.' },
-                                { id: 'luna', label: 'Luna Premium', icon: Sunrise, desc: 'Diseño industrial robusto.' },
-                            ].map((theme) => {
-                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id || 
-                                    (theme.id === 'iglesia' && settings.displayTemplate === 'primitivo');
-                                return (
-                                    <button
-                                        key={theme.id}
-                                        onClick={() => saveSettingsToCloud({ displayTemplate: theme.id as any })}
-                                        className={cn(
-                                            "group relative p-4 rounded-md border transition-all duration-500 text-left overflow-hidden",
-                                            isActive 
-                                                ? "bg-primary/20 border-primary/50" 
-                                                : settings.themeMode === 'light'
-                                                    ? "bg-black/[0.03] border-slate-200 hover:bg-black/[0.08]"
-                                                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.08]"
-                                        )}
-                                    >
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className={cn(
-                                                "p-2 rounded-md transition-colors",
-                                                isActive ? "bg-primary text-white" : "bg-white/[0.08] text-muted-foreground group-hover:bg-white/20"
-                                            )}>
-                                                <theme.icon className="w-4 h-4" />
-                                            </div>
-                                            <span className={cn("text-xs font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}>{theme.label}</span>
-                                        </div>
-                                        <p className="text-[8px] text-muted-foreground/60 leading-relaxed group-hover:text-muted-foreground/80 transition-colors">{theme.desc}</p>
-                                    </button>
-                                )
-                            })}
-                        </div>
-                    </div>
-                </TactileGlassCard>
-            </div>
+                            await saveSettingsToCloud({ missions: newMissions });
+                            showNotification(`Obra "${updated.name}" guardada.`, 'success');
+                        }
+                    }}
+                />
+            )}
         </motion.div>
     )
 }
