@@ -304,6 +304,107 @@ export const AjustesTab = ({
                         </div>
                     </div>
                 </TactileGlassCard>
+
+                {/* JERARQUÍA Y OBRAS (EVANGELIZACIÓN) */}
+                <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
+                    <div className="space-y-6">
+                        <div className="p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 block">IGLESIA PRINCIPAL</label>
+                            <div className="flex items-center gap-4">
+                                <div className="w-16 h-16 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                    {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
+                                        <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        <Church className="w-8 h-8 text-muted-foreground opacity-20" />
+                                    )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className="text-sm font-black uppercase truncate text-foreground">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</h4>
+                                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1 truncate">
+                                        {settings.mainChurch?.responsibleName || 'Sin responsable asignado'}
+                                    </p>
+                                </div>
+                                <button 
+                                    onClick={() => setEditingCongregation({ 
+                                        info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' } 
+                                    })}
+                                    className="px-4 h-11 bg-primary/20 text-primary rounded-md border border-primary/30 hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest"
+                                >
+                                    ADMINISTRAR
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="pt-4 border-t border-[var(--tactile-border)]">
+                            <div className="flex items-center justify-between mb-6">
+                                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground ml-2">IGLESIAS / OBRAS DEPENDIENTES</label>
+                                <button 
+                                    onClick={() => setEditingCongregation({ 
+                                        info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
+                                        index: -1 
+                                    })}
+                                    className="flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest"
+                                >
+                                    <Plus className="w-3 h-3" /> AGREGAR OBRA
+                                </button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 gap-4">
+                                {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
+                                    const m = typeof mission === 'string' 
+                                        ? (mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission }) 
+                                        : mission;
+                                    return (
+                                        <div key={m.id || idx} className="group relative p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md hover:border-primary/50 transition-all">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-12 h-12 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                                    {m.imageUrl ? (
+                                                        <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
+                                                    ) : (
+                                                        <div className="text-[10px] font-black text-muted-foreground opacity-20">{m.name.charAt(0)}</div>
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h4 className="text-[11px] font-black uppercase truncate text-foreground">{m.name}</h4>
+                                                    <p className="text-[9px] font-bold text-muted-foreground uppercase opacity-60 truncate">
+                                                        {m.responsibleName || 'Sin responsable'}
+                                                    </p>
+                                                </div>
+                                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button 
+                                                        onClick={() => setEditingCongregation({ info: m, index: idx })}
+                                                        className="w-8 h-8 bg-primary/10 text-primary rounded-md border border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center justify-center"
+                                                    >
+                                                        <Save className="w-4 h-4 scale-75" />
+                                                    </button>
+                                                    <button 
+                                                        onClick={() => {
+                                                            const filtered = (settings.missions || []).filter((_: any, i: number) => i !== idx);
+                                                            setSettings({ ...settings, missions: filtered });
+                                                            saveSettingsToCloud({ missions: filtered });
+                                                            showNotification('Obra eliminada correctamente.', 'success');
+                                                        }}
+                                                        className="w-8 h-8 bg-rose-500/10 text-rose-500 rounded-md border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center"
+                                                    >
+                                                        <Trash className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                                {(!settings.missions || settings.missions.length === 0) && (
+                                    <div className="py-8 text-center border-2 border-dashed border-[var(--tactile-border)] rounded-md col-span-full">
+                                        <p className="text-[10px] font-bold uppercase text-muted-foreground opacity-40">No hay misiones configuradas</p>
+                                    </div>
+                                )}
+                            </div>
+                            <p className="text-[8px] text-muted-foreground mt-6 leading-relaxed">
+                                * Las obras creadas permiten segmentar la asistencia y organizar la membresía por ubicación geográfica o administrativa.
+                            </p>
+                        </div>
+                    </div>
+                </TactileGlassCard>
             </div>
 
             {/* COLUMNA 2: MINISTRO RESPONSABLE & SISTEMA VISUAL DEL DISPLAY (PIZARRA) */}
@@ -477,7 +578,7 @@ export const AjustesTab = ({
                             <div className="space-y-4">
                                 <div 
                                     onClick={() => document.getElementById('tactile-bg-upload')?.click()}
-                                    className="w-full aspect-video rounded-md border-2 border-dashed border-[var(--tactile-border-strong)] hover:border-primary/40 bg-[var(--tactile-inner-bg)] flex flex-col items-center justify-center gap-4 cursor-pointer overflow-hidden transition-all group"
+                                    className="w-1/2 aspect-video mx-auto rounded-md border-2 border-dashed border-[var(--tactile-border-strong)] hover:border-primary/40 bg-[var(--tactile-inner-bg)] flex flex-col items-center justify-center gap-4 cursor-pointer overflow-hidden transition-all group"
                                 >
                                     {settings.displayCustomBgUrl ? (
                                         <div className="relative w-full h-full">
