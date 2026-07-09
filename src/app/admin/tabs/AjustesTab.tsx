@@ -957,7 +957,7 @@ export const AjustesTab = ({
             {imageToEdit && (
                 <ImageEditor
                     image={imageToEdit.source}
-                    aspectRatio={0.75} // 3:4 aspect ratio to perfectly fit display screens
+                    aspectRatio={1} // 1:1 aspect ratio (square photos)
                     onSave={async (cropped) => {
                         setIsSaving(true);
                         const file = dataURLtoFile(cropped, `${imageToEdit.target}-${Date.now()}.webp`);
