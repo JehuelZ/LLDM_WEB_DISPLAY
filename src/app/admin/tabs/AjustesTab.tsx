@@ -16,6 +16,7 @@ import {
 } from '@/components/admin/TactileUI'
 import { CongregationEditModal } from '@/components/admin/CongregationEditModal'
 import { CongregationInfo, UserProfile } from '@/lib/store'
+import { ImageEditor } from '@/components/ImageEditor'
 
 interface AjustesTabProps {
     settings: any
@@ -47,6 +48,19 @@ export const AjustesTab = ({
     const [isSaving, setIsSaving] = useState(false)
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: string } | null>(null)
     const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo, index?: number } | null>(null)
+    
+    const dataURLtoFile = (dataurl: string, filename: string) => {
+        let arr = dataurl.split(','),
+            match = arr[0].match(/:(.*?);/),
+            mime = match ? match[1] : 'image/jpeg',
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+    }
     
     // Get members from store for picking responsible
     const members = useAppStore(state => state.members)
@@ -449,17 +463,17 @@ export const AjustesTab = ({
                                 id="minister-avatar-upload"
                                 className="hidden"
                                 accept="image/*,.svg"
-                                onChange={async (e) => {
+                                onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file) {
-                                        setIsSaving(true);
-                                        const url = await uploadAvatar(`minister-${Date.now()}`, file);
-                                        if (url) {
-                                            await saveSettingsToCloud({ ministerAvatar: url });
-                                            setMinister({ ...minister, avatar: url });
-                                            showNotification("Avatar ministerial actualizado correctamente.", 'success');
-                                        }
-                                        setIsSaving(false);
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setImageToEdit({
+                                                source: reader.result as string,
+                                                target: 'minister'
+                                            });
+                                        };
+                                        reader.readAsDataURL(file);
                                     }
                                 }}
                             />
@@ -555,20 +569,17 @@ export const AjustesTab = ({
                                 id="supervisor-avatar-upload"
                                 className="hidden"
                                 accept="image/*,.svg"
-                                onChange={async (e) => {
+                                onChange={(e) => {
                                     const file = e.target.files?.[0];
                                     if (file) {
-                                        setIsSaving(true);
-                                        const url = await uploadAvatar(`supervisor-${Date.now()}`, file);
-                                        if (url) {
-                                            const updatedMainChurch = {
-                                                ...(settings.mainChurch || {}),
-                                                supervisorAvatar: url
-                                            };
-                                            await saveSettingsToCloud({ mainChurch: updatedMainChurch });
-                                            showNotification("Avatar de supervisión actualizado.", 'success');
-                                        }
-                                        setIsSaving(false);
+                                        const reader = new FileReader();
+                                        reader.onloadend = () => {
+                                            setImageToEdit({
+                                                source: reader.result as string,
+                                                target: 'supervisor'
+                                            });
+                                        };
+                                        reader.readAsDataURL(file);
                                     }
                                 }}
                             />
@@ -940,6 +951,35 @@ export const AjustesTab = ({
                             showNotification(`Obra "${updated.name}" guardada.`, 'success');
                         }
                     }}
+                />
+            )}
+
+            {imageToEdit && (
+                <ImageEditor
+                    image={imageToEdit.source}
+                    aspectRatio={0.75} // 3:4 aspect ratio to perfectly fit display screens
+                    onSave={async (cropped) => {
+                        setIsSaving(true);
+                        const file = dataURLtoFile(cropped, `${imageToEdit.target}-${Date.now()}.jpg`);
+                        const url = await uploadAvatar(`${imageToEdit.target}-${Date.now()}`, file);
+                        if (url) {
+                            if (imageToEdit.target === 'minister') {
+                                await saveSettingsToCloud({ ministerAvatar: url });
+                                setMinister({ ...minister, avatar: url });
+                                showNotification("Avatar ministerial actualizado correctamente.", 'success');
+                            } else if (imageToEdit.target === 'supervisor') {
+                                const updatedMainChurch = {
+                                    ...(settings.mainChurch || {}),
+                                    supervisorAvatar: url
+                                };
+                                await saveSettingsToCloud({ mainChurch: updatedMainChurch });
+                                showNotification("Avatar de supervisión actualizado.", 'success');
+                            }
+                        }
+                        setIsSaving(false);
+                        setImageToEdit(null);
+                    }}
+                    onCancel={() => setImageToEdit(null)}
                 />
             )}
         </motion.div>
