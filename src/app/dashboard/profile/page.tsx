@@ -387,7 +387,7 @@ function ProfileContent() {
     const handleSaveImage = async (croppedImage: string) => {
         setIsSaving(true);
         try {
-            const file = dataURLtoFile(croppedImage, `avatar-${currentUser.id}.jpg`);
+            const file = dataURLtoFile(croppedImage, `avatar-${currentUser.id}.webp`);
             const publicUrl = await uploadAvatar(currentUser.id, file);
             if (publicUrl) {
                 const success = await updateProfileInCloud(currentUser.id, { avatar: publicUrl });

@@ -122,7 +122,7 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
         if (!imageToEdit) return;
         setIsSaving(true);
         try {
-            const file = dataURLtoFile(dataUrl, `edited-${Date.now()}.jpg`);
+            const file = dataURLtoFile(dataUrl, `edited-${Date.now()}.webp`);
             const publicUrl = await uploadAvatar(imageToEdit.target, file);
             
             if (publicUrl) {

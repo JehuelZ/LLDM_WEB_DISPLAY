@@ -92,7 +92,7 @@ export const ImageEditor = ({ isOpen, onClose, imageSrc, onSave, aspectRatio = 1
         
         ctx.restore()
 
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+        const dataUrl = canvas.toDataURL('image/webp', 0.85)
         onSave(dataUrl)
         onClose()
     }

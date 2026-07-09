@@ -960,7 +960,7 @@ export const AjustesTab = ({
                     aspectRatio={0.75} // 3:4 aspect ratio to perfectly fit display screens
                     onSave={async (cropped) => {
                         setIsSaving(true);
-                        const file = dataURLtoFile(cropped, `${imageToEdit.target}-${Date.now()}.jpg`);
+                        const file = dataURLtoFile(cropped, `${imageToEdit.target}-${Date.now()}.webp`);
                         const url = await uploadAvatar(`${imageToEdit.target}-${Date.now()}`, file);
                         if (url) {
                             if (imageToEdit.target === 'minister') {

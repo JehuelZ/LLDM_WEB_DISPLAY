@@ -1476,7 +1476,7 @@ export default function MembersPage() {
                     onSave={async (cropped) => {
                         if (memberModal) {
                             setIsSaving(true);
-                            const file = dataURLtoFile(cropped, `avatar-${memberModal.data.id}.jpg`);
+                            const file = dataURLtoFile(cropped, `avatar-${memberModal.data.id}.webp`);
                             const publicUrl = await uploadAvatar(memberModal.data.id, file);
                             if (publicUrl) {
                                 setMemberModal({ ...memberModal, data: { ...memberModal.data, avatar: publicUrl } });

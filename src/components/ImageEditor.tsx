@@ -83,7 +83,7 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
         );
         ctx.restore();
 
-        onSave(canvas.toDataURL('image/jpeg', 0.9));
+        onSave(canvas.toDataURL('image/webp', 0.85));
     }, [zoom, rotation, x, y, image, onSave, aspectRatio]);
 
     return (
