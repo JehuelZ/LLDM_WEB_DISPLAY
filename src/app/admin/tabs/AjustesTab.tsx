@@ -516,6 +516,131 @@ export const AjustesTab = ({
                         </div>
                     </div>
                 </TactileGlassCard>
+
+                {/* TARJETA DE SUPERVISIÓN */}
+                <TactileGlassCard title="SUPERVISIÓN">
+                    <div className="space-y-5">
+                        {/* ── Avatar con anillo de degradado ── */}
+                        <div className="flex flex-col items-center gap-2 pt-2">
+                            <div
+                                className="relative cursor-pointer group"
+                                onClick={() => document.getElementById('supervisor-avatar-upload')?.click()}
+                            >
+                                {/* Anillo de degradado animado */}
+                                <div className="w-[88px] h-[88px] rounded-full p-[2px] bg-gradient-to-br from-primary via-primary/40 to-transparent animate-[spin_6s_linear_infinite]" />
+                                <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[var(--tactile-bg)]">
+                                    <img
+                                        src={settings.mainChurch?.supervisorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(settings.mainChurch?.supervisorName || 'S')}&background=random&bold=true&size=128`}
+                                        className="w-full h-full object-cover rounded-full"
+                                        alt="Supervisor"
+                                    />
+                                    <div className="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <Camera className="w-6 h-6 text-white" />
+                                    </div>
+                                </div>
+                            </div>
+                            {/* Badge de rol */}
+                            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20">
+                                <Shield className="w-3 h-3 text-primary" />
+                                <span className="text-[9px] font-black tracking-widest uppercase text-primary">Supervisor de Distrito</span>
+                            </div>
+                            <button
+                                onClick={() => document.getElementById('supervisor-avatar-upload')?.click()}
+                                className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                            >
+                                Cambiar fotografía
+                            </button>
+                            <input
+                                type="file"
+                                id="supervisor-avatar-upload"
+                                className="hidden"
+                                accept="image/*,.svg"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                        setIsSaving(true);
+                                        const url = await uploadAvatar(`supervisor-${Date.now()}`, file);
+                                        if (url) {
+                                            const updatedMainChurch = {
+                                                ...(settings.mainChurch || {}),
+                                                supervisorAvatar: url
+                                            };
+                                            await saveSettingsToCloud({ mainChurch: updatedMainChurch });
+                                            showNotification("Avatar de supervisión actualizado.", 'success');
+                                        }
+                                        setIsSaving(false);
+                                    }
+                                }}
+                            />
+                        </div>
+
+                        {/* ── Campos de datos con iconos modernos ── */}
+                        <div className="space-y-3">
+                            <TactileInput
+                                label="NOMBRE"
+                                value={settings.mainChurch?.supervisorName || ''}
+                                onChange={(e: any) => {
+                                    const updatedMainChurch = {
+                                        ...(settings.mainChurch || {}),
+                                        supervisorName: e.target.value
+                                    };
+                                    setSettings({ ...settings, mainChurch: updatedMainChurch });
+                                }}
+                                icon={UserCircle2}
+                            />
+                            <TactileInput
+                                label="EMAIL"
+                                value={settings.mainChurch?.supervisorEmail || ''}
+                                onChange={(e: any) => {
+                                    const updatedMainChurch = {
+                                        ...(settings.mainChurch || {}),
+                                        supervisorEmail: e.target.value
+                                    };
+                                    setSettings({ ...settings, mainChurch: updatedMainChurch });
+                                }}
+                                icon={AtSign}
+                            />
+                            <TactileInput
+                                label="TELÉFONO"
+                                value={settings.mainChurch?.supervisorPhone || ''}
+                                onChange={(e: any) => {
+                                    const updatedMainChurch = {
+                                        ...(settings.mainChurch || {}),
+                                        supervisorPhone: e.target.value
+                                    };
+                                    setSettings({ ...settings, mainChurch: updatedMainChurch });
+                                }}
+                                icon={Phone}
+                            />
+                        </div>
+
+                        {/* ── Botón guardar ── */}
+                        <div className="flex justify-center pt-1">
+                            <button
+                                onClick={async () => {
+                                    setIsSaving(true);
+                                    const updatedMainChurch = {
+                                        ...(settings.mainChurch || {}),
+                                        supervisorName: settings.mainChurch?.supervisorName || '',
+                                        supervisorEmail: settings.mainChurch?.supervisorEmail || '',
+                                        supervisorPhone: settings.mainChurch?.supervisorPhone || ''
+                                    };
+                                    await saveSettingsToCloud({
+                                        mainChurch: updatedMainChurch
+                                    });
+                                    showNotification("Datos de supervisión actualizados exitosamente.", 'success');
+                                    setIsSaving(false);
+                                }}
+                                className="px-6 h-10 bg-primary text-foreground rounded-md shadow-[0_8px_20px_rgba(var(--primary-rgb),0.25)] font-black uppercase tracking-widest text-[9px] flex items-center gap-2 hover:translate-y-[-2px] transition-all active:translate-y-0"
+                            >
+                                {isSaving
+                                    ? <><span className="animate-spin w-3.5 h-3.5 border-2 border-foreground/40 border-t-foreground rounded-full" /> GUARDANDO...</>
+                                    : <><CheckCircle2 className="w-3.5 h-3.5" /> GUARDAR DATOS</>
+                                }
+                            </button>
+                        </div>
+                    </div>
+                </TactileGlassCard>
             </div>
 
             {/* COLUMNA 3: FONDO DE PROYECCIÓN & SERVICIOS INTEGRADOS (CLIMA) & BOTÓN GUARDAR */}
