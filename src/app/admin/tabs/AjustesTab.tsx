@@ -720,15 +720,15 @@ export const AjustesTab = ({
                     <div className="space-y-8">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {[
-                                { id: 'iglesia', label: 'Estilo Institucional', icon: Church, desc: 'Diseño institucional tradicional.' },
+                                { id: 'iglesia', label: 'Estilo Institucional (Primitivo)', icon: Church, desc: 'Diseño institucional tradicional.' },
                                 { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Efectos de vidrio y modernismo.' },
                                 { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia y colores sólidos.' },
                                 { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Resplandores suaves nocturnos.' },
                                 { id: 'neon', label: 'Neon Forge', icon: Flame, desc: 'Futurista y de alto impacto.' },
                                 { id: 'luna', label: 'Luna Premium', icon: Sunrise, desc: 'Diseño industrial robusto.' },
-                                { id: 'primitivo', label: 'Primitivo Legacy', icon: BookOpen, desc: 'El diseño clásico original.' },
                             ].map((theme) => {
-                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id;
+                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id || 
+                                    (theme.id === 'iglesia' && settings.displayTemplate === 'primitivo');
                                 return (
                                     <button
                                         key={theme.id}
