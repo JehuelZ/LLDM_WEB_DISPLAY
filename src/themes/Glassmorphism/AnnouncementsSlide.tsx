@@ -85,24 +85,23 @@ export const GlassmorphismAnnouncements = () => {
 
             {/* Right Pillar: Minister Info */}
             {settings.showMinisterOnDisplay && (
-                <div className="w-[450px] shrink-0 flex flex-col h-full gap-6 justify-center pb-6">
-                    {/* Minister Card */}
+                <div className="w-[450px] shrink-0 flex flex-col h-full">
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         className={cn(
-                            "flex flex-col items-center border border-white/[0.05] bg-black/20 shadow-2xl relative overflow-hidden",
-                            settings.mainChurch?.supervisorName ? "flex-1 rounded-[2.5rem] p-6 justify-center" : "flex-1 rounded-[4rem] pt-12 pb-16 px-10"
+                            "flex-grow flex flex-col items-center border border-white/[0.05] bg-black/20 shadow-2xl relative overflow-hidden justify-center gap-4",
+                            settings.mainChurch?.supervisorName ? "rounded-[2.5rem] p-6" : "pt-12 pb-16 px-10 rounded-[4rem]"
                         )}
                     >
-                        {/* Internal Card Frame */}
+                        {/* Minister Section */}
                         <div className={cn(
                             "w-full flex flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] shadow-xl relative overflow-hidden group/minister",
                             settings.mainChurch?.supervisorName ? "rounded-[2rem] p-4 flex-1" : "rounded-[3.5rem] p-8 flex-1"
                         )}>
                             <div className={cn(
                                 "relative mb-4",
-                                settings.mainChurch?.supervisorName ? "w-32 h-40 mb-3" : "w-64 h-80 mb-10"
+                                settings.mainChurch?.supervisorName ? "w-28 h-36 mb-3" : "w-64 h-80 mb-10"
                             )}>
                                 <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-0 group-hover/minister:opacity-100 transition-opacity duration-700" />
                                 <div className={cn(
@@ -155,18 +154,17 @@ export const GlassmorphismAnnouncements = () => {
                                 )}
                             </div>
                         </div>
-                    </motion.div>
 
-                    {/* Supervisor Card */}
-                    {settings.mainChurch?.supervisorName && (
-                        <motion.div
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.15 }}
-                            className="flex flex-col items-center border border-white/[0.05] bg-black/20 shadow-2xl relative overflow-hidden flex-1 rounded-[2.5rem] p-6 justify-center"
-                        >
-                            {/* Internal Card Frame */}
-                            <div className="w-full flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] rounded-[2rem] p-4 flex-1 shadow-xl relative overflow-hidden group/supervisor">
+                        {/* Divider */}
+                        {settings.mainChurch?.supervisorName && (
+                            <div className="h-[1px] w-full bg-white/[0.05] my-2" />
+                        )}
+
+                        {/* Supervisor Section */}
+                        {settings.mainChurch?.supervisorName && (
+                            <div className={cn(
+                                "w-full flex flex-col items-center justify-center bg-white/[0.02] border border-white/[0.05] rounded-[2rem] p-4 flex-1 shadow-xl relative overflow-hidden group/supervisor"
+                            )}>
                                 <div className="relative w-32 h-40 mb-3">
                                     <div className="absolute inset-0 bg-blue-500/10 blur-3xl opacity-0 group-hover/supervisor:opacity-100 transition-opacity duration-700" />
                                     <div className="w-full h-full rounded-[1.5rem] overflow-hidden border-4 border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover/supervisor:scale-105">
@@ -207,8 +205,8 @@ export const GlassmorphismAnnouncements = () => {
                                     )}
                                 </div>
                             </div>
-                        </motion.div>
-                    )}
+                        )}
+                    </motion.div>
                 </div>
             )}
         </div>

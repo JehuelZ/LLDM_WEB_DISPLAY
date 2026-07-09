@@ -71,120 +71,106 @@ export const LunaAnnouncements = () => {
 
             {/* 2. RIGHT PILLAR: MINISTER & SUPERVISOR */}
             {settings.showMinisterOnDisplay && (
-                <div className="w-[480px] shrink-0 flex flex-col h-full gap-6 justify-center pb-6">
-                    {/* Minister Card */}
+                <div className="w-[480px] shrink-0 flex flex-col h-full">
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         className={cn(
-                            "flex flex-col items-center relative overflow-hidden",
-                            settings.mainChurch?.supervisorName
-                                ? "flex-1 justify-center p-8 border border-white/10 bg-white/[0.01] rounded-[2rem]"
-                                : "flex-1 justify-center p-12"
+                            "flex-grow flex flex-col items-center relative overflow-hidden",
+                            settings.mainChurch?.supervisorName 
+                                ? "p-8 border border-white/10 bg-white/[0.01] rounded-[2.5rem] justify-center gap-4" 
+                                : "p-12 justify-start"
                         )}
                     >
-                        <div className={cn(
-                            "relative",
-                            settings.mainChurch?.supervisorName ? "w-36 h-48 mb-4" : "w-72 h-96 mb-12"
-                        )}>
-                            <div className="w-full h-full rounded-sm overflow-hidden border border-white/10 shadow-2xl grayscale transition-all duration-700 hover:grayscale-0">
-                                {minister.avatar ? (
-                                    <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
-                                ) : (
-                                    <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                                        <Building2 className={settings.mainChurch?.supervisorName ? "w-12 h-12 text-white/10" : "w-24 h-24 text-white/10"} />
-                                    </div>
-                                )}
+                        {/* Minister Section */}
+                        <div className="flex flex-col items-center w-full">
+                            <div className={cn(
+                                "relative",
+                                settings.mainChurch?.supervisorName ? "w-28 h-36 mb-3" : "w-72 h-96 mb-12"
+                            )}>
+                                <div className="w-full h-full rounded-sm overflow-hidden border border-white/10 shadow-2xl grayscale transition-all duration-700 hover:grayscale-0">
+                                    {minister.avatar ? (
+                                        <img src={minister.avatar} className="w-full h-full object-cover" alt="Ministro" />
+                                    ) : (
+                                        <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                                            <Building2 className={settings.mainChurch?.supervisorName ? "w-12 h-12 text-white/10" : "w-24 h-24 text-white/10"} />
+                                        </div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="flex flex-col items-center">
                             <span className={cn(
                                 "lowercase font-[300] tracking-[0.4em] text-white/40",
-                                settings.mainChurch?.supervisorName ? "text-[8px] mb-1" : "text-[10px] mb-4"
+                                settings.mainChurch?.supervisorName ? "text-[8px] mb-0.5" : "text-[10px] mb-4"
                             )}>
                                 {minister.role?.toLowerCase() || 'ministro local'}
                             </span>
                             <h2 className={cn(
                                 "font-[200] capitalize tracking-tighter text-center",
-                                settings.mainChurch?.supervisorName ? "text-xl mb-4" : "text-3xl mb-8"
+                                settings.mainChurch?.supervisorName ? "text-xl mb-2" : "text-3xl mb-8"
                             )}>
                                 {minister.name}
                             </h2>
-                        </div>
-
-                        <div className={cn(
-                            "w-full pt-4 border-t border-white/5",
-                            settings.mainChurch?.supervisorName ? "space-y-2 text-center" : "space-y-6 pt-10"
-                        )}>
                             <div className={cn(
-                                "flex items-center gap-6 text-white/30 truncate",
-                                settings.mainChurch?.supervisorName && "justify-center gap-3"
+                                "w-full text-white/30",
+                                settings.mainChurch?.supervisorName 
+                                    ? "flex justify-center gap-4 text-[10px]" 
+                                    : "space-y-6 pt-10 border-t border-white/5"
                             )}>
-                                <Phone className={settings.mainChurch?.supervisorName ? "w-3.5 h-3.5 flex-shrink-0" : "w-5 h-5 flex-shrink-0"} />
-                                <span className={settings.mainChurch?.supervisorName ? "text-sm font-[100] tracking-widest" : "text-xl font-[100] tracking-widest"}>{minister.phone}</span>
-                            </div>
-                            <div className={cn(
-                                "flex items-center gap-6 text-white/10 truncate",
-                                settings.mainChurch?.supervisorName && "justify-center gap-3"
-                            )}>
-                                <Mail className={settings.mainChurch?.supervisorName ? "w-3.5 h-3.5 flex-shrink-0" : "w-5 h-5 flex-shrink-0"} />
-                                <span className={settings.mainChurch?.supervisorName ? "text-[10px] font-[300] lowercase tracking-wide truncate" : "text-[12px] font-[300] lowercase tracking-wide truncate"}>{minister.email?.toLowerCase()}</span>
-                            </div>
-                        </div>
-                    </motion.div>
-
-                    {/* Supervisor Card */}
-                    {settings.mainChurch?.supervisorName && (
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.15 }}
-                            className="flex-1 flex flex-col items-center justify-center p-8 border border-white/10 bg-white/[0.01] rounded-[2rem] relative overflow-hidden"
-                        >
-                            <div className="relative w-36 h-48 mb-4">
-                                <div className="w-full h-full rounded-sm overflow-hidden border border-white/10 shadow-lg grayscale transition-all duration-700 hover:grayscale-0">
-                                    {settings.mainChurch.supervisorAvatar ? (
-                                        <img src={settings.mainChurch.supervisorAvatar} className="w-full h-full object-cover" alt="Supervisor" />
-                                    ) : (
-                                        <div className="w-full h-full bg-white/5 flex items-center justify-center">
-                                            <Building2 className="w-12 h-12 text-white/10" />
-                                        </div>
-                                    )}
+                                <div className={cn("flex items-center gap-6 truncate", settings.mainChurch?.supervisorName ? "gap-2" : "text-white/30")}>
+                                    <Phone className={settings.mainChurch?.supervisorName ? "w-3.5 h-3.5" : "w-5 h-5 flex-shrink-0"} />
+                                    <span className={settings.mainChurch?.supervisorName ? "font-[100] tracking-wider" : "text-xl font-[100] tracking-widest"}>{minister.phone}</span>
+                                </div>
+                                <div className={cn("flex items-center gap-6 truncate", settings.mainChurch?.supervisorName ? "gap-2" : "text-white/10")}>
+                                    <Mail className={settings.mainChurch?.supervisorName ? "w-3.5 h-3.5" : "w-5 h-5 flex-shrink-0"} />
+                                    <span className={settings.mainChurch?.supervisorName ? "font-[300] lowercase truncate" : "text-[12px] font-[300] lowercase tracking-wide truncate"}>{minister.email?.toLowerCase()}</span>
                                 </div>
                             </div>
+                        </div>
 
-                            <div className="flex flex-col items-center">
-                                <span className="text-[8px] lowercase font-[300] tracking-[0.4em] text-white/40 mb-1">
+                        {/* Divider */}
+                        {settings.mainChurch?.supervisorName && (
+                            <div className="h-[1px] w-full bg-white/5 my-2" />
+                        )}
+
+                        {/* Supervisor Section */}
+                        {settings.mainChurch?.supervisorName && (
+                            <div className="flex flex-col items-center w-full">
+                                <div className="relative w-28 h-36 mb-3">
+                                    <div className="w-full h-full rounded-sm overflow-hidden border border-white/10 shadow-lg grayscale transition-all duration-700 hover:grayscale-0">
+                                        {settings.mainChurch.supervisorAvatar ? (
+                                            <img src={settings.mainChurch.supervisorAvatar} className="w-full h-full object-cover" alt="Supervisor" />
+                                        ) : (
+                                            <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                                                <Building2 className="w-12 h-12 text-white/10" />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <span className="text-[8px] lowercase font-[300] tracking-[0.4em] text-white/40 mb-0.5">
                                     supervisor de distrito
                                 </span>
-                                <h2 className="text-xl font-[200] capitalize tracking-tighter mb-4 text-center">
+                                <h2 className="text-xl font-[200] capitalize tracking-tighter mb-2 text-center">
                                     {settings.mainChurch.supervisorName}
                                 </h2>
-                            </div>
-
-                            <div className="w-full space-y-2 pt-4 border-t border-white/5 text-center">
-                                {settings.mainChurch.supervisorPhone && (
-                                    <div className="flex items-center justify-center gap-3 text-white/30 truncate">
-                                        <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-                                        <span className="text-sm font-[100] tracking-widest">{settings.mainChurch.supervisorPhone}</span>
+                                <div className="flex justify-center gap-4 text-[10px] text-white/30">
+                                    <div className="flex items-center gap-2 truncate">
+                                        <Phone className="w-3.5 h-3.5" />
+                                        <span className="font-[100] tracking-wider">{settings.mainChurch.supervisorPhone}</span>
                                     </div>
-                                )}
-                                {settings.mainChurch.supervisorEmail && (
-                                    <div className="flex items-center justify-center gap-3 text-white/10 truncate">
-                                        <Mail className="w-3.5 h-3.5 flex-shrink-0" />
-                                        <span className="text-[10px] font-[300] lowercase tracking-wide truncate">{settings.mainChurch.supervisorEmail.toLowerCase()}</span>
+                                    <div className="flex items-center gap-2 truncate">
+                                        <Mail className="w-3.5 h-3.5" />
+                                        <span className="font-[300] lowercase truncate">{settings.mainChurch.supervisorEmail.toLowerCase()}</span>
                                     </div>
-                                )}
+                                </div>
                             </div>
-                        </motion.div>
-                    )}
+                        )}
 
-                    {/* Force Load Saira Font */}
-                    <link 
-                        href="https://fonts.googleapis.com/css2?family=Saira:wght@100;200;300;400;900&display=swap" 
-                        rel="stylesheet" 
-                    />
+                        {/* Force Load Saira Font */}
+                        <link 
+                            href="https://fonts.googleapis.com/css2?family=Saira:wght@100;200;300;400;900&display=swap" 
+                            rel="stylesheet" 
+                        />
+                    </motion.div>
                 </div>
             )}
         </div>

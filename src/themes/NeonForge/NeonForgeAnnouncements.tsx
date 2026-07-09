@@ -129,17 +129,12 @@ export function NeonForgeAnnouncements() {
 
             {/* Right — Minister panel (optional) */}
             {settings.showMinisterOnDisplay && (
-                <div className="w-[300px] shrink-0 flex flex-col px-6 pt-20 pb-8 z-10 gap-4 h-full"
+                <div className="w-[300px] shrink-0 flex flex-col px-6 pt-20 pb-8 z-10"
                     style={{ borderLeft: `1px solid ${T.border}` }}>
-                    
-                    {/* Minister Card */}
                     <motion.div
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={cn(
-                            "flex flex-col rounded-2xl overflow-hidden relative",
-                            settings.mainChurch?.supervisorName ? "flex-1 justify-center py-4" : "h-full"
-                        )}
+                        className="flex flex-col rounded-2xl overflow-hidden h-full gap-4 relative"
                         style={{
                             background: T.card,
                             border: `1px solid ${T.accent}40`,
@@ -150,118 +145,95 @@ export function NeonForgeAnnouncements() {
                         <div className="h-[2px] shrink-0"
                             style={{ background: `linear-gradient(to right, ${T.secondary}, ${T.accent})` }} />
 
-                        {/* Avatar */}
-                        <div className={cn("flex flex-col items-center px-5", settings.mainChurch?.supervisorName ? "pt-4 pb-2" : "pt-8 pb-4")}>
-                            <div className={cn("rounded-2xl overflow-hidden flex items-center justify-center", settings.mainChurch?.supervisorName ? "w-20 h-20" : "w-28 h-28")}
-                                style={{
-                                    border: `2px solid ${T.accent}50`,
-                                    boxShadow: `0 0 30px ${T.accent}20`,
-                                    background: T.bg,
-                                }}>
-                                {minister.avatar
-                                    ? <img src={minister.avatar} className="w-full h-full object-cover" alt="" />
-                                    : <Church className={settings.mainChurch?.supervisorName ? "w-8 h-8" : "w-12 h-12"} style={{ color: `${T.accent}50` }} />
-                                }
-                            </div>
-                            <div className="mt-2 text-center">
-                                <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>{minister.role || 'Ministro Local'}</span>
-                                <p className={cn("font-black mt-0.5 leading-tight uppercase italic", settings.mainChurch?.supervisorName ? "text-sm" : "text-xl")} style={{ color: minister.name === 'Por asignar' ? T.textMuted : T.white }}>
-                                    {minister.name}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Divider */}
-                        {minister.name !== 'Por asignar' && !settings.mainChurch?.supervisorName && <div className="h-px mx-5" style={{ background: T.border }} />}
-
-                        {/* Contact */}
-                        <div className={cn("flex flex-col gap-2.5 px-5", settings.mainChurch?.supervisorName ? "pb-4 pt-2 gap-1.5" : "p-5")}>
-                            {minister.phone && minister.name !== 'Por asignar' && (
-                                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
-                                    style={{ background: T.bg, border: `1px solid ${T.border}` }}>
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-                                        style={{ background: T.accentDim, border: `1px solid ${T.accent}30` }}>
-                                        <Phone className="w-3 h-3" style={{ color: T.accent }} />
-                                    </div>
-                                    <span className="text-[10px] font-medium" style={{ color: T.textSecondary }}>{minister.phone}</span>
-                                </div>
-                            )}
-                            {minister.email && minister.name !== 'Por asignar' && (
-                                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
-                                    style={{ background: T.bg, border: `1px solid ${T.border}` }}>
-                                    <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-                                        style={{ background: T.accentDim, border: `1px solid ${T.accent}30` }}>
-                                        <Mail className="w-3 h-3" style={{ color: T.accent }} />
-                                    </div>
-                                    <span className="text-[9px] font-medium truncate" style={{ color: T.textSecondary }}>{minister.email.toLowerCase()}</span>
-                                </div>
-                            )}
-                        </div>
-                    </motion.div>
-
-                    {/* Supervisor Card */}
-                    {settings.mainChurch?.supervisorName && (
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.15 }}
-                            className="flex flex-col rounded-2xl overflow-hidden flex-1 justify-center py-4 relative"
-                            style={{
-                                background: T.card,
-                                border: `1px solid ${T.accent}40`,
-                                boxShadow: `0 0 30px ${T.accentGlow}`,
-                            }}
-                        >
-                            {/* Top glow bar */}
-                            <div className="h-[2px] shrink-0"
-                                style={{ background: `linear-gradient(to right, ${T.secondary}, ${T.accent})` }} />
-
+                        {/* Minister Section */}
+                        <div className="flex flex-col items-center w-full">
                             {/* Avatar */}
-                            <div className="flex flex-col items-center px-5 pt-4 pb-2">
-                                <div className="w-20 h-20 rounded-2xl overflow-hidden flex items-center justify-center"
+                            <div className={cn("flex flex-col items-center px-5", settings.mainChurch?.supervisorName ? "pt-4 pb-2" : "pt-8 pb-4")}>
+                                <div className={cn("rounded-2xl overflow-hidden flex items-center justify-center", settings.mainChurch?.supervisorName ? "w-20 h-20" : "w-28 h-28")}
                                     style={{
                                         border: `2px solid ${T.accent}50`,
                                         boxShadow: `0 0 30px ${T.accent}20`,
                                         background: T.bg,
                                     }}>
-                                    {settings.mainChurch.supervisorAvatar
-                                        ? <img src={settings.mainChurch.supervisorAvatar} className="w-full h-full object-cover" alt="" />
-                                        : <Church className="w-8 h-8" style={{ color: `${T.accent}50` }} />
+                                    {minister.avatar
+                                        ? <img src={minister.avatar} className="w-full h-full object-cover" alt="" />
+                                        : <Church className={settings.mainChurch?.supervisorName ? "w-8 h-8" : "w-12 h-12"} style={{ color: `${T.accent}50` }} />
                                     }
                                 </div>
                                 <div className="mt-2 text-center">
-                                    <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Supervisor de Distrito</span>
-                                    <p className="text-sm font-black mt-0.5 leading-tight uppercase italic" style={{ color: T.white }}>
-                                        {settings.mainChurch.supervisorName}
+                                    <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>{minister.role || 'Ministro Local'}</span>
+                                    <p className={cn("font-black mt-0.5 leading-tight uppercase italic", settings.mainChurch?.supervisorName ? "text-sm" : "text-xl")} style={{ color: minister.name === 'Por asignar' ? T.textMuted : T.white }}>
+                                        {minister.name}
                                     </p>
                                 </div>
                             </div>
 
                             {/* Contact */}
-                            <div className="flex flex-col gap-1.5 px-5 pb-4 pt-2">
-                                {settings.mainChurch.supervisorPhone && (
+                            <div className={cn("flex flex-col gap-2.5 px-5 w-full", settings.mainChurch?.supervisorName ? "pb-2 pt-1 gap-1.5" : "p-5")}>
+                                {minister.phone && minister.name !== 'Por asignar' && (
                                     <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
                                         style={{ background: T.bg, border: `1px solid ${T.border}` }}>
-                                        <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-                                            style={{ background: T.accentDim, border: `1px solid ${T.accent}30` }}>
-                                            <Phone className="w-3 h-3" style={{ color: T.accent }} />
-                                        </div>
-                                        <span className="text-[10px] font-medium" style={{ color: T.textSecondary }}>{settings.mainChurch.supervisorPhone}</span>
+                                        <Phone className="w-3 h-3 flex-shrink-0" style={{ color: T.accent }} />
+                                        <span className="text-[10px] font-medium truncate" style={{ color: T.textSecondary }}>{minister.phone}</span>
                                     </div>
                                 )}
-                                {settings.mainChurch.supervisorEmail && (
+                                {minister.email && minister.name !== 'Por asignar' && (
                                     <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
                                         style={{ background: T.bg, border: `1px solid ${T.border}` }}>
-                                        <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-                                            style={{ background: T.accentDim, border: `1px solid ${T.accent}30` }}>
-                                            <Mail className="w-3 h-3" style={{ color: T.accent }} />
-                                        </div>
-                                        <span className="text-[9px] font-medium truncate" style={{ color: T.textSecondary }}>{settings.mainChurch.supervisorEmail.toLowerCase()}</span>
+                                        <Mail className="w-3 h-3 flex-shrink-0" style={{ color: T.accent }} />
+                                        <span className="text-[9px] font-medium truncate" style={{ color: T.textSecondary }}>{minister.email.toLowerCase()}</span>
                                     </div>
                                 )}
                             </div>
-                        </motion.div>
-                    )}
+                        </div>
+
+                        {/* Divider */}
+                        {settings.mainChurch?.supervisorName && (
+                            <div className="h-px mx-5" style={{ background: T.border }} />
+                        )}
+
+                        {/* Supervisor Section */}
+                        {settings.mainChurch?.supervisorName && (
+                            <div className="flex flex-col items-center w-full">
+                                <div className="flex flex-col items-center px-5 pt-2 pb-2">
+                                    <div className="w-20 h-20 rounded-2xl overflow-hidden flex items-center justify-center"
+                                        style={{
+                                            border: `2px solid ${T.accent}50`,
+                                            boxShadow: `0 0 30px ${T.accent}20`,
+                                            background: T.bg,
+                                        }}>
+                                        {settings.mainChurch.supervisorAvatar
+                                            ? <img src={settings.mainChurch.supervisorAvatar} className="w-full h-full object-cover" alt="" />
+                                            : <Church className="w-8 h-8" style={{ color: `${T.accent}50` }} />
+                                        }
+                                    </div>
+                                    <div className="mt-2 text-center">
+                                        <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Supervisor de Distrito</span>
+                                        <p className="text-sm font-black mt-0.5 leading-tight uppercase italic" style={{ color: T.white }}>
+                                            {settings.mainChurch.supervisorName}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-1.5 px-5 pb-4 pt-1 w-full">
+                                    {settings.mainChurch.supervisorPhone && (
+                                        <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
+                                            style={{ background: T.bg, border: `1px solid ${T.border}` }}>
+                                            <Phone className="w-3 h-3 flex-shrink-0" style={{ color: T.accent }} />
+                                            <span className="text-[10px] font-medium truncate" style={{ color: T.textSecondary }}>{settings.mainChurch.supervisorPhone}</span>
+                                        </div>
+                                    )}
+                                    {settings.mainChurch.supervisorEmail && (
+                                        <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl"
+                                            style={{ background: T.bg, border: `1px solid ${T.border}` }}>
+                                            <Mail className="w-3 h-3 flex-shrink-0" style={{ color: T.accent }} />
+                                            <span className="text-[9px] font-medium truncate" style={{ color: T.textSecondary }}>{settings.mainChurch.supervisorEmail.toLowerCase()}</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </motion.div>
                 </div>
             )}
 
