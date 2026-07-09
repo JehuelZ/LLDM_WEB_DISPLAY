@@ -506,11 +506,10 @@ export const AjustesTab = ({
                                     showNotification("Datos del ministro actualizados exitosamente.", 'success');
                                     setIsSaving(false);
                                 }}
-                                className="px-5 h-8 rounded-full flex items-center justify-center gap-1.5 text-[9px] font-black tracking-widest text-white transition-all hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-lg"
-                                style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)' }}
+                                className="px-6 h-10 bg-primary text-foreground rounded-md shadow-[0_8px_20px_rgba(var(--primary-rgb),0.25)] font-black uppercase tracking-widest text-[9px] flex items-center gap-2 hover:translate-y-[-2px] transition-all active:translate-y-0"
                             >
                                 {isSaving
-                                    ? <><span className="animate-spin w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full" /> GUARDANDO...</>
+                                    ? <><span className="animate-spin w-3.5 h-3.5 border-2 border-foreground/40 border-t-foreground rounded-full" /> GUARDANDO...</>
                                     : <><CheckCircle2 className="w-3.5 h-3.5" /> GUARDAR DATOS</>
                                 }
                             </button>
@@ -783,7 +782,7 @@ export const AjustesTab = ({
                             await saveSettingsToCloud(finalSettings);
                             setIsSaving(false);
                         }}
-                        className="px-6 h-9 bg-orange-500 hover:bg-orange-600 text-white rounded-full flex items-center justify-center gap-2 text-[10px] font-black tracking-widest transition-all hover:scale-[1.03] active:scale-[0.97] shadow-lg"
+                        className="px-10 h-12 bg-primary text-foreground rounded-md shadow-[0_10px_30px_rgba(var(--primary-rgb),0.3)] font-black uppercase tracking-widest text-xs flex items-center gap-3 hover:translate-y-[-2px] transition-all active:translate-y-0"
                     >
                         <Save className="w-4 h-4" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR PREFERENCIAS'}
                     </button>
