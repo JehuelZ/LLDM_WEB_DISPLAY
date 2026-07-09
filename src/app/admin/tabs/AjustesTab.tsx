@@ -63,48 +63,10 @@ export const AjustesTab = ({
                 <h2 className="text-4xl font-black capitalize tracking-tighter mb-8 text-[var(--tactile-text)]">Preferencias del <span className="text-primary">Sistema</span></h2>
             </div>
 
-            {/* COLUMNA 1: APARIENCIA VISUAL & JERARQUÍA Y OBRAS */}
+            {/* COLUMNA 1: APARIENCIA VISUAL & SISTEMA VISUAL & JERARQUÍA */}
             <div className="col-span-1 lg:col-span-4 space-y-6">
                 <TactileGlassCard title="APARIENCIA VISUAL">
                     <div className="space-y-5">
-                        {/* ── Modo de Interfaz: tarjetas neón compactas ── */}
-                        <div className="space-y-2">
-                            <label className="text-[9px] font-black tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
-                                <SunMoon className="w-3 h-3" /> MODO DE INTERFAZ
-                            </label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {([
-                                    { value: 'light',  label: 'Claro',   icon: Sun },
-                                    { value: 'dark',   label: 'Oscuro',  icon: Moon },
-                                    { value: 'system', label: 'Sistema', icon: Monitor },
-                                ] as const).map((opt) => {
-                                    const active = (settings.themeMode || 'dark') === opt.value;
-                                    return (
-                                        <button
-                                            key={opt.value}
-                                            onClick={() => saveSettingsToCloud({ themeMode: opt.value })}
-                                            className={cn(
-                                                "flex flex-col items-center gap-2 py-3 px-2 rounded-lg border-2 transition-all duration-300 group",
-                                                active
-                                                    ? "bg-[var(--tactile-inner-bg)] border-primary text-primary shadow-[0_0_12px_rgba(var(--primary-rgb),0.35),inset_0_0_8px_rgba(var(--primary-rgb),0.04)]"
-                                                    : "bg-[var(--tactile-inner-bg)] border-[var(--tactile-border)] text-muted-foreground hover:border-[var(--tactile-border-strong)] hover:text-foreground"
-                                            )}
-                                        >
-                                            <div className={cn(
-                                                "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300",
-                                                active
-                                                    ? "bg-primary/15"
-                                                    : "bg-[var(--tactile-bg)] group-hover:bg-[var(--tactile-item-hover)]"
-                                            )}>
-                                                <opt.icon className={cn("w-4 h-4 transition-all duration-300", active && "drop-shadow-[0_0_4px_currentColor]")} />
-                                            </div>
-                                            <span className={cn("text-[9px] font-black tracking-[0.12em] uppercase transition-colors", active && "drop-shadow-[0_0_4px_currentColor]")}>{opt.label}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
                         {/* ── Color Primario: chips circulares ── */}
                         <div className="space-y-2">
                             <label className="text-[9px] font-black tracking-[0.2em] text-muted-foreground flex items-center gap-1.5">
@@ -305,6 +267,47 @@ export const AjustesTab = ({
                     </div>
                 </TactileGlassCard>
 
+                <TactileGlassCard title="SISTEMA VISUAL DEL DISPLAY (PIZARRA)">
+                    <div className="space-y-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {[
+                                { id: 'iglesia', label: 'Carbón & Moka', icon: BookOpen, desc: 'Relieves neumórficos en tonos moka y carbón mate.' },
+                                { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Efectos de vidrio y modernismo.' },
+                                { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia y colores sólidos.' },
+                                { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Resplandores suaves nocturnos.' },
+                                { id: 'neon', label: 'Neon Forge', icon: Flame, desc: 'Futurista y de alto impacto.' },
+                                { id: 'luna', label: 'Luna Premium', icon: Sunrise, desc: 'Diseño industrial robusto.' },
+                            ].map((theme) => {
+                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id || 
+                                    (theme.id === 'iglesia' && settings.displayTemplate === 'primitivo');
+                                return (
+                                    <button
+                                        key={theme.id}
+                                        onClick={() => saveSettingsToCloud({ displayTemplate: theme.id as any })}
+                                        className={cn(
+                                            "group relative p-4 rounded-md border transition-all duration-500 text-left overflow-hidden",
+                                            isActive 
+                                                ? "bg-primary/20 border-primary/50" 
+                                                : "bg-white/[0.03] border-white/10 hover:bg-white/[0.08]"
+                                        )}
+                                    >
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className={cn(
+                                                "p-2 rounded-md transition-colors",
+                                                isActive ? "bg-primary text-white" : "bg-white/[0.08] text-muted-foreground group-hover:bg-white/20"
+                                            )}>
+                                                <theme.icon className="w-4 h-4" />
+                                            </div>
+                                            <span className={cn("text-xs font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}>{theme.label}</span>
+                                        </div>
+                                        <p className="text-[8px] text-muted-foreground/60 leading-relaxed group-hover:text-muted-foreground/80 transition-colors">{theme.desc}</p>
+                                    </button>
+                                )
+                            })}
+                        </div>
+                    </div>
+                </TactileGlassCard>
+
                 {/* JERARQUÍA Y OBRAS (EVANGELIZACIÓN) */}
                 <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
                     <div className="space-y-6">
@@ -407,7 +410,7 @@ export const AjustesTab = ({
                 </TactileGlassCard>
             </div>
 
-            {/* COLUMNA 2: MINISTRO RESPONSABLE & SISTEMA VISUAL DEL DISPLAY (PIZARRA) */}
+            {/* COLUMNA 2: MINISTRO RESPONSABLE */}
             <div className="col-span-1 lg:col-span-4 space-y-6">
                 <TactileGlassCard title="MINISTRO RESPONSABLE">
                     <div className="space-y-5">
@@ -511,49 +514,6 @@ export const AjustesTab = ({
                                     : <><CheckCircle2 className="w-3.5 h-3.5" /> GUARDAR DATOS</>
                                 }
                             </button>
-                        </div>
-                    </div>
-                </TactileGlassCard>
-
-                <TactileGlassCard title="SISTEMA VISUAL DEL DISPLAY (PIZARRA)">
-                    <div className="space-y-8">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {[
-                                { id: 'iglesia', label: 'Carbón & Moka', icon: BookOpen, desc: 'Relieves neumórficos en tonos moka y carbón mate.' },
-                                { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Efectos de vidrio y modernismo.' },
-                                { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia y colores sólidos.' },
-                                { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Resplandores suaves nocturnos.' },
-                                { id: 'neon', label: 'Neon Forge', icon: Flame, desc: 'Futurista y de alto impacto.' },
-                                { id: 'luna', label: 'Luna Premium', icon: Sunrise, desc: 'Diseño industrial robusto.' },
-                            ].map((theme) => {
-                                const isActive = (settings.displayTemplate || 'nocturno') === theme.id || 
-                                    (theme.id === 'iglesia' && settings.displayTemplate === 'primitivo');
-                                return (
-                                    <button
-                                        key={theme.id}
-                                        onClick={() => saveSettingsToCloud({ displayTemplate: theme.id as any })}
-                                        className={cn(
-                                            "group relative p-4 rounded-md border transition-all duration-500 text-left overflow-hidden",
-                                            isActive 
-                                                ? "bg-primary/20 border-primary/50" 
-                                                : settings.themeMode === 'light'
-                                                    ? "bg-black/[0.03] border-slate-200 hover:bg-black/[0.08]"
-                                                    : "bg-white/[0.03] border-white/10 hover:bg-white/[0.08]"
-                                        )}
-                                    >
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className={cn(
-                                                "p-2 rounded-md transition-colors",
-                                                isActive ? "bg-primary text-white" : "bg-white/[0.08] text-muted-foreground group-hover:bg-white/20"
-                                            )}>
-                                                <theme.icon className="w-4 h-4" />
-                                            </div>
-                                            <span className={cn("text-xs font-black capitalize tracking-widest", isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground")}>{theme.label}</span>
-                                        </div>
-                                        <p className="text-[8px] text-muted-foreground/60 leading-relaxed group-hover:text-muted-foreground/80 transition-colors">{theme.desc}</p>
-                                    </button>
-                                )
-                            })}
                         </div>
                     </div>
                 </TactileGlassCard>
