@@ -452,12 +452,27 @@ export const AjustesTab = ({
                                 <Shield className="w-3 h-3 text-primary" />
                                 <span className="text-[9px] font-black tracking-widest uppercase text-primary">Pastor Principal</span>
                             </div>
-                            <button
-                                onClick={() => document.getElementById('minister-avatar-upload')?.click()}
-                                className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
-                            >
-                                Cambiar fotografía
-                            </button>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => document.getElementById('minister-avatar-upload')?.click()}
+                                    className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                >
+                                    Cambiar fotografía
+                                </button>
+                                {settings.ministerAvatar && (
+                                    <button
+                                        onClick={() => {
+                                            setImageToEdit({
+                                                source: settings.ministerAvatar,
+                                                target: 'minister'
+                                            });
+                                        }}
+                                        className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                    >
+                                        Re-encuadrar actual
+                                    </button>
+                                )}
+                            </div>
                             <input
                                 type="file"
                                 id="minister-avatar-upload"
@@ -558,12 +573,27 @@ export const AjustesTab = ({
                                 <Shield className="w-3 h-3 text-primary" />
                                 <span className="text-[9px] font-black tracking-widest uppercase text-primary">Supervisor de Distrito</span>
                             </div>
-                            <button
-                                onClick={() => document.getElementById('supervisor-avatar-upload')?.click()}
-                                className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
-                            >
-                                Cambiar fotografía
-                            </button>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => document.getElementById('supervisor-avatar-upload')?.click()}
+                                    className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                >
+                                    Cambiar fotografía
+                                </button>
+                                {settings.mainChurch?.supervisorAvatar && (
+                                    <button
+                                        onClick={() => {
+                                            setImageToEdit({
+                                                source: settings.mainChurch.supervisorAvatar,
+                                                target: 'supervisor'
+                                            });
+                                        }}
+                                        className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                    >
+                                        Re-encuadrar actual
+                                    </button>
+                                )}
+                            </div>
                             <input
                                 type="file"
                                 id="supervisor-avatar-upload"

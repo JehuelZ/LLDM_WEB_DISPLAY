@@ -1155,14 +1155,28 @@ export default function MembersPage() {
                                         <div>
                                             <h4 className="text-sm font-black uppercase tracking-widest text-primary ">Imagen de Perfil</h4>
                                             <p className="text-[10px] text-slate-500 uppercase font-bold mt-1">Click en la imagen para subir una nueva foto</p>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="mt-2 text-[10px] font-black uppercase text-primary border border-primary/20 hover:bg-primary/10"
-                                                onClick={() => (document.getElementById('member-avatar-upload') as HTMLInputElement)?.click()}
-                                            >
-                                                Seleccionar Imagen
-                                            </Button>
+                                            <div className="flex gap-2 mt-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="text-[10px] font-black uppercase text-primary border border-primary/20 hover:bg-primary/10"
+                                                    onClick={() => (document.getElementById('member-avatar-upload') as HTMLInputElement)?.click()}
+                                                >
+                                                    Subir Nueva
+                                                </Button>
+                                                {memberModal.data.avatar && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        className="text-[10px] font-black uppercase text-primary border border-primary/20 hover:bg-primary/10"
+                                                        onClick={() => {
+                                                            setImageToEdit(memberModal.data.avatar);
+                                                        }}
+                                                    >
+                                                        Ajustar Actual
+                                                    </Button>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                     <h4 className="text-sm font-black uppercase tracking-widest text-primary border-b border-primary/20 pb-2">Datos de Identidad</h4>

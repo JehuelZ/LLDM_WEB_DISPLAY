@@ -145,6 +145,7 @@ export function ImageEditor({ image, onSave, onCancel, aspectRatio = 1, loading 
                             <MotionImg
                                 ref={imageRef}
                                 src={image}
+                                crossOrigin="anonymous"
                                 animate={{
                                     scale: zoom,
                                     rotate: rotation,
