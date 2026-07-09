@@ -720,7 +720,7 @@ export const AjustesTab = ({
                     <div className="space-y-8">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {[
-                                { id: 'iglesia', label: 'Estilo Institucional (Primitivo)', icon: Church, desc: 'Diseño institucional tradicional.' },
+                                { id: 'iglesia', label: 'Carbón & Moka', icon: BookOpen, desc: 'Relieves neumórficos en tonos moka y carbón mate.' },
                                 { id: 'cristal', label: 'Cristal Glass', icon: Sparkles, desc: 'Efectos de vidrio y modernismo.' },
                                 { id: 'minimal', label: 'Minimalista', icon: Type, desc: 'Elegancia y colores sólidos.' },
                                 { id: 'nocturno', label: 'Midnight Glow', icon: Moon, desc: 'Resplandores suaves nocturnos.' },
