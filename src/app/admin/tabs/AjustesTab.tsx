@@ -483,32 +483,34 @@ export const AjustesTab = ({
                             />
                         </div>
 
-                        {/* ── Botón guardar con gradiente ── */}
-                        <button
-                            onClick={async () => {
-                                setIsSaving(true);
-                                await saveSettingsToCloud({
-                                    ministerName: settings.ministerName,
-                                    ministerEmail: settings.ministerEmail,
-                                    ministerPhone: settings.ministerPhone
-                                });
-                                setMinister({
-                                    ...minister,
-                                    name: settings.ministerName,
-                                    email: settings.ministerEmail,
-                                    phone: settings.ministerPhone
-                                });
-                                showNotification("Datos del ministro actualizados exitosamente.", 'success');
-                                setIsSaving(false);
-                            }}
-                            className="w-full h-11 rounded-lg flex items-center justify-center gap-2 text-[11px] font-black tracking-widest text-white transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg"
-                            style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)' }}
-                        >
-                            {isSaving
-                                ? <><span className="animate-spin w-4 h-4 border-2 border-white/40 border-t-white rounded-full" /> GUARDANDO...</>
-                                : <><CheckCircle2 className="w-4 h-4" /> GUARDAR DATOS</>
-                            }
-                        </button>
+                        {/* ── Botón guardar con gradiente en estilo píldora ── */}
+                        <div className="flex justify-center pt-1">
+                            <button
+                                onClick={async () => {
+                                    setIsSaving(true);
+                                    await saveSettingsToCloud({
+                                        ministerName: settings.ministerName,
+                                        ministerEmail: settings.ministerEmail,
+                                        ministerPhone: settings.ministerPhone
+                                    });
+                                    setMinister({
+                                        ...minister,
+                                        name: settings.ministerName,
+                                        email: settings.ministerEmail,
+                                        phone: settings.ministerPhone
+                                    });
+                                    showNotification("Datos del ministro actualizados exitosamente.", 'success');
+                                    setIsSaving(false);
+                                }}
+                                className="px-5 h-8 rounded-full flex items-center justify-center gap-1.5 text-[9px] font-black tracking-widest text-white transition-all hover:scale-[1.03] active:scale-[0.97] shadow-md hover:shadow-lg"
+                                style={{ background: 'linear-gradient(135deg, #f97316, #ea580c)' }}
+                            >
+                                {isSaving
+                                    ? <><span className="animate-spin w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full" /> GUARDANDO...</>
+                                    : <><CheckCircle2 className="w-3.5 h-3.5" /> GUARDAR DATOS</>
+                                }
+                            </button>
+                        </div>
                     </div>
                 </TactileGlassCard>
 
@@ -783,46 +785,48 @@ export const AjustesTab = ({
                     </div>
                 </TactileGlassCard>
 
-                {/* BOTÓN GUARDAR PREFERENCIAS */}
-                <button
-                    onClick={async () => {
-                        setIsSaving(true);
-                        let finalSettings = { ...settings };
-                        if (settings.weatherCity && (settings.weatherLat === null || settings.weatherLat === undefined || settings.weatherLng === null || settings.weatherLng === undefined)) {
-                            try {
-                                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(settings.weatherCity)}&count=1&language=es&format=json`);
-                                const data = await res.json();
-                                if (data.results && data.results.length > 0) {
-                                    const loc = data.results[0];
-                                    let adminStr = loc.admin1 ? `, ${loc.admin1}` : '';
-                                    if (!loc.admin1 && loc.country) adminStr = `, ${loc.country}`;
-                                    const displayName = `${loc.name}${adminStr}`;
-                                    
-                                    finalSettings.weatherCity = displayName;
-                                    finalSettings.weatherLat = loc.latitude;
-                                    finalSettings.weatherLng = loc.longitude;
-                                    
-                                    try {
-                                        const tzRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&timezone=auto&current_weather=true`);
-                                        const tzData = await tzRes.json();
-                                        if (tzData.timezone) {
-                                            finalSettings.weatherTimezone = tzData.timezone;
+                {/* BOTÓN GUARDAR PREFERENCIAS EN ESTILO PÍLDORA */}
+                <div className="flex justify-center pt-2">
+                    <button
+                        onClick={async () => {
+                            setIsSaving(true);
+                            let finalSettings = { ...settings };
+                            if (settings.weatherCity && (settings.weatherLat === null || settings.weatherLat === undefined || settings.weatherLng === null || settings.weatherLng === undefined)) {
+                                try {
+                                    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(settings.weatherCity)}&count=1&language=es&format=json`);
+                                    const data = await res.json();
+                                    if (data.results && data.results.length > 0) {
+                                        const loc = data.results[0];
+                                        let adminStr = loc.admin1 ? `, ${loc.admin1}` : '';
+                                        if (!loc.admin1 && loc.country) adminStr = `, ${loc.country}`;
+                                        const displayName = `${loc.name}${adminStr}`;
+                                        
+                                        finalSettings.weatherCity = displayName;
+                                        finalSettings.weatherLat = loc.latitude;
+                                        finalSettings.weatherLng = loc.longitude;
+                                        
+                                        try {
+                                            const tzRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&timezone=auto&current_weather=true`);
+                                            const tzData = await tzRes.json();
+                                            if (tzData.timezone) {
+                                                finalSettings.weatherTimezone = tzData.timezone;
+                                            }
+                                        } catch (tzErr) {
+                                            console.error("Error fetching timezone identifier during auto-save geocode:", tzErr);
                                         }
-                                    } catch (tzErr) {
-                                        console.error("Error fetching timezone identifier during auto-save geocode:", tzErr);
                                     }
+                                } catch (e) {
+                                    console.error("Error auto-geocoding city during save:", e);
                                 }
-                            } catch (e) {
-                                console.error("Error auto-geocoding city during save:", e);
                             }
-                        }
-                        await saveSettingsToCloud(finalSettings);
-                        setIsSaving(false);
-                    }}
-                    className="w-full h-12 bg-orange-500 text-white rounded-md flex items-center justify-center gap-3 text-sm font-black tracking-widest hover:bg-orange-600 transition-colors shadow-xl"
-                >
-                    <Save className="w-5 h-5" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR PREFERENCIAS'}
-                </button>
+                            await saveSettingsToCloud(finalSettings);
+                            setIsSaving(false);
+                        }}
+                        className="px-6 h-9 bg-orange-500 hover:bg-orange-600 text-white rounded-full flex items-center justify-center gap-2 text-[10px] font-black tracking-widest transition-all hover:scale-[1.03] active:scale-[0.97] shadow-lg"
+                    >
+                        <Save className="w-4 h-4" /> {isSaving ? 'GUARDANDO...' : 'GUARDAR PREFERENCIAS'}
+                    </button>
+                </div>
             </div>
 
             {/* RENDER DE MODALES */}
