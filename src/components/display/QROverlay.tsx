@@ -15,10 +15,10 @@ export function QROverlay({ baseUrl }: QROverlayProps) {
 
   return (
     <div
-      className="absolute bottom-6 left-12 z-[250] flex flex-col gap-2 items-start"
+      className="absolute bottom-6 left-12 z-[250] flex flex-col gap-2 items-center"
       style={{ pointerEvents: 'none' }}
     >
-      <div className="text-[8px] font-black tracking-[0.25em] text-white/60 bg-black/60 backdrop-blur-md border border-white/5 rounded-full px-3 py-1 shadow-lg flex items-center gap-1.5 ml-1 select-none">
+      <div className="text-[8px] font-black tracking-[0.25em] text-white/60 bg-black/60 backdrop-blur-md border border-white/5 rounded-full px-3 py-1 shadow-lg flex items-center gap-1.5 select-none">
         <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_var(--primary)]" />
         ¡ESCANEAME!
       </div>
