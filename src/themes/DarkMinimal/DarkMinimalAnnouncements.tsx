@@ -177,7 +177,7 @@ export const DarkMinimalAnnouncements = () => {
                                         }
                                     </div>
                                     <div className="mt-2 text-center">
-                                        <span className="text-[8px] font-semibold uppercase tracking-widest text-[#4B5563]">Supervisor de Distrito</span>
+                                        <span className="text-[8px] font-semibold uppercase tracking-widest text-[#4B5563]">Supervisor</span>
                                         <p className="text-base font-bold text-white mt-0.5 leading-tight">{settings.mainChurch.supervisorName}</p>
                                     </div>
                                 </div>

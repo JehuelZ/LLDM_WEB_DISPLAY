@@ -224,7 +224,7 @@ export const MidnightGlowAnnouncements = () => {
 
                             <div className="rounded-3xl bg-[#040D21]/95 border-2 border-[#A3FF57]/50 shadow-[0_10px_20px_rgba(0,0,0,0.6)] backdrop-blur-xl flex flex-col items-center px-6 py-1.5">
                                 <span className="font-black text-[#A3FF57] uppercase tracking-[0.3em] opacity-90 text-[8px] mb-0.5">
-                                    Supervisor de Distrito
+                                    Supervisor
                                 </span>
                                 <span className="font-black uppercase tracking-[0.05em] leading-none text-center text-base text-white">
                                     {settings.mainChurch.supervisorName}

@@ -199,7 +199,7 @@ export function NeonForgeAnnouncements() {
                                         }
                                     </div>
                                     <div className="mt-2 text-center">
-                                        <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Supervisor de Distrito</span>
+                                        <span className="text-[8px] font-bold uppercase tracking-widest" style={{ color: T.textMuted }}>Supervisor</span>
                                         <p className="text-base font-black mt-0.5 leading-tight uppercase italic" style={{ color: T.white }}>
                                             {settings.mainChurch.supervisorName}
                                         </p>

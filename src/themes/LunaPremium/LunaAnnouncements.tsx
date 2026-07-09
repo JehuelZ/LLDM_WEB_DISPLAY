@@ -143,7 +143,7 @@ export const LunaAnnouncements = () => {
                                     </div>
                                 </div>
                                 <span className="text-[8px] lowercase font-[300] tracking-[0.4em] text-white/40 mb-1">
-                                    supervisor de distrito
+                                    supervisor
                                 </span>
                                 <h2 className="text-2xl font-[200] capitalize tracking-tighter mb-3 text-center text-white">
                                     {settings.mainChurch.supervisorName}
