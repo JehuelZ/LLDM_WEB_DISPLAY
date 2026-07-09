@@ -24,3 +24,19 @@ The LLDM Rodeo portal is designed to be easily cloned and deployed by other chur
 To prevent columns or calendar slots from cutting off in different viewport sizes or templates:
 - Always use `min-w-0` on columns in flex containers (e.g. `MidnightGlowWeekly` grid).
 - Ensure that name cards or slots do not cause layout expansion by allowing truncation (`truncate` with `min-w-0`).
+
+---
+
+## 3. High-Efficiency Image Optimization (WebP)
+
+To maintain page load speed and keep database asset sizes light:
+- **WebP Output Enforced**: All compressed images must be exported as `image/webp` with a target quality of `0.8` to `0.85` inside `compressImage` and `ImageEditor`.
+- **Filename Extension**: Always save image files using `.webp` extensions rather than `.jpg` or `.png`.
+
+---
+
+## 4. Frameless Display Page Elements ("Sin Caja")
+
+To integrate display elements cleanly on projection backgrounds:
+- **No Background/Border Frames**: Display column panels for Ministers and Supervisors must float border-free and background-free directly on the slide background.
+- **Square Aspect Ratio**: Photos in settings and member details must use a 1:1 square crop box (`aspectRatio={1}`).
