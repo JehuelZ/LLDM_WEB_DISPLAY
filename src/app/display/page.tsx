@@ -179,7 +179,14 @@ export default function DisplayPage() {
 
     // Theme engine: choose the correct theme based on settings
     const activeTheme = useMemo(() => {
-        const themeId = settings?.displayTemplate || 'nocturno';
+        let themeId = settings?.displayTemplate || 'nocturno';
+        if (typeof window !== 'undefined') {
+            const urlParams = new URLSearchParams(window.location.search);
+            const themeOverride = urlParams.get('theme');
+            if (themeOverride) {
+                themeId = themeOverride as any;
+            }
+        }
         const theme = getTheme(themeId);
 
         // --- ULTIMATE FONT OVERRIDE ---
