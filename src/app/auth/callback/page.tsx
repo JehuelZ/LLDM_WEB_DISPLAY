@@ -15,6 +15,15 @@ export default function AuthCallbackPage() {
             const { data: { session }, error } = await supabase.auth.getSession();
 
             if (session?.user) {
+                // Revisar si viene de una reclamación de /activar
+                const pendingProfileId = localStorage.getItem('pending_claim_profile_id');
+                if (pendingProfileId && session.user.email) {
+                    // Llamar a RPC para vincular el Google user a este profile ID
+                    await supabase.rpc('claim_member_portal', { p_profile_id: pendingProfileId, p_email: session.user.email });
+                    // Limpiar
+                    localStorage.removeItem('pending_claim_profile_id');
+                }
+
                 setAuthSession(session);
                 // Sincronizar perfil (vincula pre-registrado si existe)
                 await syncUserWithCloud(session.user.id);

@@ -3,6 +3,7 @@
 import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
+import { useAppStore } from '@/lib/store';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChurchIcon, KeyRound, ShieldCheck, UserCheck, AlertCircle, Loader2, Eye, EyeOff, ArrowRight, CheckCircle2 } from 'lucide-react';
 
@@ -38,6 +39,8 @@ function ActivarContent() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [memberFound, setMemberFound] = useState<MemberFound | null>(null);
+
+  const { signInWithGoogle } = useAppStore();
 
   // Si viene con token, verificar automáticamente
   useEffect(() => {
@@ -301,7 +304,28 @@ function ActivarContent() {
                 </div>
                 <div>
                   <h2 className="text-white font-semibold text-lg">Crea tu acceso</h2>
-                  <p className="text-white/40 text-xs">Elige el email y contraseña para tu portal</p>
+                  <p className="text-white/40 text-xs">Usa tu cuenta de Google o elige un email y contraseña</p>
+                </div>
+              </div>
+
+              <div className="mb-6 space-y-4">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!memberFound) return;
+                    localStorage.setItem('pending_claim_profile_id', memberFound.id);
+                    await signInWithGoogle();
+                  }}
+                  className="w-full bg-white text-slate-900 font-extrabold rounded-xl px-4 py-3 flex items-center justify-center gap-3 transition-all shadow-xl hover:bg-slate-50 text-xs tracking-widest uppercase"
+                >
+                  <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G" />
+                  Activar con Google
+                </button>
+
+                <div className="relative flex items-center py-2">
+                    <div className="flex-grow border-t border-white/10"></div>
+                    <span className="flex-shrink mx-4 text-[9px] font-black uppercase tracking-[0.3em] text-white/40">O CON CORREO</span>
+                    <div className="flex-grow border-t border-white/10"></div>
                 </div>
               </div>
 
