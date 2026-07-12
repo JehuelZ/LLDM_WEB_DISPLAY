@@ -40,7 +40,7 @@ function ActivarContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [memberFound, setMemberFound] = useState<MemberFound | null>(null);
 
-  const { signInWithGoogle } = useAppStore();
+  const { signInWithGoogle, settings } = useAppStore();
 
   // Si viene con token, verificar automáticamente
   useEffect(() => {
@@ -190,8 +190,12 @@ function ActivarContent() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 mb-4">
-            <ChurchIcon className="w-8 h-8 text-orange-400" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-orange-500/10 border border-orange-500/20 mb-4 p-4 shadow-inner">
+            <img 
+              src={settings.churchLogoUrl || "/flama-oficial.svg"} 
+              alt="LLDM"
+              className="w-full h-full object-contain"
+            />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">LLDM Rodeo</h1>
           <p className="text-sm text-white/40 mt-1">Portal del Miembro</p>
