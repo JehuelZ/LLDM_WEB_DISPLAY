@@ -1,10 +1,30 @@
 'use client';
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, User, Phone, Mail, Church } from 'lucide-react';
+import { Bell, User, Phone, Mail, Church, Megaphone, Info, AlertCircle, Calendar, Users, Heart, BookOpen, Flame, Music, Star, Shield, Smile } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn, getActiveAnnouncements } from '@/lib/utils';
 import { CountdownCard } from '@/components/CountdownCard';
+
+const AnnouncementIcon = ({ name, className, style, size = 20 }: { name: string; className?: string; style?: any; size?: number }) => {
+    const icons: Record<string, any> = {
+        bell: Bell,
+        megaphone: Megaphone,
+        info: Info,
+        alert: AlertCircle,
+        calendar: Calendar,
+        users: Users,
+        heart: Heart,
+        book: BookOpen,
+        flame: Flame,
+        music: Music,
+        star: Star,
+        shield: Shield,
+        smile: Smile
+    };
+    const IconComponent = icons[name] || Bell;
+    return <IconComponent className={className} style={style} size={size} />;
+};
 
 export const MidnightGlowAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
@@ -70,7 +90,16 @@ export const MidnightGlowAnnouncements = () => {
                                     </div>
 
                                     {/* Title (Mimicking the HUGE time text block) */}
-                                    <div className="flex items-end justify-center w-full px-6 text-center z-10 mt-2 mb-5">
+                                    <div className="flex items-center justify-center w-full px-6 text-center z-10 mt-2 mb-5 gap-3">
+                                        {ann.imageUrl && (
+                                            <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-white/5 flex items-center justify-center">
+                                                {ann.imageUrl.startsWith('icon:') ? (
+                                                    <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" style={{ color: isUrgent ? '#A3FF57' : '#4F7FFF' }} />
+                                                ) : (
+                                                    <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
+                                                )}
+                                            </div>
+                                        )}
                                         <span className={`font-black text-white leading-tight uppercase tracking-wider drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] ${ann.title.length > 18 ? 'text-base' : 'text-lg md:text-xl'}`}>
                                             {ann.title}
                                         </span>

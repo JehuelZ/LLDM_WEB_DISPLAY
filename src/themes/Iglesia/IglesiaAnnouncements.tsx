@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
-import { Megaphone, Calendar, Quote, AlertCircle, Info, Star, Bookmark, Bell, Crown, Sunrise, Sun, Moon, User, Users, Music, Baby, Settings, Phone, Mail, Zap, Heart, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Megaphone, Calendar, Quote, AlertCircle, Info, Star, Bookmark, Bell, Crown, Sunrise, Sun, Moon, User, Users, Music, Baby, Settings, Phone, Mail, Zap, Heart, Facebook, Instagram, Youtube, Flame, Shield, Smile } from 'lucide-react';
 import { BigAcademicTitle, ChurchHeaderBadge } from './BigAcademicTitle';
 import { getIglesiaTokens, neuShadow } from './tokens';
 import { IglesiaClockInline } from './Clock';
@@ -10,6 +10,26 @@ import { getSlideSystemTitle } from '@/lib/display_labels';
 import { format, parseISO, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getActiveAnnouncements } from '@/lib/utils';
+
+const AnnouncementIcon = ({ name, className, style, size = 20 }: { name: string; className?: string; style?: any; size?: number }) => {
+    const icons: Record<string, any> = {
+        bell: Bell,
+        megaphone: Megaphone,
+        info: Info,
+        alert: AlertCircle,
+        calendar: Calendar,
+        users: Users,
+        heart: Heart,
+        book: Star, // fallback for book
+        flame: Flame,
+        music: Music,
+        star: Star,
+        shield: Shield,
+        smile: Smile
+    };
+    const IconComponent = icons[name] || Bell;
+    return <IconComponent className={className} style={style} size={size} />;
+};
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Iglesia — Announcements Slide (Stacked Cards)
@@ -247,10 +267,15 @@ export function IglesiaAnnouncements() {
                                                 <div style={{
                                                     width: 50, height: 50, borderRadius: 12, flexShrink: 0,
                                                     background: isUrgent ? `${T.accent}15` : `${T.secondary}15`,
-                                                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                    overflow: 'hidden'
                                                 }}>
                                                     {ann.imageUrl ? (
-                                                        <img src={ann.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12 }} />
+                                                        ann.imageUrl.startsWith('icon:') ? (
+                                                            <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} style={{ color: isUrgent ? T.accent : T.secondary }} />
+                                                        ) : (
+                                                            <img src={ann.imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 12 }} />
+                                                        )
                                                     ) : (
                                                         isUrgent ? <AlertCircle style={{ color: T.accent }} /> : <Info style={{ color: T.secondary }} />
                                                     )}

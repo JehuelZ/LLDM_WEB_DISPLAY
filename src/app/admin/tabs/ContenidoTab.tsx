@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
     Sparkles, BookOpen, Calendar, Upload, Save, RefreshCw, 
     Bell, Edit2, Trash2, Plus, Monitor, Sunrise, Radio, 
-    XCircle, CheckCircle, Reply, MessageSquare, Database
+    XCircle, CheckCircle, Reply, MessageSquare, Database,
+    Megaphone, AlertCircle, Users, Heart, Flame, Music, Star, Shield, Smile, Image as ImageIcon
 } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -15,6 +16,27 @@ import {
 } from '@/components/admin/TactileUI'
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
+import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal'
+
+export const AnnouncementIcon = ({ name, className, style, size = 18 }: { name: string; className?: string; style?: any; size?: number }) => {
+    const icons: Record<string, any> = {
+        bell: Bell,
+        megaphone: Megaphone,
+        info: BookOpen, // fallback to BookOpen/info
+        alert: AlertCircle,
+        calendar: Calendar,
+        users: Users,
+        heart: Heart,
+        book: BookOpen,
+        flame: Flame,
+        music: Music,
+        star: Star,
+        shield: Shield,
+        smile: Smile
+    };
+    const IconComponent = icons[name] || Bell;
+    return <IconComponent className={className} style={style} size={size} />;
+};
 
 interface ContenidoTabProps {
     theme: any
@@ -43,7 +65,8 @@ export const ContenidoTab = ({
 }: ContenidoTabProps) => {
     const [isSaving, setIsSaving] = useState(false)
     const [editingAnnId, setEditingAnnId] = useState<string | null>(null)
-    const [newAnn, setNewAnn] = useState({ title: '', content: '', category: 'general' })
+    const [isGalleryOpen, setIsGalleryOpen] = useState(false)
+    const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', category: 'general', imageUrl: '' })
 
     const handleSaveAnnouncement = async () => {
         if (!newAnn.title || !newAnn.content) {
@@ -56,7 +79,7 @@ export const ContenidoTab = ({
                 ...newAnn,
                 id: editingAnnId || undefined,
             })
-            setNewAnn({ title: '', content: '', category: 'general' })
+            setNewAnn({ title: '', content: '', category: 'general', imageUrl: '' })
             setEditingAnnId(null)
             showNotification(editingAnnId ? 'Aviso actualizado' : 'Aviso creado', 'success')
         } catch (err) {
@@ -226,12 +249,117 @@ export const ContenidoTab = ({
                             ]}
                             icon={Plus}
                         />
+
+                        <div className="space-y-3">
+                            <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">ILUSTRACIÓN DEL AVISO</label>
+                            <div className="grid grid-cols-3 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setNewAnn({ ...newAnn, imageUrl: '' })}
+                                    className={cn(
+                                        "p-2.5 rounded-lg border text-[11px] font-bold transition-all uppercase tracking-wider",
+                                        !newAnn.imageUrl 
+                                            ? "bg-primary/20 border-primary text-primary" 
+                                            : "bg-black/30 border-[var(--tactile-border)] text-muted-foreground hover:text-white"
+                                    )}
+                                >
+                                    Sin Ilustración
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsGalleryOpen(true)}
+                                    className={cn(
+                                        "p-2.5 rounded-lg border text-[11px] font-bold transition-all uppercase tracking-wider flex items-center justify-center gap-1.5",
+                                        newAnn.imageUrl && !newAnn.imageUrl.startsWith('icon:')
+                                            ? "bg-primary/20 border-primary text-primary" 
+                                            : "bg-black/30 border-[var(--tactile-border)] text-muted-foreground hover:text-white"
+                                    )}
+                                >
+                                    <ImageIcon className="w-3.5 h-3.5" />
+                                    Galería
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setNewAnn({ ...newAnn, imageUrl: 'icon:bell' })}
+                                    className={cn(
+                                        "p-2.5 rounded-lg border text-[11px] font-bold transition-all uppercase tracking-wider flex items-center justify-center gap-1.5",
+                                        newAnn.imageUrl && newAnn.imageUrl.startsWith('icon:')
+                                            ? "bg-primary/20 border-primary text-primary" 
+                                            : "bg-black/30 border-[var(--tactile-border)] text-muted-foreground hover:text-white"
+                                    )}
+                                >
+                                    <Sparkles className="w-3.5 h-3.5" />
+                                    Ícono
+                                </button>
+                            </div>
+
+                            {newAnn.imageUrl && !newAnn.imageUrl.startsWith('icon:') && (
+                                <div className="flex items-center gap-3 p-3 bg-black/20 rounded-md border border-[var(--tactile-border)]">
+                                    <div className="w-12 h-12 rounded overflow-hidden bg-black/50 border border-[var(--tactile-border)] flex-shrink-0">
+                                        <img src={newAnn.imageUrl} alt="" className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-[10px] font-black uppercase text-muted-foreground">Imagen seleccionada</p>
+                                        <p className="text-[11px] text-white font-mono truncate">{newAnn.imageUrl}</p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setNewAnn({ ...newAnn, imageUrl: '' })}
+                                        className="tactile-btn p-0 w-8 h-8 justify-center text-red-500 hover:text-red-400 bg-red-500/10 border border-red-500/20"
+                                    >
+                                        <XCircle className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            )}
+
+                            {newAnn.imageUrl && newAnn.imageUrl.startsWith('icon:') && (
+                                <div className="p-4 bg-black/20 rounded-md border border-[var(--tactile-border)] space-y-3">
+                                    <p className="text-[10px] font-black uppercase text-muted-foreground">Selecciona un ícono moderno:</p>
+                                    <div className="grid grid-cols-6 gap-2">
+                                        {[
+                                            { id: 'bell', label: 'Campana' },
+                                            { id: 'megaphone', label: 'Megáfono' },
+                                            { id: 'info', label: 'Info' },
+                                            { id: 'alert', label: 'Alerta' },
+                                            { id: 'calendar', label: 'Fecha' },
+                                            { id: 'users', label: 'Grupo' },
+                                            { id: 'heart', label: 'Amor' },
+                                            { id: 'book', label: 'Doctrina' },
+                                            { id: 'flame', label: 'Fuego' },
+                                            { id: 'music', label: 'Canto' },
+                                            { id: 'star', label: 'Estrella' },
+                                            { id: 'shield', label: 'Escudo' },
+                                            { id: 'smile', label: 'Niños' }
+                                        ].map((item) => {
+                                            const isSelected = newAnn.imageUrl === `icon:${item.id}`;
+                                            return (
+                                                <button
+                                                    key={item.id}
+                                                    type="button"
+                                                    title={item.label}
+                                                    onClick={() => setNewAnn({ ...newAnn, imageUrl: `icon:${item.id}` })}
+                                                    className={cn(
+                                                        "p-3 rounded-lg border flex items-center justify-center transition-all",
+                                                        isSelected 
+                                                            ? "bg-primary/20 border-primary text-primary" 
+                                                            : "bg-black/30 border-transparent text-muted-foreground hover:text-white"
+                                                    )}
+                                                >
+                                                    <AnnouncementIcon name={item.id} className="w-5 h-5" />
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         <div className="flex gap-3">
                             {editingAnnId && (
                                 <button
                                     onClick={() => {
                                         setEditingAnnId(null)
-                                        setNewAnn({ title: '', content: '', category: 'general' })
+                                        setNewAnn({ title: '', content: '', category: 'general', imageUrl: '' })
                                     }}
                                     className="tactile-btn tactile-btn-glass flex-1 justify-center"
                                 >
@@ -257,10 +385,18 @@ export const ContenidoTab = ({
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
                                         <div className={cn(
-                                            "w-10 h-10 rounded-md flex items-center justify-center border",
+                                            "w-10 h-10 rounded-md flex items-center justify-center border overflow-hidden",
                                             ann.category === 'urgent' ? "bg-red-500/20 border-red-500/20 text-red-500" : "bg-primary/20 border-primary/20 text-primary"
                                         )}>
-                                            <Bell className="w-5 h-5" />
+                                            {ann.imageUrl ? (
+                                                ann.imageUrl.startsWith('icon:') ? (
+                                                    <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" />
+                                                ) : (
+                                                    <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
+                                                )
+                                            ) : (
+                                                <Bell className="w-5 h-5" />
+                                            )}
                                         </div>
                                         <div>
                                             <h4 className="font-black text-sm capitalize">{ann.title}</h4>
@@ -291,6 +427,17 @@ export const ContenidoTab = ({
                     </div>
                 </div>
             </div>
+
+            <MediaGalleryModal
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                title="Seleccionar Imagen para el Aviso"
+                mode="select"
+                onSelectImage={(url) => {
+                    setNewAnn({ ...newAnn, imageUrl: url });
+                    setIsGalleryOpen(false);
+                }}
+            />
         </div>
     )
 }

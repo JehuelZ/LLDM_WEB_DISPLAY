@@ -1,10 +1,30 @@
 'use client';
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, User, Phone, Mail, Church } from 'lucide-react';
+import { Bell, User, Phone, Mail, Church, Megaphone, Info, AlertCircle, Calendar, Users, Heart, BookOpen, Flame, Music, Star, Shield, Smile } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { cn, getActiveAnnouncements } from '@/lib/utils';
 import { CountdownCard } from '@/components/CountdownCard';
+
+const AnnouncementIcon = ({ name, className, style, size = 24 }: { name: string; className?: string; style?: any; size?: number }) => {
+    const icons: Record<string, any> = {
+        bell: Bell,
+        megaphone: Megaphone,
+        info: Info,
+        alert: AlertCircle,
+        calendar: Calendar,
+        users: Users,
+        heart: Heart,
+        book: BookOpen,
+        flame: Flame,
+        music: Music,
+        star: Star,
+        shield: Shield,
+        smile: Smile
+    };
+    const IconComponent = icons[name] || Bell;
+    return <IconComponent className={className} style={style} size={size} />;
+};
 
 export const GlassmorphismAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
@@ -57,10 +77,18 @@ export const GlassmorphismAnnouncements = () => {
 
                                 <div className="flex items-center gap-5 mb-6">
                                     <div className={cn(
-                                        "w-14 h-14 rounded-2xl flex items-center justify-center border shadow-lg group-hover/ann:scale-110 transition-transform",
-                                        ann.priority > 0 ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-500 px-10" : "bg-white/5 border-white/10 text-white/40"
+                                        "w-14 h-14 rounded-2xl flex items-center justify-center border shadow-lg group-hover/ann:scale-110 transition-transform overflow-hidden flex-shrink-0",
+                                        ann.priority > 0 ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-500" : "bg-white/5 border-white/10 text-white/40"
                                     )}>
-                                        <Bell className="w-6 h-6" />
+                                        {ann.imageUrl ? (
+                                            ann.imageUrl.startsWith('icon:') ? (
+                                                <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-6 h-6 text-white" />
+                                            ) : (
+                                                <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
+                                            )
+                                        ) : (
+                                            <Bell className="w-6 h-6" />
+                                        )}
                                     </div>
                                     <h3 className="text-2xl font-black text-white uppercase italic leading-[1.1] truncate flex-1 tracking-tighter">
                                         {ann.title}

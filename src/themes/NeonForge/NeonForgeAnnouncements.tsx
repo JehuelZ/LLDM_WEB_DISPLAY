@@ -1,11 +1,31 @@
 'use client';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Phone, Mail, Church, AlertTriangle, Info, Zap, Shield } from 'lucide-react';
+import { Bell, Phone, Mail, Church, AlertTriangle, Info, Zap, Shield, Megaphone, Calendar, Users, Heart, BookOpen, Flame, Music, Star, Smile } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { getVariantTokens } from './tokens';
 import { useMemo } from 'react';
 import { cn } from '@/lib/utils';
+
+const AnnouncementIcon = ({ name, className, style, size = 16 }: { name: string; className?: string; style?: any; size?: number }) => {
+    const icons: Record<string, any> = {
+        bell: Bell,
+        megaphone: Megaphone,
+        info: Info,
+        alert: AlertTriangle,
+        calendar: Calendar,
+        users: Users,
+        heart: Heart,
+        book: BookOpen,
+        flame: Flame,
+        music: Music,
+        star: Star,
+        shield: Shield,
+        smile: Smile
+    };
+    const IconComponent = icons[name] || Bell;
+    return <IconComponent className={className} style={style} size={size} />;
+};
 
 // ─────────────────────────────────────────────
 // NeonForge — Announcements Slide
@@ -83,13 +103,20 @@ export function NeonForgeAnnouncements() {
                                         <div className="p-5 flex flex-col gap-3">
                                             {/* Badge */}
                                             <div className="flex items-center gap-2">
-                                                <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-                                                    style={{ background: `${accentColor}18`, border: `1px solid ${accentColor}30` }}>
-                                                    {isUrgent
-                                                        ? <AlertTriangle className="w-4 h-4" style={{ color: T.live }} />
-                                                        : <Info className="w-4 h-4" style={{ color: T.accent }} />
-                                                    }
-                                                </div>
+                                                 <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 overflow-hidden"
+                                                     style={{ background: `${accentColor}18`, border: `1px solid ${accentColor}30` }}>
+                                                     {ann.imageUrl ? (
+                                                         ann.imageUrl.startsWith('icon:') ? (
+                                                             <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-4 h-4" style={{ color: isUrgent ? T.live : T.accent }} />
+                                                         ) : (
+                                                             <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
+                                                         )
+                                                     ) : isUrgent ? (
+                                                         <AlertTriangle className="w-4 h-4" style={{ color: T.live }} />
+                                                     ) : (
+                                                         <Info className="w-4 h-4" style={{ color: T.accent }} />
+                                                     )}
+                                                 </div>
                                                 <span className="text-[9px] font-bold uppercase tracking-widest"
                                                     style={{ color: accentColor }}>
                                                     {isUrgent ? 'Urgente' : 'Aviso Oficial'}
