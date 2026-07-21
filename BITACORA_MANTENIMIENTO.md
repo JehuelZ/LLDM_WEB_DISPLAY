@@ -198,4 +198,15 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/lib/store.ts` (función `deleteMediaGalleryFile`)
     - `src/app/admin/tabs/AjustesTab.tsx`
 
+#### 17. Registro y Sincronización Total de Fotos de Perfiles en la Galería
+- **Problema:** Al listar archivos en Storage, la paginación predeterminada (límite 100) y las imágenes de perfiles guardadas en rutas externas o subcarpetas no aparecían en el catálogo de la Galería de Medios.
+- **Solución:**
+    - Se aumentó el límite de consulta en Storage a `1,000` archivos y se implementó **exploración recursiva de subcarpetas**.
+    - Se implementó **sincronización directa con la base de datos `profiles`**: el sistema consulta todos los avatares activos de los miembros y los registra de forma garantizada en la Galería bajo la categoría **`✨ Íconos y Logos`**, asignándoles automáticamente la etiqueta **`🟢 En Uso (Perfil: Nombre)`**.
+    - Esto evita que fotos de perfil activas queden fuera del catálogo y previene que el botón "Seleccionar No Vinculadas" las considere por error como archivos sin usar.
+- **Archivos Afectados:**
+    - `src/lib/store.ts` (`fetchMediaGalleryFiles`)
+    - `src/components/admin/MediaGalleryModal.tsx` (`determineCategory`)
+
+
 
