@@ -382,7 +382,14 @@ export const AjustesTab = ({
                                 </div>
                                 <button 
                                     onClick={() => setEditingCongregation({ 
-                                        info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' } 
+                                        info: {
+                                            id: 'main',
+                                            name: settings.mainChurch?.name || settings.mainChurchName || 'Principal (Rodeo CA)',
+                                            imageUrl: settings.mainChurch?.imageUrl || settings.churchLogoUrl || '',
+                                            address: settings.mainChurch?.address || '',
+                                            phone: settings.mainChurch?.phone || '',
+                                            responsibleName: settings.mainChurch?.responsibleName || settings.ministerName || ''
+                                        } 
                                     })}
                                     className="px-4 h-11 bg-primary/20 text-primary rounded-md border border-primary/30 hover:bg-primary hover:text-white transition-all text-[10px] font-black uppercase tracking-widest"
                                 >
@@ -1036,10 +1043,11 @@ export const AjustesTab = ({
                     uploadAvatar={uploadAvatar}
                     onSave={async (updated) => {
                         if (updated.id === 'main') {
+                            setChurchImgError(false);
                             const updatedPayload = { 
                                 mainChurch: updated,
-                                mainChurchName: updated.name,
-                                churchLogoUrl: updated.imageUrl || settings.churchLogoUrl
+                                mainChurchName: updated.name || 'Principal (Rodeo CA)',
+                                churchLogoUrl: updated.imageUrl || null
                             };
                             setSettings({ ...settings, ...updatedPayload });
                             await saveSettingsToCloud(updatedPayload);
