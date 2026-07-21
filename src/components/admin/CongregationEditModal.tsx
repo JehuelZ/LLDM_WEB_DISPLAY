@@ -23,7 +23,10 @@ export const CongregationEditModal: React.FC<Props> = ({
     members,
     uploadAvatar
 }) => {
-    const [formData, setFormData] = useState<CongregationInfo>({ ...congregation });
+    const [formData, setFormData] = useState<CongregationInfo>({
+        ...congregation,
+        name: congregation?.name || 'Principal (Rodeo CA)'
+    });
     const [isSaving, setIsSaving] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [showMemberPicker, setShowMemberPicker] = useState(false);
@@ -277,9 +280,10 @@ export const CongregationEditModal: React.FC<Props> = ({
                             Cancelar
                         </button>
                         <button 
+                            type="button"
                             onClick={handleSave}
-                            disabled={isSaving || !formData.name}
-                            className="px-12 h-14 bg-primary text-foreground rounded-md shadow-[0_10px_30px_rgba(var(--primary-rgb),0.3)] font-black uppercase tracking-widest text-xs flex items-center gap-3 hover:translate-y-[-2px] transition-all active:translate-y-0 disabled:opacity-50 disabled:translate-y-0"
+                            disabled={isSaving || !(formData.name || '').trim()}
+                            className="px-12 h-14 bg-primary text-foreground rounded-md shadow-[0_10px_30px_rgba(var(--primary-rgb),0.3)] font-black uppercase tracking-widest text-xs flex items-center gap-3 hover:translate-y-[-2px] transition-all active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                         >
                             <Save className="w-5 h-5" /> 
                             {isSaving ? 'GUARDANDO...' : 'GUARDAR CONFIGURACIÓN'}
