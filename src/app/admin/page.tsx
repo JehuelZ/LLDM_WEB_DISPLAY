@@ -2268,7 +2268,51 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         )}
                                                         placeholder="Ej: Servicio Especial de Niños, Aniversario..."
                                                     />
-                                                    <div className="flex items-center pt-2">
+                                                    {/* Color del acento */}
+                                                    <div className="pt-2 space-y-1.5">
+                                                        <label className="text-[10px] font-bold uppercase text-muted-foreground block">Color del Especial</label>
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            {[
+                                                                { id: 'purple', hex: '#9333EA', label: 'Morado' },
+                                                                { id: 'red', hex: '#EF4444', label: 'Rojo' },
+                                                                { id: 'orange', hex: '#F97316', label: 'Naranja' },
+                                                                { id: 'blue', hex: '#4F7FFF', label: 'Azul' },
+                                                                { id: 'emerald', hex: '#10B981', label: 'Verde' },
+                                                                { id: 'gold', hex: '#EAB308', label: 'Dorado' },
+                                                                { id: 'rose', hex: '#F43F5E', label: 'Rosa' },
+                                                                { id: 'cyan', hex: '#06B6D4', label: 'Cyan' },
+                                                            ].map(({ id, hex, label }) => {
+                                                                const currentAccent = (currentDaySchedule.slots['evening'] as any).accentColor || 'purple';
+                                                                const isSelected = currentAccent === id;
+                                                                return (
+                                                                    <button
+                                                                        key={id}
+                                                                        title={label}
+                                                                        onClick={() => updateSlot('evening', { accentColor: id })}
+                                                                        className={cn(
+                                                                            "w-7 h-7 rounded-full border-2 transition-all flex items-center justify-center",
+                                                                            isSelected ? "border-white scale-110 shadow-lg" : "border-transparent hover:scale-105"
+                                                                        )}
+                                                                        style={{ backgroundColor: hex }}
+                                                                    >
+                                                                        {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-white/80" />}
+                                                                    </button>
+                                                                );
+                                                            })}
+                                                            {/* Custom hex */}
+                                                            <div className="relative flex items-center">
+                                                                <input
+                                                                    type="color"
+                                                                    defaultValue="#9333EA"
+                                                                    onChange={(e) => updateSlot('evening', { accentColor: `custom:${e.target.value}` })}
+                                                                    className="w-7 h-7 rounded-full border-2 border-white/20 cursor-pointer hover:scale-105 transition-all"
+                                                                    title="Color personalizado"
+                                                                    style={{ padding: '1px', background: 'transparent' }}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex items-center pt-1">
                                                         <button 
                                                             onClick={() => updateSlot('evening', { hideProfiles: !currentDaySchedule.slots['evening'].hideProfiles })}
                                                             className={cn(

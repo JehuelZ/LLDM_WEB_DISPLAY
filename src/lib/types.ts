@@ -74,6 +74,7 @@ export interface DailySchedule {
             customLabel?: string;
             thirdLeaderRole?: string;
             hideProfiles?: boolean;
+            accentColor?: string;
         };
     };
 }

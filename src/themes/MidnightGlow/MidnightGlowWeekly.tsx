@@ -17,7 +17,8 @@ type ServiceSlot = {
     title: string;
     subtitle: string;
     icon: React.ReactNode;
-    accent: 'blue' | 'orange' | 'green' | 'purple' | 'red' | 'emerald';
+    accent: 'blue' | 'orange' | 'green' | 'purple' | 'red' | 'emerald' | 'gold' | 'rose' | 'cyan';
+    customAccentHex?: string;
     timeAccent: string;
     roles: string[];
     leaderIds: (string | null)[];
@@ -189,6 +190,11 @@ export function MidnightGlowWeekly() {
         const slotEv = sched?.slots?.evening;
         const isSpecial = slotEv?.type === 'special';
         const customTitle = slotEv?.customLabel;
+        // Resolve accent color for special services
+        const rawAccent = (slotEv as any)?.accentColor || 'purple';
+        const isCustomHex = rawAccent.startsWith('custom:');
+        const specialAccentId = isCustomHex ? 'purple' : rawAccent as any;
+        const specialCustomHex = isCustomHex ? rawAccent.replace('custom:', '') : undefined;
         slots.push({
             id: 'evening',
             hour: '06:00', period: 'PM',
@@ -202,7 +208,8 @@ export function MidnightGlowWeekly() {
                 ? 'SERVICIO ESPECIAL' 
                 : ((isSunday || isThursday) ? 'CULTO PRINCIPAL' : 'CONSAGRACIÓN'),
             icon: <Church className="w-3.5 h-3.5" />,
-            accent: isSpecial ? 'purple' : ((isSunday || isThursday) ? 'green' : 'blue'),
+            accent: isSpecial ? specialAccentId : ((isSunday || isThursday) ? 'green' : 'blue'),
+            customAccentHex: isSpecial ? specialCustomHex : undefined,
             timeAccent: 'text-[#A3FF57] drop-shadow-[0_0_15px_rgba(163,255,87,0.8)]',
             roles: isSpecial ? ['SERVICIO', 'ASISTENTE'] : ((isSunday || isThursday) ? ['SERVICIO', 'DOCTRINA'] : ['CONSAGRACIÓN', 'DOCTRINA']),
             language: slotEv?.language || 'es',
@@ -310,17 +317,39 @@ export function MidnightGlowWeekly() {
                                     } else if (slot.accent === 'emerald') {
                                         bgClass = 'bg-[#061410]'; borderClass = 'border-[#10B981]/40'; topBorder = '#10B981'; avatarRing = 'border-[#10B981]'; titleColor = 'text-[#6ee7b7]'; subColor = 'text-[#34d399]';
                                         customShadow = 'shadow-[0_30px_90px_rgba(16,185,129,0.15)]';
+                                    } else if (slot.accent === 'gold') {
+                                        bgClass = 'bg-[#130f00]'; borderClass = 'border-[#EAB308]/40'; topBorder = '#EAB308'; avatarRing = 'border-[#EAB308]'; titleColor = 'text-[#fde047]'; subColor = 'text-[#ca8a04]';
+                                        customShadow = 'shadow-[0_30px_90px_rgba(234,179,8,0.15)]';
+                                    } else if (slot.accent === 'rose') {
+                                        bgClass = 'bg-[#180a10]'; borderClass = 'border-[#F43F5E]/40'; topBorder = '#F43F5E'; avatarRing = 'border-[#F43F5E]'; titleColor = 'text-[#fda4af]'; subColor = 'text-[#fb7185]';
+                                        customShadow = 'shadow-[0_30px_90px_rgba(244,63,94,0.15)]';
+                                    } else if (slot.accent === 'cyan') {
+                                        bgClass = 'bg-[#00111a]'; borderClass = 'border-[#06B6D4]/40'; topBorder = '#06B6D4'; avatarRing = 'border-[#06B6D4]'; titleColor = 'text-[#67e8f9]'; subColor = 'text-[#22d3ee]';
+                                        customShadow = 'shadow-[0_30px_90px_rgba(6,182,212,0.15)]';
                                     } else {
                                         bgClass = 'bg-[#030B06]'; borderClass = 'border-[#0A2615]'; topBorder = '#10B981'; avatarRing = 'border-[#10B981]'; titleColor = 'text-[#10B981]'; subColor = 'text-[#10B981]/70';
                                         customShadow = 'shadow-[0_15px_30px_rgba(0,0,0,0.4)]';
+                                    }
+                                    // Custom hex override
+                                    if (slot.customAccentHex) {
+                                        topBorder = slot.customAccentHex;
+                                        avatarRing = `border-[${slot.customAccentHex}]`;
+                                        titleColor = 'text-white';
+                                        subColor = 'text-white/70';
+                                        borderClass = `border-[${slot.customAccentHex}]/40`;
+                                        bgClass = 'bg-[#0a0a14]';
+                                        customShadow = 'shadow-[0_30px_90px_rgba(0,0,0,0.3)]';
                                     }
 
                                     const showLiveRed = isSlotActive(dateKey, slot.id);
 
                                     return (
-                                        <div key={`${dateKey}-${sIdx}`} className={`relative flex flex-col justify-end w-full min-h-[180px] rounded-[1.5rem] border-2 transition-all duration-300 ${bgClass} ${borderClass} ${customShadow}
-                                                ${!isAssigned && 'opacity-60'}
-                                            `}>
+                                        <div key={`${dateKey}-${sIdx}`}
+                                            className={`relative flex flex-col justify-end w-full min-h-[180px] rounded-[1.5rem] border-2 transition-all duration-300 ${bgClass} ${slot.customAccentHex ? '' : borderClass} ${customShadow}
+                                                    ${!isAssigned && 'opacity-60'}
+                                                `}
+                                            style={slot.customAccentHex ? { borderColor: `${slot.customAccentHex}66` } : undefined}
+                                        >
                                             {/* Horizontal Separator Line crossing the whole screen (Drawn once per row) */}
                                             {colIdx === 0 && sIdx > 0 && (
                                                 <div className="absolute -top-[3.5rem] -left-16 w-[110vw] h-[1px] bg-gradient-to-r from-transparent via-[#4F7FFF]/20 to-transparent z-0 pointer-events-none flex items-center opacity-70">

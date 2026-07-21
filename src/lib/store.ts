@@ -650,7 +650,8 @@ export const useAppStore = create<AppState>()(
                                         topic: data.topic && data.topic.includes('|') ? data.topic.split('|')[1] : (data.topic && !data.topic.startsWith('dominical:') ? data.topic : ''),
                                         customLabel: (data.evening_custom_label || '').split('|')[0] || '',
                                         thirdLeaderRole: (data.evening_custom_label || '').split('|')[1] || '',
-                                        hideProfiles: (data.evening_custom_label || '').split('|')[2] === 'true'
+                                        hideProfiles: (data.evening_custom_label || '').split('|')[2] === 'true',
+                                        accentColor: (data.evening_custom_label || '').split('|')[3] || 'purple'
                                     }
                                 }
                             }
@@ -716,7 +717,8 @@ export const useAppStore = create<AppState>()(
                                     topic: entry.topic && entry.topic.includes('|') ? entry.topic.split('|')[1] : (entry.topic && !entry.topic.startsWith('dominical:') ? entry.topic : ''),
                                     customLabel: (entry.evening_custom_label || '').split('|')[0] || '',
                                     thirdLeaderRole: (entry.evening_custom_label || '').split('|')[1] || '',
-                                    hideProfiles: (entry.evening_custom_label || '').split('|')[2] === 'true'
+                                    hideProfiles: (entry.evening_custom_label || '').split('|')[2] === 'true',
+                                    accentColor: (entry.evening_custom_label || '').split('|')[3] || 'purple'
                                 }
                             }
                         };
@@ -1508,8 +1510,8 @@ export const useAppStore = create<AppState>()(
                     evening_leader_ids: slots.evening.leaderIds.map(cleanUuid).filter(Boolean),
                     evening_doctrine_leader_id: cleanUuid(slots.evening.doctrineLeaderId || null),
                     evening_consecration_leader_id: cleanUuid(slots.evening.consecrationLeaderId || null),
-                    evening_custom_label: slots.evening.thirdLeaderRole || slots.evening.hideProfiles
-                        ? `${slots.evening.customLabel || ''}|${slots.evening.thirdLeaderRole || ''}|${slots.evening.hideProfiles ? 'true' : 'false'}`
+                    evening_custom_label: slots.evening.thirdLeaderRole || slots.evening.hideProfiles || (slots.evening.accentColor && slots.evening.accentColor !== 'purple')
+                        ? `${slots.evening.customLabel || ''}|${slots.evening.thirdLeaderRole || ''}|${slots.evening.hideProfiles ? 'true' : 'false'}|${slots.evening.accentColor || 'purple'}`
                         : slots.evening.customLabel,
 
                     topic: (slots['9am'] as any).topic || slots.evening.topic || ''
