@@ -48,7 +48,12 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
         },
         {
             id: 'evening',
-            title: (schedule?.slots?.['evening']?.customLabel || (isSunday ? 'servicio vespertino' : getSlotLabel('evening_regular', settings?.language)))?.toLowerCase(),
+            title: (
+                schedule?.slots?.['evening']?.customLabel || 
+                (schedule?.slots?.['evening']?.type === 'special' 
+                    ? getServiceTypeLabel('special', settings?.language) 
+                    : (isSunday ? 'servicio vespertino' : getSlotLabel('evening_regular', settings?.language)))
+            )?.toLowerCase(),
             time: schedule?.slots?.['evening']?.time || '07:00 pm',
             ministerId: schedule?.slots?.['evening']?.leaderIds?.[0],
             minister2Id: (schedule?.slots?.['evening']?.type === 'children' || (schedule?.slots?.['evening']?.consecrationLeaderId && schedule?.slots?.['evening']?.doctrineLeaderId && schedule?.slots?.['evening']?.leaderIds?.[0]))

@@ -186,14 +186,22 @@ export function MidnightGlowWeekly() {
 
         // Evening Slot
         const slotEv = sched?.slots?.evening;
+        const isSpecial = slotEv?.type === 'special';
+        const customTitle = slotEv?.customLabel;
         slots.push({
             id: 'evening',
             hour: '06:00', period: 'PM',
             label: 'Principal',
-            title: (isSunday || isThursday) ? 'SERVICIO ADORACIÓN' : 'ORACIÓN VESPERTINA',
-            subtitle: (isSunday || isThursday) ? 'CULTO PRINCIPAL' : 'CONSAGRACIÓN',
+            title: customTitle 
+                ? customTitle.toUpperCase() 
+                : (isSpecial 
+                    ? 'SERVICIO ESPECIAL' 
+                    : ((isSunday || isThursday) ? 'SERVICIO ADORACIÓN' : 'ORACIÓN VESPERTINA')),
+            subtitle: customTitle 
+                ? 'SERVICIO ESPECIAL' 
+                : ((isSunday || isThursday) ? 'CULTO PRINCIPAL' : 'CONSAGRACIÓN'),
             icon: <Church className="w-3.5 h-3.5" />,
-            accent: (isSunday || isThursday) ? 'green' : 'blue',
+            accent: (isSunday || isThursday) ? 'green' : (isSpecial ? 'purple' : 'blue'),
             timeAccent: 'text-[#A3FF57] drop-shadow-[0_0_15px_rgba(163,255,87,0.8)]',
             roles: (isSunday || isThursday) ? ['SERVICIO', 'DOCTRINA'] : ['CONSAGRACIÓN', 'DOCTRINA'],
             language: slotEv?.language || 'es',

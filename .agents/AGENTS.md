@@ -40,3 +40,13 @@ To maintain page load speed and keep database asset sizes light:
 To integrate display elements cleanly on projection backgrounds:
 - **No Background/Border Frames**: Display column panels for Ministers and Supervisors must float border-free and background-free directly on the slide background.
 - **Square Aspect Ratio**: Photos in settings and member details must use a 1:1 square crop box (`aspectRatio={1}`).
+
+---
+
+## 5. Custom Special Service Titles (Servicios Especiales)
+
+To allow precise display of special events/services on the boards:
+- **Custom Title Input**: The administrator can set a custom title (`customLabel` / `evening_custom_label`) specifically for services of type `special` in the evening slot.
+- **Dynamic Fallback**: If the service type is `special` and no `customLabel` is written, all display themes (including Midnight Glow, Luna Premium, and Iglesia) must fall back to showing "Servicio Especial" (or "Special Service" in English), instead of defaulting to generic labels like "Oración de la Tarde" or "Oración Regular".
+- **Dynamic Render**: When `customLabel` is populated, themes must render the custom label text in uppercase/proper case as the service title.
+

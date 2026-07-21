@@ -68,6 +68,14 @@ export const HorariosTab = ({
         }
     };
 
+    const [tempCustomLabel, setTempCustomLabel] = useState('')
+
+    useEffect(() => {
+        if (currentDaySchedule?.slots?.['evening']) {
+            setTempCustomLabel(currentDaySchedule.slots['evening'].customLabel || '')
+        }
+    }, [currentDate, currentDaySchedule?.slots?.['evening']?.customLabel])
+
     const allMemberOptions = members
         .filter(m => m.status === 'Activo')
         .sort((a,b) => a.name.localeCompare(b.name))
@@ -427,6 +435,9 @@ export const HorariosTab = ({
                             searchable={false}
                             onChange={(val: string) => {
                                 const updates: any = { type: val };
+                                if (val !== 'special') {
+                                    updates.customLabel = '';
+                                }
                                 updateSlot('evening', updates);
                             }}
                             options={[
@@ -440,6 +451,27 @@ export const HorariosTab = ({
                             ]}
                             icon={Sparkles}
                         />
+
+                        {currentDaySchedule.slots['evening'].type === 'special' && (
+                            <TactileInput
+                                label="TÍTULO PERSONALIZADO (ESPECIAL) [↵ ENTER O CLIC FUERA PARA GUARDAR]"
+                                placeholder="Ej. Servicio Especial de Niños, Aniversario..."
+                                value={tempCustomLabel}
+                                onChange={(e: any) => setTempCustomLabel(e.target.value)}
+                                onBlur={() => {
+                                    if (tempCustomLabel !== (currentDaySchedule?.slots?.['evening']?.customLabel || '')) {
+                                        updateSlot('evening', { customLabel: tempCustomLabel });
+                                    }
+                                }}
+                                onKeyDown={(e: any) => {
+                                    if (e.key === 'Enter') {
+                                        e.currentTarget.blur();
+                                    }
+                                }}
+                                disabled={isSaving}
+                                icon={Sparkles}
+                            />
+                        )}
 
                         <div className="grid grid-cols-1 gap-4">
                             <TactileSelect

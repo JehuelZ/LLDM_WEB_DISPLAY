@@ -8,7 +8,7 @@ import { User, Crown, Sunrise, Sun, Moon, Calendar, Clock, Video, Zap, Info, Boo
 import { BigAcademicTitle, ChurchHeaderBadge } from './BigAcademicTitle';
 import { getIglesiaTokens, neuShadow } from './tokens';
 import { IglesiaClockInline } from './Clock';
-import { getSlideSystemTitle, getSlotLabel } from '@/lib/display_labels';
+import { getSlideSystemTitle, getSlotLabel, getServiceTypeLabel } from '@/lib/display_labels';
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Componentes de Estilo — Academic Buttons (Copied from Agenda)
@@ -643,7 +643,10 @@ export function IglesiaWeekly() {
                                                         )}
                                                     </div>
                                                     <p style={{ fontSize: 7.5, fontWeight: 900, color: isActive ? T.accent : T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontInter, textAlign: 'right' }}>
-                                                        {sched?.slots?.['evening']?.customLabel || (isSun ? 'Servicio Vespertino' : getSlotLabel('evening_regular', settings?.language))}
+                                                        {sched?.slots?.['evening']?.customLabel || 
+                                                            (sched?.slots?.['evening']?.type === 'special' 
+                                                                ? getServiceTypeLabel('special', settings?.language)
+                                                                : (isSun ? 'Servicio Vespertino' : getSlotLabel('evening_regular', settings?.language)))}
                                                     </p>
                                                 </div>
 

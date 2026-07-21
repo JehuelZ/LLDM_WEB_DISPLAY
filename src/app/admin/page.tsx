@@ -1078,6 +1078,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
         }
     };
 
+    const [tempCustomLabel, setTempCustomLabel] = useState('');
+
+    useEffect(() => {
+        if (currentDaySchedule?.slots?.['evening']) {
+            setTempCustomLabel(currentDaySchedule.slots['evening'].customLabel || '');
+        }
+    }, [currentDate, currentDaySchedule?.slots?.['evening']?.customLabel]);
+
     type SlotTime = '5am' | '9am' | 'evening';
 
     const updateSlot = async (slot: SlotTime, updates: any) => {
@@ -2218,6 +2226,9 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         if (!isMulti && currentDaySchedule?.slots['evening']?.leaderIds?.length > 1) {
                                                             updates.leaderIds = [currentDaySchedule?.slots['evening']?.leaderIds?.[0]];
                                                         }
+                                                        if (val !== 'special') {
+                                                            updates.customLabel = '';
+                                                        }
                                                         // Always persist the type, even when selecting 'regular'
                                                         updateSlot('evening', updates);
                                                     }}
@@ -2231,6 +2242,34 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                     ]}
                                                 />
                                             </div>
+
+                                            {currentDaySchedule?.slots['evening'].type === 'special' && (
+                                                <div className="space-y-2 mt-2">
+                                                    <div className="flex justify-between items-center">
+                                                        <label className="text-[10px] font-bold uppercase text-muted-foreground block mb-1">Título Personalizado (Especial)</label>
+                                                        <span className="text-[8px] text-[#A3FF57]/70 font-bold uppercase tracking-wider">↵ Enter o clic fuera para guardar</span>
+                                                    </div>
+                                                    <Input
+                                                        value={tempCustomLabel}
+                                                        onChange={(e) => setTempCustomLabel(e.target.value)}
+                                                        onBlur={() => {
+                                                            if (tempCustomLabel !== (currentDaySchedule?.slots?.['evening']?.customLabel || '')) {
+                                                                updateSlot('evening', { customLabel: tempCustomLabel });
+                                                            }
+                                                        }}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') {
+                                                                e.currentTarget.blur();
+                                                            }
+                                                        }}
+                                                        className={cn(
+                                                            "h-10 text-xs font-bold border-none transition-all outline-none",
+                                                            settings.adminTheme === 'primitivo' ? "bg-white/[0.03] text-white rounded-md focus:bg-white/[0.05] focus:ring-1 focus:ring-white/10" : "bg-[var(--tactile-inner-bg)] text-foreground rounded-none border-b border-[var(--tactile-border)] focus:bg-[var(--tactile-item-hover)]"
+                                                        )}
+                                                        placeholder="Ej: Servicio Especial de Niños, Aniversario..."
+                                                    />
+                                                </div>
+                                            )}
 
                                             {['special', 'youth', 'praise', 'married', 'children'].includes(currentDaySchedule?.slots['evening'].type) ? (
                                                 <div className="grid gap-4">
@@ -3593,7 +3632,17 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                             />
                                         </div>
 
-                                        <div className="flex justify-end pt-4">
+                                        <div className="flex justify-end gap-4 pt-4">
+                                            <Button 
+                                                onClick={async () => {
+                                                    await signOut();
+                                                    router.push('/login');
+                                                }}
+                                                variant="outline"
+                                                className="border-red-500/30 hover:bg-red-500/10 text-red-400 font-black uppercase tracking-widest h-14 px-8 rounded-md transition-all"
+                                            >
+                                                Cerrar Sesión
+                                            </Button>
                                             <Button 
                                                 disabled={isSaving || !currentUser}
                                                 onClick={async () => {

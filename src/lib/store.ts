@@ -305,7 +305,7 @@ interface AppState {
     saveUniformForDateToCloud: (date: string, uniformId: string | null) => Promise<void>;
     loadKidsAssignmentsFromCloud: (date: string) => Promise<void>;
     saveKidsAssignmentToCloud: (date: string, assignment: Partial<KidsAssignment>) => Promise<void>;
-    loadSettingsFromCloud: () => Promise<void>;
+    loadSettingsFromCloud: (incomingData?: any) => Promise<void>;
     saveSettingsToCloud: (newSettings: Partial<AppSettings>) => Promise<void>;
     saveRecurringScheduleToCloud: (date: string, slot: '5am' | '9am_consecration' | '9am_doctrine' | 'evening' | 'evening_0' | 'evening_1', leaderId: string, recurrence: 'month' | 'next') => Promise<void>;
     seedMonthSchedule: () => Promise<void>;
@@ -335,6 +335,7 @@ interface AppState {
     markMessageAsRead: (id: string) => Promise<void>;
     subscribeToMessages: () => () => void;
     subscribeToSettings: () => () => void;
+    subscribeToAnnouncements: () => () => void;
     setAuthSession: (session: any) => void;
     createTestAccounts: () => Promise<void>;
 
@@ -1370,8 +1371,8 @@ export const useAppStore = create<AppState>()(
 
             addMemberToCloud: async (member) => {
                 const currentUser = get().currentUser;
-                if (currentUser?.role !== 'Administrador' ) {
-                    get().showNotification("Solo administradores pueden registrar miembros", "error");
+                if (currentUser?.role !== 'Administrador' && currentUser?.role !== 'Ministro a Cargo') {
+                    get().showNotification("Solo administradores o ministros pueden registrar miembros", "error");
                     return false;
                 }
 
@@ -1412,7 +1413,7 @@ export const useAppStore = create<AppState>()(
 
             saveAnnouncementToCloud: async (ann) => {
                 const currentUser = get().currentUser;
-                if (currentUser?.role !== 'Administrador' ) {
+                if (currentUser?.role !== 'Administrador' && currentUser?.role !== 'Ministro a Cargo') {
                     get().showNotification("No tienes permiso para gestionar anuncios", "error");
                     return;
                 }
@@ -1427,22 +1428,40 @@ export const useAppStore = create<AppState>()(
                     expires_at: ann.expiresAt
                 };
 
+                let result;
                 if (ann.id) {
-                    await supabase.from('announcements').update(dbAnn).eq('id', ann.id);
+                    result = await supabase.from('announcements').update(dbAnn).eq('id', ann.id);
                 } else {
-                    await supabase.from('announcements').insert(dbAnn);
+                    result = await supabase.from('announcements').insert(dbAnn);
                 }
+
+                if (result.error) {
+                    console.error("Error saving announcement:", result.error);
+                    get().showNotification(`Error al guardar aviso: ${result.error.message}`, 'error');
+                    throw result.error;
+                }
+
                 get().loadAnnouncementsFromCloud();
             },
 
             deleteAnnouncementFromCloud: async (id) => {
-                await supabase.from('announcements').delete().eq('id', id);
+                const currentUser = get().currentUser;
+                if (currentUser?.role !== 'Administrador' && currentUser?.role !== 'Ministro a Cargo') {
+                    get().showNotification("No tienes permiso para gestionar anuncios", "error");
+                    return;
+                }
+                const { error } = await supabase.from('announcements').delete().eq('id', id);
+                if (error) {
+                    console.error("Error deleting announcement:", error);
+                    get().showNotification(`Error al borrar aviso: ${error.message}`, 'error');
+                    throw error;
+                }
                 get().loadAnnouncementsFromCloud();
             },
 
             saveScheduleDayToCloud: async (date, slots) => {
                 const currentUser = get().currentUser;
-                if (currentUser?.role !== 'Administrador' ) {
+                if (currentUser?.role !== 'Administrador' && currentUser?.role !== 'Ministro a Cargo') {
                     get().showNotification("No tienes permiso para modificar horarios", "error");
                     throw new Error("No autorizado");
                 }
@@ -1686,8 +1705,8 @@ export const useAppStore = create<AppState>()(
                 get().showNotification("Asignaciones guardadas correctamente", 'success');
             },
 
-            loadSettingsFromCloud: async () => {
-                const { data } = await supabase.from('app_settings').select('*').eq('id', 1).single();
+            loadSettingsFromCloud: async (incomingData?: any) => {
+                const data = incomingData || (await supabase.from('app_settings').select('*').eq('id', 1).single()).data;
                 if (data) {
                     const current = get().settings;
                     set({
@@ -1790,11 +1809,11 @@ export const useAppStore = create<AppState>()(
 
             saveSettingsToCloud: async (newSettings: Partial<AppSettings>) => {
                 const currentUser = get().currentUser;
-                if (currentUser?.role !== 'Administrador' ) {
+                if (currentUser?.role !== 'Administrador' && currentUser?.role !== 'Ministro a Cargo') {
                     // Solo permitir si el hostname es localhost para desarrollo, si no, bloquear
                     const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
                     if (!isLocal) {
-                        get().showNotification("Solo administradores pueden cambiar la configuración global", "error");
+                        get().showNotification("Solo administradores o ministros pueden cambiar la configuración global", "error");
                         return;
                     }
                 }
@@ -2058,9 +2077,22 @@ export const useAppStore = create<AppState>()(
             subscribeToSettings: () => {
                 const channel = supabase
                     .channel('settings_realtime')
-                    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'app_settings' }, () => {
-                        console.log("Settings updated in cloud, reloading...");
-                        get().loadSettingsFromCloud();
+                    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'app_settings' }, (payload) => {
+                        console.log("Settings updated in cloud, payload:", payload.new);
+                        get().loadSettingsFromCloud(payload.new);
+                    })
+                    .subscribe();
+                return () => {
+                    supabase.removeChannel(channel);
+                };
+            },
+
+            subscribeToAnnouncements: () => {
+                const channel = supabase
+                    .channel('announcements_realtime')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, () => {
+                        console.log("Announcements updated in cloud, reloading...");
+                        get().loadAnnouncementsFromCloud();
                     })
                     .subscribe();
                 return () => {

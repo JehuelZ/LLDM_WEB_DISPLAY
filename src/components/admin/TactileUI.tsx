@@ -40,7 +40,7 @@ export const TactileGlassCard = ({ children, title, className, subtitle, extra }
 )
 
 // Tactile Input Components
-export const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = "text", disabled }: any) => (
+export const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, type = "text", disabled, ...rest }: any) => (
     <div className={cn("space-y-2", disabled && "opacity-50 pointer-events-none")}>
         {label && <label className="text-[9px] font-black capitalize tracking-[0.2em] text-muted-foreground ml-2">{label}</label>}
         <div className="relative group">
@@ -55,6 +55,7 @@ export const TactileInput = ({ label, value, onChange, placeholder, icon: Icon, 
                     "w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md h-12 text-sm font-bold px-4 transition-all outline-none focus:border-primary/50 text-[var(--tactile-text)]",
                     Icon && "pl-12"
                 )}
+                {...rest}
             />
         </div>
     </div>

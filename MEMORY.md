@@ -2,7 +2,8 @@
 
 Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actual del proyecto, decisiones críticas de diseño y tareas pendientes.
 
-## 📌 Estado Actual del Proyecto (Mayo 2026)
+## 📌 Estado Actual del Proyecto (Julio 2026)
+- **Servicios Especiales:** Se implementó la personalización del título en los servicios tipo 'Especial' en el slot `evening` desde el panel de administración (mapeado a `customLabel` / `evening_custom_label`). Se adaptaron todos los temas de visualización (Midnight Glow, Iglesia, Luna Premium, etc.) para pintar dinámicamente este título personalizado o usar 'Servicio Especial' como fallback si está vacío.
 - **Automatización de Mayo:** Calendario de mayo 2026 completado y cargado en Supabase (`schedule`).
 - **Seguridad & Acceso:** 
     - Se habilitó el acceso administrativo para el rol **"Ministro a Cargo"** (E.E. Eliab Aguilar) mediante la actualización de políticas RLS.
@@ -39,4 +40,4 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 6. **Consistencia de Terminología Ministerial:** El tipo de tema `orthodoxy` (técnico en Supabase) debe etiquetarse en la interfaz pública y el panel de administración como **"Ortodoxia"** (o "Estudio de Ortodoxia"). No se debe utilizar la etiqueta "Sana Doctrina" ya que es un término poco familiar para visitas y miembros según retroalimentación directa recibida en junio de 2026.
 
 ---
-*Última actualización: 26 de junio de 2026*
+*Última actualización: 20 de julio de 2026*

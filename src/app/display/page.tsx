@@ -156,11 +156,13 @@ export default function DisplayPage() {
         window.addEventListener('resize', checkScale);
 
         const unsubSettings = useAppStore.getState().subscribeToSettings();
+        const unsubAnnouncements = useAppStore.getState().subscribeToAnnouncements();
 
         return () => {
             clearInterval(timer);
             window.removeEventListener('resize', checkScale);
             unsubSettings();
+            unsubAnnouncements();
         };
     }, []);
 
