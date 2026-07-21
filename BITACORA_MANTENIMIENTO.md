@@ -319,6 +319,18 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 - **Archivos Afectados:**
     - `src/themes/MidnightGlow/MidnightGlowWeekly.tsx`
 
+#### 29. Soporte de "Ocultar Perfiles" en Vistas Semanales de Otros Temas
+- **Problema:** Aunque la vista diaria o de agenda mostraba los servicios especiales con perfiles ocultos, las vistas semanales de temas como **Iglesia (Cátedra / Primitivo)**, **Luna Premium**, **Dark Minimal** y **Glassmorphism** seguían pintando la foto y nombre de los líderes debido a la falta de implementación de `hideProfiles` y desestructuración de propiedades especiales.
+- **Solución:**
+    - Se modificaron los componentes de programa semanal para detectar `hideProfiles` en el slot vespertino.
+    - Se reemplazó el avatar y nombre del miembro por el logo oficial de la iglesia / ícono personalizado (`customIconUrl`) y el título del servicio especial.
+    - Se corrigieron los condicionales para renderizar la fila de la tarde independientemente de si hay líderes asignados o no cuando se activa la casilla.
+- **Archivos Afectados:**
+    - `src/themes/Iglesia/IglesiaWeekly.tsx`
+    - `src/themes/LunaPremium/LunaPremiumWeekly.tsx`
+    - `src/themes/DarkMinimal/DarkMinimalWeekly.tsx`
+    - `src/themes/Glassmorphism/WeeklySlide.tsx`
+
 
 
 
