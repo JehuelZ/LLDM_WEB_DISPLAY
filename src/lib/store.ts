@@ -1215,7 +1215,7 @@ export const useAppStore = create<AppState>()(
                     ];
 
                     settingsUrls.forEach((sUrl, sIdx) => {
-                        if (sUrl && typeof sUrl === 'string' && sUrl.trim()) {
+                        if (sUrl && typeof sUrl === 'string' && sUrl.trim() && sUrl.startsWith('http')) {
                             const cleanUrl = sUrl.trim();
                             const filenameFromUrl = cleanUrl.split('/').pop()?.split('?')[0] || '';
                             const isAlreadyInList = Array.from(knownUrls).some(u => 
@@ -1280,15 +1280,37 @@ export const useAppStore = create<AppState>()(
                 return data?.publicUrl || null;
             },
 
-            deleteMediaGalleryFile: async (bucket: string, fileName: string) => {
+            deleteMediaGalleryFile: async (bucket: string, fileName: string, fileUrl?: string) => {
                 try {
                     const { error } = await supabase.storage.from(bucket).remove([fileName]);
-                    if (error) {
+                    if (error && (error as any).status !== 404) {
                         console.error('Error deleting storage file:', error);
-                        get().showNotification(`Error al eliminar imagen: ${error.message}`, 'error');
-                        return false;
                     }
-                    get().showNotification('Imagen eliminada de la galería', 'success');
+
+                    // Clear stale references from app_settings if matching URL exists
+                    const settingsObj = get().settings || {};
+                    const urlToClear = fileUrl || '';
+                    if (urlToClear) {
+                        const fieldsToClear: Partial<AppSettings> = {};
+                        if (settingsObj.customIconUrl === urlToClear) fieldsToClear.customIconUrl = null as any;
+                        if (settingsObj.churchLogoUrl === urlToClear) fieldsToClear.churchLogoUrl = null as any;
+                        if (settingsObj.countdownLogoUrl === urlToClear) fieldsToClear.countdownLogoUrl = null as any;
+                        if (settingsObj.displayCustomBgUrl === urlToClear) fieldsToClear.displayCustomBgUrl = null as any;
+                        if (settingsObj.customLogo1 === urlToClear) fieldsToClear.customLogo1 = null as any;
+                        if (settingsObj.customLogo2 === urlToClear) fieldsToClear.customLogo2 = null as any;
+                        if (settingsObj.customLogo3 === urlToClear) fieldsToClear.customLogo3 = null as any;
+                        if (settingsObj.customLogo4 === urlToClear) fieldsToClear.customLogo4 = null as any;
+                        if (settingsObj.ministerAvatar === urlToClear) fieldsToClear.ministerAvatar = null as any;
+                        if (settingsObj.mainChurch?.supervisorAvatar === urlToClear) {
+                            fieldsToClear.mainChurch = { ...settingsObj.mainChurch, supervisorAvatar: null as any };
+                        }
+                        if (Object.keys(fieldsToClear).length > 0) {
+                            set({ settings: { ...settingsObj, ...fieldsToClear } });
+                            await get().saveSettingsToCloud(fieldsToClear);
+                        }
+                    }
+
+                    get().showNotification('Imagen procesada y eliminada de la galería', 'success');
                     return true;
                 } catch (e: any) {
                     console.error('Error deleting storage file:', e);

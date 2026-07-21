@@ -64,6 +64,7 @@ export function MediaGalleryModal({
     const [filesToDelete, setFilesToDelete] = useState<GalleryFile[]>([]);
     const [isDeleting, setIsDeleting] = useState(false);
     const [activeHoverInfo, setActiveHoverInfo] = useState<string | null>(null);
+    const [brokenUrls, setBrokenUrls] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         if (isOpen) {
@@ -267,7 +268,7 @@ export function MediaGalleryModal({
         try {
             let successCount = 0;
             for (const f of filesToDelete) {
-                const success = await deleteMediaGalleryFile(f.bucket, f.name);
+                const success = await deleteMediaGalleryFile(f.bucket, f.name, f.url);
                 if (success) {
                     successCount++;
                     if (selectedUrl === f.url) {
@@ -551,11 +552,20 @@ export function MediaGalleryModal({
                                                             : 'border-white/10 hover:border-white/40 hover:scale-[1.01]'
                                                     }`}
                                                 >
-                                                    <img
-                                                        src={file.url}
-                                                        alt={file.name}
-                                                        className="w-full h-full object-contain p-2"
-                                                    />
+                                                    {brokenUrls.has(file.url) ? (
+                                                        <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center gap-1 bg-red-950/30 text-red-400 border border-red-500/20 rounded-xl">
+                                                            <AlertTriangle className="w-5 h-5 stroke-[1.5]" />
+                                                            <span className="text-[9px] font-bold uppercase tracking-wider">No disponible</span>
+                                                            <span className="text-[8px] opacity-60 truncate max-w-full">{file.name}</span>
+                                                        </div>
+                                                    ) : (
+                                                        <img
+                                                            src={file.url}
+                                                            alt={file.name}
+                                                            className="w-full h-full object-contain p-2"
+                                                            onError={() => setBrokenUrls(prev => new Set(prev).add(file.url))}
+                                                        />
+                                                    )}
 
                                                     {/* Bulk Checkbox Overlay */}
                                                     {bulkMode && (
