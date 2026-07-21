@@ -289,7 +289,7 @@ interface AppState {
     addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean; can_manage_prayers?: boolean; assigned_church?: string }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     fetchMediaGalleryFiles: () => Promise<Array<{ name: string; url: string; createdAt: string; bucket: string }>>;
-    uploadMediaGalleryFile: (file: File) => Promise<string | null>;
+    uploadMediaGalleryFile: (file: File, category?: 'icon' | 'poster' | 'gen') => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
     mergeProfiles: (pendingId: string, memberEmail: string, existingMemberId: string) => Promise<boolean>;
     findProfileRaw: (search: string) => Promise<UserProfile[]>;
@@ -1147,9 +1147,9 @@ export const useAppStore = create<AppState>()(
                 return results;
             },
 
-            uploadMediaGalleryFile: async (file: File) => {
+            uploadMediaGalleryFile: async (file: File, category = 'gen') => {
                 const cleanExt = file.type === 'image/webp' ? 'webp' : (file.name.split('.').pop() || 'webp');
-                const fileName = `gallery_${Date.now()}.${cleanExt}`;
+                const fileName = `${category}_${Date.now()}.${cleanExt}`;
                 const filePath = fileName;
 
                 // Try uploading to 'app_assets' first, fallback to 'avatars'
