@@ -126,3 +126,48 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - Se proveyó el fragmento de código SQL necesario para ejecutarse directamente en el SQL Editor de Supabase y resolver la incidencia de forma inmediata.
 - **Archivos Afectados:**
     - `MEGA_FIX_DATABASE.sql`
+
+---
+
+### 🛡️ Funcionalidades de Servicios Especiales (21 de Julio, 2026)
+
+#### 12. Selector de Color para Servicios Especiales
+- **Mejora:** El administrador necesitaba personalizar el color de acento de los servicios tipo "Especial" en el display.
+- **Solución:**
+    - Se implementó una paleta de **8 colores predeterminados** (Morado, Rojo, Naranja, Azul, Verde, Dorado, Rosa, Cyan) + un **selector de color personalizado** (`<input type="color">`) en el panel de administración.
+    - El color se almacena como 4to segmento en `evening_custom_label` (formato: `customLabel|thirdLeaderRole|hideProfiles|accentColor`).
+    - El color del Especial tiene **prioridad sobre el color predeterminado del día** (ej. jueves verde → morado).
+    - Se expandió la lógica de colores en `MidnightGlowWeekly.tsx` para soportar gold, rose, cyan como presets nativos.
+- **Archivos Afectados:**
+    - `src/app/admin/page.tsx` (UI del selector de color)
+    - `src/lib/store.ts` (empaquetado/desempaquetado del 4to segmento)
+    - `src/lib/types.ts` (campos `hideProfiles`, `accentColor`)
+    - `src/themes/MidnightGlow/MidnightGlowWeekly.tsx` (renderizado de colores)
+
+#### 13. Ocultar Perfiles en Display (hideProfiles)
+- **Mejora:** Para ciertos eventos especiales, el administrador necesitaba ocultar las fotos y nombres de los responsables y mostrar solo el logo de la iglesia con el título del evento.
+- **Solución:**
+    - Se añadió un botón toggle **"Ocultar Perfiles en Display"** (`hideProfiles`) en el panel admin, visible solo cuando el tipo de servicio es "Especial".
+    - En **Midnight Glow Weekly**: se ocultan los avatares (se reemplazan por el ícono de la iglesia) y los nombres de los encargados.
+    - En **Midnight Glow Schedule (Diario)**: se oculta el avatar normal y se muestra un avatar grande con el logo centrado, el título personalizado en texto grande, y "SERVICIO ESPECIAL" como subtítulo.
+- **Archivos Afectados:**
+    - `src/app/admin/page.tsx` (toggle UI)
+    - `src/themes/MidnightGlow/MidnightGlowSchedule.tsx` (logo centrado + título grande)
+    - `src/themes/MidnightGlow/MidnightGlowWeekly.tsx` (ícono de iglesia + nombres ocultos)
+
+#### 14. Corrección de Crash en Producción (IIFEs y Tailwind Dinámico)
+- **Problema:** Al activar `hideProfiles`, la pantalla `/display` crasheaba con "Application Error: client-side exception".
+- **Causa:**
+    1. `settings` no estaba importada del store en `MidnightGlowWeekly.tsx` → `settings.churchIcon` era `undefined`.
+    2. Funciones IIFE `(() => {...})()` dentro de JSX son inestables en producción de Next.js.
+    3. Clases Tailwind dinámicas como `border-[${hexColor}]` no se generan en build-time.
+- **Solución:**
+    - Se añadió `const settings = useAppStore(...)` al componente Weekly.
+    - Se reemplazaron todos los IIFEs con variables pre-computadas (`ChurchIcon`, `HideProfileIcon`) antes del `return`.
+    - Se reemplazaron clases Tailwind dinámicas con `style={{ borderColor: hex }}` inline.
+- **Archivos Afectados:**
+    - `src/themes/MidnightGlow/MidnightGlowSchedule.tsx`
+    - `src/themes/MidnightGlow/MidnightGlowWeekly.tsx`
+- **Reglas Nuevas Derivadas:**
+    - **Regla 7:** No usar IIFEs en JSX. Pre-computar antes del `return`.
+    - **Regla 8:** No usar clases Tailwind dinámicas. Usar `style={{}}` inline.
