@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, Upload, X, Check, Loader2, Images, Search, Sparkles, Tag, Trash2, Link, AlertTriangle, Info, ShieldAlert } from 'lucide-react';
+import { Image as ImageIcon, Upload, X, Check, Loader2, Images, Search, Sparkles, Tag, Trash2, Link, AlertTriangle, Info, ShieldAlert, CheckSquare, Square, CheckCircle2 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { compressImage } from '@/lib/utils';
 
@@ -56,14 +56,20 @@ export function MediaGalleryModal({
     // Upload Category Selector
     const [uploadCategory, setUploadCategory] = useState<'icon' | 'poster' | 'gen'>('icon');
 
-    // Deletion Modal State
-    const [fileToDelete, setFileToDelete] = useState<GalleryFile | null>(null);
+    // Bulk Multi-Selection State
+    const [bulkMode, setBulkMode] = useState(false);
+    const [bulkSelectedNames, setBulkSelectedNames] = useState<Set<string>>(new Set());
+
+    // Deletion Modal State (Single or Bulk)
+    const [filesToDelete, setFilesToDelete] = useState<GalleryFile[]>([]);
     const [isDeleting, setIsDeleting] = useState(false);
     const [activeHoverInfo, setActiveHoverInfo] = useState<string | null>(null);
 
     useEffect(() => {
         if (isOpen) {
             setSelectedUrl(currentUrl);
+            setBulkSelectedNames(new Set());
+            setBulkMode(false);
             loadGallery();
         }
     }, [isOpen, currentUrl]);
@@ -209,20 +215,56 @@ export function MediaGalleryModal({
         }
     };
 
+    const toggleBulkSelect = (filename: string) => {
+        setBulkSelectedNames(prev => {
+            const next = new Set(prev);
+            if (next.has(filename)) {
+                next.delete(filename);
+            } else {
+                next.add(filename);
+            }
+            return next;
+        });
+    };
+
+    const selectUnusedFiles = () => {
+        const unusedNames = filteredFiles
+            .filter(f => getFileUsages(f).length === 0)
+            .map(f => f.name);
+        setBulkSelectedNames(new Set(unusedNames));
+        showNotification?.(`Se seleccionaron ${unusedNames.length} imágenes no vinculadas`, 'success');
+    };
+
+    const clearBulkSelection = () => {
+        setBulkSelectedNames(new Set());
+    };
+
+    const initiateBulkDelete = () => {
+        const selectedFilesList = files.filter(f => bulkSelectedNames.has(f.name));
+        if (selectedFilesList.length === 0) return;
+        setFilesToDelete(selectedFilesList);
+    };
+
     const handleDeleteConfirmed = async () => {
-        if (!fileToDelete) return;
+        if (filesToDelete.length === 0) return;
         setIsDeleting(true);
         try {
-            const success = await deleteMediaGalleryFile(fileToDelete.bucket, fileToDelete.name);
-            if (success) {
-                if (selectedUrl === fileToDelete.url) {
-                    setSelectedUrl('');
+            let successCount = 0;
+            for (const f of filesToDelete) {
+                const success = await deleteMediaGalleryFile(f.bucket, f.name);
+                if (success) {
+                    successCount++;
+                    if (selectedUrl === f.url) {
+                        setSelectedUrl('');
+                    }
                 }
-                setFileToDelete(null);
-                await loadGallery();
             }
+            showNotification?.(`Se eliminaron ${successCount} imágenes de la galería`, 'success');
+            setFilesToDelete([]);
+            setBulkSelectedNames(new Set());
+            await loadGallery();
         } catch (err) {
-            console.error('Error deleting file:', err);
+            console.error('Error deleting files:', err);
         } finally {
             setIsDeleting(false);
         }
@@ -252,7 +294,12 @@ export function MediaGalleryModal({
 
     if (!isOpen) return null;
 
-    const fileToDeleteUsages = fileToDelete ? getFileUsages(fileToDelete) : [];
+    // Aggregate usages for all files marked for deletion
+    const aggregatedUsages: { file: GalleryFile; usages: string[] }[] = filesToDelete
+        .map(f => ({ file: f, usages: getFileUsages(f) }))
+        .filter(item => item.usages.length > 0);
+
+    const hasAnyInUseToDelete = aggregatedUsages.length > 0;
 
     return (
         <AnimatePresence>
@@ -261,7 +308,7 @@ export function MediaGalleryModal({
                     initial={{ opacity: 0, scale: 0.95, y: 10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                    className="relative w-full max-w-4xl bg-[#0a1120] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[88vh]"
+                    className="relative w-full max-w-4xl bg-[#0a1120] border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
                 >
                     {/* Header */}
                     <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-black/40">
@@ -271,7 +318,7 @@ export function MediaGalleryModal({
                             </div>
                             <div>
                                 <h3 className="text-lg font-bold text-white uppercase tracking-wider">{title}</h3>
-                                <p className="text-xs text-white/50">Administra, vincula y elimina archivos de Supabase Storage</p>
+                                <p className="text-xs text-white/50">Administra, clasifica y elimina archivos de forma individual o masiva</p>
                             </div>
                         </div>
                         <button
@@ -283,32 +330,52 @@ export function MediaGalleryModal({
                     </div>
 
                     {/* Navigation Tabs */}
-                    <div className="flex border-b border-white/10 bg-black/20 px-6 pt-3 gap-2">
-                        <button
-                            onClick={() => setActiveTab('gallery')}
-                            className={`flex items-center gap-2 px-5 py-2.5 font-semibold text-xs uppercase tracking-wider rounded-t-xl transition-all border-b-2 ${
-                                activeTab === 'gallery'
-                                    ? 'bg-[#101e38] text-[#A3FF57] border-[#A3FF57]'
-                                    : 'text-white/60 hover:text-white border-transparent hover:bg-white/5'
-                            }`}
-                        >
-                            <ImageIcon className="w-4 h-4" />
-                            Galería ({files.length})
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('upload')}
-                            className={`flex items-center gap-2 px-5 py-2.5 font-semibold text-xs uppercase tracking-wider rounded-t-xl transition-all border-b-2 ${
-                                activeTab === 'upload'
-                                    ? 'bg-[#101e38] text-[#A3FF57] border-[#A3FF57]'
-                                    : 'text-white/60 hover:text-white border-transparent hover:bg-white/5'
-                            }`}
-                        >
-                            <Upload className="w-4 h-4" />
-                            Subir Nueva Imagen
-                        </button>
+                    <div className="flex border-b border-white/10 bg-black/20 px-6 pt-3 gap-2 justify-between items-center">
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setActiveTab('gallery')}
+                                className={`flex items-center gap-2 px-5 py-2.5 font-semibold text-xs uppercase tracking-wider rounded-t-xl transition-all border-b-2 ${
+                                    activeTab === 'gallery'
+                                        ? 'bg-[#101e38] text-[#A3FF57] border-[#A3FF57]'
+                                        : 'text-white/60 hover:text-white border-transparent hover:bg-white/5'
+                                }`}
+                            >
+                                <ImageIcon className="w-4 h-4" />
+                                Galería ({files.length})
+                            </button>
+                            <button
+                                onClick={() => setActiveTab('upload')}
+                                className={`flex items-center gap-2 px-5 py-2.5 font-semibold text-xs uppercase tracking-wider rounded-t-xl transition-all border-b-2 ${
+                                    activeTab === 'upload'
+                                        ? 'bg-[#101e38] text-[#A3FF57] border-[#A3FF57]'
+                                        : 'text-white/60 hover:text-white border-transparent hover:bg-white/5'
+                                }`}
+                            >
+                                <Upload className="w-4 h-4" />
+                                Subir Nueva Imagen
+                            </button>
+                        </div>
+
+                        {/* Bulk Mode Toggle (Only in Gallery tab) */}
+                        {activeTab === 'gallery' && (
+                            <button
+                                onClick={() => {
+                                    setBulkMode(!bulkMode);
+                                    if (bulkMode) setBulkSelectedNames(new Set());
+                                }}
+                                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border transition-all ${
+                                    bulkMode
+                                        ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
+                                        : 'bg-white/5 border-white/10 text-white/60 hover:text-white hover:bg-white/10'
+                                }`}
+                            >
+                                <CheckSquare className="w-3.5 h-3.5" />
+                                {bulkMode ? 'Modo Selección Múltiple (Activo)' : 'Selección Múltiple'}
+                            </button>
+                        )}
                     </div>
 
-                    {/* Category Filter & Search Bar (Only in Gallery Tab) */}
+                    {/* Category Filter, Search Bar & Bulk Actions (Only in Gallery Tab) */}
                     {activeTab === 'gallery' && (
                         <div className="px-6 py-3 border-b border-white/5 bg-black/10 flex flex-wrap items-center justify-between gap-3">
                             {/* Category Filter Chips */}
@@ -379,6 +446,41 @@ export function MediaGalleryModal({
                         </div>
                     )}
 
+                    {/* Bulk Selection Bar (When Bulk Mode is enabled) */}
+                    {activeTab === 'gallery' && bulkMode && (
+                        <div className="px-6 py-2.5 bg-purple-950/40 border-b border-purple-500/30 flex items-center justify-between gap-3 text-xs">
+                            <div className="flex items-center gap-2">
+                                <span className="font-bold text-purple-300">
+                                    {bulkSelectedNames.size} seleccionadas
+                                </span>
+                                <button
+                                    onClick={selectUnusedFiles}
+                                    className="px-2.5 py-1 rounded bg-purple-500/20 hover:bg-purple-500/30 text-purple-200 border border-purple-500/40 font-semibold text-[11px]"
+                                >
+                                    Seleccionar No Vinculadas (Libres)
+                                </button>
+                                {bulkSelectedNames.size > 0 && (
+                                    <button
+                                        onClick={clearBulkSelection}
+                                        className="px-2 py-1 rounded bg-white/10 hover:bg-white/20 text-white/70 text-[11px]"
+                                    >
+                                        Desmarcar Todo
+                                    </button>
+                                )}
+                            </div>
+
+                            {bulkSelectedNames.size > 0 && (
+                                <button
+                                    onClick={initiateBulkDelete}
+                                    className="px-4 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold flex items-center gap-1.5 shadow-lg shadow-red-600/30 text-xs uppercase tracking-wider"
+                                >
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                    Eliminar {bulkSelectedNames.size} seleccionadas
+                                </button>
+                            )}
+                        </div>
+                    )}
+
                     {/* Content Area */}
                     <div className="flex-1 overflow-y-auto p-6 min-h-[320px]">
                         {activeTab === 'gallery' && (
@@ -411,15 +513,24 @@ export function MediaGalleryModal({
                                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
                                         {filteredFiles.map((file, idx) => {
                                             const isSelected = selectedUrl === file.url;
+                                            const isBulkChecked = bulkSelectedNames.has(file.name);
                                             const usages = getFileUsages(file);
                                             const isUsed = usages.length > 0;
 
                                             return (
                                                 <div
                                                     key={idx}
-                                                    onClick={() => setSelectedUrl(file.url)}
+                                                    onClick={() => {
+                                                        if (bulkMode) {
+                                                            toggleBulkSelect(file.name);
+                                                        } else {
+                                                            setSelectedUrl(file.url);
+                                                        }
+                                                    }}
                                                     className={`group relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all bg-black/40 flex items-center justify-center ${
-                                                        isSelected
+                                                        isBulkChecked
+                                                            ? 'border-purple-400 ring-4 ring-purple-500/20 shadow-[0_0_20px_rgba(168,85,247,0.4)] scale-[1.02]'
+                                                            : isSelected
                                                             ? 'border-[#A3FF57] ring-4 ring-[#A3FF57]/20 shadow-[0_0_20px_rgba(163,255,87,0.3)] scale-[1.02]'
                                                             : 'border-white/10 hover:border-white/40 hover:scale-[1.01]'
                                                     }`}
@@ -430,10 +541,25 @@ export function MediaGalleryModal({
                                                         className="w-full h-full object-contain p-2"
                                                     />
 
-                                                    {/* Category badge tag */}
-                                                    <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-md text-[9px] font-bold text-white/80 border border-white/10 uppercase">
-                                                        {file.category === 'icon' ? 'Ícono' : file.category === 'poster' ? 'Afiche' : 'Imagen'}
-                                                    </div>
+                                                    {/* Bulk Checkbox Overlay */}
+                                                    {bulkMode && (
+                                                        <div className="absolute top-2 left-2 z-20">
+                                                            <div className={`p-1 rounded-md border transition-all ${
+                                                                isBulkChecked
+                                                                    ? 'bg-purple-600 border-purple-400 text-white shadow-lg'
+                                                                    : 'bg-black/60 border-white/30 text-white/50 hover:bg-black/80'
+                                                            }`}>
+                                                                <CheckSquare className="w-4 h-4" />
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Category badge tag (Only when bulkMode is off) */}
+                                                    {!bulkMode && (
+                                                        <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-md text-[9px] font-bold text-white/80 border border-white/10 uppercase">
+                                                            {file.category === 'icon' ? 'Ícono' : file.category === 'poster' ? 'Afiche' : 'Imagen'}
+                                                        </div>
+                                                    )}
 
                                                     {/* Link Usage Status Badge */}
                                                     <div className="absolute top-1.5 right-1.5 flex items-center gap-1 z-10">
@@ -469,24 +595,26 @@ export function MediaGalleryModal({
                                                     )}
 
                                                     {/* Selection Overlay Checkmark */}
-                                                    {isSelected && (
+                                                    {isSelected && !bulkMode && (
                                                         <div className="absolute bottom-2 left-2 bg-[#A3FF57] text-black p-1 rounded-full shadow-lg z-20">
                                                             <Check className="w-3.5 h-3.5 stroke-[3]" />
                                                         </div>
                                                     )}
 
-                                                    {/* Delete Button Hover Overlay */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setFileToDelete(file);
-                                                        }}
-                                                        className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-red-500/80 hover:bg-red-600 text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                                                        title="Eliminar de la Galería"
-                                                    >
-                                                        <Trash2 className="w-3.5 h-3.5" />
-                                                    </button>
+                                                    {/* Single Delete Button Hover Overlay (When bulkMode is off) */}
+                                                    {!bulkMode && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setFilesToDelete([file]);
+                                                            }}
+                                                            className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-red-500/80 hover:bg-red-600 text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                                            title="Eliminar de la Galería"
+                                                        >
+                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                        </button>
+                                                    )}
 
                                                     {/* Hover details */}
                                                     <div className="absolute inset-x-0 bottom-0 p-1.5 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -628,16 +756,16 @@ export function MediaGalleryModal({
                 </motion.div>
             </div>
 
-            {/* Warning Deletion Modal */}
-            {fileToDelete && (
+            {/* Warning / Confirmation Deletion Modal */}
+            {filesToDelete.length > 0 && (
                 <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="w-full max-w-md bg-[#0d1629] border border-white/10 rounded-2xl p-6 shadow-2xl text-white flex flex-col gap-4"
+                        className="w-full max-w-lg bg-[#0d1629] border border-white/10 rounded-2xl p-6 shadow-2xl text-white flex flex-col gap-4 max-h-[85vh] overflow-hidden"
                     >
                         <div className="flex items-center gap-3">
-                            {fileToDeleteUsages.length > 0 ? (
+                            {hasAnyInUseToDelete ? (
                                 <div className="p-3 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30">
                                     <ShieldAlert className="w-6 h-6" />
                                 </div>
@@ -648,35 +776,48 @@ export function MediaGalleryModal({
                             )}
                             <div>
                                 <h4 className="text-base font-bold uppercase tracking-wider">
-                                    {fileToDeleteUsages.length > 0 ? '¡Atención! Imagen en Uso' : '¿Eliminar Imagen?'}
+                                    {hasAnyInUseToDelete
+                                        ? `¡Atención! ${aggregatedUsages.length} Imagen(es) en Uso`
+                                        : filesToDelete.length === 1
+                                        ? '¿Eliminar Imagen?'
+                                        : `¿Eliminar ${filesToDelete.length} Imágenes?`}
                                 </h4>
-                                <p className="text-xs text-white/50 font-mono truncate max-w-[260px]">{fileToDelete.name}</p>
+                                <p className="text-xs text-white/50">
+                                    {filesToDelete.length === 1 ? filesToDelete[0].name : `${filesToDelete.length} archivos seleccionados`}
+                                </p>
                             </div>
                         </div>
 
-                        {fileToDeleteUsages.length > 0 ? (
-                            <div className="p-4 rounded-xl bg-red-950/40 border border-red-500/30 text-xs space-y-2">
+                        {hasAnyInUseToDelete ? (
+                            <div className="p-4 rounded-xl bg-red-950/40 border border-red-500/30 text-xs space-y-3 max-h-[40vh] overflow-y-auto">
                                 <p className="font-bold text-red-300">
-                                    Esta imagen está actualmente VINCULADA a los siguientes elementos:
+                                    Las siguientes imágenes seleccionadas están actualmente VINCULADAS a secciones activas:
                                 </p>
-                                <ul className="list-disc list-inside space-y-1 font-mono text-[#ffb0b0]">
-                                    {fileToDeleteUsages.map((usage, idx) => (
-                                        <li key={idx}>{usage}</li>
+                                <div className="space-y-2">
+                                    {aggregatedUsages.map((item, idx) => (
+                                        <div key={idx} className="bg-black/40 border border-red-500/20 p-2 rounded-lg">
+                                            <p className="font-mono text-red-200 font-bold truncate">{item.file.name}</p>
+                                            <ul className="list-disc list-inside text-white/80 text-[11px] pt-1">
+                                                {item.usages.map((u, uIdx) => (
+                                                    <li key={uIdx}>{u}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     ))}
-                                </ul>
+                                </div>
                                 <p className="text-red-400/80 text-[11px] pt-1 italic">
-                                    Si la eliminas del servidor, dejará de mostrarse en esas secciones de la aplicación.
+                                    Si las eliminas del servidor, esas secciones dejarán de proyectar la imagen correspondientes.
                                 </p>
                             </div>
                         ) : (
                             <p className="text-xs text-white/70">
-                                Esta imagen no está vinculada a ningún perfil ni configuración activa. Se eliminará permanentemente de Supabase Storage.
+                                Ninguna de las {filesToDelete.length} imágenes seleccionadas está en uso. Se eliminarán permanentemente de Supabase Storage.
                             </p>
                         )}
 
-                        <div className="flex items-center justify-end gap-3 pt-2">
+                        <div className="flex items-center justify-end gap-3 pt-2 border-t border-white/10">
                             <button
-                                onClick={() => setFileToDelete(null)}
+                                onClick={() => setFilesToDelete([])}
                                 disabled={isDeleting}
                                 className="px-4 py-2 rounded-xl border border-white/10 text-white/70 hover:text-white text-xs font-bold uppercase tracking-wider"
                             >
@@ -686,7 +827,7 @@ export function MediaGalleryModal({
                                 onClick={handleDeleteConfirmed}
                                 disabled={isDeleting}
                                 className={`px-5 py-2 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-all ${
-                                    fileToDeleteUsages.length > 0
+                                    hasAnyInUseToDelete
                                         ? 'bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/30'
                                         : 'bg-red-500 hover:bg-red-400 text-white'
                                 }`}
@@ -696,7 +837,7 @@ export function MediaGalleryModal({
                                 ) : (
                                     <Trash2 className="w-4 h-4" />
                                 )}
-                                {fileToDeleteUsages.length > 0 ? 'Eliminar de todos modos' : 'Sí, Eliminar'}
+                                {hasAnyInUseToDelete ? 'Eliminar de todos modos' : 'Sí, Eliminar Todo'}
                             </button>
                         </div>
                     </motion.div>
