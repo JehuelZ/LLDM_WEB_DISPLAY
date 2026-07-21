@@ -1115,32 +1115,118 @@ export const useAppStore = create<AppState>()(
 
             fetchMediaGalleryFiles: async () => {
                 const results: Array<{ name: string; url: string; createdAt: string; bucket: string }> = [];
+                const knownUrls = new Set<string>();
                 const buckets = ['app_assets', 'avatars'];
 
+                // 1. Fetch recursively with limit 1000 from Supabase storage buckets
                 for (const bucket of buckets) {
                     try {
-                        const { data, error } = await supabase.storage.from(bucket).list('', {
-                            limit: 100,
-                            sortBy: { column: 'created_at', order: 'desc' }
-                        });
-                        if (!error && data) {
-                            for (const item of data) {
-                                if (item.name && !item.name.startsWith('.') && item.name !== '.emptyFolderPlaceholder') {
-                                    const { data: pubData } = supabase.storage.from(bucket).getPublicUrl(item.name);
-                                    if (pubData?.publicUrl) {
-                                        results.push({
-                                            name: item.name,
-                                            url: pubData.publicUrl,
-                                            createdAt: item.created_at || new Date().toISOString(),
-                                            bucket
-                                        });
+                        const listFiles = async (folder = '') => {
+                            const { data, error } = await supabase.storage.from(bucket).list(folder, {
+                                limit: 1000,
+                                sortBy: { column: 'created_at', order: 'desc' }
+                            });
+                            if (!error && data) {
+                                for (const item of data) {
+                                    if (item.name && !item.name.startsWith('.') && item.name !== '.emptyFolderPlaceholder') {
+                                        const fullPath = folder ? `${folder}/${item.name}` : item.name;
+                                        // Check if item is a subfolder or a file
+                                        if (item.id === null || (!item.metadata && !item.name.includes('.'))) {
+                                            await listFiles(fullPath);
+                                        } else {
+                                            const { data: pubData } = supabase.storage.from(bucket).getPublicUrl(fullPath);
+                                            if (pubData?.publicUrl) {
+                                                results.push({
+                                                    name: item.name,
+                                                    url: pubData.publicUrl,
+                                                    createdAt: item.created_at || new Date().toISOString(),
+                                                    bucket
+                                                });
+                                                knownUrls.add(pubData.publicUrl);
+                                                const filenamePart = fullPath.split('/').pop() || item.name;
+                                                knownUrls.add(filenamePart);
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
+                        };
+                        await listFiles();
                     } catch (e) {
                         console.warn(`Error listing files from bucket "${bucket}":`, e);
                     }
+                }
+
+                // 2. Cross-reference profile avatars directly from database to ensure ALL profile images are included
+                try {
+                    const membersList = get().members?.length ? get().members : [];
+                    let profilesData: any[] = membersList;
+                    if (!profilesData.length) {
+                        const { data: dbProfiles } = await supabase.from('profiles').select('name, avatar_url');
+                        if (dbProfiles) profilesData = dbProfiles;
+                    }
+
+                    profilesData.forEach((p: any) => {
+                        const avatarUrl = p.avatar_url || p.avatar;
+                        if (avatarUrl && typeof avatarUrl === 'string' && avatarUrl.trim()) {
+                            const cleanUrl = avatarUrl.trim();
+                            const filenameFromUrl = cleanUrl.split('/').pop()?.split('?')[0] || '';
+                            const isAlreadyInList = Array.from(knownUrls).some(u => 
+                                u === cleanUrl || 
+                                (filenameFromUrl && filenameFromUrl.length > 5 && u.includes(filenameFromUrl))
+                            );
+
+                            if (!isAlreadyInList) {
+                                results.push({
+                                    name: `icon_avatar_${(p.name || 'miembro').replace(/\s+/g, '_')}.webp`,
+                                    url: cleanUrl,
+                                    createdAt: new Date().toISOString(),
+                                    bucket: 'avatars'
+                                });
+                                knownUrls.add(cleanUrl);
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Error cross-referencing profile avatars:", e);
+                }
+
+                // 3. Cross-reference AppSettings custom logos and icons
+                try {
+                    const settingsObj = get().settings || {};
+                    const settingsUrls = [
+                        settingsObj.customIconUrl,
+                        settingsObj.churchLogoUrl,
+                        settingsObj.countdownLogoUrl,
+                        settingsObj.displayBgUrl,
+                        settingsObj.displayCustomBgUrl,
+                        settingsObj.customLogo1,
+                        settingsObj.customLogo2,
+                        settingsObj.customLogo3,
+                        settingsObj.customLogo4
+                    ];
+
+                    settingsUrls.forEach((sUrl, sIdx) => {
+                        if (sUrl && typeof sUrl === 'string' && sUrl.trim()) {
+                            const cleanUrl = sUrl.trim();
+                            const filenameFromUrl = cleanUrl.split('/').pop()?.split('?')[0] || '';
+                            const isAlreadyInList = Array.from(knownUrls).some(u => 
+                                u === cleanUrl || 
+                                (filenameFromUrl && filenameFromUrl.length > 5 && u.includes(filenameFromUrl))
+                            );
+                            if (!isAlreadyInList) {
+                                results.push({
+                                    name: `icon_setting_${sIdx}.webp`,
+                                    url: cleanUrl,
+                                    createdAt: new Date().toISOString(),
+                                    bucket: 'app_assets'
+                                });
+                                knownUrls.add(cleanUrl);
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.warn("Error cross-referencing settings images:", e);
                 }
 
                 // Sort newest first

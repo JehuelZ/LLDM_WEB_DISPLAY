@@ -74,16 +74,19 @@ export function MediaGalleryModal({
         }
     }, [isOpen, currentUrl]);
 
-    const determineCategory = (filename: string): 'icon' | 'poster' | 'gen' => {
+    const determineCategory = (filename: string, isProfileOrSetting = false): 'icon' | 'poster' | 'gen' => {
         const lower = filename.toLowerCase();
         if (
+            isProfileOrSetting ||
             lower.startsWith('icon_') ||
             lower.includes('logo') ||
             lower.includes('icon') ||
             lower.includes('flame') ||
             lower.includes('church') ||
             lower.includes('avatar') ||
-            lower.includes('symbol')
+            lower.includes('profile') ||
+            lower.includes('symbol') ||
+            lower.includes('admin')
         ) {
             return 'icon';
         }
@@ -103,10 +106,14 @@ export function MediaGalleryModal({
         setLoading(true);
         try {
             const rawList = await fetchMediaGalleryFiles();
-            const categorizedList: GalleryFile[] = (rawList || []).map((f: any) => ({
-                ...f,
-                category: determineCategory(f.name)
-            }));
+            const categorizedList: GalleryFile[] = (rawList || []).map((f: any) => {
+                const usages = getFileUsages(f);
+                const isProfileOrSetting = usages.some(u => u.startsWith('Perfil:') || u.startsWith('Ajustes:'));
+                return {
+                    ...f,
+                    category: determineCategory(f.name, isProfileOrSetting)
+                };
+            });
             setFiles(categorizedList);
         } catch (error) {
             console.error('Error loading gallery:', error);
