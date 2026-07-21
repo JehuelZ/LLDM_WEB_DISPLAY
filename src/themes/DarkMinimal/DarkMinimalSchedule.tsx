@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Check } from 'lucide-react';
+import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Check, BookOpen } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -45,7 +45,7 @@ const LangBadge = ({ lang }: { lang?: 'es' | 'en' }) => {
 };
 
 export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boolean } = {}) {
-    const { monthlySchedule: scheduleMap, members, minister: ministerStore, settings } = useAppStore((state: any) => state);
+    const { monthlySchedule: scheduleMap, members, minister: ministerStore, settings, theme } = useAppStore((state: any) => state);
 
     // Consolidated Minister Info (Priority: Settings > Store)
     const displayMinister = {
@@ -497,13 +497,20 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                     Agenda <span className="text-[#3B82F6]">{isTomorrow ? 'de Mañana' : 'del Día'}</span>
                 </h1>
                 {/* Date pill */}
-                <div className="flex justify-center mt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
                     <div className="flex items-center gap-2 border border-[#23242F] bg-[#16171F] rounded-full px-5 py-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
                         <span className="text-[12px] font-medium text-[#9CA3AF] uppercase tracking-wider">
                             {format(displayDate, "EEEE, d 'de' MMMM yyyy", { locale: es })}
                         </span>
                     </div>
+                    {theme?.title && (
+                        <div className="flex items-center gap-2 border border-[#23242F] bg-[#16171F] rounded-full px-5 py-1.5">
+                            <BookOpen className="w-3.5 h-3.5 text-[#3B82F6]" />
+                            <span className="text-[10px] font-semibold text-[#4B5563] uppercase tracking-widest">Tema Semanal:</span>
+                            <span className="text-[11px] font-bold text-white uppercase">{theme.title}</span>
+                        </div>
+                    )}
                 </div>
             </motion.div>
 

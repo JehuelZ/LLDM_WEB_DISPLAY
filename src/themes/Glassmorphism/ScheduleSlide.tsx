@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { format, parseISO, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { LeaderProfile } from '@/components/LeaderProfile';
-import { CalendarDays, User, Clock as ClockIcon, Church, ChevronRight, Radio, Sparkles } from 'lucide-react';
+import { CalendarDays, User, Clock as ClockIcon, Church, ChevronRight, Radio, Sparkles, BookOpen } from 'lucide-react';
 import { getServiceTypeLabel } from '@/lib/display_labels';
 
 export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
@@ -79,17 +79,32 @@ export const GlassmorphismSchedule = ({ isTomorrow = false }: any) => {
                     </h2>
                 </div>
 
-                <div className={cn(
-                    "border border-white/10 rounded-[2rem] py-4 px-10 flex items-center gap-6 shadow-2xl",
-                    settings.lowPerformanceMode ? "bg-[#1a1a1a]" : "bg-white/5 backdrop-blur-3xl"
-                )}>
-                    <div className="flex flex-col items-center border-r border-white/10 pr-8">
-                        <span className="text-5xl font-black text-white">{format(displayDate, 'd')}</span>
-                        <span className="text-xs font-bold text-white/30 uppercase tracking-[0.2em]">{format(displayDate, 'MMM', { locale: es })}</span>
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-2xl font-black text-white/80 uppercase italic tracking-tight">{format(displayDate, 'EEEE', { locale: es })}</span>
-                        <span className="text-xs font-bold text-white/20 uppercase tracking-[0.4em] mt-1">{format(displayDate, 'yyyy')}</span>
+                <div className="flex gap-4">
+                    {theme?.title && (
+                        <div className={cn(
+                            "border border-white/10 rounded-[2rem] py-4 px-8 flex items-center gap-3 shadow-2xl",
+                            settings.lowPerformanceMode ? "bg-[#1a1a1a]" : "bg-white/5 backdrop-blur-3xl"
+                        )}>
+                            <BookOpen size={18} className="text-blue-400" />
+                            <div className="flex flex-col">
+                                <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Tema Semanal</span>
+                                <span className="text-sm font-bold text-white uppercase truncate max-w-[200px]">{theme.title}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className={cn(
+                        "border border-white/10 rounded-[2rem] py-4 px-10 flex items-center gap-6 shadow-2xl",
+                        settings.lowPerformanceMode ? "bg-[#1a1a1a]" : "bg-white/5 backdrop-blur-3xl"
+                    )}>
+                        <div className="flex flex-col items-center border-r border-white/10 pr-8">
+                            <span className="text-5xl font-black text-white">{format(displayDate, 'd')}</span>
+                            <span className="text-xs font-bold text-white/30 uppercase tracking-[0.2em]">{format(displayDate, 'MMM', { locale: es })}</span>
+                        </div>
+                        <div className="flex flex-col">
+                            <span className="text-2xl font-black text-white/80 uppercase italic tracking-tight">{format(displayDate, 'EEEE', { locale: es })}</span>
+                            <span className="text-xs font-bold text-white/20 uppercase tracking-[0.4em] mt-1">{format(displayDate, 'yyyy')}</span>
+                        </div>
                     </div>
                 </div>
             </motion.div>

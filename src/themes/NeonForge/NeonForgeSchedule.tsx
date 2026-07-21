@@ -3,7 +3,7 @@ import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import {
     Sunrise, Sun, Moon, Church, Settings,
-    Radio, Users, Crown, HeartHandshake, Mic, LogIn, ChevronRight, Activity, Wifi, Zap
+    Radio, Users, Crown, HeartHandshake, Mic, LogIn, ChevronRight, Activity, Wifi, Zap, BookOpen
 } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format } from 'date-fns';
@@ -143,6 +143,7 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
     const members = useAppStore((state: any) => state.members);
     const minister = useAppStore((state: any) => state.minister);
     const settings = useAppStore((state: any) => state.settings);
+    const theme = useAppStore((state: any) => state.theme);
     const T = getVariantTokens(settings);
 
     const now = new Date();
@@ -241,11 +242,10 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                 </motion.h1>
 
                 {/* Date pill — centered */}
-                <motion.div
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}
-                    className="flex justify-center mt-4"
-                >
-                    <div className="flex items-center gap-2.5 px-5 py-2 rounded-full"
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
+                    <motion.div
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}
+                        className="flex items-center gap-2.5 px-5 py-2 rounded-full"
                         style={{
                             background: 'rgba(255,255,255,0.04)',
                             border: '1px solid rgba(255,255,255,0.08)',
@@ -255,8 +255,22 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                         <span className="text-[12px] font-semibold capitalize" style={{ color: 'rgba(255,255,255,0.45)' }}>
                             {format(baseDate, "EEEE, d 'de' MMMM yyyy", { locale: es })}
                         </span>
-                    </div>
-                </motion.div>
+                    </motion.div>
+                    {theme?.title && (
+                        <motion.div
+                            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.14 }}
+                            className="flex items-center gap-2.5 px-5 py-2 rounded-full"
+                            style={{
+                                background: 'rgba(255,255,255,0.04)',
+                                border: '1px solid rgba(255,255,255,0.08)',
+                                backdropFilter: 'blur(10px)',
+                            }}>
+                            <BookOpen className="w-3.5 h-3.5 animate-pulse" style={{ color: T.accent }} />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: 'rgba(255,255,255,0.3)' }}>TEMA:</span>
+                            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: '#FFFFFF' }}>{theme.title}</span>
+                        </motion.div>
+                    )}
+                </div>
             </div>
 
             {/* ────────────────────────────────────────────────────────────

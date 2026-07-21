@@ -10,7 +10,7 @@ import { getSlideSystemTitle } from '@/lib/display_labels';
 
 const LunaPremiumWeekly: React.FC = () => {
     const { fonts } = useFont();
-    const { monthlySchedule, members, settings } = useAppStore();
+    const { monthlySchedule, members, settings, theme } = useAppStore();
     
     // Get start of current week (assuming Monday)
     const today = new Date();
@@ -46,6 +46,13 @@ const LunaPremiumWeekly: React.FC = () => {
                     <div className="px-4 py-1.5 bg-secondary/10 border border-secondary/30 text-secondary text-[10px] font-[500] tracking-[0.3em] uppercase self-end mb-4">
                         semana del {format(start, 'dd', { locale: es })} al {format(addDays(start, 6), 'dd MMMM', { locale: es }).toLowerCase()}
                     </div>
+                    {theme && theme.title && (
+                        <div className="px-4 py-1.5 bg-white/[0.03] border border-amber-500/30 rounded-full backdrop-blur-md flex items-center gap-2 self-end mb-4 ml-auto">
+                            <BookOpen size={14} className="text-amber-500" />
+                            <span className="text-[9px] tracking-[0.3em] uppercase text-amber-500/80 font-black">tema semanal:</span>
+                            <span className="text-[11px] tracking-widest uppercase text-white/90 font-[400]">{theme.title?.toLowerCase()}</span>
+                        </div>
+                    )}
                 </div>
             </header>
 

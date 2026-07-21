@@ -33,6 +33,7 @@ export function MidnightGlowWeekly() {
     const monthlySchedule = useAppStore((state: any) => state.monthlySchedule);
     const members = useAppStore((state: any) => state.members);
     const settings = useAppStore((state: any) => state.settings);
+    const theme = useAppStore((state: any) => state.theme);
 
     // Pre-compute church icon for hideProfiles mode
     const _iconsMap: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
@@ -256,6 +257,23 @@ export function MidnightGlowWeekly() {
             {/* Ambient glows */}
             <div className="absolute top-0 left-1/4 w-[700px] h-[400px] bg-[#4F7FFF]/10 blur-[120px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-[500px] h-[300px] bg-[#A3FF57]/5 blur-[100px] rounded-full pointer-events-none" />
+
+            {/* ── HEADER ── */}
+            <div className="z-10 flex items-center justify-between px-8 pt-6 pb-2 shrink-0 w-full">
+                <div className="flex flex-col">
+                    <p className="text-[9px] tracking-[0.4em] text-[#4F7FFF] uppercase font-bold mb-1">Programa Semanal</p>
+                    <h1 className="text-xl font-black text-white tracking-tight">
+                        SEMANA <span className="text-[#A3FF57]">DE ACTIVIDADES</span>
+                    </h1>
+                </div>
+                {theme?.title && (
+                    <div className="flex items-center gap-2 border border-[#4F7FFF]/40 bg-[#0D1B3E]/80 rounded-full px-5 py-1.5 shadow-[0_0_15px_rgba(79,127,255,0.1)]">
+                        <BookOpen className="w-3.5 h-3.5 text-[#A3FF57]" />
+                        <span className="text-[9px] tracking-[0.2em] font-bold text-[#4F7FFF] uppercase">TEMA SEMANAL:</span>
+                        <span className="text-[10px] font-black text-white uppercase">{theme.title}</span>
+                    </div>
+                )}
+            </div>
 
             {/* ── 7 COLUMNS ── */}
             <div className="z-10 flex-1 flex gap-2 px-2 pb-2 pt-2 min-h-0 w-full">

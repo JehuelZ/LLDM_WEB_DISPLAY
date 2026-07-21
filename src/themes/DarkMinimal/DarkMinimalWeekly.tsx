@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Crown, User } from 'lucide-react';
+import { Crown, User, BookOpen } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -34,6 +34,7 @@ export function DarkMinimalWeekly() {
     const monthlySchedule = useAppStore((state: any) => state.monthlySchedule);
     const members = useAppStore((state: any) => state.members);
     const settings = useAppStore((state: any) => state.settings);
+    const theme = useAppStore((state: any) => state.theme);
 
     const [mounted, setMounted] = useState(false);
     const [today] = useState(() => new Date());
@@ -129,11 +130,20 @@ export function DarkMinimalWeekly() {
                 <h1 className="text-3xl font-bold text-white tracking-tight">
                     Programa <span className="text-[#3B82F6]">Semanal</span>
                 </h1>
-                <div className="flex items-center gap-2 border border-[#23242F] bg-[#16171F] rounded-full px-3 py-0.5 mt-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
-                    <span className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wider">
-                        {format(today, "d 'de' MMM", { locale: es })} — {format(addDays(today, 6), "d 'de' MMM yyyy", { locale: es })}
-                    </span>
+                <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
+                    <div className="flex items-center gap-2 border border-[#23242F] bg-[#16171F] rounded-full px-3 py-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
+                        <span className="text-[10px] font-medium text-[#9CA3AF] uppercase tracking-wider">
+                            {format(today, "d 'de' MMM", { locale: es })} — {format(addDays(today, 6), "d 'de' MMM yyyy", { locale: es })}
+                        </span>
+                    </div>
+                    {theme?.title && (
+                        <div className="flex items-center gap-2 border border-[#23242F] bg-[#16171F] rounded-full px-3 py-0.5">
+                            <BookOpen className="w-3 h-3 text-[#3B82F6]" />
+                            <span className="text-[9px] font-semibold text-[#4B5563] uppercase tracking-widest">Tema Semanal:</span>
+                            <span className="text-[10px] font-bold text-white uppercase">{theme.title}</span>
+                        </div>
+                    )}
                 </div>
             </motion.div>
 

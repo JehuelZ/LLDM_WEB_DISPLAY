@@ -40,6 +40,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
     const minister = useAppStore((state: any) => state.minister);
     const settings = useAppStore((state: any) => state.settings);
     const monthlySchedule = useAppStore((state: any) => state.monthlySchedule);
+    const theme = useAppStore((state: any) => state.theme);
 
     const now = new Date();
     const baseDate = new Date(now);
@@ -365,13 +366,20 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     AGENDA <span className="text-[#A3FF57]">{isTomorrow ? 'DE MAÑANA' : 'DEL DÍA'}</span>
                 </h1>
                 {/* Date pill */}
-                <div className="flex justify-center mt-4">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4">
                     <div className="flex items-center gap-2 border border-[#4F7FFF]/40 bg-[#0D1B3E]/80 rounded-full px-6 py-2 shadow-[0_0_20px_rgba(79,127,255,0.15)]">
                         <div className="w-1.5 h-1.5 rounded-full bg-[#A3FF57] animate-pulse" />
                         <span className="text-[13px] font-bold tracking-[0.2em] text-white uppercase">
                             {format(displayDate, 'EEEE, d \'de\' MMMM yyyy', { locale: es })}
                         </span>
                     </div>
+                    {theme?.title && (
+                        <div className="flex items-center gap-2 border border-[#4F7FFF]/40 bg-[#0D1B3E]/80 rounded-full px-6 py-2 shadow-[0_0_20px_rgba(79,127,255,0.15)]">
+                            <BookOpen className="w-3.5 h-3.5 text-[#A3FF57]" />
+                            <span className="text-[11px] font-bold tracking-[0.2em] text-[#4F7FFF] uppercase">TEMA SEMANAL:</span>
+                            <span className="text-[12px] font-black text-white uppercase">{theme.title}</span>
+                        </div>
+                    )}
                 </div>
             </motion.div>
 
