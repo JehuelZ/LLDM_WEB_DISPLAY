@@ -296,6 +296,22 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/lib/store.ts`
     - `src/components/admin/MediaGalleryModal.tsx`
 
+#### 27. Estandarización Multi-Tema para Servicios Especiales (Regla #5 del Proyecto)
+- **Mejora:** Garantizar coherencia total de Servicios Especiales, títulos personalizados (`customLabel`), ocultar perfiles (`hideProfiles`) y colores de acento (`accentColor`) en las 6 plantillas de proyección.
+- **Solución:**
+    - Se auditaron y actualizaron todas las plantillas (**Midnight Glow**, **Iglesia / Cátedra**, **Luna Premium**, **Dark Minimal**, **Neon Forge** y **Glassmorphism**).
+    - **Fallback de Título (Regla #5)**: Si el servicio tipo `special` no tiene `customLabel` explícito, todas las plantillas muestran automáticamente `"SERVICIO ESPECIAL"` en lugar de etiquetas genéricas.
+    - **Ocultar Perfiles (`hideProfiles`)**: Al activarse en cualquier tema, se sustituyen los avatares/nombres por el logo o ícono personalizado de la iglesia y se destaca el título en grande.
+    - **Color de Acento (`accentColor`)**: Todos los temas aplican dinámicamente el color libre o preset seleccionado para los marcos, bordes e insignias.
+- **Archivos Afectados:**
+    - `src/themes/Iglesia/IglesiaSchedule.tsx`
+    - `src/themes/LunaPremium/LunaPremiumSchedule.tsx`
+    - `src/themes/DarkMinimal/DarkMinimalSchedule.tsx`
+    - `src/themes/NeonForge/NeonForgeSchedule.tsx`
+    - `src/themes/DarkMinimal/DarkMinimalAnnouncements.tsx`
+    - `src/themes/NeonForge/NeonForgeAnnouncements.tsx`
+
+
 
 
 

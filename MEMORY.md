@@ -16,7 +16,10 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
     - **Barra de búsqueda instantánea** por nombre de archivo.
     - **Compresión WebP automática**: toda imagen se redimensiona a máx 800x800px y se convierte a `.webp` al 85% de calidad.
   - La imagen seleccionada de la galería se asigna al servicio especial (`customIconUrl`) y se proyecta en las vistas Display (Weekly y Daily).
-- **Servicios Especiales (Titulo Personalizado):** Se implementó la personalización del título en los servicios tipo 'Especial' en el slot `evening` desde el panel de administración (mapeado a `customLabel` / `evening_custom_label`). Se adaptaron todos los temas de visualización (Midnight Glow, Iglesia, Luna Premium, etc.) para pintar dinámicamente este título personalizado o usar 'Servicio Especial' como fallback si está vacío.
+- **Servicios Especiales (Multi-Tema & Título Personalizado):** Se verificó y completó el soporte completo de **Servicios Especiales** en los 6 temas de proyección (**Midnight Glow**, **Iglesia / Cátedra**, **Luna Premium**, **Dark Minimal**, **Neon Forge** y **Glassmorphism**):
+    - **Título Personalizado (`customLabel`)**: si el administrador escribe un título (ej: "AVIVAMIENTOS"), se despliega en mayúsculas como título principal. Si el servicio es `special` y no tiene `customLabel`, todas las plantillas hacen fallback automático a **"SERVICIO ESPECIAL"** (cumpliendo estrictamente la Regla #5 del proyecto).
+    - **Ocultar Perfiles (`hideProfiles`)**: al activar esta casilla en cualquier tema, se ocultan los nombres y avatares de los miembros y se despliega en su lugar el logo/ícono oficial de la iglesia en grande junto al título del evento.
+    - **Color del Acento Personalizado (`accentColor`)**: todos los temas aplican dinámicamente el color personalizado para bordes, sombras, resplandores e insignias.
 - **Automatización de Mayo:** Calendario de mayo 2026 completado y cargado en Supabase (`schedule`).
 - **Seguridad & Acceso:** 
     - Se habilitó el acceso administrativo para el rol **"Ministro a Cargo"** (E.E. Eliab Aguilar) mediante la actualización de políticas RLS.
