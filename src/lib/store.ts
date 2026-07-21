@@ -290,6 +290,7 @@ interface AppState {
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     fetchMediaGalleryFiles: () => Promise<Array<{ name: string; url: string; createdAt: string; bucket: string }>>;
     uploadMediaGalleryFile: (file: File, category?: 'icon' | 'poster' | 'gen') => Promise<string | null>;
+    deleteMediaGalleryFile: (bucket: string, fileName: string) => Promise<boolean>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
     mergeProfiles: (pendingId: string, memberEmail: string, existingMemberId: string) => Promise<boolean>;
     findProfileRaw: (search: string) => Promise<UserProfile[]>;
@@ -1183,6 +1184,22 @@ export const useAppStore = create<AppState>()(
 
                 const { data } = supabase.storage.from(bucketUsed).getPublicUrl(filePath);
                 return data?.publicUrl || null;
+            },
+
+            deleteMediaGalleryFile: async (bucket: string, fileName: string) => {
+                try {
+                    const { error } = await supabase.storage.from(bucket).remove([fileName]);
+                    if (error) {
+                        console.error('Error deleting storage file:', error);
+                        get().showNotification(`Error al eliminar imagen: ${error.message}`, 'error');
+                        return false;
+                    }
+                    get().showNotification('Imagen eliminada de la galería', 'success');
+                    return true;
+                } catch (e: any) {
+                    console.error('Error deleting storage file:', e);
+                    return false;
+                }
             },
 
             syncUserWithCloud: async (authUserId) => {

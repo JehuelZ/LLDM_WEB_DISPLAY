@@ -6,7 +6,7 @@ import {
     Sun, Type, Monitor, Upload, Save, User, Mail, Phone, Camera, 
     Church, Sparkles, Moon, BookOpen, Sunrise, Flame, Radio, 
     ChevronUp, ChevronDown, ChevronLeft, ChevronRight, XCircle, Plus, Trash,
-    SunMoon, Layers, Tv, AtSign, UserCircle2, CheckCircle2, Shield, Palette, Check
+    SunMoon, Layers, Tv, AtSign, UserCircle2, CheckCircle2, Shield, Palette, Check, Images
 } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -17,6 +17,7 @@ import {
 import { CongregationEditModal } from '@/components/admin/CongregationEditModal'
 import { CongregationInfo, UserProfile } from '@/lib/store'
 import { ImageEditor } from '@/components/ImageEditor'
+import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal'
 
 interface AjustesTabProps {
     settings: any
@@ -48,6 +49,7 @@ export const AjustesTab = ({
     const [isSaving, setIsSaving] = useState(false)
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: string } | null>(null)
     const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo, index?: number } | null>(null)
+    const [isGalleryOpen, setIsGalleryOpen] = useState(false)
     
     const dataURLtoFile = (dataurl: string, filename: string) => {
         let arr = dataurl.split(','),
@@ -79,6 +81,22 @@ export const AjustesTab = ({
 
             {/* COLUMNA 1: APARIENCIA VISUAL & SISTEMA VISUAL & JERARQUÍA */}
             <div className="col-span-1 lg:col-span-4 space-y-6">
+                <TactileGlassCard title="GALERÍA DE MEDIOS">
+                    <div className="space-y-3">
+                        <p className="text-xs text-muted-foreground">
+                            Administra, sube y elimina imágenes almacenadas en el servidor. Verifica cuáles están vinculadas a perfiles o configuraciones activas.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => setIsGalleryOpen(true)}
+                            className="w-full h-11 px-4 flex items-center justify-center gap-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-[#A3FF57]/20 border border-[#A3FF57]/40 text-[#A3FF57] hover:bg-[#A3FF57]/30 transition-all shadow-md"
+                        >
+                            <Images className="w-4 h-4" />
+                            Abrir Galería de Medios
+                        </button>
+                    </div>
+                </TactileGlassCard>
+
                 <TactileGlassCard title="APARIENCIA VISUAL">
                     <div className="space-y-5">
                         {/* ── Color Primario: chips circulares ── */}
@@ -1012,6 +1030,12 @@ export const AjustesTab = ({
                     onCancel={() => setImageToEdit(null)}
                 />
             )}
+            <MediaGalleryModal
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                title="Galería de Medios del Sistema"
+                mode="manage"
+            />
         </motion.div>
     )
 }

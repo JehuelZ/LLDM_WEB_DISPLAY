@@ -2,16 +2,17 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, Upload, X, Check, Loader2, Images, Search, Sparkles, LayoutGrid, Filter, Tag } from 'lucide-react';
+import { Image as ImageIcon, Upload, X, Check, Loader2, Images, Search, Sparkles, Tag, Trash2, Link, AlertTriangle, Info, ShieldAlert } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { compressImage } from '@/lib/utils';
 
 interface MediaGalleryModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onSelectImage: (url: string) => void;
+    onSelectImage?: (url: string) => void;
     currentUrl?: string;
     title?: string;
+    mode?: 'select' | 'manage';
 }
 
 interface GalleryFile {
@@ -27,11 +28,19 @@ export function MediaGalleryModal({
     onClose,
     onSelectImage,
     currentUrl = '',
-    title = 'Galería de Medios'
+    title = 'Galería de Medios',
+    mode = 'select'
 }: MediaGalleryModalProps) {
     const fetchMediaGalleryFiles = useAppStore((state: any) => state.fetchMediaGalleryFiles);
     const uploadMediaGalleryFile = useAppStore((state: any) => state.uploadMediaGalleryFile);
+    const deleteMediaGalleryFile = useAppStore((state: any) => state.deleteMediaGalleryFile);
     const showNotification = useAppStore((state: any) => state.showNotification);
+
+    // State from store to detect image usages
+    const members = useAppStore((state: any) => state.members || []);
+    const settings = useAppStore((state: any) => state.settings || {});
+    const monthlySchedule = useAppStore((state: any) => state.monthlySchedule || {});
+    const announcements = useAppStore((state: any) => state.announcements || []);
 
     const [activeTab, setActiveTab] = useState<'gallery' | 'upload'>('gallery');
     const [files, setFiles] = useState<GalleryFile[]>([]);
@@ -46,6 +55,11 @@ export function MediaGalleryModal({
 
     // Upload Category Selector
     const [uploadCategory, setUploadCategory] = useState<'icon' | 'poster' | 'gen'>('icon');
+
+    // Deletion Modal State
+    const [fileToDelete, setFileToDelete] = useState<GalleryFile | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [activeHoverInfo, setActiveHoverInfo] = useState<string | null>(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -95,6 +109,64 @@ export function MediaGalleryModal({
         }
     };
 
+    // Helper: Compute where a given image URL/filename is being used across the app
+    const getFileUsages = (file: GalleryFile): string[] => {
+        const usages: string[] = [];
+        const url = file.url;
+        const name = file.name;
+
+        if (!url) return usages;
+
+        // 1. Check Members Avatars
+        members.forEach((m: any) => {
+            if (m.avatar === url || m.avatarUrl === url || (m.avatar && m.avatar.includes(name))) {
+                usages.push(`Perfil: ${m.name || 'Hermano(a)'}`);
+            }
+        });
+
+        // 2. Check Settings (Logos, Icons, Backgrounds)
+        if (settings?.customIconUrl === url || (settings?.customIconUrl && settings.customIconUrl.includes(name))) {
+            usages.push('Ajustes: Ícono de la Iglesia');
+        }
+        if (settings?.customLogoUrl === url || settings?.customLogo1 === url || (settings?.customLogo1 && settings.customLogo1.includes(name))) {
+            usages.push('Ajustes: Logo Personalizado #1');
+        }
+        if (settings?.customLogo2 === url || (settings?.customLogo2 && settings.customLogo2.includes(name))) {
+            usages.push('Ajustes: Logo Personalizado #2');
+        }
+        if (settings?.customLogo3 === url || (settings?.customLogo3 && settings.customLogo3.includes(name))) {
+            usages.push('Ajustes: Logo Personalizado #3');
+        }
+        if (settings?.customLogo4 === url || (settings?.customLogo4 && settings.customLogo4.includes(name))) {
+            usages.push('Ajustes: Logo Personalizado #4');
+        }
+        if (settings?.projectionBackgroundUrl === url || (settings?.projectionBackgroundUrl && settings.projectionBackgroundUrl.includes(name))) {
+            usages.push('Ajustes: Fondo de Proyección');
+        }
+
+        // 3. Check Monthly Schedule slots
+        if (monthlySchedule) {
+            Object.entries(monthlySchedule).forEach(([dateStr, daySched]: [string, any]) => {
+                if (daySched?.slots) {
+                    Object.entries(daySched.slots).forEach(([slotId, slotData]: [string, any]) => {
+                        if (slotData?.customIconUrl === url || (slotData?.customIconUrl && slotData.customIconUrl.includes(name))) {
+                            usages.push(`Horario: Servicio del ${dateStr}`);
+                        }
+                    });
+                }
+            });
+        }
+
+        // 4. Check Announcements
+        announcements.forEach((ann: any) => {
+            if (ann.imageUrl === url || (ann.imageUrl && ann.imageUrl.includes(name))) {
+                usages.push(`Aviso: ${ann.title || 'Aviso General'}`);
+            }
+        });
+
+        return Array.from(new Set(usages)); // unique list
+    };
+
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -119,7 +191,6 @@ export function MediaGalleryModal({
 
         setUploading(true);
         try {
-            // Compress image to WebP (max 800x800, quality 0.85)
             const compressed = await compressImage(file, 800, 800, 0.85);
             const publicUrl = await uploadMediaGalleryFile(compressed, uploadCategory);
 
@@ -135,6 +206,25 @@ export function MediaGalleryModal({
             showNotification?.('Error al procesar la imagen', 'error');
         } finally {
             setUploading(false);
+        }
+    };
+
+    const handleDeleteConfirmed = async () => {
+        if (!fileToDelete) return;
+        setIsDeleting(true);
+        try {
+            const success = await deleteMediaGalleryFile(fileToDelete.bucket, fileToDelete.name);
+            if (success) {
+                if (selectedUrl === fileToDelete.url) {
+                    setSelectedUrl('');
+                }
+                setFileToDelete(null);
+                await loadGallery();
+            }
+        } catch (err) {
+            console.error('Error deleting file:', err);
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -154,15 +244,19 @@ export function MediaGalleryModal({
     }), [files]);
 
     const handleConfirm = () => {
-        onSelectImage(selectedUrl);
+        if (onSelectImage) {
+            onSelectImage(selectedUrl);
+        }
         onClose();
     };
 
     if (!isOpen) return null;
 
+    const fileToDeleteUsages = fileToDelete ? getFileUsages(fileToDelete) : [];
+
     return (
         <AnimatePresence>
-            <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <div className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 10 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -177,7 +271,7 @@ export function MediaGalleryModal({
                             </div>
                             <div>
                                 <h3 className="text-lg font-bold text-white uppercase tracking-wider">{title}</h3>
-                                <p className="text-xs text-white/50">Clasifica, selecciona o sube imágenes optimizadas (WebP)</p>
+                                <p className="text-xs text-white/50">Administra, vincula y elimina archivos de Supabase Storage</p>
                             </div>
                         </div>
                         <button
@@ -317,6 +411,9 @@ export function MediaGalleryModal({
                                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
                                         {filteredFiles.map((file, idx) => {
                                             const isSelected = selectedUrl === file.url;
+                                            const usages = getFileUsages(file);
+                                            const isUsed = usages.length > 0;
+
                                             return (
                                                 <div
                                                     key={idx}
@@ -334,20 +431,66 @@ export function MediaGalleryModal({
                                                     />
 
                                                     {/* Category badge tag */}
-                                                    <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-md text-[9px] font-bold text-white/80 border border-white/10 uppercase">
+                                                    <div className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-black/80 backdrop-blur-md text-[9px] font-bold text-white/80 border border-white/10 uppercase">
                                                         {file.category === 'icon' ? 'Ícono' : file.category === 'poster' ? 'Afiche' : 'Imagen'}
                                                     </div>
 
-                                                    {/* Selection Overlay */}
-                                                    {isSelected && (
-                                                        <div className="absolute top-2 right-2 bg-[#A3FF57] text-black p-1 rounded-full shadow-lg z-20">
-                                                            <Check className="w-4 h-4 stroke-[3]" />
+                                                    {/* Link Usage Status Badge */}
+                                                    <div className="absolute top-1.5 right-1.5 flex items-center gap-1 z-10">
+                                                        {isUsed ? (
+                                                            <div
+                                                                onMouseEnter={() => setActiveHoverInfo(file.name)}
+                                                                onMouseLeave={() => setActiveHoverInfo(null)}
+                                                                className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 text-[9px] font-bold backdrop-blur-md shadow-lg"
+                                                                title={`Vinculado a: ${usages.join(', ')}`}
+                                                            >
+                                                                <Link className="w-2.5 h-2.5" />
+                                                                <span>En Uso</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="px-1.5 py-0.5 rounded-full bg-white/10 text-white/40 border border-white/10 text-[9px] font-bold backdrop-blur-md">
+                                                                Libre
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Usage Tooltip Hover Overlay */}
+                                                    {activeHoverInfo === file.name && isUsed && (
+                                                        <div className="absolute inset-x-2 top-8 z-30 bg-black/95 border border-emerald-500/50 rounded-lg p-2 shadow-2xl text-[10px] text-white">
+                                                            <p className="font-bold text-emerald-400 mb-1 flex items-center gap-1">
+                                                                <Link className="w-3 h-3" /> Vinculado a:
+                                                            </p>
+                                                            <ul className="list-disc list-inside space-y-0.5 text-white/80 font-mono text-[9px]">
+                                                                {usages.map((u, uIdx) => (
+                                                                    <li key={uIdx} className="truncate">{u}</li>
+                                                                ))}
+                                                            </ul>
                                                         </div>
                                                     )}
 
+                                                    {/* Selection Overlay Checkmark */}
+                                                    {isSelected && (
+                                                        <div className="absolute bottom-2 left-2 bg-[#A3FF57] text-black p-1 rounded-full shadow-lg z-20">
+                                                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                                        </div>
+                                                    )}
+
+                                                    {/* Delete Button Hover Overlay */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setFileToDelete(file);
+                                                        }}
+                                                        className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-red-500/80 hover:bg-red-600 text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                                                        title="Eliminar de la Galería"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                    </button>
+
                                                     {/* Hover details */}
-                                                    <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <p className="text-[10px] text-white/80 truncate font-mono">{file.name}</p>
+                                                    <div className="absolute inset-x-0 bottom-0 p-1.5 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                                        <p className="text-[9px] text-white/80 truncate font-mono">{file.name}</p>
                                                     </div>
                                                 </div>
                                             );
@@ -453,7 +596,7 @@ export function MediaGalleryModal({
                                     <div className="w-6 h-6 rounded overflow-hidden bg-black/50 border border-white/20">
                                         <img src={selectedUrl} alt="" className="w-full h-full object-contain" />
                                     </div>
-                                    <span className="text-xs text-white/70 font-mono truncate max-w-[200px]">Imagen seleccionada</span>
+                                    <span className="text-xs text-white/70 font-mono truncate max-w-[180px]">Imagen seleccionada</span>
                                     <button
                                         onClick={() => setSelectedUrl('')}
                                         className="text-red-400 hover:text-red-300 ml-1"
@@ -470,18 +613,95 @@ export function MediaGalleryModal({
                                 onClick={onClose}
                                 className="px-5 py-2.5 rounded-xl border border-white/10 text-white/70 hover:text-white hover:bg-white/5 text-xs font-bold uppercase tracking-wider transition-colors"
                             >
-                                Cancelar
+                                {mode === 'select' ? 'Cancelar' : 'Cerrar Galería'}
                             </button>
-                            <button
-                                onClick={handleConfirm}
-                                className="px-6 py-2.5 rounded-xl bg-[#A3FF57] hover:bg-[#8eef40] text-black text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-[#A3FF57]/20 hover:scale-[1.02]"
-                            >
-                                Usar esta imagen
-                            </button>
+                            {mode === 'select' && (
+                                <button
+                                    onClick={handleConfirm}
+                                    className="px-6 py-2.5 rounded-xl bg-[#A3FF57] hover:bg-[#8eef40] text-black text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-[#A3FF57]/20 hover:scale-[1.02]"
+                                >
+                                    Usar esta imagen
+                                </button>
+                            )}
                         </div>
                     </div>
                 </motion.div>
             </div>
+
+            {/* Warning Deletion Modal */}
+            {fileToDelete && (
+                <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="w-full max-w-md bg-[#0d1629] border border-white/10 rounded-2xl p-6 shadow-2xl text-white flex flex-col gap-4"
+                    >
+                        <div className="flex items-center gap-3">
+                            {fileToDeleteUsages.length > 0 ? (
+                                <div className="p-3 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30">
+                                    <ShieldAlert className="w-6 h-6" />
+                                </div>
+                            ) : (
+                                <div className="p-3 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                    <Trash2 className="w-6 h-6" />
+                                </div>
+                            )}
+                            <div>
+                                <h4 className="text-base font-bold uppercase tracking-wider">
+                                    {fileToDeleteUsages.length > 0 ? '¡Atención! Imagen en Uso' : '¿Eliminar Imagen?'}
+                                </h4>
+                                <p className="text-xs text-white/50 font-mono truncate max-w-[260px]">{fileToDelete.name}</p>
+                            </div>
+                        </div>
+
+                        {fileToDeleteUsages.length > 0 ? (
+                            <div className="p-4 rounded-xl bg-red-950/40 border border-red-500/30 text-xs space-y-2">
+                                <p className="font-bold text-red-300">
+                                    Esta imagen está actualmente VINCULADA a los siguientes elementos:
+                                </p>
+                                <ul className="list-disc list-inside space-y-1 font-mono text-[#ffb0b0]">
+                                    {fileToDeleteUsages.map((usage, idx) => (
+                                        <li key={idx}>{usage}</li>
+                                    ))}
+                                </ul>
+                                <p className="text-red-400/80 text-[11px] pt-1 italic">
+                                    Si la eliminas del servidor, dejará de mostrarse en esas secciones de la aplicación.
+                                </p>
+                            </div>
+                        ) : (
+                            <p className="text-xs text-white/70">
+                                Esta imagen no está vinculada a ningún perfil ni configuración activa. Se eliminará permanentemente de Supabase Storage.
+                            </p>
+                        )}
+
+                        <div className="flex items-center justify-end gap-3 pt-2">
+                            <button
+                                onClick={() => setFileToDelete(null)}
+                                disabled={isDeleting}
+                                className="px-4 py-2 rounded-xl border border-white/10 text-white/70 hover:text-white text-xs font-bold uppercase tracking-wider"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleDeleteConfirmed}
+                                disabled={isDeleting}
+                                className={`px-5 py-2 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-all ${
+                                    fileToDeleteUsages.length > 0
+                                        ? 'bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-600/30'
+                                        : 'bg-red-500 hover:bg-red-400 text-white'
+                                }`}
+                            >
+                                {isDeleting ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    <Trash2 className="w-4 h-4" />
+                                )}
+                                {fileToDeleteUsages.length > 0 ? 'Eliminar de todos modos' : 'Sí, Eliminar'}
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
         </AnimatePresence>
     );
 }
