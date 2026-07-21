@@ -5,6 +5,7 @@ import { Bell, Phone, Mail, Church, AlertTriangle, Info, Zap, Shield } from 'luc
 import { useAppStore } from '@/lib/store';
 import { getVariantTokens } from './tokens';
 import { useMemo } from 'react';
+import { cn } from '@/lib/utils';
 
 // ─────────────────────────────────────────────
 // NeonForge — Announcements Slide

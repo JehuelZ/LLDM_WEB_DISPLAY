@@ -135,8 +135,9 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                 <div className="flex-1">
                                     <span 
                                         className="text-3xl font-[300] text-on-surface leading-tight transition-all duration-500 group-hover:text-primary tracking-tight lowercase"
+                                        style={(slot as any).accentColor ? { color: (slot as any).accentColor } : {}}
                                     >
-                                        {slot.title?.toLowerCase()}
+                                        {((slot as any).customLabel || (slot.type === 'special' ? 'servicio especial' : slot.title))?.toLowerCase()}
                                     </span>
                                     <div className="flex items-center gap-8 mt-3">
                                         <div className="flex items-center gap-2.5 text-[12px] tracking-widest text-on-surface-variant font-[300] opacity-60 lowercase">
@@ -146,44 +147,52 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
                                         <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
                                         <div className="flex items-center gap-2.5 text-[12px] tracking-widest text-on-surface-variant font-[300] opacity-60 lowercase">
                                             <Sunrise size={16} className="text-primary" />
-                                            {getServiceTypeLabel(slot.type, settings?.language)?.toLowerCase()}
+                                            {((slot as any).customLabel ? (slot.type === 'special' ? 'servicio especial' : getServiceTypeLabel(slot.type, settings?.language)) : getServiceTypeLabel(slot.type, settings?.language))?.toLowerCase()}
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Ministers Module */}
-                                <div className="flex items-center gap-6">
-                                    <div className="flex -space-x-4">
-                                        {[m1, m2, m3].filter(Boolean).map((m: any, idx) => (
-                                            <div key={idx} className="relative group/avatar">
-                                                <div className="w-20 h-20 rounded-[1.5rem] overflow-hidden border-4 border-surface shadow-2xl relative transition-transform duration-500 group-hover/avatar:scale-110 grayscale group-hover:grayscale-0">
-                                                    {m.avatar || m.avatarUrl ? (
-                                                        <img src={m.avatar || m.avatarUrl} className="w-full h-full object-cover" alt={m.name} />
-                                                    ) : (
-                                                        <div className="w-full h-full bg-primary/20 flex items-center justify-center">
-                                                            <User size={32} className="text-primary" />
-                                                        </div>
-                                                    )}
+                                {/* Ministers Module (Hidden when hideProfiles is true) */}
+                                {(slot as any).hideProfiles ? (
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-20 h-20 rounded-[1.5rem] overflow-hidden border-4 border-surface shadow-2xl bg-primary/10 flex items-center justify-center p-2">
+                                            <img src={(slot as any).customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'} className="w-full h-full object-contain" alt="" />
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-6">
+                                        <div className="flex -space-x-4">
+                                            {[m1, m2, m3].filter(Boolean).map((m: any, idx) => (
+                                                <div key={idx} className="relative group/avatar">
+                                                    <div className="w-20 h-20 rounded-[1.5rem] overflow-hidden border-4 border-surface shadow-2xl relative transition-transform duration-500 group-hover/avatar:scale-110 grayscale group-hover:grayscale-0">
+                                                        {m.avatar || m.avatarUrl ? (
+                                                            <img src={m.avatar || m.avatarUrl} className="w-full h-full object-cover" alt={m.name} />
+                                                        ) : (
+                                                            <div className="w-full h-full bg-primary/20 flex items-center justify-center">
+                                                                <User size={32} className="text-primary" />
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
+                                        </div>
+                                        <div className="flex flex-col min-w-[200px]">
+                                            <span className="text-[10px] tracking-[0.4em] text-primary font-[300] mb-1 opacity-60 lowercase">
+                                                responsables
+                                            </span>
+                                            <span className="text-lg font-[400] text-on-surface truncate capitalize">
+                                                {m1?.name || (m2 || m3 ? '' : 'pendiente')}
+                                                {m1 && m2 && ' | '}
+                                                {m2?.name}
+                                                {(m1 || m2) && m3 && ' | '}
+                                                {m3?.name}
+                                            </span>
+                                            <span className="text-xs text-on-surface-variant opacity-60 font-[300] lowercase">
+                                                {m1 ? m1.member_group?.toLowerCase() || 'ministerio' : ''}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="flex flex-col min-w-[200px]">
-                                        <span className="text-[10px] tracking-[0.4em] text-primary font-[300] mb-1 opacity-60 lowercase">
-                                            responsables
-                                        </span>
-                                        <span className="text-lg font-[400] text-on-surface truncate capitalize">
-                                            {m1?.name || (m2 || m3 ? '' : 'pendiente')}
-                                            {m1 && m2 && ' | '}
-                                            {m2?.name}
-                                            {(m1 || m2) && m3 && ' | '}
-                                            {m3?.name}
-                                        </span>
-                                        <span className="text-xs text-on-surface-variant opacity-60 font-[300] lowercase">
-                                            {m1 ? m1.member_group?.toLowerCase() || 'ministerio' : ''}
-                                        </span>
-                                    </div>
-                                </div>
+                                )}
 
                                 {/* Interactive Indicator */}
                                 <div className="flex items-center gap-6">

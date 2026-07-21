@@ -242,7 +242,8 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
         const type = slotEvening?.type || 'standard';
         const timeDisplay = slotEvening?.time ? slotEvening.time.split(' ')[0] : '18:00';
         const periodDisplay = slotEvening?.time ? slotEvening.time.split(' ')[1] : 'PM';
-        const label = slotEvening?.customLabel || slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th);
+        const label = slotEvening?.customLabel || (type === 'special' ? 'SERVICIO ESPECIAL' : (slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th)));
+        const accentColor = slotEvening?.accentColor || '#3B82F6';
 
         return (
             <motion.div
@@ -250,17 +251,18 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, type: 'spring', stiffness: 80 }}
                 className={`relative flex flex-col w-[460px] rounded-2xl overflow-hidden
-                    bg-[#1C1E2C] border-2 border-[#3B82F6]
-                    shadow-[0_0_0_1px_rgba(59,130,246,0.15),0_16px_48px_rgba(0,0,0,0.6)]
+                    bg-[#1C1E2C] border-2
+                    shadow-[0_16px_48px_rgba(0,0,0,0.6)]
                 `}
+                style={{ borderColor: accentColor }}
             >
                 {/* Top accent */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#3B82F6] via-[#60A5FA] to-[#3B82F6]" />
+                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(to right, ${accentColor}, #60A5FA, ${accentColor})` }} />
 
                 {/* Popular badge equivalent */}
                 <div className="absolute top-5 right-5">
-                    <span className="px-3 py-1 rounded-full bg-[#3B82F6] text-white text-[10px] font-semibold uppercase tracking-widest">
-                        Principal
+                    <span className="px-3 py-1 rounded-full text-white text-[10px] font-semibold uppercase tracking-widest" style={{ background: accentColor }}>
+                        {type === 'special' ? 'Especial' : 'Principal'}
                     </span>
                 </div>
 
@@ -272,27 +274,34 @@ export function DarkMinimalSchedule({ isTomorrow = false }: { isTomorrow?: boole
                         <LangBadge lang={slotEvening?.language} />
                     </div>
                     <div className="flex items-end gap-1 mt-3">
-                        <span className="text-[6rem] font-bold leading-none text-[#3B82F6] tracking-tight">{timeDisplay}</span>
-                        <span className="text-3xl font-semibold text-[#3B82F6]/40 mb-3">{periodDisplay}</span>
+                        <span className="text-[6rem] font-bold leading-none tracking-tight" style={{ color: accentColor }}>{timeDisplay}</span>
+                        <span className="text-3xl font-semibold mb-3 opacity-40" style={{ color: accentColor }}>{periodDisplay}</span>
                     </div>
-                    <span className="inline-block mt-2 px-4 py-1.5 rounded-full border border-[#3B82F6]/30 bg-[#3B82F6]/10 text-[10px] font-semibold text-[#60A5FA] uppercase tracking-widest">
+                    <span className="inline-block mt-2 px-4 py-1.5 rounded-full border text-[10px] font-semibold uppercase tracking-widest" style={{ borderColor: `${accentColor}40`, backgroundColor: `${accentColor}15`, color: accentColor }}>
                         {label}
                     </span>
                 </div>
 
                 {/* Divider */}
-                <div className="h-px bg-[#3B82F6]/20 mx-7" />
+                <div className="h-px mx-7" style={{ backgroundColor: `${accentColor}30` }} />
 
                 {/* Leaders */}
                 <div className="px-7 py-6 flex flex-col gap-4">
-                    {leaderIds.length === 0 && (
+                    {slotEvening?.hideProfiles ? (
+                        <div className="flex flex-col items-center justify-center py-4 gap-3 text-center">
+                            <div className="w-20 h-20 rounded-2xl border p-2 flex items-center justify-center bg-[#0F1117]" style={{ borderColor: accentColor }}>
+                                <img src={slotEvening?.customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'} className="w-full h-full object-contain" alt="" />
+                            </div>
+                            <span className="text-sm font-bold uppercase tracking-widest text-white">{label}</span>
+                        </div>
+                    ) : leaderIds.length === 0 ? (
                         <div className="flex items-center gap-3 opacity-40">
                             <div className="w-14 h-14 rounded-xl border border-[#23242F] bg-[#0F1117] flex items-center justify-center">
                                 <Church className="w-6 h-6 text-[#4B5563]" />
                             </div>
                             <span className="text-[16px] font-medium text-[#4B5563]">NO ASIGNADO</span>
                         </div>
-                    )}
+                    ) : null}
                     {leaderIds.length > 0 && type === 'married' ? (
                         // Married: two leaders side by side
                         <div className="flex gap-4">

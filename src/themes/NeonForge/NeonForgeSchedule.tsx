@@ -393,12 +393,23 @@ export function NeonForgeSchedule({ isTomorrow = false }: { isTomorrow?: boolean
                         </div>
                         <span className="inline-flex px-3 py-1 mt-1 rounded-full text-[9px] font-bold uppercase tracking-widest"
                             style={{ background: `${AEve}12`, border: `1px solid ${AEve}30`, color: AEve }}>
-                            {slotEve?.customLabel || slotEve?.topic || getServiceTypeLabel(slotEve?.type || 'regular', settings.language, is14th)}
+                            {slotEve?.customLabel || (slotEve?.type === 'special' ? 'SERVICIO ESPECIAL' : (slotEve?.topic || getServiceTypeLabel(slotEve?.type || 'regular', settings.language, is14th)))}
                         </span>
                     </div>
 
                     <div className="flex-1 flex flex-col justify-center px-6 py-4 gap-3">
-                        {leaderIds.length === 0 && <EmptyRow label="Consagración y Doctrina" icon={<Church />} T={T} />}
+                        {slotEve?.hideProfiles ? (
+                            <div className="flex flex-col items-center justify-center py-2 gap-2 text-center">
+                                <div className="w-16 h-16 rounded-xl border p-2 flex items-center justify-center bg-black/40" style={{ borderColor: AEve }}>
+                                    <img src={slotEve?.customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'} className="w-full h-full object-contain" alt="" />
+                                </div>
+                                <span className="text-xs font-black uppercase tracking-widest text-white">
+                                    {slotEve?.customLabel || 'SERVICIO ESPECIAL'}
+                                </span>
+                            </div>
+                        ) : leaderIds.length === 0 ? (
+                            <EmptyRow label="Consagración y Doctrina" icon={<Church />} T={T} />
+                        ) : null}
 
                         {leaderIds.length > 0 && eveningType === 'married' &&
                             leaderIds.slice(0, 2).map((id: string, i: number) => {

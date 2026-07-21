@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, Phone, Mail, Church, AlertCircle, Info } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
+import { cn } from '@/lib/utils';
 
 export const DarkMinimalAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
@@ -140,7 +141,7 @@ export const DarkMinimalAnnouncements = () => {
                                     }
                                 </div>
                                 <div className="mt-2 text-center">
-                                    <span className="text-[8px] font-semibold uppercase tracking-widest text-[#4B5563]">{displayMinister.role || 'Ministro'}</span>
+                                    <span className="text-[8px] font-semibold uppercase tracking-widest text-[#4B5563]">{(displayMinister as any).role || 'Ministro'}</span>
                                     <p className={cn("font-bold text-white mt-0.5 leading-tight", settings.mainChurch?.supervisorName ? "text-base" : "text-lg")}>{displayMinister.name}</p>
                                 </div>
                             </div>

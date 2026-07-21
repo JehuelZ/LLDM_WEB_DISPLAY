@@ -636,6 +636,21 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
                         }
 
                         if (isSpecialService) {
+                            if (slotEvening?.hideProfiles) {
+                                const evAccent = slotEvening?.accentColor || T.accent;
+                                return renderCard('evening', cardTitle, (
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, width: '100%', padding: '20px 0' }}>
+                                        <Avatar src={slotEvening?.customIconUrl || settings?.churchLogoUrl} size={220} T={T} isDark={isDark} />
+                                        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                                            <h3 style={{ fontSize: 32, fontWeight: 900, textTransform: 'uppercase', color: evAccent, letterSpacing: 1 }}>
+                                                {cardTitle}
+                                            </h3>
+                                            <RoleBadge label="SERVICIO ESPECIAL" icon={Crown} T={T} isDark={isDark} />
+                                        </div>
+                                    </div>
+                                ), [], false);
+                            }
+
                             return renderCard('evening', cardTitle, (
                                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 15, width: '100%' }}>
                                     <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 5 }}>
