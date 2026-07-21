@@ -638,10 +638,11 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     <div className="absolute -top-[2px] left-1/4 right-1/4 h-[4px] bg-gradient-to-r from-transparent via-[#A3FF57] to-transparent blur-sm" />
 
                     <div className="relative -mt-24 mb-6 z-50 w-full px-6 flex justify-center items-end min-h-[220px]">
-                        {(() => {
+                        {/* hideProfiles: show logo instead of avatars */}
+                        {slotEvening?.hideProfiles && (() => {
                             const iconsMap: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
                             const SelectedIcon = iconsMap[settings?.churchIcon || 'flame'] || Flame;
-                            return slotEvening?.hideProfiles ? (
+                            return (
                                 <div className="flex flex-col items-center">
                                     <motion.div
                                         whileHover={{ scale: 1.05 }}
@@ -655,7 +656,10 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                         )}
                                     </motion.div>
                                 </div>
-                            ) : ((slotEvening?.leaderIds && slotEvening.leaderIds.length > 0) || slotEvening?.type === 'children' ? (
+                            );
+                        })()}
+                        {/* normal avatars layout */}
+                        {!slotEvening?.hideProfiles && ((slotEvening?.leaderIds && slotEvening.leaderIds.length > 0) || slotEvening?.type === 'children' ? (
                             (slotEvening.type === 'children' || (slotEvening.consecrationLeaderId && slotEvening.doctrineLeaderId && slotEvening.leaderIds?.[0])) ? (
                                 /* THREE LEADERS LAYOUT FOR CHILDREN'S SERVICE */
                                 <div className="flex flex-col items-center w-full">
@@ -858,8 +862,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                     <span className="text-[22px] font-black text-white uppercase tracking-[0.1em]">NO ASIGNADO</span>
                                 </div>
                             </div>
-                        )}
-                        ) })()}
+                        ))}
                     </div>
 
                     {/* Badge — hidden when hideProfiles is on, title is shown large in its place */}
