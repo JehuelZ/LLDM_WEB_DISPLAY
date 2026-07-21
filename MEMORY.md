@@ -9,7 +9,7 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
   - Se creó un modal de **Galería de Medios (`MediaGalleryModal`) estilo WordPress** con:
     - **Detección Automática de Vinculación (`En Uso` / `Libre`)**: escanea si cada imagen está vinculada a un perfil de miembro, logo/fondo en ajustes, evento programado o aviso. Muestra una insignia `🟢 En Uso` con tooltip detallando a qué elemento exacto está vinculada.
     - **Protección contra Eliminación Accidental**: si intentas eliminar una imagen en uso, aparece un modal de advertencia roja alertando qué secciones del sistema perderán la imagen antes de permitir borrar.
-    - **Acceso Independiente**: nuevo panel **"GALERÍA DE MEDIOS"** en la pestaña de Ajustes del Admin para subir, organizar y limpiar archivos independientemente.
+    - **Modo Selección Múltiple y Eliminación Masiva**: botón de selección múltiple con casilla en cada imagen, botón útil **"Seleccionar No Vinculadas (Libres)"** para limpiar rápidamente imágenes huérfanas, y eliminación masiva protegida por el modal de seguridad.
     - **Clasificación por pestañas/etiquetas**: `✨ Íconos y Logos`, `🎨 Afiches / Eventos`, `🖼️ General`.
     - **Barra de búsqueda instantánea** por nombre de archivo.
     - **Compresión WebP automática**: toda imagen se redimensiona a máx 800x800px y se convierte a `.webp` al 85% de calidad.
