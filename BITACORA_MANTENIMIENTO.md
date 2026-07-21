@@ -250,6 +250,16 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 - **Archivos Afectados:**
     - `src/components/admin/CongregationEditModal.tsx`
 
+#### 22. Sincronización Inmediata y Renderizado de Imagen de Iglesia / Obra
+- **Problema:** Al seleccionar una imagen para la sede principal u obra desde la Galería y presionar "Guardar Configuración", la imagen se enviaba a Supabase pero la vista previa en el panel de `AjustesTab.tsx` no se refrescaba de inmediato sin recargar la página.
+- **Solución:**
+    - Se incorporó la actualización inmediata del estado local `setSettings({ ...settings, ...updatedPayload })` en el callback `onSave` de `AjustesTab.tsx`.
+    - Se vinculó explícitamente `churchLogoUrl` junto con `mainChurch.imageUrl` para garantizar que la vista previa y los displays reflejen la nueva foto al instante.
+- **Archivos Afectados:**
+    - `src/app/admin/tabs/AjustesTab.tsx`
+    - `src/components/admin/CongregationEditModal.tsx`
+
+
 
 
 
