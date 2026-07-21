@@ -217,6 +217,21 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/components/admin/MediaGalleryModal.tsx`
     - `src/lib/store.ts`
 
+#### 19. Opción "Elegir de Galería" en Creación y Edición de Perfiles
+- **Mejora:** Permitir al administrador no solo subir fotos nuevas desde su dispositivo, sino también **seleccionar y vincular imágenes existentes en la Galería de Medios** al crear o editar perfiles.
+- **Solución:**
+    - Se agregó el botón **`🖼️ Elegir de Galería`** en:
+        1. **Registro / Edición de Miembros** (`admin/members/page.tsx`).
+        2. **Fotografía del Ministro Responsable** (`AjustesTab.tsx`).
+        3. **Fotografía del Supervisor de Distrito** (`AjustesTab.tsx`).
+        4. **Fotografía de Mi Perfil Admin** (`PerfilTab.tsx`).
+    - Al hacer clic, se abre el modal de Galería de Medios en modo selección y aplica automáticamente la foto seleccionada al perfil correspondiente.
+- **Archivos Afectados:**
+    - `src/app/admin/members/page.tsx`
+    - `src/app/admin/tabs/AjustesTab.tsx`
+    - `src/app/admin/tabs/PerfilTab.tsx`
+
+
 
 
 
