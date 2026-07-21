@@ -288,6 +288,8 @@ interface AppState {
     deleteMemberFromCloud: (userId: string) => Promise<boolean>;
     addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean; can_manage_prayers?: boolean; assigned_church?: string }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
+    fetchMediaGalleryFiles: () => Promise<Array<{ name: string; url: string; createdAt: string; bucket: string }>>;
+    uploadMediaGalleryFile: (file: File) => Promise<string | null>;
     syncUserWithCloud: (authUserId: string) => Promise<void>;
     mergeProfiles: (pendingId: string, memberEmail: string, existingMemberId: string) => Promise<boolean>;
     findProfileRaw: (search: string) => Promise<UserProfile[]>;
@@ -651,7 +653,8 @@ export const useAppStore = create<AppState>()(
                                         customLabel: (data.evening_custom_label || '').split('|')[0] || '',
                                         thirdLeaderRole: (data.evening_custom_label || '').split('|')[1] || '',
                                         hideProfiles: (data.evening_custom_label || '').split('|')[2] === 'true',
-                                        accentColor: (data.evening_custom_label || '').split('|')[3] || 'purple'
+                                        accentColor: (data.evening_custom_label || '').split('|')[3] || 'purple',
+                                        customIconUrl: (data.evening_custom_label || '').split('|')[4] || ''
                                     }
                                 }
                             }
@@ -718,7 +721,8 @@ export const useAppStore = create<AppState>()(
                                     customLabel: (entry.evening_custom_label || '').split('|')[0] || '',
                                     thirdLeaderRole: (entry.evening_custom_label || '').split('|')[1] || '',
                                     hideProfiles: (entry.evening_custom_label || '').split('|')[2] === 'true',
-                                    accentColor: (entry.evening_custom_label || '').split('|')[3] || 'purple'
+                                    accentColor: (entry.evening_custom_label || '').split('|')[3] || 'purple',
+                                    customIconUrl: (entry.evening_custom_label || '').split('|')[4] || ''
                                 }
                             }
                         };
@@ -1106,6 +1110,79 @@ export const useAppStore = create<AppState>()(
 
                 console.log(`File uploaded successfully to ${bucketUsed}:`, data.publicUrl);
                 return data.publicUrl;
+            },
+
+            fetchMediaGalleryFiles: async () => {
+                const results: Array<{ name: string; url: string; createdAt: string; bucket: string }> = [];
+                const buckets = ['app_assets', 'avatars'];
+
+                for (const bucket of buckets) {
+                    try {
+                        const { data, error } = await supabase.storage.from(bucket).list('', {
+                            limit: 100,
+                            sortBy: { column: 'created_at', order: 'desc' }
+                        });
+                        if (!error && data) {
+                            for (const item of data) {
+                                if (item.name && !item.name.startsWith('.') && item.name !== '.emptyFolderPlaceholder') {
+                                    const { data: pubData } = supabase.storage.from(bucket).getPublicUrl(item.name);
+                                    if (pubData?.publicUrl) {
+                                        results.push({
+                                            name: item.name,
+                                            url: pubData.publicUrl,
+                                            createdAt: item.created_at || new Date().toISOString(),
+                                            bucket
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        console.warn(`Error listing files from bucket "${bucket}":`, e);
+                    }
+                }
+
+                // Sort newest first
+                results.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                return results;
+            },
+
+            uploadMediaGalleryFile: async (file: File) => {
+                const cleanExt = file.type === 'image/webp' ? 'webp' : (file.name.split('.').pop() || 'webp');
+                const fileName = `gallery_${Date.now()}.${cleanExt}`;
+                const filePath = fileName;
+
+                // Try uploading to 'app_assets' first, fallback to 'avatars'
+                let bucketUsed = 'app_assets';
+                let { error: uploadError } = await supabase.storage
+                    .from('app_assets')
+                    .upload(filePath, file, {
+                        upsert: true,
+                        contentType: file.type,
+                        cacheControl: '3600'
+                    });
+
+                if (uploadError) {
+                    console.warn(`Upload to "app_assets" failed, trying "avatars" bucket...`);
+                    const { error: avatarError } = await supabase.storage
+                        .from('avatars')
+                        .upload(filePath, file, {
+                            upsert: true,
+                            contentType: file.type,
+                            cacheControl: '3600'
+                        });
+                    if (!avatarError) {
+                        uploadError = null;
+                        bucketUsed = 'avatars';
+                    } else {
+                        const finalError = (avatarError as any).message || 'Unknown error';
+                        get().showNotification(`Error al subir imagen a la galería: ${finalError}.`, 'error');
+                        return null;
+                    }
+                }
+
+                const { data } = supabase.storage.from(bucketUsed).getPublicUrl(filePath);
+                return data?.publicUrl || null;
             },
 
             syncUserWithCloud: async (authUserId) => {
@@ -1510,8 +1587,8 @@ export const useAppStore = create<AppState>()(
                     evening_leader_ids: slots.evening.leaderIds.map(cleanUuid).filter(Boolean),
                     evening_doctrine_leader_id: cleanUuid(slots.evening.doctrineLeaderId || null),
                     evening_consecration_leader_id: cleanUuid(slots.evening.consecrationLeaderId || null),
-                    evening_custom_label: slots.evening.thirdLeaderRole || slots.evening.hideProfiles || (slots.evening.accentColor && slots.evening.accentColor !== 'purple')
-                        ? `${slots.evening.customLabel || ''}|${slots.evening.thirdLeaderRole || ''}|${slots.evening.hideProfiles ? 'true' : 'false'}|${slots.evening.accentColor || 'purple'}`
+                    evening_custom_label: slots.evening.thirdLeaderRole || slots.evening.hideProfiles || slots.evening.customIconUrl || (slots.evening.accentColor && slots.evening.accentColor !== 'purple')
+                        ? `${slots.evening.customLabel || ''}|${slots.evening.thirdLeaderRole || ''}|${slots.evening.hideProfiles ? 'true' : 'false'}|${slots.evening.accentColor || 'purple'}|${slots.evening.customIconUrl || ''}`
                         : slots.evening.customLabel,
 
                     topic: (slots['9am'] as any).topic || slots.evening.topic || ''

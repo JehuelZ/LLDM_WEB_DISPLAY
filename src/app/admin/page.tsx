@@ -14,7 +14,7 @@ import {
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,
     Sparkles, CalendarDays, CalendarClock, Megaphone, TrendingUp, Activity, LayoutDashboard, Clock, Target, Contrast,
     Lock, ArrowRight, LogOut, Info, XCircle, Type, ShieldAlert,
-    Sunrise, BookOpen, Palette, Layers, Eye, EyeOff, RefreshCw, Check
+    Sunrise, BookOpen, Palette, Layers, Eye, EyeOff, RefreshCw, Check, Images, ImageIcon
 } from "lucide-react";
 import Link from 'next/link';
 import { format, parseISO, startOfMonth, endOfMonth, eachDayOfInterval, differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds, subDays, startOfWeek, addDays } from 'date-fns';
@@ -34,6 +34,7 @@ import { AsistenciaTab } from './tabs/AsistenciaTab';
 import { MensajesTab } from './tabs/MensajesTab';
 import { ContenidoTab } from './tabs/ContenidoTab';
 import { AjustesTab } from './tabs/AjustesTab';
+import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 
 const MessagesPanel = ({
     messages,
@@ -790,6 +791,7 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
+    const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
     // --- SEGURIDAD: CONTROL DE ACCESO POR ROL (RBAC) ---
     useEffect(() => {
@@ -2312,22 +2314,51 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div className="flex items-center pt-1">
+                                                    <div className="flex items-center gap-2 pt-1">
                                                         <button 
                                                             onClick={() => updateSlot('evening', { hideProfiles: !currentDaySchedule.slots['evening'].hideProfiles })}
                                                             className={cn(
-                                                                "w-full h-10 px-4 flex items-center justify-center gap-2 rounded-md font-bold text-[11px] uppercase transition-all border",
+                                                                "flex-1 h-10 px-3 flex items-center justify-center gap-2 rounded-md font-bold text-[11px] uppercase transition-all border",
                                                                 currentDaySchedule.slots['evening'].hideProfiles 
                                                                     ? "bg-purple-500/10 border-purple-500/50 text-purple-400" 
                                                                     : (settings.adminTheme === 'primitivo' ? "bg-white/[0.03] border-white/10 text-white/50 hover:bg-white/[0.06]" : "bg-[var(--tactile-inner-bg)] border-[var(--tactile-border)] text-muted-foreground hover:bg-[var(--tactile-item-hover)]")
                                                             )}
                                                         >
                                                             {currentDaySchedule.slots['evening'].hideProfiles ? (
-                                                                <><EyeOff className="w-4 h-4" /> Perfiles Ocultos (Mostrando Logo)</>
+                                                                <><EyeOff className="w-4 h-4" /> Perfiles Ocultos</>
                                                             ) : (
-                                                                <><Eye className="w-4 h-4" /> Ocultar Perfiles en Display</>
+                                                                <><Eye className="w-4 h-4" /> Ocultar Perfiles</>
                                                             )}
                                                         </button>
+
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setIsGalleryOpen(true)}
+                                                            className={cn(
+                                                                "h-10 px-3 flex items-center justify-center gap-2 rounded-md font-bold text-[11px] uppercase transition-all border",
+                                                                currentDaySchedule.slots['evening'].customIconUrl
+                                                                    ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400"
+                                                                    : "bg-white/[0.05] border-white/10 text-white/70 hover:bg-white/10"
+                                                            )}
+                                                            title="Elegir Imagen de Evento Especial"
+                                                        >
+                                                            <Images className="w-4 h-4 text-emerald-400" />
+                                                            {currentDaySchedule.slots['evening'].customIconUrl ? 'Imagen' : 'Galería'}
+                                                        </button>
+
+                                                        {currentDaySchedule.slots['evening'].customIconUrl && (
+                                                            <div className="flex items-center gap-1 bg-black/40 border border-white/10 p-1 rounded-md">
+                                                                <img src={currentDaySchedule.slots['evening'].customIconUrl} className="w-7 h-7 object-contain rounded" alt="" />
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => updateSlot('evening', { customIconUrl: '' })}
+                                                                    className="text-red-400 hover:text-red-300 p-0.5"
+                                                                    title="Quitar imagen personalizada"
+                                                                >
+                                                                    <X className="w-3.5 h-3.5" />
+                                                                </button>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             )}
@@ -3785,6 +3816,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                     />
                 )
             }
+
+            <MediaGalleryModal
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                onSelectImage={(url) => updateSlot('evening', { customIconUrl: url })}
+                currentUrl={currentDaySchedule.slots['evening']?.customIconUrl}
+                title="Seleccionar Imagen para Servicio Especial"
+            />
 
         </div>
     );

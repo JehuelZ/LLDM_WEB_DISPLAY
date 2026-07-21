@@ -650,7 +650,9 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                     className="relative w-44 h-44 rounded-full bg-[#0D1B3E] border-4 border-[#1E3A6E] flex items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_40px_rgba(163,255,87,0.2)] overflow-hidden"
                                 >
                                     <div className="absolute inset-0 rounded-full border-2 border-[#A3FF57]/20 border-dashed animate-spin-slow" />
-                                    {settings?.churchIcon === 'custom' && settings?.customIconUrl ? (
+                                    {slotEvening?.customIconUrl ? (
+                                        <img src={slotEvening.customIconUrl} alt="Event Logo" className="w-[75%] h-[75%] object-contain drop-shadow-[0_0_15px_rgba(163,255,87,0.3)]" />
+                                    ) : settings?.churchIcon === 'custom' && settings?.customIconUrl ? (
                                         <img src={settings.customIconUrl} alt="Logo" className="w-[70%] h-[70%] object-contain" />
                                     ) : (
                                         <ChurchIcon className="w-20 h-20 text-[#A3FF57]/80" />

@@ -26,6 +26,7 @@ type ServiceSlot = {
     churchOrigin?: string;
     language?: string;
     hideProfiles?: boolean;
+    customIconUrl?: string;
 };
 
 export function MidnightGlowWeekly() {
@@ -223,6 +224,7 @@ export function MidnightGlowWeekly() {
                 slotEv?.doctrineLeaderId || slotEv?.leaderIds?.[1] || null
             ],
             hideProfiles: slotEv?.hideProfiles,
+            customIconUrl: slotEv?.customIconUrl,
         });
 
         return slots;
@@ -419,7 +421,11 @@ export function MidnightGlowWeekly() {
                                                             <div className={`relative w-[4.5rem] h-[4.5rem] rounded-[1.2rem] overflow-hidden border-[1.5px] shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-20 flex-shrink-0 bg-[#071020] ${avatarRing}`}>
                                                                 <div className="absolute inset-0 bg-gradient-to-tr from-[currentColor]/30 via-transparent to-transparent opacity-60 z-20 pointer-events-none" style={{ color: topBorder }} />
                                                                 <div className="absolute inset-0 rounded-[1.2rem] border-2 border-[currentColor]/40 animate-pulse opacity-50 z-20 pointer-events-none" style={{ borderColor: topBorder }} />
-                                                                {settings?.churchIcon === 'custom' && settings?.customIconUrl ? (
+                                                                {slot.customIconUrl ? (
+                                                                    <div className="w-full h-full flex items-center justify-center p-1.5 relative z-10">
+                                                                        <img src={slot.customIconUrl} className="w-full h-full object-contain drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} alt="" />
+                                                                    </div>
+                                                                ) : settings?.churchIcon === 'custom' && settings?.customIconUrl ? (
                                                                     <div className="w-full h-full flex items-center justify-center p-2 relative z-10">
                                                                         <img src={settings.customIconUrl} className="w-full h-full object-contain drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} alt="" />
                                                                     </div>
