@@ -415,7 +415,7 @@ export function MidnightGlowWeekly() {
 
                                             {/* Popping Avatar(s) */}
                                             <div className="absolute -top-9 inset-x-0 flex justify-center h-16">
-                                                {isAssigned ? (
+                                                {(isAssigned || slot.hideProfiles) ? (
                                                     <div className="flex relative items-center justify-center">
                                                         {slot.hideProfiles ? (
                                                             <div className={`relative w-[4.5rem] h-[4.5rem] rounded-[1.2rem] overflow-hidden border-[1.5px] shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-20 flex-shrink-0 bg-[#071020] ${avatarRing}`}>
@@ -424,6 +424,10 @@ export function MidnightGlowWeekly() {
                                                                 {slot.customIconUrl ? (
                                                                     <div className="w-full h-full flex items-center justify-center p-1.5 relative z-10">
                                                                         <img src={slot.customIconUrl} className="w-full h-full object-contain drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} alt="" />
+                                                                    </div>
+                                                                ) : settings?.churchLogoUrl ? (
+                                                                    <div className="w-full h-full flex items-center justify-center p-2 relative z-10">
+                                                                        <img src={settings.churchLogoUrl} className="w-full h-full object-contain drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} alt="" />
                                                                     </div>
                                                                 ) : settings?.churchIcon === 'custom' && settings?.customIconUrl ? (
                                                                     <div className="w-full h-full flex items-center justify-center p-2 relative z-10">
@@ -459,19 +463,33 @@ export function MidnightGlowWeekly() {
                                             {/* Names row as encapsulated premium pill(s) */}
                                             <div className="relative mt-8 mb-2 w-full flex items-center justify-center z-30 px-1 shrink-0">
                                                 <div className="flex items-center justify-center gap-1.5 w-full relative">
-                                                    {isAssigned ? (slot.hideProfiles ? null : leaders.map((leader, lIdx) => (
-                                                        <div key={lIdx} className="flex flex-col items-center min-w-[70px] max-w-[95%] z-30">
+                                                    {slot.hideProfiles ? (
+                                                        <div className="flex flex-col items-center max-w-[95%] z-30">
                                                             <span
                                                                 className="text-[6px] font-black uppercase tracking-[0.3em] mb-1 drop-shadow-[0_0_8px_currentColor]"
                                                                 style={{ color: topBorder }}
                                                             >
-                                                                {slot.roles[lIdx] || 'SERVICIO'}
+                                                                SERVICIO ESPECIAL
                                                             </span>
-                                                            <span className="text-[11px] leading-none font-black text-white uppercase tracking-[0.05em] drop-shadow-md bg-black/60 px-3 py-1.5 rounded-[0.6rem] border border-white/10 backdrop-blur-xl w-full flex justify-center text-center truncate">
-                                                                {leader.name}
+                                                            <span className="text-[10px] leading-none font-black text-white uppercase tracking-[0.05em] drop-shadow-md bg-black/60 px-3 py-1.5 rounded-[0.6rem] border border-white/10 backdrop-blur-xl w-full flex justify-center text-center truncate" style={{ color: topBorder }}>
+                                                                {slot.title}
                                                             </span>
                                                         </div>
-                                                    ))) : (
+                                                    ) : isAssigned ? (
+                                                        leaders.map((leader, lIdx) => (
+                                                            <div key={lIdx} className="flex flex-col items-center min-w-[70px] max-w-[95%] z-30">
+                                                                <span
+                                                                    className="text-[6px] font-black uppercase tracking-[0.3em] mb-1 drop-shadow-[0_0_8px_currentColor]"
+                                                                    style={{ color: topBorder }}
+                                                                >
+                                                                    {slot.roles[lIdx] || 'SERVICIO'}
+                                                                </span>
+                                                                <span className="text-[11px] leading-none font-black text-white uppercase tracking-[0.05em] drop-shadow-md bg-black/60 px-3 py-1.5 rounded-[0.6rem] border border-white/10 backdrop-blur-xl w-full flex justify-center text-center truncate">
+                                                                    {leader.name}
+                                                                </span>
+                                                            </div>
+                                                        ))
+                                                    ) : (
                                                         <div className="flex flex-col items-center">
                                                             <span className="text-[10px] leading-none font-bold uppercase tracking-widest text-white/30 italic drop-shadow-md bg-black/40 px-4 py-1.5 rounded-[0.6rem] border border-white/5 backdrop-blur-xl">
                                                                 VACANTE
