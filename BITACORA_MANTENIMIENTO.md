@@ -208,5 +208,15 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/lib/store.ts` (`fetchMediaGalleryFiles`)
     - `src/components/admin/MediaGalleryModal.tsx` (`determineCategory`)
 
+#### 18. Protección de Fotos de Ministro Responsable y Supervisor
+- **Problema:** Las fotografías del **Ministro Responsable** (`settings.ministerAvatar`) y del **Supervisor** (`settings.mainChurch.supervisorAvatar`) no estaban registradas en el validador `getFileUsages`, causando que fueran marcadas como `Libres` y borradas al presionar "Seleccionar No Vinculadas".
+- **Solución:**
+    - Se añadieron `ministerAvatar`, `supervisorAvatar` y `ministerAvatar` a las listas de comprobación en `getFileUsages` (`MediaGalleryModal.tsx`) y en `fetchMediaGalleryFiles` (`store.ts`).
+    - Ahora estas fotografías se etiquetan automáticamente como **`🟢 En Uso (Ajustes: Foto del Ministro)`** y **`🟢 En Uso (Ajustes: Foto del Supervisor)`**, garantizando que nunca sean borradas por accidente.
+- **Archivos Afectados:**
+    - `src/components/admin/MediaGalleryModal.tsx`
+    - `src/lib/store.ts`
+
+
 
 
