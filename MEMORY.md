@@ -3,11 +3,15 @@
 Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actual del proyecto, decisiones críticas de diseño y tareas pendientes.
 
 ## 📌 Estado Actual del Proyecto (Julio 2026)
-- **Servicios Especiales (Julio 21, 2026):**
-  - Se implementó **"Ocultar Perfiles"** (`hideProfiles`) para servicios de tipo Especial. Cuando está activado, los perfiles de los responsables (fotos + nombres) se esconden en las vistas Display (Semanal y Diario) y en su lugar se muestra el **ícono/logo de la iglesia** centrado con el **título personalizado** en texto grande.
-  - Se implementó **selector de color del acento** (`accentColor`) para servicios Especiales con 8 colores predeterminados (Morado, Rojo, Naranja, Azul, Verde, Dorado, Rosa, Cyan) + un **color personalizado libre** vía `<input type="color">`.
-  - El color del Especial tiene **prioridad sobre el color del día** (ej. jueves verde → se reemplaza por morado o el color elegido).
-  - Datos empaquetados en `evening_custom_label` con formato `customLabel|thirdLeaderRole|hideProfiles|accentColor` separados por `|`.
+- **Servicios Especiales & Galería de Medios (Julio 21, 2026):**
+  - Se implementó **"Ocultar Perfiles"** (`hideProfiles`) para servicios de tipo Especial, reemplazando fotos por ícono/logo y título en grande.
+  - Se implementó **selector de color del acento** (`accentColor`) con 8 presets + color personalizado libre (`#hex`).
+  - Se creó un modal de **Galería de Medios (`MediaGalleryModal`) estilo WordPress** con:
+    - **Clasificación por pestañas/etiquetas**: `✨ Íconos y Logos`, `🎨 Afiches / Eventos`, `🖼️ General`.
+    - **Barra de búsqueda instantánea** por nombre de archivo.
+    - **Selector de categoría al subir**: permite subir imágenes especificando si es Ícono, Afiche o General.
+    - **Compresión WebP automática**: toda imagen se redimensiona a máx 800x800px y se convierte a `.webp` al 85% de calidad.
+  - La imagen seleccionada de la galería se asigna al servicio especial (`customIconUrl`) y se proyecta en las vistas Display (Weekly y Daily).
 - **Servicios Especiales (Titulo Personalizado):** Se implementó la personalización del título en los servicios tipo 'Especial' en el slot `evening` desde el panel de administración (mapeado a `customLabel` / `evening_custom_label`). Se adaptaron todos los temas de visualización (Midnight Glow, Iglesia, Luna Premium, etc.) para pintar dinámicamente este título personalizado o usar 'Servicio Especial' como fallback si está vacío.
 - **Automatización de Mayo:** Calendario de mayo 2026 completado y cargado en Supabase (`schedule`).
 - **Seguridad & Acceso:** 

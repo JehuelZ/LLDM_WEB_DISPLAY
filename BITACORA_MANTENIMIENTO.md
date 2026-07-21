@@ -171,3 +171,18 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 - **Reglas Nuevas Derivadas:**
     - **Regla 7:** No usar IIFEs en JSX. Pre-computar antes del `return`.
     - **Regla 8:** No usar clases Tailwind dinámicas. Usar `style={{}}` inline.
+
+#### 15. Galería de Medios y Clasificación de Íconos / Logos
+- **Mejora:** Se implementó un modal de **Galería de Medios (`MediaGalleryModal`)** para seleccionar y subir imágenes optimizadas (WebP). Se incorporó la **clasificación de archivos** a solicitud del usuario para facilitar la búsqueda de íconos/logos frente a afiches o imágenes generales.
+- **Solución:**
+    - Se agregaron **botones de filtro por categoría**: `Todos`, `✨ Íconos y Logos`, `🎨 Afiches / Eventos` y `General`.
+    - Se agregó una **barra de búsqueda rápida** en la galería por nombre de archivo.
+    - Se incluyó un **selector de categoría previo al subir** (permite etiquetar archivos como `icon_`, `poster_` o `gen_`).
+    - Al seleccionar una imagen, su URL pública se guarda en el 5to parámetro de `evening_custom_label` (`customIconUrl`) y se renderiza en la tarjeta/pantalla del display cuando los perfiles están ocultos.
+- **Archivos Afectados:**
+    - `src/components/admin/MediaGalleryModal.tsx`
+    - `src/lib/store.ts`
+    - `src/app/admin/page.tsx`
+    - `src/themes/MidnightGlow/MidnightGlowWeekly.tsx`
+    - `src/themes/MidnightGlow/MidnightGlowSchedule.tsx`
+
