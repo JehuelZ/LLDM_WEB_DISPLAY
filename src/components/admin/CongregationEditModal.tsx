@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Save, Upload, User, MapPin, Phone, Text, Search, Check } from 'lucide-react';
+import { X, Save, Upload, User, MapPin, Phone, Text, Search, Check, Images } from 'lucide-react';
 import { CongregationInfo, UserProfile } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { TactileGlassCard, TactileInput } from './TactileUI';
+import { MediaGalleryModal } from './MediaGalleryModal';
 
 interface Props {
     congregation: CongregationInfo;
@@ -26,6 +27,7 @@ export const CongregationEditModal: React.FC<Props> = ({
     const [isSaving, setIsSaving] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [showMemberPicker, setShowMemberPicker] = useState(false);
+    const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
     const filteredMembers = useMemo(() => {
         if (!searchTerm.trim()) return members.slice(0, 10);
@@ -118,6 +120,24 @@ export const CongregationEditModal: React.FC<Props> = ({
                                         }
                                     }}
                                 />
+                                <div className="flex gap-2 mt-2">
+                                    <button
+                                        type="button"
+                                        onClick={() => document.getElementById('cong-image-upload')?.click()}
+                                        className="flex-1 px-3 py-2 rounded-lg bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] text-white/90 hover:text-white hover:border-primary/50 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all"
+                                    >
+                                        <Upload className="w-3.5 h-3.5 text-primary" />
+                                        Subir Nueva
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsGalleryOpen(true)}
+                                        className="flex-1 px-3 py-2 rounded-lg bg-[#A3FF57]/10 border border-[#A3FF57]/30 text-[#A3FF57] hover:bg-[#A3FF57]/20 text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all"
+                                    >
+                                        <Images className="w-3.5 h-3.5" />
+                                        Elegir de Galería
+                                    </button>
+                                </div>
                                 <p className="text-[9px] text-muted-foreground leading-relaxed italic">
                                     * Se recomienda una imagen de alta resolución que muestre el frente del lugar o el logotipo oficial.
                                 </p>
@@ -267,6 +287,18 @@ export const CongregationEditModal: React.FC<Props> = ({
                     </div>
                 </motion.div>
             </div>
+            
+            <MediaGalleryModal
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                title="Elegir Imagen de la Iglesia / Obra"
+                mode="select"
+                onSelectImage={(url) => {
+                    if (url) {
+                        setFormData(prev => ({ ...prev, imageUrl: url }));
+                    }
+                }}
+            />
         </AnimatePresence>
     );
 };
