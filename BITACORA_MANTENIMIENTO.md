@@ -258,8 +258,15 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 - **Archivos Afectados:**
     - `src/app/admin/tabs/AjustesTab.tsx`
     - `src/components/admin/CongregationEditModal.tsx`
-
-
+#### 23. Manejo de Errores `onError` y Respaldo para Imágenes Eliminadas / Rotas
+- **Problema:** Si una imagen previamente asignada fue eliminada del almacenamiento (o su enlace expiró), el navegador mostraba el icono de imagen rota de Chrome.
+- **Solución:**
+    - Se añadió captura de error `onError` en todas las imágenes de sede principal, ministro, supervisor y obras (`AjustesTab.tsx` y `CongregationEditModal.tsx`).
+    - Si la URL falla (404), el componente conmuta automáticamente a mostrar el icono elegante (`<Church />` o avatar con iniciales).
+    - Al seleccionar una nueva foto válida de la Galería, el estado de error se reinicia automáticamente y proyecta la nueva imagen limpia.
+- **Archivos Afectados:**
+    - `src/app/admin/tabs/AjustesTab.tsx`
+    - `src/components/admin/CongregationEditModal.tsx`
 
 
 
