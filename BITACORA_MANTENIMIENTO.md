@@ -277,6 +277,16 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - Base de datos Supabase `app_settings` (registro #1)
     - `src/app/admin/tabs/AjustesTab.tsx`
 
+#### 25. Galería de Medios y Recuperación para "FONDO DE PROYECCIÓN"
+- **Mejora:** Permitir elegir un fondo de pantalla directamente desde la Galería de Medios y agregar respaldo `onError` para imágenes de fondo eliminadas o rotas.
+- **Solución:**
+    - Se agregaron los botones táctiles **`📤 Subir Fondo`** y **`🖼️ Elegir de Galería`** dentro de la tarjeta **FONDO DE PROYECCIÓN** (`AjustesTab.tsx`).
+    - Al seleccionar una imagen desde la Galería, se actualiza `displayCustomBgUrl` y `displayBgMode: 'custom'`, sincronizándolo globalmente en la nube.
+    - Se incorporó detección de fallo de carga `onError` con estado `bgImgError` para que, si el fondo personalizado era una imagen eliminada, no muestre el recuadro roto de Chrome y permita elegir una imagen limpia de inmediato.
+- **Archivos Afectados:**
+    - `src/app/admin/tabs/AjustesTab.tsx`
+
+
 
 
 
