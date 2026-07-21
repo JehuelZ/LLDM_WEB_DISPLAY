@@ -311,6 +311,15 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/themes/DarkMinimal/DarkMinimalAnnouncements.tsx`
     - `src/themes/NeonForge/NeonForgeAnnouncements.tsx`
 
+#### 28. Renderizado de Ícono y Título Especial en Vista Semanal (`MidnightGlowWeekly`)
+- **Problema:** En la vista semanal (`LISTA DE ORACIONES`), si se activaba la casilla "Ocultar Perfiles" en un servicio especial pero no había líderes asignados (o estaban vacíos), el componente evaluaba la condición de líderes como `false` y mostraba `VACANTE` en lugar del ícono oficial de la iglesia y la píldora con el título especial.
+- **Solución:**
+    - Se actualizó la lógica en `MidnightGlowWeekly.tsx` para que al estar activado `hideProfiles` renderice **siempre** la tarjeta flotante con el ícono personalizado (`customIconUrl`) o el logo oficial de la iglesia (`churchLogoUrl`).
+    - Se añadió una píldora prominente con el título especial (`customLabel` / `"SERVICIO ESPECIAL"`) en lugar del texto vacante o el área en blanco.
+- **Archivos Afectados:**
+    - `src/themes/MidnightGlow/MidnightGlowWeekly.tsx`
+
+
 
 
 
