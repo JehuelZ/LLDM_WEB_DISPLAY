@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Flame, Clock } from 'lucide-react';
+import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Flame, Clock, BookOpen, Star, Heart } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -638,7 +638,24 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     <div className="absolute -top-[2px] left-1/4 right-1/4 h-[4px] bg-gradient-to-r from-transparent via-[#A3FF57] to-transparent blur-sm" />
 
                     <div className="relative -mt-24 mb-6 z-50 w-full px-6 flex justify-center items-end min-h-[220px]">
-                        {(slotEvening?.leaderIds && slotEvening.leaderIds.length > 0) || slotEvening?.type === 'children' ? (
+                        {(() => {
+                            const iconsMap: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
+                            const SelectedIcon = iconsMap[settings?.churchIcon || 'flame'] || Flame;
+                            return slotEvening?.hideProfiles ? (
+                                <div className="flex flex-col items-center">
+                                    <motion.div
+                                        whileHover={{ scale: 1.05 }}
+                                        className="relative w-44 h-44 rounded-full bg-[#0D1B3E] border-4 border-[#1E3A6E] flex items-center justify-center shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_40px_rgba(163,255,87,0.2)] overflow-hidden"
+                                    >
+                                        <div className="absolute inset-0 rounded-full border-2 border-[#A3FF57]/20 border-dashed animate-spin-slow" />
+                                        {settings?.churchIcon === 'custom' && settings?.customIconUrl ? (
+                                            <img src={settings.customIconUrl} alt="Logo" className="w-[70%] h-[70%] object-contain" />
+                                        ) : (
+                                            <SelectedIcon className="w-20 h-20 text-[#A3FF57]/80" />
+                                        )}
+                                    </motion.div>
+                                </div>
+                            ) : ((slotEvening?.leaderIds && slotEvening.leaderIds.length > 0) || slotEvening?.type === 'children' ? (
                             (slotEvening.type === 'children' || (slotEvening.consecrationLeaderId && slotEvening.doctrineLeaderId && slotEvening.leaderIds?.[0])) ? (
                                 /* THREE LEADERS LAYOUT FOR CHILDREN'S SERVICE */
                                 <div className="flex flex-col items-center w-full">
@@ -842,6 +859,7 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                                 </div>
                             </div>
                         )}
+                        ) })()}
                     </div>
 
                     {/* Badge */}

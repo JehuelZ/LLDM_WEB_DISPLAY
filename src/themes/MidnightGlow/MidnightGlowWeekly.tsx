@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Church, Sunrise, Sun, User, HeartHandshake, Radio, Users, Crown } from 'lucide-react';
+import { Church, Sunrise, Sun, User, HeartHandshake, Radio, Users, Crown, Flame, BookOpen, Star, Heart } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -24,6 +24,7 @@ type ServiceSlot = {
     sundayType?: string;
     churchOrigin?: string;
     language?: string;
+    hideProfiles?: boolean;
 };
 
 export function MidnightGlowWeekly() {
@@ -201,14 +202,15 @@ export function MidnightGlowWeekly() {
                 ? 'SERVICIO ESPECIAL' 
                 : ((isSunday || isThursday) ? 'CULTO PRINCIPAL' : 'CONSAGRACIÓN'),
             icon: <Church className="w-3.5 h-3.5" />,
-            accent: (isSunday || isThursday) ? 'green' : (isSpecial ? 'purple' : 'blue'),
+            accent: isSpecial ? 'purple' : ((isSunday || isThursday) ? 'green' : 'blue'),
             timeAccent: 'text-[#A3FF57] drop-shadow-[0_0_15px_rgba(163,255,87,0.8)]',
-            roles: (isSunday || isThursday) ? ['SERVICIO', 'DOCTRINA'] : ['CONSAGRACIÓN', 'DOCTRINA'],
+            roles: isSpecial ? ['SERVICIO', 'ASISTENTE'] : ((isSunday || isThursday) ? ['SERVICIO', 'DOCTRINA'] : ['CONSAGRACIÓN', 'DOCTRINA']),
             language: slotEv?.language || 'es',
             leaderIds: [
                 slotEv?.leaderIds?.[0] || null,
                 slotEv?.doctrineLeaderId || slotEv?.leaderIds?.[1] || null
             ],
+            hideProfiles: slotEv?.hideProfiles,
         });
 
         return slots;
@@ -373,7 +375,25 @@ export function MidnightGlowWeekly() {
                                             <div className="absolute -top-9 inset-x-0 flex justify-center h-16">
                                                 {isAssigned ? (
                                                     <div className="flex relative items-center justify-center">
-                                                        {leaders.map((leader, lIdx) => (
+                                                        {slot.hideProfiles ? (
+                                                            <div className={`relative w-[4.5rem] h-[4.5rem] rounded-[1.2rem] overflow-hidden border-[1.5px] shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-20 flex-shrink-0 bg-[#071020] ${avatarRing}`}>
+                                                                <div className="absolute inset-0 bg-gradient-to-tr from-[currentColor]/30 via-transparent to-transparent opacity-60 z-20 pointer-events-none" style={{ color: topBorder }} />
+                                                                <div className="absolute inset-0 rounded-[1.2rem] border-2 border-[currentColor]/40 animate-pulse opacity-50 z-20 pointer-events-none" style={{ borderColor: topBorder }} />
+                                                                {settings?.churchIcon === 'custom' && settings?.customIconUrl ? (
+                                                                    <div className="w-full h-full flex items-center justify-center p-2 relative z-10">
+                                                                        <img src={settings.customIconUrl} className="w-full h-full object-contain drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} alt="" />
+                                                                    </div>
+                                                                ) : (() => {
+                                                                    const iconsMap: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
+                                                                    const SelectedIcon = iconsMap[settings?.churchIcon || 'flame'] || Flame;
+                                                                    return (
+                                                                        <div className="w-full h-full flex items-center justify-center relative z-10">
+                                                                            <SelectedIcon className="w-7 h-7 opacity-90 drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} />
+                                                                        </div>
+                                                                    );
+                                                                })()}
+                                                            </div>
+                                                        ) : leaders.map((leader, lIdx) => (
                                                             <div key={lIdx} className={`relative w-[4.5rem] h-[4.5rem] rounded-[1.2rem] overflow-hidden border-[1.5px] shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-20 flex-shrink-0 bg-[#071020] ${avatarRing} ${lIdx > 0 ? '-ml-5' : ''}`}>
                                                                 <div className="absolute inset-0 bg-gradient-to-tr from-[currentColor]/30 via-transparent to-transparent opacity-60 z-20 pointer-events-none" style={{ color: topBorder }} />
                                                                 <div className="absolute inset-0 rounded-[1.2rem] border-2 border-[currentColor]/40 animate-pulse opacity-50 z-20 pointer-events-none" style={{ borderColor: topBorder }} />
@@ -397,7 +417,7 @@ export function MidnightGlowWeekly() {
                                             {/* Names row as encapsulated premium pill(s) */}
                                             <div className="relative mt-8 mb-2 w-full flex items-center justify-center z-30 px-1 shrink-0">
                                                 <div className="flex items-center justify-center gap-1.5 w-full relative">
-                                                    {isAssigned ? leaders.map((leader, lIdx) => (
+                                                    {isAssigned ? (slot.hideProfiles ? null : leaders.map((leader, lIdx) => (
                                                         <div key={lIdx} className="flex flex-col items-center min-w-[70px] max-w-[95%] z-30">
                                                             <span
                                                                 className="text-[6px] font-black uppercase tracking-[0.3em] mb-1 drop-shadow-[0_0_8px_currentColor]"
@@ -409,7 +429,7 @@ export function MidnightGlowWeekly() {
                                                                 {leader.name}
                                                             </span>
                                                         </div>
-                                                    )) : (
+                                                    ))) : (
                                                         <div className="flex flex-col items-center">
                                                             <span className="text-[10px] leading-none font-bold uppercase tracking-widest text-white/30 italic drop-shadow-md bg-black/40 px-4 py-1.5 rounded-[0.6rem] border border-white/5 backdrop-blur-xl">
                                                                 VACANTE

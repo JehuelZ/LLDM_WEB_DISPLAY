@@ -2268,6 +2268,23 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                                                         )}
                                                         placeholder="Ej: Servicio Especial de Niños, Aniversario..."
                                                     />
+                                                    <div className="flex items-center pt-2">
+                                                        <button 
+                                                            onClick={() => updateSlot('evening', { hideProfiles: !currentDaySchedule.slots['evening'].hideProfiles })}
+                                                            className={cn(
+                                                                "w-full h-10 px-4 flex items-center justify-center gap-2 rounded-md font-bold text-[11px] uppercase transition-all border",
+                                                                currentDaySchedule.slots['evening'].hideProfiles 
+                                                                    ? "bg-purple-500/10 border-purple-500/50 text-purple-400" 
+                                                                    : (settings.adminTheme === 'primitivo' ? "bg-white/[0.03] border-white/10 text-white/50 hover:bg-white/[0.06]" : "bg-[var(--tactile-inner-bg)] border-[var(--tactile-border)] text-muted-foreground hover:bg-[var(--tactile-item-hover)]")
+                                                            )}
+                                                        >
+                                                            {currentDaySchedule.slots['evening'].hideProfiles ? (
+                                                                <><EyeOff className="w-4 h-4" /> Perfiles Ocultos (Mostrando Logo)</>
+                                                            ) : (
+                                                                <><Eye className="w-4 h-4" /> Ocultar Perfiles en Display</>
+                                                            )}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             )}
 

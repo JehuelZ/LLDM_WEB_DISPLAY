@@ -73,6 +73,7 @@ export interface DailySchedule {
             language?: 'es' | 'en'; // Service language (Spanish/English)
             customLabel?: string;
             thirdLeaderRole?: string;
+            hideProfiles?: boolean;
         };
     };
 }
