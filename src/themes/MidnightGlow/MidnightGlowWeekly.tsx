@@ -31,6 +31,11 @@ type ServiceSlot = {
 export function MidnightGlowWeekly() {
     const monthlySchedule = useAppStore((state: any) => state.monthlySchedule);
     const members = useAppStore((state: any) => state.members);
+    const settings = useAppStore((state: any) => state.settings);
+
+    // Pre-compute church icon for hideProfiles mode
+    const _iconsMap: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
+    const HideProfileIcon = _iconsMap[settings?.churchIcon || 'flame'] || Flame;
 
     const [mounted, setMounted] = useState(false);
     const [today] = useState(() => new Date());
@@ -330,13 +335,19 @@ export function MidnightGlowWeekly() {
                                         bgClass = 'bg-[#030B06]'; borderClass = 'border-[#0A2615]'; topBorder = '#10B981'; avatarRing = 'border-[#10B981]'; titleColor = 'text-[#10B981]'; subColor = 'text-[#10B981]/70';
                                         customShadow = 'shadow-[0_15px_30px_rgba(0,0,0,0.4)]';
                                     }
-                                    // Custom hex override
+                                    // Custom hex override — use inline styles since Tailwind can't generate dynamic classes
+                                    let useInlineColors = false;
+                                    let inlineBorderColor = '';
+                                    let inlineAvatarBorderColor = '';
                                     if (slot.customAccentHex) {
                                         topBorder = slot.customAccentHex;
-                                        avatarRing = `border-[${slot.customAccentHex}]`;
+                                        useInlineColors = true;
+                                        inlineBorderColor = `${slot.customAccentHex}66`; // 40% opacity
+                                        inlineAvatarBorderColor = slot.customAccentHex;
+                                        avatarRing = 'border-white/30'; // fallback class
                                         titleColor = 'text-white';
                                         subColor = 'text-white/70';
-                                        borderClass = `border-[${slot.customAccentHex}]/40`;
+                                        borderClass = 'border-transparent'; // overridden by inline style
                                         bgClass = 'bg-[#0a0a14]';
                                         customShadow = 'shadow-[0_30px_90px_rgba(0,0,0,0.3)]';
                                     }
@@ -412,15 +423,11 @@ export function MidnightGlowWeekly() {
                                                                     <div className="w-full h-full flex items-center justify-center p-2 relative z-10">
                                                                         <img src={settings.customIconUrl} className="w-full h-full object-contain drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} alt="" />
                                                                     </div>
-                                                                ) : (() => {
-                                                                    const iconsMap: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
-                                                                    const SelectedIcon = iconsMap[settings?.churchIcon || 'flame'] || Flame;
-                                                                    return (
-                                                                        <div className="w-full h-full flex items-center justify-center relative z-10">
-                                                                            <SelectedIcon className="w-7 h-7 opacity-90 drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} />
-                                                                        </div>
-                                                                    );
-                                                                })()}
+                                                                ) : (
+                                                                    <div className="w-full h-full flex items-center justify-center relative z-10">
+                                                                        <HideProfileIcon className="w-7 h-7 opacity-90 drop-shadow-[0_0_10px_currentColor]" style={{ color: topBorder }} />
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         ) : leaders.map((leader, lIdx) => (
                                                             <div key={lIdx} className={`relative w-[4.5rem] h-[4.5rem] rounded-[1.2rem] overflow-hidden border-[1.5px] shadow-[0_15px_30px_rgba(0,0,0,0.8)] z-20 flex-shrink-0 bg-[#071020] ${avatarRing} ${lIdx > 0 ? '-ml-5' : ''}`}>
