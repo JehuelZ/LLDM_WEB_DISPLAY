@@ -51,6 +51,21 @@ export const AjustesTab = ({
     const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo, index?: number } | null>(null)
     const [isGalleryOpen, setIsGalleryOpen] = useState(false)
     const [galleryTarget, setGalleryTarget] = useState<'manage' | 'minister' | 'supervisor'>('manage')
+    const [churchImgError, setChurchImgError] = useState(false)
+    const [ministerImgError, setMinisterImgError] = useState(false)
+    const [supervisorImgError, setSupervisorImgError] = useState(false)
+
+    React.useEffect(() => {
+        setChurchImgError(false);
+    }, [settings.mainChurch?.imageUrl, settings.churchLogoUrl]);
+
+    React.useEffect(() => {
+        setMinisterImgError(false);
+    }, [settings.ministerAvatar]);
+
+    React.useEffect(() => {
+        setSupervisorImgError(false);
+    }, [settings.mainChurch?.supervisorAvatar]);
     
     const dataURLtoFile = (dataurl: string, filename: string) => {
         let arr = dataurl.split(','),
@@ -348,8 +363,13 @@ export const AjustesTab = ({
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 block">IGLESIA PRINCIPAL</label>
                             <div className="flex items-center gap-4">
                                 <div className="w-16 h-16 rounded-md bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
-                                    {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
-                                        <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
+                                    {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) && !churchImgError ? (
+                                        <img 
+                                            src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} 
+                                            className="w-full h-full object-cover" 
+                                            alt="" 
+                                            onError={() => setChurchImgError(true)}
+                                        />
                                     ) : (
                                         <Church className="w-8 h-8 text-muted-foreground opacity-20" />
                                     )}
@@ -457,9 +477,10 @@ export const AjustesTab = ({
                                 <div className="w-[88px] h-[88px] rounded-full p-[2px] bg-gradient-to-br from-primary via-primary/40 to-transparent animate-[spin_6s_linear_infinite]" />
                                 <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[var(--tactile-bg)]">
                                     <img
-                                        src={settings.ministerAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(settings.ministerName || 'M')}&background=random&bold=true&size=128`}
+                                        src={(!ministerImgError && settings.ministerAvatar) ? settings.ministerAvatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(settings.ministerName || 'M')}&background=random&bold=true&size=128`}
                                         className="w-full h-full object-cover rounded-full"
                                         alt="Ministro"
+                                        onError={() => setMinisterImgError(true)}
                                     />
                                     <div className="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <Camera className="w-6 h-6 text-white" />
@@ -593,9 +614,10 @@ export const AjustesTab = ({
                                 <div className="w-[88px] h-[88px] rounded-full p-[2px] bg-gradient-to-br from-primary via-primary/40 to-transparent animate-[spin_6s_linear_infinite]" />
                                 <div className="absolute inset-[2px] rounded-full overflow-hidden bg-[var(--tactile-bg)]">
                                     <img
-                                        src={settings.mainChurch?.supervisorAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(settings.mainChurch?.supervisorName || 'S')}&background=random&bold=true&size=128`}
+                                        src={(!supervisorImgError && settings.mainChurch?.supervisorAvatar) ? settings.mainChurch.supervisorAvatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(settings.mainChurch?.supervisorName || 'S')}&background=random&bold=true&size=128`}
                                         className="w-full h-full object-cover rounded-full"
                                         alt="Supervisor"
+                                        onError={() => setSupervisorImgError(true)}
                                     />
                                     <div className="absolute inset-0 bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                         <Camera className="w-6 h-6 text-white" />

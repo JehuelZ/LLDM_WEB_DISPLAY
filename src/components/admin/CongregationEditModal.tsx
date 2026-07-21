@@ -31,6 +31,11 @@ export const CongregationEditModal: React.FC<Props> = ({
     const [searchTerm, setSearchTerm] = useState('');
     const [showMemberPicker, setShowMemberPicker] = useState(false);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+    const [imgError, setImgError] = useState(false);
+
+    React.useEffect(() => {
+        setImgError(false);
+    }, [formData.imageUrl]);
 
     React.useEffect(() => {
         if (isOpen && congregation) {
@@ -104,8 +109,13 @@ export const CongregationEditModal: React.FC<Props> = ({
                                     className="relative group aspect-[4/3] rounded-md border-2 border-dashed border-[var(--tactile-border-strong)] bg-[var(--tactile-inner-bg-alt)] overflow-hidden cursor-pointer"
                                     onClick={() => document.getElementById('cong-image-upload')?.click()}
                                 >
-                                    {formData.imageUrl ? (
-                                        <img src={formData.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Church" />
+                                    {formData.imageUrl && !imgError ? (
+                                        <img 
+                                            src={formData.imageUrl} 
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                            alt="Church" 
+                                            onError={() => setImgError(true)}
+                                        />
                                     ) : (
                                         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                                             <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-primary/20 transition-colors">
