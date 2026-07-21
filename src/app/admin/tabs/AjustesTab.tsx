@@ -50,10 +50,11 @@ export const AjustesTab = ({
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: string } | null>(null)
     const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo, index?: number } | null>(null)
     const [isGalleryOpen, setIsGalleryOpen] = useState(false)
-    const [galleryTarget, setGalleryTarget] = useState<'manage' | 'minister' | 'supervisor'>('manage')
+    const [galleryTarget, setGalleryTarget] = useState<'manage' | 'minister' | 'supervisor' | 'bg'>('manage')
     const [churchImgError, setChurchImgError] = useState(false)
     const [ministerImgError, setMinisterImgError] = useState(false)
     const [supervisorImgError, setSupervisorImgError] = useState(false)
+    const [bgImgError, setBgImgError] = useState(false)
 
     React.useEffect(() => {
         setChurchImgError(false);
@@ -66,6 +67,10 @@ export const AjustesTab = ({
     React.useEffect(() => {
         setSupervisorImgError(false);
     }, [settings.mainChurch?.supervisorAvatar]);
+
+    React.useEffect(() => {
+        setBgImgError(false);
+    }, [settings.displayCustomBgUrl]);
     
     const dataURLtoFile = (dataurl: string, filename: string) => {
         let arr = dataurl.split(','),
@@ -783,9 +788,14 @@ export const AjustesTab = ({
                                     onClick={() => document.getElementById('tactile-bg-upload')?.click()}
                                     className="w-1/2 aspect-video mx-auto rounded-md border-2 border-dashed border-[var(--tactile-border-strong)] hover:border-primary/40 bg-[var(--tactile-inner-bg)] flex flex-col items-center justify-center gap-4 cursor-pointer overflow-hidden transition-all group"
                                 >
-                                    {settings.displayCustomBgUrl ? (
+                                    {settings.displayCustomBgUrl && !bgImgError ? (
                                         <div className="relative w-full h-full">
-                                            <img src={settings.displayCustomBgUrl} className="w-full h-full object-cover" alt="Custom background" />
+                                            <img 
+                                                src={settings.displayCustomBgUrl} 
+                                                className="w-full h-full object-cover" 
+                                                alt="Custom background" 
+                                                onError={() => setBgImgError(true)}
+                                            />
                                             <div className="absolute inset-0 bg-[var(--tactile-bg)]/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                                 <Upload className="w-8 h-8 text-foreground" />
                                             </div>
@@ -801,6 +811,27 @@ export const AjustesTab = ({
                                             </div>
                                         </>
                                     )}
+                                </div>
+                                <div className="flex items-center justify-center gap-2 mt-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => document.getElementById('tactile-bg-upload')?.click()}
+                                        className="px-3 py-1.5 rounded-lg bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] text-white/90 hover:text-white hover:border-primary/50 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95"
+                                    >
+                                        <Upload className="w-3 h-3 text-primary" />
+                                        Subir Fondo
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setGalleryTarget('bg');
+                                            setIsGalleryOpen(true);
+                                        }}
+                                        className="px-3 py-1.5 rounded-lg bg-[#A3FF57]/10 border border-[#A3FF57]/30 text-[#A3FF57] hover:bg-[#A3FF57]/20 hover:border-[#A3FF57]/50 text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all active:scale-95"
+                                    >
+                                        <Images className="w-3 h-3" />
+                                        Elegir de Galería
+                                    </button>
                                 </div>
                                 <input
                                     id="tactile-bg-upload"
@@ -1099,7 +1130,15 @@ export const AjustesTab = ({
             <MediaGalleryModal
                 isOpen={isGalleryOpen}
                 onClose={() => setIsGalleryOpen(false)}
-                title={galleryTarget === 'minister' ? 'Elegir Foto del Ministro' : galleryTarget === 'supervisor' ? 'Elegir Foto del Supervisor' : 'Galería de Medios del Sistema'}
+                title={
+                    galleryTarget === 'minister' 
+                        ? 'Elegir Foto del Ministro' 
+                        : galleryTarget === 'supervisor' 
+                        ? 'Elegir Foto del Supervisor' 
+                        : galleryTarget === 'bg'
+                        ? 'Elegir Fondo de Proyección'
+                        : 'Galería de Medios del Sistema'
+                }
                 mode={galleryTarget === 'manage' ? 'manage' : 'select'}
                 onSelectImage={async (url) => {
                     if (!url) return;
@@ -1112,6 +1151,17 @@ export const AjustesTab = ({
                         await saveSettingsToCloud({ mainChurch: updatedMainChurch });
                         setSettings({ ...settings, mainChurch: updatedMainChurch });
                         showNotification('Fotografía del supervisor actualizada desde la galería', 'success');
+                    } else if (galleryTarget === 'bg') {
+                        setBgImgError(false);
+                        const updatedPayload = {
+                            displayCustomBgUrl: url,
+                            displayBgMode: 'custom' as const,
+                            churchLogoUrl: url,
+                            churchIcon: 'custom' as const
+                        };
+                        setSettings({ ...settings, ...updatedPayload });
+                        await saveSettingsToCloud(updatedPayload);
+                        showNotification('Fondo de proyección actualizado desde la galería', 'success');
                     }
                 }}
             />
