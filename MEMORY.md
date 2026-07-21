@@ -7,9 +7,11 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
   - Se implementó **"Ocultar Perfiles"** (`hideProfiles`) para servicios de tipo Especial, reemplazando fotos por ícono/logo y título en grande.
   - Se implementó **selector de color del acento** (`accentColor`) con 8 presets + color personalizado libre (`#hex`).
   - Se creó un modal de **Galería de Medios (`MediaGalleryModal`) estilo WordPress** con:
+    - **Detección Automática de Vinculación (`En Uso` / `Libre`)**: escanea si cada imagen está vinculada a un perfil de miembro, logo/fondo en ajustes, evento programado o aviso. Muestra una insignia `🟢 En Uso` con tooltip detallando a qué elemento exacto está vinculada.
+    - **Protección contra Eliminación Accidental**: si intentas eliminar una imagen en uso, aparece un modal de advertencia roja alertando qué secciones del sistema perderán la imagen antes de permitir borrar.
+    - **Acceso Independiente**: nuevo panel **"GALERÍA DE MEDIOS"** en la pestaña de Ajustes del Admin para subir, organizar y limpiar archivos independientemente.
     - **Clasificación por pestañas/etiquetas**: `✨ Íconos y Logos`, `🎨 Afiches / Eventos`, `🖼️ General`.
     - **Barra de búsqueda instantánea** por nombre de archivo.
-    - **Selector de categoría al subir**: permite subir imágenes especificando si es Ícono, Afiche o General.
     - **Compresión WebP automática**: toda imagen se redimensiona a máx 800x800px y se convierte a `.webp` al 85% de calidad.
   - La imagen seleccionada de la galería se asigna al servicio especial (`customIconUrl`) y se proyecta en las vistas Display (Weekly y Daily).
 - **Servicios Especiales (Titulo Personalizado):** Se implementó la personalización del título en los servicios tipo 'Especial' en el slot `evening` desde el panel de administración (mapeado a `customLabel` / `evening_custom_label`). Se adaptaron todos los temas de visualización (Midnight Glow, Iglesia, Luna Premium, etc.) para pintar dinámicamente este título personalizado o usar 'Servicio Especial' como fallback si está vacío.

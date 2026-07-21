@@ -186,3 +186,15 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/themes/MidnightGlow/MidnightGlowWeekly.tsx`
     - `src/themes/MidnightGlow/MidnightGlowSchedule.tsx`
 
+#### 16. Detección de Vinculación y Protección contra Eliminación
+- **Mejora:** Prevenir que un administrador borre accidentalmente una imagen de la galería que esté siendo utilizada en un perfil de hermano, logo del sistema, evento o aviso.
+- **Solución:**
+    - **Detección Automática de Vinculación**: cada imagen escanea en tiempo real el estado global (`members`, `settings`, `monthlySchedule`, `announcements`). Si está en uso, muestra la etiqueta **`🟢 En Uso`** con un tooltip que lista los elementos exactos vinculados (ej: *Perfil: Hno. Juan Aguilar*).
+    - **Modal de Advertencia en Rojo**: si se presiona el botón eliminar en una imagen en uso, se abre un modal de seguridad que advierte explícitamente cuáles secciones perderán la foto si se procede.
+    - **Acceso Independiente en Ajustes**: se agregó la tarjeta **"GALERÍA DE MEDIOS"** en la pestaña de Preferencias del Panel Admin (`AjustesTab.tsx`) para gestionar y limpiar imágenes sin necesidad de estar editando un horario.
+- **Archivos Afectados:**
+    - `src/components/admin/MediaGalleryModal.tsx`
+    - `src/lib/store.ts` (función `deleteMediaGalleryFile`)
+    - `src/app/admin/tabs/AjustesTab.tsx`
+
+
