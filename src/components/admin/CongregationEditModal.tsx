@@ -32,6 +32,15 @@ export const CongregationEditModal: React.FC<Props> = ({
     const [showMemberPicker, setShowMemberPicker] = useState(false);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
+    React.useEffect(() => {
+        if (isOpen && congregation) {
+            setFormData({
+                ...congregation,
+                name: congregation.name || 'Principal (Rodeo CA)'
+            });
+        }
+    }, [isOpen, congregation]);
+
     const filteredMembers = useMemo(() => {
         if (!searchTerm.trim()) return members.slice(0, 10);
         return members

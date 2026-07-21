@@ -1014,10 +1014,13 @@ export const AjustesTab = ({
                     uploadAvatar={uploadAvatar}
                     onSave={async (updated) => {
                         if (updated.id === 'main') {
-                            await saveSettingsToCloud({ 
+                            const updatedPayload = { 
                                 mainChurch: updated,
-                                mainChurchName: updated.name
-                            });
+                                mainChurchName: updated.name,
+                                churchLogoUrl: updated.imageUrl || settings.churchLogoUrl
+                            };
+                            setSettings({ ...settings, ...updatedPayload });
+                            await saveSettingsToCloud(updatedPayload);
                             showNotification('Configuración de sede principal actualizada.', 'success');
                         } else {
                             let newMissions = [...(settings.missions || [])];
@@ -1026,7 +1029,9 @@ export const AjustesTab = ({
                             } else if (editingCongregation.index !== undefined) {
                                 newMissions[editingCongregation.index] = updated;
                             }
-                            await saveSettingsToCloud({ missions: newMissions });
+                            const updatedPayload = { missions: newMissions };
+                            setSettings({ ...settings, ...updatedPayload });
+                            await saveSettingsToCloud(updatedPayload);
                             showNotification(`Obra "${updated.name}" guardada.`, 'success');
                         }
                     }}
