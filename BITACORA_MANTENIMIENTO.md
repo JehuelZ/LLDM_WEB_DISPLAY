@@ -234,12 +234,13 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 #### 20. Rediseño de Acciones de Fotografía a Botones Táctiles Estilizados
 - **Mejora:** Reemplazar los enlaces de texto simple por **botones táctiles estilizados** con iconos explicativos para "Subir Foto", "Elegir de Galería" y "Re-encuadrar".
 - **Solución:**
-    - En las tarjetas de Ministro Responsable y Supervisor (`AjustesTab.tsx`), las opciones de edición de avatar ahora se despliegan como botones independientes:
-        - `📤 Subir Foto` (botón con fondo táctil oscuro).
-        - `🖼️ Elegir de Galería` (botón destacado con borde neón verde).
-        - `✂️ Re-encuadrar` (botón sutil con ícono de recorte).
+    - En las tarjetas de Ministro Responsable y Supervisor (`AjustesTab.tsx`), así como en el modal de Jerarquía de Obras (`CongregationEditModal.tsx`), las opciones de edición de avatar ahora se despliegan como botones táctiles independientes:
+        - `📤 Subir Foto` (botón táctil oscuro).
+        - `🖼️ Elegir de Galería` (botón destacado con borde verde neón).
+        - `✂️ Re-encuadrar` (botón con ícono de recorte).
 - **Archivos Afectados:**
     - `src/app/admin/tabs/AjustesTab.tsx`
+    - `src/components/admin/CongregationEditModal.tsx`
 
 
 
