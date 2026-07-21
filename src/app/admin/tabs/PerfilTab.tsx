@@ -3,12 +3,13 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
-    User, Camera, Mail, Phone, Lock, Save, LogOut
+    User, Camera, Mail, Phone, Lock, Save, LogOut, Images
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { 
     TactileGlassCard, TactileInput 
 } from '@/components/admin/TactileUI'
+import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal'
 
 interface PerfilTabProps {
     currentUser: any
@@ -28,6 +29,7 @@ export const PerfilTab = ({
     showNotification
 }: PerfilTabProps) => {
     const [isSaving, setIsSaving] = useState(false)
+    const [isGalleryOpen, setIsGalleryOpen] = useState(false)
     const [profileData, setProfileData] = useState({
         name: currentUser?.name || '',
         email: currentUser?.email || '',
@@ -98,7 +100,14 @@ export const PerfilTab = ({
                             }
                         }}
                     />
-                    <div className="mt-8 text-center">
+                    <button
+                        type="button"
+                        onClick={() => setIsGalleryOpen(true)}
+                        className="mt-4 px-4 py-2 rounded-lg bg-[#A3FF57]/10 text-[#A3FF57] hover:bg-[#A3FF57]/20 border border-[#A3FF57]/30 text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-all"
+                    >
+                        <Images className="w-4 h-4" /> Elegir de Galería
+                    </button>
+                    <div className="mt-6 text-center">
                         <h3 className="text-xl font-black capitalize">{currentUser?.name || 'Administrador'}</h3>
                         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mt-1">{currentUser?.role || 'BOSS'}</p>
                     </div>
@@ -159,6 +168,21 @@ export const PerfilTab = ({
                     </div>
                 </TactileGlassCard>
             </div>
+            <MediaGalleryModal
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                title="Elegir Foto de Mi Perfil"
+                mode="select"
+                onSelectImage={async (url) => {
+                    if (url && currentUser?.id) {
+                        setIsSaving(true);
+                        await updateProfileInCloud(currentUser.id, { avatar: url });
+                        setCurrentUser({ ...currentUser, avatar: url });
+                        showNotification('Foto de perfil actualizada desde la galería', 'success');
+                        setIsSaving(false);
+                    }
+                }}
+            />
         </motion.div>
     )
 }

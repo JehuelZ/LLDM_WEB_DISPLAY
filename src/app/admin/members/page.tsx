@@ -34,10 +34,12 @@ import {
     Camera,
     EyeOff,
     ShieldAlert,
-    Church
+    Church,
+    Images
 } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { ImageEditor } from '@/components/ImageEditor';
+import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 import { useAppStore } from '@/lib/store';
 
 // --- Components ---
@@ -265,6 +267,7 @@ export default function MembersPage() {
     const [imageToEdit, setImageToEdit] = useState<string | null>(null);
     const [memberModal, setMemberModal] = useState<{ mode: 'new' | 'edit', data: Member } | null>(null);
     const [memberModalTab, setMemberModalTab] = useState<'stats' | 'config'>('stats');
+    const [isGalleryOpenForMember, setIsGalleryOpenForMember] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
 
     const [mounted, setMounted] = useState(false);
@@ -1164,6 +1167,14 @@ export default function MembersPage() {
                                                 >
                                                     Subir Nueva
                                                 </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    className="text-[10px] font-black uppercase text-[#A3FF57] border border-[#A3FF57]/30 hover:bg-[#A3FF57]/10 flex items-center gap-1"
+                                                    onClick={() => setIsGalleryOpenForMember(true)}
+                                                >
+                                                    <Images className="w-3.5 h-3.5" /> Elegir de Galería
+                                                </Button>
                                                 {memberModal.data.avatar && (
                                                     <Button
                                                         variant="ghost"
@@ -1502,6 +1513,25 @@ export default function MembersPage() {
                     onCancel={() => setImageToEdit(null)}
                 />
             )}
+            {/* Media Gallery Modal for selecting existing profile photo */}
+            <MediaGalleryModal
+                isOpen={isGalleryOpenForMember}
+                onClose={() => setIsGalleryOpenForMember(false)}
+                title="Elegir Foto de Perfil"
+                mode="select"
+                onSelectImage={(url) => {
+                    if (url && memberModal) {
+                        setMemberModal({
+                            ...memberModal,
+                            data: {
+                                ...memberModal.data,
+                                avatar: url
+                            }
+                        });
+                        showNotification('Foto de perfil vinculada desde la galería', 'success');
+                    }
+                }}
+            />
         </div>
     );
 }

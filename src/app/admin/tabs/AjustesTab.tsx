@@ -50,6 +50,7 @@ export const AjustesTab = ({
     const [imageToEdit, setImageToEdit] = useState<{ source: string, target: string } | null>(null)
     const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo, index?: number } | null>(null)
     const [isGalleryOpen, setIsGalleryOpen] = useState(false)
+    const [galleryTarget, setGalleryTarget] = useState<'manage' | 'minister' | 'supervisor'>('manage')
     
     const dataURLtoFile = (dataurl: string, filename: string) => {
         let arr = dataurl.split(','),
@@ -470,15 +471,27 @@ export const AjustesTab = ({
                                 <Shield className="w-3 h-3 text-primary" />
                                 <span className="text-[9px] font-black tracking-widest uppercase text-primary">Pastor Principal</span>
                             </div>
-                            <div className="flex gap-4">
+                            <div className="flex gap-3">
                                 <button
+                                    type="button"
                                     onClick={() => document.getElementById('minister-avatar-upload')?.click()}
                                     className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
                                 >
                                     Cambiar fotografía
                                 </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setGalleryTarget('minister');
+                                        setIsGalleryOpen(true);
+                                    }}
+                                    className="text-[9px] font-bold text-[#A3FF57] hover:underline transition-colors tracking-widest flex items-center gap-1"
+                                >
+                                    <Images className="w-3 h-3" /> Elegir de Galería
+                                </button>
                                 {settings.ministerAvatar && (
                                     <button
+                                        type="button"
                                         onClick={() => {
                                             setImageToEdit({
                                                 source: settings.ministerAvatar,
@@ -591,15 +604,27 @@ export const AjustesTab = ({
                                 <Shield className="w-3 h-3 text-primary" />
                                 <span className="text-[9px] font-black tracking-widest uppercase text-primary">Supervisor de Distrito</span>
                             </div>
-                            <div className="flex gap-4">
+                            <div className="flex gap-3">
                                 <button
+                                    type="button"
                                     onClick={() => document.getElementById('supervisor-avatar-upload')?.click()}
                                     className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
                                 >
                                     Cambiar fotografía
                                 </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setGalleryTarget('supervisor');
+                                        setIsGalleryOpen(true);
+                                    }}
+                                    className="text-[9px] font-bold text-[#A3FF57] hover:underline transition-colors tracking-widest flex items-center gap-1"
+                                >
+                                    <Images className="w-3 h-3" /> Elegir de Galería
+                                </button>
                                 {settings.mainChurch?.supervisorAvatar && (
                                     <button
+                                        type="button"
                                         onClick={() => {
                                             setImageToEdit({
                                                 source: settings.mainChurch.supervisorAvatar,
@@ -1033,8 +1058,21 @@ export const AjustesTab = ({
             <MediaGalleryModal
                 isOpen={isGalleryOpen}
                 onClose={() => setIsGalleryOpen(false)}
-                title="Galería de Medios del Sistema"
-                mode="manage"
+                title={galleryTarget === 'minister' ? 'Elegir Foto del Ministro' : galleryTarget === 'supervisor' ? 'Elegir Foto del Supervisor' : 'Galería de Medios del Sistema'}
+                mode={galleryTarget === 'manage' ? 'manage' : 'select'}
+                onSelectImage={async (url) => {
+                    if (!url) return;
+                    if (galleryTarget === 'minister') {
+                        await saveSettingsToCloud({ ministerAvatar: url });
+                        setSettings({ ...settings, ministerAvatar: url });
+                        showNotification('Fotografía del ministro actualizada desde la galería', 'success');
+                    } else if (galleryTarget === 'supervisor') {
+                        const updatedMainChurch = { ...settings.mainChurch, supervisorAvatar: url };
+                        await saveSettingsToCloud({ mainChurch: updatedMainChurch });
+                        setSettings({ ...settings, mainChurch: updatedMainChurch });
+                        showNotification('Fotografía del supervisor actualizada desde la galería', 'success');
+                    }
+                }}
             />
         </motion.div>
     )
