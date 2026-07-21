@@ -198,33 +198,44 @@ export const GlassmorphismWeekly = () => {
 
                                             {/* Avatars Section */}
                                             <div className="flex items-center justify-center -space-x-3 mb-2 flex-shrink-0">
-                                                {/* Leader 1 Avatar */}
-                                                <div className={cn(
-                                                    "rounded-full bg-black/40 border-2 border-white/20 overflow-hidden relative shadow-lg transition-transform group-hover/slot:scale-110",
-                                                    l2.name ? "w-16 h-16 z-20" : "w-20 h-20",
-                                                    isActive && "border-emerald-400"
-                                                )}>
-                                                    {l1.avatar ? (
-                                                        <img src={l1.avatar} className="w-full h-full object-cover" alt="" />
-                                                    ) : (
-                                                        <User className="w-full h-full p-2 text-white/20" />
-                                                    )}
-                                                    <div className={cn("absolute inset-0 opacity-20", isActive ? 'bg-emerald-500' : (slotKey === '5am' ? 'bg-blue-500' : slotKey === '9am' ? 'bg-orange-500' : 'bg-purple-500'))} />
-                                                </div>
-
-                                                {/* Leader 2 Avatar */}
-                                                {l2.name && (
+                                                {slot?.hideProfiles ? (
                                                     <div className={cn(
-                                                        "w-16 h-16 rounded-full bg-black/40 border-2 border-white/20 overflow-hidden relative shadow-lg z-10 transition-transform group-hover/slot:scale-110",
+                                                        "rounded-full bg-black/40 border-2 border-white/20 overflow-hidden relative shadow-lg transition-transform group-hover/slot:scale-110 w-20 h-20 p-1.5 flex items-center justify-center",
                                                         isActive && "border-emerald-400"
-                                                    )}>
-                                                        {l2.avatar ? (
-                                                            <img src={l2.avatar} className="w-full h-full object-cover" alt="" />
-                                                        ) : (
-                                                            <User className="w-full h-full p-2 text-white/20" />
-                                                        )}
-                                                        <div className={cn("absolute inset-0 opacity-20", isActive ? 'bg-emerald-500' : (slotKey === '9am' ? 'bg-orange-500' : 'bg-purple-500'))} />
+                                                    )} style={slot.accentColor ? { borderColor: slot.accentColor } : {}}>
+                                                        <img src={slot.customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'} className="w-full h-full object-contain" alt="" />
                                                     </div>
+                                                ) : (
+                                                    <>
+                                                        {/* Leader 1 Avatar */}
+                                                        <div className={cn(
+                                                            "rounded-full bg-black/40 border-2 border-white/20 overflow-hidden relative shadow-lg transition-transform group-hover/slot:scale-110",
+                                                            l2.name ? "w-16 h-16 z-20" : "w-20 h-20",
+                                                            isActive && "border-emerald-400"
+                                                        )}>
+                                                            {l1.avatar ? (
+                                                                <img src={l1.avatar} className="w-full h-full object-cover" alt="" />
+                                                            ) : (
+                                                                <User className="w-full h-full p-2 text-white/20" />
+                                                            )}
+                                                            <div className={cn("absolute inset-0 opacity-20", isActive ? 'bg-emerald-500' : (slotKey === '5am' ? 'bg-blue-500' : slotKey === '9am' ? 'bg-orange-500' : 'bg-purple-500'))} />
+                                                        </div>
+
+                                                        {/* Leader 2 Avatar */}
+                                                        {l2.name && (
+                                                            <div className={cn(
+                                                                "w-16 h-16 rounded-full bg-black/40 border-2 border-white/20 overflow-hidden relative shadow-lg z-10 transition-transform group-hover/slot:scale-110",
+                                                                isActive && "border-emerald-400"
+                                                            )}>
+                                                                {l2.avatar ? (
+                                                                    <img src={l2.avatar} className="w-full h-full object-cover" alt="" />
+                                                                ) : (
+                                                                    <User className="w-full h-full p-2 text-white/20" />
+                                                                )}
+                                                                <div className={cn("absolute inset-0 opacity-20", isActive ? 'bg-emerald-500' : (slotKey === '9am' ? 'bg-orange-500' : 'bg-purple-500'))} />
+                                                            </div>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
 
@@ -232,7 +243,7 @@ export const GlassmorphismWeekly = () => {
                                                 <span className={cn(
                                                     "text-[10px] font-black uppercase tracking-[0.1em] leading-none mb-1 opacity-80",
                                                     isActive ? 'text-emerald-400' : (slotKey === '5am' ? 'text-blue-400' : slotKey === '9am' ? 'text-orange-400' : 'text-purple-400')
-                                                )}>
+                                                )} style={slot.accentColor ? { color: slot.accentColor } : {}}>
                                                     {slotKey === '5am' ? 'CONSAGRACIÓN' :
                                                         slotKey === '9am' ? (isSunday ? (() => {
                                                             const type = slot.sundayType;
@@ -254,14 +265,20 @@ export const GlassmorphismWeekly = () => {
                                                             })()}
                                                 </span>
                                                 <div className="flex flex-col w-full items-center">
-                                                    {shortNames.map((name, i) => (
-                                                        <span key={i} className={cn(
-                                                            "font-black uppercase truncate w-full text-center leading-tight",
-                                                            i === 0 ? "text-white text-[14px]" : "text-white/60 text-[10.5px] mt-0.5"
-                                                        )}>
-                                                            {name}
+                                                    {slot?.hideProfiles ? (
+                                                        <span className="font-black uppercase truncate w-full text-center leading-tight text-white text-[14px]">
+                                                            {slot.customLabel || (slot.type === 'special' ? 'servicio especial' : 'servicio')}
                                                         </span>
-                                                    ))}
+                                                    ) : (
+                                                        shortNames.map((name, i) => (
+                                                            <span key={i} className={cn(
+                                                                "font-black uppercase truncate w-full text-center leading-tight",
+                                                                i === 0 ? "text-white text-[14px]" : "text-white/60 text-[10.5px] mt-0.5"
+                                                            )}>
+                                                                {name}
+                                                            </span>
+                                                        ))
+                                                    )}
                                                 </div>
                                             </div>
                                         </motion.div>

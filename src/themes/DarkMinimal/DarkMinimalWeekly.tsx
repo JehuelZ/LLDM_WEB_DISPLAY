@@ -33,6 +33,7 @@ const SlotAvatar = ({ detail, size = 'md' }: { detail: { name: string; avatar: s
 export function DarkMinimalWeekly() {
     const monthlySchedule = useAppStore((state: any) => state.monthlySchedule);
     const members = useAppStore((state: any) => state.members);
+    const settings = useAppStore((state: any) => state.settings);
 
     const [mounted, setMounted] = useState(false);
     const [today] = useState(() => new Date());
@@ -326,7 +327,21 @@ export function DarkMinimalWeekly() {
                                             </div>
                                         )}
                                     </div>
-                                    {leaderEv1.name ? (
+                                    {slotEv?.hideProfiles ? (
+                                         <div className="flex flex-col items-center text-center gap-3 py-2">
+                                             <div className="relative">
+                                                 <div className="absolute inset-x-[-10px] inset-y-[-10px] rounded-2xl blur-xl -z-10" style={{ backgroundColor: `${slotEv?.accentColor || '#3B82F6'}15` }} />
+                                                 <div className="w-12 h-12 rounded-xl border flex items-center justify-center bg-[#0F1117] p-1.5" style={{ borderColor: slotEv?.accentColor || '#3B82F6' }}>
+                                                     <img src={slotEv?.customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'} className="w-full h-full object-contain" alt="" />
+                                                 </div>
+                                             </div>
+                                             <BigName
+                                                 name={slotEv?.customLabel || 'Servicio Especial'}
+                                                 color="text-white"
+                                                 role="SERVICIO ESPECIAL"
+                                             />
+                                         </div>
+                                     ) : leaderEv1.name ? (
                                         <div className="flex flex-col gap-4">
                                             {!leaderEv2.name ? (
                                                 <div className="flex flex-col items-center text-center gap-3 py-2">

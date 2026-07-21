@@ -84,32 +84,46 @@ const LunaPremiumWeekly: React.FC = () => {
                                     { id: '5am', lead: lead5am, color: 'text-primary' },
                                     { id: '9am', lead: lead9am, color: 'text-secondary' },
                                     { id: 'evening', lead: leadEv, color: 'text-tertiary' }
-                                ].map((slot, idx) => (
-                                    <div key={idx} className="flex flex-col gap-1.5 p-3 rounded-2xl bg-white/5 border border-white/5 group/slot hover:bg-white/10 transition-colors">
-                                        <div className="flex items-center justify-between">
-                                            <span className={`text-[8px] font-[300] tracking-widest lowercase ${slot.color} opacity-60`}>
-                                                {slot.id}
-                                            </span>
-                                            {slot.lead && <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" />}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded-sm overflow-hidden bg-white/5 flex-shrink-0 border border-white/10 grayscale group-hover/slot:grayscale-0 transition-all">
-                                                {slot.lead?.avatar ? (
-                                                    <img src={slot.lead.avatar} className="w-full h-full object-cover" alt="" />
-                                                ) : (
-                                                   <User size={12} className="m-auto opacity-20" />
-                                                )}
-                                            </div>
-                                            <span className="text-[10px] font-[400] text-on-surface truncate leading-tight capitalize">
-                                                {(sched?.slots as any)?.[slot.id]?.consecrationLeaderId || (sched?.slots as any)?.[slot.id]?.doctrineLeaderId ? (
-                                                    [getMember((sched?.slots as any)?.[slot.id]?.consecrationLeaderId)?.name, getMember((sched?.slots as any)?.[slot.id]?.doctrineLeaderId)?.name].filter(Boolean).join(' | ')
-                                                ) : (
-                                                    (slot.id === 'evening' && (sched?.slots?.['evening']?.leaderIds || []).map((id: any) => getMember(id)?.name).filter(Boolean).join(' | ')) || slot.lead?.name || '---'
-                                                )}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))}
+                                 ].map((slot, idx) => (() => {
+                                         const dbSlot = (sched?.slots as any)?.[slot.id];
+                                         const isSpecial = dbSlot?.type === 'special';
+                                         const isHidden = dbSlot?.hideProfiles;
+                                         const accent = dbSlot?.accentColor || '';
+                                         
+                                         return (
+                                             <div key={idx} className="flex flex-col gap-1.5 p-3 rounded-2xl bg-white/5 border border-white/5 group/slot hover:bg-white/10 transition-colors">
+                                                 <div className="flex items-center justify-between">
+                                                     <span 
+                                                         className={`text-[8px] font-[300] tracking-widest lowercase opacity-60`}
+                                                         style={accent ? { color: accent } : {}}
+                                                     >
+                                                         {dbSlot?.customLabel || slot.id}
+                                                     </span>
+                                                     {(slot.lead || isHidden) && <div className="w-1.5 h-1.5 rounded-none bg-primary animate-pulse" style={accent ? { backgroundColor: accent } : {}} />}
+                                                 </div>
+                                                 <div className="flex items-center gap-2">
+                                                     <div className="w-6 h-6 rounded-sm overflow-hidden bg-white/5 flex-shrink-0 border border-white/10 grayscale group-hover/slot:grayscale-0 transition-all p-0.5">
+                                                         {isHidden ? (
+                                                             <img src={dbSlot?.customIconUrl || settings.churchLogoUrl || '/flama-oficial.svg'} className="w-full h-full object-contain" alt="" />
+                                                         ) : slot.lead?.avatar ? (
+                                                             <img src={slot.lead.avatar} className="w-full h-full object-cover" alt="" />
+                                                         ) : (
+                                                             <User size={12} className="m-auto opacity-20" />
+                                                         )}
+                                                     </div>
+                                                     <span className="text-[10px] font-[400] text-on-surface truncate leading-tight capitalize">
+                                                         {isHidden ? (
+                                                             (dbSlot?.customLabel || (isSpecial ? 'servicio especial' : 'servicio'))?.toLowerCase()
+                                                         ) : dbSlot?.consecrationLeaderId || dbSlot?.doctrineLeaderId ? (
+                                                             [getMember(dbSlot?.consecrationLeaderId)?.name, getMember(dbSlot?.doctrineLeaderId)?.name].filter(Boolean).join(' | ')
+                                                         ) : (
+                                                             (slot.id === 'evening' && (dbSlot?.leaderIds || []).map((id: any) => getMember(id)?.name).filter(Boolean).join(' | ')) || slot.lead?.name || '---'
+                                                         )}
+                                                     </span>
+                                                 </div>
+                                             </div>
+                                         );
+                                     })())}
                             </div>
 
                             {isToday && (

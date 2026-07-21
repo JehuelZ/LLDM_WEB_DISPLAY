@@ -619,30 +619,31 @@ export function IglesiaWeekly() {
                                         );
                                     })()}
 
-                                    {evLeaders.length > 0 && (() => {
+                                    {sched?.slots?.['evening'] && (() => {
                                         const isActive = isSlotActive(key, 'evening');
+                                        const evAccent = sched?.slots?.['evening']?.accentColor || T.accent;
                                         return (
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                                                 {/* Evening Header */}
                                                 <div style={{
                                                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                                    borderTop: `1px solid ${isActive ? T.accent + '80' : (isToday ? T.accent + '40' : T.textMuted + '20')}`,
+                                                    borderTop: `1px solid ${isActive ? evAccent + '80' : (isToday ? evAccent + '40' : T.textMuted + '20')}`,
                                                     paddingTop: 8, marginTop: 4, marginBottom: 6, position: 'relative'
                                                 }}>
                                                     <TimeBadge time={sched?.slots?.['evening']?.time || "07:00 PM"} T={T} isDark={isDark} />
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                                                         {sched?.slots?.evening?.language === 'en' && (
-                                                            <div style={{ background: T.accent, padding: '2px 4px', borderRadius: 4, fontSize: 7, fontWeight: 900, color: '#FFF' }}>
+                                                            <div style={{ background: evAccent, padding: '2px 4px', borderRadius: 4, fontSize: 7, fontWeight: 900, color: '#FFF' }}>
                                                                 EN
                                                             </div>
                                                         )}
                                                         {isActive && (
-                                                            <motion.div animate={{ opacity: [1, 0.4, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} style={{ background: T.accent, padding: '2px 6px', borderRadius: 4, fontSize: 7, fontWeight: 900, color: '#FFF' }}>
+                                                            <motion.div animate={{ opacity: [1, 0.4, 1] }} transition={{ repeat: Infinity, duration: 1.5 }} style={{ background: evAccent, padding: '2px 6px', borderRadius: 4, fontSize: 7, fontWeight: 900, color: '#FFF' }}>
                                                                 EN CURSO
                                                             </motion.div>
                                                         )}
                                                     </div>
-                                                    <p style={{ fontSize: 7.5, fontWeight: 900, color: isActive ? T.accent : T.accent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontInter, textAlign: 'right' }}>
+                                                    <p style={{ fontSize: 7.5, fontWeight: 900, color: isActive ? evAccent : evAccent, textTransform: 'uppercase', letterSpacing: '0.15em', fontFamily: T.fontInter, textAlign: 'right' }}>
                                                         {sched?.slots?.['evening']?.customLabel || 
                                                             (sched?.slots?.['evening']?.type === 'special' 
                                                                 ? getServiceTypeLabel('special', settings?.language)
@@ -658,15 +659,24 @@ export function IglesiaWeekly() {
                                                         display: 'flex', flexDirection: 'column', gap: 6,
                                                         background: T.surface,
                                                         borderRadius: 18, padding: '8px 10px',
-                                                        boxShadow: isActive ? `0 0 20px ${T.accent}30, ${neuShadow(T, true, 'sm', isDark)}` : neuShadow(T, true, 'sm', isDark),
-                                                        border: isActive ? `1.5px solid ${T.accent}` : 'none'
+                                                        boxShadow: isActive ? `0 0 20px ${evAccent}30, ${neuShadow(T, true, 'sm', isDark)}` : neuShadow(T, true, 'sm', isDark),
+                                                        border: isActive ? `1.5px solid ${evAccent}` : 'none'
                                                     }}
                                                 >
-                                                    {evLeaders.length === 1 ? (
-                                                        <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 12, padding: '2px 0' }}>
-                                                            <Avatar src={evLeaders[0]?.avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${T.accent}` : `1.5px solid ${T.surface}`} />
+                                                    {sched?.slots?.['evening']?.hideProfiles ? (
+                                                        <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 12, padding: '2px 0', justifyContent: 'center' }}>
+                                                            <Avatar src={sched?.slots?.['evening']?.customIconUrl || settings?.churchLogoUrl || '/flama-oficial.svg'} size={60} T={T} isDark={isDark} relief={true} border={`1.5px solid ${evAccent}`} />
                                                             <div style={{ flex: 1, minWidth: 0, textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                                                                <p style={{ fontSize: 13, fontWeight: 800, color: isActive ? T.accent : (isDark ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat, lineHeight: 1.1, marginBottom: 4 }}>
+                                                                <p style={{ fontSize: 13, fontWeight: 900, color: evAccent, fontFamily: T.fontMontserrat, lineHeight: 1.1 }}>
+                                                                    {sched?.slots?.['evening']?.customLabel || 'SERVICIO ESPECIAL'}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    ) : evLeaders.length === 1 ? (
+                                                        <div style={{ display: 'flex', flexDirection: 'row-reverse', alignItems: 'center', gap: 12, padding: '2px 0' }}>
+                                                            <Avatar src={evLeaders[0]?.avatar} size={60} T={T} isDark={isDark} relief={true} border={isActive ? `1.5px solid ${evAccent}` : `1.5px solid ${T.surface}`} />
+                                                            <div style={{ flex: 1, minWidth: 0, textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                                                <p style={{ fontSize: 13, fontWeight: 800, color: isActive ? evAccent : (isDark ? '#FFFFFF' : T.textPrimary), fontFamily: T.fontMontserrat, lineHeight: 1.1, marginBottom: 4 }}>
                                                                     {evLeaders[0]?.name}
                                                                 </p>
                                                                 <RoleBadge
