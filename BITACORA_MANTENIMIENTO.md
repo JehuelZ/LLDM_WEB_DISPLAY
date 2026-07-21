@@ -242,6 +242,15 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/app/admin/tabs/AjustesTab.tsx`
     - `src/components/admin/CongregationEditModal.tsx`
 
+#### 21. Corrección de Activación del Botón "Guardar Configuración" en Jerarquía de Obras
+- **Problema:** En el modal de gestión de iglesia / obra (`CongregationEditModal.tsx`), el botón **"Guardar Configuración"** permanecía desactivado (gris) cuando el objeto inicial no traía un nombre predeterminado asignado.
+- **Solución:**
+    - Se agregó un valor de respaldo por defecto (`formData.name || 'Principal (Rodeo CA)'`) en la inicialización del estado del formulario.
+    - Se flexibilizó la condición de desactivación a `disabled={isSaving || !(formData.name || '').trim()}`, permitiendo que el botón se active inmediatamente al cargar o al escribir cualquier nombre.
+- **Archivos Afectados:**
+    - `src/components/admin/CongregationEditModal.tsx`
+
+
 
 
 
