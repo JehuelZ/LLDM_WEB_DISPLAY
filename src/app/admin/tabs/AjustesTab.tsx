@@ -6,7 +6,7 @@ import {
     Sun, Type, Monitor, Upload, Save, User, Mail, Phone, Camera, 
     Church, Sparkles, Moon, BookOpen, Sunrise, Flame, Radio, 
     ChevronUp, ChevronDown, ChevronLeft, ChevronRight, XCircle, Plus, Trash,
-    SunMoon, Layers, Tv, AtSign, UserCircle2, CheckCircle2, Shield, Palette, Check, Images
+    SunMoon, Layers, Tv, AtSign, UserCircle2, CheckCircle2, Shield, Palette, Check, Images, Crop
 } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -471,13 +471,14 @@ export const AjustesTab = ({
                                 <Shield className="w-3 h-3 text-primary" />
                                 <span className="text-[9px] font-black tracking-widest uppercase text-primary">Pastor Principal</span>
                             </div>
-                            <div className="flex gap-3">
+                            <div className="flex flex-wrap items-center justify-center gap-2 mt-1">
                                 <button
                                     type="button"
                                     onClick={() => document.getElementById('minister-avatar-upload')?.click()}
-                                    className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                    className="px-3 py-1.5 rounded-lg bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] text-white/90 hover:text-white hover:border-primary/50 hover:bg-primary/10 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                                 >
-                                    Cambiar fotografía
+                                    <Upload className="w-3 h-3 text-primary" />
+                                    Subir Foto
                                 </button>
                                 <button
                                     type="button"
@@ -485,9 +486,10 @@ export const AjustesTab = ({
                                         setGalleryTarget('minister');
                                         setIsGalleryOpen(true);
                                     }}
-                                    className="text-[9px] font-bold text-[#A3FF57] hover:underline transition-colors tracking-widest flex items-center gap-1"
+                                    className="px-3 py-1.5 rounded-lg bg-[#A3FF57]/10 border border-[#A3FF57]/30 text-[#A3FF57] hover:bg-[#A3FF57]/20 hover:border-[#A3FF57]/50 text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                                 >
-                                    <Images className="w-3 h-3" /> Elegir de Galería
+                                    <Images className="w-3 h-3" />
+                                    Elegir de Galería
                                 </button>
                                 {settings.ministerAvatar && (
                                     <button
@@ -498,9 +500,10 @@ export const AjustesTab = ({
                                                 target: 'minister'
                                             });
                                         }}
-                                        className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                                     >
-                                        Re-encuadrar actual
+                                        <Crop className="w-3 h-3 text-white/50" />
+                                        Re-encuadrar
                                     </button>
                                 )}
                             </div>
@@ -604,13 +607,14 @@ export const AjustesTab = ({
                                 <Shield className="w-3 h-3 text-primary" />
                                 <span className="text-[9px] font-black tracking-widest uppercase text-primary">Supervisor de Distrito</span>
                             </div>
-                            <div className="flex gap-3">
+                            <div className="flex flex-wrap items-center justify-center gap-2 mt-1">
                                 <button
                                     type="button"
                                     onClick={() => document.getElementById('supervisor-avatar-upload')?.click()}
-                                    className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                    className="px-3 py-1.5 rounded-lg bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] text-white/90 hover:text-white hover:border-primary/50 hover:bg-primary/10 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                                 >
-                                    Cambiar fotografía
+                                    <Upload className="w-3 h-3 text-primary" />
+                                    Subir Foto
                                 </button>
                                 <button
                                     type="button"
@@ -618,9 +622,10 @@ export const AjustesTab = ({
                                         setGalleryTarget('supervisor');
                                         setIsGalleryOpen(true);
                                     }}
-                                    className="text-[9px] font-bold text-[#A3FF57] hover:underline transition-colors tracking-widest flex items-center gap-1"
+                                    className="px-3 py-1.5 rounded-lg bg-[#A3FF57]/10 border border-[#A3FF57]/30 text-[#A3FF57] hover:bg-[#A3FF57]/20 hover:border-[#A3FF57]/50 text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                                 >
-                                    <Images className="w-3 h-3" /> Elegir de Galería
+                                    <Images className="w-3 h-3" />
+                                    Elegir de Galería
                                 </button>
                                 {settings.mainChurch?.supervisorAvatar && (
                                     <button
@@ -631,9 +636,10 @@ export const AjustesTab = ({
                                                 target: 'supervisor'
                                             });
                                         }}
-                                        className="text-[9px] font-bold text-muted-foreground hover:text-primary transition-colors tracking-widest"
+                                        className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm active:scale-95"
                                     >
-                                        Re-encuadrar actual
+                                        <Crop className="w-3 h-3 text-white/50" />
+                                        Re-encuadrar
                                     </button>
                                 )}
                             </div>
