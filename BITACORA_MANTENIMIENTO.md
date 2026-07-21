@@ -268,6 +268,16 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
     - `src/app/admin/tabs/AjustesTab.tsx`
     - `src/components/admin/CongregationEditModal.tsx`
 
+#### 24. Limpieza de URLs Antiguas en BD Supabase y Sincronización de Foto de Iglesia Sede
+- **Problema:** La base de datos mantenía un enlace antiguo `church_logo_url` borrado en Supabase Storage, provocando que la tarjeta de Iglesia Principal en `AjustesTab` continuara cayendo en fallo de imagen rota e icono de reemplazo.
+- **Solución:**
+    - Se ejecutó limpieza en Supabase para anular `church_logo_url` roto y refrescar `main_church_obj`.
+    - Se modificó la invocación a `CongregationEditModal` en `AjustesTab.tsx` para pasar de forma explícita el campo `imageUrl`, actualizando simultáneamente `mainChurch` y `churchLogoUrl` al seleccionar cualquier foto desde la Galería de Medios.
+- **Archivos Afectados:**
+    - Base de datos Supabase `app_settings` (registro #1)
+    - `src/app/admin/tabs/AjustesTab.tsx`
+
+
 
 
 
