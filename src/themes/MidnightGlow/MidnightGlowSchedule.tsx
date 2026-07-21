@@ -862,12 +862,24 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                         ) })()}
                     </div>
 
-                    {/* Badge */}
-                    <div className="flex justify-center">
-                        <span className="text-[14px] font-black tracking-[0.4em] uppercase border-2 border-[#A3FF57]/50 text-[#A3FF57] px-8 py-2 rounded-full bg-[#0D1B3E]/90">
-                            {slotEvening?.customLabel || (slotEvening?.time?.includes('07:00') || slotEvening?.time?.includes('19:00') ? 'Oración de la Tarde' : (slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th)))}
-                        </span>
-                    </div>
+                    {/* Badge — hidden when hideProfiles is on, title is shown large in its place */}
+                    {!slotEvening?.hideProfiles && (
+                        <div className="flex justify-center">
+                            <span className="text-[14px] font-black tracking-[0.4em] uppercase border-2 border-[#A3FF57]/50 text-[#A3FF57] px-8 py-2 rounded-full bg-[#0D1B3E]/90">
+                                {slotEvening?.customLabel || (slotEvening?.time?.includes('07:00') || slotEvening?.time?.includes('19:00') ? 'Oración de la Tarde' : (slotEvening?.topic || getServiceTypeLabel(slotEvening?.type || 'regular', settings.language, is14th)))}
+                            </span>
+                        </div>
+                    )}
+                    {slotEvening?.hideProfiles && slotEvening?.customLabel && (
+                        <div className="flex flex-col items-center gap-3 px-4">
+                            <span className="text-[28px] font-black text-white uppercase tracking-[0.08em] text-center leading-tight drop-shadow-[0_0_20px_rgba(163,255,87,0.4)]">
+                                {slotEvening.customLabel}
+                            </span>
+                            <span className="text-[13px] font-black tracking-[0.4em] uppercase text-[#A3FF57]/70">
+                                Servicio Especial
+                            </span>
+                        </div>
+                    )}
 
                     {/* Time — neon green numbers */}
                     <div className="flex items-end justify-center gap-2 mt-8 px-6">
@@ -880,7 +892,10 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
                     </div>
 
                     <p className="text-center text-[14px] tracking-[0.4em] text-white/50 uppercase font-black mb-8 px-4">
-                        {isServiceDay ? 'Servicio Vespertino' : 'Oración Vespertina'}
+                        {slotEvening?.hideProfiles
+                            ? slotEvening?.time ? `${slotEvening.time.split(' ')[0]} ${slotEvening.time.split(' ')[1] || 'PM'}` : ''
+                            : (isServiceDay ? 'Servicio Vespertino' : 'Oración Vespertina')
+                        }
                     </p>
 
                     {/* Divider with dot */}

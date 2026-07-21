@@ -514,12 +514,14 @@ export function MidnightGlowWeekly() {
 
                                                 <div className="mx-6 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-2 opacity-50" />
 
-                                                {/* Member Name */}
-                                                <div className="flex-1 flex flex-col justify-center px-4 mb-2">
-                                                    <span className={`text-[12px] font-black uppercase text-center leading-tight tracking-wide ${isActive ? 'text-white' : 'text-white/80'}`}>
-                                                        {leaders.map(l => l.name).join(' | ') || 'SIN ASIGNAR'}
-                                                    </span>
-                                                </div>
+                                                {/* Member Name — hidden when hideProfiles is on */}
+                                                {!slot.hideProfiles && (
+                                                    <div className="flex-1 flex flex-col justify-center px-4 mb-2">
+                                                        <span className={`text-[12px] font-black uppercase text-center leading-tight tracking-wide ${isActive ? 'text-white' : 'text-white/80'}`}>
+                                                            {leaders.map(l => l.name).join(' | ') || 'SIN ASIGNAR'}
+                                                        </span>
+                                                    </div>
+                                                )}
 
                                                 {/* Bottom subtitle if not orange */}
                                                 {slot.accent !== 'orange' ? (
