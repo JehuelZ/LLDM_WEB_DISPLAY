@@ -137,9 +137,18 @@ export function MediaGalleryModal({
             }
         });
 
-        // 2. Check Settings (Logos, Icons, Backgrounds)
+        // 2. Check Settings (Logos, Icons, Minister & Supervisor Avatars, Backgrounds)
         if (settings?.customIconUrl === url || (settings?.customIconUrl && settings.customIconUrl.includes(name))) {
             usages.push('Ajustes: Ícono de la Iglesia');
+        }
+        if (settings?.ministerAvatar === url || (settings?.ministerAvatar && settings.ministerAvatar.includes(name))) {
+            usages.push(`Ajustes: Foto de Ministro (${settings?.ministerName || 'Ministro'})`);
+        }
+        if (settings?.mainChurch?.supervisorAvatar === url || (settings?.mainChurch?.supervisorAvatar && settings.mainChurch.supervisorAvatar.includes(name))) {
+            usages.push(`Ajustes: Foto de Supervisor (${settings?.mainChurch?.supervisorName || 'Supervisor'})`);
+        }
+        if (settings?.mainChurch?.ministerAvatar === url || (settings?.mainChurch?.ministerAvatar && settings.mainChurch.ministerAvatar.includes(name))) {
+            usages.push('Ajustes: Foto del Ministro Principal');
         }
         if (settings?.customLogoUrl === url || settings?.customLogo1 === url || (settings?.customLogo1 && settings.customLogo1.includes(name))) {
             usages.push('Ajustes: Logo Personalizado #1');

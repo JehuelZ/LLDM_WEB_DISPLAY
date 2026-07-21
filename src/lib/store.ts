@@ -27,6 +27,11 @@ export interface CongregationInfo {
     phone?: string;
     responsibleId?: string;
     responsibleName?: string;
+    supervisorAvatar?: string;
+    supervisorName?: string;
+    supervisorPhone?: string;
+    supervisorEmail?: string;
+    ministerAvatar?: string;
 }
 
 export interface AppSettings {
@@ -1191,7 +1196,7 @@ export const useAppStore = create<AppState>()(
                     console.warn("Error cross-referencing profile avatars:", e);
                 }
 
-                // 3. Cross-reference AppSettings custom logos and icons
+                // 3. Cross-reference AppSettings custom logos, icons, minister and supervisor avatars
                 try {
                     const settingsObj = get().settings || {};
                     const settingsUrls = [
@@ -1203,7 +1208,10 @@ export const useAppStore = create<AppState>()(
                         settingsObj.customLogo1,
                         settingsObj.customLogo2,
                         settingsObj.customLogo3,
-                        settingsObj.customLogo4
+                        settingsObj.customLogo4,
+                        settingsObj.ministerAvatar,
+                        settingsObj.mainChurch?.supervisorAvatar,
+                        settingsObj.mainChurch?.ministerAvatar
                     ];
 
                     settingsUrls.forEach((sUrl, sIdx) => {
