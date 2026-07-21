@@ -286,6 +286,17 @@ Este documento registra las reparaciones técnicas, mejoras de UX y correcciones
 - **Archivos Afectados:**
     - `src/app/admin/tabs/AjustesTab.tsx`
 
+#### 26. Filtrado de Rutas Relativas e Indicador 404 en Galería de Medios
+- **Problema:** La Galería generaba elementos sintéticos (`icon_setting_...`) para rutas relativas locales (como `/flama-oficial.svg`) o enlaces borrados, mostrando un cuadro con icono roto de Chrome.
+- **Solución:**
+    - Se filtraron en `store.ts` los elementos sintéticos de ajustes para incluir únicamente URLs HTTP remotas válidas (`sUrl.startsWith('http')`).
+    - En `MediaGalleryModal.tsx`, se añadió una tarjeta estilizada `⚠️ No disponible (404)` en lugar del recuadro roto del navegador.
+    - Al eliminar cualquier imagen eliminada o rota desde la Galería, la función `deleteMediaGalleryFile` desvincula automáticamente su URL de `app_settings` en la base de datos de Supabase.
+- **Archivos Afectados:**
+    - `src/lib/store.ts`
+    - `src/components/admin/MediaGalleryModal.tsx`
+
+
 
 
 
