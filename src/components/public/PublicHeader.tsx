@@ -10,6 +10,13 @@ export function PublicHeader() {
 
   const churchName = settings.mainChurchName || settings.churchCity || 'Rodeo';
   const logoAlign = settings.churchOfficialLogoAlign || 'center';
+  const logoSize = settings.churchOfficialLogoSize || 'large';
+
+  const logoSizeClass = logoSize === 'medium'
+    ? 'h-12 sm:h-14'
+    : logoSize === 'xlarge'
+    ? 'h-20 sm:h-24'
+    : 'h-16 sm:h-20'; // large
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/10 transition-all">
@@ -21,14 +28,12 @@ export function PublicHeader() {
           : 'flex flex-row items-center justify-between gap-6 h-20'
       }`}>
         {/* Brand / Logo */}
-        <a href="/" className="flex items-center gap-3 group shrink-0">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/30 flex items-center justify-center p-2 group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(249,115,22,0.15)]">
-            <img
-              src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
-              alt="La Luz del Mundo"
-              className="w-full h-full object-contain"
-            />
-          </div>
+        <a href="/" className="flex items-center gap-4 group shrink-0">
+          <img
+            src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
+            alt="La Luz del Mundo"
+            className={`${logoSizeClass} w-auto object-contain group-hover:scale-105 transition-transform duration-500 filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]`}
+          />
           <div>
             <span className="text-lg font-black tracking-tight text-white block leading-none">
               LLDM <span className="text-orange-400">{churchName}</span>
