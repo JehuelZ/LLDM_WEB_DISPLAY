@@ -21,6 +21,7 @@ import { PerfilTab } from './tabs/PerfilTab'
 import { MensajesTab } from './tabs/MensajesTab'
 import { EstilosTab } from './tabs/EstilosTab'
 import PublicWebTab from './tabs/PublicWebTab'
+import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal'
 
 import { ImageEditor } from '@/components/admin/ImageEditor'
 
@@ -270,6 +271,15 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
             case 'public_web':
             case 'publico':
                 return <PublicWebTab />;
+            case 'galeria':
+            case 'media':
+                return (
+                    <MediaGalleryModal 
+                        isOpen={true} 
+                        mode="manage" 
+                        onClose={() => setActiveTab('dashboard')} 
+                    />
+                );
             default:
                 return <DashboardTab 
                     setActiveTab={setActiveTab}

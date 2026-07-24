@@ -914,12 +914,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
             'ajustes': 'configuracion',
             'configuracion': 'configuracion',
             'publico': 'public_web',
-            'public_web': 'public_web'
+            'public_web': 'public_web',
+            'galeria': 'galeria',
+            'media': 'galeria'
         };
 
         const mappedTab = aliasMap[queryTab] || queryTab;
 
-        const validTabs = ['dashboard', 'horarios', 'asistencia', 'mensajes', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil', 'public_web'];
+        const validTabs = ['dashboard', 'horarios', 'asistencia', 'mensajes', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil', 'public_web', 'galeria'];
 
         if (mappedTab && validTabs.includes(mappedTab)) {
             setActiveTab(mappedTab);
@@ -2668,6 +2670,20 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
             {
                 activeTab === 'public_web' && (
                     <PublicWebTab />
+                )
+            }
+
+            {
+                activeTab === 'galeria' && (
+                    <MediaGalleryModal
+                        isOpen={true}
+                        mode="manage"
+                        onClose={() => {
+                            const params = new URLSearchParams(searchParams.toString());
+                            params.set('tab', 'dashboard');
+                            router.push(`${pathname}?${params.toString()}`);
+                        }}
+                    />
                 )
             }
 
