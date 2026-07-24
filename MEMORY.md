@@ -40,9 +40,9 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 - **Interactividad:** Favicon dinámico que cambia de color según el tema activo.
 - **Reportes:** Capacidad de exportar "Fichas Personales" de miembros a PDF usando `html2pdf.js`.
 - **Gestión de Horarios:** Soporte para hasta 3 responsables en servicios especiales (Niños/Jóvenes).
-- **Visión Futura: Sitio Web Público (`lldmrodeo.org/`) Estilo WordPress (CMS):**
-    - Se proyectó transformar la ruta raíz `/` en el Sitio Web Oficial Público de la Iglesia (Home, Quiénes Somos, Horarios Públicos, Ubicación en Google Maps).
-    - **Totalmente editable sin código**: El Hero (portada, título, lema, foto del templo, color de acento) y el contenido público serán editables desde el panel de control `/admin` estilo CMS / WordPress para cualquier administrador o colaborador sin experiencia técnica.
+- **FLAMA CMS & Sitio Web Público (`lldmrodeo.org/`):**
+    - Se construyó el sitio web público oficial en la raíz `/` (Home, Quiénes Somos, Horarios Públicos, Ubicación en Google Maps).
+    - **FLAMA CMS**: Denominación oficial del gestor de contenido sin código integrado en `/admin?tab=public_web`. Permite editar en tiempo real la portada (Hero), títulos, lemas, mensaje ministerial, dirección, teléfono y foto de fondo con 1 clic desde la Galería de Medios.
 
 ## 🛠️ Especificaciones Técnicas
 - **Frontend:** Next.js (src/app architecture).

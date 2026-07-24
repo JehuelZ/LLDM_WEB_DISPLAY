@@ -50,9 +50,14 @@ export default function PublicWebTab() {
             <Globe className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Gestor del Sitio Web Público</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-black text-white tracking-tight">FLAMA CMS</h2>
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-orange-500/20 text-orange-400 border border-orange-500/30">
+                Sitio Público
+              </span>
+            </div>
             <p className="text-xs text-white/50 mt-0.5">
-              Edita el contenido que ven los visitantes en <span className="text-orange-400 font-mono">lldmrodeo.org</span> sin necesidad de código.
+              Gestor de Contenidos <span className="text-orange-400 font-semibold">FLAMA</span> para <span className="text-white font-mono">lldmrodeo.org</span>. Edición dinámica sin código.
             </p>
           </div>
         </div>
