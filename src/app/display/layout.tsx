@@ -4,6 +4,10 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "LLDM Rodeo - Proyección",
     description: "Modo de pantalla completa para proyección",
+    robots: {
+        index: false,
+        follow: false,
+    },
 };
 
 export default function DisplayLayout({

@@ -4,6 +4,10 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "LLDM Rodeo - TV Mode",
     description: "Modo de alto rendimiento para Smart TVs",
+    robots: {
+        index: false,
+        follow: false,
+    },
 };
 
 export default function TVLayout({
