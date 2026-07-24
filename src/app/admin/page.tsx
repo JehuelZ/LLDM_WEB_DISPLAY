@@ -6,9 +6,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import {
     Calendar, Users, User, FileText, Settings, ExternalLink,
-    Sun, Moon, Monitor, Church, Star, Heart, Flame,
+    Sun, Moon, Monitor, Star, Heart, Flame,
     Upload, X, ChevronDown, ChevronUp, Bell, FilePlus, AlertCircle, Save, Trash2, Plus,
     ChevronLeft, ChevronRight, Shirt, Music2, Baby, Briefcase, Mail, Phone, Camera, Search, Move,
     Languages, CheckCircle, Send, Reply, UserPlus, Edit2, UserCheck, Crown, BadgeCheck,

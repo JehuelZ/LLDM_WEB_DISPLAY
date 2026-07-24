@@ -1,7 +1,8 @@
 'use client';
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, Phone, Mail, Church, AlertCircle, Info, Megaphone, Calendar, Users, Heart, BookOpen, Flame, Music, Star, Shield, Smile } from 'lucide-react';
+import { Bell, Phone, Mail, AlertCircle, Info, Megaphone, Calendar, Users, Heart, BookOpen, Flame, Music, Star, Shield, Smile } from 'lucide-react';
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useAppStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 

@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
-import { Flame, Church, BookOpen, Star, Heart, Sun, Cloud, CloudRain, CloudLightning, Snowflake, CloudFog } from 'lucide-react';
+import { Flame, BookOpen, Star, Heart, Sun, Cloud, CloudRain, CloudLightning, Snowflake, CloudFog } from 'lucide-react';
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useWeather } from '@/hooks/useWeather';
 import { parseISO } from 'date-fns';
 

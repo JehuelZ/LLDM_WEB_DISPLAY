@@ -8,7 +8,8 @@ import { PublicAbout, PublicWelcome, PublicPrinciples } from '@/components/publi
 import { PublicSchedule } from '@/components/public/PublicSchedule';
 import { PublicContact } from '@/components/public/PublicContact';
 import { PublicFooter } from '@/components/public/PublicFooter';
-import { Wrench, ShieldCheck, Monitor, Sparkles, Church, Phone, MapPin, Lock } from 'lucide-react';
+import { Wrench, ShieldCheck, Monitor, Sparkles, Phone, MapPin, Lock } from 'lucide-react';
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { motion } from 'framer-motion';
 
 function MaintenanceView() {

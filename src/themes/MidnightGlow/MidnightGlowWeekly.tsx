@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Church, Sunrise, Sun, User, HeartHandshake, Radio, Users, Crown, Flame, BookOpen, Star, Heart } from 'lucide-react';
+import { Sunrise, Sun, User, HeartHandshake, Radio, Users, Crown, Flame, BookOpen, Star, Heart } from 'lucide-react';
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useAppStore } from '@/lib/store';
 import { format, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
