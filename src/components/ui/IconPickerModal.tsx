@@ -132,7 +132,9 @@ export function IconPickerModal({ isOpen, onClose, onSelectIcon, currentIconId }
     } catch (e) {
       console.error(e);
     }
-    onClose();
+    setTimeout(() => {
+      onClose();
+    }, 10);
   };
 
   return (
