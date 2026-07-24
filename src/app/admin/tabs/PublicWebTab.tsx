@@ -41,6 +41,33 @@ export default function PublicWebTab() {
     publicHomeAboutBgStyle: settings.publicHomeAboutBgStyle || 'glass',
     publicHomePrinciplesImage: settings.publicHomePrinciplesImage || '',
     publicHomeSectionsOrder: settings.publicHomeSectionsOrder || ['hero', 'welcome', 'principles', 'schedule', 'contact'],
+    publicHomeNavInicio: settings.publicHomeNavInicio || 'Inicio',
+    publicHomeNavNosotros: settings.publicHomeNavNosotros || 'Quiénes Somos',
+    publicHomeNavHorarios: settings.publicHomeNavHorarios || 'Horarios',
+    publicHomeNavContacto: settings.publicHomeNavContacto || 'Ubicación',
+    publicHomeNavDisplayBtn: settings.publicHomeNavDisplayBtn || 'Pantalla TV',
+    publicHomeNavPortalBtn: settings.publicHomeNavPortalBtn || 'Portal del Miembro',
+    publicHomeHeroCtaMember: settings.publicHomeHeroCtaMember || 'Acceso a Miembros',
+    publicHomePrinciplesBadge: settings.publicHomePrinciplesBadge || 'Nuestros Principios',
+    publicHomeValue1Title: settings.publicHomeValue1Title || 'Fe y Doctrina Cristiana',
+    publicHomeValue1Desc: settings.publicHomeValue1Desc || 'Fundamentados en las Sagradas Escrituras y el evangelio de Jesucristo.',
+    publicHomeValue2Title: settings.publicHomeValue2Title || 'Amor Fraternal y Comunión',
+    publicHomeValue2Desc: settings.publicHomeValue2Desc || 'Promovemos la unidad de los creyentes y el apoyo solidario a las familias.',
+    publicHomeValue3Title: settings.publicHomeValue3Title || 'Valores Morales y Civiles',
+    publicHomeValue3Desc: settings.publicHomeValue3Desc || 'Fomentamos el respeto a las autoridades, la paz y la dignidad humana.',
+    publicHomeValue4Title: settings.publicHomeValue4Title || 'Comunidad Abierta',
+    publicHomeValue4Desc: settings.publicHomeValue4Desc || 'Recibimos cordialmente a todos aquellos que deseen acercarse a Dios.',
+    publicHomeScheduleBadge: settings.publicHomeScheduleBadge || 'Horarios Públicos de Oración',
+    publicHomeScheduleTitle: settings.publicHomeScheduleTitle || 'Nuestras Reuniones de Oración',
+    publicHomeScheduleSubtitle: settings.publicHomeScheduleSubtitle || 'Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y reuniones espirituales.',
+    publicHomeContactBadge: settings.publicHomeContactBadge || 'Ubicación y Contacto',
+    publicHomeContactTitle: settings.publicHomeContactTitle || 'Visítanos en Nuestra Casa de Oración',
+    publicHomeContactSubtitle: settings.publicHomeContactSubtitle || 'Estamos ubicados para atenderte y recibirte con los brazos abiertos.',
+    publicHomeAddressLabel: settings.publicHomeAddressLabel || 'Dirección',
+    publicHomePhoneLabel: settings.publicHomePhoneLabel || 'Teléfono de Atención',
+    publicHomeMapsBtnText: settings.publicHomeMapsBtnText || 'Abrir en Google Maps',
+    publicHomeFooterSubtitle: settings.publicHomeFooterSubtitle || 'Sitio Web Oficial',
+    publicHomeFooterAdminBtn: settings.publicHomeFooterAdminBtn || 'Acceso Administración',
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
@@ -1018,6 +1045,90 @@ export default function PublicWebTab() {
                 >
                   Galería
                 </button>
+              </div>
+            </div>
+            {/* Edición de las 4 Tarjetas de Principios (Para traducción) */}
+            <div className="pt-4 border-t border-white/5 space-y-4">
+              <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider">
+                Traducción / Edición de los 4 Principios (Tarjetas)
+              </label>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Principio 1 */}
+                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
+                  <span className="text-[10px] font-bold text-orange-400 uppercase">Tarjeta 1</span>
+                  <input
+                    type="text"
+                    value={form.publicHomeValue1Title || ''}
+                    onChange={e => handleChange('publicHomeValue1Title', e.target.value)}
+                    placeholder="Título 1"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                  />
+                  <textarea
+                    rows={2}
+                    value={form.publicHomeValue1Desc || ''}
+                    onChange={e => handleChange('publicHomeValue1Desc', e.target.value)}
+                    placeholder="Descripción 1"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
+                  />
+                </div>
+
+                {/* Principio 2 */}
+                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
+                  <span className="text-[10px] font-bold text-rose-400 uppercase">Tarjeta 2</span>
+                  <input
+                    type="text"
+                    value={form.publicHomeValue2Title || ''}
+                    onChange={e => handleChange('publicHomeValue2Title', e.target.value)}
+                    placeholder="Título 2"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                  />
+                  <textarea
+                    rows={2}
+                    value={form.publicHomeValue2Desc || ''}
+                    onChange={e => handleChange('publicHomeValue2Desc', e.target.value)}
+                    placeholder="Descripción 2"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
+                  />
+                </div>
+
+                {/* Principio 3 */}
+                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
+                  <span className="text-[10px] font-bold text-sky-400 uppercase">Tarjeta 3</span>
+                  <input
+                    type="text"
+                    value={form.publicHomeValue3Title || ''}
+                    onChange={e => handleChange('publicHomeValue3Title', e.target.value)}
+                    placeholder="Título 3"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                  />
+                  <textarea
+                    rows={2}
+                    value={form.publicHomeValue3Desc || ''}
+                    onChange={e => handleChange('publicHomeValue3Desc', e.target.value)}
+                    placeholder="Descripción 3"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
+                  />
+                </div>
+
+                {/* Principio 4 */}
+                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Tarjeta 4</span>
+                  <input
+                    type="text"
+                    value={form.publicHomeValue4Title || ''}
+                    onChange={e => handleChange('publicHomeValue4Title', e.target.value)}
+                    placeholder="Título 4"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                  />
+                  <textarea
+                    rows={2}
+                    value={form.publicHomeValue4Desc || ''}
+                    onChange={e => handleChange('publicHomeValue4Desc', e.target.value)}
+                    placeholder="Descripción 4"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -101,6 +101,34 @@ export interface AppSettings {
     publicHomePrinciplesImage?: string;
     publicHomePrinciplesImageMode?: 'bg' | 'side' | 'none';
     publicHomeSectionsOrder?: string[];
+    // Internationalization & Custom Text Fields
+    publicHomeNavInicio?: string;
+    publicHomeNavNosotros?: string;
+    publicHomeNavHorarios?: string;
+    publicHomeNavContacto?: string;
+    publicHomeNavDisplayBtn?: string;
+    publicHomeNavPortalBtn?: string;
+    publicHomeHeroCtaMember?: string;
+    publicHomePrinciplesBadge?: string;
+    publicHomeValue1Title?: string;
+    publicHomeValue1Desc?: string;
+    publicHomeValue2Title?: string;
+    publicHomeValue2Desc?: string;
+    publicHomeValue3Title?: string;
+    publicHomeValue3Desc?: string;
+    publicHomeValue4Title?: string;
+    publicHomeValue4Desc?: string;
+    publicHomeScheduleBadge?: string;
+    publicHomeScheduleTitle?: string;
+    publicHomeScheduleSubtitle?: string;
+    publicHomeContactBadge?: string;
+    publicHomeContactTitle?: string;
+    publicHomeContactSubtitle?: string;
+    publicHomeAddressLabel?: string;
+    publicHomePhoneLabel?: string;
+    publicHomeMapsBtnText?: string;
+    publicHomeFooterSubtitle?: string;
+    publicHomeFooterAdminBtn?: string;
     publicHomeContactPhone?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
@@ -474,6 +502,33 @@ export const useAppStore = create<AppState>()(
                 publicHomePrinciplesImage: '',
                 publicHomePrinciplesImageMode: 'bg',
                 publicHomeSectionsOrder: ['hero', 'welcome', 'principles', 'schedule', 'contact'],
+                publicHomeNavInicio: 'Inicio',
+                publicHomeNavNosotros: 'Quiénes Somos',
+                publicHomeNavHorarios: 'Horarios',
+                publicHomeNavContacto: 'Ubicación',
+                publicHomeNavDisplayBtn: 'Pantalla TV',
+                publicHomeNavPortalBtn: 'Portal del Miembro',
+                publicHomeHeroCtaMember: 'Acceso a Miembros',
+                publicHomePrinciplesBadge: 'Nuestros Principios',
+                publicHomeValue1Title: 'Fe y Doctrina Cristiana',
+                publicHomeValue1Desc: 'Fundamentados en las Sagradas Escrituras y el evangelio de Jesucristo.',
+                publicHomeValue2Title: 'Amor Fraternal y Comunión',
+                publicHomeValue2Desc: 'Promovemos la unidad de los creyentes y el apoyo solidario a las familias.',
+                publicHomeValue3Title: 'Valores Morales y Civiles',
+                publicHomeValue3Desc: 'Fomentamos el respeto a las autoridades, la paz y la dignidad humana.',
+                publicHomeValue4Title: 'Comunidad Abierta',
+                publicHomeValue4Desc: 'Recibimos cordialmente a todos aquellos que deseen acercarse a Dios.',
+                publicHomeScheduleBadge: 'Horarios Públicos de Oración',
+                publicHomeScheduleTitle: 'Nuestras Reuniones de Oración',
+                publicHomeScheduleSubtitle: 'Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y reuniones espirituales. Todas nuestras reuniones están abiertas a las visitas.',
+                publicHomeContactBadge: 'Ubicación y Contacto',
+                publicHomeContactTitle: 'Visítanos en Nuestra Casa de Oración',
+                publicHomeContactSubtitle: 'Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.',
+                publicHomeAddressLabel: 'Dirección',
+                publicHomePhoneLabel: 'Teléfono de Atención',
+                publicHomeMapsBtnText: 'Abrir Dirección en Google Maps',
+                publicHomeFooterSubtitle: 'Sitio Web Oficial',
+                publicHomeFooterAdminBtn: 'Acceso Administración',
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',

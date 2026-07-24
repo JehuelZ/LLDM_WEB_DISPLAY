@@ -8,6 +8,14 @@ export function PublicFooter() {
   const churchName = settings.mainChurchName || settings.churchCity || 'Rodeo';
   const year = new Date().getFullYear();
 
+  const navInicio = settings.publicHomeNavInicio || 'Inicio';
+  const navNosotros = settings.publicHomeNavNosotros || 'Quiénes Somos';
+  const navHorarios = settings.publicHomeNavHorarios || 'Horarios';
+  const navContacto = settings.publicHomeNavContacto || 'Ubicación';
+  const footerSubtitle = settings.publicHomeFooterSubtitle || 'Sitio Web Oficial';
+  const navDisplayBtn = settings.publicHomeNavDisplayBtn || 'Pantalla TV';
+  const navPortalBtn = settings.publicHomeNavPortalBtn || 'Portal del Miembro';
+
   return (
     <footer className="bg-[#050508] border-t border-white/10 text-white/50 text-xs py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
@@ -25,16 +33,16 @@ export function PublicFooter() {
               <span className="text-white font-bold text-sm block leading-none">
                 La Luz del Mundo — {churchName}
               </span>
-              <span className="text-[10px] text-white/40">Sitio Web Oficial · <span className="text-orange-400 font-semibold">FLAMA v1.0 (Beta)</span></span>
+              <span className="text-[10px] text-white/40">{footerSubtitle} · <span className="text-orange-400 font-semibold">FLAMA v1.0 (Beta)</span></span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div className="flex items-center gap-6 text-white/70 text-xs font-medium">
-            <a href="#inicio" className="hover:text-orange-400 transition-colors">Inicio</a>
-            <a href="#nosotros" className="hover:text-orange-400 transition-colors">Quiénes Somos</a>
-            <a href="#horarios" className="hover:text-orange-400 transition-colors">Horarios</a>
-            <a href="#contacto" className="hover:text-orange-400 transition-colors">Ubicación</a>
+            <a href="#inicio" className="hover:text-orange-400 transition-colors">{navInicio}</a>
+            <a href="#nosotros" className="hover:text-orange-400 transition-colors">{navNosotros}</a>
+            <a href="#horarios" className="hover:text-orange-400 transition-colors">{navHorarios}</a>
+            <a href="#contacto" className="hover:text-orange-400 transition-colors">{navContacto}</a>
           </div>
 
           {/* Direct Member & Display Access & Social Links */}
@@ -81,7 +89,7 @@ export function PublicFooter() {
               className="flex items-center gap-1.5 text-xs text-orange-400 hover:text-orange-300 font-bold transition-colors"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>Portal Miembros</span>
+              <span>{navPortalBtn}</span>
             </a>
             <span className="text-white/20">•</span>
             <a
@@ -91,7 +99,7 @@ export function PublicFooter() {
               className="flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-bold transition-colors"
             >
               <Monitor className="w-3.5 h-3.5" />
-              <span>Pantallas TV</span>
+              <span>{navDisplayBtn}</span>
             </a>
           </div>
         </div>

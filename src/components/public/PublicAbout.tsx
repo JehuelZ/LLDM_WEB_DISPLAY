@@ -84,6 +84,7 @@ export function PublicWelcome() {
 export function PublicPrinciples() {
   const { settings } = useAppStore();
 
+  const principlesBadge = settings.publicHomePrinciplesBadge || 'Nuestros Principios';
   const aboutTitle = settings.publicHomeAboutTitle || 'Nuestra Fe y Principios';
   const aboutText = settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas de la iglesia primitiva, promoviendo el amor fraternal, la fe y el respeto a la sociedad.';
   const principlesImage = settings.publicHomePrinciplesImage || '';
@@ -98,26 +99,26 @@ export function PublicPrinciples() {
 
   const values = [
     {
-      title: 'Fe y Doctrina Cristiana',
-      desc: 'Fundamentados en las Sagradas Escrituras y el evangelio de Jesucristo.',
+      title: settings.publicHomeValue1Title || 'Fe y Doctrina Cristiana',
+      desc: settings.publicHomeValue1Desc || 'Fundamentados en las Sagradas Escrituras y el evangelio de Jesucristo.',
       icon: BookOpen,
       color: 'from-orange-500/20 to-amber-500/10 text-orange-400 border-orange-500/30',
     },
     {
-      title: 'Amor Fraternal y Comunión',
-      desc: 'Promovemos la unidad de los creyentes y el apoyo solidario a las familias.',
+      title: settings.publicHomeValue2Title || 'Amor Fraternal y Comunión',
+      desc: settings.publicHomeValue2Desc || 'Promovemos la unidad de los creyentes y el apoyo solidario a las familias.',
       icon: Heart,
       color: 'from-rose-500/20 to-pink-500/10 text-rose-400 border-rose-500/30',
     },
     {
-      title: 'Valores Morales y Civiles',
-      desc: 'Fomentamos el respeto a las autoridades, la paz y la dignidad humana.',
+      title: settings.publicHomeValue3Title || 'Valores Morales y Civiles',
+      desc: settings.publicHomeValue3Desc || 'Fomentamos el respeto a las autoridades, la paz y la dignidad humana.',
       icon: Shield,
       color: 'from-sky-500/20 to-indigo-500/10 text-sky-400 border-sky-500/30',
     },
     {
-      title: 'Comunidad Abierta',
-      desc: 'Recibimos cordialmente a todos aquellos que deseen acercarse a Dios.',
+      title: settings.publicHomeValue4Title || 'Comunidad Abierta',
+      desc: settings.publicHomeValue4Desc || 'Recibimos cordialmente a todos aquellos que deseen acercarse a Dios.',
       icon: Users,
       color: 'from-emerald-500/20 to-teal-500/10 text-emerald-400 border-emerald-500/30',
     },
@@ -137,7 +138,7 @@ export function PublicPrinciples() {
         <div className={`space-y-4 max-w-3xl flex flex-col ${getAlignClass(titleAlign)}`}>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Nuestros Principios</span>
+            <span>{principlesBadge}</span>
           </div>
           <h2 className={`text-3xl sm:text-4xl font-extrabold text-white tracking-tight w-full ${titleAlign === 'left' ? 'text-left' : titleAlign === 'right' ? 'text-right' : 'text-center'}`}>
             {aboutTitle}

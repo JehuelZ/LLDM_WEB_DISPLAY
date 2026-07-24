@@ -12,6 +12,13 @@ export function PublicContact() {
   const phone = settings.publicHomeContactPhone || '(510) 000-0000';
   const mapsUrl = settings.publicHomeMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(address)}`;
 
+  const badge = settings.publicHomeContactBadge || 'Ubicación y Contacto';
+  const title = settings.publicHomeContactTitle || `Visítanos en ${churchName}`;
+  const subtitle = settings.publicHomeContactSubtitle || 'Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.';
+  const addressLabel = settings.publicHomeAddressLabel || 'Dirección';
+  const phoneLabel = settings.publicHomePhoneLabel || 'Teléfono de Atención';
+  const mapsBtnText = settings.publicHomeMapsBtnText || 'Abrir en Google Maps';
+
   return (
     <section id="contacto" className="py-24 relative z-10 bg-[#0a0a0f]/80 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
@@ -19,13 +26,13 @@ export function PublicContact() {
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-orange-400 text-xs font-semibold uppercase tracking-wider">
             <MapPin className="w-3.5 h-3.5" />
-            <span>Ubicación y Contacto</span>
+            <span>{badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Visítanos en {churchName}
+            {title}
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
-            Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.
+            {subtitle}
           </p>
         </div>
 
@@ -56,7 +63,7 @@ export function PublicContact() {
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider block">Dirección</span>
+                    <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider block">{addressLabel}</span>
                     <p className="text-white/90 text-sm font-semibold mt-0.5">{address}</p>
                   </div>
                 </div>
@@ -67,7 +74,7 @@ export function PublicContact() {
                       <Phone className="w-5 h-5" />
                     </div>
                     <div>
-                      <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider block">Teléfono de Atención</span>
+                      <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider block">{phoneLabel}</span>
                       <p className="text-white/90 text-sm font-semibold mt-0.5">{phone}</p>
                     </div>
                   </div>
@@ -83,7 +90,7 @@ export function PublicContact() {
                 className="w-full py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02] flex items-center justify-center gap-2"
               >
                 <ExternalLink className="w-4 h-4" />
-                <span>Abrir en Google Maps</span>
+                <span>{mapsBtnText}</span>
               </a>
             </div>
           </motion.div>

@@ -38,6 +38,10 @@ export function PublicSchedule() {
     },
   ];
 
+  const badge = settings.publicHomeScheduleBadge || 'Horarios Públicos de Oración';
+  const title = settings.publicHomeScheduleTitle || `Nuestras Reuniones de Oración en ${churchCity}`;
+  const subtitle = settings.publicHomeScheduleSubtitle || 'Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y reuniones espirituales. Todas nuestras reuniones están abiertas a las visitas.';
+
   return (
     <section id="horarios" className="py-24 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
@@ -45,13 +49,13 @@ export function PublicSchedule() {
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-orange-400 text-xs font-semibold uppercase tracking-wider">
             <Calendar className="w-3.5 h-3.5" />
-            <span>Horarios Públicos de Oración</span>
+            <span>{badge}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Nuestras Reuniones de Oración en {churchCity}
+            {title}
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
-            Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y reuniones espirituales. Todas nuestras reuniones están abiertas a las visitas.
+            {subtitle}
           </p>
         </div>
 

@@ -12,6 +12,13 @@ export function PublicHeader() {
   const logoAlign = settings.churchOfficialLogoAlign || 'center';
   const logoSize = settings.churchOfficialLogoSize || 'large';
 
+  const navInicio = settings.publicHomeNavInicio || 'Inicio';
+  const navNosotros = settings.publicHomeNavNosotros || 'Quiénes Somos';
+  const navHorarios = settings.publicHomeNavHorarios || 'Horarios';
+  const navContacto = settings.publicHomeNavContacto || 'Ubicación';
+  const navDisplayBtn = settings.publicHomeNavDisplayBtn || 'Pantalla TV';
+  const navPortalBtn = settings.publicHomeNavPortalBtn || 'Portal del Miembro';
+
   const logoSizeClass = logoSize === 'medium'
     ? 'h-16 sm:h-20'
     : logoSize === 'xlarge'
@@ -45,10 +52,10 @@ export function PublicHeader() {
             : ''
         }`}>
           <nav className="flex items-center gap-8 text-xs font-semibold text-white/70 uppercase tracking-widest">
-            <a href="#inicio" className="hover:text-orange-400 transition-colors">Inicio</a>
-            <a href="#nosotros" className="hover:text-orange-400 transition-colors">Quiénes Somos</a>
-            <a href="#horarios" className="hover:text-orange-400 transition-colors">Horarios</a>
-            <a href="#contacto" className="hover:text-orange-400 transition-colors">Ubicación</a>
+            <a href="#inicio" className="hover:text-orange-400 transition-colors">{navInicio}</a>
+            <a href="#nosotros" className="hover:text-orange-400 transition-colors">{navNosotros}</a>
+            <a href="#horarios" className="hover:text-orange-400 transition-colors">{navHorarios}</a>
+            <a href="#contacto" className="hover:text-orange-400 transition-colors">{navContacto}</a>
           </nav>
 
           {/* Action Buttons */}
@@ -60,7 +67,7 @@ export function PublicHeader() {
               className="flex items-center gap-2 px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white/80 transition-all hover:text-white"
             >
               <Monitor className="w-3.5 h-3.5 text-amber-400" />
-              <span>Pantalla TV</span>
+              <span>{navDisplayBtn}</span>
             </a>
 
             <a
@@ -68,7 +75,7 @@ export function PublicHeader() {
               className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02]"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>Portal del Miembro</span>
+              <span>{navPortalBtn}</span>
             </a>
           </div>
         </div>
@@ -91,28 +98,28 @@ export function PublicHeader() {
             onClick={() => setMobileMenuOpen(false)}
             className="block text-sm font-semibold text-white/80 hover:text-orange-400"
           >
-            Inicio
+            {navInicio}
           </a>
           <a
             href="#nosotros"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-sm font-semibold text-white/80 hover:text-orange-400"
           >
-            Quiénes Somos
+            {navNosotros}
           </a>
           <a
             href="#horarios"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-sm font-semibold text-white/80 hover:text-orange-400"
           >
-            Horarios
+            {navHorarios}
           </a>
           <a
             href="#contacto"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-sm font-semibold text-white/80 hover:text-orange-400"
           >
-            Ubicación
+            {navContacto}
           </a>
           <div className="pt-4 border-t border-white/10 space-y-3">
             <a
@@ -120,14 +127,14 @@ export function PublicHeader() {
               className="flex items-center justify-center gap-2 w-full py-3 bg-orange-500 text-white font-bold text-xs rounded-xl"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>Portal del Miembro</span>
+              <span>{navPortalBtn}</span>
             </a>
             <a
               href="/display"
               className="flex items-center justify-center gap-2 w-full py-3 bg-white/5 border border-white/10 text-white/80 font-bold text-xs rounded-xl"
             >
               <Monitor className="w-4 h-4 text-amber-400" />
-              <span>Pantalla TV</span>
+              <span>{navDisplayBtn}</span>
             </a>
           </div>
         </div>
