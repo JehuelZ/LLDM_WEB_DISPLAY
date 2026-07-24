@@ -1245,292 +1245,263 @@ export default function PublicWebTab() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
 
-            {/* Imagen de Fondo para Sección Principios */}
-            <div className="pt-2 border-t border-white/5 space-y-2">
-              <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                Imagen de Fondo para Sección Principios
-              </label>
-              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
-                <div className="w-12 h-12 rounded-xl bg-black/50 border border-amber-500/30 p-1 shrink-0 overflow-hidden">
-                  {form.publicHomePrinciplesImage ? (
-                    <img src={form.publicHomePrinciplesImage} alt="" className="w-full h-full object-cover rounded-lg" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/20">
-                      <ImageIcon className="w-5 h-5" />
-                    </div>
-                  )}
+        {/* Edición de las 4 Tarjetas de Principios (Con Íconos Modernos y Fotos) - ANCHO COMPLETO */}
+        <div className="pt-6 border-t border-white/10 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                Traducción, Íconos Modernos e Imágenes de los 4 Principios (Tarjetas)
+              </h4>
+              <p className="text-[11px] text-white/40">Personaliza cada tarjeta con íconos vectoriales modernos o fotografías de la galería.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {/* Principio 1 */}
+            <div className="bg-black/40 border border-white/10 p-4 rounded-2xl space-y-3 shadow-lg hover:border-amber-500/30 transition-all flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black text-orange-400 uppercase tracking-wider">Tarjeta 1</span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIconPickerTargetCard('val1');
+                      setShowIconPicker(true);
+                    }}
+                    className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3 text-amber-400" />
+                    <span>Ícono</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGalleryTargetMode('val1');
+                      setShowGallery(true);
+                    }}
+                    className="px-2.5 py-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <ImageIcon className="w-3 h-3" />
+                    <span>Foto</span>
+                  </button>
                 </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {form.publicHomeValue1Image && (
+                  <div className="w-9 h-9 rounded-xl border border-orange-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-orange-400">
+                    {renderModernIconOrImg(form.publicHomeValue1Image, Sparkles, "w-5 h-5")}
+                  </div>
+                )}
                 <input
                   type="text"
-                  value={form.publicHomePrinciplesImage || ''}
-                  onChange={e => handleChange('publicHomePrinciplesImage', e.target.value)}
-                  placeholder="URL o selecciona de la galería..."
-                  className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500/50"
+                  value={form.publicHomeValue1Image || ''}
+                  onChange={e => handleChange('publicHomeValue1Image', e.target.value)}
+                  placeholder="Ícono elegido o URL de foto..."
+                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
                 />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setGalleryTargetMode('principlesImage');
-                    setShowGallery(true);
-                  }}
-                  className="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition-all shrink-0"
-                >
-                  Galería
-                </button>
               </div>
+
+              <input
+                type="text"
+                value={form.publicHomeValue1Title || ''}
+                onChange={e => handleChange('publicHomeValue1Title', e.target.value)}
+                placeholder="Título 1"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500/50"
+              />
+              <textarea
+                rows={3}
+                value={form.publicHomeValue1Desc || ''}
+                onChange={e => handleChange('publicHomeValue1Desc', e.target.value)}
+                placeholder="Descripción 1"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 resize-none focus:outline-none focus:border-amber-500/50 leading-relaxed"
+              />
             </div>
-            {/* Edición de las 4 Tarjetas de Principios (Con Íconos Modernos y Fotos) */}
-            <div className="pt-4 border-t border-white/5 space-y-4">
-              <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center justify-between">
-                <span>Traducción, Íconos Modernos e Imágenes de los 4 Principios (Tarjetas)</span>
-              </label>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Principio 1 */}
-                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-orange-400 uppercase">Tarjeta 1</span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIconPickerTargetCard('val1');
-                          setShowIconPicker(true);
-                        }}
-                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <Sparkles className="w-3 h-3 text-amber-400" />
-                        <span>Elegir Ícono</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setGalleryTargetMode('val1');
-                          setShowGallery(true);
-                        }}
-                        className="px-2.5 py-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <ImageIcon className="w-3 h-3" />
-                        <span>Foto</span>
-                      </button>
-                    </div>
-                  </div>
 
-                  <div className="flex items-center gap-2">
-                    {form.publicHomeValue1Image && (
-                      <div className="w-8 h-8 rounded-lg border border-orange-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-orange-400">
-                        {renderModernIconOrImg(form.publicHomeValue1Image, Sparkles, "w-4 h-4")}
-                      </div>
-                    )}
-                    <input
-                      type="text"
-                      value={form.publicHomeValue1Image || ''}
-                      onChange={e => handleChange('publicHomeValue1Image', e.target.value)}
-                      placeholder="Ícono elegido o URL de foto..."
-                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
-                    />
-                  </div>
-
-                  <input
-                    type="text"
-                    value={form.publicHomeValue1Title || ''}
-                    onChange={e => handleChange('publicHomeValue1Title', e.target.value)}
-                    placeholder="Título 1"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
-                  />
-                  <textarea
-                    rows={2}
-                    value={form.publicHomeValue1Desc || ''}
-                    onChange={e => handleChange('publicHomeValue1Desc', e.target.value)}
-                    placeholder="Descripción 1"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
-                  />
-                </div>
-
-                {/* Principio 2 */}
-                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-rose-400 uppercase">Tarjeta 2</span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIconPickerTargetCard('val2');
-                          setShowIconPicker(true);
-                        }}
-                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <Sparkles className="w-3 h-3 text-amber-400" />
-                        <span>Elegir Ícono</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setGalleryTargetMode('val2');
-                          setShowGallery(true);
-                        }}
-                        className="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <ImageIcon className="w-3 h-3" />
-                        <span>Foto</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {form.publicHomeValue2Image && (
-                      <div className="w-8 h-8 rounded-lg border border-rose-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-rose-400">
-                        {renderModernIconOrImg(form.publicHomeValue2Image, Heart, "w-4 h-4")}
-                      </div>
-                    )}
-                    <input
-                      type="text"
-                      value={form.publicHomeValue2Image || ''}
-                      onChange={e => handleChange('publicHomeValue2Image', e.target.value)}
-                      placeholder="Ícono elegido o URL de foto..."
-                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
-                    />
-                  </div>
-
-                  <input
-                    type="text"
-                    value={form.publicHomeValue2Title || ''}
-                    onChange={e => handleChange('publicHomeValue2Title', e.target.value)}
-                    placeholder="Título 2"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
-                  />
-                  <textarea
-                    rows={2}
-                    value={form.publicHomeValue2Desc || ''}
-                    onChange={e => handleChange('publicHomeValue2Desc', e.target.value)}
-                    placeholder="Descripción 2"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
-                  />
-                </div>
-
-                {/* Principio 3 */}
-                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-sky-400 uppercase">Tarjeta 3</span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIconPickerTargetCard('val3');
-                          setShowIconPicker(true);
-                        }}
-                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <Sparkles className="w-3 h-3 text-amber-400" />
-                        <span>Elegir Ícono</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setGalleryTargetMode('val3');
-                          setShowGallery(true);
-                        }}
-                        className="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <ImageIcon className="w-3 h-3" />
-                        <span>Foto</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {form.publicHomeValue3Image && (
-                      <div className="w-8 h-8 rounded-lg border border-sky-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-sky-400">
-                        {renderModernIconOrImg(form.publicHomeValue3Image, Globe, "w-4 h-4")}
-                      </div>
-                    )}
-                    <input
-                      type="text"
-                      value={form.publicHomeValue3Image || ''}
-                      onChange={e => handleChange('publicHomeValue3Image', e.target.value)}
-                      placeholder="Ícono elegido o URL de foto..."
-                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
-                    />
-                  </div>
-
-                  <input
-                    type="text"
-                    value={form.publicHomeValue3Title || ''}
-                    onChange={e => handleChange('publicHomeValue3Title', e.target.value)}
-                    placeholder="Título 3"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
-                  />
-                  <textarea
-                    rows={2}
-                    value={form.publicHomeValue3Desc || ''}
-                    onChange={e => handleChange('publicHomeValue3Desc', e.target.value)}
-                    placeholder="Descripción 3"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
-                  />
-                </div>
-
-                {/* Principio 4 */}
-                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-emerald-400 uppercase">Tarjeta 4</span>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIconPickerTargetCard('val4');
-                          setShowIconPicker(true);
-                        }}
-                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <Sparkles className="w-3 h-3 text-amber-400" />
-                        <span>Elegir Ícono</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setGalleryTargetMode('val4');
-                          setShowGallery(true);
-                        }}
-                        className="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                      >
-                        <ImageIcon className="w-3 h-3" />
-                        <span>Foto</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {form.publicHomeValue4Image && (
-                      <div className="w-8 h-8 rounded-lg border border-emerald-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-emerald-400">
-                        {renderModernIconOrImg(form.publicHomeValue4Image, Sparkles, "w-4 h-4")}
-                      </div>
-                    )}
-                    <input
-                      type="text"
-                      value={form.publicHomeValue4Image || ''}
-                      onChange={e => handleChange('publicHomeValue4Image', e.target.value)}
-                      placeholder="Ícono elegido o URL de foto..."
-                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
-                    />
-                  </div>
-
-                  <input
-                    type="text"
-                    value={form.publicHomeValue4Title || ''}
-                    onChange={e => handleChange('publicHomeValue4Title', e.target.value)}
-                    placeholder="Título 4"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
-                  />
-                  <textarea
-                    rows={2}
-                    value={form.publicHomeValue4Desc || ''}
-                    onChange={e => handleChange('publicHomeValue4Desc', e.target.value)}
-                    placeholder="Descripción 4"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white resize-none"
-                  />
+            {/* Principio 2 */}
+            <div className="bg-black/40 border border-white/10 p-4 rounded-2xl space-y-3 shadow-lg hover:border-rose-500/30 transition-all flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black text-rose-400 uppercase tracking-wider">Tarjeta 2</span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIconPickerTargetCard('val2');
+                      setShowIconPicker(true);
+                    }}
+                    className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3 text-amber-400" />
+                    <span>Ícono</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGalleryTargetMode('val2');
+                      setShowGallery(true);
+                    }}
+                    className="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <ImageIcon className="w-3 h-3" />
+                    <span>Foto</span>
+                  </button>
                 </div>
               </div>
+
+              <div className="flex items-center gap-2">
+                {form.publicHomeValue2Image && (
+                  <div className="w-9 h-9 rounded-xl border border-rose-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-rose-400">
+                    {renderModernIconOrImg(form.publicHomeValue2Image, Heart, "w-5 h-5")}
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={form.publicHomeValue2Image || ''}
+                  onChange={e => handleChange('publicHomeValue2Image', e.target.value)}
+                  placeholder="Ícono elegido o URL de foto..."
+                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
+                />
+              </div>
+
+              <input
+                type="text"
+                value={form.publicHomeValue2Title || ''}
+                onChange={e => handleChange('publicHomeValue2Title', e.target.value)}
+                placeholder="Título 2"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500/50"
+              />
+              <textarea
+                rows={3}
+                value={form.publicHomeValue2Desc || ''}
+                onChange={e => handleChange('publicHomeValue2Desc', e.target.value)}
+                placeholder="Descripción 2"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 resize-none focus:outline-none focus:border-amber-500/50 leading-relaxed"
+              />
+            </div>
+
+            {/* Principio 3 */}
+            <div className="bg-black/40 border border-white/10 p-4 rounded-2xl space-y-3 shadow-lg hover:border-sky-500/30 transition-all flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black text-sky-400 uppercase tracking-wider">Tarjeta 3</span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIconPickerTargetCard('val3');
+                      setShowIconPicker(true);
+                    }}
+                    className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3 text-amber-400" />
+                    <span>Ícono</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGalleryTargetMode('val3');
+                      setShowGallery(true);
+                    }}
+                    className="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <ImageIcon className="w-3 h-3" />
+                    <span>Foto</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {form.publicHomeValue3Image && (
+                  <div className="w-9 h-9 rounded-xl border border-sky-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-sky-400">
+                    {renderModernIconOrImg(form.publicHomeValue3Image, Globe, "w-5 h-5")}
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={form.publicHomeValue3Image || ''}
+                  onChange={e => handleChange('publicHomeValue3Image', e.target.value)}
+                  placeholder="Ícono elegido o URL de foto..."
+                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
+                />
+              </div>
+
+              <input
+                type="text"
+                value={form.publicHomeValue3Title || ''}
+                onChange={e => handleChange('publicHomeValue3Title', e.target.value)}
+                placeholder="Título 3"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500/50"
+              />
+              <textarea
+                rows={3}
+                value={form.publicHomeValue3Desc || ''}
+                onChange={e => handleChange('publicHomeValue3Desc', e.target.value)}
+                placeholder="Descripción 3"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 resize-none focus:outline-none focus:border-amber-500/50 leading-relaxed"
+              />
+            </div>
+
+            {/* Principio 4 */}
+            <div className="bg-black/40 border border-white/10 p-4 rounded-2xl space-y-3 shadow-lg hover:border-emerald-500/30 transition-all flex flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-black text-emerald-400 uppercase tracking-wider">Tarjeta 4</span>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIconPickerTargetCard('val4');
+                      setShowIconPicker(true);
+                    }}
+                    className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3 text-amber-400" />
+                    <span>Ícono</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGalleryTargetMode('val4');
+                      setShowGallery(true);
+                    }}
+                    className="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                  >
+                    <ImageIcon className="w-3 h-3" />
+                    <span>Foto</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {form.publicHomeValue4Image && (
+                  <div className="w-9 h-9 rounded-xl border border-emerald-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-emerald-400">
+                    {renderModernIconOrImg(form.publicHomeValue4Image, Sparkles, "w-5 h-5")}
+                  </div>
+                )}
+                <input
+                  type="text"
+                  value={form.publicHomeValue4Image || ''}
+                  onChange={e => handleChange('publicHomeValue4Image', e.target.value)}
+                  placeholder="Ícono elegido o URL de foto..."
+                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
+                />
+              </div>
+
+              <input
+                type="text"
+                value={form.publicHomeValue4Title || ''}
+                onChange={e => handleChange('publicHomeValue4Title', e.target.value)}
+                placeholder="Título 4"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-amber-500/50"
+              />
+              <textarea
+                rows={3}
+                value={form.publicHomeValue4Desc || ''}
+                onChange={e => handleChange('publicHomeValue4Desc', e.target.value)}
+                placeholder="Descripción 4"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white/80 resize-none focus:outline-none focus:border-amber-500/50 leading-relaxed"
+              />
             </div>
           </div>
         </div>
