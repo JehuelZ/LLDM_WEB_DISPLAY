@@ -89,7 +89,14 @@ export interface AppSettings {
     publicHomeCtaLink?: string;
     publicHomeAboutTitle?: string;
     publicHomeAboutText?: string;
+    publicHomeMinisterWelcomeTitle?: string;
     publicHomeMinisterWelcome?: string;
+    publicHomeAboutImage?: string;
+    publicHomeAboutImageMode?: 'side' | 'bg';
+    publicHomeAboutImagePos?: 'left' | 'right';
+    publicHomeAboutTitleAlign?: 'left' | 'center' | 'right';
+    publicHomeAboutTextAlign?: 'left' | 'center' | 'right';
+    publicHomeAboutBgStyle?: 'light' | 'dark' | 'glass';
     publicHomeContactPhone?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
@@ -451,7 +458,14 @@ export const useAppStore = create<AppState>()(
                 publicHomeCtaLink: '#horarios',
                 publicHomeAboutTitle: 'Nuestra Fe y Principios',
                 publicHomeAboutText: 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
+                publicHomeMinisterWelcomeTitle: '"Nuestras puertas están abiertas para ti"',
                 publicHomeMinisterWelcome: 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
+                publicHomeAboutImage: '',
+                publicHomeAboutImageMode: 'side',
+                publicHomeAboutImagePos: 'left',
+                publicHomeAboutTitleAlign: 'center',
+                publicHomeAboutTextAlign: 'center',
+                publicHomeAboutBgStyle: 'glass',
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',

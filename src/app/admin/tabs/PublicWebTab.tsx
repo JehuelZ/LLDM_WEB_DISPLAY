@@ -10,7 +10,7 @@ export default function PublicWebTab() {
   const { settings, saveSettingsToCloud, showNotification } = useAppStore();
   const [isSaving, setIsSaving] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
-  const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo'>('heroBg');
+  const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo' | 'aboutImage'>('heroBg');
 
   // Form local state initialized with settings
   const [form, setForm] = useState({
@@ -28,8 +28,15 @@ export default function PublicWebTab() {
     publicHomeCtaText: settings.publicHomeCtaText || 'Conoce Nuestros Horarios',
     publicHomeCtaAlign: settings.publicHomeCtaAlign || 'center',
     publicHomeAboutTitle: settings.publicHomeAboutTitle || 'Nuestra Fe y Principios',
+    publicHomeAboutTitleAlign: settings.publicHomeAboutTitleAlign || 'center',
     publicHomeAboutText: settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
+    publicHomeAboutTextAlign: settings.publicHomeAboutTextAlign || 'center',
+    publicHomeMinisterWelcomeTitle: settings.publicHomeMinisterWelcomeTitle || '"Nuestras puertas están abiertas para ti"',
     publicHomeMinisterWelcome: settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
+    publicHomeAboutImage: settings.publicHomeAboutImage || '',
+    publicHomeAboutImageMode: settings.publicHomeAboutImageMode || 'side',
+    publicHomeAboutImagePos: settings.publicHomeAboutImagePos || 'left',
+    publicHomeAboutBgStyle: settings.publicHomeAboutBgStyle || 'glass',
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
@@ -578,7 +585,7 @@ export default function PublicWebTab() {
         </div>
       </motion.div>
 
-      {/* ── SECCIÓN 2: QUIÉNES SOMOS & BIENVENIDA MINISTERIAL ── */}
+      {/* ── SECCIÓN 3: MENSAJE MINISTERIAL, QUIÉNES SOMOS & VALORES ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -590,51 +597,260 @@ export default function PublicWebTab() {
             <Heart className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">2. Mensaje Ministerial & Valores</h3>
-            <p className="text-xs text-white/40">Presentación oficial para visitantes y simpatizantes.</p>
+            <h3 className="text-base font-bold text-white">3. Mensaje Ministerial, Quiénes Somos & Valores</h3>
+            <p className="text-xs text-white/40">Presentación oficial, mensajes editables e imagen de acompañamiento/fondo.</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2 flex items-center gap-2">
-              <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
-              Mensaje de Bienvenida del Ministro
-            </label>
-            <textarea
-              rows={6}
-              value={form.publicHomeMinisterWelcome}
-              onChange={e => handleChange('publicHomeMinisterWelcome', e.target.value)}
-              placeholder="Escribe el mensaje de bienvenida para quienes visitan la página por primera vez..."
-              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors resize-none"
-            />
-          </div>
-
+          {/* Columna Izquierda: Mensajes & Títulos Editables */}
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">
-                Título de la Sección de Valores
+              <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">
+                Título del Mensaje del Ministro
               </label>
               <input
                 type="text"
-                value={form.publicHomeAboutTitle}
-                onChange={e => handleChange('publicHomeAboutTitle', e.target.value)}
-                placeholder="Nuestra Fe y Principios"
-                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors"
+                value={form.publicHomeMinisterWelcomeTitle || ''}
+                onChange={e => handleChange('publicHomeMinisterWelcomeTitle', e.target.value)}
+                placeholder='"Nuestras puertas están abiertas para ti"'
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">
-                Descripción de Principios y Fe
+              <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1 flex items-center gap-2">
+                <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+                Mensaje de Bienvenida del Ministro
               </label>
               <textarea
-                rows={3}
-                value={form.publicHomeAboutText}
-                onChange={e => handleChange('publicHomeAboutText', e.target.value)}
-                placeholder="Resumen de los valores y comunión espiritual..."
+                rows={4}
+                value={form.publicHomeMinisterWelcome || ''}
+                onChange={e => handleChange('publicHomeMinisterWelcome', e.target.value)}
+                placeholder="Escribe el mensaje de bienvenida para quienes visitan la página por primera vez..."
                 className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-500/50 transition-colors resize-none"
               />
+            </div>
+
+            {/* Título de Sección + Alineación */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                  Título de la Sección Principios
+                </label>
+                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutTitleAlign', 'left')}
+                    className={`p-1 rounded transition-all ${form.publicHomeAboutTitleAlign === 'left' ? 'bg-amber-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear a la Izquierda"
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutTitleAlign', 'center')}
+                    className={`p-1 rounded transition-all ${form.publicHomeAboutTitleAlign === 'center' ? 'bg-amber-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Centrar"
+                  >
+                    <AlignCenter className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutTitleAlign', 'right')}
+                    className={`p-1 rounded transition-all ${form.publicHomeAboutTitleAlign === 'right' ? 'bg-amber-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear a la Derecha"
+                  >
+                    <AlignRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <input
+                type="text"
+                value={form.publicHomeAboutTitle || ''}
+                onChange={e => handleChange('publicHomeAboutTitle', e.target.value)}
+                placeholder="Nuestra Fe y Principios"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50"
+              />
+            </div>
+
+            {/* Texto de Sección + Alineación */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                  Descripción de Principios y Fe
+                </label>
+                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutTextAlign', 'left')}
+                    className={`p-1 rounded transition-all ${form.publicHomeAboutTextAlign === 'left' ? 'bg-amber-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear a la Izquierda"
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutTextAlign', 'center')}
+                    className={`p-1 rounded transition-all ${form.publicHomeAboutTextAlign === 'center' ? 'bg-amber-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Centrar"
+                  >
+                    <AlignCenter className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutTextAlign', 'right')}
+                    className={`p-1 rounded transition-all ${form.publicHomeAboutTextAlign === 'right' ? 'bg-amber-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear a la Derecha"
+                  >
+                    <AlignRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <textarea
+                rows={3}
+                value={form.publicHomeAboutText || ''}
+                onChange={e => handleChange('publicHomeAboutText', e.target.value)}
+                placeholder="Resumen de los valores y comunión espiritual..."
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50 resize-none"
+              />
+            </div>
+          </div>
+
+          {/* Columna Derecha: Imagen de Acompañamiento / Fondo, Posición y Estilo de Fondo */}
+          <div className="space-y-4">
+            <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider">
+              Imagen de Acompañamiento o Fondo de Sección
+            </label>
+            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
+              <div className="w-16 h-16 rounded-xl bg-black/50 border border-amber-500/30 p-1 shrink-0 overflow-hidden">
+                {form.publicHomeAboutImage ? (
+                  <img src={form.publicHomeAboutImage} alt="" className="w-full h-full object-cover rounded-lg" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-white/20">
+                    <ImageIcon className="w-6 h-6" />
+                  </div>
+                )}
+              </div>
+              <input
+                type="text"
+                value={form.publicHomeAboutImage || ''}
+                onChange={e => handleChange('publicHomeAboutImage', e.target.value)}
+                placeholder="URL de foto o selecciona de galería..."
+                className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500/50"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setGalleryTargetMode('aboutImage');
+                  setShowGallery(true);
+                }}
+                className="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition-all shrink-0"
+              >
+                Galería
+              </button>
+            </div>
+
+            {/* Modo de Imagen: Al Lado vs Fondo */}
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <div>
+                <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Modo de Imagen</span>
+                <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutImageMode', 'side')}
+                    className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                      form.publicHomeAboutImageMode === 'side' || !form.publicHomeAboutImageMode
+                        ? 'bg-amber-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white'
+                    }`}
+                  >
+                    Al Lado
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeAboutImageMode', 'bg')}
+                    className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                      form.publicHomeAboutImageMode === 'bg'
+                        ? 'bg-amber-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white'
+                    }`}
+                  >
+                    Fondo
+                  </button>
+                </div>
+              </div>
+
+              {/* Posición de la Imagen (Izquierda vs Derecha) si Modo === 'side' */}
+              {form.publicHomeAboutImageMode !== 'bg' && (
+                <div>
+                  <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Posición de Imagen</span>
+                  <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => handleChange('publicHomeAboutImagePos', 'left')}
+                      className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                        form.publicHomeAboutImagePos === 'left' || !form.publicHomeAboutImagePos
+                          ? 'bg-amber-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white'
+                      }`}
+                    >
+                      Izquierda
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('publicHomeAboutImagePos', 'right')}
+                      className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                        form.publicHomeAboutImagePos === 'right'
+                          ? 'bg-amber-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white'
+                      }`}
+                    >
+                      Derecha
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Estilo de Fondo de Sección (Tono Claro / Oscuro / Cristal) */}
+            <div>
+              <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Fondo de Sección</span>
+              <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+                <button
+                  type="button"
+                  onClick={() => handleChange('publicHomeAboutBgStyle', 'glass')}
+                  className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                    form.publicHomeAboutBgStyle === 'glass' || !form.publicHomeAboutBgStyle
+                      ? 'bg-amber-500 text-white shadow-md'
+                      : 'text-white/40 hover:text-white'
+                  }`}
+                >
+                  Cristal
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleChange('publicHomeAboutBgStyle', 'light')}
+                  className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                    form.publicHomeAboutBgStyle === 'light'
+                      ? 'bg-amber-500 text-white shadow-md'
+                      : 'text-white/40 hover:text-white'
+                  }`}
+                >
+                  Contraste Claro
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleChange('publicHomeAboutBgStyle', 'dark')}
+                  className={`flex-1 py-1.5 text-xs font-bold rounded-lg transition-all ${
+                    form.publicHomeAboutBgStyle === 'dark'
+                      ? 'bg-amber-500 text-white shadow-md'
+                      : 'text-white/40 hover:text-white'
+                  }`}
+                >
+                  Profundo
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -756,12 +972,20 @@ export default function PublicWebTab() {
       {showGallery && (
         <MediaGalleryModal
           isOpen={showGallery}
-          currentUrl={galleryTargetMode === 'officialLogo' ? form.churchOfficialLogoUrl : form.publicHomeHeroBg}
+          currentUrl={
+            galleryTargetMode === 'officialLogo'
+              ? form.churchOfficialLogoUrl
+              : galleryTargetMode === 'aboutImage'
+              ? form.publicHomeAboutImage
+              : form.publicHomeHeroBg
+          }
           onClose={() => setShowGallery(false)}
           onSelectImage={(url) => {
             if (url) {
               if (galleryTargetMode === 'officialLogo') {
                 setForm(prev => ({ ...prev, churchOfficialLogoUrl: url }));
+              } else if (galleryTargetMode === 'aboutImage') {
+                setForm(prev => ({ ...prev, publicHomeAboutImage: url }));
               } else {
                 setForm(prev => ({ ...prev, publicHomeHeroBg: url }));
               }

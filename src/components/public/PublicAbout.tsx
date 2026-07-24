@@ -1,16 +1,36 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { BookOpen, Heart, Shield, Users, Church, Sparkles, Quote } from 'lucide-react';
+import { BookOpen, Heart, Shield, Users, Church, Sparkles, Quote, ImageIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function PublicAbout() {
   const { settings } = useAppStore();
 
   const ministerName = settings.ministerName || 'Ministro a Cargo';
+  const welcomeTitle = settings.publicHomeMinisterWelcomeTitle || '"Nuestras puertas están abiertas para ti"';
   const welcomeText = settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad, la fe y la paz de Dios.';
   const aboutTitle = settings.publicHomeAboutTitle || 'Nuestra Fe y Principios';
   const aboutText = settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas de la iglesia primitiva, promoviendo el amor fraternal, la fe y el respeto a la sociedad.';
+
+  const image = settings.publicHomeAboutImage || '';
+  const imageMode = settings.publicHomeAboutImageMode || 'side';
+  const imagePos = settings.publicHomeAboutImagePos || 'left';
+  const titleAlign = settings.publicHomeAboutTitleAlign || 'center';
+  const textAlign = settings.publicHomeAboutTextAlign || 'center';
+  const bgStyle = settings.publicHomeAboutBgStyle || 'glass';
+
+  const getAlignClass = (align: string) => {
+    if (align === 'left') return 'text-left justify-start items-start mr-auto';
+    if (align === 'right') return 'text-right justify-end items-end ml-auto';
+    return 'text-center justify-center items-center mx-auto';
+  };
+
+  const bgClasses = bgStyle === 'light'
+    ? 'bg-gradient-to-b from-[#0f172a] via-[#1e293b]/90 to-[#0a0a0f] border-y border-white/10'
+    : bgStyle === 'dark'
+    ? 'bg-[#060810] border-y border-white/5'
+    : 'bg-[#0a0a0f]/80 backdrop-blur-xl border-y border-white/10';
 
   const values = [
     {
@@ -40,67 +60,93 @@ export function PublicAbout() {
   ];
 
   return (
-    <section id="nosotros" className="py-24 relative z-10 bg-[#0a0a0f]/60 backdrop-blur-md border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        {/* Minister Welcome Card */}
+    <section id="nosotros" className={`py-20 relative z-10 overflow-hidden ${bgClasses}`}>
+      {/* Background Image Mode */}
+      {imageMode === 'bg' && image && (
+        <div className="absolute inset-0 z-0">
+          <img src={image} alt="Fondo Sección" className="w-full h-full object-cover opacity-20 filter brightness-[0.7]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-[#0a0a0f]" />
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
+        {/* Minister Welcome Card + Optional Side Image Companion */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-transparent border border-orange-500/20 rounded-3xl p-8 sm:p-12 overflow-hidden backdrop-blur-xl"
+          className={`relative bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-transparent border border-orange-500/20 rounded-3xl p-8 sm:p-12 overflow-hidden backdrop-blur-xl grid grid-cols-1 ${
+            imageMode === 'side' && image ? 'lg:grid-cols-12 gap-8 items-center' : ''
+          }`}
         >
           <div className="absolute top-6 right-8 text-orange-500/10 pointer-events-none">
             <Quote className="w-32 h-32" />
           </div>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-            {/* Minister Avatar / Emblem */}
-            <div className="shrink-0 text-center space-y-3">
-              <div className="relative w-28 h-28 mx-auto rounded-3xl overflow-hidden border-2 border-orange-500/40 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
-                {settings.ministerAvatar ? (
-                  <img
-                    src={settings.ministerAvatar}
-                    alt={ministerName}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-[#12121a] flex items-center justify-center text-orange-400">
-                    <Church className="w-12 h-12" />
-                  </div>
-                )}
-              </div>
-              <div>
-                <h4 className="text-white font-bold text-base leading-tight">{ministerName}</h4>
-                <span className="text-xs text-orange-400/80 font-medium">Ministro a Cargo</span>
+          {/* Optional Side Image Column */}
+          {imageMode === 'side' && image && (
+            <div className={`shrink-0 lg:col-span-4 ${imagePos === 'right' ? 'lg:order-2' : 'lg:order-1'}`}>
+              <div className="relative aspect-4/3 lg:aspect-square rounded-2xl overflow-hidden border-2 border-orange-500/30 shadow-2xl group">
+                <img
+                  src={image}
+                  alt="Imagen de Acompañamiento"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
             </div>
+          )}
 
-            {/* Welcome Quote Text */}
-            <div className="space-y-3 text-center md:text-left">
-              <span className="text-xs font-bold uppercase tracking-widest text-orange-400">
-                Bienvenida Oficial
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-                "Nuestras puertas están abiertas para ti"
-              </h3>
-              <p className="text-white/70 text-base leading-relaxed italic">
-                "{welcomeText}"
-              </p>
+          {/* Card Text & Minister Column */}
+          <div className={`relative z-10 ${imageMode === 'side' && image ? 'lg:col-span-8 space-y-6' : 'flex flex-col md:flex-row items-center gap-8'}`}>
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Minister Avatar */}
+              <div className="shrink-0 text-center space-y-3">
+                <div className="relative w-28 h-28 mx-auto rounded-3xl overflow-hidden border-2 border-orange-500/40 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
+                  {settings.ministerAvatar ? (
+                    <img
+                      src={settings.ministerAvatar}
+                      alt={ministerName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-[#12121a] flex items-center justify-center text-orange-400">
+                      <Church className="w-12 h-12" />
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <h4 className="text-white font-bold text-base leading-tight">{ministerName}</h4>
+                  <span className="text-xs text-orange-400/80 font-medium">Ministro a Cargo</span>
+                </div>
+              </div>
+
+              {/* Welcome Quote Text */}
+              <div className="space-y-3 text-center md:text-left flex-1">
+                <span className="text-xs font-bold uppercase tracking-widest text-orange-400">
+                  Bienvenida Oficial
+                </span>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+                  {welcomeTitle}
+                </h3>
+                <p className="text-white/70 text-base leading-relaxed italic">
+                  "{welcomeText}"
+                </p>
+              </div>
             </div>
           </div>
         </motion.div>
 
         {/* Section Header: About & Values */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
+        <div className={`space-y-4 max-w-3xl flex flex-col ${getAlignClass(titleAlign)}`}>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-orange-400 text-xs font-semibold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5" />
             <span>Nuestros Principios</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className={`text-3xl sm:text-4xl font-extrabold text-white tracking-tight w-full ${titleAlign === 'left' ? 'text-left' : titleAlign === 'right' ? 'text-right' : 'text-center'}`}>
             {aboutTitle}
           </h2>
-          <p className="text-white/60 text-base leading-relaxed">
+          <p className={`text-white/60 text-base leading-relaxed w-full ${textAlign === 'left' ? 'text-left' : textAlign === 'right' ? 'text-right' : 'text-center'}`}>
             {aboutText}
           </p>
         </div>
