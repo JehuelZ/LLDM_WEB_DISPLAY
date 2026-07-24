@@ -30,10 +30,10 @@ export function PublicHero() {
         <img
           src={bgImage}
           alt="Templo"
-          className="w-full h-full object-cover scale-105 filter brightness-[0.4] contrast-[1.1]"
+          className="w-full h-full object-cover scale-105 filter brightness-[0.65] contrast-[1.05]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0f]/80 via-transparent to-[#0a0a0f]/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0f]/60 via-transparent to-[#0a0a0f]/60" />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-orange-500/15 rounded-full blur-[140px] pointer-events-none" />
       </div>
 
