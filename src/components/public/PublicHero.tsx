@@ -8,9 +8,9 @@ export function PublicHero() {
   const { settings } = useAppStore();
 
   const title = settings.publicHomeTitle || `La Luz del Mundo — ${settings.churchCity || 'Rodeo, CA'}`;
-  const subtitle = settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia. Te invitamos a conocer nuestros principios cristianos y unirte a nuestros servicios.';
+  const subtitle = settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia. Te invitamos a conocer nuestros principios cristianos y unirte a nuestras reuniones de oración.';
   const bgImage = settings.publicHomeHeroBg || settings.displayBgUrl || '/bg_login.png';
-  const ctaText = settings.publicHomeCtaText || 'Conoce Nuestros Horarios';
+  const ctaText = settings.publicHomeCtaText || 'Conoce Nuestras Reuniones';
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden">

@@ -542,6 +542,16 @@ export function MediaGalleryModal({
                                                             toggleBulkSelect(file.name);
                                                         } else {
                                                             setSelectedUrl(file.url);
+                                                            if (mode === 'select' && onSelectImage) {
+                                                                onSelectImage(file.url);
+                                                            }
+                                                        }
+                                                    }}
+                                                    onDoubleClick={() => {
+                                                        if (!bulkMode) {
+                                                            setSelectedUrl(file.url);
+                                                            if (onSelectImage) onSelectImage(file.url);
+                                                            onClose();
                                                         }
                                                     }}
                                                     className={`group relative aspect-square rounded-xl overflow-hidden cursor-pointer border-2 transition-all bg-black/40 flex items-center justify-center ${

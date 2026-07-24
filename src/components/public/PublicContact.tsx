@@ -22,7 +22,7 @@ export function PublicContact() {
             <span>Ubicación y Contacto</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Visítanos en la Congregación de {churchName}
+            Visítanos en {churchName}
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
             Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.
@@ -45,8 +45,8 @@ export function PublicContact() {
                   <Church className="w-7 h-7" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white leading-tight">Congregación {churchName}</h3>
-                  <span className="text-xs text-white/40 font-medium">La Luz del Mundo</span>
+                  <h3 className="text-xl font-bold text-white leading-tight">Iglesia La Luz del Mundo</h3>
+                  <span className="text-xs text-white/40 font-medium">{churchName}</span>
                 </div>
               </div>
 

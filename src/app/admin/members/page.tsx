@@ -624,7 +624,7 @@ export default function MembersPage() {
                                                     }
                                                 }}
                                             >
-                                                <option value="Principal" className="bg-slate-900">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                <option value="Principal" className="bg-slate-900">{settings.mainChurchName || 'Rodeo, CA'}</option>
                                                 {(settings.missions || []).map((m: any, idx: number) => {
                                                     const name = typeof m === 'string' ? m : m.name;
                                                     return <option key={idx} value={name} className="bg-slate-900">{name}</option>;
@@ -854,7 +854,7 @@ export default function MembersPage() {
                                                                                 setIsSaving(false);
                                                                             }}
                                                                         >
-                                                                            <option value="Principal" className="bg-slate-900">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                                            <option value="Principal" className="bg-slate-900">{settings.mainChurchName || 'Rodeo, CA'}</option>
                                                                             {(settings.missions || []).map((m: any, idx: number) => {
                                                                                 const name = typeof m === 'string' ? m : m.name;
                                                                                 return <option key={idx} value={name} className="bg-slate-900 uppercase">{name}</option>;
@@ -1241,7 +1241,7 @@ export default function MembersPage() {
                                                 value={memberModal.data.assigned_church || 'Principal'}
                                                 onChange={(e) => setMemberModal({ ...memberModal, data: { ...memberModal.data, assigned_church: e.target.value } })}
                                             >
-                                                <option value="Principal">{settings.mainChurchName || 'Principal (Rodeo CA)'}</option>
+                                                <option value="Principal">{settings.mainChurchName || 'Rodeo, CA'}</option>
                                                 {(settings.missions || []).map((m: any, idx: number) => {
                                                     const name = typeof m === 'string' ? m : m.name;
                                                     return <option key={idx} value={name}>{name}</option>;

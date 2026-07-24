@@ -441,7 +441,7 @@ export const useAppStore = create<AppState>()(
                 publicHomeCtaLink: '#horarios',
                 publicHomeAboutTitle: 'Nuestra Fe y Principios',
                 publicHomeAboutText: 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
-                publicHomeMinisterWelcome: 'Les damos una calurosa bienvenida a nuestra congregación en Rodeo, California. Nuestra iglesia está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
+                publicHomeMinisterWelcome: 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',

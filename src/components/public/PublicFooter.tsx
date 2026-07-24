@@ -60,7 +60,7 @@ export function PublicFooter() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white/30 text-[11px]">
-          <p>© {year} La Luz del Mundo — Congregación {churchName}. Todos los derechos reservados.</p>
+          <p>© {year} La Luz del Mundo — {churchName}. Todos los derechos reservados.</p>
           <p className="italic">"Un lugar de fe, comunión y esperanza"</p>
         </div>
       </div>

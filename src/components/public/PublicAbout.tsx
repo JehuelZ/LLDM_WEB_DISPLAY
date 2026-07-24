@@ -8,7 +8,7 @@ export function PublicAbout() {
   const { settings } = useAppStore();
 
   const ministerName = settings.ministerName || 'Ministro a Cargo';
-  const welcomeText = settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a nuestra congregación en Rodeo, California. Nuestra iglesia está con las puertas abiertas para todos aquellos que buscan la verdad, la fe y la paz de Dios.';
+  const welcomeText = settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad, la fe y la paz de Dios.';
   const aboutTitle = settings.publicHomeAboutTitle || 'Nuestra Fe y Principios';
   const aboutText = settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas de la iglesia primitiva, promoviendo el amor fraternal, la fe y el respeto a la sociedad.';
 

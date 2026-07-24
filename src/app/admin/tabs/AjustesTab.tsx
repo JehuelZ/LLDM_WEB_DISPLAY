@@ -389,7 +389,7 @@ export const AjustesTab = ({
                                     onClick={() => setEditingCongregation({ 
                                         info: {
                                             id: 'main',
-                                            name: settings.mainChurch?.name || settings.mainChurchName || 'Principal (Rodeo CA)',
+                                            name: settings.mainChurch?.name || settings.mainChurchName || 'Rodeo, CA',
                                             imageUrl: settings.mainChurch?.imageUrl || settings.churchLogoUrl || '',
                                             address: settings.mainChurch?.address || '',
                                             phone: settings.mainChurch?.phone || '',

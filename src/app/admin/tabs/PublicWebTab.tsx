@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck } from 'lucide-react';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
@@ -22,11 +22,13 @@ export default function PublicWebTab() {
     publicHomeCtaText: settings.publicHomeCtaText || 'Conoce Nuestros Horarios',
     publicHomeAboutTitle: settings.publicHomeAboutTitle || 'Nuestra Fe y Principios',
     publicHomeAboutText: settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
-    publicHomeMinisterWelcome: settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a nuestra congregación en Rodeo, California. Nuestra iglesia está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
+    publicHomeMinisterWelcome: settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
   });
+
+
 
   const handleChange = (key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));
@@ -266,6 +268,17 @@ export default function PublicWebTab() {
               </div>
             </div>
 
+            {/* Campo de URL directa */}
+            <div>
+              <input
+                type="text"
+                value={form.publicHomeHeroBg}
+                onChange={e => handleChange('publicHomeHeroBg', e.target.value)}
+                placeholder="https://... o selecciona de la galería"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-orange-500/50"
+              />
+            </div>
+
             <button
               type="button"
               onClick={() => setShowGallery(true)}
@@ -419,9 +432,12 @@ export default function PublicWebTab() {
       {showGallery && (
         <MediaGalleryModal
           isOpen={showGallery}
+          currentUrl={form.publicHomeHeroBg}
           onClose={() => setShowGallery(false)}
-          onSelect={(url) => {
-            handleChange('publicHomeHeroBg', url);
+          onSelectImage={(url) => {
+            if (url) {
+              setForm(prev => ({ ...prev, publicHomeHeroBg: url }));
+            }
             setShowGallery(false);
           }}
         />

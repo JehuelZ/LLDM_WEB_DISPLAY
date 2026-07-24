@@ -124,7 +124,7 @@ function MaintenanceView() {
 
       {/* Footer */}
       <footer className="max-w-5xl mx-auto w-full flex flex-col sm:flex-row items-center justify-between gap-4 py-4 text-center sm:text-left text-xs text-white/30 relative z-10 border-t border-white/5">
-        <p>© {new Date().getFullYear()} La Luz del Mundo — Congregación {churchName}. Todos los derechos reservados.</p>
+        <p>© {new Date().getFullYear()} La Luz del Mundo — {churchName}. Todos los derechos reservados.</p>
         <a
           href="/admin"
           className="text-white/30 hover:text-orange-400 transition-colors flex items-center gap-1 text-[11px]"

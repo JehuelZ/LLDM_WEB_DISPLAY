@@ -29,8 +29,8 @@ export function PublicSchedule() {
     },
     {
       time: '6:00 PM',
-      title: 'Culto Vespertino General',
-      desc: 'Servicio de adoración, cánticos de alabanza, oración y predicación de la palabra.',
+      title: 'Oración de la Tarde',
+      desc: 'Servicio de alabanza, oración y predicación de la palabra de Dios.',
       days: 'Lunes a Domingo (6:00 PM / 7:00 PM)',
       badge: 'Principal',
       icon: Clock,
@@ -48,10 +48,10 @@ export function PublicSchedule() {
             <span>Horarios Públicos de Oración</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Nuestros Cultos y Servicios en {churchCity}
+            Nuestras Reuniones de Oración en {churchCity}
           </h2>
           <p className="text-white/60 text-base leading-relaxed">
-            Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y cultos de adoración. Todos nuestros servicios están abiertos al público general.
+            Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y reuniones espirituales. Todas nuestras reuniones están abiertas a las visitas.
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export function PublicSchedule() {
         {/* Note banner for visitors */}
         <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-6 text-center max-w-2xl mx-auto backdrop-blur-md">
           <p className="text-xs sm:text-sm text-orange-300 font-medium">
-            💡 <span className="font-bold">¿Primera vez que nos visitas?</span> No necesitas reservación previa. Si deseas más detalles sobre los servicios, puedes hablar con nuestro Ministro o contactarnos directamente.
+            💡 <span className="font-bold">¿Primera vez que nos visitas?</span> No necesitas reservación previa. Si deseas más detalles sobre nuestras reuniones, puedes hablar con nuestro Ministro o contactarnos directamente.
           </p>
         </div>
       </div>
