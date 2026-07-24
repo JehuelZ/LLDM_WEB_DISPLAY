@@ -11,6 +11,7 @@ export function PublicHero() {
   const subtitle = settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia. Te invitamos a conocer nuestros principios cristianos y unirte a nuestras reuniones de oración.';
   const bgImage = settings.publicHomeHeroBg || settings.displayBgUrl || '/bg_login.png';
   const ctaText = settings.publicHomeCtaText || 'Conoce Nuestras Reuniones';
+  const badgeText = settings.publicHomeBadgeText || 'La Restauración de la Primitiva Iglesia Cristiana';
   const badgeAlign = settings.publicHomeBadgeAlign || 'center';
   const titleAlign = settings.publicHomeTitleAlign || 'center';
   const subtitleAlign = settings.publicHomeSubtitleAlign || 'center';
@@ -48,7 +49,7 @@ export function PublicHero() {
           >
             <Sparkles className="w-4 h-4 text-orange-400" />
             <span className="text-xs font-semibold text-orange-300 uppercase tracking-widest">
-              Iglesia Cristiana Restauracionista
+              {badgeText}
             </span>
           </motion.div>
         </div>

@@ -335,6 +335,49 @@ export default function PublicWebTab() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-5">
+            {/* Etiqueta / Badge + Alineación */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                  Etiqueta Superior (Badge)
+                </label>
+                {/* Selector de Alineación */}
+                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeBadgeAlign', 'left')}
+                    className={`p-1 rounded transition-all ${form.publicHomeBadgeAlign === 'left' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear a la Izquierda"
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeBadgeAlign', 'center')}
+                    className={`p-1 rounded transition-all ${form.publicHomeBadgeAlign === 'center' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Centrar"
+                  >
+                    <AlignCenter className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeBadgeAlign', 'right')}
+                    className={`p-1 rounded transition-all ${form.publicHomeBadgeAlign === 'right' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear a la Derecha"
+                  >
+                    <AlignRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+              <input
+                type="text"
+                value={form.publicHomeBadgeText || ''}
+                onChange={e => handleChange('publicHomeBadgeText', e.target.value)}
+                placeholder="La Restauración de la Primitiva Iglesia Cristiana"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-colors"
+              />
+            </div>
+
             {/* Título de la Portada + Alineación */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">

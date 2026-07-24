@@ -80,6 +80,8 @@ export interface AppSettings {
     displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna' | 'primitivo';
 
     // Public Home Page CMS Settings
+    publicHomeBadgeText?: string;
+    publicHomeBadgeAlign?: 'left' | 'center' | 'right';
     publicHomeTitle?: string;
     publicHomeSubtitle?: string;
     publicHomeHeroBg?: string;
@@ -437,6 +439,7 @@ export const useAppStore = create<AppState>()(
                 customLogo4: '',
                 minimalShowWeather: true,
                 minimalShowForecast: true,
+                publicHomeBadgeText: 'La Restauración de la Primitiva Iglesia Cristiana',
                 publicHomeBadgeAlign: 'center',    // 'left' | 'center' | 'right'
                 publicHomeTitleAlign: 'center',    // 'left' | 'center' | 'right'
                 publicHomeSubtitleAlign: 'center', // 'left' | 'center' | 'right'
