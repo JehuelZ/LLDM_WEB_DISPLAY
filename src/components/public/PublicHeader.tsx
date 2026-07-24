@@ -17,8 +17,8 @@ export function PublicHeader() {
         <a href="/" className="flex items-center gap-3 group">
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/30 flex items-center justify-center p-2 group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(249,115,22,0.15)]">
             <img
-              src={settings.churchLogoUrl || '/flama-oficial.svg'}
-              alt="LLDM"
+              src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
+              alt="La Luz del Mundo"
               className="w-full h-full object-contain"
             />
           </div>
