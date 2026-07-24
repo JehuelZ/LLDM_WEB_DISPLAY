@@ -25,7 +25,7 @@ export function PublicFooter() {
               <span className="text-white font-bold text-sm block leading-none">
                 La Luz del Mundo — {churchName}
               </span>
-              <span className="text-[10px] text-white/30">Sitio Web Oficial de la Congregación</span>
+              <span className="text-[10px] text-white/40">Sitio Web Oficial · <span className="text-orange-400 font-semibold">FLAMA CMS v1.0 (Beta)</span></span>
             </div>
           </div>
 
