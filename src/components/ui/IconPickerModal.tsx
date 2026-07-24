@@ -49,25 +49,31 @@ export function ModernIconOrImage({
   fallbackIcon?: React.ComponentType<{ className?: string }>;
   className?: string;
 }) {
-  if (!value || typeof value !== 'string') {
-    return <FallbackComp className={className} />;
-  }
+  const Fallback = FallbackComp || Sparkles;
 
-  const str = value.trim();
-  if (!str) {
-    return <FallbackComp className={className} />;
-  }
+  try {
+    if (!value || typeof value !== 'string') {
+      return <Fallback className={className} />;
+    }
 
-  if (str.startsWith('http://') || str.startsWith('https://') || str.startsWith('/') || str.startsWith('data:')) {
-    return <img src={str} alt="" className="w-full h-full object-contain" />;
-  }
+    const str = value.trim();
+    if (!str) {
+      return <Fallback className={className} />;
+    }
 
-  const IconComp = MODERN_ICONS_MAP[str];
-  if (IconComp) {
-    return <IconComp className={className} />;
-  }
+    if (str.startsWith('http://') || str.startsWith('https://') || str.startsWith('/') || str.startsWith('data:')) {
+      return <img src={str} alt="" className="w-full h-full object-contain" />;
+    }
 
-  return <FallbackComp className={className} />;
+    const IconComp = MODERN_ICONS_MAP[str];
+    if (IconComp) {
+      return <IconComp className={className} />;
+    }
+
+    return <Fallback className={className} />;
+  } catch (err) {
+    return <Fallback className={className} />;
+  }
 }
 
 export function renderModernIconOrImg(

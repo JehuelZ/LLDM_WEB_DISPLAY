@@ -1942,6 +1942,7 @@ export default function PublicWebTab() {
             };
             const targetKey = keyMap[iconPickerTargetCard] || 'publicHomeValue1Image';
             handleChange(targetKey, iconId);
+            setShowIconPicker(false);
           }}
         />
       )}
