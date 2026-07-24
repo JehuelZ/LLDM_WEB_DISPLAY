@@ -51,7 +51,7 @@ export default function PublicWebTab() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xl font-black text-white tracking-tight">FLAMA CMS</h2>
+              <h2 className="text-xl font-black text-white tracking-tight">FLAMA</h2>
               <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-md bg-orange-500/20 text-orange-400 border border-orange-500/30 tracking-wider">
                 v1.0 Beta
               </span>

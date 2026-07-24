@@ -40,9 +40,9 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 - **Interactividad:** Favicon dinámico que cambia de color según el tema activo.
 - **Reportes:** Capacidad de exportar "Fichas Personales" de miembros a PDF usando `html2pdf.js`.
 - **Gestión de Horarios:** Soporte para hasta 3 responsables en servicios especiales (Niños/Jóvenes).
-- **FLAMA CMS & Sitio Web Público (`lldmrodeo.org/`):**
+- **FLAMA v1.0 (Beta) & Sitio Web Público (`lldmrodeo.org/`):**
     - Se construyó el sitio web público oficial en la raíz `/` (Home, Quiénes Somos, Horarios Públicos, Ubicación en Google Maps).
-    - **FLAMA CMS**: Denominación oficial del gestor de contenido sin código integrado en `/admin?tab=public_web`. Permite editar en tiempo real la portada (Hero), títulos, lemas, mensaje ministerial, dirección, teléfono y foto de fondo con 1 clic desde la Galería de Medios.
+    - **FLAMA v1.0 (Beta)**: Denominación oficial de la plataforma y del gestor de contenido sin código integrado en `/admin?tab=public_web`. Permite editar en tiempo real la portada (Hero), títulos, lemas, mensaje ministerial, dirección, teléfono y foto de fondo con 1 clic desde la Galería de Medios.
 
 ## 🛠️ Especificaciones Técnicas
 - **Frontend:** Next.js (src/app architecture).
