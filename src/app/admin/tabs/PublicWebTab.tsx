@@ -607,7 +607,7 @@ export default function PublicWebTab() {
           <div className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">
-                Título del Mensaje del Ministro
+                Invitación Pública
               </label>
               <input
                 type="text"
