@@ -10,6 +10,7 @@ export default function PublicWebTab() {
   const { settings, saveSettingsToCloud, showNotification } = useAppStore();
   const [isSaving, setIsSaving] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
+  const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo'>('heroBg');
 
   // Form local state initialized with settings
   const [form, setForm] = useState({
@@ -234,7 +235,7 @@ export default function PublicWebTab() {
             {/* Logo Oficial de la Iglesia Mundial (Flotante) */}
             <div className="pt-2 border-t border-white/5 space-y-2">
               <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider">
-                Logo Oficial Mundial (Escudo de la Iglesia)
+                Logo Oficial Mundial (Escudo "The Light of the World")
               </label>
               <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
                 <div className="w-12 h-12 rounded-xl bg-black/50 border border-orange-500/30 p-1.5 shrink-0 flex items-center justify-center">
@@ -248,9 +249,19 @@ export default function PublicWebTab() {
                   type="text"
                   value={form.churchOfficialLogoUrl}
                   onChange={e => handleChange('churchOfficialLogoUrl', e.target.value)}
-                  placeholder="Predeterminado (Escudo Oficial)"
+                  placeholder="https://... o selecciona de la galería"
                   className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-orange-500/50"
                 />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setGalleryTargetMode('officialLogo');
+                    setShowGallery(true);
+                  }}
+                  className="px-3 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30 rounded-xl text-xs font-bold transition-all shrink-0"
+                >
+                  Galería
+                </button>
               </div>
             </div>
           </div>
@@ -277,7 +288,10 @@ export default function PublicWebTab() {
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 backdrop-blur-xs flex items-center justify-center gap-3 transition-opacity">
                 <button
                   type="button"
-                  onClick={() => setShowGallery(true)}
+                  onClick={() => {
+                    setGalleryTargetMode('heroBg');
+                    setShowGallery(true);
+                  }}
                   className="px-4 py-2 bg-orange-500 text-white text-xs font-bold rounded-xl shadow-lg hover:bg-orange-600 transition-colors flex items-center gap-2"
                 >
                   <ImageIcon className="w-3.5 h-3.5" />
@@ -308,7 +322,10 @@ export default function PublicWebTab() {
 
             <button
               type="button"
-              onClick={() => setShowGallery(true)}
+              onClick={() => {
+                setGalleryTargetMode('heroBg');
+                setShowGallery(true);
+              }}
               className="w-full py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white/80 transition-colors flex items-center justify-center gap-2"
             >
               <ImageIcon className="w-4 h-4 text-orange-400" />
@@ -496,11 +513,15 @@ export default function PublicWebTab() {
       {showGallery && (
         <MediaGalleryModal
           isOpen={showGallery}
-          currentUrl={form.publicHomeHeroBg}
+          currentUrl={galleryTargetMode === 'officialLogo' ? form.churchOfficialLogoUrl : form.publicHomeHeroBg}
           onClose={() => setShowGallery(false)}
           onSelectImage={(url) => {
             if (url) {
-              setForm(prev => ({ ...prev, publicHomeHeroBg: url }));
+              if (galleryTargetMode === 'officialLogo') {
+                setForm(prev => ({ ...prev, churchOfficialLogoUrl: url }));
+              } else {
+                setForm(prev => ({ ...prev, publicHomeHeroBg: url }));
+              }
             }
             setShowGallery(false);
           }}
