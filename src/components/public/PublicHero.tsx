@@ -17,6 +17,32 @@ export function PublicHero() {
   const titleAlign = settings.publicHomeTitleAlign || 'center';
   const subtitleAlign = settings.publicHomeSubtitleAlign || 'center';
   const ctaAlign = settings.publicHomeCtaAlign || 'center';
+  const ctaColor = settings.publicHomeCtaColor || 'orange';
+  const ctaStyle = settings.publicHomeCtaStyle || 'rounded';
+
+  const getColorClass = (color: string) => {
+    switch (color) {
+      case 'blue': return 'bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white shadow-blue-500/25';
+      case 'emerald': return 'bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-700 hover:to-teal-600 text-white shadow-emerald-500/25';
+      case 'purple': return 'bg-gradient-to-r from-purple-600 to-indigo-500 hover:from-purple-700 hover:to-indigo-600 text-white shadow-purple-500/25';
+      case 'ruby': return 'bg-gradient-to-r from-rose-600 to-pink-500 hover:from-rose-700 hover:to-pink-600 text-white shadow-rose-500/25';
+      case 'gold': return 'bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-600 hover:to-yellow-500 text-slate-950 font-black shadow-amber-500/25';
+      case 'monochrome': return 'bg-white text-slate-950 font-black hover:bg-slate-200 shadow-white/20';
+      default: return 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-orange-500/25';
+    }
+  };
+
+  const getStyleClass = (style: string) => {
+    switch (style) {
+      case 'pill': return 'rounded-full';
+      case 'square': return 'rounded-md';
+      case 'glass': return 'rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 text-white';
+      default: return 'rounded-2xl';
+    }
+  };
+
+  const ctaColorClass = getColorClass(ctaColor);
+  const ctaShapeClass = getStyleClass(ctaStyle);
 
   const getAlignClass = (align: string) => {
     if (align === 'left') return 'text-left justify-start items-start';
@@ -84,7 +110,7 @@ export function PublicHero() {
         >
           <a
             href="#horarios"
-            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-sm rounded-2xl shadow-xl shadow-orange-500/25 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-wider"
+            className={`w-full sm:w-auto px-8 py-4 ${ctaColorClass} ${ctaShapeClass} font-extrabold text-sm shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 uppercase tracking-wider`}
           >
             <Calendar className="w-4 h-4" />
             <span>{ctaText}</span>
@@ -92,7 +118,7 @@ export function PublicHero() {
 
           <a
             href="/portal"
-            className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/15 backdrop-blur-md text-white font-bold text-sm rounded-2xl transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3"
+            className={`w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/15 backdrop-blur-md text-white font-bold text-sm ${ctaShapeClass} transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3`}
           >
             <ShieldCheck className="w-4 h-4 text-orange-400" />
             <span>{ctaMemberText}</span>

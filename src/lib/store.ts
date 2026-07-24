@@ -141,6 +141,12 @@ export interface AppSettings {
     publicHomeMapsBtnText?: string;
     publicHomeFooterSubtitle?: string;
     publicHomeFooterAdminBtn?: string;
+    // Typography (Google Fonts) & Button Styling
+    publicHomeTitleFont?: string;
+    publicHomeSubtitleFont?: string;
+    publicHomeBodyFont?: string;
+    publicHomeCtaColor?: string;
+    publicHomeCtaStyle?: string;
     publicHomeContactPhone?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
@@ -553,6 +559,11 @@ export const useAppStore = create<AppState>()(
                 publicHomeMapsBtnText: 'Abrir Dirección en Google Maps',
                 publicHomeFooterSubtitle: 'Sitio Web Oficial',
                 publicHomeFooterAdminBtn: 'Acceso Administración',
+                publicHomeTitleFont: 'Outfit',
+                publicHomeSubtitleFont: 'Plus Jakarta Sans',
+                publicHomeBodyFont: 'Inter',
+                publicHomeCtaColor: 'orange',
+                publicHomeCtaStyle: 'rounded',
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',

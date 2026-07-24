@@ -141,10 +141,32 @@ export default function HomePage() {
   const { currentUser, settings, loadSettingsFromCloud } = useAppStore();
   const [mounted, setMounted] = useState(false);
 
+  const titleFont = settings.publicHomeTitleFont || 'Outfit';
+  const subtitleFont = settings.publicHomeSubtitleFont || 'Plus Jakarta Sans';
+  const bodyFont = settings.publicHomeBodyFont || 'Inter';
+
   useEffect(() => {
     setMounted(true);
     loadSettingsFromCloud();
   }, [loadSettingsFromCloud]);
+
+  // Inject Google Fonts stylesheet dynamically
+  useEffect(() => {
+    const fontsToLoad = Array.from(new Set([titleFont, subtitleFont, bodyFont])).filter(Boolean);
+    if (fontsToLoad.length === 0) return;
+
+    const fontQuery = fontsToLoad.map(f => `family=${encodeURIComponent(f)}:wght@300;400;500;600;700;800;900`).join('&');
+    const href = `https://fonts.googleapis.com/css2?${fontQuery}&display=swap`;
+
+    let link = document.getElementById('google-fonts-homepage') as HTMLLinkElement;
+    if (!link) {
+      link = document.createElement('link');
+      link.id = 'google-fonts-homepage';
+      link.rel = 'stylesheet';
+      document.head.appendChild(link);
+    }
+    link.href = href;
+  }, [titleFont, subtitleFont, bodyFont]);
 
   if (!mounted) {
     return (
@@ -188,7 +210,17 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white selection:bg-orange-500/30 selection:text-orange-300 font-sans antialiased overflow-x-hidden">
+    <div
+      className="min-h-screen bg-[#0a0a0f] text-white selection:bg-orange-500/30 selection:text-orange-300 font-sans antialiased overflow-x-hidden"
+      style={{
+        fontFamily: bodyFont ? `'${bodyFont}', sans-serif` : 'inherit',
+      }}
+    >
+      <style dangerouslySetInnerHTML={{ __html: `
+        h1, h2, h3, .font-title { font-family: '${titleFont}', sans-serif !important; }
+        .font-subtitle { font-family: '${subtitleFont}', sans-serif !important; }
+        body, p, span, button, a, input { font-family: '${bodyFont}', sans-serif; }
+      ` }} />
       {/* Admin/Minister Preview Floating Banner when Maintenance Mode is ON */}
       {settings.publicHomeMaintenanceMode && isPrivilegedUser && (
         <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 px-4 py-2.5 text-center text-xs font-black tracking-wide flex items-center justify-center gap-2 border-b border-amber-400/30 shadow-xl fixed top-0 left-0 right-0 z-[100] backdrop-blur-md">

@@ -41,6 +41,11 @@ export default function PublicWebTab() {
     publicHomeAboutBgStyle: settings.publicHomeAboutBgStyle || 'glass',
     publicHomePrinciplesImage: settings.publicHomePrinciplesImage || '',
     publicHomeSectionsOrder: settings.publicHomeSectionsOrder || ['hero', 'welcome', 'principles', 'schedule', 'contact'],
+    publicHomeTitleFont: settings.publicHomeTitleFont || 'Outfit',
+    publicHomeSubtitleFont: settings.publicHomeSubtitleFont || 'Plus Jakarta Sans',
+    publicHomeBodyFont: settings.publicHomeBodyFont || 'Inter',
+    publicHomeCtaColor: settings.publicHomeCtaColor || 'orange',
+    publicHomeCtaStyle: settings.publicHomeCtaStyle || 'rounded',
     publicHomeNavInicio: settings.publicHomeNavInicio || 'Inicio',
     publicHomeNavNosotros: settings.publicHomeNavNosotros || 'Quiénes Somos',
     publicHomeNavHorarios: settings.publicHomeNavHorarios || 'Horarios',
@@ -468,6 +473,136 @@ export default function PublicWebTab() {
               </div>
             );
           })}
+      {/* ── CONTROL DE TIPOGRAFÍA (GOOGLE FONTS) & BOTONES ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/[0.03] border border-white/8 rounded-3xl p-6 backdrop-blur-xl space-y-6"
+      >
+        <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+          <div className="w-8 h-8 rounded-lg bg-pink-500/10 border border-pink-500/20 flex items-center justify-center text-pink-400">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">Tipografía (Google Fonts) & Estilo de Botones</h3>
+            <p className="text-xs text-white/40">Personaliza la tipografía inyectando fuentes de Google Fonts y elige el color y forma de los botones.</p>
+          </div>
+        </div>
+
+        {/* Tipografía: Títulos, Subtítulos, Cuerpo */}
+        <div className="space-y-4">
+          <label className="block text-xs font-semibold text-pink-400 uppercase tracking-wider">
+            Inyección de Fuentes (Google Fonts)
+          </label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-[11px] font-bold text-white/60 mb-1">
+                Fuente para Título
+              </label>
+              <input
+                type="text"
+                value={form.publicHomeTitleFont || ''}
+                onChange={e => handleChange('publicHomeTitleFont', e.target.value)}
+                placeholder="Ej: Outfit, Playfair Display, Cinzel, Montserrat"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-pink-500/50 font-mono"
+              />
+              <span className="text-[10px] text-white/30 block mt-1">Escribe cualquier nombre de Google Font.</span>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-white/60 mb-1">
+                Fuente para Subtítulo
+              </label>
+              <input
+                type="text"
+                value={form.publicHomeSubtitleFont || ''}
+                onChange={e => handleChange('publicHomeSubtitleFont', e.target.value)}
+                placeholder="Ej: Plus Jakarta Sans, Poppins, Roboto"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-pink-500/50 font-mono"
+              />
+              <span className="text-[10px] text-white/30 block mt-1">Escribe cualquier nombre de Google Font.</span>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-white/60 mb-1">
+                Fuente para Contenido / Texto
+              </label>
+              <input
+                type="text"
+                value={form.publicHomeBodyFont || ''}
+                onChange={e => handleChange('publicHomeBodyFont', e.target.value)}
+                placeholder="Ej: Inter, Open Sans, Lato"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-pink-500/50 font-mono"
+              />
+              <span className="text-[10px] text-white/30 block mt-1">Escribe cualquier nombre de Google Font.</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Personalización de Botones (Color & Estilo) */}
+        <div className="pt-4 border-t border-white/5 space-y-4">
+          <label className="block text-xs font-semibold text-pink-400 uppercase tracking-wider">
+            Diseño & Colores de Botones
+          </label>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Color del Botón */}
+            <div>
+              <span className="block text-[11px] font-bold text-white/60 mb-2 uppercase tracking-wider">Color del Botón Principal</span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { id: 'orange', name: 'Naranja', bg: 'from-orange-500 to-amber-500' },
+                  { id: 'blue', name: 'Azul Neón', bg: 'from-blue-600 to-cyan-500' },
+                  { id: 'emerald', name: 'Esmeralda', bg: 'from-emerald-600 to-teal-500' },
+                  { id: 'purple', name: 'Púrpura', bg: 'from-purple-600 to-indigo-500' },
+                  { id: 'ruby', name: 'Rubí', bg: 'from-rose-600 to-pink-500' },
+                  { id: 'gold', name: 'Dorado Lujo', bg: 'from-amber-500 to-yellow-400 text-slate-950' },
+                  { id: 'monochrome', name: 'Blanco', bg: 'bg-white text-slate-950' },
+                ].map((c) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => handleChange('publicHomeCtaColor', c.id)}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold transition-all border flex items-center justify-center gap-1.5 ${
+                      form.publicHomeCtaColor === c.id || (!form.publicHomeCtaColor && c.id === 'orange')
+                        ? 'border-pink-500 ring-2 ring-pink-500/40 text-white'
+                        : 'border-white/10 text-white/50 hover:text-white'
+                    }`}
+                  >
+                    <span className={`w-3 h-3 rounded-full bg-gradient-to-r ${c.bg} shrink-0`} />
+                    <span className="truncate">{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Estilo / Forma del Botón */}
+            <div>
+              <span className="block text-[11px] font-bold text-white/60 mb-2 uppercase tracking-wider">Estilo & Forma</span>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: 'rounded', name: 'Redondeado (Soft)', preview: 'rounded-xl' },
+                  { id: 'pill', name: 'Píldora (Pill)', preview: 'rounded-full' },
+                  { id: 'square', name: 'Recto (Modern)', preview: 'rounded-none' },
+                  { id: 'glass', name: 'Cristal (Outline)', preview: 'rounded-xl border border-white/30' },
+                ].map((s) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => handleChange('publicHomeCtaStyle', s.id)}
+                    className={`py-2 px-3 rounded-xl text-xs font-bold transition-all border flex items-center justify-between ${
+                      form.publicHomeCtaStyle === s.id || (!form.publicHomeCtaStyle && s.id === 'rounded')
+                        ? 'bg-pink-500/20 border-pink-500 text-pink-300'
+                        : 'bg-white/[0.04] border-white/10 text-white/60 hover:text-white'
+                    }`}
+                  >
+                    <span>{s.name}</span>
+                    <div className={`w-4 h-2.5 bg-current opacity-40 ${s.preview}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </motion.div>
 
