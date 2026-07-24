@@ -89,6 +89,7 @@ export interface AppSettings {
     publicHomeCtaLink?: string;
     publicHomeAboutTitle?: string;
     publicHomeAboutText?: string;
+    publicHomeMinisterBadgeText?: string;
     publicHomeMinisterWelcomeTitle?: string;
     publicHomeMinisterWelcome?: string;
     publicHomeAboutImage?: string;
@@ -458,6 +459,7 @@ export const useAppStore = create<AppState>()(
                 publicHomeCtaLink: '#horarios',
                 publicHomeAboutTitle: 'Nuestra Fe y Principios',
                 publicHomeAboutText: 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
+                publicHomeMinisterBadgeText: 'Bienvenida Oficial',
                 publicHomeMinisterWelcomeTitle: '"Nuestras puertas están abiertas para ti"',
                 publicHomeMinisterWelcome: 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
                 publicHomeAboutImage: '',

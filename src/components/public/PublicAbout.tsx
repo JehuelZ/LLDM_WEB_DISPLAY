@@ -8,6 +8,7 @@ export function PublicAbout() {
   const { settings } = useAppStore();
 
   const ministerName = settings.ministerName || 'Ministro a Cargo';
+  const welcomeBadge = settings.publicHomeMinisterBadgeText || 'Bienvenida Oficial';
   const welcomeTitle = settings.publicHomeMinisterWelcomeTitle || '"Nuestras puertas están abiertas para ti"';
   const welcomeText = settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad, la fe y la paz de Dios.';
   const aboutTitle = settings.publicHomeAboutTitle || 'Nuestra Fe y Principios';
@@ -97,42 +98,18 @@ export function PublicAbout() {
             </div>
           )}
 
-          {/* Card Text & Minister Column */}
-          <div className={`relative z-10 ${imageMode === 'side' && image ? 'lg:col-span-8 space-y-6' : 'flex flex-col md:flex-row items-center gap-8'}`}>
-            <div className="flex flex-col md:flex-row items-center gap-8">
-              {/* Minister Avatar */}
-              <div className="shrink-0 text-center space-y-3">
-                <div className="relative w-28 h-28 mx-auto rounded-3xl overflow-hidden border-2 border-orange-500/40 shadow-[0_0_30px_rgba(249,115,22,0.2)]">
-                  {settings.ministerAvatar ? (
-                    <img
-                      src={settings.ministerAvatar}
-                      alt={ministerName}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-[#12121a] flex items-center justify-center text-orange-400">
-                      <Church className="w-12 h-12" />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <h4 className="text-white font-bold text-base leading-tight">{ministerName}</h4>
-                  <span className="text-xs text-orange-400/80 font-medium">Ministro a Cargo</span>
-                </div>
-              </div>
-
-              {/* Welcome Quote Text */}
-              <div className="space-y-3 text-center md:text-left flex-1">
-                <span className="text-xs font-bold uppercase tracking-widest text-orange-400">
-                  Bienvenida Oficial
-                </span>
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
-                  {welcomeTitle}
-                </h3>
-                <p className="text-white/70 text-base leading-relaxed italic">
-                  "{welcomeText}"
-                </p>
-              </div>
+          {/* Card Text Column */}
+          <div className={`relative z-10 ${imageMode === 'side' && image ? 'lg:col-span-8' : 'w-full'}`}>
+            <div className="space-y-3 text-center md:text-left">
+              <span className="text-xs font-bold uppercase tracking-widest text-orange-400">
+                {welcomeBadge}
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+                {welcomeTitle}
+              </h3>
+              <p className="text-white/70 text-base leading-relaxed italic">
+                "{welcomeText}"
+              </p>
             </div>
           </div>
         </motion.div>

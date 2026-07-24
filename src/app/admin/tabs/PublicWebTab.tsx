@@ -31,6 +31,7 @@ export default function PublicWebTab() {
     publicHomeAboutTitleAlign: settings.publicHomeAboutTitleAlign || 'center',
     publicHomeAboutText: settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
     publicHomeAboutTextAlign: settings.publicHomeAboutTextAlign || 'center',
+    publicHomeMinisterBadgeText: settings.publicHomeMinisterBadgeText || 'Bienvenida Oficial',
     publicHomeMinisterWelcomeTitle: settings.publicHomeMinisterWelcomeTitle || '"Nuestras puertas están abiertas para ti"',
     publicHomeMinisterWelcome: settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
     publicHomeAboutImage: settings.publicHomeAboutImage || '',
@@ -605,6 +606,19 @@ export default function PublicWebTab() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Columna Izquierda: Mensajes & Títulos Editables */}
           <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+                Etiqueta del Recuadro (Badge)
+              </label>
+              <input
+                type="text"
+                value={form.publicHomeMinisterBadgeText || ''}
+                onChange={e => handleChange('publicHomeMinisterBadgeText', e.target.value)}
+                placeholder="Bienvenida Oficial"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50"
+              />
+            </div>
+
             <div>
               <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider mb-1">
                 Invitación Pública
