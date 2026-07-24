@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck, AlignLeft, AlignCenter, AlignRight, Maximize2, MoveUp, MoveDown, GripVertical, Layers } from 'lucide-react';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
+import { IconPickerModal, MODERN_ICONS_MAP } from '@/components/ui/IconPickerModal';
 import { motion } from 'framer-motion';
 
 const CURATED_FONT_GROUPS = [
@@ -30,6 +31,8 @@ export default function PublicWebTab() {
   const [isSaving, setIsSaving] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo' | 'aboutImage' | 'principlesImage' | 'val1' | 'val2' | 'val3' | 'val4'>('heroBg');
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [iconPickerTargetCard, setIconPickerTargetCard] = useState<'val1' | 'val2' | 'val3' | 'val4'>('val1');
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   // Form local state initialized with settings
@@ -1277,10 +1280,10 @@ export default function PublicWebTab() {
                 </button>
               </div>
             </div>
-            {/* Edición de las 4 Tarjetas de Principios (Con Imágenes e Íconos) */}
+            {/* Edición de las 4 Tarjetas de Principios (Con Íconos Modernos y Fotos) */}
             <div className="pt-4 border-t border-white/5 space-y-4">
-              <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                Traducción, Imágenes e Íconos de los 4 Principios (Tarjetas)
+              <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider flex items-center justify-between">
+                <span>Traducción, Íconos Modernos e Imágenes de los 4 Principios (Tarjetas)</span>
               </label>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1288,30 +1291,49 @@ export default function PublicWebTab() {
                 <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-orange-400 uppercase">Tarjeta 1</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setGalleryTargetMode('val1');
-                        setShowGallery(true);
-                      }}
-                      className="px-2.5 py-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                    >
-                      <ImageIcon className="w-3 h-3" />
-                      <span>Elegir Imagen</span>
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIconPickerTargetCard('val1');
+                          setShowIconPicker(true);
+                        }}
+                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>Elegir Ícono</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setGalleryTargetMode('val1');
+                          setShowGallery(true);
+                        }}
+                        className="px-2.5 py-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <ImageIcon className="w-3 h-3" />
+                        <span>Foto</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue1Image && (
-                      <div className="w-8 h-8 rounded-lg border border-orange-500/40 p-0.5 shrink-0 bg-black">
-                        <img src={form.publicHomeValue1Image} alt="" className="w-full h-full object-contain" />
+                      <div className="w-8 h-8 rounded-lg border border-orange-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-orange-400">
+                        {form.publicHomeValue1Image.startsWith('http') || form.publicHomeValue1Image.startsWith('/') ? (
+                          <img src={form.publicHomeValue1Image} alt="" className="w-full h-full object-contain" />
+                        ) : MODERN_ICONS_MAP[form.publicHomeValue1Image] ? (
+                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue1Image], { className: 'w-4 h-4' })
+                        ) : (
+                          <Sparkles className="w-4 h-4 text-orange-400" />
+                        )}
                       </div>
                     )}
                     <input
                       type="text"
                       value={form.publicHomeValue1Image || ''}
                       onChange={e => handleChange('publicHomeValue1Image', e.target.value)}
-                      placeholder="URL de imagen o ícono (opcional)"
+                      placeholder="Ícono elegido o URL de foto..."
                       className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
                     />
                   </div>
@@ -1336,30 +1358,49 @@ export default function PublicWebTab() {
                 <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-rose-400 uppercase">Tarjeta 2</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setGalleryTargetMode('val2');
-                        setShowGallery(true);
-                      }}
-                      className="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                    >
-                      <ImageIcon className="w-3 h-3" />
-                      <span>Elegir Imagen</span>
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIconPickerTargetCard('val2');
+                          setShowIconPicker(true);
+                        }}
+                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>Elegir Ícono</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setGalleryTargetMode('val2');
+                          setShowGallery(true);
+                        }}
+                        className="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <ImageIcon className="w-3 h-3" />
+                        <span>Foto</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue2Image && (
-                      <div className="w-8 h-8 rounded-lg border border-rose-500/40 p-0.5 shrink-0 bg-black">
-                        <img src={form.publicHomeValue2Image} alt="" className="w-full h-full object-contain" />
+                      <div className="w-8 h-8 rounded-lg border border-rose-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-rose-400">
+                        {form.publicHomeValue2Image.startsWith('http') || form.publicHomeValue2Image.startsWith('/') ? (
+                          <img src={form.publicHomeValue2Image} alt="" className="w-full h-full object-contain" />
+                        ) : MODERN_ICONS_MAP[form.publicHomeValue2Image] ? (
+                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue2Image], { className: 'w-4 h-4' })
+                        ) : (
+                          <Sparkles className="w-4 h-4 text-rose-400" />
+                        )}
                       </div>
                     )}
                     <input
                       type="text"
                       value={form.publicHomeValue2Image || ''}
                       onChange={e => handleChange('publicHomeValue2Image', e.target.value)}
-                      placeholder="URL de imagen o ícono (opcional)"
+                      placeholder="Ícono elegido o URL de foto..."
                       className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
                     />
                   </div>
@@ -1384,30 +1425,49 @@ export default function PublicWebTab() {
                 <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-sky-400 uppercase">Tarjeta 3</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setGalleryTargetMode('val3');
-                        setShowGallery(true);
-                      }}
-                      className="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                    >
-                      <ImageIcon className="w-3 h-3" />
-                      <span>Elegir Imagen</span>
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIconPickerTargetCard('val3');
+                          setShowIconPicker(true);
+                        }}
+                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>Elegir Ícono</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setGalleryTargetMode('val3');
+                          setShowGallery(true);
+                        }}
+                        className="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <ImageIcon className="w-3 h-3" />
+                        <span>Foto</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue3Image && (
-                      <div className="w-8 h-8 rounded-lg border border-sky-500/40 p-0.5 shrink-0 bg-black">
-                        <img src={form.publicHomeValue3Image} alt="" className="w-full h-full object-contain" />
+                      <div className="w-8 h-8 rounded-lg border border-sky-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-sky-400">
+                        {form.publicHomeValue3Image.startsWith('http') || form.publicHomeValue3Image.startsWith('/') ? (
+                          <img src={form.publicHomeValue3Image} alt="" className="w-full h-full object-contain" />
+                        ) : MODERN_ICONS_MAP[form.publicHomeValue3Image] ? (
+                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue3Image], { className: 'w-4 h-4' })
+                        ) : (
+                          <Sparkles className="w-4 h-4 text-sky-400" />
+                        )}
                       </div>
                     )}
                     <input
                       type="text"
                       value={form.publicHomeValue3Image || ''}
                       onChange={e => handleChange('publicHomeValue3Image', e.target.value)}
-                      placeholder="URL de imagen o ícono (opcional)"
+                      placeholder="Ícono elegido o URL de foto..."
                       className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
                     />
                   </div>
@@ -1432,30 +1492,49 @@ export default function PublicWebTab() {
                 <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-emerald-400 uppercase">Tarjeta 4</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setGalleryTargetMode('val4');
-                        setShowGallery(true);
-                      }}
-                      className="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
-                    >
-                      <ImageIcon className="w-3 h-3" />
-                      <span>Elegir Imagen</span>
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIconPickerTargetCard('val4');
+                          setShowIconPicker(true);
+                        }}
+                        className="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <Sparkles className="w-3 h-3 text-amber-400" />
+                        <span>Elegir Ícono</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setGalleryTargetMode('val4');
+                          setShowGallery(true);
+                        }}
+                        className="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                      >
+                        <ImageIcon className="w-3 h-3" />
+                        <span>Foto</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue4Image && (
-                      <div className="w-8 h-8 rounded-lg border border-emerald-500/40 p-0.5 shrink-0 bg-black">
-                        <img src={form.publicHomeValue4Image} alt="" className="w-full h-full object-contain" />
+                      <div className="w-8 h-8 rounded-lg border border-emerald-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-emerald-400">
+                        {form.publicHomeValue4Image.startsWith('http') || form.publicHomeValue4Image.startsWith('/') ? (
+                          <img src={form.publicHomeValue4Image} alt="" className="w-full h-full object-contain" />
+                        ) : MODERN_ICONS_MAP[form.publicHomeValue4Image] ? (
+                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue4Image], { className: 'w-4 h-4' })
+                        ) : (
+                          <Sparkles className="w-4 h-4 text-emerald-400" />
+                        )}
                       </div>
                     )}
                     <input
                       type="text"
                       value={form.publicHomeValue4Image || ''}
                       onChange={e => handleChange('publicHomeValue4Image', e.target.value)}
-                      placeholder="URL de imagen o ícono (opcional)"
+                      placeholder="Ícono elegido o URL de foto..."
                       className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
                     />
                   </div>
@@ -1889,6 +1968,34 @@ export default function PublicWebTab() {
               }
             }
             setShowGallery(false);
+          }}
+        />
+      )}
+
+      {/* Icon Picker Modal Integration */}
+      {showIconPicker && (
+        <IconPickerModal
+          isOpen={showIconPicker}
+          currentIconId={
+            iconPickerTargetCard === 'val1'
+              ? form.publicHomeValue1Image
+              : iconPickerTargetCard === 'val2'
+              ? form.publicHomeValue2Image
+              : iconPickerTargetCard === 'val3'
+              ? form.publicHomeValue3Image
+              : form.publicHomeValue4Image
+          }
+          onClose={() => setShowIconPicker(false)}
+          onSelectIcon={(iconId) => {
+            if (iconPickerTargetCard === 'val1') {
+              setForm(prev => ({ ...prev, publicHomeValue1Image: iconId }));
+            } else if (iconPickerTargetCard === 'val2') {
+              setForm(prev => ({ ...prev, publicHomeValue2Image: iconId }));
+            } else if (iconPickerTargetCard === 'val3') {
+              setForm(prev => ({ ...prev, publicHomeValue3Image: iconId }));
+            } else if (iconPickerTargetCard === 'val4') {
+              setForm(prev => ({ ...prev, publicHomeValue4Image: iconId }));
+            }
           }}
         />
       )}

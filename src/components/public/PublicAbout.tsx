@@ -3,6 +3,7 @@
 import { useAppStore } from '@/lib/store';
 import { BookOpen, Heart, Shield, Users, Sparkles, Quote, ImageIcon } from 'lucide-react';
 import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
+import { MODERN_ICONS_MAP } from '@/components/ui/IconPickerModal';
 import { motion } from 'framer-motion';
 
 export function PublicWelcome() {
@@ -156,7 +157,10 @@ export function PublicPrinciples() {
         {/* Values Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {values.map((v, index) => {
-            const Icon = v.icon;
+            const DefaultIcon = v.icon;
+            const isUrl = v.image && (v.image.startsWith('http') || v.image.startsWith('/') || v.image.startsWith('data:'));
+            const CustomIconComp = !isUrl && v.image ? MODERN_ICONS_MAP[v.image] : null;
+
             return (
               <motion.div
                 key={v.title}
@@ -166,11 +170,13 @@ export function PublicPrinciples() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-slate-900/80 border border-slate-700/50 hover:border-orange-500/30 rounded-2xl p-6 shadow-xl transition-all hover:-translate-y-1 group"
               >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${v.color} border flex items-center justify-center mb-5 group-hover:scale-110 transition-transform overflow-hidden p-2`}>
-                  {v.image ? (
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${v.color} border flex items-center justify-center mb-5 group-hover:scale-110 transition-transform overflow-hidden p-2.5`}>
+                  {isUrl ? (
                     <img src={v.image} alt={v.title} className="w-full h-full object-contain" />
+                  ) : CustomIconComp ? (
+                    <CustomIconComp className="w-6 h-6" />
                   ) : (
-                    <Icon className="w-6 h-6" />
+                    <DefaultIcon className="w-6 h-6" />
                   )}
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">{v.title}</h3>
