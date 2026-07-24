@@ -91,6 +91,9 @@ export interface AppSettings {
     publicHomeContactPhone?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
+    publicHomeMaintenanceMode?: boolean;
+    publicHomeMaintenanceTitle?: string;
+    publicHomeMaintenanceMessage?: string;
     displayScale?: number; // New: Scale factor for TV displays (0.5 to 1.5)
     displayOffsetX?: number; // New: Manual horizontal adjustment
     displayOffsetY?: number; // New: Manual vertical adjustment
@@ -442,6 +445,9 @@ export const useAppStore = create<AppState>()(
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',
+                publicHomeMaintenanceMode: true,
+                publicHomeMaintenanceTitle: 'Sitio Web en Mantenimiento',
+                publicHomeMaintenanceMessage: 'Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto.',
             },
             currentUser: null,
             minister: {
@@ -2015,6 +2021,9 @@ export const useAppStore = create<AppState>()(
                             publicHomeContactPhone: data.public_home_contact_phone || current.publicHomeContactPhone,
                             publicHomeAddress: data.public_home_address || current.publicHomeAddress,
                             publicHomeMapsUrl: data.public_home_maps_url || current.publicHomeMapsUrl,
+                            publicHomeMaintenanceMode: data.public_home_maintenance_mode ?? current.publicHomeMaintenanceMode ?? true,
+                            publicHomeMaintenanceTitle: data.public_home_maintenance_title || current.publicHomeMaintenanceTitle || 'Sitio Web en Mantenimiento',
+                            publicHomeMaintenanceMessage: data.public_home_maintenance_message || current.publicHomeMaintenanceMessage || 'Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto.',
                             fontWeight: data.display_font_weight || '400',
                             weatherLat: data.weather_lat,
                             weatherLng: data.weather_lng,
@@ -2148,7 +2157,10 @@ export const useAppStore = create<AppState>()(
                     publicHomeMinisterWelcome: 'public_home_minister_welcome',
                     publicHomeContactPhone: 'public_home_contact_phone',
                     publicHomeAddress: 'public_home_address',
-                    publicHomeMapsUrl: 'public_home_maps_url'
+                    publicHomeMapsUrl: 'public_home_maps_url',
+                    publicHomeMaintenanceMode: 'public_home_maintenance_mode',
+                    publicHomeMaintenanceTitle: 'public_home_maintenance_title',
+                    publicHomeMaintenanceMessage: 'public_home_maintenance_message'
                 };
 
                 const dbUpdate: Record<string, any> = {};

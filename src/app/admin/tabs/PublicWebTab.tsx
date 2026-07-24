@@ -13,6 +13,9 @@ export default function PublicWebTab() {
 
   // Form local state initialized with settings
   const [form, setForm] = useState({
+    publicHomeMaintenanceMode: settings.publicHomeMaintenanceMode ?? true,
+    publicHomeMaintenanceTitle: settings.publicHomeMaintenanceTitle || 'Sitio Web en Mantenimiento',
+    publicHomeMaintenanceMessage: settings.publicHomeMaintenanceMessage || 'Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto.',
     publicHomeTitle: settings.publicHomeTitle || 'La Luz del Mundo — Rodeo, CA',
     publicHomeSubtitle: settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia.',
     publicHomeHeroBg: settings.publicHomeHeroBg || '',
@@ -25,7 +28,7 @@ export default function PublicWebTab() {
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
   });
 
-  const handleChange = (key: string, value: string) => {
+  const handleChange = (key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));
   };
 
@@ -84,6 +87,86 @@ export default function PublicWebTab() {
           </button>
         </div>
       </div>
+
+      {/* ── MODO MANTENIMIENTO ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className={`rounded-3xl p-6 backdrop-blur-xl border transition-all ${
+          form.publicHomeMaintenanceMode
+            ? 'bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent border-amber-500/30'
+            : 'bg-white/[0.03] border-white/8'
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+          <div className="flex items-start gap-4">
+            <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 border ${
+              form.publicHomeMaintenanceMode
+                ? 'bg-amber-500/20 border-amber-500/40 text-amber-400'
+                : 'bg-white/5 border-white/10 text-white/40'
+            }`}>
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-extrabold text-white">Modo Mantenimiento del Sitio Web</h3>
+                <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border ${
+                  form.publicHomeMaintenanceMode
+                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                }`}>
+                  {form.publicHomeMaintenanceMode ? '🔒 ACTIVADO (Oculto al Público)' : '🌐 DESACTIVADO (Sitio Visible)'}
+                </span>
+              </div>
+              <p className="text-xs text-white/50 mt-1">
+                Al estar <strong className="text-white">ACTIVADO</strong>, los visitantes verán una pantalla elegante de mantenimiento mientras realizas cambios. Los miembros y pantallas de la iglesia pueden seguir usando sus accesos normalmente.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => handleChange('publicHomeMaintenanceMode', !form.publicHomeMaintenanceMode)}
+            className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl flex items-center justify-center gap-2 shrink-0 ${
+              form.publicHomeMaintenanceMode
+                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-amber-500/20 hover:scale-105'
+                : 'bg-white/10 hover:bg-white/15 text-white/80 border border-white/10'
+            }`}
+          >
+            <span>{form.publicHomeMaintenanceMode ? '🔒 Desactivar Mantenimiento' : '🔓 Activar Mantenimiento'}</span>
+          </button>
+        </div>
+
+        {form.publicHomeMaintenanceMode && (
+          <div className="mt-6 pt-6 border-t border-amber-500/20 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] font-bold text-amber-300/80 uppercase tracking-wider mb-1.5">
+                Título del Aviso de Mantenimiento
+              </label>
+              <input
+                type="text"
+                value={form.publicHomeMaintenanceTitle}
+                onChange={e => handleChange('publicHomeMaintenanceTitle', e.target.value)}
+                placeholder="Sitio Web en Mantenimiento"
+                className="w-full bg-black/40 border border-amber-500/30 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-amber-300/80 uppercase tracking-wider mb-1.5">
+                Mensaje Informativo para Visitantes
+              </label>
+              <input
+                type="text"
+                value={form.publicHomeMaintenanceMessage}
+                onChange={e => handleChange('publicHomeMaintenanceMessage', e.target.value)}
+                placeholder="Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto."
+                className="w-full bg-black/40 border border-amber-500/30 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-amber-400"
+              />
+            </div>
+          </div>
+        )}
+      </motion.div>
 
       {/* ── SECCIÓN 1: PORTADA PRINCIPAL (HERO) ── */}
       <motion.div
