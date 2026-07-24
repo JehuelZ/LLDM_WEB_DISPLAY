@@ -609,7 +609,8 @@ export default function PublicWebTab() {
               </div>
             );
           })}
-
+        </div>
+      </motion.div>
 
       {/* ── SECCIÓN 2: PORTADA PRINCIPAL (HERO) ── */}
       <motion.div
@@ -1588,7 +1589,6 @@ export default function PublicWebTab() {
               className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors font-mono text-xs"
             />
           </div>
-        </div>
 
         {/* Redes Sociales Oficiales */}
         <div className="pt-6 border-t border-white/5 space-y-4">
