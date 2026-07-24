@@ -13,10 +13,10 @@ export function PublicHeader() {
   const logoSize = settings.churchOfficialLogoSize || 'large';
 
   const logoSizeClass = logoSize === 'medium'
-    ? 'h-12 sm:h-14'
+    ? 'h-16 sm:h-20'
     : logoSize === 'xlarge'
-    ? 'h-20 sm:h-24'
-    : 'h-16 sm:h-20'; // large
+    ? 'h-32 sm:h-40 md:h-48'
+    : 'h-24 sm:h-32'; // large
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/40 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] transition-all">
@@ -24,8 +24,8 @@ export function PublicHeader() {
         logoAlign === 'center'
           ? 'flex flex-col items-center gap-3'
           : logoAlign === 'right'
-          ? 'flex flex-row-reverse items-center justify-between gap-6 h-20'
-          : 'flex flex-row items-center justify-between gap-6 h-20'
+          ? 'flex flex-row-reverse items-center justify-between gap-6 min-h-[80px]'
+          : 'flex flex-row items-center justify-between gap-6 min-h-[80px]'
       }`}>
         {/* Brand / Logo */}
         <a href="/" className="flex items-center gap-4 group shrink-0">
