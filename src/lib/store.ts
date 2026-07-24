@@ -78,6 +78,19 @@ export interface AppSettings {
     adminTheme?: 'classic' | 'tactile' | 'luna' | 'primitivo';
     displayPin?: string; // New: Access code for TV/Display mode
     displayTemplate?: 'iglesia' | 'cristal' | 'minimal' | 'nocturno' | 'neon' | 'luna' | 'primitivo';
+
+    // Public Home Page CMS Settings
+    publicHomeTitle?: string;
+    publicHomeSubtitle?: string;
+    publicHomeHeroBg?: string;
+    publicHomeCtaText?: string;
+    publicHomeCtaLink?: string;
+    publicHomeAboutTitle?: string;
+    publicHomeAboutText?: string;
+    publicHomeMinisterWelcome?: string;
+    publicHomeContactPhone?: string;
+    publicHomeAddress?: string;
+    publicHomeMapsUrl?: string;
     displayScale?: number; // New: Scale factor for TV displays (0.5 to 1.5)
     displayOffsetX?: number; // New: Manual horizontal adjustment
     displayOffsetY?: number; // New: Manual vertical adjustment
@@ -418,6 +431,17 @@ export const useAppStore = create<AppState>()(
                 customLogo4: '',
                 minimalShowWeather: true,
                 minimalShowForecast: true,
+                publicHomeTitle: 'La Luz del Mundo',
+                publicHomeSubtitle: 'Un lugar de fe, comunión y esperanza para toda la familia.',
+                publicHomeHeroBg: '',
+                publicHomeCtaText: 'Conoce Nuestros Horarios',
+                publicHomeCtaLink: '#horarios',
+                publicHomeAboutTitle: 'Nuestra Fe y Principios',
+                publicHomeAboutText: 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
+                publicHomeMinisterWelcome: 'Les damos una calurosa bienvenida a nuestra congregación en Rodeo, California. Nuestra iglesia está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
+                publicHomeContactPhone: '(510) 000-0000',
+                publicHomeAddress: 'Rodeo, CA',
+                publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',
             },
             currentUser: null,
             minister: {
@@ -1979,7 +2003,18 @@ export const useAppStore = create<AppState>()(
                             customLogo3: data.custom_logo_3,
                             customLogo4: data.custom_logo_4,
                             weatherUnit: data.weather_unit || 'fahrenheit',
-                            fontMain: data.display_font_family || 'Poppins',
+                            fontMain: data.font_main || 'Poppins',
+                            publicHomeTitle: data.public_home_title || current.publicHomeTitle,
+                            publicHomeSubtitle: data.public_home_subtitle || current.publicHomeSubtitle,
+                            publicHomeHeroBg: data.public_home_hero_bg || current.publicHomeHeroBg,
+                            publicHomeCtaText: data.public_home_cta_text || current.publicHomeCtaText,
+                            publicHomeCtaLink: data.public_home_cta_link || current.publicHomeCtaLink,
+                            publicHomeAboutTitle: data.public_home_about_title || current.publicHomeAboutTitle,
+                            publicHomeAboutText: data.public_home_about_text || current.publicHomeAboutText,
+                            publicHomeMinisterWelcome: data.public_home_minister_welcome || current.publicHomeMinisterWelcome,
+                            publicHomeContactPhone: data.public_home_contact_phone || current.publicHomeContactPhone,
+                            publicHomeAddress: data.public_home_address || current.publicHomeAddress,
+                            publicHomeMapsUrl: data.public_home_maps_url || current.publicHomeMapsUrl,
                             fontWeight: data.display_font_weight || '400',
                             weatherLat: data.weather_lat,
                             weatherLng: data.weather_lng,
@@ -2102,7 +2137,18 @@ export const useAppStore = create<AppState>()(
                     neonForgeCityData: 'neon_forge_city_data',
                     mainChurchName: 'main_church_name',
                     mainChurch: 'main_church_obj',
-                    missions: 'missions'
+                    missions: 'missions',
+                    publicHomeTitle: 'public_home_title',
+                    publicHomeSubtitle: 'public_home_subtitle',
+                    publicHomeHeroBg: 'public_home_hero_bg',
+                    publicHomeCtaText: 'public_home_cta_text',
+                    publicHomeCtaLink: 'public_home_cta_link',
+                    publicHomeAboutTitle: 'public_home_about_title',
+                    publicHomeAboutText: 'public_home_about_text',
+                    publicHomeMinisterWelcome: 'public_home_minister_welcome',
+                    publicHomeContactPhone: 'public_home_contact_phone',
+                    publicHomeAddress: 'public_home_address',
+                    publicHomeMapsUrl: 'public_home_maps_url'
                 };
 
                 const dbUpdate: Record<string, any> = {};

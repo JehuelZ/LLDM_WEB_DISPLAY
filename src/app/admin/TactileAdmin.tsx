@@ -20,6 +20,7 @@ import { CorosTab } from './tabs/CorosTab'
 import { PerfilTab } from './tabs/PerfilTab'
 import { MensajesTab } from './tabs/MensajesTab'
 import { EstilosTab } from './tabs/EstilosTab'
+import PublicWebTab from './tabs/PublicWebTab'
 
 import { ImageEditor } from '@/components/admin/ImageEditor'
 
@@ -266,6 +267,9 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
                         }}
                     />
                 );
+            case 'public_web':
+            case 'publico':
+                return <PublicWebTab />;
             default:
                 return <DashboardTab 
                     setActiveTab={setActiveTab}

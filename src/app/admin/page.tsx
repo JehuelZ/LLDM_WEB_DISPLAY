@@ -33,6 +33,7 @@ import PremiumCalendar from '@/components/ui/PremiumCalendar';
 import { AsistenciaTab } from './tabs/AsistenciaTab';
 import { MensajesTab } from './tabs/MensajesTab';
 import { ContenidoTab } from './tabs/ContenidoTab';
+import PublicWebTab from './tabs/PublicWebTab';
 import { AjustesTab } from './tabs/AjustesTab';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 
@@ -911,12 +912,14 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
             'temas': 'contenido',
             'contenido': 'contenido',
             'ajustes': 'configuracion',
-            'configuracion': 'configuracion'
+            'configuracion': 'configuracion',
+            'publico': 'public_web',
+            'public_web': 'public_web'
         };
 
         const mappedTab = aliasMap[queryTab] || queryTab;
 
-        const validTabs = ['dashboard', 'horarios', 'asistencia', 'mensajes', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil'];
+        const validTabs = ['dashboard', 'horarios', 'asistencia', 'mensajes', 'contenido', 'coros', 'configuracion', 'miembros', 'perfil', 'public_web'];
 
         if (mappedTab && validTabs.includes(mappedTab)) {
             setActiveTab(mappedTab);
@@ -2659,6 +2662,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
                         showNotification={showNotification}
                         handleCustomLogoUpload={handleCustomLogoUpload}
                     />
+                )
+            }
+
+            {
+                activeTab === 'public_web' && (
+                    <PublicWebTab />
                 )
             }
 
