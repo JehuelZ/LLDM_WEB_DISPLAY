@@ -40,32 +40,42 @@ export const MODERN_ICONS_MAP: Record<string, React.ComponentType<{ className?: 
   lightbulb: Lightbulb,
 };
 
+export function ModernIconOrImage({
+  value,
+  fallbackIcon: FallbackComp = Sparkles,
+  className = "w-5 h-5"
+}: {
+  value?: string | null;
+  fallbackIcon?: React.ComponentType<{ className?: string }>;
+  className?: string;
+}) {
+  if (!value || typeof value !== 'string') {
+    return <FallbackComp className={className} />;
+  }
+
+  const str = value.trim();
+  if (!str) {
+    return <FallbackComp className={className} />;
+  }
+
+  if (str.startsWith('http://') || str.startsWith('https://') || str.startsWith('/') || str.startsWith('data:')) {
+    return <img src={str} alt="" className="w-full h-full object-contain" />;
+  }
+
+  const IconComp = MODERN_ICONS_MAP[str];
+  if (IconComp) {
+    return <IconComp className={className} />;
+  }
+
+  return <FallbackComp className={className} />;
+}
+
 export function renderModernIconOrImg(
   value: any,
   fallbackIcon: React.ComponentType<{ className?: string }>,
   className = "w-5 h-5"
 ) {
-  try {
-    const Fallback = fallbackIcon || Sparkles;
-    if (!value || typeof value !== 'string') {
-      return <Fallback className={className} />;
-    }
-
-    const str = value.trim();
-    if (str.startsWith('http://') || str.startsWith('https://') || str.startsWith('/') || str.startsWith('data:')) {
-      return <img src={str} alt="" className="w-full h-full object-contain" />;
-    }
-
-    const IconComp = MODERN_ICONS_MAP[str];
-    if (IconComp) {
-      return <IconComp className={className} />;
-    }
-
-    return <Fallback className={className} />;
-  } catch (err) {
-    const Fallback = fallbackIcon || Sparkles;
-    return <Fallback className={className} />;
-  }
+  return <ModernIconOrImage value={value} fallbackIcon={fallbackIcon} className={className} />;
 }
 
 export const MODERN_ICON_CATEGORIES = [
@@ -127,14 +137,7 @@ export function IconPickerModal({ isOpen, onClose, onSelectIcon, currentIconId }
   if (!isOpen) return null;
 
   const handleSelect = (iconId: string) => {
-    try {
-      onSelectIcon(iconId);
-    } catch (e) {
-      console.error(e);
-    }
-    setTimeout(() => {
-      onClose();
-    }, 10);
+    onSelectIcon(iconId);
   };
 
   return (
