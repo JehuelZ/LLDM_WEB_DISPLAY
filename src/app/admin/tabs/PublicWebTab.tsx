@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
 import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck, AlignLeft, AlignCenter, AlignRight, Maximize2, MoveUp, MoveDown, GripVertical, Layers } from 'lucide-react';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
-import { IconPickerModal, MODERN_ICONS_MAP } from '@/components/ui/IconPickerModal';
+import { IconPickerModal, MODERN_ICONS_MAP, renderModernIconOrImg } from '@/components/ui/IconPickerModal';
 import { motion } from 'framer-motion';
 
 const CURATED_FONT_GROUPS = [
@@ -1296,13 +1296,29 @@ export default function PublicWebTab() {
                     {renderModernIconOrImg(form.publicHomeValue1Image, Sparkles, "w-5 h-5")}
                   </div>
                 )}
-                <input
-                  type="text"
+                <select
                   value={form.publicHomeValue1Image || ''}
                   onChange={e => handleChange('publicHomeValue1Image', e.target.value)}
-                  placeholder="Ícono elegido o URL de foto..."
-                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
-                />
+                  className="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 font-sans cursor-pointer"
+                >
+                  <option value="" className="bg-gray-900 text-white/50">-- Seleccionar ícono rápido --</option>
+                  <option value="flame" className="bg-gray-900 text-white">🔥 Flama Sacra</option>
+                  <option value="church" className="bg-gray-900 text-white">🏛️ Casa de Oración (LLDM)</option>
+                  <option value="book" className="bg-gray-900 text-white">📖 Biblia / Doctrina</option>
+                  <option value="sun" className="bg-gray-900 text-white">☀️ Luz / Sol</option>
+                  <option value="star" className="bg-gray-900 text-white">⭐ Estrella / Esperanza</option>
+                  <option value="sparkles" className="bg-gray-900 text-white">✨ Destello / Gracia</option>
+                  <option value="heart" className="bg-gray-900 text-white">❤️ Amor Fraternal</option>
+                  <option value="handshake" className="bg-gray-900 text-white">🤝 Unidad & Comunión</option>
+                  <option value="users" className="bg-gray-900 text-white">👥 Comunidad / Hermanos</option>
+                  <option value="userCheck" className="bg-gray-900 text-white">👤 Fidelidad / Miembro</option>
+                  <option value="shield" className="bg-gray-900 text-white">🛡️ Protección / Integridad</option>
+                  <option value="award" className="bg-gray-900 text-white">🏆 Excelencia / Galardón</option>
+                  <option value="globe" className="bg-gray-900 text-white">🌐 Universalidad / Mundo</option>
+                  <option value="mapPin" className="bg-gray-900 text-white">📍 Ubicación / Templo</option>
+                  <option value="bell" className="bg-gray-900 text-white">🔔 Oración / Llamado</option>
+                  <option value="music" className="bg-gray-900 text-white">🎵 Alabanza / Coro</option>
+                </select>
               </div>
 
               <input
@@ -1357,13 +1373,29 @@ export default function PublicWebTab() {
                     {renderModernIconOrImg(form.publicHomeValue2Image, Heart, "w-5 h-5")}
                   </div>
                 )}
-                <input
-                  type="text"
+                <select
                   value={form.publicHomeValue2Image || ''}
                   onChange={e => handleChange('publicHomeValue2Image', e.target.value)}
-                  placeholder="Ícono elegido o URL de foto..."
-                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
-                />
+                  className="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 font-sans cursor-pointer"
+                >
+                  <option value="" className="bg-gray-900 text-white/50">-- Seleccionar ícono rápido --</option>
+                  <option value="flame" className="bg-gray-900 text-white">🔥 Flama Sacra</option>
+                  <option value="church" className="bg-gray-900 text-white">🏛️ Casa de Oración (LLDM)</option>
+                  <option value="book" className="bg-gray-900 text-white">📖 Biblia / Doctrina</option>
+                  <option value="sun" className="bg-gray-900 text-white">☀️ Luz / Sol</option>
+                  <option value="star" className="bg-gray-900 text-white">⭐ Estrella / Esperanza</option>
+                  <option value="sparkles" className="bg-gray-900 text-white">✨ Destello / Gracia</option>
+                  <option value="heart" className="bg-gray-900 text-white">❤️ Amor Fraternal</option>
+                  <option value="handshake" className="bg-gray-900 text-white">🤝 Unidad & Comunión</option>
+                  <option value="users" className="bg-gray-900 text-white">👥 Comunidad / Hermanos</option>
+                  <option value="userCheck" className="bg-gray-900 text-white">👤 Fidelidad / Miembro</option>
+                  <option value="shield" className="bg-gray-900 text-white">🛡️ Protección / Integridad</option>
+                  <option value="award" className="bg-gray-900 text-white">🏆 Excelencia / Galardón</option>
+                  <option value="globe" className="bg-gray-900 text-white">🌐 Universalidad / Mundo</option>
+                  <option value="mapPin" className="bg-gray-900 text-white">📍 Ubicación / Templo</option>
+                  <option value="bell" className="bg-gray-900 text-white">🔔 Oración / Llamado</option>
+                  <option value="music" className="bg-gray-900 text-white">🎵 Alabanza / Coro</option>
+                </select>
               </div>
 
               <input
@@ -1418,13 +1450,29 @@ export default function PublicWebTab() {
                     {renderModernIconOrImg(form.publicHomeValue3Image, Globe, "w-5 h-5")}
                   </div>
                 )}
-                <input
-                  type="text"
+                <select
                   value={form.publicHomeValue3Image || ''}
                   onChange={e => handleChange('publicHomeValue3Image', e.target.value)}
-                  placeholder="Ícono elegido o URL de foto..."
-                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
-                />
+                  className="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 font-sans cursor-pointer"
+                >
+                  <option value="" className="bg-gray-900 text-white/50">-- Seleccionar ícono rápido --</option>
+                  <option value="flame" className="bg-gray-900 text-white">🔥 Flama Sacra</option>
+                  <option value="church" className="bg-gray-900 text-white">🏛️ Casa de Oración (LLDM)</option>
+                  <option value="book" className="bg-gray-900 text-white">📖 Biblia / Doctrina</option>
+                  <option value="sun" className="bg-gray-900 text-white">☀️ Luz / Sol</option>
+                  <option value="star" className="bg-gray-900 text-white">⭐ Estrella / Esperanza</option>
+                  <option value="sparkles" className="bg-gray-900 text-white">✨ Destello / Gracia</option>
+                  <option value="heart" className="bg-gray-900 text-white">❤️ Amor Fraternal</option>
+                  <option value="handshake" className="bg-gray-900 text-white">🤝 Unidad & Comunión</option>
+                  <option value="users" className="bg-gray-900 text-white">👥 Comunidad / Hermanos</option>
+                  <option value="userCheck" className="bg-gray-900 text-white">👤 Fidelidad / Miembro</option>
+                  <option value="shield" className="bg-gray-900 text-white">🛡️ Protección / Integridad</option>
+                  <option value="award" className="bg-gray-900 text-white">🏆 Excelencia / Galardón</option>
+                  <option value="globe" className="bg-gray-900 text-white">🌐 Universalidad / Mundo</option>
+                  <option value="mapPin" className="bg-gray-900 text-white">📍 Ubicación / Templo</option>
+                  <option value="bell" className="bg-gray-900 text-white">🔔 Oración / Llamado</option>
+                  <option value="music" className="bg-gray-900 text-white">🎵 Alabanza / Coro</option>
+                </select>
               </div>
 
               <input
@@ -1479,13 +1527,29 @@ export default function PublicWebTab() {
                     {renderModernIconOrImg(form.publicHomeValue4Image, Sparkles, "w-5 h-5")}
                   </div>
                 )}
-                <input
-                  type="text"
+                <select
                   value={form.publicHomeValue4Image || ''}
                   onChange={e => handleChange('publicHomeValue4Image', e.target.value)}
-                  placeholder="Ícono elegido o URL de foto..."
-                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-[11px] font-mono text-white focus:outline-none focus:border-amber-500/50"
-                />
+                  className="flex-1 bg-black/60 border border-white/15 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 font-sans cursor-pointer"
+                >
+                  <option value="" className="bg-gray-900 text-white/50">-- Seleccionar ícono rápido --</option>
+                  <option value="flame" className="bg-gray-900 text-white">🔥 Flama Sacra</option>
+                  <option value="church" className="bg-gray-900 text-white">🏛️ Casa de Oración (LLDM)</option>
+                  <option value="book" className="bg-gray-900 text-white">📖 Biblia / Doctrina</option>
+                  <option value="sun" className="bg-gray-900 text-white">☀️ Luz / Sol</option>
+                  <option value="star" className="bg-gray-900 text-white">⭐ Estrella / Esperanza</option>
+                  <option value="sparkles" className="bg-gray-900 text-white">✨ Destello / Gracia</option>
+                  <option value="heart" className="bg-gray-900 text-white">❤️ Amor Fraternal</option>
+                  <option value="handshake" className="bg-gray-900 text-white">🤝 Unidad & Comunión</option>
+                  <option value="users" className="bg-gray-900 text-white">👥 Comunidad / Hermanos</option>
+                  <option value="userCheck" className="bg-gray-900 text-white">👤 Fidelidad / Miembro</option>
+                  <option value="shield" className="bg-gray-900 text-white">🛡️ Protección / Integridad</option>
+                  <option value="award" className="bg-gray-900 text-white">🏆 Excelencia / Galardón</option>
+                  <option value="globe" className="bg-gray-900 text-white">🌐 Universalidad / Mundo</option>
+                  <option value="mapPin" className="bg-gray-900 text-white">📍 Ubicación / Templo</option>
+                  <option value="bell" className="bg-gray-900 text-white">🔔 Oración / Llamado</option>
+                  <option value="music" className="bg-gray-900 text-white">🎵 Alabanza / Coro</option>
+                </select>
               </div>
 
               <input
