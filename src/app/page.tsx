@@ -138,7 +138,7 @@ function MaintenanceView() {
 }
 
 export default function HomePage() {
-  const { settings, loadSettingsFromCloud } = useAppStore();
+  const { currentUser, settings, loadSettingsFromCloud } = useAppStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -154,18 +154,33 @@ export default function HomePage() {
     );
   }
 
-  // If maintenance mode is active (default true), render maintenance view
-  if (settings.publicHomeMaintenanceMode) {
+  // Check if current logged-in user is Administrator or Minister
+  const isPrivilegedUser = currentUser && (
+    currentUser.role === 'Administrador' ||
+    currentUser.role === 'Ministro a Cargo' ||
+    currentUser.privileges?.includes('admin')
+  );
+
+  // If maintenance mode is active AND user is NOT Admin/Minister, render maintenance view
+  if (settings.publicHomeMaintenanceMode && !isPrivilegedUser) {
     return <MaintenanceView />;
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white selection:bg-orange-500/30 selection:text-orange-300 font-sans antialiased overflow-x-hidden">
+      {/* Admin/Minister Preview Floating Banner when Maintenance Mode is ON */}
+      {settings.publicHomeMaintenanceMode && isPrivilegedUser && (
+        <div className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-slate-950 px-4 py-2.5 text-center text-xs font-black tracking-wide flex items-center justify-center gap-2 border-b border-amber-400/30 shadow-xl fixed top-0 left-0 right-0 z-[100] backdrop-blur-md">
+          <Sparkles className="w-4 h-4 text-slate-950 animate-spin" />
+          <span>VISTA PREVIA DE AUTORIDAD (Administrador / Ministro) — El sitio web está oculto en mantenimiento para las visitas.</span>
+        </div>
+      )}
+
       {/* Navigation Bar */}
       <PublicHeader />
 
       {/* Main Content */}
-      <main>
+      <main className={settings.publicHomeMaintenanceMode && isPrivilegedUser ? 'pt-8' : ''}>
         {/* Hero Section */}
         <PublicHero />
 
