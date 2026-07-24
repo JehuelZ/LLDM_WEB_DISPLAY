@@ -11,6 +11,7 @@ export default function PublicWebTab() {
   const [isSaving, setIsSaving] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo' | 'aboutImage' | 'principlesImage'>('heroBg');
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   // Form local state initialized with settings
   const [form, setForm] = useState({
@@ -62,6 +63,29 @@ export default function PublicWebTab() {
     currentOrder[index] = currentOrder[targetIndex];
     currentOrder[targetIndex] = temp;
     handleChange('publicHomeSectionsOrder', currentOrder);
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === targetIndex) return;
+
+    const currentOrder = [...(form.publicHomeSectionsOrder || ['hero', 'welcome', 'principles', 'schedule', 'contact'])];
+    const draggedItem = currentOrder[draggedIndex];
+    currentOrder.splice(draggedIndex, 1);
+    currentOrder.splice(targetIndex, 0, draggedItem);
+
+    handleChange('publicHomeSectionsOrder', currentOrder);
+    setDraggedIndex(null);
   };
 
   const handleSave = async () => {
@@ -337,7 +361,7 @@ export default function PublicWebTab() {
         </div>
       </motion.div>
 
-      {/* ── CONTROL DE ORDEN DE SECCIONES ── */}
+      {/* ── CONTROL DE ORDEN DE SECCIONES (CON ARRASTRAR Y SOLTAR) ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -349,11 +373,11 @@ export default function PublicWebTab() {
           </div>
           <div>
             <h3 className="text-base font-bold text-white">Orden Personalizado de Secciones</h3>
-            <p className="text-xs text-white/40">Organiza las secciones de la página pública en el orden exacto que prefieras usando las flechas de Subir y Bajar.</p>
+            <p className="text-xs text-white/40">Arrastra cada sección con el mouse o usa los botones de Subir / Bajar para reordenar tu página web pública.</p>
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {(form.publicHomeSectionsOrder || ['hero', 'welcome', 'principles', 'schedule', 'contact']).map((key, index, arr) => {
             const labelMap: Record<string, { title: string; subtitle: string }> = {
               hero: { title: 'Portada Principal (Hero)', subtitle: 'Título, subtítulo, botón CTA y foto de fondo' },
@@ -363,26 +387,36 @@ export default function PublicWebTab() {
               contact: { title: 'Contacto & Ubicación', subtitle: 'Dirección, teléfono y mapa de Google' },
             };
             const item = labelMap[key] || { title: key, subtitle: '' };
+            const isDragging = draggedIndex === index;
 
             return (
               <div
                 key={key}
-                className="flex items-center justify-between bg-white/[0.04] border border-white/10 hover:border-orange-500/30 rounded-2xl p-3 px-4 transition-all"
+                draggable
+                onDragStart={(e) => handleDragStart(e, index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDrop={(e) => handleDrop(e, index)}
+                onDragEnd={() => setDraggedIndex(null)}
+                className={`flex items-center justify-between rounded-2xl p-3 px-4 transition-all cursor-grab active:cursor-grabbing select-none ${
+                  isDragging
+                    ? 'opacity-40 bg-orange-500/10 border-2 border-dashed border-orange-500 scale-[0.99]'
+                    : 'bg-white/[0.04] border border-white/10 hover:border-orange-500/40 hover:bg-white/[0.07]'
+                }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-1.5 rounded-lg bg-black/40 text-white/40">
-                    <GripVertical className="w-4 h-4 text-orange-400" />
+                  <div className="p-2 rounded-xl bg-black/40 text-orange-400 group-hover:scale-110 transition-transform">
+                    <GripVertical className="w-4 h-4" />
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                      <span className="text-orange-400 font-mono text-xs">Posición #{index + 1}</span>
+                      <span className="text-orange-400 font-mono text-xs font-black">#{index + 1}</span>
                       <span>{item.title}</span>
                     </h4>
                     <p className="text-[11px] text-white/40">{item.subtitle}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                   <button
                     type="button"
                     onClick={() => moveSection(index, 'up')}
