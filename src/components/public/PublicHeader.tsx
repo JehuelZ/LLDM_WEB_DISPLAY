@@ -19,7 +19,7 @@ export function PublicHeader() {
     : 'h-16 sm:h-20'; // large
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/10 transition-all">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/40 backdrop-blur-2xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.1)] transition-all">
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 transition-all ${
         logoAlign === 'center'
           ? 'flex flex-col items-center gap-3'
