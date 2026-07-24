@@ -408,6 +408,7 @@ export const useAppStore = create<AppState>()(
             settings: {
                 themeMode: 'dark',
                 churchIcon: 'custom',
+                churchOfficialLogoUrl: '',
                 primaryColor: '#3b82f6',
                 showMinisterOnDisplay: true,
                 language: 'es',

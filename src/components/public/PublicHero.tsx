@@ -28,11 +28,25 @@ export function PublicHero() {
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+        {/* Floating Official Worldwide Church Emblem */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7 }}
+          className="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-orange-500/20 via-amber-500/10 to-transparent border border-orange-500/30 p-3 backdrop-blur-2xl shadow-[0_0_50px_rgba(249,115,22,0.25)] flex items-center justify-center group"
+        >
+          <img
+            src={settings.churchOfficialLogoUrl || '/flame_logo_premium.png'}
+            alt="Logo Oficial La Luz del Mundo"
+            className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform duration-500"
+          />
+        </motion.div>
+
         {/* Emblem / Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/[0.06] border border-orange-500/30 backdrop-blur-md"
         >
           <Sparkles className="w-4 h-4 text-orange-400" />

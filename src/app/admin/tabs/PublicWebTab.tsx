@@ -19,6 +19,7 @@ export default function PublicWebTab() {
     publicHomeTitle: settings.publicHomeTitle || 'La Luz del Mundo — Rodeo, CA',
     publicHomeSubtitle: settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia.',
     publicHomeHeroBg: settings.publicHomeHeroBg || '',
+    churchOfficialLogoUrl: settings.churchOfficialLogoUrl || '',
     publicHomeCtaText: settings.publicHomeCtaText || 'Conoce Nuestros Horarios',
     publicHomeAboutTitle: settings.publicHomeAboutTitle || 'Nuestra Fe y Principios',
     publicHomeAboutText: settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
@@ -26,6 +27,9 @@ export default function PublicWebTab() {
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
+    facebookUrl: settings.facebookUrl || '',
+    instagramUrl: settings.instagramUrl || '',
+    youtubeUrl: settings.youtubeUrl || '',
   });
 
 
@@ -226,6 +230,29 @@ export default function PublicWebTab() {
                 className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-colors"
               />
             </div>
+
+            {/* Logo Oficial de la Iglesia Mundial (Flotante) */}
+            <div className="pt-2 border-t border-white/5 space-y-2">
+              <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider">
+                Logo Oficial Mundial (Escudo de la Iglesia)
+              </label>
+              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
+                <div className="w-12 h-12 rounded-xl bg-black/50 border border-orange-500/30 p-1.5 shrink-0 flex items-center justify-center">
+                  <img
+                    src={form.churchOfficialLogoUrl || '/flame_logo_premium.png'}
+                    alt="Oficial"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <input
+                  type="text"
+                  value={form.churchOfficialLogoUrl}
+                  onChange={e => handleChange('churchOfficialLogoUrl', e.target.value)}
+                  placeholder="Predeterminado (Escudo Oficial)"
+                  className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-orange-500/50"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Imagen de Fondo de Portada */}
@@ -411,6 +438,43 @@ export default function PublicWebTab() {
               placeholder="https://maps.google.com/?q=Rodeo,+CA"
               className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors font-mono text-xs"
             />
+          </div>
+        </div>
+
+        {/* Redes Sociales Oficiales */}
+        <div className="pt-6 border-t border-white/5 space-y-4">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-orange-400">Enlaces de Redes Sociales (Aparecerán en el Pie de Página)</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-[11px] font-semibold text-white/60 mb-1">Página de Facebook</label>
+              <input
+                type="text"
+                value={form.facebookUrl}
+                onChange={e => handleChange('facebookUrl', e.target.value)}
+                placeholder="https://facebook.com/..."
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-white/60 mb-1">Perfil de Instagram</label>
+              <input
+                type="text"
+                value={form.instagramUrl}
+                onChange={e => handleChange('instagramUrl', e.target.value)}
+                placeholder="https://instagram.com/..."
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-white/60 mb-1">Canal de YouTube / Transmisión</label>
+              <input
+                type="text"
+                value={form.youtubeUrl}
+                onChange={e => handleChange('youtubeUrl', e.target.value)}
+                placeholder="https://youtube.com/..."
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500"
+              />
+            </div>
           </div>
         </div>
       </motion.div>

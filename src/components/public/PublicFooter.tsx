@@ -37,8 +37,45 @@ export function PublicFooter() {
             <a href="#contacto" className="hover:text-orange-400 transition-colors">Ubicación</a>
           </div>
 
-          {/* Direct Member & Display Access */}
-          <div className="flex items-center gap-3">
+          {/* Direct Member & Display Access & Social Links */}
+          <div className="flex items-center gap-4 flex-wrap justify-center sm:justify-end">
+            {/* Social Media Buttons */}
+            {settings.facebookUrl && (
+              <a
+                href={settings.facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-blue-600/20 border border-white/10 hover:border-blue-500/40 flex items-center justify-center text-white/70 hover:text-blue-400 transition-all"
+                title="Facebook"
+              >
+                <span className="font-black text-xs">f</span>
+              </a>
+            )}
+            {settings.instagramUrl && (
+              <a
+                href={settings.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-pink-600/20 border border-white/10 hover:border-pink-500/40 flex items-center justify-center text-white/70 hover:text-pink-400 transition-all"
+                title="Instagram"
+              >
+                <span className="font-black text-xs">ig</span>
+              </a>
+            )}
+            {settings.youtubeUrl && (
+              <a
+                href={settings.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-red-600/20 border border-white/10 hover:border-red-500/40 flex items-center justify-center text-white/70 hover:text-red-400 transition-all"
+                title="YouTube / Transmisión"
+              >
+                <span className="font-black text-xs">▶</span>
+              </a>
+            )}
+
+            <span className="text-white/20 hidden sm:inline">•</span>
+
             <a
               href="/portal"
               className="flex items-center gap-1.5 text-xs text-orange-400 hover:text-orange-300 font-bold transition-colors"
