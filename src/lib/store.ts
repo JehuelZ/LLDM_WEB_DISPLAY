@@ -2082,6 +2082,7 @@ export const useAppStore = create<AppState>()(
                 const data = incomingData || (await supabase.from('app_settings').select('*').eq('id', 1).single()).data;
                 if (data) {
                     const current = get().settings;
+                    const cloudHomeConfig = data.main_church_obj?.publicHomeConfig || {};
                     set({
                         settings: {
                             ...current,
@@ -2132,20 +2133,21 @@ export const useAppStore = create<AppState>()(
                             customLogo4: data.custom_logo_4,
                             weatherUnit: data.weather_unit || 'fahrenheit',
                             fontMain: data.font_main || 'Poppins',
-                            publicHomeTitle: data.public_home_title || current.publicHomeTitle,
-                            publicHomeSubtitle: data.public_home_subtitle || current.publicHomeSubtitle,
-                            publicHomeHeroBg: data.public_home_hero_bg || current.publicHomeHeroBg,
-                            publicHomeCtaText: data.public_home_cta_text || current.publicHomeCtaText,
-                            publicHomeCtaLink: data.public_home_cta_link || current.publicHomeCtaLink,
-                            publicHomeAboutTitle: data.public_home_about_title || current.publicHomeAboutTitle,
-                            publicHomeAboutText: data.public_home_about_text || current.publicHomeAboutText,
-                            publicHomeMinisterWelcome: data.public_home_minister_welcome || current.publicHomeMinisterWelcome,
-                            publicHomeContactPhone: data.public_home_contact_phone || current.publicHomeContactPhone,
-                            publicHomeAddress: data.public_home_address || current.publicHomeAddress,
-                            publicHomeMapsUrl: data.public_home_maps_url || current.publicHomeMapsUrl,
-                            publicHomeMaintenanceMode: data.public_home_maintenance_mode ?? current.publicHomeMaintenanceMode ?? true,
-                            publicHomeMaintenanceTitle: data.public_home_maintenance_title || current.publicHomeMaintenanceTitle || 'Sitio Web en Mantenimiento',
-                            publicHomeMaintenanceMessage: data.public_home_maintenance_message || current.publicHomeMaintenanceMessage || 'Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto.',
+                            publicHomeTitle: cloudHomeConfig.publicHomeTitle || data.public_home_title || current.publicHomeTitle,
+                            publicHomeSubtitle: cloudHomeConfig.publicHomeSubtitle || data.public_home_subtitle || current.publicHomeSubtitle,
+                            publicHomeHeroBg: cloudHomeConfig.publicHomeHeroBg || data.public_home_hero_bg || current.publicHomeHeroBg,
+                            publicHomeCtaText: cloudHomeConfig.publicHomeCtaText || data.public_home_cta_text || current.publicHomeCtaText,
+                            publicHomeCtaLink: cloudHomeConfig.publicHomeCtaLink || data.public_home_cta_link || current.publicHomeCtaLink,
+                            publicHomeAboutTitle: cloudHomeConfig.publicHomeAboutTitle || data.public_home_about_title || current.publicHomeAboutTitle,
+                            publicHomeAboutText: cloudHomeConfig.publicHomeAboutText || data.public_home_about_text || current.publicHomeAboutText,
+                            publicHomeMinisterWelcome: cloudHomeConfig.publicHomeMinisterWelcome || data.public_home_minister_welcome || current.publicHomeMinisterWelcome,
+                            publicHomeContactPhone: cloudHomeConfig.publicHomeContactPhone || data.public_home_contact_phone || current.publicHomeContactPhone,
+                            publicHomeAddress: cloudHomeConfig.publicHomeAddress || data.public_home_address || current.publicHomeAddress,
+                            publicHomeMapsUrl: cloudHomeConfig.publicHomeMapsUrl || data.public_home_maps_url || current.publicHomeMapsUrl,
+                            publicHomeMaintenanceMode: cloudHomeConfig.publicHomeMaintenanceMode ?? data.public_home_maintenance_mode ?? current.publicHomeMaintenanceMode ?? true,
+                            publicHomeMaintenanceTitle: cloudHomeConfig.publicHomeMaintenanceTitle || data.public_home_maintenance_title || current.publicHomeMaintenanceTitle || 'Sitio Web en Mantenimiento',
+                            publicHomeMaintenanceMessage: cloudHomeConfig.publicHomeMaintenanceMessage || data.public_home_maintenance_message || current.publicHomeMaintenanceMessage || 'Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto.',
+                            ...cloudHomeConfig,
                             fontWeight: data.display_font_weight || '400',
                             weatherLat: data.weather_lat,
                             weatherLng: data.weather_lng,
@@ -2208,6 +2210,25 @@ export const useAppStore = create<AppState>()(
                 const current = get().settings;
                 const updated = { ...current, ...newSettings };
                 
+                // Mapear todas las configuraciones públicas de la Home a main_church_obj.publicHomeConfig para sincronización indestructible en la nube
+                const homeFields: Record<string, any> = {};
+                Object.entries(updated).forEach(([k, v]) => {
+                    if (k.startsWith('publicHome') || k.startsWith('churchOfficialLogo') || k === 'facebookUrl' || k === 'instagramUrl' || k === 'youtubeUrl') {
+                        homeFields[k] = v;
+                    }
+                });
+
+                const currentMainChurchObj = updated.mainChurch || {};
+                const updatedMainChurchObj = {
+                    ...currentMainChurchObj,
+                    publicHomeConfig: {
+                        ...(currentMainChurchObj.publicHomeConfig || {}),
+                        ...homeFields
+                    }
+                };
+
+                updated.mainChurch = updatedMainChurchObj;
+
                 // MAPEO DINÁMICO DE CAMELCASE A SNAKE_CASE
                 const mapping: Record<string, string> = {
                     themeMode: 'theme_mode',
