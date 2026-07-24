@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, Upload, X, Check, Loader2, Images, Search, Sparkles, Tag, Trash2, Link, AlertTriangle, Info, ShieldAlert, CheckSquare, Square, CheckCircle2 } from 'lucide-react';
+import { Image as ImageIcon, Upload, X, Check, Loader2, Images, Search, Sparkles, Tag, Trash2, Link, AlertTriangle, Info, ShieldAlert, CheckSquare, Square, CheckCircle2, Download } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { compressImage } from '@/lib/utils';
 
@@ -229,6 +229,26 @@ export function MediaGalleryModal({
             showNotification?.('Error al procesar la imagen', 'error');
         } finally {
             setUploading(false);
+        }
+    };
+
+    const handleDownload = async (fileUrl: string, fileName: string) => {
+        try {
+            showNotification?.('Iniciando descarga...', 'info');
+            const response = await fetch(fileUrl);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = fileName || 'imagen-galeria.webp';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+            showNotification?.('Imagen descargada exitosamente', 'success');
+        } catch (error) {
+            console.error('Error al descargar la imagen:', error);
+            window.open(fileUrl, '_blank');
         }
     };
 
@@ -498,8 +518,28 @@ export function MediaGalleryModal({
                         </div>
                     )}
 
-                    {/* Content Area */}
-                    <div className="flex-1 overflow-y-auto p-6 min-h-[320px]">
+                    {/* Content Area with Global Drag & Drop Support */}
+                    <div 
+                        onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+                        onDragLeave={(e) => {
+                            if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+                            setDragActive(false);
+                        }}
+                        onDrop={handleDrop}
+                        className="flex-1 overflow-y-auto p-6 min-h-[320px] relative"
+                    >
+                        {/* Drag & Drop Visual Overlay */}
+                        {dragActive && (
+                            <div className="absolute inset-2 z-50 bg-[#0a1120]/95 border-2 border-dashed border-[#A3FF57] rounded-2xl flex flex-col items-center justify-center p-6 text-center gap-3 backdrop-blur-md animate-in fade-in duration-200">
+                                <div className="p-4 rounded-2xl bg-[#A3FF57]/20 text-[#A3FF57] animate-bounce">
+                                    <Upload className="w-10 h-10" />
+                                </div>
+                                <h4 className="text-lg font-black text-white uppercase tracking-wider">Suelta tu imagen aquí</h4>
+                                <p className="text-xs text-white/70 max-w-xs">
+                                    Se optimizará a WebP y se guardará automáticamente en tu galería de medios.
+                                </p>
+                            </div>
+                        )}
                         {activeTab === 'gallery' && (
                             <div>
                                 {loading ? (
@@ -637,19 +677,32 @@ export function MediaGalleryModal({
                                                         </div>
                                                     )}
 
-                                                    {/* Single Delete Button Hover Overlay (When bulkMode is off) */}
+                                                    {/* Single Action Buttons Hover Overlay (When bulkMode is off) */}
                                                     {!bulkMode && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                setFilesToDelete([file]);
-                                                            }}
-                                                            className="absolute bottom-2 right-2 p-1.5 rounded-lg bg-red-500/80 hover:bg-red-600 text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                                                            title="Eliminar de la Galería"
-                                                        >
-                                                            <Trash2 className="w-3.5 h-3.5" />
-                                                        </button>
+                                                        <div className="absolute bottom-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                                                            <button
+                                                                type="button"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleDownload(file.url, file.name);
+                                                                }}
+                                                                className="p-1.5 rounded-lg bg-blue-600/90 hover:bg-blue-500 text-white shadow-lg transition-transform hover:scale-110"
+                                                                title="Descargar Imagen"
+                                                            >
+                                                                <Download className="w-3.5 h-3.5" />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setFilesToDelete([file]);
+                                                                }}
+                                                                className="p-1.5 rounded-lg bg-red-600/90 hover:bg-red-500 text-white shadow-lg transition-transform hover:scale-110"
+                                                                title="Eliminar de la Galería"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                            </button>
+                                                        </div>
                                                     )}
 
                                                     {/* Hover details */}
@@ -761,6 +814,14 @@ export function MediaGalleryModal({
                                         <img src={selectedUrl} alt="" className="w-full h-full object-contain" />
                                     </div>
                                     <span className="text-xs text-white/70 font-mono truncate max-w-[180px]">Imagen seleccionada</span>
+                                    <button
+                                        onClick={() => handleDownload(selectedUrl, 'imagen-seleccionada.webp')}
+                                        className="p-1 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-xs font-bold flex items-center gap-1 px-2 border border-blue-500/30 transition-colors"
+                                        title="Descargar imagen seleccionada"
+                                    >
+                                        <Download className="w-3 h-3" />
+                                        <span>Descargar</span>
+                                    </button>
                                     <button
                                         onClick={() => setSelectedUrl('')}
                                         className="text-red-400 hover:text-red-300 ml-1"
