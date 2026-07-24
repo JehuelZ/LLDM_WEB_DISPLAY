@@ -17,7 +17,8 @@ export function PublicAbout() {
   const image = settings.publicHomeAboutImage || '';
   const imageMode = settings.publicHomeAboutImageMode || 'side';
   const imagePos = settings.publicHomeAboutImagePos || 'left';
-  const titleAlign = settings.publicHomeAboutTitleAlign || 'center';
+  const principlesImage = settings.publicHomePrinciplesImage || '';
+  const principlesImageMode = settings.publicHomePrinciplesImageMode || 'bg';
   const textAlign = settings.publicHomeAboutTextAlign || 'center';
   const bgStyle = settings.publicHomeAboutBgStyle || 'glass';
 
@@ -120,7 +121,14 @@ export function PublicAbout() {
       </section>
 
       {/* ── SECCIÓN 2: NUESTRA FE Y PRINCIPIOS (COLOR SÓLIDO DIFERENCIADO) ── */}
-      <section id="principios" className="py-20 relative z-10 bg-[#0f172a] border-t border-b border-white/10 shadow-2xl">
+      <section id="principios" className="py-20 relative z-10 bg-[#0f172a] border-t border-b border-white/10 shadow-2xl overflow-hidden">
+        {/* Background Image for Principles Section */}
+        {principlesImage && (
+          <div className="absolute inset-0 z-0">
+            <img src={principlesImage} alt="Fondo Principios" className="w-full h-full object-cover opacity-15 filter brightness-[0.8]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/70 to-[#0f172a]" />
+          </div>
+        )}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
           {/* Section Header: About & Values */}
           <div className={`space-y-4 max-w-3xl flex flex-col ${getAlignClass(titleAlign)}`}>

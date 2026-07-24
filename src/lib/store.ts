@@ -98,6 +98,8 @@ export interface AppSettings {
     publicHomeAboutTitleAlign?: 'left' | 'center' | 'right';
     publicHomeAboutTextAlign?: 'left' | 'center' | 'right';
     publicHomeAboutBgStyle?: 'light' | 'dark' | 'glass';
+    publicHomePrinciplesImage?: string;
+    publicHomePrinciplesImageMode?: 'bg' | 'side' | 'none';
     publicHomeContactPhone?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
@@ -468,6 +470,8 @@ export const useAppStore = create<AppState>()(
                 publicHomeAboutTitleAlign: 'center',
                 publicHomeAboutTextAlign: 'center',
                 publicHomeAboutBgStyle: 'glass',
+                publicHomePrinciplesImage: '',
+                publicHomePrinciplesImageMode: 'bg',
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',

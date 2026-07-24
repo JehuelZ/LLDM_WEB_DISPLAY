@@ -10,7 +10,7 @@ export default function PublicWebTab() {
   const { settings, saveSettingsToCloud, showNotification } = useAppStore();
   const [isSaving, setIsSaving] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
-  const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo' | 'aboutImage'>('heroBg');
+  const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo' | 'aboutImage' | 'principlesImage'>('heroBg');
 
   // Form local state initialized with settings
   const [form, setForm] = useState({
@@ -38,6 +38,7 @@ export default function PublicWebTab() {
     publicHomeAboutImageMode: settings.publicHomeAboutImageMode || 'side',
     publicHomeAboutImagePos: settings.publicHomeAboutImagePos || 'left',
     publicHomeAboutBgStyle: settings.publicHomeAboutBgStyle || 'glass',
+    publicHomePrinciplesImage: settings.publicHomePrinciplesImage || '',
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
@@ -829,7 +830,7 @@ export default function PublicWebTab() {
 
             {/* Estilo de Fondo de Sección (Tono Claro / Oscuro / Cristal) */}
             <div>
-              <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Fondo de Sección</span>
+              <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Fondo de Sección de Invitación</span>
               <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
                 <button
                   type="button"
@@ -863,6 +864,41 @@ export default function PublicWebTab() {
                   }`}
                 >
                   Profundo
+                </button>
+              </div>
+            </div>
+
+            {/* Imagen de Fondo para Sección Principios */}
+            <div className="pt-2 border-t border-white/5 space-y-2">
+              <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider">
+                Imagen de Fondo para Sección Principios
+              </label>
+              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
+                <div className="w-12 h-12 rounded-xl bg-black/50 border border-amber-500/30 p-1 shrink-0 overflow-hidden">
+                  {form.publicHomePrinciplesImage ? (
+                    <img src={form.publicHomePrinciplesImage} alt="" className="w-full h-full object-cover rounded-lg" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white/20">
+                      <ImageIcon className="w-5 h-5" />
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="text"
+                  value={form.publicHomePrinciplesImage || ''}
+                  onChange={e => handleChange('publicHomePrinciplesImage', e.target.value)}
+                  placeholder="URL o selecciona de la galería..."
+                  className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-amber-500/50"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setGalleryTargetMode('principlesImage');
+                    setShowGallery(true);
+                  }}
+                  className="px-3 py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold transition-all shrink-0"
+                >
+                  Galería
                 </button>
               </div>
             </div>
@@ -991,6 +1027,8 @@ export default function PublicWebTab() {
               ? form.churchOfficialLogoUrl
               : galleryTargetMode === 'aboutImage'
               ? form.publicHomeAboutImage
+              : galleryTargetMode === 'principlesImage'
+              ? form.publicHomePrinciplesImage
               : form.publicHomeHeroBg
           }
           onClose={() => setShowGallery(false)}
@@ -1000,6 +1038,8 @@ export default function PublicWebTab() {
                 setForm(prev => ({ ...prev, churchOfficialLogoUrl: url }));
               } else if (galleryTargetMode === 'aboutImage') {
                 setForm(prev => ({ ...prev, publicHomeAboutImage: url }));
+              } else if (galleryTargetMode === 'principlesImage') {
+                setForm(prev => ({ ...prev, publicHomePrinciplesImage: url }));
               } else {
                 setForm(prev => ({ ...prev, publicHomeHeroBg: url }));
               }
