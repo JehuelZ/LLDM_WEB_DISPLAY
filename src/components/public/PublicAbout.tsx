@@ -71,24 +71,24 @@ export function PublicAbout() {
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 relative z-10">
-        {/* Minister Welcome Card + Optional Side Image Companion */}
+        {/* Minister Welcome Message + Optional Side Image Companion (Frameless) */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className={`relative bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-transparent border border-orange-500/20 rounded-3xl p-8 sm:p-12 overflow-hidden backdrop-blur-xl grid grid-cols-1 ${
-            imageMode === 'side' && image ? 'lg:grid-cols-12 gap-8 items-center' : ''
+          className={`relative grid grid-cols-1 ${
+            imageMode === 'side' && image ? 'lg:grid-cols-12 gap-10 items-center' : ''
           }`}
         >
-          <div className="absolute top-6 right-8 text-orange-500/10 pointer-events-none">
-            <Quote className="w-32 h-32" />
+          <div className="absolute -top-4 right-0 text-orange-500/5 pointer-events-none">
+            <Quote className="w-40 h-40" />
           </div>
 
           {/* Optional Side Image Column */}
           {imageMode === 'side' && image && (
-            <div className={`shrink-0 lg:col-span-4 ${imagePos === 'right' ? 'lg:order-2' : 'lg:order-1'}`}>
-              <div className="relative aspect-4/3 lg:aspect-square rounded-2xl overflow-hidden border-2 border-orange-500/30 shadow-2xl group">
+            <div className={`shrink-0 lg:col-span-5 ${imagePos === 'right' ? 'lg:order-2' : 'lg:order-1'}`}>
+              <div className="relative aspect-4/3 lg:aspect-4/3 rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
                 <img
                   src={image}
                   alt="Imagen de Acompañamiento"
@@ -99,15 +99,16 @@ export function PublicAbout() {
           )}
 
           {/* Card Text Column */}
-          <div className={`relative z-10 ${imageMode === 'side' && image ? 'lg:col-span-8' : 'w-full'}`}>
-            <div className="space-y-3 text-center md:text-left">
-              <span className="text-xs font-bold uppercase tracking-widest text-orange-400">
-                {welcomeBadge}
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight">
+          <div className={`relative z-10 ${imageMode === 'side' && image ? 'lg:col-span-7' : 'w-full'}`}>
+            <div className="space-y-4 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-bold uppercase tracking-widest">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>{welcomeBadge}</span>
+              </div>
+              <h3 className="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight">
                 {welcomeTitle}
               </h3>
-              <p className="text-white/70 text-base leading-relaxed italic">
+              <p className="text-white/80 text-lg leading-relaxed font-light">
                 "{welcomeText}"
               </p>
             </div>
