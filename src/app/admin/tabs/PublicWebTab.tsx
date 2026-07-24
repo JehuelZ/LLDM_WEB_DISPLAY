@@ -1934,13 +1934,15 @@ export default function PublicWebTab() {
           }
           onClose={() => setShowIconPicker(false)}
           onSelectIcon={(iconId) => {
-            if (iconPickerTargetCard === 'val1') handleChange('publicHomeValue1Image', iconId);
-            else if (iconPickerTargetCard === 'val2') handleChange('publicHomeValue2Image', iconId);
-            else if (iconPickerTargetCard === 'val3') handleChange('publicHomeValue3Image', iconId);
-            else if (iconPickerTargetCard === 'val4') handleChange('publicHomeValue4Image', iconId);
-            setTimeout(() => {
-              setShowIconPicker(false);
-            }, 50);
+            const keyMap = {
+              val1: 'publicHomeValue1Image',
+              val2: 'publicHomeValue2Image',
+              val3: 'publicHomeValue3Image',
+              val4: 'publicHomeValue4Image',
+            };
+            const targetKey = keyMap[iconPickerTargetCard] || 'publicHomeValue1Image';
+            setForm(prev => ({ ...prev, [targetKey]: iconId }));
+            setShowIconPicker(false);
           }}
         />
       )}
