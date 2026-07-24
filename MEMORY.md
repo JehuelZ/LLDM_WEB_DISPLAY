@@ -20,6 +20,12 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
     - **Título Personalizado (`customLabel`)**: si el administrador escribe un título (ej: "AVIVAMIENTOS"), se despliega en mayúsculas como título principal. Si el servicio es `special` y no tiene `customLabel`, todas las plantillas hacen fallback automático a **"SERVICIO ESPECIAL"** (cumpliendo estrictamente la Regla #5 del proyecto).
     - **Ocultar Perfiles (`hideProfiles`)**: al activar esta casilla en cualquier tema, se ocultan los nombres y avatares de los miembros y se despliega en su lugar el logo/ícono oficial de la iglesia en grande junto al título del evento.
     - **Color del Acento Personalizado (`accentColor`)**: todos los temas aplican dinámicamente el color personalizado para bordes, sombras, resplandores e insignias.
+- **Activación QR & Autenticación de Google (Julio 24, 2026):**
+  - **Vinculación Atómica OAuth**: Se corrigió el flujo de activación desde el escaneo del QR code. El parámetro `claim_profile_id` ahora se transmite mediante la URL de retorno de OAuth en `signInWithGoogle(memberFound.id)`, evitando la pérdida de `localStorage` al saltar entre dominios en navegadores móviles.
+  - **Función RPC Atómica `claim_member_portal`**: Actualizada en Supabase SQL para vincular `auth_user_id`, `email`, `status: 'Activo'` e `is_pre_registered: false` en una sola transacción segura.
+  - **Terminología Ministerial**: Se actualizó la interfaz para referirse a la autoridad ministerial como **"habla con tu Ministro"** (reemplazando "líder").
+  - **Nota de Membresía**: Se incorporó una insignia informativa en `/activar`: *"Nota: Este sistema es estrictamente para miembros de la iglesia (Rodeo)"* usando dinámicamente la configuración de la ciudad/iglesia.
+  - **Protección SEO (`robots.txt`)**: Se creó `src/app/robots.ts` y `src/app/sitemap.ts` bloqueando la indexación de las rutas privadas (`/admin`, `/portal`, `/dashboard`, `/display`, `/activar`, `/tv`) y permitiendo solo el acceso público a la raíz (`/`).
 - **Automatización de Mayo:** Calendario de mayo 2026 completado y cargado en Supabase (`schedule`).
 - **Seguridad & Acceso:** 
     - Se habilitó el acceso administrativo para el rol **"Ministro a Cargo"** (E.E. Eliab Aguilar) mediante la actualización de políticas RLS.
@@ -34,21 +40,23 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 - **Interactividad:** Favicon dinámico que cambia de color según el tema activo.
 - **Reportes:** Capacidad de exportar "Fichas Personales" de miembros a PDF usando `html2pdf.js`.
 - **Gestión de Horarios:** Soporte para hasta 3 responsables en servicios especiales (Niños/Jóvenes).
-- **Servicios Especiales en Display:**
-    - Tema **Midnight Glow Weekly**: Tarjeta del día especial adopta el color seleccionado (borde, sombra, texto, avatar ring). Si `hideProfiles` está activo, el avatar muestra el ícono de la iglesia y los nombres desaparecen.
-    - Tema **Midnight Glow Schedule (Diario)**: Cuando `hideProfiles` está activo, se muestra un avatar grande con el logo de la iglesia centrado, el título personalizado en texto grande, y "SERVICIO ESPECIAL" como subtítulo.
+- **Visión Futura: Sitio Web Público (`lldmrodeo.org/`) Estilo WordPress (CMS):**
+    - Se proyectó transformar la ruta raíz `/` en el Sitio Web Oficial Público de la Iglesia (Home, Quiénes Somos, Horarios Públicos, Ubicación en Google Maps).
+    - **Totalmente editable sin código**: El Hero (portada, título, lema, foto del templo, color de acento) y el contenido público serán editables desde el panel de control `/admin` estilo CMS / WordPress para cualquier administrador o colaborador sin experiencia técnica.
 
 ## 🛠️ Especificaciones Técnicas
 - **Frontend:** Next.js (src/app architecture).
 - **Backend/DB:** Supabase con políticas RLS (Row Level Security) estrictas.
 - **Control de Acceso:** RBAC expandido para incluir `Ministro a Cargo` con permisos de escritura en temas y avisos.
 - **Prevención de Duplicados:** Implementación de restricción única (`UNIQUE constraint`) en la tabla `schedule` y `weekly_themes` para evitar colisiones de fechas.
+- **SEO & Privacidad:** Indexación restringida por `robots.txt` y meta tags `noindex` para proteger datos de la iglesia.
 
 ## 🚀 Próximos Pasos (Pendientes)
 - [ ] Monitorear la respuesta de la UI en dispositivos Smart TV tras el parche de `LockManager`.
 - [ ] Validar la visualización de los 3 responsables de niños en los temas Luna y Primitivo (Pantallas de Proyección).
 - [ ] Auditoría de seguridad de políticas RLS para nuevas tablas.
 - [ ] Optimización de la carga de "Member Profiles" con grandes volumenes de datos.
+- [ ] Diseñar el módulo CMS para la Página Home Pública (`/`) administrable desde `/admin`.
 - [ ] Implementar `hideProfiles` y `accentColor` en temas **Iglesia** y **Luna Premium** para coherencia multi-tema.
 - [ ] Validar comportamiento de `hideProfiles` en servicios con 3 líderes (niños/matrimonios).
 
@@ -63,4 +71,4 @@ Este archivo sirve como puente cognitivo entre sesiones. Contiene el estado actu
 8. **No usar clases Tailwind dinámicas:** Expresiones como `border-[${variable}]` no funcionan porque Tailwind las genera en build-time. Usar `style={{ borderColor: variable }}` en su lugar.
 
 ---
-*Última actualización: 21 de julio de 2026*
+*Última actualización: 24 de julio de 2026*
