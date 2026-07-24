@@ -11,8 +11,7 @@ export function PublicHero() {
   const subtitle = settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia. Te invitamos a conocer nuestros principios cristianos y unirte a nuestras reuniones de oración.';
   const bgImage = settings.publicHomeHeroBg || settings.displayBgUrl || '/bg_login.png';
   const ctaText = settings.publicHomeCtaText || 'Conoce Nuestras Reuniones';
-  const logoAlign = settings.churchOfficialLogoAlign || 'center';
-  const logoSize = settings.churchOfficialLogoSize || 'large';
+  const badgeAlign = settings.publicHomeBadgeAlign || 'center';
   const titleAlign = settings.publicHomeTitleAlign || 'center';
   const subtitleAlign = settings.publicHomeSubtitleAlign || 'center';
   const ctaAlign = settings.publicHomeCtaAlign || 'center';
@@ -22,18 +21,6 @@ export function PublicHero() {
     if (align === 'right') return 'text-right justify-end items-end';
     return 'text-center justify-center items-center';
   };
-
-  const alignContainerClass = logoAlign === 'left'
-    ? 'justify-start text-left'
-    : logoAlign === 'right'
-    ? 'justify-end text-right'
-    : 'justify-center text-center';
-
-  const sizeClass = logoSize === 'medium'
-    ? 'h-24 sm:h-28 md:h-32'
-    : logoSize === 'xlarge'
-    ? 'h-40 sm:h-52 md:h-64'
-    : 'h-32 sm:h-40 md:h-48';
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden">
@@ -51,22 +38,8 @@ export function PublicHero() {
 
       {/* Hero Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 w-full">
-        {/* Official Worldwide Church Emblem (Frameless & Resizable) */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7 }}
-          className={`flex items-center ${alignContainerClass}`}
-        >
-          <img
-            src={settings.churchOfficialLogoUrl || '/flame_logo_premium.png'}
-            alt="Logo Oficial La Luz del Mundo"
-            className={`${sizeClass} w-auto object-contain filter drop-shadow-[0_8px_24px_rgba(0,0,0,0.6)] hover:scale-105 transition-transform duration-500`}
-          />
-        </motion.div>
-
         {/* Emblem / Badge */}
-        <div className={`flex ${getAlignClass(logoAlign)}`}>
+        <div className={`flex ${getAlignClass(badgeAlign)}`}>
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}

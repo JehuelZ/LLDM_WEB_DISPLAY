@@ -180,7 +180,144 @@ export default function PublicWebTab() {
         )}
       </motion.div>
 
-      {/* ── SECCIÓN 1: PORTADA PRINCIPAL (HERO) ── */}
+      {/* ── SECCIÓN 1: MENÚ SUPERIOR (NAVEGACIÓN) ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/[0.03] border border-white/8 rounded-3xl p-6 backdrop-blur-xl space-y-6"
+      >
+        <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+          <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+            <Globe className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">1. Menú Superior (Navegación y Logo)</h3>
+            <p className="text-xs text-white/40">Control de logo oficial universal y estructura de barra de navegación.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="col-span-1 md:col-span-2 space-y-3">
+            <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider">
+              Logo Oficial Mundial (Escudo "The Light of the World")
+            </label>
+            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl max-w-xl">
+              <div className="w-12 h-12 rounded-xl bg-black/50 border border-orange-500/30 p-1.5 shrink-0 flex items-center justify-center">
+                <img
+                  src={form.churchOfficialLogoUrl || '/flame_logo_premium.png'}
+                  alt="Oficial"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <input
+                type="text"
+                value={form.churchOfficialLogoUrl}
+                onChange={e => handleChange('churchOfficialLogoUrl', e.target.value)}
+                placeholder="https://... o selecciona de la galería"
+                className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-orange-500/50"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setGalleryTargetMode('officialLogo');
+                  setShowGallery(true);
+                }}
+                className="px-3 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30 rounded-xl text-xs font-bold transition-all shrink-0"
+              >
+                Galería
+              </button>
+            </div>
+
+            {/* Botones de Alineación por Iconos & Control de Tamaño */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 max-w-xl">
+              {/* Alineación (Izquierda, Centro, Derecha) */}
+              <div>
+                <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Disposición del Menú</span>
+                <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('churchOfficialLogoAlign', 'left')}
+                    className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
+                      form.churchOfficialLogoAlign === 'left'
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                    }`}
+                    title="Logo a la Izquierda"
+                  >
+                    <AlignLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('churchOfficialLogoAlign', 'center')}
+                    className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
+                      form.churchOfficialLogoAlign === 'center'
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                    }`}
+                    title="Logo Centrado (Apilado)"
+                  >
+                    <AlignCenter className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('churchOfficialLogoAlign', 'right')}
+                    className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
+                      form.churchOfficialLogoAlign === 'right'
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                    }`}
+                    title="Logo a la Derecha"
+                  >
+                    <AlignRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Tamaño (Mediano, Grande, Extra Grande) */}
+              <div>
+                <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Tamaño Visual</span>
+                <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('churchOfficialLogoSize', 'medium')}
+                    className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                      form.churchOfficialLogoSize === 'medium'
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    Med
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('churchOfficialLogoSize', 'large')}
+                    className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                      form.churchOfficialLogoSize === 'large'
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    Grande
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('churchOfficialLogoSize', 'xlarge')}
+                    className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                      form.churchOfficialLogoSize === 'xlarge'
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-white/40 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    Max
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ── SECCIÓN 2: PORTADA PRINCIPAL (HERO) ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -191,7 +328,7 @@ export default function PublicWebTab() {
             <Sparkles className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">1. Portada Principal (Hero Banner)</h3>
+            <h3 className="text-base font-bold text-white">2. Portada Principal (Hero Banner)</h3>
             <p className="text-xs text-white/40">Título de impacto, mensaje de bienvenida y foto de fondo de la iglesia.</p>
           </div>
         </div>
@@ -327,124 +464,6 @@ export default function PublicWebTab() {
               />
             </div>
 
-            {/* Logo Oficial de la Iglesia Mundial (Flotante y Alineable) */}
-            <div className="pt-2 border-t border-white/5 space-y-3">
-              <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider">
-                Logo Oficial Mundial (Escudo "The Light of the World")
-              </label>
-              <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
-                <div className="w-12 h-12 rounded-xl bg-black/50 border border-orange-500/30 p-1.5 shrink-0 flex items-center justify-center">
-                  <img
-                    src={form.churchOfficialLogoUrl || '/flame_logo_premium.png'}
-                    alt="Oficial"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <input
-                  type="text"
-                  value={form.churchOfficialLogoUrl}
-                  onChange={e => handleChange('churchOfficialLogoUrl', e.target.value)}
-                  placeholder="https://... o selecciona de la galería"
-                  className="flex-1 bg-black/40 border border-white/10 rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-orange-500/50"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setGalleryTargetMode('officialLogo');
-                    setShowGallery(true);
-                  }}
-                  className="px-3 py-2 bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30 rounded-xl text-xs font-bold transition-all shrink-0"
-                >
-                  Galería
-                </button>
-              </div>
-
-              {/* Botones de Alineación por Iconos & Control de Tamaño */}
-              <div className="grid grid-cols-2 gap-3 pt-1">
-                {/* Alineación (Izquierda, Centro, Derecha) */}
-                <div>
-                  <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Alineación</span>
-                  <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
-                    <button
-                      type="button"
-                      onClick={() => handleChange('churchOfficialLogoAlign', 'left')}
-                      className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
-                        form.churchOfficialLogoAlign === 'left'
-                          ? 'bg-orange-500 text-white shadow-md'
-                          : 'text-white/40 hover:text-white hover:bg-white/5'
-                      }`}
-                      title="Alinear a la Izquierda"
-                    >
-                      <AlignLeft className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleChange('churchOfficialLogoAlign', 'center')}
-                      className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
-                        form.churchOfficialLogoAlign === 'center'
-                          ? 'bg-orange-500 text-white shadow-md'
-                          : 'text-white/40 hover:text-white hover:bg-white/5'
-                      }`}
-                      title="Centrar"
-                    >
-                      <AlignCenter className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleChange('churchOfficialLogoAlign', 'right')}
-                      className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
-                        form.churchOfficialLogoAlign === 'right'
-                          ? 'bg-orange-500 text-white shadow-md'
-                          : 'text-white/40 hover:text-white hover:bg-white/5'
-                      }`}
-                      title="Alinear a la Derecha"
-                    >
-                      <AlignRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Tamaño (Mediano, Grande, Extra Grande) */}
-                <div>
-                  <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Tamaño</span>
-                  <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
-                    <button
-                      type="button"
-                      onClick={() => handleChange('churchOfficialLogoSize', 'medium')}
-                      className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
-                        form.churchOfficialLogoSize === 'medium'
-                          ? 'bg-orange-500 text-white shadow-md'
-                          : 'text-white/40 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      Med
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleChange('churchOfficialLogoSize', 'large')}
-                      className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
-                        form.churchOfficialLogoSize === 'large'
-                          ? 'bg-orange-500 text-white shadow-md'
-                          : 'text-white/40 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      Grande
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleChange('churchOfficialLogoSize', 'xlarge')}
-                      className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
-                        form.churchOfficialLogoSize === 'xlarge'
-                          ? 'bg-orange-500 text-white shadow-md'
-                          : 'text-white/40 hover:text-white hover:bg-white/5'
-                      }`}
-                    >
-                      Max
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Imagen de Fondo de Portada */}
