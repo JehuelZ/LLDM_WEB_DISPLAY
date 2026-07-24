@@ -22,13 +22,11 @@ export function PublicFooter() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pb-8 border-b border-white/5">
           {/* Brand logo */}
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center p-1.5">
-              <img
-                src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
-                alt="La Luz del Mundo"
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <img
+              src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
+              alt="La Luz del Mundo"
+              className="h-9 w-auto object-contain shrink-0"
+            />
             <div>
               <span className="text-white font-bold text-sm block leading-none">
                 La Luz del Mundo
