@@ -42,23 +42,24 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- 4. Crear función RPC segura para iniciar el proceso de reclamo (claim)
--- Asocia un email a un perfil antes de que el usuario haga signUp en Supabase Auth.
--- De esta forma, el email coincide durante el proceso de signUp y syncUserWithCloud.
-CREATE OR REPLACE FUNCTION claim_member_portal(p_profile_id uuid, p_email text)
+-- Asocia un email y auth_user_id a un perfil antes/durante la autenticación en Supabase Auth.
+CREATE OR REPLACE FUNCTION claim_member_portal(p_profile_id uuid, p_email text, p_auth_user_id uuid DEFAULT NULL)
 RETURNS boolean
 SECURITY DEFINER
 AS $$
 BEGIN
-  -- Verificar si el perfil existe, está habilitado y no ha sido reclamado aún
+  -- Verificar si el perfil existe y está habilitado
   IF EXISTS (
     SELECT 1 FROM profiles 
     WHERE id = p_profile_id 
-      AND portal_habilitado = true 
-      AND auth_user_id IS NULL
+      AND portal_habilitado = true
   ) THEN
-    -- Actualizar el correo en el perfil pre-registrado
+    -- Actualizar el correo, auth_user_id y estado en el perfil pre-registrado
     UPDATE profiles
     SET email = LOWER(TRIM(p_email)),
+        auth_user_id = COALESCE(p_auth_user_id, auth_user_id),
+        status = 'Activo',
+        is_pre_registered = false,
         portal_invite_token = NULL, -- Limpiar token si existía
         portal_invite_expires = NULL
     WHERE id = p_profile_id;

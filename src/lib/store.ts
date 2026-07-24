@@ -335,7 +335,7 @@ interface AppState {
     loadDetailedWeeklyStats: (days: string[]) => Promise<any[]>;
     loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
 
-    signInWithGoogle: () => Promise<void>;
+    signInWithGoogle: (claimProfileId?: string) => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
     signOut: () => Promise<void>;
     sendCloudMessage: (msg: Partial<Message>) => Promise<void>;
@@ -1375,12 +1375,19 @@ export const useAppStore = create<AppState>()(
                             .from('profiles')
                             .update({ 
                                 auth_user_id: authUser.id,
+                                status: 'Activo',
+                                email: existingProfile.email || userEmail,
                                 is_pre_registered: false // Ya no es un pre-registro una vez vinculado
                             })
                             .eq('id', existingProfile.id);
                         
                         if (linkError) {
                             console.error("Error linking profile to auth account:", linkError.message);
+                        } else {
+                            existingProfile.auth_user_id = authUser.id;
+                            existingProfile.status = 'Activo';
+                            existingProfile.email = existingProfile.email || userEmail;
+                            existingProfile.is_pre_registered = false;
                         }
                     }
 
@@ -2160,11 +2167,16 @@ export const useAppStore = create<AppState>()(
                 }
             },
 
-            signInWithGoogle: async () => {
+            signInWithGoogle: async (claimProfileId?: string) => {
+                const origin = typeof window !== 'undefined' ? window.location.origin : '';
+                const redirectUrl = claimProfileId 
+                    ? `${origin}/auth/callback?claim_profile_id=${claimProfileId}`
+                    : `${origin}/auth/callback`;
+
                 const { error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : undefined
+                        redirectTo: redirectUrl
                     }
                 });
                 if (error) console.error("Error signing in with Google:", error);

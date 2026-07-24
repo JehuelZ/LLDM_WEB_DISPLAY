@@ -42,8 +42,10 @@ function ActivarContent() {
 
   const { signInWithGoogle, settings } = useAppStore();
 
-  // Si viene con token, verificar automáticamente
+  // Si viene con token, verificar automáticamente; cargar ajustes
   useEffect(() => {
+    const loadSettings = useAppStore.getState().loadSettingsFromCloud;
+    if (loadSettings) loadSettings();
     if (token) {
       verificarToken(token);
     }
@@ -96,14 +98,14 @@ function ActivarContent() {
       if (dbError) throw dbError;
 
       if (!data || data.length === 0) {
-        setError('No encontramos tu registro. Verifica tu nombre y teléfono, o habla con un líder.');
+        setError('No encontramos tu registro. Verifica tu nombre y teléfono, o habla con tu Ministro.');
         return;
       }
 
       const member = data[0];
 
       if (!member.portal_habilitado) {
-        setError('Tu acceso al portal aún no ha sido habilitado. Habla con un líder para activarlo.');
+        setError('Tu acceso al portal aún no ha sido habilitado. Habla con tu Ministro para activarlo.');
         return;
       }
 
@@ -199,6 +201,11 @@ function ActivarContent() {
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">LLDM Rodeo</h1>
           <p className="text-sm text-white/40 mt-1">Portal del Miembro</p>
+          <div className="mt-3 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-xl text-center backdrop-blur-md">
+            <p className="text-[11px] font-semibold text-orange-300">
+              Nota: Este sistema es estrictamente para miembros de la iglesia ({settings?.churchCity || settings?.weatherCity || 'Rodeo'}).
+            </p>
+          </div>
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -318,7 +325,7 @@ function ActivarContent() {
                   onClick={async () => {
                     if (!memberFound) return;
                     localStorage.setItem('pending_claim_profile_id', memberFound.id);
-                    await signInWithGoogle();
+                    await signInWithGoogle(memberFound.id);
                   }}
                   className="w-full bg-white text-slate-900 font-extrabold rounded-xl px-4 py-3 flex items-center justify-center gap-3 transition-all shadow-xl hover:bg-slate-50 text-xs tracking-widest uppercase"
                 >
