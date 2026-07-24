@@ -1135,7 +1135,208 @@ export default function PublicWebTab() {
         </div>
       </motion.div>
 
-      {/* ── SECCIÓN 3: CONTACTO & UBICACIÓN ── */}
+      {/* ── SECCIÓN 4: REUNIONES & HORARIOS PÚBLICOS ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+        className="bg-white/[0.03] border border-white/8 rounded-3xl p-6 backdrop-blur-xl space-y-6"
+      >
+        <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+          <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+            <Globe className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">4. Textos de la Sección Horarios</h3>
+            <p className="text-xs text-white/40">Insignia, títulos y los 3 servicios de oración editables.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Insignia / Badge
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeScheduleBadge || ''}
+              onChange={e => handleChange('publicHomeScheduleBadge', e.target.value)}
+              placeholder="Horarios Públicos de Oración"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Título de la Sección
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeScheduleTitle || ''}
+              onChange={e => handleChange('publicHomeScheduleTitle', e.target.value)}
+              placeholder="Nuestras Reuniones de Oración"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Descripción Corta
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeScheduleSubtitle || ''}
+              onChange={e => handleChange('publicHomeScheduleSubtitle', e.target.value)}
+              placeholder="Te invitamos cordialmente a acompañarnos..."
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
+          </div>
+        </div>
+
+        {/* Tarjetas de los 3 Servicios */}
+        <div className="pt-2 border-t border-white/5 space-y-4">
+          <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider">
+            Detalles de los 3 Servicios de Oración
+          </label>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Servicio 1 */}
+            <div className="bg-black/30 border border-white/10 p-4 rounded-2xl space-y-3">
+              <span className="text-xs font-bold text-amber-400 uppercase">Servicio 1 (Matutino)</span>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Hora:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService1Time || ''}
+                  onChange={e => handleChange('publicHomeService1Time', e.target.value)}
+                  placeholder="5:00 AM"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Título:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService1Title || ''}
+                  onChange={e => handleChange('publicHomeService1Title', e.target.value)}
+                  placeholder="Oración Matutina"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Días:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService1Days || ''}
+                  onChange={e => handleChange('publicHomeService1Days', e.target.value)}
+                  placeholder="Lunes a Domingo"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Descripción:</span>
+                <textarea
+                  rows={2}
+                  value={form.publicHomeService1Desc || ''}
+                  onChange={e => handleChange('publicHomeService1Desc', e.target.value)}
+                  placeholder="Primera oración del día..."
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Servicio 2 */}
+            <div className="bg-black/30 border border-white/10 p-4 rounded-2xl space-y-3">
+              <span className="text-xs font-bold text-orange-400 uppercase">Servicio 2 (Mañana)</span>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Hora:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService2Time || ''}
+                  onChange={e => handleChange('publicHomeService2Time', e.target.value)}
+                  placeholder="9:00 AM"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Título:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService2Title || ''}
+                  onChange={e => handleChange('publicHomeService2Title', e.target.value)}
+                  placeholder="Consagración y Estudio Bíblico"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Días:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService2Days || ''}
+                  onChange={e => handleChange('publicHomeService2Days', e.target.value)}
+                  placeholder="Lunes a Domingo"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Descripción:</span>
+                <textarea
+                  rows={2}
+                  value={form.publicHomeService2Desc || ''}
+                  onChange={e => handleChange('publicHomeService2Desc', e.target.value)}
+                  placeholder="Oración de consagración..."
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white resize-none"
+                />
+              </div>
+            </div>
+
+            {/* Servicio 3 */}
+            <div className="bg-black/30 border border-white/10 p-4 rounded-2xl space-y-3">
+              <span className="text-xs font-bold text-purple-400 uppercase">Servicio 3 (Tarde / Principal)</span>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Hora:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService3Time || ''}
+                  onChange={e => handleChange('publicHomeService3Time', e.target.value)}
+                  placeholder="6:00 PM"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Título:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService3Title || ''}
+                  onChange={e => handleChange('publicHomeService3Title', e.target.value)}
+                  placeholder="Oración de la Tarde"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Días:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService3Days || ''}
+                  onChange={e => handleChange('publicHomeService3Days', e.target.value)}
+                  placeholder="Lunes a Domingo (6:00 PM / 7:00 PM)"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Descripción:</span>
+                <textarea
+                  rows={2}
+                  value={form.publicHomeService3Desc || ''}
+                  onChange={e => handleChange('publicHomeService3Desc', e.target.value)}
+                  placeholder="Servicio de alabanza..."
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white resize-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* ── SECCIÓN 5: CONTACTO & UBICACIÓN ── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -1147,8 +1348,47 @@ export default function PublicWebTab() {
             <MapPin className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white">3. Contacto & Ubicación</h3>
-            <p className="text-xs text-white/40">Dirección, teléfono de atención y enlace a Google Maps.</p>
+            <h3 className="text-base font-bold text-white">5. Contacto & Ubicación</h3>
+            <p className="text-xs text-white/40">Dirección, teléfono de atención, etiquetas y enlace a Google Maps.</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2 border-b border-white/5">
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Insignia / Badge
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeContactBadge || ''}
+              onChange={e => handleChange('publicHomeContactBadge', e.target.value)}
+              placeholder="Ubicación y Contacto"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Título de la Sección
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeContactTitle || ''}
+              onChange={e => handleChange('publicHomeContactTitle', e.target.value)}
+              placeholder="Visítanos en Nuestra Casa de Oración"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
+          </div>
+          <div className="md:col-span-2">
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Descripción Corta
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeContactSubtitle || ''}
+              onChange={e => handleChange('publicHomeContactSubtitle', e.target.value)}
+              placeholder="Estamos ubicados para atenderte..."
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
           </div>
         </div>
 
@@ -1180,6 +1420,20 @@ export default function PublicWebTab() {
               className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
             />
           </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">
+              Texto del Botón Google Maps
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeMapsBtnText || ''}
+              onChange={e => handleChange('publicHomeMapsBtnText', e.target.value)}
+              placeholder="Abrir en Google Maps"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
+            />
+          </div>
+        </div>
 
           <div>
             <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">

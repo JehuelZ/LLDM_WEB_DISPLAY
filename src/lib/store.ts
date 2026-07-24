@@ -121,6 +121,18 @@ export interface AppSettings {
     publicHomeScheduleBadge?: string;
     publicHomeScheduleTitle?: string;
     publicHomeScheduleSubtitle?: string;
+    publicHomeService1Time?: string;
+    publicHomeService1Title?: string;
+    publicHomeService1Days?: string;
+    publicHomeService1Desc?: string;
+    publicHomeService2Time?: string;
+    publicHomeService2Title?: string;
+    publicHomeService2Days?: string;
+    publicHomeService2Desc?: string;
+    publicHomeService3Time?: string;
+    publicHomeService3Title?: string;
+    publicHomeService3Days?: string;
+    publicHomeService3Desc?: string;
     publicHomeContactBadge?: string;
     publicHomeContactTitle?: string;
     publicHomeContactSubtitle?: string;
@@ -521,6 +533,18 @@ export const useAppStore = create<AppState>()(
                 publicHomeScheduleBadge: 'Horarios Públicos de Oración',
                 publicHomeScheduleTitle: 'Nuestras Reuniones de Oración',
                 publicHomeScheduleSubtitle: 'Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y reuniones espirituales. Todas nuestras reuniones están abiertas a las visitas.',
+                publicHomeService1Time: '5:00 AM',
+                publicHomeService1Title: 'Oración Matutina',
+                publicHomeService1Days: 'Lunes a Domingo',
+                publicHomeService1Desc: 'Primera oración del día para consagrar la jornada en gratitud y comunión con Dios.',
+                publicHomeService2Time: '9:00 AM',
+                publicHomeService2Title: 'Consagración y Estudio Bíblico',
+                publicHomeService2Days: 'Lunes a Domingo',
+                publicHomeService2Desc: 'Oración de consagración y estudio de las doctrinas cristianas fundamentales.',
+                publicHomeService3Time: '6:00 PM',
+                publicHomeService3Title: 'Oración de la Tarde',
+                publicHomeService3Days: 'Lunes a Domingo (6:00 PM / 7:00 PM)',
+                publicHomeService3Desc: 'Servicio de alabanza, oración y predicación de la palabra de Dios.',
                 publicHomeContactBadge: 'Ubicación y Contacto',
                 publicHomeContactTitle: 'Visítanos en Nuestra Casa de Oración',
                 publicHomeContactSubtitle: 'Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.',
