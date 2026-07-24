@@ -106,6 +106,14 @@ export default function RootLayout({
                   document.body.classList.add(themeClass);
                   if (mode === 'light') document.body.classList.add('light-mode');
                   else document.body.classList.add('dark-mode');
+
+                  if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                      for(var r of registrations) {
+                        r.unregister();
+                      }
+                    });
+                  }
                 } catch (e) {}
               })();
             `,
