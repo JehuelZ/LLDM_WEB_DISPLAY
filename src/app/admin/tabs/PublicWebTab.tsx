@@ -1941,8 +1941,7 @@ export default function PublicWebTab() {
               val4: 'publicHomeValue4Image',
             };
             const targetKey = keyMap[iconPickerTargetCard] || 'publicHomeValue1Image';
-            setForm(prev => ({ ...prev, [targetKey]: iconId }));
-            setShowIconPicker(false);
+            handleChange(targetKey, iconId);
           }}
         />
       )}

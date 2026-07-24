@@ -126,6 +126,15 @@ export function IconPickerModal({ isOpen, onClose, onSelectIcon, currentIconId }
 
   if (!isOpen) return null;
 
+  const handleSelect = (iconId: string) => {
+    try {
+      onSelectIcon(iconId);
+    } catch (e) {
+      console.error(e);
+    }
+    onClose();
+  };
+
   return (
     <div className="fixed inset-0 z-[300] bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 animate-fade-in">
       <div className="bg-[#0c0d14] border border-white/15 rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden ring-1 ring-orange-500/20">
@@ -185,11 +194,7 @@ export function IconPickerModal({ isOpen, onClose, onSelectIcon, currentIconId }
                       <button
                         key={item.id}
                         type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          onSelectIcon(item.id);
-                        }}
+                        onClick={() => handleSelect(item.id)}
                         className={`p-3 rounded-2xl border transition-all flex flex-col items-center justify-center gap-2 group ${
                           isSelected
                             ? 'bg-orange-500/20 border-orange-500 text-orange-400 ring-2 ring-orange-500/30'
