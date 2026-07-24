@@ -1934,15 +1934,11 @@ export default function PublicWebTab() {
           }
           onClose={() => setShowIconPicker(false)}
           onSelectIcon={(iconId) => {
-            if (iconPickerTargetCard === 'val1') {
-              setForm(prev => ({ ...prev, publicHomeValue1Image: iconId }));
-            } else if (iconPickerTargetCard === 'val2') {
-              setForm(prev => ({ ...prev, publicHomeValue2Image: iconId }));
-            } else if (iconPickerTargetCard === 'val3') {
-              setForm(prev => ({ ...prev, publicHomeValue3Image: iconId }));
-            } else if (iconPickerTargetCard === 'val4') {
-              setForm(prev => ({ ...prev, publicHomeValue4Image: iconId }));
-            }
+            if (iconPickerTargetCard === 'val1') handleChange('publicHomeValue1Image', iconId);
+            else if (iconPickerTargetCard === 'val2') handleChange('publicHomeValue2Image', iconId);
+            else if (iconPickerTargetCard === 'val3') handleChange('publicHomeValue3Image', iconId);
+            else if (iconPickerTargetCard === 'val4') handleChange('publicHomeValue4Image', iconId);
+            setShowIconPicker(false);
           }}
         />
       )}

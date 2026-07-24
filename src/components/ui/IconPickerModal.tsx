@@ -180,10 +180,7 @@ export function IconPickerModal({ isOpen, onClose, onSelectIcon, currentIconId }
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => {
-                          onSelectIcon(item.id);
-                          onClose();
-                        }}
+                        onClick={() => onSelectIcon(item.id)}
                         className={`p-3 rounded-2xl border transition-all flex flex-col items-center justify-center gap-2 group ${
                           isSelected
                             ? 'bg-orange-500/20 border-orange-500 text-orange-400 ring-2 ring-orange-500/30'
