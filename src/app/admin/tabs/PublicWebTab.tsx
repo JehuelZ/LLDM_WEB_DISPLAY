@@ -29,7 +29,7 @@ export default function PublicWebTab() {
   const { settings, saveSettingsToCloud, showNotification } = useAppStore();
   const [isSaving, setIsSaving] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
-  const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo' | 'aboutImage' | 'principlesImage'>('heroBg');
+  const [galleryTargetMode, setGalleryTargetMode] = useState<'heroBg' | 'officialLogo' | 'aboutImage' | 'principlesImage' | 'val1' | 'val2' | 'val3' | 'val4'>('heroBg');
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
   // Form local state initialized with settings
@@ -75,12 +75,16 @@ export default function PublicWebTab() {
     publicHomePrinciplesBadge: settings.publicHomePrinciplesBadge || 'Nuestros Principios',
     publicHomeValue1Title: settings.publicHomeValue1Title || 'Fe y Doctrina Cristiana',
     publicHomeValue1Desc: settings.publicHomeValue1Desc || 'Fundamentados en las Sagradas Escrituras y el evangelio de Jesucristo.',
+    publicHomeValue1Image: settings.publicHomeValue1Image || '',
     publicHomeValue2Title: settings.publicHomeValue2Title || 'Amor Fraternal y Comunión',
     publicHomeValue2Desc: settings.publicHomeValue2Desc || 'Promovemos la unidad de los creyentes y el apoyo solidario a las familias.',
+    publicHomeValue2Image: settings.publicHomeValue2Image || '',
     publicHomeValue3Title: settings.publicHomeValue3Title || 'Valores Morales y Civiles',
     publicHomeValue3Desc: settings.publicHomeValue3Desc || 'Fomentamos el respeto a las autoridades, la paz y la dignidad humana.',
+    publicHomeValue3Image: settings.publicHomeValue3Image || '',
     publicHomeValue4Title: settings.publicHomeValue4Title || 'Comunidad Abierta',
     publicHomeValue4Desc: settings.publicHomeValue4Desc || 'Recibimos cordialmente a todos aquellos que deseen acercarse a Dios.',
+    publicHomeValue4Image: settings.publicHomeValue4Image || '',
     publicHomeScheduleBadge: settings.publicHomeScheduleBadge || 'Horarios Públicos de Oración',
     publicHomeScheduleTitle: settings.publicHomeScheduleTitle || 'Nuestras Reuniones de Oración',
     publicHomeScheduleSubtitle: settings.publicHomeScheduleSubtitle || 'Te invitamos cordialmente a acompañarnos en nuestras oraciones diarias y reuniones espirituales.',
@@ -1273,22 +1277,51 @@ export default function PublicWebTab() {
                 </button>
               </div>
             </div>
-            {/* Edición de las 4 Tarjetas de Principios (Para traducción) */}
+            {/* Edición de las 4 Tarjetas de Principios (Con Imágenes e Íconos) */}
             <div className="pt-4 border-t border-white/5 space-y-4">
               <label className="block text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                Traducción / Edición de los 4 Principios (Tarjetas)
+                Traducción, Imágenes e Íconos de los 4 Principios (Tarjetas)
               </label>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Principio 1 */}
-                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
-                  <span className="text-[10px] font-bold text-orange-400 uppercase">Tarjeta 1</span>
+                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-orange-400 uppercase">Tarjeta 1</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGalleryTargetMode('val1');
+                        setShowGallery(true);
+                      }}
+                      className="px-2.5 py-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-300 border border-orange-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                    >
+                      <ImageIcon className="w-3 h-3" />
+                      <span>Elegir Imagen</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {form.publicHomeValue1Image && (
+                      <div className="w-8 h-8 rounded-lg border border-orange-500/40 p-0.5 shrink-0 bg-black">
+                        <img src={form.publicHomeValue1Image} alt="" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      value={form.publicHomeValue1Image || ''}
+                      onChange={e => handleChange('publicHomeValue1Image', e.target.value)}
+                      placeholder="URL de imagen o ícono (opcional)"
+                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
+                    />
+                  </div>
+
                   <input
                     type="text"
                     value={form.publicHomeValue1Title || ''}
                     onChange={e => handleChange('publicHomeValue1Title', e.target.value)}
                     placeholder="Título 1"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
                   />
                   <textarea
                     rows={2}
@@ -1300,14 +1333,43 @@ export default function PublicWebTab() {
                 </div>
 
                 {/* Principio 2 */}
-                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
-                  <span className="text-[10px] font-bold text-rose-400 uppercase">Tarjeta 2</span>
+                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-rose-400 uppercase">Tarjeta 2</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGalleryTargetMode('val2');
+                        setShowGallery(true);
+                      }}
+                      className="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                    >
+                      <ImageIcon className="w-3 h-3" />
+                      <span>Elegir Imagen</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {form.publicHomeValue2Image && (
+                      <div className="w-8 h-8 rounded-lg border border-rose-500/40 p-0.5 shrink-0 bg-black">
+                        <img src={form.publicHomeValue2Image} alt="" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      value={form.publicHomeValue2Image || ''}
+                      onChange={e => handleChange('publicHomeValue2Image', e.target.value)}
+                      placeholder="URL de imagen o ícono (opcional)"
+                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
+                    />
+                  </div>
+
                   <input
                     type="text"
                     value={form.publicHomeValue2Title || ''}
                     onChange={e => handleChange('publicHomeValue2Title', e.target.value)}
                     placeholder="Título 2"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
                   />
                   <textarea
                     rows={2}
@@ -1319,14 +1381,43 @@ export default function PublicWebTab() {
                 </div>
 
                 {/* Principio 3 */}
-                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
-                  <span className="text-[10px] font-bold text-sky-400 uppercase">Tarjeta 3</span>
+                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-sky-400 uppercase">Tarjeta 3</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGalleryTargetMode('val3');
+                        setShowGallery(true);
+                      }}
+                      className="px-2.5 py-1 bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                    >
+                      <ImageIcon className="w-3 h-3" />
+                      <span>Elegir Imagen</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {form.publicHomeValue3Image && (
+                      <div className="w-8 h-8 rounded-lg border border-sky-500/40 p-0.5 shrink-0 bg-black">
+                        <img src={form.publicHomeValue3Image} alt="" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      value={form.publicHomeValue3Image || ''}
+                      onChange={e => handleChange('publicHomeValue3Image', e.target.value)}
+                      placeholder="URL de imagen o ícono (opcional)"
+                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
+                    />
+                  </div>
+
                   <input
                     type="text"
                     value={form.publicHomeValue3Title || ''}
                     onChange={e => handleChange('publicHomeValue3Title', e.target.value)}
                     placeholder="Título 3"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
                   />
                   <textarea
                     rows={2}
@@ -1338,14 +1429,43 @@ export default function PublicWebTab() {
                 </div>
 
                 {/* Principio 4 */}
-                <div className="bg-black/30 border border-white/10 p-3 rounded-2xl space-y-2">
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Tarjeta 4</span>
+                <div className="bg-black/30 border border-white/10 p-3.5 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-emerald-400 uppercase">Tarjeta 4</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setGalleryTargetMode('val4');
+                        setShowGallery(true);
+                      }}
+                      className="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1"
+                    >
+                      <ImageIcon className="w-3 h-3" />
+                      <span>Elegir Imagen</span>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    {form.publicHomeValue4Image && (
+                      <div className="w-8 h-8 rounded-lg border border-emerald-500/40 p-0.5 shrink-0 bg-black">
+                        <img src={form.publicHomeValue4Image} alt="" className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    <input
+                      type="text"
+                      value={form.publicHomeValue4Image || ''}
+                      onChange={e => handleChange('publicHomeValue4Image', e.target.value)}
+                      placeholder="URL de imagen o ícono (opcional)"
+                      className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-2.5 py-1.5 text-[11px] font-mono text-white"
+                    />
+                  </div>
+
                   <input
                     type="text"
                     value={form.publicHomeValue4Title || ''}
                     onChange={e => handleChange('publicHomeValue4Title', e.target.value)}
                     placeholder="Título 4"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white"
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
                   />
                   <textarea
                     rows={2}
@@ -1737,6 +1857,14 @@ export default function PublicWebTab() {
               ? form.publicHomeAboutImage
               : galleryTargetMode === 'principlesImage'
               ? form.publicHomePrinciplesImage
+              : galleryTargetMode === 'val1'
+              ? form.publicHomeValue1Image
+              : galleryTargetMode === 'val2'
+              ? form.publicHomeValue2Image
+              : galleryTargetMode === 'val3'
+              ? form.publicHomeValue3Image
+              : galleryTargetMode === 'val4'
+              ? form.publicHomeValue4Image
               : form.publicHomeHeroBg
           }
           onClose={() => setShowGallery(false)}
@@ -1748,6 +1876,14 @@ export default function PublicWebTab() {
                 setForm(prev => ({ ...prev, publicHomeAboutImage: url }));
               } else if (galleryTargetMode === 'principlesImage') {
                 setForm(prev => ({ ...prev, publicHomePrinciplesImage: url }));
+              } else if (galleryTargetMode === 'val1') {
+                setForm(prev => ({ ...prev, publicHomeValue1Image: url }));
+              } else if (galleryTargetMode === 'val2') {
+                setForm(prev => ({ ...prev, publicHomeValue2Image: url }));
+              } else if (galleryTargetMode === 'val3') {
+                setForm(prev => ({ ...prev, publicHomeValue3Image: url }));
+              } else if (galleryTargetMode === 'val4') {
+                setForm(prev => ({ ...prev, publicHomeValue4Image: url }));
               } else {
                 setForm(prev => ({ ...prev, publicHomeHeroBg: url }));
               }

@@ -102,24 +102,28 @@ export function PublicPrinciples() {
     {
       title: settings.publicHomeValue1Title || 'Fe y Doctrina Cristiana',
       desc: settings.publicHomeValue1Desc || 'Fundamentados en las Sagradas Escrituras y el evangelio de Jesucristo.',
+      image: settings.publicHomeValue1Image || '',
       icon: BookOpen,
       color: 'from-orange-500/20 to-amber-500/10 text-orange-400 border-orange-500/30',
     },
     {
       title: settings.publicHomeValue2Title || 'Amor Fraternal y Comunión',
       desc: settings.publicHomeValue2Desc || 'Promovemos la unidad de los creyentes y el apoyo solidario a las familias.',
+      image: settings.publicHomeValue2Image || '',
       icon: Heart,
       color: 'from-rose-500/20 to-pink-500/10 text-rose-400 border-rose-500/30',
     },
     {
       title: settings.publicHomeValue3Title || 'Valores Morales y Civiles',
       desc: settings.publicHomeValue3Desc || 'Fomentamos el respeto a las autoridades, la paz y la dignidad humana.',
+      image: settings.publicHomeValue3Image || '',
       icon: Shield,
       color: 'from-sky-500/20 to-indigo-500/10 text-sky-400 border-sky-500/30',
     },
     {
       title: settings.publicHomeValue4Title || 'Comunidad Abierta',
       desc: settings.publicHomeValue4Desc || 'Recibimos cordialmente a todos aquellos que deseen acercarse a Dios.',
+      image: settings.publicHomeValue4Image || '',
       icon: Users,
       color: 'from-emerald-500/20 to-teal-500/10 text-emerald-400 border-emerald-500/30',
     },
@@ -162,8 +166,12 @@ export function PublicPrinciples() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="bg-slate-900/80 border border-slate-700/50 hover:border-orange-500/30 rounded-2xl p-6 shadow-xl transition-all hover:-translate-y-1 group"
               >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${v.color} border flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
-                  <Icon className="w-6 h-6" />
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${v.color} border flex items-center justify-center mb-5 group-hover:scale-110 transition-transform overflow-hidden p-2`}>
+                  {v.image ? (
+                    <img src={v.image} alt={v.title} className="w-full h-full object-contain" />
+                  ) : (
+                    <Icon className="w-6 h-6" />
+                  )}
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">{v.title}</h3>
                 <p className="text-slate-300 text-xs leading-relaxed">{v.desc}</p>

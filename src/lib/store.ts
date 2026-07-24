@@ -112,12 +112,16 @@ export interface AppSettings {
     publicHomePrinciplesBadge?: string;
     publicHomeValue1Title?: string;
     publicHomeValue1Desc?: string;
+    publicHomeValue1Image?: string;
     publicHomeValue2Title?: string;
     publicHomeValue2Desc?: string;
+    publicHomeValue2Image?: string;
     publicHomeValue3Title?: string;
     publicHomeValue3Desc?: string;
+    publicHomeValue3Image?: string;
     publicHomeValue4Title?: string;
     publicHomeValue4Desc?: string;
+    publicHomeValue4Image?: string;
     publicHomeScheduleBadge?: string;
     publicHomeScheduleTitle?: string;
     publicHomeScheduleSubtitle?: string;
