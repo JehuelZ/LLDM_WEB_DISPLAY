@@ -100,6 +100,7 @@ export interface AppSettings {
     publicHomeAboutBgStyle?: 'light' | 'dark' | 'glass';
     publicHomePrinciplesImage?: string;
     publicHomePrinciplesImageMode?: 'bg' | 'side' | 'none';
+    publicHomeSectionsOrder?: string[];
     publicHomeContactPhone?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
@@ -472,6 +473,7 @@ export const useAppStore = create<AppState>()(
                 publicHomeAboutBgStyle: 'glass',
                 publicHomePrinciplesImage: '',
                 publicHomePrinciplesImageMode: 'bg',
+                publicHomeSectionsOrder: ['hero', 'welcome', 'principles', 'schedule', 'contact'],
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useAppStore } from '@/lib/store';
 import { PublicHeader } from '@/components/public/PublicHeader';
 import { PublicHero } from '@/components/public/PublicHero';
-import { PublicAbout } from '@/components/public/PublicAbout';
+import { PublicAbout, PublicWelcome, PublicPrinciples } from '@/components/public/PublicAbout';
 import { PublicSchedule } from '@/components/public/PublicSchedule';
 import { PublicContact } from '@/components/public/PublicContact';
 import { PublicFooter } from '@/components/public/PublicFooter';
@@ -166,6 +166,27 @@ export default function HomePage() {
     return <MaintenanceView />;
   }
 
+  const sectionOrder = settings.publicHomeSectionsOrder && settings.publicHomeSectionsOrder.length > 0
+    ? settings.publicHomeSectionsOrder
+    : ['hero', 'welcome', 'principles', 'schedule', 'contact'];
+
+  const renderSection = (sectionKey: string) => {
+    switch (sectionKey) {
+      case 'hero':
+        return <PublicHero key="hero" />;
+      case 'welcome':
+        return <PublicWelcome key="welcome" />;
+      case 'principles':
+        return <PublicPrinciples key="principles" />;
+      case 'schedule':
+        return <PublicSchedule key="schedule" />;
+      case 'contact':
+        return <PublicContact key="contact" />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white selection:bg-orange-500/30 selection:text-orange-300 font-sans antialiased overflow-x-hidden">
       {/* Admin/Minister Preview Floating Banner when Maintenance Mode is ON */}
@@ -179,19 +200,9 @@ export default function HomePage() {
       {/* Navigation Bar */}
       <PublicHeader />
 
-      {/* Main Content */}
+      {/* Main Content Rendered in Dynamic Order */}
       <main className={settings.publicHomeMaintenanceMode && isPrivilegedUser ? 'pt-8' : ''}>
-        {/* Hero Section */}
-        <PublicHero />
-
-        {/* About & Minister Welcome Section */}
-        <PublicAbout />
-
-        {/* Public Worship Schedule */}
-        <PublicSchedule />
-
-        {/* Location & Contact Info */}
-        <PublicContact />
+        {sectionOrder.map(key => renderSection(key))}
       </main>
 
       {/* Footer */}

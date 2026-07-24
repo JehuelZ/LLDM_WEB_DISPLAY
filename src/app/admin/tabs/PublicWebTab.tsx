@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
-import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck, AlignLeft, AlignCenter, AlignRight, Maximize2 } from 'lucide-react';
+import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck, AlignLeft, AlignCenter, AlignRight, Maximize2, MoveUp, MoveDown, GripVertical, Layers } from 'lucide-react';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 import { motion } from 'framer-motion';
 
@@ -39,6 +39,7 @@ export default function PublicWebTab() {
     publicHomeAboutImagePos: settings.publicHomeAboutImagePos || 'left',
     publicHomeAboutBgStyle: settings.publicHomeAboutBgStyle || 'glass',
     publicHomePrinciplesImage: settings.publicHomePrinciplesImage || '',
+    publicHomeSectionsOrder: settings.publicHomeSectionsOrder || ['hero', 'welcome', 'principles', 'schedule', 'contact'],
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
@@ -51,6 +52,16 @@ export default function PublicWebTab() {
 
   const handleChange = (key: string, value: any) => {
     setForm(prev => ({ ...prev, [key]: value }));
+  };
+
+  const moveSection = (index: number, direction: 'up' | 'down') => {
+    const currentOrder = [...(form.publicHomeSectionsOrder || ['hero', 'welcome', 'principles', 'schedule', 'contact'])];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= currentOrder.length) return;
+    const temp = currentOrder[index];
+    currentOrder[index] = currentOrder[targetIndex];
+    currentOrder[targetIndex] = temp;
+    handleChange('publicHomeSectionsOrder', currentOrder);
   };
 
   const handleSave = async () => {
@@ -323,6 +334,79 @@ export default function PublicWebTab() {
               </div>
             </div>
           </div>
+        </div>
+      </motion.div>
+
+      {/* ── CONTROL DE ORDEN DE SECCIONES ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white/[0.03] border border-white/8 rounded-3xl p-6 backdrop-blur-xl space-y-4"
+      >
+        <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+          <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+            <Layers className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">Orden Personalizado de Secciones</h3>
+            <p className="text-xs text-white/40">Organiza las secciones de la página pública en el orden exacto que prefieras usando las flechas de Subir y Bajar.</p>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          {(form.publicHomeSectionsOrder || ['hero', 'welcome', 'principles', 'schedule', 'contact']).map((key, index, arr) => {
+            const labelMap: Record<string, { title: string; subtitle: string }> = {
+              hero: { title: 'Portada Principal (Hero)', subtitle: 'Título, subtítulo, botón CTA y foto de fondo' },
+              welcome: { title: 'Invitación Pública', subtitle: 'Mensaje de bienvenida y foto de acompañamiento' },
+              principles: { title: 'Nuestra Fe y Principios', subtitle: 'Bloque con los 4 principios de la comunidad y valores' },
+              schedule: { title: 'Reuniones & Horarios', subtitle: 'Calendario de servicios de oración y cultos' },
+              contact: { title: 'Contacto & Ubicación', subtitle: 'Dirección, teléfono y mapa de Google' },
+            };
+            const item = labelMap[key] || { title: key, subtitle: '' };
+
+            return (
+              <div
+                key={key}
+                className="flex items-center justify-between bg-white/[0.04] border border-white/10 hover:border-orange-500/30 rounded-2xl p-3 px-4 transition-all"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-1.5 rounded-lg bg-black/40 text-white/40">
+                    <GripVertical className="w-4 h-4 text-orange-400" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-white flex items-center gap-2">
+                      <span className="text-orange-400 font-mono text-xs">Posición #{index + 1}</span>
+                      <span>{item.title}</span>
+                    </h4>
+                    <p className="text-[11px] text-white/40">{item.subtitle}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => moveSection(index, 'up')}
+                    disabled={index === 0}
+                    className="p-2 bg-white/5 hover:bg-orange-500/20 hover:text-orange-400 disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-white/40 rounded-xl text-white/60 transition-all flex items-center gap-1 text-xs font-bold"
+                    title="Subir posición"
+                  >
+                    <MoveUp className="w-3.5 h-3.5" />
+                    <span>Subir</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveSection(index, 'down')}
+                    disabled={index === arr.length - 1}
+                    className="p-2 bg-white/5 hover:bg-orange-500/20 hover:text-orange-400 disabled:opacity-20 disabled:hover:bg-white/5 disabled:hover:text-white/40 rounded-xl text-white/60 transition-all flex items-center gap-1 text-xs font-bold"
+                    title="Bajar posición"
+                  >
+                    <MoveDown className="w-3.5 h-3.5" />
+                    <span>Bajar</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </motion.div>
 
