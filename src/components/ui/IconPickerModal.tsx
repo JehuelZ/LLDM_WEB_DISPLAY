@@ -174,13 +174,18 @@ export function IconPickerModal({ isOpen, onClose, onSelectIcon, currentIconId }
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {filteredIcons.map(item => {
                     const IconComp = item.icon;
+                    if (!IconComp) return null;
                     const isSelected = currentIconId === item.id;
 
                     return (
                       <button
                         key={item.id}
                         type="button"
-                        onClick={() => onSelectIcon(item.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          onSelectIcon(item.id);
+                        }}
                         className={`p-3 rounded-2xl border transition-all flex flex-col items-center justify-center gap-2 group ${
                           isSelected
                             ? 'bg-orange-500/20 border-orange-500 text-orange-400 ring-2 ring-orange-500/30'

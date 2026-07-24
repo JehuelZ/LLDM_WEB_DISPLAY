@@ -1938,7 +1938,9 @@ export default function PublicWebTab() {
             else if (iconPickerTargetCard === 'val2') handleChange('publicHomeValue2Image', iconId);
             else if (iconPickerTargetCard === 'val3') handleChange('publicHomeValue3Image', iconId);
             else if (iconPickerTargetCard === 'val4') handleChange('publicHomeValue4Image', iconId);
-            setShowIconPicker(false);
+            setTimeout(() => {
+              setShowIconPicker(false);
+            }, 50);
           }}
         />
       )}
