@@ -24,7 +24,7 @@ export function PublicHero() {
   };
 
   return (
-    <section id="inicio" className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden">
+    <section id="inicio" className="relative flex items-center justify-center pt-24 pb-10 sm:pt-28 sm:pb-14 overflow-hidden">
       {/* Background Image & Gradient Overlays */}
       <div className="absolute inset-0 z-0">
         <img
@@ -38,7 +38,7 @@ export function PublicHero() {
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 w-full">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5 sm:space-y-6 w-full">
         {/* Emblem / Badge */}
         <div className={`flex ${getAlignClass(badgeAlign)}`}>
           <motion.div
