@@ -6,6 +6,25 @@ import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin,
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 import { motion } from 'framer-motion';
 
+const CURATED_FONT_GROUPS = [
+  {
+    category: '✨ Populares & Neón Moderno',
+    fonts: ['Outfit', 'Plus Jakarta Sans', 'Inter', 'Montserrat', 'Sora', 'Poppins', 'Syne', 'Space Grotesk', 'Roboto']
+  },
+  {
+    category: '🏛️ Elegantes & Sacras (Serif)',
+    fonts: ['Playfair Display', 'Cinzel', 'Cormorant Garamond', 'Bodoni Moda', 'Lora', 'Merriweather', 'PT Serif']
+  },
+  {
+    category: '⚡ Titulares & Fuerte Impacto',
+    fonts: ['Oswald', 'Bebas Neue', 'Black Ops One', 'Orbitron', 'Saira', 'Barlow']
+  },
+  {
+    category: '✒️ Manuscritas & Especiales',
+    fonts: ['Great Vibes', 'Cinzel Decorative', 'Marcellus', 'UnifrakturMaguntia']
+  }
+];
+
 export default function PublicWebTab() {
   const { settings, saveSettingsToCloud, showNotification } = useAppStore();
   const [isSaving, setIsSaving] = useState(false);
@@ -278,49 +297,115 @@ export default function PublicWebTab() {
         {/* Tipografía: Títulos, Subtítulos, Cuerpo */}
         <div className="space-y-4">
           <label className="block text-xs font-semibold text-pink-400 uppercase tracking-wider">
-            Inyección de Fuentes (Google Fonts)
+            Selección de Tipografía (Google Fonts)
           </label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-[11px] font-bold text-white/60 mb-1">
-                Fuente para Título
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Fuente Título */}
+            <div className="space-y-2">
+              <label className="block text-[11px] font-bold text-white/70">
+                Fuente para Título Principal
               </label>
-              <input
-                type="text"
-                value={form.publicHomeTitleFont || ''}
+              <select
+                value={form.publicHomeTitleFont || 'Outfit'}
                 onChange={e => handleChange('publicHomeTitleFont', e.target.value)}
-                placeholder="Ej: Outfit, Playfair Display, Cinzel, Montserrat"
-                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-pink-500/50 font-mono"
-              />
-              <span className="text-[10px] text-white/30 block mt-1">Escribe cualquier nombre de Google Font.</span>
+                className="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500 font-semibold cursor-pointer"
+              >
+                {CURATED_FONT_GROUPS.map(group => (
+                  <optgroup key={group.category} label={group.category} className="bg-slate-900 text-pink-300 font-bold">
+                    {group.fonts.map(font => (
+                      <option key={font} value={font} className="bg-slate-900 text-white font-normal">
+                        {font}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+                <option value="custom" className="bg-slate-900 text-amber-300 font-bold">
+                  ✍️ Escribir otra fuente personalizada...
+                </option>
+              </select>
+              {form.publicHomeTitleFont === 'custom' && (
+                <input
+                  type="text"
+                  placeholder="Ej: Playfair Display"
+                  onChange={e => handleChange('publicHomeTitleFont', e.target.value)}
+                  className="w-full bg-white/[0.05] border border-pink-500/40 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+                />
+              )}
+              <span className="text-[10px] text-pink-300/60 block font-mono">
+                Actual: <strong className="text-white">{form.publicHomeTitleFont || 'Outfit'}</strong>
+              </span>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-white/60 mb-1">
-                Fuente para Subtítulo
+            {/* Fuente Subtítulo */}
+            <div className="space-y-2">
+              <label className="block text-[11px] font-bold text-white/70">
+                Fuente para Subtítulos
               </label>
-              <input
-                type="text"
-                value={form.publicHomeSubtitleFont || ''}
+              <select
+                value={form.publicHomeSubtitleFont || 'Plus Jakarta Sans'}
                 onChange={e => handleChange('publicHomeSubtitleFont', e.target.value)}
-                placeholder="Ej: Plus Jakarta Sans, Poppins, Roboto"
-                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-pink-500/50 font-mono"
-              />
-              <span className="text-[10px] text-white/30 block mt-1">Escribe cualquier nombre de Google Font.</span>
+                className="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500 font-semibold cursor-pointer"
+              >
+                {CURATED_FONT_GROUPS.map(group => (
+                  <optgroup key={group.category} label={group.category} className="bg-slate-900 text-pink-300 font-bold">
+                    {group.fonts.map(font => (
+                      <option key={font} value={font} className="bg-slate-900 text-white font-normal">
+                        {font}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+                <option value="custom" className="bg-slate-900 text-amber-300 font-bold">
+                  ✍️ Escribir otra fuente personalizada...
+                </option>
+              </select>
+              {form.publicHomeSubtitleFont === 'custom' && (
+                <input
+                  type="text"
+                  placeholder="Ej: Plus Jakarta Sans"
+                  onChange={e => handleChange('publicHomeSubtitleFont', e.target.value)}
+                  className="w-full bg-white/[0.05] border border-pink-500/40 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+                />
+              )}
+              <span className="text-[10px] text-pink-300/60 block font-mono">
+                Actual: <strong className="text-white">{form.publicHomeSubtitleFont || 'Plus Jakarta Sans'}</strong>
+              </span>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold text-white/60 mb-1">
+            {/* Fuente Cuerpo */}
+            <div className="space-y-2">
+              <label className="block text-[11px] font-bold text-white/70">
                 Fuente para Contenido / Texto
               </label>
-              <input
-                type="text"
-                value={form.publicHomeBodyFont || ''}
+              <select
+                value={form.publicHomeBodyFont || 'Inter'}
                 onChange={e => handleChange('publicHomeBodyFont', e.target.value)}
-                placeholder="Ej: Inter, Open Sans, Lato"
-                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-pink-500/50 font-mono"
-              />
-              <span className="text-[10px] text-white/30 block mt-1">Escribe cualquier nombre de Google Font.</span>
+                className="w-full bg-black/60 border border-white/15 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-pink-500 font-semibold cursor-pointer"
+              >
+                {CURATED_FONT_GROUPS.map(group => (
+                  <optgroup key={group.category} label={group.category} className="bg-slate-900 text-pink-300 font-bold">
+                    {group.fonts.map(font => (
+                      <option key={font} value={font} className="bg-slate-900 text-white font-normal">
+                        {font}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+                <option value="custom" className="bg-slate-900 text-amber-300 font-bold">
+                  ✍️ Escribir otra fuente personalizada...
+                </option>
+              </select>
+              {form.publicHomeBodyFont === 'custom' && (
+                <input
+                  type="text"
+                  placeholder="Ej: Inter"
+                  onChange={e => handleChange('publicHomeBodyFont', e.target.value)}
+                  className="w-full bg-white/[0.05] border border-pink-500/40 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+                />
+              )}
+              <span className="text-[10px] text-pink-300/60 block font-mono">
+                Actual: <strong className="text-white">{form.publicHomeBodyFont || 'Inter'}</strong>
+              </span>
             </div>
           </div>
         </div>
