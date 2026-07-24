@@ -1,7 +1,8 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { BookOpen, Heart, Shield, Users, Church, Sparkles, Quote, ImageIcon } from 'lucide-react';
+import { BookOpen, Heart, Shield, Users, Sparkles, Quote, ImageIcon } from 'lucide-react';
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { motion } from 'framer-motion';
 
 export function PublicWelcome() {

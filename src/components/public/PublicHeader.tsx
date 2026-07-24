@@ -1,7 +1,8 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { Church, ShieldCheck, Monitor, UserCheck, Menu, X } from 'lucide-react';
+import { ShieldCheck, Monitor, UserCheck, Menu, X } from 'lucide-react';
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useState } from 'react';
 
 export function PublicHeader() {

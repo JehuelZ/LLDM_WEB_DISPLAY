@@ -1,7 +1,8 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { MapPin, Phone, ExternalLink, Mail, Church, ShieldCheck } from 'lucide-react';
+import { MapPin, Phone, ExternalLink, Mail, ShieldCheck } from 'lucide-react';
+import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { motion } from 'framer-motion';
 
 export function PublicContact() {
