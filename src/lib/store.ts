@@ -437,6 +437,10 @@ export const useAppStore = create<AppState>()(
                 customLogo4: '',
                 minimalShowWeather: true,
                 minimalShowForecast: true,
+                publicHomeBadgeAlign: 'center',    // 'left' | 'center' | 'right'
+                publicHomeTitleAlign: 'center',    // 'left' | 'center' | 'right'
+                publicHomeSubtitleAlign: 'center', // 'left' | 'center' | 'right'
+                publicHomeCtaAlign: 'center',      // 'left' | 'center' | 'right'
                 publicHomeTitle: 'La Luz del Mundo',
                 publicHomeSubtitle: 'Un lugar de fe, comunión y esperanza para toda la familia.',
                 publicHomeHeroBg: '',

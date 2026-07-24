@@ -18,12 +18,15 @@ export default function PublicWebTab() {
     publicHomeMaintenanceTitle: settings.publicHomeMaintenanceTitle || 'Sitio Web en Mantenimiento',
     publicHomeMaintenanceMessage: settings.publicHomeMaintenanceMessage || 'Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto.',
     publicHomeTitle: settings.publicHomeTitle || 'La Luz del Mundo — Rodeo, CA',
+    publicHomeTitleAlign: settings.publicHomeTitleAlign || 'center',
     publicHomeSubtitle: settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia.',
+    publicHomeSubtitleAlign: settings.publicHomeSubtitleAlign || 'center',
     publicHomeHeroBg: settings.publicHomeHeroBg || '',
     churchOfficialLogoUrl: settings.churchOfficialLogoUrl || '',
     churchOfficialLogoAlign: settings.churchOfficialLogoAlign || 'center',
     churchOfficialLogoSize: settings.churchOfficialLogoSize || 'large',
     publicHomeCtaText: settings.publicHomeCtaText || 'Conoce Nuestros Horarios',
+    publicHomeCtaAlign: settings.publicHomeCtaAlign || 'center',
     publicHomeAboutTitle: settings.publicHomeAboutTitle || 'Nuestra Fe y Principios',
     publicHomeAboutText: settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
     publicHomeMinisterWelcome: settings.publicHomeMinisterWelcome || 'Les damos una calurosa bienvenida a la Iglesia La Luz del Mundo en Rodeo, California. Nuestra casa de oración está con las puertas abiertas para todos aquellos que buscan la verdad y la paz de Dios.',
@@ -194,11 +197,41 @@ export default function PublicWebTab() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">
-                Título de la Portada
-              </label>
+          <div className="space-y-5">
+            {/* Título de la Portada + Alineación */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                  Título de la Portada
+                </label>
+                {/* Selector de Alineación */}
+                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeTitleAlign', 'left')}
+                    className={`p-1 rounded transition-all ${form.publicHomeTitleAlign === 'left' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear Título a la Izquierda"
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeTitleAlign', 'center')}
+                    className={`p-1 rounded transition-all ${form.publicHomeTitleAlign === 'center' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Centrar Título"
+                  >
+                    <AlignCenter className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeTitleAlign', 'right')}
+                    className={`p-1 rounded transition-all ${form.publicHomeTitleAlign === 'right' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear Título a la Derecha"
+                  >
+                    <AlignRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
               <input
                 type="text"
                 value={form.publicHomeTitle}
@@ -208,10 +241,40 @@ export default function PublicWebTab() {
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">
-                Subtítulo / Lema de Bienvenida
-              </label>
+            {/* Subtítulo + Alineación */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                  Subtítulo / Lema de Bienvenida
+                </label>
+                {/* Selector de Alineación */}
+                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeSubtitleAlign', 'left')}
+                    className={`p-1 rounded transition-all ${form.publicHomeSubtitleAlign === 'left' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear Subtítulo a la Izquierda"
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeSubtitleAlign', 'center')}
+                    className={`p-1 rounded transition-all ${form.publicHomeSubtitleAlign === 'center' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Centrar Subtítulo"
+                  >
+                    <AlignCenter className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeSubtitleAlign', 'right')}
+                    className={`p-1 rounded transition-all ${form.publicHomeSubtitleAlign === 'right' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear Subtítulo a la Derecha"
+                  >
+                    <AlignRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
               <textarea
                 rows={3}
                 value={form.publicHomeSubtitle}
@@ -221,10 +284,40 @@ export default function PublicWebTab() {
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">
-                Texto del Botón Principal (CTA)
-              </label>
+            {/* Texto del Botón + Alineación */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                  Texto del Botón Principal (CTA)
+                </label>
+                {/* Selector de Alineación */}
+                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeCtaAlign', 'left')}
+                    className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'left' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear Botones a la Izquierda"
+                  >
+                    <AlignLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeCtaAlign', 'center')}
+                    className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'center' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Centrar Botones"
+                  >
+                    <AlignCenter className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleChange('publicHomeCtaAlign', 'right')}
+                    className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'right' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                    title="Alinear Botones a la Derecha"
+                  >
+                    <AlignRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
               <input
                 type="text"
                 value={form.publicHomeCtaText}
