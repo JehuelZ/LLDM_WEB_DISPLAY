@@ -1320,13 +1320,7 @@ export default function PublicWebTab() {
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue1Image && (
                       <div className="w-8 h-8 rounded-lg border border-orange-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-orange-400">
-                        {form.publicHomeValue1Image.startsWith('http') || form.publicHomeValue1Image.startsWith('/') ? (
-                          <img src={form.publicHomeValue1Image} alt="" className="w-full h-full object-contain" />
-                        ) : MODERN_ICONS_MAP[form.publicHomeValue1Image] ? (
-                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue1Image], { className: 'w-4 h-4' })
-                        ) : (
-                          <Sparkles className="w-4 h-4 text-orange-400" />
-                        )}
+                        {renderModernIconOrImg(form.publicHomeValue1Image, Sparkles, "w-4 h-4")}
                       </div>
                     )}
                     <input
@@ -1387,13 +1381,7 @@ export default function PublicWebTab() {
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue2Image && (
                       <div className="w-8 h-8 rounded-lg border border-rose-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-rose-400">
-                        {form.publicHomeValue2Image.startsWith('http') || form.publicHomeValue2Image.startsWith('/') ? (
-                          <img src={form.publicHomeValue2Image} alt="" className="w-full h-full object-contain" />
-                        ) : MODERN_ICONS_MAP[form.publicHomeValue2Image] ? (
-                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue2Image], { className: 'w-4 h-4' })
-                        ) : (
-                          <Sparkles className="w-4 h-4 text-rose-400" />
-                        )}
+                        {renderModernIconOrImg(form.publicHomeValue2Image, Heart, "w-4 h-4")}
                       </div>
                     )}
                     <input
@@ -1454,13 +1442,7 @@ export default function PublicWebTab() {
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue3Image && (
                       <div className="w-8 h-8 rounded-lg border border-sky-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-sky-400">
-                        {form.publicHomeValue3Image.startsWith('http') || form.publicHomeValue3Image.startsWith('/') ? (
-                          <img src={form.publicHomeValue3Image} alt="" className="w-full h-full object-contain" />
-                        ) : MODERN_ICONS_MAP[form.publicHomeValue3Image] ? (
-                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue3Image], { className: 'w-4 h-4' })
-                        ) : (
-                          <Sparkles className="w-4 h-4 text-sky-400" />
-                        )}
+                        {renderModernIconOrImg(form.publicHomeValue3Image, Globe, "w-4 h-4")}
                       </div>
                     )}
                     <input
@@ -1521,13 +1503,7 @@ export default function PublicWebTab() {
                   <div className="flex items-center gap-2">
                     {form.publicHomeValue4Image && (
                       <div className="w-8 h-8 rounded-lg border border-emerald-500/40 p-1 shrink-0 bg-black flex items-center justify-center text-emerald-400">
-                        {form.publicHomeValue4Image.startsWith('http') || form.publicHomeValue4Image.startsWith('/') ? (
-                          <img src={form.publicHomeValue4Image} alt="" className="w-full h-full object-contain" />
-                        ) : MODERN_ICONS_MAP[form.publicHomeValue4Image] ? (
-                          React.createElement(MODERN_ICONS_MAP[form.publicHomeValue4Image], { className: 'w-4 h-4' })
-                        ) : (
-                          <Sparkles className="w-4 h-4 text-emerald-400" />
-                        )}
+                        {renderModernIconOrImg(form.publicHomeValue4Image, Sparkles, "w-4 h-4")}
                       </div>
                     )}
                     <input

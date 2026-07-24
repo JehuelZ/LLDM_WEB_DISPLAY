@@ -40,6 +40,30 @@ export const MODERN_ICONS_MAP: Record<string, React.ComponentType<{ className?: 
   lightbulb: Lightbulb,
 };
 
+export function renderModernIconOrImg(
+  value: any,
+  fallbackIcon: React.ComponentType<{ className?: string }>,
+  className = "w-5 h-5"
+) {
+  if (!value || typeof value !== 'string') {
+    const Fallback = fallbackIcon;
+    return <Fallback className={className} />;
+  }
+
+  const str = value.trim();
+  if (str.startsWith('http://') || str.startsWith('https://') || str.startsWith('/') || str.startsWith('data:')) {
+    return <img src={str} alt="" className="w-full h-full object-contain" />;
+  }
+
+  const IconComp = MODERN_ICONS_MAP[str];
+  if (IconComp) {
+    return <IconComp className={className} />;
+  }
+
+  const Fallback = fallbackIcon;
+  return <Fallback className={className} />;
+}
+
 export const MODERN_ICON_CATEGORIES = [
   {
     name: '✨ Sacros & Fe',
