@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
-import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck } from 'lucide-react';
+import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck, AlignLeft, AlignCenter, AlignRight, Maximize2 } from 'lucide-react';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 import { motion } from 'framer-motion';
 
@@ -21,6 +21,8 @@ export default function PublicWebTab() {
     publicHomeSubtitle: settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia.',
     publicHomeHeroBg: settings.publicHomeHeroBg || '',
     churchOfficialLogoUrl: settings.churchOfficialLogoUrl || '',
+    churchOfficialLogoAlign: settings.churchOfficialLogoAlign || 'center',
+    churchOfficialLogoSize: settings.churchOfficialLogoSize || 'large',
     publicHomeCtaText: settings.publicHomeCtaText || 'Conoce Nuestros Horarios',
     publicHomeAboutTitle: settings.publicHomeAboutTitle || 'Nuestra Fe y Principios',
     publicHomeAboutText: settings.publicHomeAboutText || 'Somos una comunidad cristiana comprometida con los principios y enseñanzas bíblicas, promoviendo el amor fraternal, la fe y la comunión espiritual.',
@@ -232,8 +234,8 @@ export default function PublicWebTab() {
               />
             </div>
 
-            {/* Logo Oficial de la Iglesia Mundial (Flotante) */}
-            <div className="pt-2 border-t border-white/5 space-y-2">
+            {/* Logo Oficial de la Iglesia Mundial (Flotante y Alineable) */}
+            <div className="pt-2 border-t border-white/5 space-y-3">
               <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider">
                 Logo Oficial Mundial (Escudo "The Light of the World")
               </label>
@@ -262,6 +264,92 @@ export default function PublicWebTab() {
                 >
                   Galería
                 </button>
+              </div>
+
+              {/* Botones de Alineación por Iconos & Control de Tamaño */}
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                {/* Alineación (Izquierda, Centro, Derecha) */}
+                <div>
+                  <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Alineación</span>
+                  <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => handleChange('churchOfficialLogoAlign', 'left')}
+                      className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
+                        form.churchOfficialLogoAlign === 'left'
+                          ? 'bg-orange-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white hover:bg-white/5'
+                      }`}
+                      title="Alinear a la Izquierda"
+                    >
+                      <AlignLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('churchOfficialLogoAlign', 'center')}
+                      className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
+                        form.churchOfficialLogoAlign === 'center'
+                          ? 'bg-orange-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white hover:bg-white/5'
+                      }`}
+                      title="Centrar"
+                    >
+                      <AlignCenter className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('churchOfficialLogoAlign', 'right')}
+                      className={`flex-1 py-1.5 flex items-center justify-center rounded-lg transition-all ${
+                        form.churchOfficialLogoAlign === 'right'
+                          ? 'bg-orange-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white hover:bg-white/5'
+                      }`}
+                      title="Alinear a la Derecha"
+                    >
+                      <AlignRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Tamaño (Mediano, Grande, Extra Grande) */}
+                <div>
+                  <span className="block text-[11px] font-bold text-white/50 mb-1.5 uppercase tracking-wider">Tamaño</span>
+                  <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-xl border border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => handleChange('churchOfficialLogoSize', 'medium')}
+                      className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                        form.churchOfficialLogoSize === 'medium'
+                          ? 'bg-orange-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Med
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('churchOfficialLogoSize', 'large')}
+                      className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                        form.churchOfficialLogoSize === 'large'
+                          ? 'bg-orange-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Grande
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('churchOfficialLogoSize', 'xlarge')}
+                      className={`flex-1 py-1.5 text-[10px] font-bold uppercase rounded-lg transition-all ${
+                        form.churchOfficialLogoSize === 'xlarge'
+                          ? 'bg-orange-500 text-white shadow-md'
+                          : 'text-white/40 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      Max
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

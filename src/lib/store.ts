@@ -409,6 +409,8 @@ export const useAppStore = create<AppState>()(
                 themeMode: 'dark',
                 churchIcon: 'custom',
                 churchOfficialLogoUrl: '',
+                churchOfficialLogoAlign: 'center', // 'left' | 'center' | 'right'
+                churchOfficialLogoSize: 'large',   // 'medium' | 'large' | 'xlarge'
                 primaryColor: '#3b82f6',
                 showMinisterOnDisplay: true,
                 language: 'es',
