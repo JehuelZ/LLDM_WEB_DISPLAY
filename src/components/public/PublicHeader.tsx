@@ -34,14 +34,6 @@ export function PublicHeader() {
             alt="La Luz del Mundo"
             className={`${logoSizeClass} w-auto object-contain group-hover:scale-105 transition-transform duration-500 filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]`}
           />
-          <div>
-            <span className="text-lg font-black tracking-tight text-white block leading-none">
-              LLDM <span className="text-orange-400">{churchName}</span>
-            </span>
-            <span className="text-[10px] uppercase font-semibold text-white/40 tracking-wider">
-              La Luz del Mundo
-            </span>
-          </div>
         </a>
 
         {/* Desktop Navigation Links & Action Buttons */}
