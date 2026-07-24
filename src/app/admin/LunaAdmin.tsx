@@ -9,7 +9,7 @@ import {
     Settings as SettingsIcon, User, Layout, Music2, Activity,
     Shield, ChevronLeft, ChevronRight, Target, Camera,
     ChevronDown, MoreHorizontal, Search, User as UserIcon,
-    UserSearch, CalendarDays, Sun, Moon
+    UserSearch, CalendarDays, Sun, Moon, Globe
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/lib/store';
@@ -62,6 +62,7 @@ const LunaAdmin: React.FC<LunaAdminProps> = ({ children, isSubpage }) => {
     // NAVIGATION ITEMS
     const navItems = [
         { id: 'dashboard', icon: Layout, label: 'dashboard', color: 'bg-emerald-500' },
+        { id: 'public_web', icon: Globe, label: 'sitio público', color: 'bg-orange-500' },
         { id: 'miembros', icon: Users, label: 'miembros', color: 'bg-blue-500' },
         { id: 'horarios', icon: Clock, label: 'horarios', color: 'bg-emerald-500' },
         { id: 'contenido', icon: Monitor, label: 'contenido', color: 'bg-purple-500' },

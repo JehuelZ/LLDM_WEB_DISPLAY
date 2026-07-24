@@ -102,6 +102,21 @@ export const AjustesTab = ({
 
             {/* COLUMNA 1: APARIENCIA VISUAL & SISTEMA VISUAL & JERARQUÍA */}
             <div className="col-span-1 lg:col-span-4 space-y-6">
+                <TactileGlassCard title="SITIO WEB PÚBLICO (HOMEPAGE)">
+                    <div className="space-y-3">
+                        <p className="text-xs text-muted-foreground">
+                            Personaliza Google Fonts, colores de botones, textos, portadas, mensajes de bienvenida y orden de secciones de la página principal.
+                        </p>
+                        <a
+                            href="/admin?tab=public_web"
+                            className="w-full h-11 px-4 flex items-center justify-center gap-2 rounded-xl font-bold text-xs uppercase tracking-wider bg-orange-500/20 border border-orange-500/40 text-orange-400 hover:bg-orange-500/30 transition-all shadow-md"
+                        >
+                            <Sparkles className="w-4 h-4 text-orange-400" />
+                            Personalizar Web Pública (Fuentes & Colores)
+                        </a>
+                    </div>
+                </TactileGlassCard>
+
                 <TactileGlassCard title="GALERÍA DE MEDIOS">
                     <div className="space-y-3">
                         <p className="text-xs text-muted-foreground">
