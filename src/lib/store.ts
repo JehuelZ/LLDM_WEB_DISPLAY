@@ -2311,6 +2311,12 @@ export const useAppStore = create<AppState>()(
                 };
 
                 const dbUpdate: Record<string, any> = {};
+                
+                // Siempre incluir main_church_obj con publicHomeConfig actualizado para persistencia indestructible en Supabase
+                if (updatedMainChurchObj && Object.keys(homeFields).length > 0) {
+                    dbUpdate['main_church_obj'] = updatedMainChurchObj;
+                }
+
                 Object.entries(newSettings).forEach(([key, value]) => {
                     const dbKey = mapping[key];
                     if (dbKey) {
