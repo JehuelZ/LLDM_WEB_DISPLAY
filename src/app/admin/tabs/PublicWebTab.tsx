@@ -1627,13 +1627,13 @@ export default function PublicWebTab() {
           </div>
         </div>
 
-        {/* Tarjetas de los 3 Servicios */}
+        {/* Tarjetas de los 4 Servicios */}
         <div className="pt-2 border-t border-white/5 space-y-4">
           <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider">
-            Detalles de los 3 Servicios de Oración
+            Detalles de los 4 Servicios (incluye Escuela Dominical)
           </label>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
             {/* Servicio 1 */}
             <div className="bg-black/30 border border-white/10 p-4 rounded-2xl space-y-3">
               <span className="text-xs font-bold text-amber-400 uppercase">Servicio 1 (Matutino)</span>
@@ -1764,6 +1764,50 @@ export default function PublicWebTab() {
                   value={form.publicHomeService3Desc || ''}
                   onChange={e => handleChange('publicHomeService3Desc', e.target.value)}
                   placeholder="Servicio de alabanza..."
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white resize-none"
+                />
+              </div>
+            </div>
+            {/* Servicio 4 — Escuela Dominical */}
+            <div className="bg-black/30 border border-emerald-500/20 p-4 rounded-2xl space-y-3">
+              <span className="text-xs font-bold text-emerald-400 uppercase">Servicio 4 (Escuela Dominical)</span>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Hora:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService4Time || ''}
+                  onChange={e => handleChange('publicHomeService4Time', e.target.value)}
+                  placeholder="10:00 AM"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Título:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService4Title || ''}
+                  onChange={e => handleChange('publicHomeService4Title', e.target.value)}
+                  placeholder="Escuela Dominical"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Días:</span>
+                <input
+                  type="text"
+                  value={form.publicHomeService4Days || ''}
+                  onChange={e => handleChange('publicHomeService4Days', e.target.value)}
+                  placeholder="Domingos"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white"
+                />
+              </div>
+              <div>
+                <span className="block text-[10px] text-white/50 mb-0.5">Descripción:</span>
+                <textarea
+                  rows={2}
+                  value={form.publicHomeService4Desc || ''}
+                  onChange={e => handleChange('publicHomeService4Desc', e.target.value)}
+                  placeholder="Clases bíblicas para niños, jóvenes y adultos..."
                   className="w-full bg-white/[0.04] border border-white/10 rounded-lg px-2.5 py-1 text-xs text-white resize-none"
                 />
               </div>

@@ -137,6 +137,10 @@ export interface AppSettings {
     publicHomeService3Title?: string;
     publicHomeService3Days?: string;
     publicHomeService3Desc?: string;
+    publicHomeService4Time?: string;
+    publicHomeService4Title?: string;
+    publicHomeService4Days?: string;
+    publicHomeService4Desc?: string;
     publicHomeContactBadge?: string;
     publicHomeContactTitle?: string;
     publicHomeContactSubtitle?: string;
@@ -555,6 +559,10 @@ export const useAppStore = create<AppState>()(
                 publicHomeService3Title: 'Oración de la Tarde',
                 publicHomeService3Days: 'Lunes a Domingo (6:00 PM / 7:00 PM)',
                 publicHomeService3Desc: 'Servicio de alabanza, oración y predicación de la palabra de Dios.',
+                publicHomeService4Time: '10:00 AM',
+                publicHomeService4Title: 'Escuela Dominical',
+                publicHomeService4Days: 'Domingos',
+                publicHomeService4Desc: 'Clases bíblicas para niños, jóvenes y adultos. Formación en la fe y doctrina cristiana.',
                 publicHomeContactBadge: 'Ubicación y Contacto',
                 publicHomeContactTitle: 'Visítanos en Nuestra Casa de Oración',
                 publicHomeContactSubtitle: 'Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.',

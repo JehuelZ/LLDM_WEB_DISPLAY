@@ -36,6 +36,15 @@ export function PublicSchedule() {
       icon: Clock,
       color: 'from-purple-500/20 to-indigo-500/10 text-purple-400 border-purple-500/30',
     },
+    {
+      time: settings.publicHomeService4Time || '10:00 AM',
+      title: settings.publicHomeService4Title || 'Escuela Dominical',
+      desc: settings.publicHomeService4Desc || 'Clases bíblicas para niños, jóvenes y adultos. Formación en la fe y doctrina cristiana.',
+      days: settings.publicHomeService4Days || 'Domingos',
+      badge: 'Dominical',
+      icon: Sparkles,
+      color: 'from-emerald-500/20 to-teal-500/10 text-emerald-400 border-emerald-500/30',
+    },
   ];
 
   const badge = settings.publicHomeScheduleBadge || 'Horarios Públicos de Oración';
@@ -60,7 +69,7 @@ export function PublicSchedule() {
         </div>
 
         {/* Services Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           {services.map((item, index) => {
             const Icon = item.icon;
             return (
