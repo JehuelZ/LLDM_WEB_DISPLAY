@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { ShieldCheck, Monitor } from 'lucide-react';
+import { ShieldCheck, Monitor, Facebook, Instagram, Youtube } from 'lucide-react';
 
 export function PublicFooter() {
   const { settings } = useAppStore();
@@ -50,10 +50,10 @@ export function PublicFooter() {
                 href={settings.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-blue-600/20 border border-white/10 hover:border-blue-500/40 flex items-center justify-center text-white/70 hover:text-blue-400 transition-all"
-                title="Facebook"
+                className="w-9 h-9 rounded-xl bg-blue-600/10 hover:bg-blue-600/25 border border-blue-500/30 flex items-center justify-center text-blue-400 hover:text-blue-300 transition-all hover:scale-110 shadow-lg shadow-blue-500/10"
+                title="Facebook Oficial"
               >
-                <span className="font-black text-xs">f</span>
+                <Facebook className="w-4.5 h-4.5" />
               </a>
             )}
             {settings.instagramUrl && (
@@ -61,10 +61,10 @@ export function PublicFooter() {
                 href={settings.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-pink-600/20 border border-white/10 hover:border-pink-500/40 flex items-center justify-center text-white/70 hover:text-pink-400 transition-all"
-                title="Instagram"
+                className="w-9 h-9 rounded-xl bg-pink-600/10 hover:bg-pink-600/25 border border-pink-500/30 flex items-center justify-center text-pink-400 hover:text-pink-300 transition-all hover:scale-110 shadow-lg shadow-pink-500/10"
+                title="Instagram Oficial"
               >
-                <span className="font-black text-xs">ig</span>
+                <Instagram className="w-4.5 h-4.5" />
               </a>
             )}
             {settings.youtubeUrl && (
@@ -72,10 +72,10 @@ export function PublicFooter() {
                 href={settings.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-xl bg-white/5 hover:bg-red-600/20 border border-white/10 hover:border-red-500/40 flex items-center justify-center text-white/70 hover:text-red-400 transition-all"
-                title="YouTube / Transmisión"
+                className="w-9 h-9 rounded-xl bg-red-600/10 hover:bg-red-600/25 border border-red-500/30 flex items-center justify-center text-red-400 hover:text-red-300 transition-all hover:scale-110 shadow-lg shadow-red-500/10"
+                title="Canal de YouTube / Transmisiones"
               >
-                <span className="font-black text-xs">▶</span>
+                <Youtube className="w-4.5 h-4.5" />
               </a>
             )}
 
