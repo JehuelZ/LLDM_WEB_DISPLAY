@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { Sparkles, Calendar, ShieldCheck, ChevronDown, BookOpen } from 'lucide-react';
+import { Sparkles, Calendar, MapPin, Phone, ChevronDown, BookOpen } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function PublicHero() {
@@ -11,7 +11,7 @@ export function PublicHero() {
   const subtitle = settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia. Te invitamos a conocer nuestros principios cristianos y unirte a nuestras reuniones de oración.';
   const bgImage = settings.publicHomeHeroBg || settings.displayBgUrl || '/bg_login.png';
   const ctaText = settings.publicHomeCtaText || 'Conoce Nuestras Reuniones';
-  const ctaMemberText = settings.publicHomeHeroCtaMember || 'Acceso a Miembros';
+  const ctaMemberText = settings.publicHomeHeroCtaMember || 'Ubicación y Contacto';
   const badgeText = settings.publicHomeBadgeText || 'La Restauración de la Primitiva Iglesia Cristiana';
   const badgeAlign = settings.publicHomeBadgeAlign || 'center';
   const titleAlign = settings.publicHomeTitleAlign || 'center';
@@ -117,10 +117,10 @@ export function PublicHero() {
           </a>
 
           <a
-            href="/portal"
+            href="#contacto"
             className={`w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/15 backdrop-blur-md text-white font-bold text-sm ${ctaShapeClass} transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3`}
           >
-            <ShieldCheck className="w-4 h-4 text-orange-400" />
+            <MapPin className="w-4 h-4 text-orange-400" />
             <span>{ctaMemberText}</span>
           </a>
         </motion.div>

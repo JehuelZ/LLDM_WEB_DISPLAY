@@ -534,7 +534,7 @@ export const useAppStore = create<AppState>()(
                 publicHomeNavContacto: 'Ubicación',
                 publicHomeNavDisplayBtn: 'Pantalla TV',
                 publicHomeNavPortalBtn: 'Portal del Miembro',
-                publicHomeHeroCtaMember: 'Acceso a Miembros',
+                publicHomeHeroCtaMember: 'Ubicación y Contacto',
                 publicHomePrinciplesBadge: 'Nuestros Principios',
                 publicHomeValue1Title: 'Fe y Doctrina Cristiana',
                 publicHomeValue1Desc: 'Fundamentados en las Sagradas Escrituras y el evangelio de Jesucristo.',
