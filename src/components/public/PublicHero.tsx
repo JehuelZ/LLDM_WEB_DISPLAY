@@ -51,7 +51,7 @@ export function PublicHero() {
   };
 
   return (
-    <section id="inicio" className="relative flex items-center justify-center pt-24 pb-10 sm:pt-28 sm:pb-14 overflow-hidden">
+    <section id="inicio" className="relative flex items-center justify-center pt-48 sm:pt-56 md:pt-64 pb-12 sm:pb-16 overflow-hidden">
       {/* Background Image & Gradient Overlays */}
       <div className="absolute inset-0 z-0">
         <img
