@@ -37,10 +37,10 @@ export default function PublicWebTab() {
 
   // Form local state initialized with settings
   const [form, setForm] = useState({
-    publicHomeMaintenanceMode: settings.publicHomeMaintenanceMode ?? true,
+    publicHomeMaintenanceMode: typeof settings.publicHomeMaintenanceMode !== 'undefined' ? settings.publicHomeMaintenanceMode : false,
     publicHomeMaintenanceTitle: settings.publicHomeMaintenanceTitle || 'Sitio Web en Mantenimiento',
     publicHomeMaintenanceMessage: settings.publicHomeMaintenanceMessage || 'Estamos realizando mejoras en nuestro sitio web oficial. Por favor regresa muy pronto.',
-    publicHomeTitle: settings.publicHomeTitle || 'La Luz del Mundo — Rodeo, CA',
+    publicHomeTitle: settings.publicHomeTitle || `La Luz del Mundo — ${settings.churchCity || 'Rodeo, CA'}`,
     publicHomeTitleAlign: settings.publicHomeTitleAlign || 'center',
     publicHomeSubtitle: settings.publicHomeSubtitle || 'Un lugar de fe, comunión y esperanza para toda la familia.',
     publicHomeSubtitleAlign: settings.publicHomeSubtitleAlign || 'center',
