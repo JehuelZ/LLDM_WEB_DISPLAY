@@ -4,7 +4,7 @@ import { useAppStore } from '@/lib/store';
 import { ShieldCheck, Monitor, Facebook, Instagram, Youtube } from 'lucide-react';
 
 export function PublicFooter() {
-  const { settings } = useAppStore();
+  const { settings, currentUser } = useAppStore();
   const churchName = settings.mainChurchName || settings.churchCity || 'Rodeo';
   const year = new Date().getFullYear();
 
@@ -88,18 +88,23 @@ export function PublicFooter() {
               className="flex items-center gap-1.5 text-xs text-orange-400 hover:text-orange-300 font-bold transition-colors"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span>{navPortalBtn}</span>
+              <span>{currentUser ? 'Mi Portal' : navPortalBtn}</span>
             </a>
-            <span className="text-white/20">•</span>
-            <a
-              href="/display"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-bold transition-colors"
-            >
-              <Monitor className="w-3.5 h-3.5" />
-              <span>{navDisplayBtn}</span>
-            </a>
+
+            {currentUser && (
+              <>
+                <span className="text-white/20">•</span>
+                <a
+                  href="/display"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-bold transition-colors"
+                >
+                  <Monitor className="w-3.5 h-3.5" />
+                  <span>{navDisplayBtn}</span>
+                </a>
+              </>
+            )}
           </div>
         </div>
 

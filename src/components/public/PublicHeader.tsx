@@ -6,7 +6,7 @@ import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useState } from 'react';
 
 export function PublicHeader() {
-  const { settings } = useAppStore();
+  const { settings, currentUser } = useAppStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const churchName = settings.mainChurchName || settings.churchCity || 'Rodeo';
@@ -61,22 +61,24 @@ export function PublicHeader() {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-3">
-            <a
-              href="/display"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white/80 transition-all hover:text-white"
-            >
-              <Monitor className="w-3.5 h-3.5 text-amber-400" />
-              <span>{navDisplayBtn}</span>
-            </a>
+            {currentUser && (
+              <a
+                href="/display"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3.5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-bold text-white/80 transition-all hover:text-white"
+              >
+                <Monitor className="w-3.5 h-3.5 text-amber-400" />
+                <span>{navDisplayBtn}</span>
+              </a>
+            )}
 
             <a
               href="/portal"
               className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-orange-500/20 transition-all hover:scale-[1.02]"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>{navPortalBtn}</span>
+              <span>{currentUser ? 'Mi Portal' : navPortalBtn}</span>
             </a>
           </div>
         </div>
@@ -128,15 +130,17 @@ export function PublicHeader() {
               className="flex items-center justify-center gap-2 w-full py-3 bg-orange-500 text-white font-bold text-xs rounded-xl"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span>{navPortalBtn}</span>
+              <span>{currentUser ? 'Mi Portal' : navPortalBtn}</span>
             </a>
-            <a
-              href="/display"
-              className="flex items-center justify-center gap-2 w-full py-3 bg-white/5 border border-white/10 text-white/80 font-bold text-xs rounded-xl"
-            >
-              <Monitor className="w-4 h-4 text-amber-400" />
-              <span>{navDisplayBtn}</span>
-            </a>
+            {currentUser && (
+              <a
+                href="/display"
+                className="flex items-center justify-center gap-2 w-full py-3 bg-white/5 border border-white/10 text-white/80 font-bold text-xs rounded-xl"
+              >
+                <Monitor className="w-4 h-4 text-amber-400" />
+                <span>{navDisplayBtn}</span>
+              </a>
+            )}
           </div>
         </div>
       )}
