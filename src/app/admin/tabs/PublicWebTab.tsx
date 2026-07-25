@@ -851,47 +851,62 @@ export default function PublicWebTab() {
               />
             </div>
 
-            {/* Texto del Botón + Alineación */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
-                  Texto del Botón Principal (CTA)
-                </label>
-                {/* Selector de Alineación */}
-                <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
-                  <button
-                    type="button"
-                    onClick={() => handleChange('publicHomeCtaAlign', 'left')}
-                    className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'left' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
-                    title="Alinear Botones a la Izquierda"
-                  >
-                    <AlignLeft className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleChange('publicHomeCtaAlign', 'center')}
-                    className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'center' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
-                    title="Centrar Botones"
-                  >
-                    <AlignCenter className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleChange('publicHomeCtaAlign', 'right')}
-                    className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'right' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
-                    title="Alinear Botones a la Derecha"
-                  >
-                    <AlignRight className="w-3.5 h-3.5" />
-                  </button>
+            {/* Texto de los Botones CTA (Principal y Secundario) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                    Texto del Botón Principal (CTA 1)
+                  </label>
+                  {/* Selector de Alineación */}
+                  <div className="flex items-center gap-1 bg-black/40 p-0.5 rounded-lg border border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => handleChange('publicHomeCtaAlign', 'left')}
+                      className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'left' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                      title="Alinear Botones a la Izquierda"
+                    >
+                      <AlignLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('publicHomeCtaAlign', 'center')}
+                      className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'center' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                      title="Centrar Botones"
+                    >
+                      <AlignCenter className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleChange('publicHomeCtaAlign', 'right')}
+                      className={`p-1 rounded transition-all ${form.publicHomeCtaAlign === 'right' ? 'bg-orange-500 text-white' : 'text-white/40 hover:text-white'}`}
+                      title="Alinear Botones a la Derecha"
+                    >
+                      <AlignRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
+                <input
+                  type="text"
+                  value={form.publicHomeCtaText}
+                  onChange={e => handleChange('publicHomeCtaText', e.target.value)}
+                  placeholder="Conoce Nuestros Horarios"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-colors"
+                />
               </div>
-              <input
-                type="text"
-                value={form.publicHomeCtaText}
-                onChange={e => handleChange('publicHomeCtaText', e.target.value)}
-                placeholder="Conoce Nuestros Horarios"
-                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-colors"
-              />
+
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider">
+                  Texto del Segundo Botón (CTA 2)
+                </label>
+                <input
+                  type="text"
+                  value={form.publicHomeHeroCtaMember || ''}
+                  onChange={e => handleChange('publicHomeHeroCtaMember', e.target.value)}
+                  placeholder="Ubicación y Contacto"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-colors"
+                />
+              </div>
             </div>
 
           </div>
