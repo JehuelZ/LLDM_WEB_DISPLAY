@@ -72,6 +72,17 @@ export const metadata: Metadata = {
   title: "LLDM RODEO - Tablero Digital",
   description: "Sistema de proyección y control para la iglesia LLDM RODEO",
   manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/flame_logo_premium.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    shortcut: '/flame_logo_premium.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/flame_logo_premium.png' }
+    ],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
