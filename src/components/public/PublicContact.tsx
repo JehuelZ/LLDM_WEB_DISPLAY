@@ -15,6 +15,8 @@ export function PublicContact() {
   const badge = settings.publicHomeContactBadge || 'Ubicación y Contacto';
   const title = settings.publicHomeContactTitle || `Visítanos en ${churchName}`;
   const subtitle = settings.publicHomeContactSubtitle || 'Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.';
+  const headerName = settings.publicHomeContactHeaderName || 'La Luz del Mundo';
+  const headerSub = settings.publicHomeContactHeaderSub || settings.mainChurchName || settings.churchCity || 'Principal (Rodeo CA)';
   const addressLabel = settings.publicHomeAddressLabel || 'Dirección';
   const phoneLabel = settings.publicHomePhoneLabel || 'Teléfono de Atención';
   const mapsBtnText = settings.publicHomeMapsBtnText || 'Abrir Dirección en Google Maps';
@@ -58,8 +60,8 @@ export function PublicContact() {
                   <img src={logoUrl} alt="La Luz del Mundo" className="w-full h-full object-contain filter drop-shadow" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-extrabold text-white leading-tight">La Luz del Mundo</h3>
-                  <p className="text-xs font-semibold text-orange-400/90 tracking-wide uppercase mt-0.5">{churchName}</p>
+                  <h3 className="text-xl font-extrabold text-white leading-tight">{headerName}</h3>
+                  <p className="text-xs font-semibold text-orange-400/90 tracking-wide uppercase mt-0.5">{headerSub}</p>
                 </div>
               </div>
 

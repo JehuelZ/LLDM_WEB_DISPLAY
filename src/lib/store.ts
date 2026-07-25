@@ -144,6 +144,8 @@ export interface AppSettings {
     publicHomeContactBadge?: string;
     publicHomeContactTitle?: string;
     publicHomeContactSubtitle?: string;
+    publicHomeContactHeaderName?: string;
+    publicHomeContactHeaderSub?: string;
     publicHomeAddressLabel?: string;
     publicHomePhoneLabel?: string;
     publicHomeMapsBtnText?: string;
@@ -568,6 +570,8 @@ export const useAppStore = create<AppState>()(
                 publicHomeContactBadge: 'Ubicación y Contacto',
                 publicHomeContactTitle: 'Visítanos en Nuestra Casa de Oración',
                 publicHomeContactSubtitle: 'Estamos ubicados para atenderte y recibirte con los brazos abiertos. A continuación puedes consultar nuestra dirección y canal telefónico de atención.',
+                publicHomeContactHeaderName: 'La Luz del Mundo',
+                publicHomeContactHeaderSub: 'Principal (Rodeo CA)',
                 publicHomeAddressLabel: 'Dirección',
                 publicHomePhoneLabel: 'Teléfono de Atención',
                 publicHomeMapsBtnText: 'Abrir Dirección en Google Maps',

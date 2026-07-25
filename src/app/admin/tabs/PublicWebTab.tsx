@@ -94,6 +94,8 @@ export default function PublicWebTab() {
     publicHomeContactBadge: settings.publicHomeContactBadge || 'Ubicación y Contacto',
     publicHomeContactTitle: settings.publicHomeContactTitle || 'Visítanos en Nuestra Casa de Oración',
     publicHomeContactSubtitle: settings.publicHomeContactSubtitle || 'Estamos ubicados para atenderte y recibirte con los brazos abiertos.',
+    publicHomeContactHeaderName: settings.publicHomeContactHeaderName || 'La Luz del Mundo',
+    publicHomeContactHeaderSub: settings.publicHomeContactHeaderSub || settings.mainChurchName || settings.churchCity || 'Principal (Rodeo CA)',
     publicHomeAddressLabel: settings.publicHomeAddressLabel || 'Dirección',
     publicHomePhoneLabel: settings.publicHomePhoneLabel || 'Teléfono de Atención',
     publicHomeMapsBtnText: settings.publicHomeMapsBtnText || 'Abrir en Google Maps',
@@ -1884,6 +1886,32 @@ export default function PublicWebTab() {
               value={form.publicHomeContactSubtitle || ''}
               onChange={e => handleChange('publicHomeContactSubtitle', e.target.value)}
               placeholder="Estamos ubicados para atenderte..."
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider mb-1">
+              Título de la Tarjeta de Contacto
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeContactHeaderName || ''}
+              onChange={e => handleChange('publicHomeContactHeaderName', e.target.value)}
+              placeholder="La Luz del Mundo"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-xs font-semibold text-orange-400 uppercase tracking-wider mb-1">
+              Subtítulo de la Tarjeta (Ej: Principal (Rodeo CA))
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeContactHeaderSub || ''}
+              onChange={e => handleChange('publicHomeContactHeaderSub', e.target.value)}
+              placeholder="Principal (Rodeo CA)"
               className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white"
             />
           </div>
