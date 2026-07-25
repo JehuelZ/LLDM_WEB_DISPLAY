@@ -13,6 +13,8 @@ export function PublicFooter() {
   const navHorarios = settings.publicHomeNavHorarios || 'Horarios';
   const navContacto = settings.publicHomeNavContacto || 'Ubicación';
   const footerSubtitle = settings.publicHomeFooterSubtitle || 'Sitio Web Oficial';
+  const footerText = settings.publicHomeFooterText || 'La Luz del Mundo. Todos los derechos reservados.';
+  const footerQuote = settings.publicHomeFooterQuote || 'Un lugar de fe, comunión y esperanza';
   const navDisplayBtn = settings.publicHomeNavDisplayBtn || 'Pantalla TV';
   const navPortalBtn = settings.publicHomeNavPortalBtn || 'Portal del Miembro';
 
@@ -101,9 +103,9 @@ export function PublicFooter() {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white/30 text-[11px]">
-          <p>© {year} La Luz del Mundo. Todos los derechos reservados.</p>
-          <p className="italic">"Un lugar de fe, comunión y esperanza"</p>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-white/40 text-[11px]">
+          <p>© {year} {footerText}</p>
+          {footerQuote && <p className="italic">"{footerQuote}"</p>}
         </div>
       </div>
     </footer>

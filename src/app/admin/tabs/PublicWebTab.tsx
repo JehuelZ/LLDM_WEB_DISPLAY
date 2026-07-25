@@ -98,6 +98,8 @@ export default function PublicWebTab() {
     publicHomePhoneLabel: settings.publicHomePhoneLabel || 'Teléfono de Atención',
     publicHomeMapsBtnText: settings.publicHomeMapsBtnText || 'Abrir en Google Maps',
     publicHomeFooterSubtitle: settings.publicHomeFooterSubtitle || 'Sitio Web Oficial',
+    publicHomeFooterText: settings.publicHomeFooterText || 'La Luz del Mundo. Todos los derechos reservados.',
+    publicHomeFooterQuote: settings.publicHomeFooterQuote || 'Un lugar de fe, comunión y esperanza',
     publicHomeFooterAdminBtn: settings.publicHomeFooterAdminBtn || 'Acceso Administración',
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
@@ -1944,9 +1946,57 @@ export default function PublicWebTab() {
             />
           </div>
 
+      </motion.div>
+
+      {/* ── SECCIÓN 6: PIE DE PÁGINA (FOOTER) & REDES SOCIALES ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.25 }}
+        className="bg-white/[0.03] border border-white/8 rounded-3xl p-6 backdrop-blur-xl space-y-6"
+      >
+        <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+          <div className="w-8 h-8 rounded-lg bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+            <Globe className="w-4 h-4" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">6. Pie de Página (Footer) & Redes Sociales</h3>
+            <p className="text-xs text-white/40">Personaliza la frase inspiradora, texto de derechos reservados y enlaces a redes sociales oficiales.</p>
+          </div>
+        </div>
+
+        {/* Textos del Footer */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2 border-b border-white/5">
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Texto de Derechos Reservados / Copyright
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeFooterText || ''}
+              onChange={e => handleChange('publicHomeFooterText', e.target.value)}
+              placeholder="La Luz del Mundo. Todos los derechos reservados."
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-1">
+              Frase Inspiradora / Lema del Pie de Página
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeFooterQuote || ''}
+              onChange={e => handleChange('publicHomeFooterQuote', e.target.value)}
+              placeholder="Un lugar de fe, comunión y esperanza"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-orange-500/50 transition-colors"
+            />
+          </div>
+        </div>
+
         {/* Redes Sociales Oficiales */}
-        <div className="pt-6 border-t border-white/5 space-y-4">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-orange-400">Enlaces de Redes Sociales (Aparecerán en el Pie de Página)</h4>
+        <div className="pt-2 space-y-4">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-orange-400">Enlaces de Redes Sociales (Íconos Oficiales)</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-[11px] font-semibold text-white/60 mb-1">Página de Facebook</label>

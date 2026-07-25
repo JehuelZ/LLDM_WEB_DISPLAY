@@ -148,6 +148,8 @@ export interface AppSettings {
     publicHomePhoneLabel?: string;
     publicHomeMapsBtnText?: string;
     publicHomeFooterSubtitle?: string;
+    publicHomeFooterText?: string;
+    publicHomeFooterQuote?: string;
     publicHomeFooterAdminBtn?: string;
     // Typography (Google Fonts) & Button Styling
     publicHomeTitleFont?: string;
@@ -570,6 +572,8 @@ export const useAppStore = create<AppState>()(
                 publicHomePhoneLabel: 'Teléfono de Atención',
                 publicHomeMapsBtnText: 'Abrir Dirección en Google Maps',
                 publicHomeFooterSubtitle: 'Sitio Web Oficial',
+                publicHomeFooterText: 'La Luz del Mundo. Todos los derechos reservados.',
+                publicHomeFooterQuote: 'Un lugar de fe, comunión y esperanza',
                 publicHomeFooterAdminBtn: 'Acceso Administración',
                 publicHomeTitleFont: 'Outfit',
                 publicHomeSubtitleFont: 'Plus Jakarta Sans',
