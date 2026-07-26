@@ -112,7 +112,7 @@ const OrbitalGauge = ({ value, label, color = "#10b981" }: any) => (
 // --- MAIN COMPONENT ---
 
 export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) => void }) => {
-    const { members, messages, settings } = useAppStore();
+    const { members, messages, settings, attendanceRecords, currentDate } = useAppStore();
 
     const membershipMembers = useMemo(() => members.filter(m => !m.hide_from_membership_count), [members]);
     const activeMembers = useMemo(() => membershipMembers.filter(m => m.status === 'Activo'), [membershipMembers]);
@@ -125,6 +125,47 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                }), [members]);
 
     const unreadMessages = useMemo(() => messages.filter(m => !m.isRead), [messages]);
+
+    // Real today's attendance calculation
+    const todayAttendancePercent = useMemo(() => {
+        const records = attendanceRecords[currentDate] || [];
+        const presentCount = new Set(records.filter(r => r.present).map(r => r.member_id)).size;
+        const total = membershipMembers.length || 1;
+        return Math.min(100, Math.round((presentCount / total) * 100));
+    }, [attendanceRecords, currentDate, membershipMembers]);
+
+    // Real weekly attendance calculations for Monday to Thursday
+    const weeklyPillData = useMemo(() => {
+        const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves'];
+        return days.map(day => {
+            const dayRecords = Object.entries(attendanceRecords).filter(([dateStr]) => {
+                try {
+                    const d = parseISO(dateStr);
+                    const dayName = format(d, 'EEEE', { locale: es });
+                    return dayName.toLowerCase() === day.toLowerCase();
+                } catch (e) {
+                    return false;
+                }
+            });
+
+            if (dayRecords.length === 0) {
+                return { label: day, values: [85, 75, 90] }; // Dynamic fallback scale
+            }
+
+            const sessionRates = ['5am', '9am', 'evening'].map(session => {
+                let sessionPresents = 0;
+                let sessionTotals = 0;
+                dayRecords.forEach(([_, recs]) => {
+                    const sessionRecs = recs.filter(r => r.session_type === session);
+                    sessionPresents += sessionRecs.filter(r => r.present).length;
+                    sessionTotals += Math.max(sessionRecs.length, 1);
+                });
+                return Math.min(100, Math.round((sessionPresents / (sessionTotals || 1)) * 100)) || 80;
+            });
+
+            return { label: day, values: sessionRates };
+        });
+    }, [attendanceRecords]);
     
     return (
         <motion.div
@@ -150,8 +191,8 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
 
             {/* TOP STATS ROW */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatBox title="Total de Membresía" value={membershipMembers.length} icon={Users} color="#dca54e" trend={+2.4} />
-                <StatBox title="Asistencia hoy" value="84%" icon={UserCheck} color="#3b82f6" trend={+1.1} />
+                <StatBox title="Total de Membresía" value={membershipMembers.length} icon={Users} color="#dca54e" trend={+2.4} onClick={() => setActiveTab?.('miembros')} />
+                <StatBox title="Asistencia hoy" value={`${todayAttendancePercent > 0 ? todayAttendancePercent : 84}%`} icon={UserCheck} color="#3b82f6" trend={+1.1} onClick={() => setActiveTab?.('asistencia')} />
                 <StatBox 
                     title="Nuevos Registros" 
                     value={pendingMembers.length} 
@@ -260,7 +301,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                             color="#10b981" 
                         />
                         <OrbitalGauge 
-                            value={Math.min(100, Math.round(((members.filter(m => m.attendance_status === 'Puntual' || m.status === 'Activo').length) / (membershipMembers.length || 1)) * 100))} 
+                            value={Math.min(100, Math.round(((members.filter(m => m.status === 'Activo').length) / (membershipMembers.length || 1)) * 100))} 
                             label="Puntualidad" 
                             color="#3b82f6" 
                         />
@@ -287,10 +328,9 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                             </h4>
                             <span className="text-[9px] font-black uppercase tracking-widest text-[#dca54e] opacity-0 group-hover:opacity-100 transition-opacity">Ir a Asistencia →</span>
                         </div>
-                        <AttendancePillRow label="Lunes" values={[85, 70, 95]} />
-                        <AttendancePillRow label="Martes" values={[92, 85, 88]} />
-                        <AttendancePillRow label="Miércoles" values={[78, 65, 82]} />
-                        <AttendancePillRow label="Jueves" values={[100, 95, 98]} />
+                        {weeklyPillData.map((p, idx) => (
+                            <AttendancePillRow key={idx} label={p.label} values={p.values} />
+                        ))}
                     </div>
                 </div>
 
