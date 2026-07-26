@@ -834,12 +834,10 @@ function AdminLayoutContent({
                         <LunaAdmin propTab={currentTab} isSubpage={pathname !== '/admin'}>
                             {children}
                         </LunaAdmin>
-                    ) : (settings.adminTheme as any) === 'tactile' ? (
+                    ) : (
                         <TactileAdmin propTab={currentTab} isSubpage={pathname !== '/admin'}>
                             {children}
                         </TactileAdmin>
-                    ) : (
-                        children
                     )}
                 </div>
 
