@@ -365,15 +365,21 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         <div className="pt-4 border-t border-foreground/[0.08] space-y-3">
                             <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Protocolos Rápidos</h4>
                             {[
-                                { label: 'Gestionar Miembros', icon: Users, tab: 'miembros' },
-                                { label: 'Bandeja de Mensajes', icon: Bell, tab: 'mensajes' },
-                                { label: 'Crear Notificación', icon: Mail, tab: 'contenido' },
-                                { label: 'Calendario de Cultos', icon: Calendar, tab: 'horarios' },
-                                { label: 'Ajustes del Sistema', icon: Shield, tab: 'configuracion' }
+                                { label: 'Gestionar Miembros', icon: Users, tab: 'miembros', href: '/admin?tab=miembros' },
+                                { label: 'Bandeja de Mensajes', icon: Bell, tab: 'mensajes', href: '/admin?tab=mensajes' },
+                                { label: 'Crear Notificación', icon: Mail, tab: 'contenido', href: '/admin?tab=temas' },
+                                { label: 'Calendario de Cultos', icon: Calendar, tab: 'horarios', href: '/admin?tab=horarios' },
+                                { label: 'Ajustes del Sistema', icon: Shield, tab: 'configuracion', href: '/admin?tab=configuracion' }
                             ].map((btn, i) => (
                                 <button 
                                     key={i} 
-                                    onClick={() => btn.tab && setActiveTab?.(btn.tab)}
+                                    onClick={() => {
+                                        if (setActiveTab) {
+                                            setActiveTab(btn.tab);
+                                        } else {
+                                            window.location.href = btn.href;
+                                        }
+                                    }}
                                     className="w-full flex items-center justify-between p-3.5 rounded-md bg-foreground/[0.03] border border-foreground/[0.05] hover:border-primary/30 hover:bg-foreground/[0.05] transition-all group"
                                 >
                                     <div className="flex items-center gap-3">
