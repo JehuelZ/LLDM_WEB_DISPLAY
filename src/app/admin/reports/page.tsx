@@ -62,19 +62,45 @@ export default function ReportsPage() {
     const [isGenerating, setIsGenerating] = useState(false);
 
     useEffect(() => {
+        // Detect earliest date from registered members or database
+        let earliestDate = new Date();
+        if (members && members.length > 0) {
+            members.forEach((m: any) => {
+                if (m.created_at || m.createdAt || m.date_joined) {
+                    const d = new Date(m.created_at || m.createdAt || m.date_joined);
+                    if (!isNaN(d.getTime()) && d < earliestDate) {
+                        earliestDate = d;
+                    }
+                }
+            });
+        } else {
+            // Default first recorded month fallback (e.g., Noviembre 2025)
+            earliestDate = new Date(2025, 10, 1);
+        }
+
         const months: string[] = [];
         const now = new Date();
-        for (let i = 0; i < 12; i++) {
-            const date = subMonths(now, i);
-            months.push(format(date, "MMMM yyyy", { locale: es }));
+        let currentDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        const cutoffDate = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), 1);
+
+        // Generate months backwards until reaching the cutoffDate (earliest month with records)
+        while (currentDate >= cutoffDate) {
+            months.push(format(currentDate, "MMMM yyyy", { locale: es }));
+            currentDate = subMonths(currentDate, 1);
         }
+
+        // Safety fallback: ensure at least 1 month is present
+        if (months.length === 0) {
+            months.push(format(now, "MMMM yyyy", { locale: es }));
+        }
+
         setAvailableMonths(months);
         if (months.length > 0) {
             setSelectedMonth(months[0]);
         }
         loadMembersFromCloud();
         loadSettingsFromCloud();
-    }, []);
+    }, [members.length]);
 
     // Recalculate top metrics dynamically based on selected month
     const currentStats = useMemo(() => {
