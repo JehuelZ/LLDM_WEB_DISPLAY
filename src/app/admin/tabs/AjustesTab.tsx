@@ -1100,10 +1100,11 @@ export const AjustesTab = ({
                             showNotification('Configuración de sede principal actualizada.', 'success');
                         } else {
                             let newMissions = [...(settings.missions || [])];
-                            if (editingCongregation.index === -1) {
+                            const targetIdx = editingCongregation?.index;
+                            if (targetIdx === -1) {
                                 newMissions.push(updated);
-                            } else if (editingCongregation.index !== undefined) {
-                                newMissions[editingCongregation.index] = updated;
+                            } else if (targetIdx !== undefined && targetIdx >= 0) {
+                                newMissions[targetIdx] = updated;
                             }
                             const updatedPayload = { missions: newMissions };
                             setSettings({ ...settings, ...updatedPayload });
