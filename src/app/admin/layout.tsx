@@ -27,6 +27,7 @@ import {
     ClipboardCheck,
     Baby,
     FileText,
+    FileSpreadsheet,
     Cloud,
     Globe,
     Lock,
@@ -433,6 +434,28 @@ function AdminLayoutContent({
                         {pathname === '/admin/reports' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
                         <FileText className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/reports' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.reportes}</span>}
+                    </Link>
+
+                    <Link 
+                        href="/admin?tab=templates"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'templates' 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'templates' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <FileSpreadsheet className={cn("w-5 h-5 transition-colors shrink-0", currentTab === 'templates' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Plantillas PDF/Excel</span>}
                     </Link>
 
                     <Link href="/admin/cloud" className={cn(

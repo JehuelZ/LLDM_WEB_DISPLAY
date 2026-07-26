@@ -175,6 +175,7 @@ export interface AppSettings {
     displayOffsetY?: number; // New: Manual vertical adjustment
     displayAuthorizedEmails?: string[]; // New: List of emails allowed to use display mode
     lowPerformanceMode?: boolean; // New: Disable expensive visual effects for TVs
+    reportTemplatesConfig?: any; // New: PDF/Excel/CSV template configuration
     
     // Slide & Transition Settings
     transitionsEnabled?: boolean;
@@ -2144,6 +2145,7 @@ export const useAppStore = create<AppState>()(
                             iglesiaAnimation: data.iglesia_animation || 'metro',
                             iglesiaAnimationSpeed: data.iglesia_animation_speed || 2.4,
                             displayTemplate: data.display_template || 'cristal',
+                            reportTemplatesConfig: data.report_templates_config || null,
                             displayScale: data.display_scale || 1.0,
                             displayOffsetX: data.display_offset_x || 0,
                             displayOffsetY: data.display_offset_y || 0,
@@ -2320,6 +2322,7 @@ export const useAppStore = create<AppState>()(
                     mainChurchName: 'main_church_name',
                     mainChurch: 'main_church_obj',
                     missions: 'missions',
+                    reportTemplatesConfig: 'report_templates_config',
                     publicHomeTitle: 'public_home_title',
                     publicHomeSubtitle: 'public_home_subtitle',
                     publicHomeHeroBg: 'public_home_hero_bg',
