@@ -106,6 +106,9 @@ export default function PublicWebTab() {
     publicHomeContactPhone: typeof settings.publicHomeContactPhone !== 'undefined' ? settings.publicHomeContactPhone : '',
     publicHomeContactEmail: settings.publicHomeContactEmail || '',
     publicHomeEmailLabel: settings.publicHomeEmailLabel || 'Correo Electrónico',
+    publicHomeAddressLabel: settings.publicHomeAddressLabel || 'Dirección',
+    publicHomePhoneLabel: settings.publicHomePhoneLabel || 'Teléfono de Atención',
+    publicHomeCallBtnText: settings.publicHomeCallBtnText || 'Llamar por Teléfono',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
     facebookUrl: settings.facebookUrl || '',
@@ -1919,6 +1922,43 @@ export default function PublicWebTab() {
           </div>
         </div>
 
+        {/* Etiquetas Personalizables de las Tarjetas */}
+        <div className="pt-2 border-t border-white/5 space-y-4">
+          <h4 className="text-xs font-bold uppercase tracking-wider text-orange-400">Etiquetas Personalizables de las Tarjetas de Contacto</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-[11px] font-semibold text-white/60 mb-1">Etiqueta "Dirección"</label>
+              <input
+                type="text"
+                value={form.publicHomeAddressLabel || ''}
+                onChange={e => handleChange('publicHomeAddressLabel', e.target.value)}
+                placeholder="Dirección"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-white/60 mb-1">Etiqueta "Teléfono"</label>
+              <input
+                type="text"
+                value={form.publicHomePhoneLabel || ''}
+                onChange={e => handleChange('publicHomePhoneLabel', e.target.value)}
+                placeholder="Teléfono de Atención"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500"
+              />
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-white/60 mb-1">Etiqueta "Correo Electrónico"</label>
+              <input
+                type="text"
+                value={form.publicHomeEmailLabel || ''}
+                onChange={e => handleChange('publicHomeEmailLabel', e.target.value)}
+                placeholder="Correo Electrónico"
+                className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-orange-500"
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -1971,6 +2011,19 @@ export default function PublicWebTab() {
               value={form.publicHomeMapsBtnText || ''}
               onChange={e => handleChange('publicHomeMapsBtnText', e.target.value)}
               placeholder="Abrir en Google Maps"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2">
+              Texto del Botón de Llamada
+            </label>
+            <input
+              type="text"
+              value={form.publicHomeCallBtnText || ''}
+              onChange={e => handleChange('publicHomeCallBtnText', e.target.value)}
+              placeholder="Llamar por Teléfono"
               className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
             />
           </div>

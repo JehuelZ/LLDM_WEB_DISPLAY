@@ -162,6 +162,9 @@ export interface AppSettings {
     publicHomeContactPhone?: string;
     publicHomeContactEmail?: string;
     publicHomeEmailLabel?: string;
+    publicHomeAddressLabel?: string;
+    publicHomePhoneLabel?: string;
+    publicHomeCallBtnText?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
     publicHomeMaintenanceMode?: boolean;
@@ -589,6 +592,9 @@ export const useAppStore = create<AppState>()(
                 publicHomeContactPhone: '(510) 000-0000',
                 publicHomeContactEmail: '',
                 publicHomeEmailLabel: 'Correo Electrónico',
+                publicHomeAddressLabel: 'Dirección',
+                publicHomePhoneLabel: 'Teléfono de Atención',
+                publicHomeCallBtnText: 'Llamar por Teléfono',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',
                 publicHomeMaintenanceMode: false,

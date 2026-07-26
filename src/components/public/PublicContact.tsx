@@ -22,6 +22,7 @@ export function PublicContact() {
   const addressLabel = settings.publicHomeAddressLabel || 'Dirección';
   const phoneLabel = settings.publicHomePhoneLabel || 'Teléfono de Atención';
   const mapsBtnText = settings.publicHomeMapsBtnText || 'Abrir Dirección en Google Maps';
+  const callBtnText = settings.publicHomeCallBtnText || 'Llamar por Teléfono';
   const logoUrl = settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png';
 
   return (
@@ -132,7 +133,7 @@ export function PublicContact() {
                   className="w-full py-3.5 px-6 bg-white/5 hover:bg-white/10 border border-white/15 text-white font-bold text-xs uppercase tracking-widest rounded-2xl transition-all hover:scale-[1.02] flex items-center justify-center gap-2 text-white/80 hover:text-white"
                 >
                   <PhoneCall className="w-4 h-4 text-emerald-400" />
-                  <span>Llamar por Teléfono</span>
+                  <span>{callBtnText}</span>
                 </a>
               )}
             </div>
