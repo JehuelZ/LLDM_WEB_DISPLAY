@@ -54,9 +54,30 @@ const AttendanceBar = ({ label, percent, color, value }: any) => (
 );
 
 export default function ReportsPage() {
-    const { showNotification } = useAppStore();
+    const { settings, showNotification, members = [] } = useAppStore();
     const [selectedMonth, setSelectedMonth] = useState('Febrero 2026');
     const [isGenerating, setIsGenerating] = useState(false);
+
+    const templateConfig = settings.reportTemplatesConfig || {
+        pdf: {
+            title: 'INFORME OFICIAL DE ASISTENCIA',
+            subtitle: 'LA LUZ DEL MUNDO - SEDE RODEO, CA',
+            logoType: 'official_gold',
+            showPage1Stats: true,
+            separatePageForTable: true,
+            donutGroups: ['varones', 'festivas', 'jovenes', 'ninos'],
+            columns: [
+                { id: 'member_name', label: 'Nombre del Miembro', visible: true },
+                { id: 'group', label: 'Batallón / Grupo', visible: true },
+                { id: 'total_attendances', label: 'Asistencias Acumuladas', visible: true },
+                { id: 'percentage', label: 'Porcentaje %', visible: true },
+                { id: 'status', label: 'Estado / Observaciones', visible: true },
+            ],
+            showSignatures: true,
+            ministerSignatureTitle: 'Ministro a Cargo',
+            attendanceOfficerSignatureTitle: 'Encargado de Asistencia'
+        }
+    };
 
     const handlePrint = () => {
         window.print();
@@ -64,7 +85,10 @@ export default function ReportsPage() {
 
     const handleDownload = () => {
         setIsGenerating(true);
-        setTimeout(() => setIsGenerating(false), 2000);
+        setTimeout(() => {
+            window.print();
+            setIsGenerating(false);
+        }, 800);
     };
 
     return (
@@ -117,16 +141,23 @@ export default function ReportsPage() {
                 </div>
             </div>
 
-            {/* Print Header (Only visible when printing) */}
-            <div className="hidden print:block border-b-4 border-emerald-500 pb-6 mb-8">
-                <div className="flex justify-between items-center">
+            {/* Print Header (Only visible when printing / PDF export) */}
+            <div className="hidden print:block space-y-6 bg-white text-slate-900 p-8">
+                <div className="flex justify-between items-center border-b-2 border-emerald-600 pb-4">
                     <div>
-                        <h1 className="text-4xl font-black uppercase italic text-emerald-600">LLDM RODEO APP</h1>
-                        <p className="uppercase tracking-[0.3em] font-bold text-slate-600">Reporte Mensual de Asistencia</p>
+                        <h1 className="text-2xl font-black uppercase italic text-slate-900">{templateConfig.pdf.title}</h1>
+                        <p className="uppercase tracking-[0.2em] font-bold text-slate-600 text-xs">{templateConfig.pdf.subtitle}</p>
                     </div>
-                    <div className="text-right">
-                        <p className="text-sm font-black uppercase">{selectedMonth}</p>
-                        <p className="text-xs text-slate-500">Generado: {new Date().toLocaleDateString()}</p>
+                    <div className="text-right flex items-center gap-4">
+                        <div>
+                            <p className="text-xs font-black uppercase">{selectedMonth}</p>
+                            <p className="text-[10px] text-slate-500">Generado: {new Date().toLocaleDateString()}</p>
+                        </div>
+                        <img 
+                            src={templateConfig.pdf.logoType === 'universal_white' ? '/lldm_logo_universal_white.svg' : '/icon_1784673063714.webp'} 
+                            className="w-12 h-12 object-contain" 
+                            alt="Logo"
+                        />
                     </div>
                 </div>
             </div>
