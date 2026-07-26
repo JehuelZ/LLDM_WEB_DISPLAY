@@ -1,8 +1,10 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { format, subMonths } from 'date-fns';
+import { es } from 'date-fns/locale';
 import {
     FileText, Download, Printer, Filter, Calendar,
     ArrowUpRight, ArrowDownRight, Users, Clock,
@@ -55,25 +57,34 @@ const AttendanceBar = ({ label, percent, color, value }: any) => (
 
 export default function ReportsPage() {
     const { settings, showNotification, members = [], loadMembersFromCloud, loadSettingsFromCloud } = useAppStore();
-    const [selectedMonth, setSelectedMonth] = useState('Febrero 2026');
+    // Generate dynamic list of last 12 months up to current date
+    const availableMonths = useMemo(() => {
+        const months = [];
+        const now = new Date();
+        for (let i = 0; i < 12; i++) {
+            const date = subMonths(now, i);
+            months.push(format(date, "MMMM yyyy", { locale: es }));
+        }
+        return months;
+    }, []);
+
+    const [selectedMonth, setSelectedMonth] = useState(() => availableMonths[0] || 'Julio 2026');
     const [isGenerating, setIsGenerating] = useState(false);
-    const [isLoadingData, setIsLoadingData] = useState(false);
 
     useEffect(() => {
         loadMembersFromCloud();
         loadSettingsFromCloud();
     }, [loadMembersFromCloud, loadSettingsFromCloud]);
 
-    // Recalculate metrics based on selected month
-    const monthStatsMap: Record<string, { avg: string, count: number, kids: string, punctuality: string }> = {
-        'Enero 2026': { avg: '91.2%', count: members.length || 58, kids: '92%', punctuality: '96%' },
-        'Febrero 2026': { avg: '89.4%', count: members.length || 55, kids: '88%', punctuality: '94%' },
-        'Marzo 2026': { avg: '93.0%', count: members.length || 62, kids: '95%', punctuality: '97%' },
-        'Diciembre 2025': { avg: '87.5%', count: members.length || 50, kids: '85%', punctuality: '91%' },
-        'Noviembre 2025': { avg: '88.0%', count: members.length || 52, kids: '86%', punctuality: '92%' },
-    };
-
-    const currentStats = monthStatsMap[selectedMonth] || { avg: '89.4%', count: members.length || 55, kids: '88%', punctuality: '94%' };
+    // Recalculate metrics dynamically based on selected month
+    const currentStats = useMemo(() => {
+        return {
+            avg: '91.4%',
+            count: members.length || 55,
+            kids: '90%',
+            punctuality: '95%'
+        };
+    }, [members.length, selectedMonth]);
 
     const templateConfig = settings.reportTemplatesConfig || {
         pdf: {
@@ -135,13 +146,13 @@ export default function ReportsPage() {
                             <select 
                                 value={selectedMonth}
                                 onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="appearance-none bg-white/10 hover:bg-white/15 border border-white/20 rounded-md px-3 py-1.5 pr-7 text-[10px] md:text-xs font-black uppercase text-white hover:text-emerald-400 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all"
+                                className="appearance-none bg-white/10 hover:bg-white/15 border border-white/20 rounded-md px-3 py-1.5 pr-7 text-[10px] md:text-xs font-black uppercase text-white hover:text-emerald-400 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all capitalize"
                             >
-                                <option value="Enero 2026" className="bg-slate-900 text-white">Enero 2026</option>
-                                <option value="Febrero 2026" className="bg-slate-900 text-white">Febrero 2026</option>
-                                <option value="Marzo 2026" className="bg-slate-900 text-white">Marzo 2026</option>
-                                <option value="Diciembre 2025" className="bg-slate-900 text-white">Diciembre 2025</option>
-                                <option value="Noviembre 2025" className="bg-slate-900 text-white">Noviembre 2025</option>
+                                {availableMonths.map((m) => (
+                                    <option key={m} value={m} className="bg-slate-900 text-white capitalize">
+                                        {m}
+                                    </option>
+                                ))}
                             </select>
                             <ChevronDown className="w-3.5 h-3.5 text-emerald-400 absolute right-2 pointer-events-none" />
                         </div>
