@@ -2116,7 +2116,6 @@ export default function PublicWebTab() {
                 } else {
                   updatedForm.publicHomeHeroBg = url;
                 }
-                saveSettingsToCloud(updatedForm);
                 return updatedForm;
               });
             }
@@ -2147,11 +2146,7 @@ export default function PublicWebTab() {
               val4: 'publicHomeValue4Image',
             };
             const targetKey = keyMap[iconPickerTargetCard] || 'publicHomeValue1Image';
-            setForm(prev => {
-              const updatedForm = { ...prev, [targetKey]: iconId };
-              saveSettingsToCloud(updatedForm);
-              return updatedForm;
-            });
+            setForm(prev => ({ ...prev, [targetKey]: iconId }));
             setShowIconPicker(false);
           }}
         />
