@@ -908,6 +908,10 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
 
     useEffect(() => {
         const aliasMap: Record<string, string> = {
+            'miembros': 'miembros',
+            'miembro': 'miembros',
+            'members': 'miembros',
+            'member': 'miembros',
             'asistencia': 'asistencia',
             'mensajes': 'mensajes',
             'horarios': 'horarios',
