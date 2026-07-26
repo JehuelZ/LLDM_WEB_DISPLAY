@@ -1171,8 +1171,6 @@ export const AjustesTab = ({
                         const updatedPayload = {
                             displayCustomBgUrl: url,
                             displayBgMode: 'custom' as const,
-                            churchLogoUrl: url,
-                            churchIcon: 'custom' as const
                         };
                         setSettings({ ...settings, ...updatedPayload });
                         await saveSettingsToCloud(updatedPayload);

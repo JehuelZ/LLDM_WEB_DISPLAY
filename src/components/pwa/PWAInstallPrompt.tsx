@@ -97,7 +97,7 @@ export function PWAInstallPrompt() {
 
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 shrink-0 flex items-center justify-center">
-              <img src="/flama_amarilla_pwa.svg" alt="LLDM Rodeo" className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(249,115,22,0.5)]" />
+              <img src="/icon_1784673063714.webp" alt="LLDM Rodeo" className="w-full h-full object-contain filter drop-shadow-[0_4px_14px_rgba(245,158,11,0.6)]" />
             </div>
 
             <div className="space-y-1 pr-6">
