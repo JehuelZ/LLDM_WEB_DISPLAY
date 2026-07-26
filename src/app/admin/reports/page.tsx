@@ -57,24 +57,24 @@ const AttendanceBar = ({ label, percent, color, value }: any) => (
 
 export default function ReportsPage() {
     const { settings, showNotification, members = [], loadMembersFromCloud, loadSettingsFromCloud } = useAppStore();
-    // Generate dynamic list of last 12 months up to current date
-    const availableMonths = useMemo(() => {
-        const months = [];
+    const [selectedMonth, setSelectedMonth] = useState('Julio 2026');
+    const [availableMonths, setAvailableMonths] = useState<string[]>(['Julio 2026', 'Junio 2026', 'Mayo 2026', 'Abril 2026', 'Marzo 2026', 'Febrero 2026', 'Enero 2026']);
+    const [isGenerating, setIsGenerating] = useState(false);
+
+    useEffect(() => {
+        const months: string[] = [];
         const now = new Date();
         for (let i = 0; i < 12; i++) {
             const date = subMonths(now, i);
             months.push(format(date, "MMMM yyyy", { locale: es }));
         }
-        return months;
-    }, []);
-
-    const [selectedMonth, setSelectedMonth] = useState(() => availableMonths[0] || 'Julio 2026');
-    const [isGenerating, setIsGenerating] = useState(false);
-
-    useEffect(() => {
+        setAvailableMonths(months);
+        if (months.length > 0) {
+            setSelectedMonth(months[0]);
+        }
         loadMembersFromCloud();
         loadSettingsFromCloud();
-    }, [loadMembersFromCloud, loadSettingsFromCloud]);
+    }, []);
 
     // Recalculate metrics dynamically based on selected month
     const currentStats = useMemo(() => {
