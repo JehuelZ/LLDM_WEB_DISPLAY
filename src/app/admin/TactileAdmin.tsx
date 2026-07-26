@@ -153,7 +153,12 @@ export default function TactileAdmin({ propTab = 'dashboard', isSubpage = false,
             case 'dashboard':
                 return (
                     <DashboardTab 
-                        setActiveTab={setActiveTab}
+                        setActiveTab={(tab) => {
+                            if (tab === 'miembros') {
+                                setMemberFilter('Pendiente');
+                            }
+                            setActiveTab(tab);
+                        }}
                     />
                 );
             case 'asistencia':
