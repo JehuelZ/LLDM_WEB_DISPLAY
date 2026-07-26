@@ -1,7 +1,7 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
-import { MapPin, Phone, ExternalLink, Compass, PhoneCall, Sparkles, Navigation, ArrowUpRight } from 'lucide-react';
+import { MapPin, Phone, Mail, ExternalLink, Compass, PhoneCall, Sparkles, Navigation, ArrowUpRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function PublicContact() {
@@ -10,6 +10,8 @@ export function PublicContact() {
   const churchName = settings.mainChurchName || settings.churchCity || 'Rodeo';
   const address = settings.publicHomeAddress || `${churchName}, California, EE. UU.`;
   const phone = settings.publicHomeContactPhone || '(510) 000-0000';
+  const email = settings.publicHomeContactEmail;
+  const emailLabel = settings.publicHomeEmailLabel || 'Correo Electrónico';
   const mapsUrl = settings.publicHomeMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(address)}`;
 
   const badge = settings.publicHomeContactBadge || 'Ubicación y Contacto';
@@ -89,6 +91,22 @@ export function PublicContact() {
                       <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} className="text-emerald-400 hover:text-emerald-300 text-sm sm:text-base font-bold leading-snug transition-colors flex items-center gap-1.5">
                         <span>{phone}</span>
                         <ArrowUpRight className="w-4 h-4" />
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {/* Email Item (Only rendered if configured by admin) */}
+                {email && (
+                  <div className="flex items-start gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-white/15 transition-all">
+                    <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0 shadow-md">
+                      <Mail className="w-6 h-6" />
+                    </div>
+                    <div className="space-y-1 overflow-hidden">
+                      <span className="text-[10px] uppercase font-bold text-white/40 tracking-wider block">{emailLabel}</span>
+                      <a href={`mailto:${email}`} className="text-cyan-400 hover:text-cyan-300 text-sm sm:text-base font-bold leading-snug transition-colors flex items-center gap-1.5 break-all">
+                        <span>{email}</span>
+                        <ArrowUpRight className="w-4 h-4 shrink-0" />
                       </a>
                     </div>
                   </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAppStore } from '@/lib/store';
-import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, MessageSquare, Check, ShieldCheck, AlignLeft, AlignCenter, AlignRight, Maximize2, MoveUp, MoveDown, GripVertical, Layers } from 'lucide-react';
+import { Globe, Image as ImageIcon, Save, ExternalLink, Sparkles, Heart, MapPin, Phone, Mail, MessageSquare, Check, ShieldCheck, AlignLeft, AlignCenter, AlignRight, Maximize2, MoveUp, MoveDown, GripVertical, Layers } from 'lucide-react';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 import { IconPickerModal, MODERN_ICONS_MAP, renderModernIconOrImg } from '@/components/ui/IconPickerModal';
 import { motion } from 'framer-motion';
@@ -104,6 +104,8 @@ export default function PublicWebTab() {
     publicHomeFooterQuote: settings.publicHomeFooterQuote || 'Un lugar de fe, comunión y esperanza',
     publicHomeFooterAdminBtn: settings.publicHomeFooterAdminBtn || 'Acceso Administración',
     publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
+    publicHomeContactEmail: settings.publicHomeContactEmail || '',
+    publicHomeEmailLabel: settings.publicHomeEmailLabel || 'Correo Electrónico',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
     publicHomeMapsUrl: settings.publicHomeMapsUrl || 'https://maps.google.com/?q=Rodeo,+CA',
     facebookUrl: settings.facebookUrl || '',
@@ -1943,6 +1945,20 @@ export default function PublicWebTab() {
               onChange={e => handleChange('publicHomeContactPhone', e.target.value)}
               placeholder="(510) 000-0000"
               className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
+            />
+          </div>
+
+          <div>
+            <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5 text-cyan-400" />
+              Correo Electrónico de Contacto (Opcional)
+            </label>
+            <input
+              type="email"
+              value={form.publicHomeContactEmail || ''}
+              onChange={e => handleChange('publicHomeContactEmail', e.target.value)}
+              placeholder="contacto@lldmrodeo.org (dejar vacio si no desea mostrarlo)"
+              className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
             />
           </div>
 

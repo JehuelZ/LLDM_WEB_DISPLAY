@@ -160,6 +160,8 @@ export interface AppSettings {
     publicHomeCtaColor?: string;
     publicHomeCtaStyle?: string;
     publicHomeContactPhone?: string;
+    publicHomeContactEmail?: string;
+    publicHomeEmailLabel?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
     publicHomeMaintenanceMode?: boolean;
@@ -585,6 +587,8 @@ export const useAppStore = create<AppState>()(
                 publicHomeCtaColor: 'orange',
                 publicHomeCtaStyle: 'rounded',
                 publicHomeContactPhone: '(510) 000-0000',
+                publicHomeContactEmail: '',
+                publicHomeEmailLabel: 'Correo Electrónico',
                 publicHomeAddress: 'Rodeo, CA',
                 publicHomeMapsUrl: 'https://maps.google.com/?q=Rodeo,+CA',
                 publicHomeMaintenanceMode: false,
