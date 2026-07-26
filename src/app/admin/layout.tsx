@@ -480,7 +480,14 @@ function AdminLayoutContent({
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.admin_cloud}</span>}
                     </Link>
 
-                    <Link href="/admin?tab=coros"
+                    <Link 
+                        href="/admin?tab=coros"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'coros' 
@@ -495,7 +502,14 @@ function AdminLayoutContent({
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">Coros</span>}
                     </Link>
 
-                    <Link href="/admin?tab=mensajes"
+                    <Link 
+                        href="/admin?tab=mensajes"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
                         className={cn(
                             "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
                             currentTab === 'mensajes' 
