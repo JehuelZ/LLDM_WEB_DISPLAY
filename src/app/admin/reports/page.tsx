@@ -177,7 +177,7 @@ export default function ReportsPage() {
             </div>
 
             {/* Print Header & Printable Document (Only visible when printing / PDF export) */}
-            <div className="hidden print:block space-y-6 bg-white text-slate-900 p-8 min-h-screen pdf-preview-sheet">
+            <div id="print-only-document" className="hidden print:block space-y-6 bg-white text-slate-900 p-8 min-h-screen pdf-preview-sheet">
                 
                 {/* ── HOJA 1: CABECERA Y ESTADÍSTICAS ── */}
                 <div className="border-b-2 border-orange-500 pb-6 flex justify-between items-center">
