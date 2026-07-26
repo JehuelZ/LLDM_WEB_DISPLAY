@@ -52,10 +52,10 @@ export function PublicFooter() {
                 href={settings.facebookUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-blue-600/10 hover:bg-blue-600/25 border border-blue-500/30 flex items-center justify-center text-blue-400 hover:text-blue-300 transition-all hover:scale-110 shadow-lg shadow-blue-500/10"
+                className="text-[#1877F2] hover:text-[#3b82f6] transition-transform duration-300 hover:scale-125 p-1"
                 title="Facebook Oficial"
               >
-                <Facebook className="w-4.5 h-4.5" />
+                <Facebook className="w-6 h-6" />
               </a>
             )}
             {settings.instagramUrl && (
@@ -63,10 +63,10 @@ export function PublicFooter() {
                 href={settings.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-pink-600/10 hover:bg-pink-600/25 border border-pink-500/30 flex items-center justify-center text-pink-400 hover:text-pink-300 transition-all hover:scale-110 shadow-lg shadow-pink-500/10"
+                className="text-[#E4405F] hover:text-[#f43f5e] transition-transform duration-300 hover:scale-125 p-1"
                 title="Instagram Oficial"
               >
-                <Instagram className="w-4.5 h-4.5" />
+                <Instagram className="w-6 h-6" />
               </a>
             )}
             {settings.youtubeUrl && (
@@ -74,10 +74,10 @@ export function PublicFooter() {
                 href={settings.youtubeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 rounded-xl bg-red-600/10 hover:bg-red-600/25 border border-red-500/30 flex items-center justify-center text-red-400 hover:text-red-300 transition-all hover:scale-110 shadow-lg shadow-red-500/10"
+                className="text-[#FF0000] hover:text-[#ef4444] transition-transform duration-300 hover:scale-125 p-1"
                 title="Canal de YouTube / Transmisiones"
               >
-                <Youtube className="w-4.5 h-4.5" />
+                <Youtube className="w-6 h-6" />
               </a>
             )}
 
