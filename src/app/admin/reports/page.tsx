@@ -62,20 +62,18 @@ export default function ReportsPage() {
     const [isGenerating, setIsGenerating] = useState(false);
 
     useEffect(() => {
-        // Detect earliest date from registered members or database
-        let earliestDate = new Date();
+        // Detect earliest date from registered members or default to Jan 2025
+        let earliestDate = new Date(2025, 0, 1); // Default to Enero 2025
         if (members && members.length > 0) {
             members.forEach((m: any) => {
-                if (m.created_at || m.createdAt || m.date_joined) {
-                    const d = new Date(m.created_at || m.createdAt || m.date_joined);
+                const dateStr = m.created_at || m.createdAt || m.date_joined || m.created;
+                if (dateStr) {
+                    const d = new Date(dateStr);
                     if (!isNaN(d.getTime()) && d < earliestDate) {
                         earliestDate = d;
                     }
                 }
             });
-        } else {
-            // Default first recorded month fallback (e.g., Noviembre 2025)
-            earliestDate = new Date(2025, 10, 1);
         }
 
         const months: string[] = [];
@@ -83,24 +81,26 @@ export default function ReportsPage() {
         let currentDate = new Date(now.getFullYear(), now.getMonth(), 1);
         const cutoffDate = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), 1);
 
-        // Generate months backwards until reaching the cutoffDate (earliest month with records)
+        // Generate months backwards until reaching cutoffDate
         while (currentDate >= cutoffDate) {
             months.push(format(currentDate, "MMMM yyyy", { locale: es }));
             currentDate = subMonths(currentDate, 1);
         }
 
-        // Safety fallback: ensure at least 1 month is present
-        if (months.length === 0) {
-            months.push(format(now, "MMMM yyyy", { locale: es }));
+        // Safety fallback: ensure at least 6 recent months are present
+        if (months.length < 6) {
+            const fallbackMonths = [];
+            for (let i = 0; i < 12; i++) {
+                fallbackMonths.push(format(subMonths(now, i), "MMMM yyyy", { locale: es }));
+            }
+            setAvailableMonths(fallbackMonths);
+        } else {
+            setAvailableMonths(months);
         }
 
-        setAvailableMonths(months);
-        if (months.length > 0) {
-            setSelectedMonth(months[0]);
-        }
         loadMembersFromCloud();
         loadSettingsFromCloud();
-    }, [members.length]);
+    }, [members]);
 
     // Recalculate top metrics dynamically based on selected month
     const currentStats = useMemo(() => {
