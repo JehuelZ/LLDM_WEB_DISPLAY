@@ -229,7 +229,15 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-[8px] font-black uppercase tracking-widest text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full border border-orange-500/20">Solicitó Cuenta</span>
                                                     <span className="text-[8px] font-bold text-muted-foreground">
-                                                        {member.createdAt ? format(parseISO(member.createdAt), 'dd MMM, HH:mm', { locale: es }) : 'Reciente'}
+                                                        {(() => {
+                                                            try {
+                                                                if (!member.createdAt) return 'Reciente';
+                                                                const d = new Date(member.createdAt);
+                                                                return !isNaN(d.getTime()) ? format(d, 'dd MMM, HH:mm', { locale: es }) : 'Reciente';
+                                                            } catch (e) {
+                                                                return 'Reciente';
+                                                            }
+                                                        })()}
                                                     </span>
                                                 </div>
                                             </div>
@@ -294,7 +302,17 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                             <div className="w-1.5 h-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.6)]" />
                                             <span className="text-[10px] font-black uppercase tracking-tighter text-foreground group-hover:text-orange-500 transition-colors truncate max-w-[120px]">{member.name}</span>
                                         </div>
-                                        <span className="text-[8px] font-bold text-muted-foreground uppercase">{member.createdAt ? format(parseISO(member.createdAt), 'dd/MM') : 'HOY'}</span>
+                                        <span className="text-[8px] font-bold text-muted-foreground uppercase">
+                                            {(() => {
+                                                try {
+                                                    if (!member.createdAt) return 'HOY';
+                                                    const d = new Date(member.createdAt);
+                                                    return !isNaN(d.getTime()) ? format(d, 'dd/MM') : 'HOY';
+                                                } catch (e) {
+                                                    return 'HOY';
+                                                }
+                                            })()}
+                                        </span>
                                     </div>
                                 ))
                             )}
