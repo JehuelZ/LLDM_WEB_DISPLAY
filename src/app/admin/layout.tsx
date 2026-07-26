@@ -575,72 +575,73 @@ function AdminLayoutContent({
                         </Link>
                     </div>
 
-                    <div className={cn("mt-auto pt-6 px-4 space-y-4", collapsed && "px-0")}>
-                        <Link 
-                            href="/admin?tab=galeria"
-                            onClick={() => {
-                                setTimeout(() => {
-                                    window.dispatchEvent(new Event('popstate'));
-                                    window.dispatchEvent(new Event('tab-change'));
-                                }, 100);
-                            }}
-                            className={cn(
-                                "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
-                                currentTab === 'galeria' 
-                                    ? "bg-emerald-500 text-white font-bold rounded-md" 
-                                    : settings.adminTheme === 'primitivo' 
-                                        ? "text-muted-foreground hover:text-foreground" 
-                                        : "text-white/40 hover:text-white bg-transparent",
-                                collapsed && "justify-center px-0"
-                            )}>
-                            {currentTab === 'galeria' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/2 bg-emerald-400 rounded-r-md" />}
-                            <Images className={cn("w-5 h-5 group-hover:scale-110 transition-transform duration-500 shrink-0 text-emerald-400", currentTab === 'galeria' ? "text-white" : "")} />
-                            {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">Galería de Fotos</span>}
-                        </Link>
+                    <Link 
+                        href="/admin?tab=galeria"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'galeria' 
+                                ? "bg-emerald-500 text-white font-bold rounded-md" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'galeria' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3.5 bg-emerald-400 rounded-r-md" />}
+                        <Images className={cn("w-5 h-5 group-hover:scale-110 transition-transform duration-500 shrink-0 text-emerald-400", currentTab === 'galeria' ? "text-white" : "")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">Galería de Fotos</span>}
+                    </Link>
 
-                        <Link 
-                            href="/admin?tab=public_web"
-                            onClick={() => {
-                                setTimeout(() => {
-                                    window.dispatchEvent(new Event('popstate'));
-                                    window.dispatchEvent(new Event('tab-change'));
-                                }, 100);
-                            }}
-                            className={cn(
-                                "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
-                                currentTab === 'public_web' 
-                                    ? "bg-orange-500 text-white font-bold rounded-md" 
-                                    : settings.adminTheme === 'primitivo' 
-                                        ? "text-muted-foreground hover:text-foreground" 
-                                        : "text-white/40 hover:text-white bg-transparent",
-                                collapsed && "justify-center px-0"
-                            )}>
-                            {currentTab === 'public_web' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/2 bg-orange-400 rounded-r-md" />}
-                            <Globe className={cn("w-5 h-5 group-hover:rotate-12 transition-transform duration-500 shrink-0 text-orange-400", currentTab === 'public_web' ? "text-white" : "")} />
-                            {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">Sitio Público</span>}
-                        </Link>
+                    <Link 
+                        href="/admin?tab=public_web"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'public_web' 
+                                ? "bg-orange-500 text-white font-bold rounded-md" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'public_web' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3.5 bg-orange-400 rounded-r-md" />}
+                        <Globe className={cn("w-5 h-5 group-hover:rotate-12 transition-transform duration-500 shrink-0 text-orange-400", currentTab === 'public_web' ? "text-white" : "")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">Sitio Público</span>}
+                    </Link>
 
-                        <Link 
-                            href="/admin?tab=configuracion"
-                            onClick={() => {
-                                setTimeout(() => {
-                                    window.dispatchEvent(new Event('popstate'));
-                                    window.dispatchEvent(new Event('tab-change'));
-                                }, 100);
-                            }}
-                            className={cn(
-                                "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
-                                currentTab === 'configuracion' 
-                                    ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
-                                    : settings.adminTheme === 'primitivo' 
-                                        ? "text-muted-foreground hover:text-foreground" 
-                                        : "text-white/40 hover:text-white bg-transparent",
-                                collapsed && "justify-center px-0"
-                            )}>
-                            {currentTab === 'configuracion' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/2 bg-slate-400 rounded-r-md" />}
-                            <Settings className={cn("w-5 h-5 group-hover:rotate-45 transition-transform duration-500 shrink-0 shadow-none", currentTab === 'configuracion' ? "" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
-                            {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">{t.configuracion}</span>}
-                        </Link>
+                    <Link 
+                        href="/admin?tab=configuracion"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            currentTab === 'configuracion' 
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {currentTab === 'configuracion' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <Settings className={cn("w-5 h-5 group-hover:rotate-45 transition-transform duration-500 shrink-0 shadow-none", currentTab === 'configuracion' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "")} />
+                        {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap shadow-none">{t.configuracion}</span>}
+                    </Link>
+
+                    <div className={cn("mt-auto pt-4 px-4", collapsed && "px-0")}>
 
                         {/* Theme Switcher - Divided Icon Pill (Alair Style) */}
                         <div className={cn(
