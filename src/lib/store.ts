@@ -162,8 +162,6 @@ export interface AppSettings {
     publicHomeContactPhone?: string;
     publicHomeContactEmail?: string;
     publicHomeEmailLabel?: string;
-    publicHomeAddressLabel?: string;
-    publicHomePhoneLabel?: string;
     publicHomeCallBtnText?: string;
     publicHomeAddress?: string;
     publicHomeMapsUrl?: string;
@@ -211,6 +209,15 @@ export interface AppSettings {
     weatherLng?: number;
     weatherCity?: string;
     clockFormat?: '12h' | '24h';
+    // Church branding & identity
+    churchCity?: string;
+    churchOfficialLogoUrl?: string;
+    churchOfficialLogoAlign?: 'left' | 'center' | 'right';
+    churchOfficialLogoSize?: 'sm' | 'md' | 'lg';
+    // Public home page alignment
+    publicHomeTitleAlign?: 'left' | 'center' | 'right';
+    publicHomeSubtitleAlign?: 'left' | 'center' | 'right';
+    publicHomeCtaAlign?: 'left' | 'center' | 'right';
 }
 
 export interface UserProfile {
@@ -233,7 +240,7 @@ export interface UserProfile {
     medals?: number;
     nextPrivilege?: string;
     parentName?: string;
-    privileges: ('admin' | 'monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper' | 'youth_leader')[];
+    privileges: ('admin' | 'monitor' | 'choir' | 'leader' | 'kids_leader' | 'kids_helper' | 'youth_leader' | 'can_edit_report_templates')[];
     responsibilities?: { date: string; type: string; status: 'pending' | 'completed'; label: string }[];
     is_pre_registered?: boolean;
     bio?: string;
