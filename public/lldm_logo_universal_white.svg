@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="600" height="240" fill="none">
+  <!-- Logo Universal LLDM - Versión Blanco Vectorial HD -->
+  <style>
+    .white-title { font-family: 'Outfit', 'Montserrat', sans-serif; font-weight: 900; fill: #ffffff; letter-spacing: 4px; }
+    .white-sub { font-family: 'Inter', sans-serif; font-weight: 700; fill: #ffffff; opacity: 0.85; letter-spacing: 3px; }
+    .white-arc { stroke: #ffffff; stroke-width: 2.5; stroke-linecap: round; fill: none; opacity: 0.9; }
+  </style>
+
+  <!-- Simbolo de Flama Superior en Blanco -->
+  <g transform="translate(300, 48) scale(0.28)">
+    <path
+      d="M0 -120 
+         C25 -50, 95 15, 95 105 
+         C95 185, 45 255, 0 335 
+         C-45 255, -95 185, -95 105 
+         C-95 15, -25 -50, 0 -120 Z"
+      fill="#ffffff"
+    />
+    <path
+      d="M0 -30
+         C-20 20, -50 70, -50 110
+         C-50 160, -20 200, 0 250
+         C20 200, 50 160, 50 110
+         C50 70, 20 20, 0 -30 Z"
+      fill="#0a0a0f"
+      opacity="0.25"
+    />
+    <path
+      d="M0 30
+         C-12 60, -28 95, -28 120
+         C-28 150, -12 180, 0 210
+         C12 180, 28 150, 28 120
+         C28 95, 12 60, 0 30 Z"
+      fill="#ffffff"
+    />
+  </g>
+
+  <!-- Arco de la Cúpula / Templo -->
+  <path d="M 170 110 A 130 65 0 0 1 430 110" className="white-arc" />
+  <line x1="280" y1="45" x2="320" y2="45" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+
+  <!-- Texto Principal: THE LIGHT OF THE WORLD -->
+  <text x="300" y="148" text-anchor="middle" className="white-title" font-size="28">
+    THE LIGHT OF THE WORLD
+  </text>
+
+  <!-- Líneas Divisorias Elegantes -->
+  <line x1="160" y1="168" x2="240" y2="168" stroke="#ffffff" stroke-width="1.5" opacity="0.4" />
+  <circle cx="300" cy="168" r="3" fill="#ffffff" opacity="0.8" />
+  <line x1="360" y1="168" x2="440" y2="168" stroke="#ffffff" stroke-width="1.5" opacity="0.4" />
+
+  <!-- Subtítulo: LA LUZ DEL MUNDO -->
+  <text x="300" y="196" text-anchor="middle" className="white-sub" font-size="14">
+    LA LUZ DEL MUNDO
+  </text>
+</svg>
