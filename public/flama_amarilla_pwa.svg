@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
+  <!-- Fondo Oscuro de Alta Calidad para Icono PWA -->
+  <rect width="512" height="512" rx="128" fill="#0a0a0f" />
+  
+  <defs>
+    <!-- Gradiente de la Flama Amarilla Oficial -->
+    <linearGradient id="flameYellowGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fef08a;stop-opacity:1" />
+      <stop offset="35%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Resplandor Dorado de Fondo -->
+    <filter id="goldFlameGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="16" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Brillo de Fondo -->
+  <circle cx="256" cy="256" r="160" fill="#f59e0b" opacity="0.12" />
+
+  <!-- Emblema de Flama Amarilla Centrado con Margen Seguro (Maskable Safe Zone) -->
+  <g filter="url(#goldFlameGlow)">
+    <!-- Cuerpo de la Flama -->
+    <path
+      d="M256 90 
+         C275 140, 335 195, 335 270 
+         C335 335, 295 390, 256 422 
+         C217 390, 177 335, 177 270 
+         C177 195, 237 140, 256 90 Z"
+      fill="url(#flameYellowGold)"
+    />
+
+    <!-- Sombra/Detalle Interno de la Flama -->
+    <path
+      d="M256 160
+         C240 195, 215 235, 215 270
+         C215 310, 235 345, 256 385
+         C277 345, 297 310, 297 270
+         C297 235, 272 195, 256 160 Z"
+      fill="#0a0a0f"
+      opacity="0.3"
+    />
+
+    <!-- Núcleo de Luz Amarillo Brillante -->
+    <path
+      d="M256 210
+         C248 230, 232 258, 232 280
+         C232 300, 244 325, 256 355
+         C268 325, 280 300, 280 280
+         C280 258, 264 230, 256 210 Z"
+      fill="#ffffff"
+      opacity="0.9"
+    />
+
+    <!-- Destello Central -->
+    <ellipse cx="256" cy="285" rx="8" ry="22" fill="#ffffff" />
+  </g>
+</svg>
