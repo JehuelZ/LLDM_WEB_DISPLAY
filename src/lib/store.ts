@@ -2380,14 +2380,23 @@ export const useAppStore = create<AppState>()(
                 if (error) {
                     const errorMsg = (error as any).message || 'Unknown DB error';
                     const errorCode = (error as any).code || 'N/A';
-                    console.error("SYNC ERROR: Failed to update app_settings:", error);
+                    console.warn("SYNC WARNING: Individual column update failed, trying JSONB fallback:", errorMsg);
                     
-                    // Solo revertir if error no es por columna faltante (evitar parpadeo si el schema está desfasado)
-                    // PGRST204 es columna faltante
-                    if (errorCode !== 'PGRST204') {
-                        set({ settings: current });
+                    // Fallback indestructible: Guardar en main_church_obj JSONB (disponible en todos los esquemas de Supabase)
+                    if (errorCode === 'PGRST204' || errorMsg.includes('schema cache') || errorMsg.includes('column')) {
+                        const { error: fallbackErr } = await supabase
+                            .from('app_settings')
+                            .update({ main_church_obj: updatedMainChurchObj })
+                            .eq('id', 1);
+
+                        if (!fallbackErr) {
+                            console.log('SYNC SUCCESS (JSONB Fallback): App settings saved seamlessly.');
+                            get().showNotification("Cambios guardados y sincronizados globalmente en la nube", 'success');
+                            return;
+                        }
                     }
-                    get().showNotification(`Falla de sincronización: ${errorMsg}. Por favor, ejecute el script MEGA_FIX en Supabase.`, 'error');
+
+                    get().showNotification(`Falla de sincronización: ${errorMsg}`, 'error');
                 } else {
                     console.log('SYNC SUCCESS: App settings saved to cloud.');
                     get().showNotification("Cambios sincronizados globalmente", 'success');
