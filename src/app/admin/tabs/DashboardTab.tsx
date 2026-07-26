@@ -26,13 +26,8 @@ const StatBox = ({ title, value, icon: Icon, color, trend, onClick }: any) => (
             onClick && "cursor-pointer hover:border-primary/40 shadow-xl"
         )}
     >
-        <div className="absolute top-0 right-0 p-4 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity">
-            <Icon size={64} style={{ color }} />
-        </div>
         <div className="flex items-start justify-between mb-4">
-            <div className={cn("p-3 rounded-md bg-opacity-10", `bg-[${color}]/10`)} style={{ backgroundColor: `${color}15` }}>
-                <Icon size={20} style={{ color }} />
-            </div>
+            <Icon size={24} style={{ color }} className="transition-transform group-hover:scale-110" />
             {trend !== undefined && (
                 <div className={cn("flex items-center gap-1 text-[10px] font-black italic", trend > 0 ? "text-emerald-500" : "text-orange-500")}>
                     {trend > 0 ? <ArrowUpRight size={12} /> : <Activity size={12} />}
@@ -326,9 +321,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                          onClick={() => window.open('https://lldmrodeo.org', '_blank')}>
                         <div className="absolute inset-0 bg-black/10 group-hover:opacity-0 transition-opacity" />
                         <div className="relative z-10">
-                            <div className="p-3 bg-white/20 rounded-md w-fit mb-4 backdrop-blur-md">
-                                <Smartphone className="w-6 h-6 text-white" />
-                            </div>
+                            <Smartphone className="w-6 h-6 text-white mb-4 transition-transform group-hover:scale-110" />
                             <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">Ver Sitio En Vivo</h3>
                             <p className="text-white/70 text-xs font-medium mb-4">Acceso directo a la terminal de visualización pública.</p>
                             <div className="flex items-center gap-2 text-white font-black uppercase text-[10px] tracking-widest">
