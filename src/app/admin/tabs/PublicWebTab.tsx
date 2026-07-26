@@ -2097,23 +2097,28 @@ export default function PublicWebTab() {
           onClose={() => setShowGallery(false)}
           onSelectImage={(url) => {
             if (url) {
-              if (galleryTargetMode === 'officialLogo') {
-                setForm(prev => ({ ...prev, churchOfficialLogoUrl: url }));
-              } else if (galleryTargetMode === 'aboutImage') {
-                setForm(prev => ({ ...prev, publicHomeAboutImage: url }));
-              } else if (galleryTargetMode === 'principlesImage') {
-                setForm(prev => ({ ...prev, publicHomePrinciplesImage: url }));
-              } else if (galleryTargetMode === 'val1') {
-                setForm(prev => ({ ...prev, publicHomeValue1Image: url }));
-              } else if (galleryTargetMode === 'val2') {
-                setForm(prev => ({ ...prev, publicHomeValue2Image: url }));
-              } else if (galleryTargetMode === 'val3') {
-                setForm(prev => ({ ...prev, publicHomeValue3Image: url }));
-              } else if (galleryTargetMode === 'val4') {
-                setForm(prev => ({ ...prev, publicHomeValue4Image: url }));
-              } else {
-                setForm(prev => ({ ...prev, publicHomeHeroBg: url }));
-              }
+              setForm(prev => {
+                const updatedForm = { ...prev };
+                if (galleryTargetMode === 'officialLogo') {
+                  updatedForm.churchOfficialLogoUrl = url;
+                } else if (galleryTargetMode === 'aboutImage') {
+                  updatedForm.publicHomeAboutImage = url;
+                } else if (galleryTargetMode === 'principlesImage') {
+                  updatedForm.publicHomePrinciplesImage = url;
+                } else if (galleryTargetMode === 'val1') {
+                  updatedForm.publicHomeValue1Image = url;
+                } else if (galleryTargetMode === 'val2') {
+                  updatedForm.publicHomeValue2Image = url;
+                } else if (galleryTargetMode === 'val3') {
+                  updatedForm.publicHomeValue3Image = url;
+                } else if (galleryTargetMode === 'val4') {
+                  updatedForm.publicHomeValue4Image = url;
+                } else {
+                  updatedForm.publicHomeHeroBg = url;
+                }
+                saveSettingsToCloud(updatedForm);
+                return updatedForm;
+              });
             }
             setShowGallery(false);
           }}
@@ -2142,7 +2147,11 @@ export default function PublicWebTab() {
               val4: 'publicHomeValue4Image',
             };
             const targetKey = keyMap[iconPickerTargetCard] || 'publicHomeValue1Image';
-            handleChange(targetKey, iconId);
+            setForm(prev => {
+              const updatedForm = { ...prev, [targetKey]: iconId };
+              saveSettingsToCloud(updatedForm);
+              return updatedForm;
+            });
             setShowIconPicker(false);
           }}
         />
