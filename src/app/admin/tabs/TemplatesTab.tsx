@@ -31,6 +31,7 @@ export const DEFAULT_REPORT_TEMPLATE_CONFIG = {
         showSignatures: true,
         ministerSignatureLabel: 'Ministro a Cargo',
         leaderSignatureLabel: 'Encargado de Asistencia',
+        attendanceUnit: 'Oraciones', // 'Oraciones' | 'Cultos' | 'Servicios'
     },
     excelCsv: {
         delimiter: ',',
@@ -274,6 +275,17 @@ export function TemplatesTab() {
                             <span>3. Columnas de la Tabla Nominal (PDF)</span>
                         </div>
 
+                        <div className="space-y-3 p-3 bg-black/40 border border-white/10 rounded-2xl">
+                            <label className="block text-xs font-medium text-white/70">Unidad de Asistencia (Ej: Oraciones, Cultos, Servicios)</label>
+                            <input
+                                type="text"
+                                value={config.pdf.attendanceUnit || 'Oraciones'}
+                                onChange={e => setConfig({ ...config, pdf: { ...config.pdf, attendanceUnit: e.target.value } })}
+                                className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-emerald-500/50"
+                                placeholder="Oraciones"
+                            />
+                        </div>
+
                         <div className="space-y-2">
                             {config.pdf.columns.map((col: any) => (
                                 <div key={col.id} className="flex items-center justify-between p-3 bg-black/40 border border-white/10 rounded-2xl">
@@ -430,14 +442,14 @@ export function TemplatesTab() {
                                         <tr>
                                             {config.pdf.columns.find((c: any) => c.id === 'member_name' && c.visible) && <td className="py-2 font-bold">Hermano Ejemplo 1</td>}
                                             {config.pdf.columns.find((c: any) => c.id === 'group' && c.visible) && <td>Varones</td>}
-                                            {config.pdf.columns.find((c: any) => c.id === 'total_attendances' && c.visible) && <td>12 Cultos</td>}
+                                            {config.pdf.columns.find((c: any) => c.id === 'total_attendances' && c.visible) && <td>12 {config.pdf.attendanceUnit || 'Oraciones'}</td>}
                                             {config.pdf.columns.find((c: any) => c.id === 'percentage' && c.visible) && <td className="font-bold text-emerald-600">95%</td>}
                                             {config.pdf.columns.find((c: any) => c.id === 'status' && c.visible) && <td>Fiel / Regular</td>}
                                         </tr>
                                         <tr>
                                             {config.pdf.columns.find((c: any) => c.id === 'member_name' && c.visible) && <td className="py-2 font-bold">Hermana Ejemplo 2</td>}
                                             {config.pdf.columns.find((c: any) => c.id === 'group' && c.visible) && <td>Festivas</td>}
-                                            {config.pdf.columns.find((c: any) => c.id === 'total_attendances' && c.visible) && <td>11 Cultos</td>}
+                                            {config.pdf.columns.find((c: any) => c.id === 'total_attendances' && c.visible) && <td>11 {config.pdf.attendanceUnit || 'Oraciones'}</td>}
                                             {config.pdf.columns.find((c: any) => c.id === 'percentage' && c.visible) && <td className="font-bold text-emerald-600">90%</td>}
                                             {config.pdf.columns.find((c: any) => c.id === 'status' && c.visible) && <td>Fiel / Regular</td>}
                                         </tr>

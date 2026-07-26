@@ -246,7 +246,7 @@ export default function ReportsPage() {
                                     <tr key={m.id}>
                                         {templateConfig.pdf.columns.find((c: any) => c.id === 'member_name' && c.visible) && <td className="py-2.5 px-2 font-bold text-slate-900">{m.name}</td>}
                                         {templateConfig.pdf.columns.find((c: any) => c.id === 'group' && c.visible) && <td className="px-2">{m.category || 'Hermana/Varon'}</td>}
-                                        {templateConfig.pdf.columns.find((c: any) => c.id === 'total_attendances' && c.visible) && <td className="px-2 font-semibold">12 Cultos</td>}
+                                        {templateConfig.pdf.columns.find((c: any) => c.id === 'total_attendances' && c.visible) && <td className="px-2 font-semibold">12 {templateConfig.pdf.attendanceUnit || 'Oraciones'}</td>}
                                         {templateConfig.pdf.columns.find((c: any) => c.id === 'percentage' && c.visible) && <td className="px-2 font-black text-emerald-700">95%</td>}
                                         {templateConfig.pdf.columns.find((c: any) => c.id === 'status' && c.visible) && <td className="px-2">{m.status || 'Activo'}</td>}
                                     </tr>
