@@ -189,13 +189,13 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         <div className="flex items-center justify-between">
                             <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground flex items-center gap-3">
                                 <Activity className="w-4 h-4 text-[#dca54e]" /> 
-                                Bandeja de Actividad Reciente
+                                Bandeja de Actividad Reciente (Solicitudes de Registro)
                             </h4>
                             <button 
                                 onClick={() => setActiveTab?.('miembros')}
                                 className="text-[9px] font-black uppercase tracking-widest text-[#dca54e] hover:text-foreground transition-colors"
                             >
-                                Ver todos
+                                Ver todos en Miembros
                             </button>
                         </div>
                         
@@ -206,14 +206,15 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">No hay registros pendientes de aprobación</p>
                                 </div>
                             ) : (
-                                pendingMembers.slice(0, 3).map((member, i) => (
+                                pendingMembers.slice(0, 4).map((member, i) => (
                                     <motion.div 
                                         key={member.id}
                                         initial={{ opacity: 0, x: -20 }}
                                         animate={{ opacity: 1, x: 0 }}
                                         transition={{ delay: i * 0.1 }}
-                                        className="p-4 rounded-md bg-white/[0.03] border border-white/5 flex items-center justify-between group hover:border-[#dca54e]/30 transition-all cursor-pointer"
+                                        className="p-4 rounded-md bg-white/[0.03] border border-white/5 flex items-center justify-between group hover:border-[#dca54e]/40 hover:bg-white/[0.05] transition-all cursor-pointer"
                                         onClick={() => setActiveTab?.('miembros')}
+                                        title="Haz clic para ver la ficha y aprobar la cuenta en la pestaña Miembros"
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-md bg-[#dca54e]/10 border border-[#dca54e]/20 flex items-center justify-center overflow-hidden">
@@ -224,9 +225,9 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                                 )}
                                             </div>
                                             <div>
-                                                <h4 className="text-xs font-black text-foreground uppercase italic tracking-tighter">{member.name}</h4>
+                                                <h4 className="text-xs font-black text-foreground uppercase italic tracking-tighter group-hover:text-[#dca54e] transition-colors">{member.name}</h4>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-[8px] font-black uppercase tracking-widest text-emerald-500 bg-emerald-500/10 px-2 rounded-full">Solicitud de Registro</span>
+                                                    <span className="text-[8px] font-black uppercase tracking-widest text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full border border-orange-500/20">Solicitó Cuenta</span>
                                                     <span className="text-[8px] font-bold text-muted-foreground">
                                                         {member.createdAt ? format(parseISO(member.createdAt), 'dd MMM, HH:mm', { locale: es }) : 'Reciente'}
                                                     </span>
@@ -234,6 +235,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
+                                            <span className="text-[9px] font-black uppercase text-[#dca54e] opacity-0 group-hover:opacity-100 transition-opacity">Aprobar / Ver</span>
                                             <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
                                             <ChevronRight size={14} className="text-muted-foreground group-hover:translate-x-1 transition-transform" />
                                         </div>
