@@ -47,6 +47,7 @@ export const MiembrosTab = ({
 
     const [isSaving, setIsSaving] = useState(false)
     const [selectedFichaMember, setSelectedFichaMember] = useState<UserProfile | null>(null)
+    const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo; index?: number } | null>(null)
     const pendingMembers = members.filter(m => 
         m.status === 'Pendiente' || 
         m.status === 'Pendiente de Aprobación'
