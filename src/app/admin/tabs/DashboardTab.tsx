@@ -117,7 +117,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
     const membershipMembers = useMemo(() => members.filter(m => !m.hide_from_membership_count), [members]);
     const activeMembers = useMemo(() => membershipMembers.filter(m => m.status === 'Activo'), [membershipMembers]);
     const pendingMembers = useMemo(() => 
-        members.filter(m => m.status === 'Pendiente' || m.is_pre_registered)
+        members.filter(m => m.status === 'Pendiente' || m.status === 'Pendiente de Aprobación')
                .sort((a, b) => {
                    const dateA = a.createdAt || a.lastActive || '';
                    const dateB = b.createdAt || b.lastActive || '';

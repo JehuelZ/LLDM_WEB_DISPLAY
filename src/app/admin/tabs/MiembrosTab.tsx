@@ -49,9 +49,7 @@ export const MiembrosTab = ({
     const [selectedFichaMember, setSelectedFichaMember] = useState<UserProfile | null>(null)
     const pendingMembers = members.filter(m => 
         m.status === 'Pendiente' || 
-        m.status === 'Pendiente de Aprobación' || 
-        m.is_pre_registered || 
-        (m.is_portal_user && !m.portal_activated)
+        m.status === 'Pendiente de Aprobación'
     );
 
     return (
