@@ -724,3 +724,39 @@ body.admin-theme-primitivo {
     color: #64748b !important;
 }
 
+/* ── PRINT MEDIA RULES (HIDE ADMIN UI ON PRINTING) ── */
+@media print {
+    body, html {
+        background: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    /* Hide Admin Sidebars, Top Navbar & Fixed Elements */
+    aside,
+    #admin-sidebar-master,
+    header,
+    .no-print,
+    .no-print *,
+    [class*="fixed"],
+    [class*="bottom-6"] {
+        display: none !important;
+    }
+
+    /* Make main content container full width white paper */
+    main,
+    .flex-1 {
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    /* Ensure print headers and document containers are visible */
+    .print\:block {
+        display: block !important;
+    }
+}
+
+
