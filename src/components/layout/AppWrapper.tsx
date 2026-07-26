@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabaseClient';
 import { useIsPhone } from '@/hooks/useIsPhone';
 import { MobileNav } from './MobileNav';
+import { PWAInstallPrompt } from '@/components/pwa/PWAInstallPrompt';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
 
@@ -319,6 +320,8 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
                 )}
             </AnimatePresence>
             </AnimatePresence>
+            {/* PWA Install Prompt Banner */}
+            <PWAInstallPrompt />
         </div>
     );
 }
