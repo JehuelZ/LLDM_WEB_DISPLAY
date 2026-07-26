@@ -103,7 +103,7 @@ export default function PublicWebTab() {
     publicHomeFooterText: settings.publicHomeFooterText || 'La Luz del Mundo. Todos los derechos reservados.',
     publicHomeFooterQuote: settings.publicHomeFooterQuote || 'Un lugar de fe, comunión y esperanza',
     publicHomeFooterAdminBtn: settings.publicHomeFooterAdminBtn || 'Acceso Administración',
-    publicHomeContactPhone: settings.publicHomeContactPhone || '(510) 000-0000',
+    publicHomeContactPhone: typeof settings.publicHomeContactPhone !== 'undefined' ? settings.publicHomeContactPhone : '',
     publicHomeContactEmail: settings.publicHomeContactEmail || '',
     publicHomeEmailLabel: settings.publicHomeEmailLabel || 'Correo Electrónico',
     publicHomeAddress: settings.publicHomeAddress || 'Rodeo, CA',
@@ -1937,13 +1937,13 @@ export default function PublicWebTab() {
           <div>
             <label className="block text-xs font-semibold text-white/70 uppercase tracking-wider mb-2 flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5 text-emerald-400" />
-              Teléfono de Atención
+              Teléfono de Atención (Opcional)
             </label>
             <input
               type="text"
-              value={form.publicHomeContactPhone}
+              value={form.publicHomeContactPhone || ''}
               onChange={e => handleChange('publicHomeContactPhone', e.target.value)}
-              placeholder="(510) 000-0000"
+              placeholder="(510) 000-0000 (dejar vacio si no desea mostrarlo)"
               className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
             />
           </div>

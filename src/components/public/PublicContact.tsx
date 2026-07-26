@@ -9,7 +9,7 @@ export function PublicContact() {
 
   const churchName = settings.mainChurchName || settings.churchCity || 'Rodeo';
   const address = settings.publicHomeAddress || `${churchName}, California, EE. UU.`;
-  const phone = settings.publicHomeContactPhone || '(510) 000-0000';
+  const phone = settings.publicHomeContactPhone;
   const email = settings.publicHomeContactEmail;
   const emailLabel = settings.publicHomeEmailLabel || 'Correo Electrónico';
   const mapsUrl = settings.publicHomeMapsUrl || `https://maps.google.com/?q=${encodeURIComponent(address)}`;
