@@ -719,8 +719,8 @@ function AdminLayoutContent({
                             <Menu className="w-5 h-5" />
                         </button>
                         
-                        <div className="flex flex-col">
-                            <h2 className="text-[12px] font-black uppercase tracking-[0.25em] text-foreground font-orbitron leading-none">
+                        <div className="flex flex-col justify-center">
+                            <h2 className="text-sm sm:text-base lg:text-lg font-black uppercase tracking-[0.2em] text-foreground font-orbitron leading-none whitespace-nowrap">
                                 PANEL DE <span className="text-[#dca54e]">CONTROL DIGITAL</span>
                             </h2>
                         </div>
