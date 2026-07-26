@@ -866,12 +866,12 @@ function AdminLayoutContent({
                     )}>
                         {[
                             { id: 'dashboard', icon: LayoutDashboard, label: 'Inicio', path: '/admin?tab=dashboard' },
-                            { id: 'members', icon: Users, label: 'Miembros', path: '/admin/members' },
+                            { id: 'miembros', icon: Users, label: 'Miembros', path: '/admin?tab=miembros' },
                             { id: 'asistencia', icon: ClipboardCheck, label: 'Asistencia', path: '/admin?tab=asistencia' },
                             { id: 'mensajes', icon: Bell, label: 'Inbox', path: '/admin?tab=mensajes' },
                             { id: 'configuracion', icon: Settings, label: 'Panel', path: '/admin?tab=configuracion' }
                         ].map((item) => {
-                            const isActive = item.path.includes('/admin/members') ? pathname === '/admin/members' : currentTab === item.id;
+                            const isActive = currentTab === item.id;
                             
                             return (
                                 <Link 
