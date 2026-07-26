@@ -731,12 +731,15 @@ body.admin-theme-primitivo {
         color: #0f172a !important;
     }
 
-    /* Hide Admin Sidebars, Top Navbar & Fixed Elements */
+    /* Hide Admin Sidebars, Top Navbar, Dark Containers & Fixed Elements */
     aside,
     #admin-sidebar-master,
     header,
     .no-print,
     .no-print *,
+    .glass-card,
+    .admin-theme-primitivo .card,
+    .admin-theme-tactile .card,
     [class*="fixed"],
     [class*="bottom-6"] {
         display: none !important;
@@ -753,9 +756,32 @@ body.admin-theme-primitivo {
         color: #0f172a !important;
     }
 
-    /* Ensure print headers and document containers are visible */
-    .print\:block {
+    /* Ensure print headers and document containers are visible and forced text-slate-900 */
+    .print\:block,
+    .print\:block * {
         display: block !important;
+        color: #0f172a !important;
+    }
+    
+    .print\:block .flex {
+        display: flex !important;
+    }
+
+    .print\:block .grid {
+        display: grid !important;
+    }
+
+    .print\:block table {
+        display: table !important;
+    }
+
+    .print\:block tr {
+        display: table-row !important;
+    }
+
+    .print\:block th,
+    .print\:block td {
+        display: table-cell !important;
     }
 }
 
