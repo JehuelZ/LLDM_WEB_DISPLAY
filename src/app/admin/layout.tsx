@@ -533,7 +533,7 @@ function AdminLayoutContent({
                     </div>
 
                     <div className="space-y-0.5">
-                        <Link href="/" className={cn(
+                        <Link href="/portal" className={cn(
                             "flex items-center gap-3 px-3 py-2.5 text-[13px] font-semibold bg-transparent transition-all shadow-none",
                             settings.adminTheme === 'primitivo' ? "text-muted-foreground hover:text-foreground" : "text-white/40 hover:text-white",
                             collapsed && "justify-center px-0"
