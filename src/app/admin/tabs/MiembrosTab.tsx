@@ -198,9 +198,16 @@ export const MiembrosTab = ({
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
-                                const m = typeof mission === 'string' 
-                                    ? (mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission }) 
-                                    : mission;
+                                let m: CongregationInfo = { id: `leg-${idx}`, name: 'Obra' };
+                                try {
+                                    if (typeof mission === 'string') {
+                                        m = mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission };
+                                    } else if (mission && typeof mission === 'object') {
+                                        m = mission;
+                                    }
+                                } catch (e) {
+                                    m = { id: `leg-${idx}`, name: typeof mission === 'string' ? mission : 'Obra' };
+                                }
                                 return (
                                     <div key={m.id || idx} className="group relative p-4 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md hover:border-primary/50 transition-all">
                                         <div className="flex items-center gap-4">
@@ -208,7 +215,7 @@ export const MiembrosTab = ({
                                                 {m.imageUrl ? (
                                                     <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
                                                 ) : (
-                                                    <div className="text-[10px] font-black text-muted-foreground opacity-20">{m.name.charAt(0)}</div>
+                                                    <div className="text-[10px] font-black text-muted-foreground opacity-20">{(m.name || 'O').charAt(0)}</div>
                                                 )}
                                             </div>
                                             <div className="flex-1 min-w-0">
