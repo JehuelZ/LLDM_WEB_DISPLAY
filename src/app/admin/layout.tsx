@@ -408,17 +408,25 @@ function AdminLayoutContent({
                         collapsed && "invisible h-0 py-0"
                     )}>{t.gestion}</div>
 
-                    <Link href="/admin/members" className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
-                        pathname === '/admin/members' 
-                            ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
-                            : settings.adminTheme === 'primitivo' 
-                                ? "text-muted-foreground hover:text-foreground" 
-                                : "text-white/40 hover:text-white bg-transparent",
-                        collapsed && "justify-center px-0"
-                    )}>
-                        {pathname === '/admin/members' && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
-                        <Users className={cn("w-5 h-5 transition-colors shrink-0", pathname === '/admin/members' ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
+                    <Link 
+                        href="/admin?tab=miembros"
+                        onClick={() => {
+                            setTimeout(() => {
+                                window.dispatchEvent(new Event('popstate'));
+                                window.dispatchEvent(new Event('tab-change'));
+                            }, 100);
+                        }}
+                        className={cn(
+                            "flex items-center gap-3 px-3 py-2.5 transition-all group relative shadow-none",
+                            (pathname === '/admin/members' || currentTab === 'miembros')
+                                ? "bg-tactile-emerald-pill text-white font-bold rounded-md" 
+                                : settings.adminTheme === 'primitivo' 
+                                    ? "text-muted-foreground hover:text-foreground" 
+                                    : "text-white/40 hover:text-white bg-transparent",
+                            collapsed && "justify-center px-0"
+                        )}>
+                        {(pathname === '/admin/members' || currentTab === 'miembros') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-3/5 active-indicator-emerald rounded-r-md" />}
+                        <Users className={cn("w-5 h-5 transition-colors shrink-0", (pathname === '/admin/members' || currentTab === 'miembros') ? "text-white" : settings.adminTheme === 'primitivo' ? "text-muted-foreground group-hover:text-foreground" : "group-hover:text-tactile-emerald")} />
                         {!collapsed && <span className="text-[13px] font-semibold overflow-hidden whitespace-nowrap">{t.miembros}</span>}
                     </Link>
 
