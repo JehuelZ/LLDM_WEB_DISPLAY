@@ -181,11 +181,8 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#dca54e]">Sistema de Mando LLDM Rodeo</span>
                     </div>
                     <h1 className="text-3xl md:text-5xl font-black text-foreground tracking-tighter italic uppercase font-orbitron">
-                        Consola <span className="text-[#dca54e]">Hardware</span>
+                        Panel de <span className="text-[#dca54e]">Control Digital</span>
                     </h1>
-                </div>
-                <div className="hidden md:flex items-center gap-4 bg-card/80 backdrop-blur-md p-2 rounded-md border border-primary/10">
-                    <AdminClockWeather className="scale-90" />
                 </div>
             </div>
 
