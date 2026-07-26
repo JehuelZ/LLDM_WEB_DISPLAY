@@ -253,15 +253,40 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 mb-16 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 scrollbar-hide">
-                        <OrbitalGauge value={Math.round((activeMembers.length / (membershipMembers.length || 1)) * 100)} label="Actividad" color="#10b981" />
-                        <OrbitalGauge value={88} label="Puntualidad" color="#3b82f6" />
-                        <OrbitalGauge value={92} label="Retención" color="#059669" />
-                        <OrbitalGauge value={75} label="Participación" color="#10b981" />
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8 mb-12 overflow-x-auto lg:overflow-visible pb-4 lg:pb-0 scrollbar-hide">
+                        <OrbitalGauge 
+                            value={Math.round((activeMembers.length / (membershipMembers.length || 1)) * 100)} 
+                            label="Actividad Real" 
+                            color="#10b981" 
+                        />
+                        <OrbitalGauge 
+                            value={Math.min(100, Math.round(((members.filter(m => m.attendance_status === 'Puntual' || m.status === 'Activo').length) / (membershipMembers.length || 1)) * 100))} 
+                            label="Puntualidad" 
+                            color="#3b82f6" 
+                        />
+                        <OrbitalGauge 
+                            value={Math.round(((members.filter(m => m.status !== 'Inactivo').length) / (membershipMembers.length || 1)) * 100)} 
+                            label="Retención" 
+                            color="#059669" 
+                        />
+                        <OrbitalGauge 
+                            value={Math.round(((members.filter(m => m.member_group && m.member_group !== 'Sin Asignar').length) / (membershipMembers.length || 1)) * 100)} 
+                            label="Participación" 
+                            color="#dca54e" 
+                        />
                     </div>
 
-                    <div className="space-y-4 bg-foreground/[0.03] p-6 rounded-md border border-foreground/[0.05]">
-                        <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-4">Relación de Asistencia Semanal (Primitivo Scale)</h4>
+                    <div 
+                        className="space-y-4 bg-foreground/[0.03] p-6 rounded-md border border-foreground/[0.05] cursor-pointer hover:border-[#dca54e]/30 transition-all group"
+                        onClick={() => setActiveTab?.('asistencia')}
+                        title="Haz clic para abrir el control completo de asistencia semanal"
+                    >
+                        <div className="flex items-center justify-between mb-4">
+                            <h4 className="text-[9px] font-black uppercase tracking-widest text-muted-foreground group-hover:text-[#dca54e] transition-colors">
+                                Relación de Asistencia Semanal por Culto
+                            </h4>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-[#dca54e] opacity-0 group-hover:opacity-100 transition-opacity">Ir a Asistencia →</span>
+                        </div>
                         <AttendancePillRow label="Lunes" values={[85, 70, 95]} />
                         <AttendancePillRow label="Martes" values={[92, 85, 88]} />
                         <AttendancePillRow label="Miércoles" values={[78, 65, 82]} />
