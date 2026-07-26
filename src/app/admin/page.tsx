@@ -35,6 +35,7 @@ import { AsistenciaTab } from './tabs/AsistenciaTab';
 import { MensajesTab } from './tabs/MensajesTab';
 import { ContenidoTab } from './tabs/ContenidoTab';
 import PublicWebTab from './tabs/PublicWebTab';
+import { TemplatesTab } from './tabs/TemplatesTab';
 import { AjustesTab } from './tabs/AjustesTab';
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal';
 
@@ -2671,6 +2672,12 @@ function AdminDashboardContent({ hideLayout = false }: { hideLayout?: boolean })
             {
                 activeTab === 'public_web' && (
                     <PublicWebTab />
+                )
+            }
+
+            {
+                (activeTab === 'templates' || activeTab === 'plantillas') && (
+                    <TemplatesTab />
                 )
             }
 
