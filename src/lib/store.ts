@@ -479,7 +479,7 @@ export const useAppStore = create<AppState>()(
             settings: {
                 themeMode: 'dark',
                 churchIcon: 'custom',
-                churchOfficialLogoUrl: '',
+                churchOfficialLogoUrl: '/lldm_logo_universal_white.svg',
                 churchOfficialLogoAlign: 'center', // 'left' | 'center' | 'right'
                 churchOfficialLogoSize: 'large',   // 'medium' | 'large' | 'xlarge'
                 primaryColor: '#3b82f6',

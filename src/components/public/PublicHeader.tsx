@@ -38,7 +38,7 @@ export function PublicHeader() {
         {/* Brand / Logo */}
         <a href="/" className="flex items-center gap-4 group shrink-0">
           <img
-            src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
+            src={settings.churchOfficialLogoUrl || '/lldm_logo_universal_white.svg'}
             alt="La Luz del Mundo"
             className={`${logoSizeClass} w-auto object-contain group-hover:scale-105 transition-transform duration-500 filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]`}
           />

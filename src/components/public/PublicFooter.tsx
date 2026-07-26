@@ -25,7 +25,7 @@ export function PublicFooter() {
           {/* Brand logo */}
           <div className="flex items-center gap-3">
             <img
-              src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
+              src={settings.churchOfficialLogoUrl || '/lldm_logo_universal_white.svg'}
               alt="La Luz del Mundo"
               className="h-9 w-auto object-contain shrink-0"
             />
