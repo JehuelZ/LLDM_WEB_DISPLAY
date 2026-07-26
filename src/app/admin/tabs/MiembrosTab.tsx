@@ -47,9 +47,12 @@ export const MiembrosTab = ({
 
     const [isSaving, setIsSaving] = useState(false)
     const [selectedFichaMember, setSelectedFichaMember] = useState<UserProfile | null>(null)
-    const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo, index?: number } | null>(null)
-
-    const pendingMembers = members.filter(m => m.status === 'Pendiente');
+    const pendingMembers = members.filter(m => 
+        m.status === 'Pendiente' || 
+        m.status === 'Pendiente de Aprobación' || 
+        m.is_pre_registered || 
+        (m.is_portal_user && !m.portal_activated)
+    );
 
     return (
         <motion.div
@@ -352,6 +355,7 @@ export const MiembrosTab = ({
             <div className="admin-member-filters-bar flex flex-wrap items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md shadow-2xl overflow-hidden">
                 {[
                     { id: 'all', label: 'TODOS LOS MIEMBROS', count: members.filter(m => !m.hide_from_membership_count).length },
+                    { id: 'Pendiente', label: '⚡ SOLICITUDES / PENDIENTES', count: pendingMembers.length },
                     { id: 'Administración', label: 'SIERVOS DE DIOS', count: members.filter(m => !m.hide_from_membership_count && (m.role === 'Administrador' || m.member_group === 'Administración')).length },
                     { id: 'Casados', label: 'MATRIMONIOS', count: members.filter(m => !m.hide_from_membership_count && (m.member_group === 'Casados' || m.member_group === 'Casadas')).length },
                     { id: 'Solos y Solas', label: 'SOLOS Y SOLAS', count: members.filter(m => !m.hide_from_membership_count && m.member_group === 'Solos y Solas').length },
