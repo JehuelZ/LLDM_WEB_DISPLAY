@@ -720,12 +720,9 @@ function AdminLayoutContent({
                         </button>
                         
                         <div className="flex flex-col">
-                            <h2 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/80 leading-none">
-                                Bienvenido, <span className="text-foreground">{currentUser?.name.split(' ')[0] || 'Admin'}</span>
+                            <h2 className="text-[12px] font-black uppercase tracking-[0.25em] text-foreground font-orbitron leading-none">
+                                PANEL DE <span className="text-[#dca54e]">CONTROL DIGITAL</span>
                             </h2>
-                            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mt-1.5 opacity-60">
-                                Panel de Control Digital
-                            </p>
                         </div>
                     </div>
 

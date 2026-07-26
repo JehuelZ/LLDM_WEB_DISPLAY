@@ -173,18 +173,7 @@ export const DashboardTab = ({ setActiveTab }: { setActiveTab?: (tab: string) =>
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
         >
-            {/* WELCOME BANNER */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-4">
-                <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <div className="w-8 h-[2px] bg-[#dca54e]" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#dca54e]">Sistema de Mando LLDM Rodeo</span>
-                    </div>
-                    <h1 className="text-3xl md:text-5xl font-black text-foreground tracking-tighter italic uppercase font-orbitron">
-                        Panel de <span className="text-[#dca54e]">Control Digital</span>
-                    </h1>
-                </div>
-            </div>
+            {/* DYNAMIC METRICS DASHBOARD */}
 
             {/* TOP STATS ROW */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
