@@ -47,14 +47,14 @@
       "short_name": "Privilegios",
       "description": "Ver mis privilegios y responsabilidades",
       "url": "/portal",
-      "icons": [{ "src": "/flame_logo_premium.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Pantalla de la Iglesia",
       "short_name": "Pantalla",
       "description": "Ver la pizarra de la iglesia",
       "url": "/display",
-      "icons": [{ "src": "/flame_logo_premium.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

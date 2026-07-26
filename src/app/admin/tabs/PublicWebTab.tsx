@@ -517,7 +517,7 @@ export default function PublicWebTab() {
             <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 p-3 rounded-2xl max-w-xl">
               <div className="w-12 h-12 rounded-xl bg-black/50 border border-orange-500/30 p-1.5 shrink-0 flex items-center justify-center">
                 <img
-                  src={form.churchOfficialLogoUrl || '/flame_logo_premium.png'}
+                  src={form.churchOfficialLogoUrl || '/lldm_logo_universal_white.svg'}
                   alt="Oficial"
                   className="w-full h-full object-contain"
                 />

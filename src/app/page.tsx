@@ -32,7 +32,7 @@ function MaintenanceView() {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center p-2">
             <img
-              src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png'}
+              src={settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/lldm_logo_universal_white.svg'}
               alt="La Luz del Mundo"
               className="w-full h-full object-contain"
             />

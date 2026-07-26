@@ -23,7 +23,7 @@ export function PublicContact() {
   const phoneLabel = settings.publicHomePhoneLabel || 'Teléfono de Atención';
   const mapsBtnText = settings.publicHomeMapsBtnText || 'Abrir Dirección en Google Maps';
   const callBtnText = settings.publicHomeCallBtnText || 'Llamar por Teléfono';
-  const logoUrl = settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/flame_logo_premium.png';
+  const logoUrl = settings.churchOfficialLogoUrl || settings.churchLogoUrl || '/lldm_flama_white.svg';
 
   return (
     <section id="contacto" className="py-24 relative z-10 bg-[#07070b] border-t border-white/5 overflow-hidden">
