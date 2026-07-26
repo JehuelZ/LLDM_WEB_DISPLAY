@@ -114,18 +114,20 @@ export default function ReportsPage() {
                         >
                             <Filter className="w-3 h-3 mr-1 md:mr-2 text-emerald-500" /> Filtrar
                         </Button>
-                        <div className="w-px h-4 bg-white/10" />
-                        <select 
-                            value={selectedMonth}
-                            onChange={(e) => setSelectedMonth(e.target.value)}
-                            className="bg-transparent text-[9px] md:text-[10px] font-black uppercase text-white hover:text-emerald-400 cursor-pointer focus:outline-none pr-2"
-                        >
-                            <option value="Enero 2026" className="bg-slate-900 text-white">Enero 2026</option>
-                            <option value="Febrero 2026" className="bg-slate-900 text-white">Febrero 2026</option>
-                            <option value="Marzo 2026" className="bg-slate-900 text-white">Marzo 2026</option>
-                            <option value="Diciembre 2025" className="bg-slate-900 text-white">Diciembre 2025</option>
-                            <option value="Noviembre 2025" className="bg-slate-900 text-white">Noviembre 2025</option>
-                        </select>
+                        <div className="relative flex items-center">
+                            <select 
+                                value={selectedMonth}
+                                onChange={(e) => setSelectedMonth(e.target.value)}
+                                className="appearance-none bg-white/10 hover:bg-white/15 border border-white/20 rounded-md px-3 py-1.5 pr-7 text-[10px] md:text-xs font-black uppercase text-white hover:text-emerald-400 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all"
+                            >
+                                <option value="Enero 2026" className="bg-slate-900 text-white">Enero 2026</option>
+                                <option value="Febrero 2026" className="bg-slate-900 text-white">Febrero 2026</option>
+                                <option value="Marzo 2026" className="bg-slate-900 text-white">Marzo 2026</option>
+                                <option value="Diciembre 2025" className="bg-slate-900 text-white">Diciembre 2025</option>
+                                <option value="Noviembre 2025" className="bg-slate-900 text-white">Noviembre 2025</option>
+                            </select>
+                            <ChevronDown className="w-3.5 h-3.5 text-emerald-400 absolute right-2 pointer-events-none" />
+                        </div>
                     </div>
                     <div className="flex items-center gap-2 w-full md:w-auto">
                         <Button onClick={handlePrint} variant="outline" className="flex-1 md:flex-none border-white/10 bg-white/5 hover:bg-white/10 gap-2 font-black uppercase text-[10px] h-10">
