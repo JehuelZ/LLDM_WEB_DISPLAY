@@ -724,17 +724,8 @@ function AdminLayoutContent({
                                 Bienvenido, <span className="text-foreground">{currentUser?.name.split(' ')[0] || 'Admin'}</span>
                             </h2>
                             <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground mt-1.5 opacity-60">
-                                Panel de Control Digital - LLDM Rodeo
+                                Panel de Control Digital
                             </p>
-                        </div>
-                        
-                        <div className={cn("w-[1px] h-8 mx-2", settings.themeMode === 'light' ? "bg-black/10" : "bg-white/5")} />
-
-                        <div className="hidden sm:flex flex-col">
-                            <span className={cn("text-[10px] font-black uppercase tracking-[0.4em] opacity-40 leading-none", settings.themeMode === 'light' ? "text-slate-600" : "text-muted-foreground")}>Pizarra</span>
-                            <span key={currentDate} className="text-[12px] font-black uppercase tracking-tighter text-foreground mt-1.5 font-sans animate-fade-in">
-                                {currentTab === 'dashboard' ? 'Principal' : currentTab === 'asistencia' ? 'Asistencia' : currentTab === 'horarios' ? 'Programación' : currentTab}
-                            </span>
                         </div>
                     </div>
 
@@ -807,7 +798,7 @@ function AdminLayoutContent({
                             <Link href="/display" target="_blank" className="hidden sm:block">
                                 <button className="h-9 lg:h-10 px-4 lg:px-6 rounded-md bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 group">
                                     <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                                    <span className="hidden lg:inline">Pizarra</span>
+                                    <span className="hidden lg:inline">Ver Pantalla TV</span>
                                 </button>
                             </Link>
 
