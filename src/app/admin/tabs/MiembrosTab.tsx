@@ -398,6 +398,7 @@ export const MiembrosTab = ({
                         if (m.hide_from_membership_count && !searchTerm) return false;
 
                         if (memberFilter === 'all') return true;
+                        if (memberFilter === 'Pendiente') return (m.status === 'Pendiente' || m.status === 'Pendiente de Aprobación');
                         if (memberFilter === 'Administración') return (m.role === 'Administrador' || m.member_group === 'Administración') && !m.hide_from_membership_count;
                         if (memberFilter === 'Casados') return (m.member_group === 'Casados' || m.member_group === 'Casadas') && !m.hide_from_membership_count;
                         if (memberFilter === 'Niños') return (m.member_group === 'Niños' || m.member_group === 'Niñas') && !m.hide_from_membership_count;
