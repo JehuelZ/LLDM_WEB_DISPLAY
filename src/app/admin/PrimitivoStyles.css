@@ -677,3 +677,50 @@ body.admin-theme-primitivo {
     background-color: rgba(255, 255, 255, 0.05) !important;
     color: #ffffff !important;
 }
+
+/* ISOLATION FOR REPORT TEMPLATES PDF PREVIEW */
+.pdf-preview-canvas {
+    color: #0f172a !important;
+}
+
+.pdf-preview-sheet, 
+.pdf-preview-sheet * {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+.pdf-preview-sheet h1,
+.pdf-preview-sheet h2,
+.pdf-preview-sheet h3,
+.pdf-preview-sheet h4,
+.pdf-preview-sheet span,
+.pdf-preview-sheet p,
+.pdf-preview-sheet th,
+.pdf-preview-sheet td {
+    color: inherit;
+    letter-spacing: normal !important;
+}
+
+.pdf-preview-sheet h1 {
+    color: #0f172a !important;
+}
+
+.pdf-preview-sheet .pdf-text-slate-900 {
+    color: #0f172a !important;
+}
+
+.pdf-preview-sheet .pdf-text-slate-800 {
+    color: #1e293b !important;
+}
+
+.pdf-preview-sheet .pdf-text-slate-700 {
+    color: #334155 !important;
+}
+
+.pdf-preview-sheet .pdf-text-slate-600 {
+    color: #475569 !important;
+}
+
+.pdf-preview-sheet .pdf-text-slate-500 {
+    color: #64748b !important;
+}
+

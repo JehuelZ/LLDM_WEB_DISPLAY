@@ -349,17 +349,17 @@ export function TemplatesTab() {
                     </div>
 
                     {/* Contenedor del PDF simulado */}
-                    <div className="bg-slate-900 border border-white/15 rounded-3xl p-6 shadow-2xl overflow-y-auto max-h-[900px] text-slate-900 space-y-6">
+                    <div className="bg-slate-900 border border-white/15 rounded-3xl p-6 shadow-2xl overflow-y-auto max-h-[900px] text-slate-900 space-y-6 pdf-preview-canvas">
                         
                         {/* ── HOJA 1 SIMULADA ── */}
-                        <div className="bg-white p-8 rounded-2xl shadow-xl space-y-6 min-h-[550px] relative font-sans text-xs">
+                        <div className="bg-white p-8 rounded-2xl shadow-xl space-y-6 min-h-[550px] relative font-sans text-xs pdf-preview-sheet">
                             <div className="absolute top-2 right-4 text-[9px] text-slate-400 font-mono">Página 1</div>
                             
                             {/* Cabecera del PDF */}
                             <div className="flex items-center justify-between border-b-2 border-orange-500 pb-4">
                                 <div>
-                                    <h1 className="text-base font-black text-slate-900 leading-tight uppercase">{config.pdf.title}</h1>
-                                    <p className="text-[11px] text-slate-600 font-semibold">{config.pdf.subtitle}</p>
+                                    <h1 className="text-base font-black leading-tight uppercase" style={{ color: '#0f172a' }}>{config.pdf.title}</h1>
+                                    <p className="text-[11px] font-semibold" style={{ color: '#475569' }}>{config.pdf.subtitle}</p>
                                 </div>
                                 <div className="w-10 h-10 shrink-0">
                                     <img 
@@ -379,12 +379,12 @@ export function TemplatesTab() {
                                 <div className="space-y-4">
                                     <div className="grid grid-cols-2 gap-3">
                                         <div className="bg-slate-100 p-3 rounded-xl border border-slate-200 text-center">
-                                            <span className="text-[10px] text-slate-500 uppercase font-bold block">Asistencia General</span>
-                                            <span className="text-lg font-black text-slate-900">89.4%</span>
+                                            <span className="text-[10px] uppercase font-bold block" style={{ color: '#64748b' }}>Asistencia General</span>
+                                            <span className="text-lg font-black" style={{ color: '#0f172a' }}>89.4%</span>
                                         </div>
                                         <div className="bg-slate-100 p-3 rounded-xl border border-slate-200 text-center">
-                                            <span className="text-[10px] text-slate-500 uppercase font-bold block">Asistentes Promedio</span>
-                                            <span className="text-lg font-black text-slate-900">142 Hnos</span>
+                                            <span className="text-[10px] uppercase font-bold block" style={{ color: '#64748b' }}>Asistentes Promedio</span>
+                                            <span className="text-lg font-black" style={{ color: '#0f172a' }}>142 Hnos</span>
                                         </div>
                                     </div>
 
@@ -392,10 +392,10 @@ export function TemplatesTab() {
                                     <div className="grid grid-cols-2 gap-3 pt-2">
                                         {(config.pdf.donutGroups || []).map((g: string) => (
                                             <div key={g} className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-full border-4 border-orange-500 flex items-center justify-center font-bold text-[10px] text-slate-800">
+                                                <div className="w-10 h-10 rounded-full border-4 border-orange-500 flex items-center justify-center font-bold text-[10px]" style={{ color: '#1e293b' }}>
                                                     85%
                                                 </div>
-                                                <span className="font-bold text-slate-700 capitalize text-xs">{g}</span>
+                                                <span className="font-bold capitalize text-xs" style={{ color: '#334155' }}>{g}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -403,16 +403,16 @@ export function TemplatesTab() {
                             )}
 
                             {!config.pdf.separatePageForTable && (
-                                <p className="text-[10px] text-slate-400 italic text-center pt-4">--- La tabla nominal continúa aquí abajo ---</p>
+                                <p className="text-[10px] italic text-center pt-4" style={{ color: '#94a3b8' }}>--- La tabla nominal continúa aquí abajo ---</p>
                             )}
                         </div>
 
                         {/* ── HOJA 2 SIMULADA ── */}
                         {config.pdf.separatePageForTable && (
-                            <div className="bg-white p-8 rounded-2xl shadow-xl space-y-6 min-h-[550px] relative font-sans text-xs">
+                            <div className="bg-white p-8 rounded-2xl shadow-xl space-y-6 min-h-[550px] relative font-sans text-xs pdf-preview-sheet">
                                 <div className="absolute top-2 right-4 text-[9px] text-slate-400 font-mono">Página 2</div>
                                 
-                                <div className="border-b border-slate-200 pb-2 flex justify-between items-center text-slate-500 text-[10px] font-bold">
+                                <div className="border-b border-slate-200 pb-2 flex justify-between items-center text-[10px] font-bold" style={{ color: '#64748b' }}>
                                     <span>LISTADO DETALLADO DE ASISTENCIA</span>
                                     <span>HOJA DE REGISTRO NOMINAL</span>
                                 </div>
@@ -420,13 +420,13 @@ export function TemplatesTab() {
                                 {/* Tabla Nomminal Simulada */}
                                 <table className="w-full text-left border-collapse">
                                     <thead>
-                                        <tr className="border-b-2 border-slate-900 text-[10px] font-black uppercase text-slate-800">
+                                        <tr className="border-b-2 border-slate-900 text-[10px] font-black uppercase" style={{ color: '#1e293b' }}>
                                             {config.pdf.columns.filter((c: any) => c.visible).map((c: any) => (
                                                 <th key={c.id} className="py-2 px-1">{c.label}</th>
                                             ))}
                                         </tr>
                                     </thead>
-                                    <tbody className="divide-y divide-slate-200 text-[11px] text-slate-700">
+                                    <tbody className="divide-y divide-slate-200 text-[11px]" style={{ color: '#334155' }}>
                                         <tr>
                                             {config.pdf.columns.find((c: any) => c.id === 'member_name' && c.visible) && <td className="py-2 font-bold">Hermano Ejemplo 1</td>}
                                             {config.pdf.columns.find((c: any) => c.id === 'group' && c.visible) && <td>Varones</td>}
