@@ -79,7 +79,7 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
     };
 
     // Calculate metrics for selected month
-    const currentMonthRecords = attendanceHist.filter(r => r.date.startsWith(selectedMonthStr));
+    const currentMonthRecords = attendanceHist.filter(r => r?.date && selectedMonthStr && r.date.startsWith(selectedMonthStr));
     const attendanceCount = currentMonthRecords.filter(r => r.present).length;
     // For "possible" attendance, we might just assume 30 for now or rely on records.
     // Usually, attendance is tracked per expected service. For simplicity, we show pure presences found.
@@ -87,8 +87,8 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
 
     // Calculate prayers/services assigned for selected month
     let servicesAssigned = 0;
-    Object.values(monthlySchedule).forEach(day => {
-        if (!day.date.startsWith(selectedMonthStr)) return;
+    Object.values(monthlySchedule || {}).forEach(day => {
+        if (!day?.date || !selectedMonthStr || !day.date.startsWith(selectedMonthStr)) return;
         if (day.slots?.['5am']?.leaderId === member.id) servicesAssigned++;
         if (day.slots?.['9am']?.consecrationLeaderId === member.id || day.slots?.['9am']?.doctrineLeaderId === member.id) servicesAssigned++;
         if (day.slots?.['evening']?.doctrineLeaderId === member.id || (day.slots?.['evening']?.leaderIds && day.slots['evening'].leaderIds.includes(member.id))) servicesAssigned++;
