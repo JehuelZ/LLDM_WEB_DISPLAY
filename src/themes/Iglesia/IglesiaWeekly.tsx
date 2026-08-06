@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
 import { format, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { User, Crown, Sunrise, Sun, Moon, Calendar, Clock, Video, Zap, Info, BookOpen } from 'lucide-react';
+import { User, Crown, Sunrise, Sun, Moon, Calendar, Clock, Video, Zap, Info, BookOpen, Radio, Globe, Star, Sparkles } from 'lucide-react';
 import { BigAcademicTitle, ChurchHeaderBadge } from './BigAcademicTitle';
 import { getIglesiaTokens, neuShadow } from './tokens';
 import { IglesiaClockInline } from './Clock';
@@ -318,7 +318,15 @@ export function IglesiaWeekly() {
         const evLeader2 = getMember(sched?.slots?.['evening']?.doctrineLeaderId) || getMember(sched?.slots?.['evening']?.leaderIds?.[1]);
         const evLeaders = [evLeader1, evLeader2].filter(Boolean);
 
-        return { date, key, isSun, isToday, color, leader5am, consec9am, doctrine9am, evLeaders, sched };
+        // ─── Día Extraordinario ───────────────────────────
+        const _iwDmIcons: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+        const iwDmParts = (sched?.dayMode || '').split('|');
+        const iwHasDayMode = !!sched?.dayMode;
+        const IwDayModeIcon = _iwDmIcons[iwDmParts[0]] || Radio;
+        const iwDmTitle = iwDmParts.slice(1).join('|').split('—')[0].trim();
+        // ───────────────────────────────────────────────
+
+        return { date, key, isSun, isToday, color, leader5am, consec9am, doctrine9am, evLeaders, sched, iwHasDayMode, IwDayModeIcon, iwDmTitle };
     });
 
     return (
@@ -375,6 +383,28 @@ export function IglesiaWeekly() {
 
                                 {/* Slots Container */}
                                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8, padding: '10px 12px' }}>
+                                    {sched?.dayMode ? (
+                                        /* ─── PANEL DÍA EXTRAORDINARIO (Iglesia Weekly Column) ─── */
+                                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, padding: 8 }}>
+                                            <motion.div
+                                                animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
+                                                transition={{ repeat: Infinity, duration: 3 }}
+                                                style={{ width: 44, height: 44, borderRadius: '50%', border: '1px solid rgba(245,158,11,0.4)', background: 'rgba(245,158,11,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 20px rgba(245,158,11,0.2)' }}
+                                            >
+                                                <Radio style={{ width: 20, height: 20, color: '#f59e0b' }} />
+                                            </motion.div>
+                                            {(sched.dayMode.split('|')[1] || '').split('—')[0] && (
+                                                <p style={{ fontSize: 9, fontWeight: 900, color: 'rgba(245,158,11,0.8)', textTransform: 'uppercase', textAlign: 'center', margin: 0, lineHeight: 1.2, fontFamily: T.fontMontserrat }}>
+                                                    {(sched.dayMode.split('|')[1] || '').split('—')[0].trim()}
+                                                </p>
+                                            )}
+                                            <div style={{ width: 24, height: 1, background: 'rgba(245,158,11,0.3)' }} />
+                                            <p style={{ fontSize: 7, fontWeight: 800, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '0.1em', textAlign: 'center', margin: 0 }}>
+                                                Día Extraordinario
+                                            </p>
+                                        </div>
+                                    ) : (
+                                    <>
                                     {leader5am && (() => {
                                         const isActive = isSlotActive(key, '5am');
                                         return (
@@ -711,6 +741,8 @@ export function IglesiaWeekly() {
                                             </div>
                                         );
                                     })()}
+                                    </>
+                                    )}
                                 </div>
                             </div>
                         )

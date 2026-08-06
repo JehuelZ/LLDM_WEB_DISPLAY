@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useAppStore } from '@/lib/store';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay, parseISO, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { User, Star } from 'lucide-react';
+import { User, Star, Radio, Crown, Sparkles, Globe, Zap } from 'lucide-react';
 
 // THEME: Tech Corporate — Calendar View
 // Paleta: navy #040D21 · card #0D1B3E · neon-green #A3FF57 · blue-bright #4F7FFF
@@ -173,6 +173,14 @@ export function MidnightGlowCalendar() {
                         const time9am = formatAbbrTime(sched?.slots?.['9am']?.time, isSunday ? '10AM' : '9AM');
                         const timeEvening = formatAbbrTime(sched?.slots?.evening?.time, isSunday ? '5PM' : '6PM');
 
+                        // ─── Día Extraordinario ───────────────────────────
+                        const _dmIconMap: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+                        const dmParts = (sched?.dayMode || '').split('|');
+                        const hasDayMode = !!sched?.dayMode;
+                        const DayModeIcon = _dmIconMap[dmParts[0]] || Radio;
+                        const dmShortTitle = dmParts.slice(1).join('|').split('—')[0].trim();
+                        // ──────────────────────────────────────────────────
+
                         return (
                             <motion.div
                                 key={key}
@@ -213,6 +221,20 @@ export function MidnightGlowCalendar() {
 
                                 {/* Text Schedule inside cell */}
                                 <div className="flex-1 flex flex-col px-2 pb-0 gap-1.5 min-h-0 overflow-hidden justify-center mt-0.5">
+                                    {/* ─── Día Extraordinario: badge especial ─── */}
+                                    {hasDayMode ? (
+                                        <div className="flex flex-col items-center justify-center gap-1 h-full">
+                                            <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center shadow-[0_0_12px_rgba(251,191,36,0.3)]">
+                                                <DayModeIcon className="w-3.5 h-3.5 text-amber-400" />
+                                            </div>
+                                            {dmShortTitle && (
+                                                <span className="text-[7px] font-black text-amber-400/80 uppercase tracking-tight text-center leading-tight line-clamp-2 px-1">
+                                                    {dmShortTitle}
+                                                </span>
+                                            )}
+                                        </div>
+                                    ) : (
+                                    <>
                                     {/* 5 AM - Matutina */}
                                     {leader5am.name && (
                                         <div className="relative flex flex-col items-center justify-center w-full mt-1">
@@ -356,6 +378,8 @@ export function MidnightGlowCalendar() {
                                                 </div>
                                             </div>
                                         </div>
+                                    )}
+                                    </>
                                     )}
                                 </div>
                             </motion.div>

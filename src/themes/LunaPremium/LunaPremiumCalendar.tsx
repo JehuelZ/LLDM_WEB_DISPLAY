@@ -5,6 +5,7 @@ import { useAppStore } from '@/lib/store';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { motion } from 'framer-motion';
+import { Radio, Crown, Globe, Star, Zap, Sparkles } from 'lucide-react';
 import { getChurchNow } from '@/lib/time';
 
 // ─────────────────────────────────────────────
@@ -113,6 +114,13 @@ const LunaPremiumCalendar: React.FC = () => {
                         }
                         const eveningText = eveningLeaders.map((l: any) => l?.name).filter(Boolean).join(' | ');
 
+                        // ─── Día Extraordinario ───────────────────────────
+                        const _lcDmIcons: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+                        const lcDmParts = (sched?.dayMode || '').split('|');
+                        const lcHasDayMode = !!sched?.dayMode;
+                        const LcDayModeIcon = _lcDmIcons[lcDmParts[0]] || Radio;
+                        // ───────────────────────────────────────────────
+
                         const colIndex = (padding.length + idx) % 7;
                         const isLastCol = colIndex === 6;
 
@@ -141,6 +149,20 @@ const LunaPremiumCalendar: React.FC = () => {
                                 
                                 {/* Data Stack - Three Daily Slots with pipe formatting */}
                                 <div className="flex flex-col gap-2.5 mt-auto pb-4">
+                                    {lcHasDayMode ? (
+                                        /* Extraordinary Day indicator */
+                                        <div className="flex flex-col items-center justify-center gap-1.5 py-2">
+                                            <motion.div
+                                                animate={{ opacity: [0.4, 0.9, 0.4] }}
+                                                transition={{ repeat: Infinity, duration: 3 }}
+                                                className="w-5 h-5 rounded-full border border-amber-300/40 bg-amber-500/5 flex items-center justify-center"
+                                            >
+                                                <LcDayModeIcon className="w-2.5 h-2.5 text-amber-300" />
+                                            </motion.div>
+                                            <div className="w-4 h-[1px] bg-gradient-to-r from-transparent via-amber-300 to-transparent opacity-50" />
+                                        </div>
+                                    ) : (
+                                    <>
                                     {/* Slot 1: 5am */}
                                     {lead5am && (
                                         <div className="flex items-baseline gap-1.5 overflow-hidden">
@@ -165,6 +187,8 @@ const LunaPremiumCalendar: React.FC = () => {
                                             <span className="text-[9px] text-white/40 font-[400] truncate capitalize shrink-0 max-w-[120px]">{eveningText}</span>
                                             <span className="px-1.5 py-0.5 bg-amber-500/10 border border-amber-500/20 text-[5px] text-amber-400/60 tracking-[0.05em] lowercase shrink-0">oración</span>
                                         </div>
+                                    )}
+                                    </>
                                     )}
                                 </div>
                             </motion.div>

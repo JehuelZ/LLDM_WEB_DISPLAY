@@ -33,6 +33,13 @@ export interface DailySchedule {
     id: string;
     date: string; // ISO Date YYYY-MM-DD
     dayName?: string; // Lunes, Martes...
+    /**
+     * Modo Día Extraordinario.
+     * Formato: "iconKey|Título personalizado"
+     * iconKey: 'radio' | 'crown' | 'sparkles' | 'globe' | 'star' | 'zap'
+     * Si está presente, los displays muestran un panel especial en lugar de los líderes.
+     */
+    dayMode?: string;
     slots: {
         '5am': {
             leaderId: string;

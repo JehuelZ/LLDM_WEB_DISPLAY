@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Star, CalendarIcon, Radio, Crown, Globe, Zap, Sparkles, Info } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Calendar as CalendarIcon, Star, Info } from 'lucide-react';
 import { BigAcademicTitle } from './BigAcademicTitle';
 import { getIglesiaTokens, neuShadow } from './tokens';
 import { getSlideSystemTitle } from '@/lib/display_labels';
@@ -200,6 +200,14 @@ export function IglesiaCalendar() {
                             .filter(Boolean)
                             .join(' | ') || (eveningSlot?.leaderId ? getMember(eveningSlot.leaderId)?.name : null);
 
+                        // ─── Día Extraordinario ───────────────────────────
+                        const _icDmIcons: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+                        const icDmParts = (sched?.dayMode || '').split('|');
+                        const icHasDayMode = !!sched?.dayMode;
+                        const IcDayModeIcon = _icDmIcons[icDmParts[0]] || Radio;
+                        const icDmShort = icDmParts.slice(1).join('|').split('—')[0].trim();
+                        // ───────────────────────────────────────────────
+
                         return (
                             <motion.div
                                 key={key}
@@ -250,6 +258,22 @@ export function IglesiaCalendar() {
                                     justifyContent: 'center', gap: 5,
                                     opacity: isToday ? 1 : 0.9
                                 }}>
+                                    {icHasDayMode ? (
+                                        /* Extraordinary Day icon */
+                                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, flex: 1 }}>
+                                            <motion.div
+                                                animate={{ opacity: [0.5, 1, 0.5] }}
+                                                transition={{ repeat: Infinity, duration: 3 }}
+                                                style={{ width: 22, height: 22, borderRadius: '50%', border: '1px solid rgba(245,158,11,0.4)', background: 'rgba(245,158,11,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                            >
+                                                <IcDayModeIcon style={{ width: 11, height: 11, color: '#f59e0b' }} />
+                                            </motion.div>
+                                            {icDmShort && (
+                                                <p style={{ fontSize: 8, fontWeight: 800, color: 'rgba(245,158,11,0.6)', textTransform: 'uppercase', textAlign: 'center', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '90%' }}>{icDmShort}</p>
+                                            )}
+                                        </div>
+                                    ) : (
+                                    <>
                                     {[
                                         { active: active5, label: l5am?.name, color: T.tertiary },
                                         { active: active9, label: nineAmLabel, color: (isSun ? T.secondary : T.emerald) },
@@ -307,6 +331,8 @@ export function IglesiaCalendar() {
                                             </div>
                                         );
                                     })}
+                                    </>
+                                    )}
                                 </div>
 
                                 {/* Subtle Sun Indicator */}

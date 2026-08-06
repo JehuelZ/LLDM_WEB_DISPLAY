@@ -3,7 +3,7 @@
 import React from 'react';
 import { useFont } from '@/components/layout/FontWrapper';
 import { useAppStore } from '@/lib/store';
-import { Calendar, Clock, MapPin, User, ChevronRight, Sunrise, Sun, BookOpen } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, ChevronRight, Sunrise, Sun, BookOpen, Radio, Crown, Globe, Star, Zap, Sparkles } from 'lucide-react';
 import { format, addDays } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getSlideSystemTitle, getSlotLabel, getServiceTypeLabel } from '@/lib/display_labels';
@@ -68,9 +68,55 @@ const LunaPremiumSchedule: React.FC<ScheduleProps> = ({ isTomorrow = false }) =>
 
     const slideTitle = getSlideSystemTitle(isTomorrow ? 'schedule_tomorrow' : 'schedule', settings?.language)?.toLowerCase();
 
+    // ─── Día Extraordinario ────────────────────────────────────
+    const _lunaDmIconMap: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+    const lunaDmParts = (schedule?.dayMode || '').split('|');
+    const lunaHasDayMode = !!schedule?.dayMode;
+    const LunaDayModeIcon = _lunaDmIconMap[lunaDmParts[0]] || Radio;
+    const lunaDmTitle = lunaDmParts.slice(1).join('|') || '';
+    // ────────────────────────────────────────────────────────
+
     return (
         <div className="flex flex-col gap-12 w-full h-full animate-in fade-in zoom-in-95 duration-1400 pl-[320px] pr-4 py-8 pt-32 pb-32 relative"
              style={{ fontFamily: "'Saira', sans-serif" }}>
+
+            {/* ─── MODO DÍA EXTRAORDINARIO (Luna Premium) ─── */}
+            {lunaHasDayMode && (
+                <div className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-10">
+                    <div className="absolute inset-0 opacity-10 pointer-events-none"
+                        style={{ backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '14% 100%' }} />
+
+                    <motion.div
+                        animate={{ scale: [1, 1.06, 1], opacity: [0.6, 1, 0.6] }}
+                        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+                        className="w-28 h-28 rounded-full border border-amber-300/30 bg-amber-500/5 flex items-center justify-center shadow-[0_0_50px_rgba(251,191,36,0.15)]"
+                    >
+                        <LunaDayModeIcon className="w-12 h-12 text-amber-300" />
+                    </motion.div>
+
+                    <div className="text-center max-w-3xl px-8">
+                        <p className="text-[9px] font-[300] tracking-[0.8em] text-amber-300/40 uppercase mb-6">día extraordinario</p>
+                        <h1 className="text-5xl font-[100] lowercase tracking-tight leading-tight text-white">
+                            {lunaDmTitle.toLowerCase()}
+                        </h1>
+                        <div className="h-[1px] w-32 mx-auto mt-8 bg-gradient-to-r from-transparent via-amber-300 to-transparent shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
+                        <p className="mt-6 text-[11px] font-[300] tracking-[0.4em] text-white/20 lowercase">
+                            {format(isTomorrow ? addDays(new Date(), 1) : new Date(), "EEEE d 'de' MMMM", { locale: es })}
+                        </p>
+                    </div>
+
+                    <motion.div
+                        animate={{ opacity: [0.3, 0.8, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 2.5 }}
+                        className="flex items-center gap-3 px-6 py-2 border border-amber-300/20 bg-amber-500/5"
+                    >
+                        <div className="w-1.5 h-1.5 rounded-none bg-amber-300 animate-pulse" />
+                        <span className="text-[9px] font-[300] tracking-[0.6em] text-amber-300/60 lowercase">en curso</span>
+                    </motion.div>
+                </div>
+            )}
+            {/* ─────────────────────────────────────────────────────── */}
+
             {/* High-Tech Section Header (Synchronized Flare Style) */}
             <header className="flex flex-col mb-8">
                 <div className="flex items-center gap-4">

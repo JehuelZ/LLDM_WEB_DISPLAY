@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Flame, Clock, BookOpen, Star, Heart } from 'lucide-react';
+import { Sunrise, Church, Sun, Radio, Users, Crown, HeartHandshake, Mic, Flame, Clock, BookOpen, Star, Heart, Globe, Zap, Sparkles } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -97,6 +97,19 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
     // Pre-compute church icon for hideProfiles mode
     const _iconsMap: Record<string, any> = { flame: Flame, church: Church, book: BookOpen, star: Star, heart: Heart };
     const ChurchIcon = _iconsMap[settings?.churchIcon || 'flame'] || Flame;
+
+    // ─── Modo Día Extraordinario ─────────────────────────────────────────
+    const _dayModeIconMap: Record<string, any> = {
+        radio: Radio, crown: Crown, sparkles: Sparkles,
+        globe: Globe, star: Star, zap: Zap
+    };
+    const parseDayMode = (dm?: string) => {
+        if (!dm) return null;
+        const parts = dm.split('|');
+        return { iconKey: parts[0] || 'radio', title: parts.slice(1).join('|') || '' };
+    };
+    const dayModeData = parseDayMode(schedule?.dayMode);
+    // ─────────────────────────────────────────────────────────────────────
 
     // Member row – hexagonal avatar + name
     const renderMember = (id: string | undefined | null, role: string, index = 0, hideAvatar = false) => {
@@ -321,6 +334,58 @@ export function MidnightGlowSchedule({ isTomorrow = false }: { isTomorrow?: bool
             className="h-full w-full flex flex-col justify-center items-center overflow-hidden relative"
             style={{ background: 'radial-gradient(ellipse 120% 80% at 50% 30%, #071428 0%, #040D21 60%, #02080F 100%)' }}
         >
+            {/* ─── MODO DÍA EXTRAORDINARIO ─────────────────────────────────────── */}
+            {dayModeData && (() => {
+                const DayModeIcon = _dayModeIconMap[dayModeData.iconKey] || Radio;
+                return (
+                    <div className="absolute inset-0 z-50 flex flex-col items-center justify-center gap-10 px-20 bg-gradient-to-b from-[#040D21] via-[#071428] to-[#040D21]">
+                        {/* Ambient glow */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/5 blur-[120px] rounded-full pointer-events-none" />
+                        {/* Grid bg */}
+                        <div className="absolute inset-0 opacity-[0.02] pointer-events-none"
+                            style={{ backgroundImage: 'linear-gradient(to right, #A3FF57 1px, transparent 1px), linear-gradient(to bottom, #A3FF57 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+
+                        {/* Pulsing icon ring */}
+                        <motion.div
+                            animate={{ scale: [1, 1.08, 1], opacity: [0.7, 1, 0.7] }}
+                            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                            className="relative flex items-center justify-center"
+                        >
+                            <div className="absolute w-40 h-40 rounded-full border-2 border-amber-400/30 animate-ping" style={{ animationDuration: '3s' }} />
+                            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-amber-500/20 to-amber-700/10 border border-amber-400/40 flex items-center justify-center shadow-[0_0_60px_rgba(251,191,36,0.3)]">
+                                <DayModeIcon className="w-14 h-14 text-amber-400" />
+                            </div>
+                        </motion.div>
+
+                        {/* Title */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="text-center max-w-3xl"
+                        >
+                            <p className="text-[11px] font-black tracking-[0.6em] text-amber-400/60 uppercase mb-4">Día Extraordinario</p>
+                            <h1 className="text-4xl font-black text-white uppercase tracking-tight leading-tight">{dayModeData.title}</h1>
+                            <div className="mt-6 h-[2px] w-48 mx-auto bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
+                            <p className="mt-4 text-[13px] text-white/40 font-bold tracking-widest uppercase">
+                                {format(isTomorrow ? new Date(Date.now() + 86400000) : new Date(), "EEEE, d 'de' MMMM", { locale: es })}
+                            </p>
+                        </motion.div>
+
+                        {/* Bottom badge */}
+                        <motion.div
+                            animate={{ opacity: [0.5, 1, 0.5] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            className="flex items-center gap-3 px-6 py-2 rounded-full border border-amber-400/30 bg-amber-500/10"
+                        >
+                            <div className="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+                            <span className="text-[10px] font-black tracking-[0.5em] text-amber-400 uppercase">En Curso</span>
+                        </motion.div>
+                    </div>
+                );
+            })()}
+            {/* ────────────────────────────────────────────────────────────────── */}
+
             {/* ── Background texture: grid pattern ── */}
             <div
                 className="absolute inset-0 pointer-events-none opacity-[0.03]"

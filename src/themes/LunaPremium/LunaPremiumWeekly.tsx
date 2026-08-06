@@ -3,7 +3,7 @@
 import React from 'react';
 import { useFont } from '@/components/layout/FontWrapper';
 import { useAppStore } from '@/lib/store';
-import { Calendar, Clock, MapPin, User, ChevronRight, Sunrise, Sun, BookOpen } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, ChevronRight, Sunrise, Sun, BookOpen, Radio, Crown, Globe, Star, Zap, Sparkles } from 'lucide-react';
 import { format, addDays, startOfWeek } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getSlideSystemTitle } from '@/lib/display_labels';
@@ -66,6 +66,14 @@ const LunaPremiumWeekly: React.FC = () => {
                     const lead9am = getMember(sched?.slots?.['9am']?.consecrationLeaderId);
                     const leadEv = getMember(sched?.slots?.['evening']?.leaderIds?.[0]);
 
+                    // ─── Día Extraordinario ───────────────────────────
+                    const _lwDmIcons: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+                    const lwDmParts = (sched?.dayMode || '').split('|');
+                    const lwHasDayMode = !!sched?.dayMode;
+                    const LwDayModeIcon = _lwDmIcons[lwDmParts[0]] || Radio;
+                    const lwDmTitle = lwDmParts.slice(1).join('|').split('—')[0].trim();
+                    // ───────────────────────────────────────────────
+
                     return (
                         <div 
                             key={key}
@@ -85,13 +93,30 @@ const LunaPremiumWeekly: React.FC = () => {
                                 </span>
                             </div>
 
-                            {/* Mini Slots */}
+                            {/* Mini Slots OR Extraordinary Day */}
                             <div className="flex flex-col gap-4 flex-1">
-                                {[
-                                    { id: '5am', lead: lead5am, color: 'text-primary' },
-                                    { id: '9am', lead: lead9am, color: 'text-secondary' },
-                                    { id: 'evening', lead: leadEv, color: 'text-tertiary' }
-                                 ].map((slot, idx) => (() => {
+                                {lwHasDayMode ? (
+                                    <div className="flex flex-col items-center justify-center gap-2 flex-1">
+                                        <motion.div
+                                            animate={{ opacity: [0.5, 1, 0.5] }}
+                                            transition={{ repeat: Infinity, duration: 3 }}
+                                            className="w-8 h-8 rounded-full border border-amber-300/30 bg-amber-500/5 flex items-center justify-center"
+                                        >
+                                            <LwDayModeIcon className="w-4 h-4 text-amber-300" />
+                                        </motion.div>
+                                        {lwDmTitle && (
+                                            <span className="text-[7px] font-[300] text-amber-300/50 tracking-widest text-center lowercase leading-tight">
+                                                {lwDmTitle.toLowerCase()}
+                                            </span>
+                                        )}
+                                    </div>
+                                ) : (
+                                <>
+                                    {[
+                                        { id: '5am', lead: lead5am, color: 'text-primary' },
+                                        { id: '9am', lead: lead9am, color: 'text-secondary' },
+                                        { id: 'evening', lead: leadEv, color: 'text-tertiary' }
+                                    ].map((slot, idx) => (() => {
                                          const dbSlot = (sched?.slots as any)?.[slot.id];
                                          const isSpecial = dbSlot?.type === 'special';
                                          const isHidden = dbSlot?.hideProfiles;
@@ -131,6 +156,8 @@ const LunaPremiumWeekly: React.FC = () => {
                                              </div>
                                          );
                                      })())}
+                                </>
+                                )}
                             </div>
 
                             {isToday && (

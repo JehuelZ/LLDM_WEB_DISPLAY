@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Sun, Moon, Crown, User, Video, FileText, Zap, Thermometer, Hash, Layout, Clock as ClockIcon, BookOpen, Music, Info } from 'lucide-react';
+import { Sunrise, Sun, Moon, Crown, User, Video, FileText, Zap, Thermometer, Hash, Layout, Clock as ClockIcon, BookOpen, Music, Info, Radio, Globe, Star, Sparkles } from 'lucide-react';
 import { BigAcademicTitle, ChurchHeaderBadge } from './BigAcademicTitle';
 import { useAppStore } from '@/lib/store';
 import { format, addDays } from 'date-fns';
@@ -331,6 +331,14 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
     const isLive9am = isSlotActive('9am');
     const isLiveEvening = isSlotActive('evening');
 
+    // ─── Día Extraordinario ─────────────────────────────────
+    const _igDmIconMap: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+    const igDmParts = (schedule?.dayMode || '').split('|');
+    const igHasDayMode = !!schedule?.dayMode;
+    const IgDayModeIcon = _igDmIconMap[igDmParts[0]] || Radio;
+    const igDmTitle = igDmParts.slice(1).join('|') || '';
+    // ────────────────────────────────────────────────────
+
     const renderCard = (slotKey: '5am' | '9am' | 'evening', title: string, content: React.ReactNode, buttons: any[], isSync: boolean = false) => {
         const isLive = isSlotActive(slotKey);
         const sched = monthlySchedule?.[dateKey];
@@ -389,6 +397,65 @@ export function IglesiaSchedule({ isTomorrow = false }: { isTomorrow?: boolean }
     return (
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', padding: '160px 40px 180px 40px', gap: 20, fontFamily: T.fontFamily }}>
 
+            {/* ─── MODO DÍA EXTRAORDINARIO (Iglesia Theme) ─── */}
+            {igHasDayMode && (() => {
+                return (
+                    <div style={{
+                        position: 'absolute', inset: 0, zIndex: 100,
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                        gap: 32, background: T.background, fontFamily: T.fontFamily
+                    }}>
+                        {/* Ambient glow */}
+                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 600, height: 600, background: 'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%)', borderRadius: '50%', pointerEvents: 'none' }} />
+
+                        {/* Icon ring */}
+                        <motion.div
+                            animate={{ scale: [1, 1.08, 1], opacity: [0.7, 1, 0.7] }}
+                            transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
+                            style={{
+                                width: 140, height: 140, borderRadius: '50%',
+                                background: isDark ? 'rgba(251,191,36,0.12)' : 'rgba(251,191,36,0.08)',
+                                border: '2px solid rgba(251,191,36,0.4)',
+                                boxShadow: neuShadow(T, false, 'lg', isDark) + ', 0 0 60px rgba(251,191,36,0.25)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                        >
+                            <IgDayModeIcon style={{ width: 56, height: 56, color: '#f59e0b' }} />
+                        </motion.div>
+
+                        {/* Text */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            style={{ textAlign: 'center', maxWidth: 800 }}
+                        >
+                            <p style={{ fontSize: 11, fontWeight: 900, letterSpacing: '0.6em', color: 'rgba(245,158,11,0.6)', textTransform: 'uppercase', marginBottom: 16 }}>Día Extraordinario</p>
+                            <h1 style={{ fontSize: 40, fontWeight: 900, color: T.textPrimary, textTransform: 'uppercase', letterSpacing: '-0.01em', lineHeight: 1.15, fontFamily: T.fontMontserrat }}>{igDmTitle}</h1>
+                            <div style={{ marginTop: 24, height: 2, width: 180, margin: '24px auto 0', background: 'linear-gradient(to right, transparent, #f59e0b, transparent)' }} />
+                            <p style={{ marginTop: 16, fontSize: 13, color: T.textMuted, fontWeight: 700, letterSpacing: '0.3em', textTransform: 'uppercase' }}>
+                                {format(isTomorrow ? addDays(new Date(), 1) : new Date(), "EEEE, d 'de' MMMM", { locale: es })}
+                            </p>
+                        </motion.div>
+
+                        {/* Pulse badge */}
+                        <motion.div
+                            animate={{ opacity: [0.5, 1, 0.5] }}
+                            transition={{ repeat: Infinity, duration: 2 }}
+                            style={{
+                                display: 'flex', alignItems: 'center', gap: 12,
+                                padding: '10px 28px', borderRadius: 999,
+                                border: '1px solid rgba(245,158,11,0.4)',
+                                background: 'rgba(245,158,11,0.08)'
+                            }}
+                        >
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#f59e0b', boxShadow: '0 0 10px rgba(245,158,11,0.8)' }} />
+                            <span style={{ fontSize: 10, fontWeight: 900, letterSpacing: '0.5em', color: '#f59e0b', textTransform: 'uppercase' }}>En Curso</span>
+                        </motion.div>
+                    </div>
+                );
+            })()}
+            {/* ──────────────────────────────────────────────────────── */}
 
             <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 40, justifyContent: 'center', alignItems: 'center', width: '100%', position: 'relative' }}>
 

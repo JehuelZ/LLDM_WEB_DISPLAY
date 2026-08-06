@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { Sparkles, Save, User as UserIcon, Clock, Languages, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Flame, Crown, BookOpen, RefreshCw } from 'lucide-react'
+import { Sparkles, Save, User as UserIcon, Clock, Languages, ChevronLeft, ChevronRight, Calendar as CalendarIcon, Flame, Crown, BookOpen, RefreshCw, Radio, Globe, Star, Zap, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { format, parseISO, addDays, subDays } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -69,6 +69,54 @@ export const HorariosTab = ({
     };
 
     const [tempCustomLabel, setTempCustomLabel] = useState('')
+
+    // ─── Modo Día Extraordinario ───────────────────────────────────────
+    const [dayModeActive, setDayModeActive] = useState(false)
+    const [dayModeIcon, setDayModeIcon] = useState('radio')
+    const [dayModeTitle, setDayModeTitle] = useState('')
+    const [isSavingDayMode, setIsSavingDayMode] = useState(false)
+
+    // Sync dayMode state from store when date changes
+    useEffect(() => {
+        const dm = currentDaySchedule?.dayMode || ''
+        if (dm) {
+            const parts = dm.split('|')
+            setDayModeIcon(parts[0] || 'radio')
+            setDayModeTitle(parts.slice(1).join('|') || '')
+            setDayModeActive(true)
+        } else {
+            setDayModeActive(false)
+            setDayModeIcon('radio')
+            setDayModeTitle('')
+        }
+    }, [currentDate, currentDaySchedule?.dayMode])
+
+    const saveDayMode = async (active: boolean, icon: string, title: string) => {
+        setIsSavingDayMode(true)
+        try {
+            const dayModeValue = active && title.trim() ? `${icon}|${title.trim()}` : null
+            const updatedSchedule = {
+                ...currentDaySchedule,
+                dayMode: dayModeValue || undefined,
+            }
+            await saveScheduleDayToCloud(sanitizedDate, updatedSchedule as any)
+            showNotification(active && title.trim() ? 'Modo extraordinario activado' : 'Modo extraordinario desactivado', 'success')
+        } catch (e) {
+            showNotification('Error al guardar modo extraordinario', 'error')
+        } finally {
+            setIsSavingDayMode(false)
+        }
+    }
+
+    const DAY_MODE_ICONS = [
+        { key: 'radio',    Icon: Radio,    label: 'Transmisión' },
+        { key: 'crown',    Icon: Crown,    label: 'Ministerial' },
+        { key: 'sparkles', Icon: Sparkles, label: 'General'     },
+        { key: 'globe',    Icon: Globe,    label: 'Internacional'},
+        { key: 'star',     Icon: Star,     label: 'Celebración'  },
+        { key: 'zap',      Icon: Zap,      label: 'Oración'      },
+    ] as const
+    // ───────────────────────────────────────────────────────────────────
 
     useEffect(() => {
         if (currentDaySchedule?.slots?.['evening']) {
@@ -206,8 +254,102 @@ export const HorariosTab = ({
                 </div>
             </div>
 
+            {/* ─── PANEL: MODO DÍA EXTRAORDINARIO ─────────────────────────────── */}
+            <div className={`relative rounded-xl border transition-all duration-500 overflow-hidden ${dayModeActive ? 'border-amber-500/60 bg-amber-500/5' : 'border-[var(--tactile-border)] bg-white/[0.02]'}`}>
+                {/* Active glow strip */}
+                {dayModeActive && (
+                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600 animate-pulse" />
+                )}
+
+                <div className="p-5">
+                    {/* Header row */}
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${dayModeActive ? 'bg-amber-500/20 text-amber-400' : 'bg-white/5 text-white/30'}`}>
+                                <Radio className="w-4 h-4" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-black uppercase tracking-widest text-foreground/80">Modo Día Extraordinario</p>
+                                <p className="text-[10px] text-muted-foreground mt-0.5">
+                                    {dayModeActive ? '🔴 Activo — el display mostrará panel especial' : 'Inactivo — día normal con líderes asignados'}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Toggle button */}
+                        <button
+                            onClick={() => {
+                                const next = !dayModeActive
+                                setDayModeActive(next)
+                                if (!next) saveDayMode(false, dayModeIcon, dayModeTitle)
+                            }}
+                            disabled={isSavingDayMode}
+                            className={`relative w-14 h-7 rounded-full transition-all duration-300 disabled:opacity-50 ${dayModeActive ? 'bg-amber-500' : 'bg-white/10 border border-white/10'}`}
+                        >
+                            <span className={`absolute top-1 w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 ${dayModeActive ? 'left-8' : 'left-1'}`} />
+                        </button>
+                    </div>
+
+                    {/* Expanded content when active */}
+                    <AnimatePresence>
+                        {dayModeActive && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="overflow-hidden"
+                            >
+                                <div className="space-y-4 pt-2 border-t border-amber-500/20">
+                                    {/* Icon selector */}
+                                    <div>
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-amber-400/70 mb-2">Tipo de Evento</p>
+                                        <div className="grid grid-cols-6 gap-2">
+                                            {DAY_MODE_ICONS.map(({ key, Icon, label }) => (
+                                                <button
+                                                    key={key}
+                                                    onClick={() => setDayModeIcon(key)}
+                                                    className={`flex flex-col items-center gap-1.5 p-2.5 rounded-lg border transition-all ${dayModeIcon === key ? 'bg-amber-500/20 border-amber-500/60 text-amber-300' : 'bg-white/5 border-white/10 text-white/40 hover:border-white/20 hover:text-white/60'}`}
+                                                >
+                                                    <Icon className="w-4 h-4" />
+                                                    <span className="text-[8px] font-bold uppercase tracking-wider leading-none">{label}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Title input */}
+                                    <div>
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-amber-400/70 mb-2">Título que aparecerá en pantalla</p>
+                                        <input
+                                            type="text"
+                                            value={dayModeTitle}
+                                            onChange={e => setDayModeTitle(e.target.value)}
+                                            placeholder="Ej. Transmisión desde Sede Internacional — Santa Cena 2025"
+                                            className="w-full bg-black/30 border border-amber-500/30 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-amber-400/60 transition-colors"
+                                            onKeyDown={e => { if (e.key === 'Enter') saveDayMode(true, dayModeIcon, dayModeTitle) }}
+                                        />
+                                    </div>
+
+                                    {/* Save button */}
+                                    <button
+                                        onClick={() => saveDayMode(true, dayModeIcon, dayModeTitle)}
+                                        disabled={isSavingDayMode || !dayModeTitle.trim()}
+                                        className="tactile-btn tactile-btn-orange w-full justify-center h-10 disabled:opacity-40"
+                                    >
+                                        <Save className="w-3.5 h-3.5 mr-2" />
+                                        {isSavingDayMode ? 'GUARDANDO...' : 'GUARDAR MODO EXTRAORDINARIO'}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+            {/* ────────────────────────────────────────────────────────────────── */}
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* 5 AM Slot */}
+
                 <TactileGlassCard
                     title="05:00 AM"
                     subtitle="Oración de Primicias"

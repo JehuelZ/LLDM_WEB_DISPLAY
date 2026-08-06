@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { Sunrise, Sun, User, HeartHandshake, Radio, Users, Crown, Flame, BookOpen, Star, Heart } from 'lucide-react';
+import { Sunrise, Sun, User, HeartHandshake, Radio, Users, Crown, Flame, BookOpen, Star, Heart, Globe, Zap, Sparkles } from 'lucide-react';
 import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useAppStore } from '@/lib/store';
 import { format, addDays, isSameDay } from 'date-fns';
@@ -284,6 +284,14 @@ export function MidnightGlowWeekly() {
 
                     const accentText = isActive ? 'text-[#A3FF57] border-[#A3FF57]/50' : 'text-[#4F7FFF] border-[#4F7FFF]/40';
 
+                    // ─── Día Extraordinario ─────────────────────────
+                    const _wkDmIcons: Record<string, any> = { radio: Radio, crown: Crown, sparkles: Sparkles, globe: Globe, star: Star, zap: Zap };
+                    const wkDmParts = (sched?.dayMode || '').split('|');
+                    const wkHasDayMode = !!sched?.dayMode;
+                    const WkDayModeIcon = _wkDmIcons[wkDmParts[0]] || Radio;
+                    const wkDmTitle = wkDmParts.slice(1).join('|').split('—')[0].trim();
+                    // ───────────────────────────────────────────────
+
                     return (
                         <motion.div
                             key={dateKey}
@@ -317,8 +325,28 @@ export function MidnightGlowWeekly() {
                                 <p className="text-center text-[10px] tracking-[0.4em] text-transparent uppercase font-black mt-2 shrink-0 select-none">HOY</p>
                             )}
 
-                            {/* Service slots perfectly matching mockup */}
+                            {/* Service slots OR Extraordinary Day panel */}
                             <div className="flex flex-col gap-12 px-1 pb-6 flex-1 min-h-0 z-10 w-full mt-2">
+                                {wkHasDayMode ? (
+                                    /* ─── PANEL DÍA EXTRAORDINARIO (weekly column) ─── */
+                                    <div className="flex flex-col items-center justify-center gap-3 flex-1 px-2">
+                                        <motion.div
+                                            animate={{ scale: [1, 1.1, 1], opacity: [0.6, 1, 0.6] }}
+                                            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                                            className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.3)]"
+                                        >
+                                            <WkDayModeIcon className="w-5 h-5 text-amber-400" />
+                                        </motion.div>
+                                        {wkDmTitle && (
+                                            <p className="text-[8px] font-black text-amber-400/80 uppercase tracking-tight text-center leading-tight">
+                                                {wkDmTitle}
+                                            </p>
+                                        )}
+                                        <div className="w-8 h-[1px] bg-amber-400/30" />
+                                        <p className="text-[7px] text-amber-300/50 uppercase tracking-widest text-center">Día<br/>Extraordinario</p>
+                                    </div>
+                                ) : (
+                                <>
                                 {slots.map((slot, sIdx) => {
                                     const leaders = (slot.leaderIds || [])
                                         .map(id => getMemberDetail(id))
@@ -584,6 +612,8 @@ export function MidnightGlowWeekly() {
                                         </div>
                                     );
                                 })}
+                                </>
+                                )}
                             </div>
                         </motion.div>
                     );
