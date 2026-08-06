@@ -756,5 +756,12 @@ body.admin-theme-primitivo {
     }
 }
 
-
-
+/* ENFORCE COMPACT CONTENT-FIT BUTTONS IN ADMIN PANEL */
+.tactile-btn,
+.admin-theme-primitivo .tactile-btn,
+body .tactile-btn {
+    width: auto !important;
+    max-width: max-content !important;
+    display: inline-flex !important;
+    flex-grow: 0 !important;
+}
