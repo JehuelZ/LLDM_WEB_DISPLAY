@@ -225,18 +225,18 @@ export default function DisplayPage() {
         const { Schedule, ScheduleTomorrow: ThemeScheduleTomorrow, Calendar, Weekly, Announcements } = activeTheme.slides;
 
         const s = [
-            { id: 'calendar', component: <Calendar />, enabled: true },
-            { id: 'weekly_program', component: <Weekly />, enabled: true },
-            { id: 'announcements', component: <Announcements />, enabled: true },
-            { id: 'schedule', component: <Schedule />, enabled: true },
-            {
+            Calendar ? { id: 'calendar', component: <Calendar />, enabled: true } : null,
+            Weekly ? { id: 'weekly_program', component: <Weekly />, enabled: true } : null,
+            Announcements ? { id: 'announcements', component: <Announcements />, enabled: true } : null,
+            Schedule ? { id: 'schedule', component: <Schedule />, enabled: true } : null,
+            Schedule ? {
                 id: 'schedule_tomorrow',
                 component: ThemeScheduleTomorrow ? <ThemeScheduleTomorrow /> : <Schedule isTomorrow={true} />,
                 enabled: true
-            },
-            { id: 'countdown', component: <CountdownSlide />, enabled: settings?.showCountdown },
+            } : null,
+            { id: 'countdown', component: <CountdownSlide />, enabled: !!settings?.showCountdown },
             { id: 'ceremonial-countdown', component: <CeremonialCountdownSlide />, enabled: false },
-        ];
+        ].filter(Boolean) as { id: string; component: JSX.Element; enabled: boolean }[];
         return s.filter(slide => slide.enabled);
     }, [activeTheme, settings?.showCountdown, members, monthlySchedule]);
 

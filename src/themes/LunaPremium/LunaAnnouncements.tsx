@@ -2,28 +2,9 @@
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bell, User, Phone, Mail, Building2, Megaphone, Info, AlertCircle, Calendar, Users, Heart, BookOpen, Flame, Music, Star, Shield, Smile } from 'lucide-react';
+import DynamicIcon from '@/components/ui/DynamicIcon';
 import { useAppStore } from '@/lib/store';
 import { cn, getActiveAnnouncements } from '@/lib/utils';
-
-const AnnouncementIcon = ({ name, className, style, size = 18 }: { name: string; className?: string; style?: any; size?: number }) => {
-    const icons: Record<string, any> = {
-        bell: Bell,
-        megaphone: Megaphone,
-        info: Info,
-        alert: AlertCircle,
-        calendar: Calendar,
-        users: Users,
-        heart: Heart,
-        book: BookOpen,
-        flame: Flame,
-        music: Music,
-        star: Star,
-        shield: Shield,
-        smile: Smile
-    };
-    const IconComponent = icons[name] || Bell;
-    return <IconComponent className={className} style={style} size={size} />;
-};
 
 export const LunaAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
@@ -70,7 +51,7 @@ export const LunaAnnouncements = () => {
                                     <div className="w-12 h-12 rounded-sm border border-white/10 flex items-center justify-center overflow-hidden opacity-40 group-hover:opacity-100 transition-opacity">
                                         {ann.imageUrl ? (
                                             ann.imageUrl.startsWith('icon:') ? (
-                                                <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5 text-white" />
+                                                <DynamicIcon icon={ann.imageUrl.replace('icon:', '')} className="w-5 h-5 text-white" fallbackIcon="bell" />
                                             ) : (
                                                 <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
                                             )

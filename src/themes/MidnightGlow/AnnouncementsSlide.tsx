@@ -1,6 +1,7 @@
 'use client';
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Bell, Phone, Mail } from 'lucide-react';
 import DynamicIcon from '@/components/ui/DynamicIcon';
 import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useAppStore } from '@/lib/store';
