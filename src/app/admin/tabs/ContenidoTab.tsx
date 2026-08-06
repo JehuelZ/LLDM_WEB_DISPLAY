@@ -173,31 +173,33 @@ export const ContenidoTab = ({
                             </div>
                         </div>
 
-                        <button
-                            onClick={async () => {
-                                setIsSaving(true);
-                                try {
-                                    await saveThemeToCloud(theme || {});
-                                    showNotification('Tema guardado en la nube.', 'success');
-                                } catch (err) {
-                                    showNotification('Error al guardar el tema', 'error');
-                                } finally {
-                                    setIsSaving(false);
-                                }
-                            }}
-                            disabled={isSaving}
-                            className={cn(
-                                "tactile-btn tactile-btn-orange w-full h-12 justify-center",
-                                isSaving && "opacity-50 cursor-wait"
-                            )}
-                        >
-                            {isSaving ? (
-                                <RefreshCw className="w-4 h-4 animate-spin mr-2" />
-                            ) : (
-                                <Save className="w-4 h-4 mr-2" />
-                            )}
-                            {isSaving ? 'GUARDANDO...' : 'GUARDAR TEMA'}
-                        </button>
+                        <div className="flex justify-end pt-2">
+                            <button
+                                onClick={async () => {
+                                    setIsSaving(true);
+                                    try {
+                                        await saveThemeToCloud(theme || {});
+                                        showNotification('Tema guardado en la nube.', 'success');
+                                    } catch (err) {
+                                        showNotification('Error al guardar el tema', 'error');
+                                    } finally {
+                                        setIsSaving(false);
+                                    }
+                                }}
+                                disabled={isSaving}
+                                className={cn(
+                                    "tactile-btn tactile-btn-orange px-6 h-10 rounded-xl justify-center font-bold text-[11px] tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98]",
+                                    isSaving && "opacity-50 cursor-wait"
+                                )}
+                            >
+                                {isSaving ? (
+                                    <RefreshCw className="w-3.5 h-3.5 animate-spin mr-2" />
+                                ) : (
+                                    <Save className="w-3.5 h-3.5 mr-2" />
+                                )}
+                                {isSaving ? 'GUARDANDO...' : 'GUARDAR TEMA'}
+                            </button>
+                        </div>
                     </div>
                 </TactileGlassCard>
 
@@ -354,14 +356,14 @@ export const ContenidoTab = ({
                             )}
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex justify-end gap-3 pt-2">
                             {editingAnnId && (
                                 <button
                                     onClick={() => {
                                         setEditingAnnId(null)
                                         setNewAnn({ title: '', content: '', category: 'general', imageUrl: '' })
                                     }}
-                                    className="tactile-btn tactile-btn-glass flex-1 justify-center"
+                                    className="tactile-btn tactile-btn-glass px-5 h-10 rounded-xl justify-center font-bold text-[11px]"
                                 >
                                     CANCELAR
                                 </button>
@@ -369,9 +371,9 @@ export const ContenidoTab = ({
                             <button
                                 onClick={handleSaveAnnouncement}
                                 disabled={isSaving}
-                                className="tactile-btn tactile-btn-orange flex-1 justify-center h-12"
+                                className="tactile-btn tactile-btn-orange px-6 h-10 rounded-xl justify-center font-bold text-[11px] tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98]"
                             >
-                                <Save className="w-4 h-4 mr-2" /> {editingAnnId ? 'ACTUALIZAR' : 'PUBLICAR'} AVISO
+                                <Save className="w-3.5 h-3.5 mr-2" /> {editingAnnId ? 'ACTUALIZAR' : 'PUBLICAR'} AVISO
                             </button>
                         </div>
                     </div>

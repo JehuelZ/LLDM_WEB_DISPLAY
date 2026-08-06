@@ -332,15 +332,17 @@ export const HorariosTab = ({
                                         />
                                     </div>
 
-                                    {/* Save button */}
-                                    <button
-                                        onClick={() => saveDayMode(true, dayModeIcon, dayModeTitle)}
-                                        disabled={isSavingDayMode}
-                                        className="tactile-btn tactile-btn-orange w-full justify-center h-10 disabled:opacity-40"
-                                    >
-                                        <Save className="w-3.5 h-3.5 mr-2" />
-                                        {isSavingDayMode ? 'GUARDANDO...' : 'GUARDAR MODO EXTRAORDINARIO'}
-                                    </button>
+                                    {/* Save button - Right aligned & Content fit */}
+                                    <div className="flex justify-end pt-2">
+                                        <button
+                                            onClick={() => saveDayMode(true, dayModeIcon, dayModeTitle)}
+                                            disabled={isSavingDayMode}
+                                            className="tactile-btn tactile-btn-orange px-6 h-10 rounded-xl justify-center font-bold tracking-wider text-[11px] disabled:opacity-40 shadow-[0_4px_20px_rgba(16,185,129,0.25)] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                        >
+                                            <Save className="w-3.5 h-3.5 mr-2" />
+                                            {isSavingDayMode ? 'GUARDANDO...' : 'GUARDAR MODO EXTRAORDINARIO'}
+                                        </button>
+                                    </div>
                                 </div>
                             </motion.div>
                         )}
@@ -389,12 +391,12 @@ export const HorariosTab = ({
                             icon={UserIcon}
                         />
 
-                        <div className="flex gap-3">
+                        <div className="flex justify-end pt-1">
                             <button
                                 onClick={() => updateSlot('5am', { leaderId: currentDaySchedule.slots['5am'].leaderId })}
-                                className="tactile-btn tactile-btn-orange flex-1 justify-center h-10"
+                                className="tactile-btn tactile-btn-orange px-5 h-9 rounded-xl justify-center"
                             >
-                                <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
+                                <Save className="w-3.5 h-3.5 mr-1.5" /> GUARDAR
                             </button>
                         </div>
 
@@ -491,12 +493,14 @@ export const HorariosTab = ({
                             </>
                         )}
 
-                        <button
-                            onClick={() => updateSlot('9am', {})}
-                            className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
-                        >
-                            <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR {isSun ? 'DOMINICAL' : 'PROGRAMA'}
-                        </button>
+                        <div className="flex justify-end pt-1">
+                            <button
+                                onClick={() => updateSlot('9am', {})}
+                                className="tactile-btn tactile-btn-orange px-5 h-9 rounded-xl justify-center"
+                            >
+                                <Save className="w-3.5 h-3.5 mr-1.5" /> GUARDAR {isSun ? 'DOMINICAL' : 'PROGRAMA'}
+                            </button>
+                        </div>
                     </div>
                 </TactileGlassCard>
 
@@ -535,12 +539,14 @@ export const HorariosTab = ({
                             options={privilegedMemberOptions}
                             icon={UserIcon}
                         />
-                        <button
-                            onClick={() => updateSlot('12pm', {})}
-                            className="tactile-btn tactile-btn-orange w-full justify-center h-10"
-                        >
-                            <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR
-                        </button>
+                        <div className="flex justify-end pt-1">
+                            <button
+                                onClick={() => updateSlot('12pm', {})}
+                                className="tactile-btn tactile-btn-orange px-5 h-9 rounded-xl justify-center"
+                            >
+                                <Save className="w-3.5 h-3.5 mr-1.5" /> GUARDAR
+                            </button>
+                        </div>
                     </div>
                 </TactileGlassCard>
 
@@ -666,12 +672,14 @@ export const HorariosTab = ({
                             disabled={isSaving}
                             icon={Sparkles}
                         />
-                        <button
-                            onClick={() => updateSlot('evening', {})}
-                            className="tactile-btn tactile-btn-orange w-full justify-center h-10 mt-2"
-                        >
-                            <Save className="w-3.5 h-3.5 mr-2" /> GUARDAR SERVICIO
-                        </button>
+                        <div className="flex justify-end pt-1">
+                            <button
+                                onClick={() => updateSlot('evening', {})}
+                                className="tactile-btn tactile-btn-orange px-5 h-9 rounded-xl justify-center"
+                            >
+                                <Save className="w-3.5 h-3.5 mr-1.5" /> GUARDAR SERVICIO
+                            </button>
+                        </div>
                     </div>
                 </TactileGlassCard>
             </div>

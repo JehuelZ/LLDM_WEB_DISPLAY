@@ -148,16 +148,18 @@
 }
 
 .tactile-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    border-radius: 16px;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 12px;
     font-size: 11px;
     font-weight: 800;
-    text-transform: capitalize;
-    letter-spacing: 0.15em;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    width: auto;
+    max-width: max-content;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     cursor: pointer;
     border: 1px solid transparent;
