@@ -175,89 +175,101 @@ export function AppWrapper({ children }: { children: React.ReactNode }) {
 
             {/* Global Premium Notification Toast - Re-designed: Square Glassmorphism */}
             <AnimatePresence>
-            {/* Global Premium Notification Toast - Re-designed: "Papel Cebolla" (Onion Skin) Glassmorphism */}
+            {/* Global Premium Notification Toast - Re-designed: Centered Dark Frosted Backdrop */}
             <AnimatePresence>
                 {notification && (
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9, x: '-50%', y: '-60%' }}
-                        animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
-                        exit={{ opacity: 0, scale: 0.9, x: '-50%', y: '-60%' }}
-                        className={cn(
-                            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999]",
-                            "flex flex-col items-center text-center p-10 rounded-[2.5rem]",
-                            "border border-white/20 shadow-[0_60px_120px_-20px_rgba(0,0,0,0.6)]",
-                            "backdrop-blur-[80px] bg-white/15 min-w-[340px] max-w-[450px] overflow-hidden",
-                            notification.type === 'success' && "border-emerald-500/30",
-                            notification.type === 'error' && "border-red-500/30",
-                            notification.type === 'warning' && "border-emerald-400/30"
-                        )}
-                    >
-                        {/* Interactive Shine Effect */}
-                        <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-to-tr from-white/[0.08] to-transparent pointer-events-none rotate-12" />
+                    <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+                        {/* Dark backdrop overlay with smoked glass / frosted effect */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={hideNotification}
+                            className="absolute inset-0 bg-black/80 backdrop-blur-xl transition-all duration-300"
+                        />
 
-                        {/* Dynamic Logo/Icon Section */}
-                        <div className="relative mb-8">
-                            <div className={cn(
-                                "w-28 h-28 rounded-[2rem] flex items-center justify-center relative overflow-hidden bg-white/20 border border-white/30 backdrop-blur-md",
-                                notification.type === 'success' ? "shadow-[0_20px_40px_-10px_rgba(16,185,129,0.3)]" : "shadow-[0_20px_40px_-10px_rgba(239,68,68,0.3)]"
-                             )}>
-                                <img 
-                                    src={(settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/lldm_flama_3.svg" : settings.churchLogoUrl} 
-                                    className={cn(
-                                        "w-16 h-16 object-contain transition-all",
-                                        (settings.churchLogoUrl === '' || !settings.churchLogoUrl) && "brightness-0 invert opacity-80"
-                                    )}
-                                    alt="Logo"
-                                />
-                                {/* Internal Glow */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none" />
-                            </div>
-                            
-                            {/* Small Status Badge */}
-                            <div className={cn(
-                                "absolute -bottom-1 -right-1 w-10 h-10 rounded-full border-4 border-[#fff]/10 backdrop-blur-xl flex items-center justify-center shadow-2xl",
-                                notification.type === 'success' ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
-                            )}>
-                                {notification.type === 'success' ? <CheckCircle className="w-6 h-6" strokeWidth={3} /> : <XCircle className="w-6 h-6" />}
-                            </div>
-                        </div>
-
-                        {/* Text Content */}
-                        <div className="space-y-4 relative z-10 mb-2">
-                            <p className={cn(
-                                "text-[10px] font-black uppercase tracking-[0.5em] mb-1",
-                                notification.type === 'success' ? "text-emerald-500" : "text-red-500"
-                            )}>
-                                {notification.type === 'success' ? 'LLDM RODEO / SISTEMAS' : 'ALTA PRIORIDAD'}
-                            </p>
-                            <h2 className="text-3xl font-black italic tracking-tighter text-white drop-shadow-sm leading-tight">
-                                {notification.message.replace(/^[✅⚠️❌]\s*/, '')}
-                            </h2>
-                            <div className="w-12 h-1 bg-white/10 mx-auto rounded-full" />
-                            <p className="text-[10px] font-bold text-white/50 tracking-widest uppercase">
-                                Realizado con éxito por la administración
-                            </p>
-                        </div>
-
-                        {/* Centered Theme Button - Standardized: Small height, Full width */}
-                        <button 
-                            onClick={hideNotification} 
+                        {/* Centered Modern Modal Card */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.92, y: 20 }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 350 }}
                             className={cn(
-                                "mt-8 w-full h-11 rounded-xl flex items-center justify-center gap-3",
-                                "bg-primary hover:brightness-110 active:scale-95 transition-all group relative overflow-hidden",
-                                "text-[10px] font-black uppercase tracking-[0.3em] text-primary-foreground shadow-[0_10px_20px_-5px_rgba(var(--primary-rgb),0.3)]"
+                                "relative z-10 flex flex-col items-center text-center p-8 md:p-10 rounded-[2.5rem]",
+                                "border backdrop-blur-2xl bg-slate-950/80 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.9),0_0_50px_rgba(255,255,255,0.05)]",
+                                "w-full max-w-[440px] overflow-hidden",
+                                notification.type === 'success' && "border-emerald-500/30 shadow-[0_0_80px_rgba(16,185,129,0.15)]",
+                                notification.type === 'error' && "border-red-500/30 shadow-[0_0_80px_rgba(239,68,68,0.15)]",
+                                notification.type === 'warning' && "border-amber-400/30 shadow-[0_0_80px_rgba(251,191,36,0.15)]"
                             )}
                         >
-                            <span className="relative z-10">CONTINUAR</span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                        </button>
+                            {/* Ambient Top Glow Line */}
+                            <div className={cn(
+                                "absolute top-0 left-1/4 right-1/4 h-[2px] rounded-full blur-[1px]",
+                                notification.type === 'success' ? "bg-gradient-to-r from-transparent via-emerald-400 to-transparent" : "bg-gradient-to-r from-transparent via-red-500 to-transparent"
+                            )} />
 
-                        {/* Background subtle glow center */}
-                        <div className={cn(
-                            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-64 h-64 blur-[120px] opacity-10",
-                            notification.type === 'success' ? "bg-emerald-500" : "bg-red-500"
-                        )} />
-                    </motion.div>
+                            {/* Interactive Light Beam */}
+                            <div className="absolute -top-[100%] -left-[100%] w-[300%] h-[300%] bg-gradient-to-tr from-white/[0.04] via-transparent to-transparent pointer-events-none rotate-12" />
+
+                            {/* Dynamic Logo / Badge Section */}
+                            <div className="relative mb-6">
+                                <div className={cn(
+                                    "w-24 h-24 rounded-[2.2rem] flex items-center justify-center relative overflow-hidden bg-white/10 border border-white/20 backdrop-blur-md shadow-2xl transition-all",
+                                    notification.type === 'success' ? "shadow-emerald-500/20" : "shadow-red-500/20"
+                                )}>
+                                    <img 
+                                        src={(settings.churchLogoUrl === '' || !settings.churchLogoUrl) ? "/lldm_flama_3.svg" : settings.churchLogoUrl} 
+                                        className={cn(
+                                            "w-13 h-13 object-contain transition-all drop-shadow-md",
+                                            (settings.churchLogoUrl === '' || !settings.churchLogoUrl) && "brightness-0 invert opacity-90"
+                                        )}
+                                        alt="Logo"
+                                    />
+                                    {/* Internal Mirror Highlight */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none" />
+                                </div>
+                                
+                                {/* Status Icon Overlay */}
+                                <div className={cn(
+                                    "absolute -bottom-1 -right-1 w-9 h-9 rounded-full border-2 border-slate-950 backdrop-blur-xl flex items-center justify-center shadow-xl",
+                                    notification.type === 'success' ? "bg-emerald-500 text-slate-950" : "bg-red-500 text-white"
+                                )}>
+                                    {notification.type === 'success' ? <CheckCircle className="w-5 h-5" strokeWidth={3} /> : <XCircle className="w-5 h-5" strokeWidth={2.5} />}
+                                </div>
+                            </div>
+
+                            {/* Text Content */}
+                            <div className="space-y-3 relative z-10 w-full">
+                                <p className={cn(
+                                    "text-[9px] font-black uppercase tracking-[0.4em]",
+                                    notification.type === 'success' ? "text-emerald-400" : "text-red-400"
+                                )}>
+                                    {notification.type === 'success' ? 'LLDM RODEO • SISTEMAS' : 'NOTIFICACIÓN DEL SISTEMA'}
+                                </p>
+                                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white leading-snug">
+                                    {notification.message.replace(/^[✅⚠️❌]\s*/, '')}
+                                </h2>
+                                <div className="w-10 h-[2px] bg-white/10 mx-auto rounded-full my-3" />
+                                <p className="text-[9px] font-bold text-white/40 tracking-widest uppercase">
+                                    Confirmado por la administración
+                                </p>
+                            </div>
+
+                            {/* Centered Modern Button */}
+                            <button 
+                                onClick={hideNotification} 
+                                className={cn(
+                                    "mt-7 w-full h-12 rounded-2xl flex items-center justify-center gap-2",
+                                    "bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] transition-all group relative overflow-hidden",
+                                    "text-[11px] font-black uppercase tracking-[0.3em] text-slate-950 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.4)]"
+                                )}
+                            >
+                                <span className="relative z-10">CONTINUAR</span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                            </button>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
             </AnimatePresence>
