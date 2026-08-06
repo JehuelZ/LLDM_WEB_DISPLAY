@@ -91,23 +91,6 @@ export const HorariosTab = ({
         }
     }, [currentDate, currentDaySchedule?.dayMode])
 
-    const saveDayMode = async (active: boolean, icon: string, title: string) => {
-        setIsSavingDayMode(true)
-        try {
-            const dayModeValue = active && title.trim() ? `${icon}|${title.trim()}` : null;
-            const slotsWithDayMode = {
-                ...currentDaySchedule.slots,
-                dayMode: dayModeValue
-            };
-            await saveScheduleDayToCloud(sanitizedDate, slotsWithDayMode as any);
-            showNotification(active && title.trim() ? 'Modo extraordinario activado' : 'Modo extraordinario desactivado', 'success');
-        } catch (e) {
-            showNotification('Error al guardar modo extraordinario', 'error')
-        } finally {
-            setIsSavingDayMode(false)
-        }
-    }
-
     const DAY_MODE_ICONS = [
         { key: 'radio',    Icon: Radio,    label: 'Transmisión' },
         { key: 'crown',    Icon: Crown,    label: 'Ministerial' },
@@ -116,6 +99,25 @@ export const HorariosTab = ({
         { key: 'star',     Icon: Star,     label: 'Celebración'  },
         { key: 'zap',      Icon: Zap,      label: 'Oración'      },
     ] as const
+
+    const saveDayMode = async (active: boolean, icon: string, title: string) => {
+        setIsSavingDayMode(true)
+        try {
+            const selectedLabel = DAY_MODE_ICONS.find(i => i.key === icon)?.label || 'Evento Especial';
+            const finalTitle = title.trim() || selectedLabel;
+            const dayModeValue = active ? `${icon}|${finalTitle}` : null;
+            const slotsWithDayMode = {
+                ...currentDaySchedule.slots,
+                dayMode: dayModeValue
+            };
+            await saveScheduleDayToCloud(sanitizedDate, slotsWithDayMode as any);
+            showNotification(active ? `Modo extraordinario: ${finalTitle}` : 'Modo extraordinario desactivado', 'success');
+        } catch (e) {
+            showNotification('Error al guardar modo extraordinario', 'error')
+        } finally {
+            setIsSavingDayMode(false)
+        }
+    }
     // ───────────────────────────────────────────────────────────────────
 
     useEffect(() => {
@@ -333,7 +335,7 @@ export const HorariosTab = ({
                                     {/* Save button */}
                                     <button
                                         onClick={() => saveDayMode(true, dayModeIcon, dayModeTitle)}
-                                        disabled={isSavingDayMode || !dayModeTitle.trim()}
+                                        disabled={isSavingDayMode}
                                         className="tactile-btn tactile-btn-orange w-full justify-center h-10 disabled:opacity-40"
                                     >
                                         <Save className="w-3.5 h-3.5 mr-2" />
