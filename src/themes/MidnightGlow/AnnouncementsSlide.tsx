@@ -1,31 +1,12 @@
 'use client';
 import { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bell, User, Phone, Mail, Megaphone, Info, AlertCircle, Calendar, Users, Heart, BookOpen, Flame, Music, Star, Shield, Smile } from 'lucide-react';
+import DynamicIcon from '@/components/ui/DynamicIcon';
 import { ChurchIcon as Church } from '@/components/ui/ChurchIcon';
 import { useAppStore } from '@/lib/store';
 import { cn, getActiveAnnouncements } from '@/lib/utils';
 import { CountdownCard } from '@/components/CountdownCard';
 
-const AnnouncementIcon = ({ name, className, style, size = 20 }: { name: string; className?: string; style?: any; size?: number }) => {
-    const icons: Record<string, any> = {
-        bell: Bell,
-        megaphone: Megaphone,
-        info: Info,
-        alert: AlertCircle,
-        calendar: Calendar,
-        users: Users,
-        heart: Heart,
-        book: BookOpen,
-        flame: Flame,
-        music: Music,
-        star: Star,
-        shield: Shield,
-        smile: Smile
-    };
-    const IconComponent = icons[name] || Bell;
-    return <IconComponent className={className} style={style} size={size} />;
-};
 
 export const MidnightGlowAnnouncements = () => {
     const allAnnouncements = useAppStore((state) => state.announcements);
@@ -92,7 +73,7 @@ export const MidnightGlowAnnouncements = () => {
 
                                         {isImageIcon && ann.imageUrl && (
                                             <div className="w-9 h-9 rounded-xl border border-white/15 bg-white/10 flex items-center justify-center backdrop-blur-md shadow-md">
-                                                <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" style={{ color: isUrgent ? '#A3FF57' : '#4F7FFF' }} />
+                                                <DynamicIcon icon={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" style={{ color: isUrgent ? '#A3FF57' : '#4F7FFF' }} fallbackIcon="bell" />
                                             </div>
                                         )}
                                     </div>

@@ -6,7 +6,7 @@ import {
     Sparkles, BookOpen, Calendar, Upload, Save, RefreshCw, 
     Bell, Edit2, Trash2, Plus, Monitor, Sunrise, Radio, 
     XCircle, CheckCircle, Reply, MessageSquare, Database,
-    Megaphone, AlertCircle, Users, Heart, Flame, Music, Star, Shield, Smile, Image as ImageIcon
+    Megaphone, AlertCircle, Users, Heart, Flame, Music, Star, Shield, Smile, Image as ImageIcon, Search
 } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -17,6 +17,9 @@ import {
 import { format, parseISO } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { MediaGalleryModal } from '@/components/admin/MediaGalleryModal'
+import { IconPickerModal } from '@/components/admin/IconPickerModal'
+import DynamicIcon from '@/components/ui/DynamicIcon'
+
 
 export const AnnouncementIcon = ({ name, className, style, size = 18 }: { name: string; className?: string; style?: any; size?: number }) => {
     const icons: Record<string, any> = {
@@ -66,6 +69,7 @@ export const ContenidoTab = ({
     const [isSaving, setIsSaving] = useState(false)
     const [editingAnnId, setEditingAnnId] = useState<string | null>(null)
     const [isGalleryOpen, setIsGalleryOpen] = useState(false)
+    const [isIconPickerOpen, setIsIconPickerOpen] = useState(false)
     const [newAnn, setNewAnn] = useState<any>({ title: '', content: '', category: 'general', imageUrl: '' })
 
     const handleSaveAnnouncement = async () => {
@@ -316,41 +320,63 @@ export const ContenidoTab = ({
 
                             {newAnn.imageUrl && newAnn.imageUrl.startsWith('icon:') && (
                                 <div className="p-4 bg-black/20 rounded-md border border-[var(--tactile-border)] space-y-3">
-                                    <p className="text-[10px] font-black uppercase text-muted-foreground">Selecciona un ícono moderno:</p>
-                                    <div className="grid grid-cols-6 gap-2">
-                                        {[
-                                            { id: 'bell', label: 'Campana' },
-                                            { id: 'megaphone', label: 'Megáfono' },
-                                            { id: 'info', label: 'Info' },
-                                            { id: 'alert', label: 'Alerta' },
-                                            { id: 'calendar', label: 'Fecha' },
-                                            { id: 'users', label: 'Grupo' },
-                                            { id: 'heart', label: 'Amor' },
-                                            { id: 'book', label: 'Doctrina' },
-                                            { id: 'flame', label: 'Fuego' },
-                                            { id: 'music', label: 'Canto' },
-                                            { id: 'star', label: 'Estrella' },
-                                            { id: 'shield', label: 'Escudo' },
-                                            { id: 'smile', label: 'Niños' }
-                                        ].map((item) => {
-                                            const isSelected = newAnn.imageUrl === `icon:${item.id}`;
-                                            return (
-                                                <button
-                                                    key={item.id}
-                                                    type="button"
-                                                    title={item.label}
-                                                    onClick={() => setNewAnn({ ...newAnn, imageUrl: `icon:${item.id}` })}
-                                                    className={cn(
-                                                        "p-3 rounded-lg border flex items-center justify-center transition-all",
-                                                        isSelected 
-                                                            ? "bg-primary/20 border-primary text-primary" 
-                                                            : "bg-black/30 border-transparent text-muted-foreground hover:text-white"
-                                                    )}
-                                                >
-                                                    <AnnouncementIcon name={item.id} className="w-5 h-5" />
-                                                </button>
-                                            );
-                                        })}
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-[10px] font-black uppercase text-muted-foreground">Ícono seleccionado:</p>
+                                        <button
+                                            type="button"
+                                            onClick={() => setIsIconPickerOpen(true)}
+                                            className="px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/50 text-indigo-300 hover:text-white text-[11px] font-bold transition-all flex items-center gap-1.5"
+                                        >
+                                            <Search className="w-3.5 h-3.5" />
+                                            Explorar Galería (+200k íconos)
+                                        </button>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 p-3 bg-black/30 rounded-xl border border-[var(--tactile-border)]">
+                                        <div className="w-10 h-10 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                                            <DynamicIcon icon={newAnn.imageUrl.replace('icon:', '')} className="w-6 h-6" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-[11px] font-mono text-indigo-300 truncate">{newAnn.imageUrl.replace('icon:', '')}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-1">
+                                        <p className="text-[9px] font-black uppercase text-muted-foreground mb-2">Accesos rápidos populares:</p>
+                                        <div className="grid grid-cols-6 gap-2">
+                                            {[
+                                                { id: 'solar:bell-bing-bold-duotone', label: 'Campana' },
+                                                { id: 'solar:megaphone-bold-duotone', label: 'Megáfono' },
+                                                { id: 'solar:info-circle-bold-duotone', label: 'Info' },
+                                                { id: 'solar:danger-triangle-bold-duotone', label: 'Alerta' },
+                                                { id: 'solar:calendar-date-bold-duotone', label: 'Fecha' },
+                                                { id: 'solar:users-group-two-rounded-bold-duotone', label: 'Grupo' },
+                                                { id: 'solar:heart-bold-duotone', label: 'Amor' },
+                                                { id: 'solar:book-bookmark-bold-duotone', label: 'Doctrina' },
+                                                { id: 'solar:flame-bold-duotone', label: 'Fuego' },
+                                                { id: 'solar:music-note-bold-duotone', label: 'Canto' },
+                                                { id: 'solar:star-bold-duotone', label: 'Estrella' },
+                                                { id: 'solar:shield-check-bold-duotone', label: 'Escudo' }
+                                            ].map((item) => {
+                                                const isSelected = newAnn.imageUrl === `icon:${item.id}`;
+                                                return (
+                                                    <button
+                                                        key={item.id}
+                                                        type="button"
+                                                        title={item.label}
+                                                        onClick={() => setNewAnn({ ...newAnn, imageUrl: `icon:${item.id}` })}
+                                                        className={cn(
+                                                            "p-2.5 rounded-lg border flex items-center justify-center transition-all",
+                                                            isSelected 
+                                                                ? "bg-indigo-600/30 border-indigo-500 text-indigo-300 ring-1 ring-indigo-500/50" 
+                                                                : "bg-black/30 border-transparent text-muted-foreground hover:text-white"
+                                                        )}
+                                                    >
+                                                        <DynamicIcon icon={item.id} className="w-5 h-5" />
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -392,7 +418,7 @@ export const ContenidoTab = ({
                                         )}>
                                             {ann.imageUrl ? (
                                                 ann.imageUrl.startsWith('icon:') ? (
-                                                    <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" />
+                                                    <DynamicIcon icon={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" fallbackIcon="bell" />
                                                 ) : (
                                                     <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
                                                 )
@@ -438,6 +464,15 @@ export const ContenidoTab = ({
                 onSelectImage={(url) => {
                     setNewAnn({ ...newAnn, imageUrl: url });
                     setIsGalleryOpen(false);
+                }}
+            />
+
+            <IconPickerModal
+                isOpen={isIconPickerOpen}
+                onClose={() => setIsIconPickerOpen(false)}
+                currentIcon={newAnn.imageUrl?.startsWith('icon:') ? newAnn.imageUrl.replace('icon:', '') : ''}
+                onSelectIcon={(iconName) => {
+                    setNewAnn({ ...newAnn, imageUrl: `icon:${iconName}` });
                 }}
             />
         </div>
