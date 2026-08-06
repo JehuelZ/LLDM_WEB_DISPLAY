@@ -1903,7 +1903,6 @@ export const useAppStore = create<AppState>()(
 
                 const dbSchedule = {
                     date: cleanDate,
-                    day_mode: dayMode || null,
                     custom_label: dayMode || null,
                     five_am_leader_id: slots?.['5am'] ? cleanUuid(slots['5am'].leaderId) : null,
                     five_am_time: slots?.['5am']?.time,
