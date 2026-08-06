@@ -94,13 +94,13 @@ export const HorariosTab = ({
     const saveDayMode = async (active: boolean, icon: string, title: string) => {
         setIsSavingDayMode(true)
         try {
-            const dayModeValue = active && title.trim() ? `${icon}|${title.trim()}` : null
-            const updatedSchedule = {
-                ...currentDaySchedule,
-                dayMode: dayModeValue || undefined,
-            }
-            await saveScheduleDayToCloud(sanitizedDate, updatedSchedule as any)
-            showNotification(active && title.trim() ? 'Modo extraordinario activado' : 'Modo extraordinario desactivado', 'success')
+            const dayModeValue = active && title.trim() ? `${icon}|${title.trim()}` : null;
+            const slotsWithDayMode = {
+                ...currentDaySchedule.slots,
+                dayMode: dayModeValue
+            };
+            await saveScheduleDayToCloud(sanitizedDate, slotsWithDayMode as any);
+            showNotification(active && title.trim() ? 'Modo extraordinario activado' : 'Modo extraordinario desactivado', 'success');
         } catch (e) {
             showNotification('Error al guardar modo extraordinario', 'error')
         } finally {
