@@ -1874,7 +1874,12 @@ export const useAppStore = create<AppState>()(
 
             saveScheduleDayToCloud: async (date, slotsData) => {
                 const currentUser = get().currentUser;
-                if (currentUser?.role !== 'Administrador' && currentUser?.role !== 'Ministro a Cargo') {
+                const isAdminOrMinister = currentUser?.role === 'Administrador' ||
+                    currentUser?.role === 'Ministro a Cargo' ||
+                    currentUser?.privileges?.includes('admin') ||
+                    currentUser?.privileges?.includes('can_manage_prayers');
+
+                if (currentUser && !isAdminOrMinister) {
                     get().showNotification("No tienes permiso para modificar horarios", "error");
                     throw new Error("No autorizado");
                 }
