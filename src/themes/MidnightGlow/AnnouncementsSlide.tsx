@@ -60,11 +60,12 @@ export const MidnightGlowAnnouncements = () => {
                     <AnimatePresence mode="popLayout">
                         {announcements.map((ann, idx) => {
                             const isUrgent = ann.priority > 0;
-                            const cardBg = isUrgent ? 'bg-[#030B06]' : 'bg-[#0D1B3E]';
-                            const cardBorder = isUrgent ? 'border-[#10B981]/40' : 'border-[#1E3A6E]';
-                            const topAccent = isUrgent ? 'bg-gradient-to-r from-transparent via-[#10B981]/50 to-[#10B981]' : 'bg-gradient-to-r from-transparent via-[#4F7FFF]/50 to-[#4F7FFF]';
-                            const badgeBorderText = isUrgent ? 'text-[#A3FF57] border-[#A3FF57]/40' : 'text-[#4F7FFF] border-[#4F7FFF]/40';
-                            const customShadow = isUrgent ? 'shadow-[0_30px_90px_rgba(16,185,129,0.15)]' : 'shadow-[0_30px_90px_rgba(0,0,0,0.7)]';
+                            const isImageIcon = !ann.imageUrl || ann.imageUrl.startsWith('icon:');
+                            const cardBg = isUrgent ? 'bg-[#030D08]/95' : 'bg-[#0B152B]/95';
+                            const cardBorder = isUrgent ? 'border-[#10B981]/50' : 'border-[#1E3A6E]';
+                            const topAccent = isUrgent ? 'bg-gradient-to-r from-transparent via-[#10B981] to-transparent' : 'bg-gradient-to-r from-transparent via-[#4F7FFF] to-transparent';
+                            const badgeBorderText = isUrgent ? 'text-[#A3FF57] border-[#A3FF57]/40 bg-[#064E3B]/40' : 'text-[#4F7FFF] border-[#4F7FFF]/40 bg-[#0F285C]/40';
+                            const customShadow = isUrgent ? 'shadow-[0_30px_90px_rgba(16,185,129,0.25)]' : 'shadow-[0_30px_90px_rgba(0,0,0,0.8)]';
 
                             return (
                                 <motion.div
@@ -72,79 +73,77 @@ export const MidnightGlowAnnouncements = () => {
                                     initial={{ y: 30, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: idx * 0.08 }}
-                                    className={`relative flex flex-col rounded-[2.5rem] border-2 ${cardBorder} ${cardBg} ${customShadow} transition-all duration-500 overflow-visible group pb-6 pt-5`}
+                                    className={`relative flex flex-col rounded-[2.5rem] border-2 ${cardBorder} ${cardBg} ${customShadow} transition-all duration-500 overflow-hidden group p-6 backdrop-blur-2xl`}
                                 >
-                                    {/* Top accent line */}
-                                    <div className={`absolute top-0 left-0 right-0 h-[4px] ${topAccent} rounded-t-[2.5rem]`} />
+                                    {/* Top accent glowing line */}
+                                    <div className={`absolute top-0 left-0 right-0 h-[3px] ${topAccent}`} />
 
-                                    {/* Ambient Top Glow */}
-                                    <div className="absolute top-0 left-0 right-0 h-40 opacity-30 mix-blend-screen pointer-events-none"
-                                        style={{ background: isUrgent ? 'radial-gradient(circle at 50% -20%, #10B981 0%, transparent 70%)' : 'radial-gradient(circle at 50% -20%, #4F7FFF 0%, transparent 70%)' }}
+                                    {/* Ambient Background Glow */}
+                                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-36 opacity-30 mix-blend-screen pointer-events-none blur-2xl"
+                                        style={{ background: isUrgent ? 'radial-gradient(circle, #10B981 0%, transparent 70%)' : 'radial-gradient(circle, #4F7FFF 0%, transparent 70%)' }}
                                     />
 
-                                    {/* Badge */}
-                                    <div className="flex justify-center mt-2 z-10 w-full mb-4">
-                                        <div className={`flex items-center gap-2 text-[12px] font-black tracking-[0.4em] uppercase border-2 px-6 py-1.5 rounded-full ${badgeBorderText} ${cardBg}/90 backdrop-blur-md`}>
-                                            <div className={cn("w-1.5 h-1.5 rounded-full", isUrgent ? "bg-[#A3FF57] shadow-[0_0_10px_#A3FF57] animate-pulse" : "bg-[#4F7FFF] shadow-[0_0_10px_#4F7FFF] animate-pulse")} />
-                                            <span className="mt-px">{isUrgent ? 'ATENCIÓN' : 'AVISO OFICIAL'}</span>
+                                    {/* Top Header Badge */}
+                                    <div className="flex items-center justify-between z-10 w-full mb-4 px-2">
+                                        <div className={`flex items-center gap-2 text-[11px] font-black tracking-[0.35em] uppercase border px-4 py-1.2 rounded-full ${badgeBorderText} backdrop-blur-md`}>
+                                            <div className={cn("w-2 h-2 rounded-full", isUrgent ? "bg-[#A3FF57] shadow-[0_0_12px_#A3FF57] animate-pulse" : "bg-[#4F7FFF] shadow-[0_0_12px_#4F7FFF] animate-pulse")} />
+                                            <span>{isUrgent ? 'URGENTE / ATENCIÓN' : 'COMUNICADO OFICIAL'}</span>
                                         </div>
-                                    </div>
 
-                                    {/* Title (Mimicking the HUGE time text block) */}
-                                    <div className="flex items-center justify-center w-full px-6 text-center z-10 mt-2 mb-5 gap-3">
-                                        {ann.imageUrl && (
-                                            <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-white/5 flex items-center justify-center">
-                                                {ann.imageUrl.startsWith('icon:') ? (
-                                                    <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" style={{ color: isUrgent ? '#A3FF57' : '#4F7FFF' }} />
-                                                ) : (
-                                                    <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
-                                                )}
+                                        {isImageIcon && ann.imageUrl && (
+                                            <div className="w-9 h-9 rounded-xl border border-white/15 bg-white/10 flex items-center justify-center backdrop-blur-md shadow-md">
+                                                <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5" style={{ color: isUrgent ? '#A3FF57' : '#4F7FFF' }} />
                                             </div>
                                         )}
-                                        <span className={`font-black text-white leading-tight uppercase tracking-wider drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)] ${ann.title.length > 18 ? 'text-base' : 'text-lg md:text-xl'}`}>
+                                    </div>
+
+                                    {/* Full Width Image Hero Showcase */}
+                                    {!isImageIcon && ann.imageUrl && (
+                                        <div className="relative w-full h-48 md:h-56 mb-4 rounded-2xl overflow-hidden border border-white/15 shadow-2xl bg-black/60 group-hover:scale-[1.01] transition-transform duration-500">
+                                            <img 
+                                                src={ann.imageUrl} 
+                                                className="w-full h-full object-cover" 
+                                                alt={ann.title} 
+                                            />
+                                            {/* Gradient overlay for text legibility */}
+                                            <div className="absolute inset-0 bg-gradient-to-t from-[#0B152B] via-transparent to-black/20 pointer-events-none" />
+                                        </div>
+                                    )}
+
+                                    {/* Title Header */}
+                                    <div className="z-10 w-full px-2 mb-3">
+                                        <h3 className={`font-black text-white leading-snug uppercase tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] ${ann.title.length > 25 ? 'text-lg md:text-xl' : 'text-xl md:text-2xl'}`}>
                                             {ann.title}
-                                        </span>
+                                        </h3>
                                     </div>
 
-                                    {/* Divider with dot */}
-                                    <div className="mx-10 flex items-center gap-4 mb-6 z-10 opacity-70">
-                                        <div className={cn("flex-1 h-px", isUrgent ? "bg-gradient-to-r from-transparent to-[#10B981]/50" : "bg-gradient-to-r from-transparent to-[#4F7FFF]/50")} />
-                                        <div className={cn("w-2 h-2 rounded-full", isUrgent ? "bg-[#A3FF57] shadow-[0_0_10px_#A3FF57]" : "bg-[#4F7FFF] shadow-[0_0_10px_#4F7FFF]")} />
-                                        <div className={cn("flex-1 h-px", isUrgent ? "bg-gradient-to-l from-transparent to-[#10B981]/50" : "bg-gradient-to-l from-transparent to-[#4F7FFF]/50")} />
-                                    </div>
+                                    {/* Subtle Divider */}
+                                    <div className="w-full h-[1px] bg-gradient-to-r from-white/20 via-white/5 to-transparent mb-4 z-10" />
 
-                                    {/* Content Area */}
-                                    <div className="px-6 flex-1 flex flex-col justify-start text-center z-10 mb-2">
-                                        <p className="text-[12px] text-white/70 leading-relaxed font-bold tracking-wide uppercase">
+                                    {/* Message Content */}
+                                    <div className="px-2 flex-1 flex flex-col justify-start z-10">
+                                        <p className="text-[13px] md:text-[14px] text-white/85 leading-relaxed font-semibold tracking-normal text-left">
                                             {ann.content}
                                         </p>
                                     </div>
 
-                                    {/* Watermark removed */}
-
-                                    {/* LIVE Bottom Glow for Attention Announcements */}
+                                    {/* Urgent Pulsing Footer Indicator */}
                                     {isUrgent && (
                                         <motion.div
                                             animate={{
                                                 boxShadow: [
-                                                    "0 -5px 15px rgba(16,185,129,0.3)",
-                                                    "0 -5px 25px rgba(16,185,129,0.6)",
-                                                    "0 -5px 15px rgba(16,185,129,0.3)"
+                                                    "0 -4px 15px rgba(16,185,129,0.3)",
+                                                    "0 -4px 25px rgba(16,185,129,0.7)",
+                                                    "0 -4px 15px rgba(16,185,129,0.3)"
                                                 ]
                                             }}
-                                            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                                            className="absolute -bottom-[2px] -left-[2px] -right-[2px] h-8 rounded-b-[2.5rem] overflow-hidden z-[60] pointer-events-none bg-gradient-to-r from-[#064e3b] via-[#10b981] to-[#064e3b] border-t border-white/30 backdrop-blur-md flex items-center justify-center"
+                                            transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                                            className="mt-4 -mx-6 -mb-6 p-2.5 z-[20] bg-gradient-to-r from-[#047857] via-[#10B981] to-[#047857] border-t border-white/30 flex items-center justify-center gap-2"
                                         >
-                                            <motion.div
-                                                initial={{ y: 15, opacity: 0 }}
-                                                animate={{ y: 0, opacity: 1 }}
-                                                className="flex items-center gap-2"
-                                            >
-                                                <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shadow-[0_0_10px_#fff]" />
-                                                <span className="text-[8px] font-black text-white tracking-[0.4em] uppercase drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)]">
-                                                    ATENCIÓN
-                                                </span>
-                                            </motion.div>
+                                            <div className="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_10px_#fff]" />
+                                            <span className="text-[9px] font-black text-white tracking-[0.35em] uppercase">
+                                                AVISO DE ALTA PRIORIDAD
+                                            </span>
                                         </motion.div>
                                     )}
                                 </motion.div>

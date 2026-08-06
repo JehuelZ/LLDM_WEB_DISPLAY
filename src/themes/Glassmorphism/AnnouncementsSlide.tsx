@@ -55,58 +55,67 @@ export const GlassmorphismAnnouncements = () => {
                 {/* Pillar Container for Notices */}
                 <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-hidden bg-black/20 rounded-[2rem] border border-white/5 p-3 shadow-inner">
                     <AnimatePresence mode="popLayout">
-                        {announcements.map((ann, idx) => (
-                            <motion.div
-                                key={ann.id}
-                                initial={{ y: 50, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                exit={{ scale: 0.9, opacity: 0 }}
-                                transition={{ delay: idx * 0.1 }}
-                                className={cn(
-                                    "flex flex-col p-6 rounded-[2rem] border transition-all hover:bg-white/[0.04] relative overflow-hidden group/ann",
-                                    ann.priority > 0
-                                        ? "border-emerald-500/40 bg-emerald-500/[0.03] shadow-[0_20px_40px_rgba(245,158,11,0.05)]"
-                                        : "border-white/10 bg-white/[0.02]"
-                                )}
-                            >
-                                {ann.priority > 0 && (
-                                    <div className="absolute top-0 right-0 bg-emerald-500/20 border-b border-l border-emerald-500/40 px-6 py-2 rounded-bl-3xl z-10">
-                                        <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest italic text-glow-emerald">Urgente</span>
-                                    </div>
-                                )}
+                        {announcements.map((ann, idx) => {
+                            const isImageIcon = !ann.imageUrl || ann.imageUrl.startsWith('icon:');
+                            return (
+                                <motion.div
+                                    key={ann.id}
+                                    initial={{ y: 50, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ scale: 0.9, opacity: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    className={cn(
+                                        "flex flex-col p-6 rounded-[2rem] border transition-all hover:bg-white/[0.04] relative overflow-hidden group/ann backdrop-blur-xl",
+                                        ann.priority > 0
+                                            ? "border-emerald-500/40 bg-emerald-500/[0.04] shadow-[0_20px_40px_rgba(16,185,129,0.15)]"
+                                            : "border-white/10 bg-white/[0.03]"
+                                    )}
+                                >
+                                    {ann.priority > 0 && (
+                                        <div className="absolute top-0 right-0 bg-emerald-500/20 border-b border-l border-emerald-500/40 px-5 py-1.5 rounded-bl-2xl z-20">
+                                            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest italic">Urgente</span>
+                                        </div>
+                                    )}
 
-                                <div className="flex items-center gap-5 mb-6">
-                                    <div className={cn(
-                                        "w-14 h-14 rounded-2xl flex items-center justify-center border shadow-lg group-hover/ann:scale-110 transition-transform overflow-hidden flex-shrink-0",
-                                        ann.priority > 0 ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-500" : "bg-white/5 border-white/10 text-white/40"
-                                    )}>
-                                        {ann.imageUrl ? (
-                                            ann.imageUrl.startsWith('icon:') ? (
-                                                <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-6 h-6 text-white" />
-                                            ) : (
-                                                <img src={ann.imageUrl} className="w-full h-full object-cover" alt="" />
-                                            )
-                                        ) : (
-                                            <Bell className="w-6 h-6" />
+                                    {/* Full Width Image Hero Showcase */}
+                                    {!isImageIcon && ann.imageUrl && (
+                                        <div className="relative w-full h-44 mb-4 rounded-xl overflow-hidden border border-white/15 shadow-2xl bg-black/50">
+                                            <img 
+                                                src={ann.imageUrl} 
+                                                className="w-full h-full object-cover group-hover/ann:scale-105 transition-transform duration-700" 
+                                                alt={ann.title} 
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                                        </div>
+                                    )}
+
+                                    <div className="flex items-center gap-4 mb-3">
+                                        {isImageIcon && ann.imageUrl && (
+                                            <div className={cn(
+                                                "w-12 h-12 rounded-xl flex items-center justify-center border shadow-lg overflow-hidden flex-shrink-0",
+                                                ann.priority > 0 ? "bg-emerald-500/20 border-emerald-500/30 text-emerald-400" : "bg-white/5 border-white/10 text-white/50"
+                                            )}>
+                                                <AnnouncementIcon name={ann.imageUrl.replace('icon:', '')} className="w-5 h-5 text-white" />
+                                            </div>
                                         )}
+                                        <h3 className="text-xl md:text-2xl font-black text-white uppercase italic leading-tight flex-1 tracking-tight">
+                                            {ann.title}
+                                        </h3>
                                     </div>
-                                    <h3 className="text-2xl font-black text-white uppercase italic leading-[1.1] truncate flex-1 tracking-tighter">
-                                        {ann.title}
-                                    </h3>
-                                </div>
 
-                                <div className="flex-1 flex flex-col gap-4">
-                                    <p className="text-xl text-white/70 leading-relaxed italic border-l-4 border-emerald-500/20 pl-6 font-medium">
-                                        {ann.content}
-                                    </p>
-                                </div>
+                                    <div className="flex-1 flex flex-col gap-3">
+                                        <p className="text-sm md:text-base text-white/80 leading-relaxed font-medium border-l-2 border-emerald-500/40 pl-4">
+                                            {ann.content}
+                                        </p>
+                                    </div>
 
-                                <div className="mt-8 flex items-center justify-between text-[10px] font-black text-white/10 uppercase tracking-[0.3em]">
-                                    <span>Comunicado Oficial</span>
-                                    <span>#{String(idx + 1).padStart(2, '0')}</span>
-                                </div>
-                            </motion.div>
-                        ))}
+                                    <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[9px] font-black text-white/30 uppercase tracking-[0.3em]">
+                                        <span>Comunicado Oficial</span>
+                                        <span>#{String(idx + 1).padStart(2, '0')}</span>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                     </AnimatePresence>
                 </div>
             </div>
