@@ -1872,12 +1872,16 @@ export const useAppStore = create<AppState>()(
                 get().loadAnnouncementsFromCloud();
             },
 
-            saveScheduleDayToCloud: async (date, slots) => {
+            saveScheduleDayToCloud: async (date, slotsData) => {
                 const currentUser = get().currentUser;
                 if (currentUser?.role !== 'Administrador' && currentUser?.role !== 'Ministro a Cargo') {
                     get().showNotification("No tienes permiso para modificar horarios", "error");
                     throw new Error("No autorizado");
                 }
+
+                // Accept either slots directly or full schedule object
+                const slots = (slotsData as any)?.slots || slotsData;
+                const dayMode = (slotsData as any)?.dayMode !== undefined ? (slotsData as any).dayMode : (slots as any)?.dayMode;
 
                 const cleanDate = date.split(':')[0].split(' ')[0];
                 const { data: existing } = await supabase
@@ -1894,41 +1898,41 @@ export const useAppStore = create<AppState>()(
 
                 const dbSchedule = {
                     date: cleanDate,
-                    day_mode: (slots as any).dayMode || null,
-                    five_am_leader_id: cleanUuid(slots['5am'].leaderId),
-                    five_am_time: slots['5am'].time,
-                    five_am_end_time: slots['5am'].endTime,
-                    five_am_custom_label: slots['5am'].customLabel,
-                    five_am_language: (slots['5am'] as any).language || 'es',
+                    day_mode: dayMode || null,
+                    five_am_leader_id: slots?.['5am'] ? cleanUuid(slots['5am'].leaderId) : null,
+                    five_am_time: slots?.['5am']?.time,
+                    five_am_end_time: slots?.['5am']?.endTime,
+                    five_am_custom_label: slots?.['5am']?.customLabel,
+                    five_am_language: slots?.['5am']?.language || 'es',
 
-                    nine_am_consecration_leader_id: cleanUuid(slots['9am'].consecrationLeaderId),
-                    nine_am_doctrine_leader_id: cleanUuid(slots['9am'].doctrineLeaderId),
-                    nine_am_time: slots['9am'].time,
-                    nine_am_end_time: slots['9am'].endTime,
-                    nine_am_custom_label: slots['9am'].customLabel,
-                    nine_am_language: (slots['9am'] as any).language || 'es',
+                    nine_am_consecration_leader_id: slots?.['9am'] ? cleanUuid(slots['9am'].consecrationLeaderId) : null,
+                    nine_am_doctrine_leader_id: slots?.['9am'] ? cleanUuid(slots['9am'].doctrineLeaderId) : null,
+                    nine_am_time: slots?.['9am']?.time,
+                    nine_am_end_time: slots?.['9am']?.endTime,
+                    nine_am_custom_label: slots?.['9am']?.customLabel,
+                    nine_am_language: slots?.['9am']?.language || 'es',
 
-                    noon_leader_id: slots['12pm'] ? cleanUuid(slots['12pm'].leaderId) : null,
-                    noon_time: slots['12pm']?.time,
-                    noon_end_time: slots['12pm']?.endTime,
-                    noon_custom_label: slots['12pm']?.customLabel,
+                    noon_leader_id: slots?.['12pm'] ? cleanUuid(slots['12pm'].leaderId) : null,
+                    noon_time: slots?.['12pm']?.time,
+                    noon_end_time: slots?.['12pm']?.endTime,
+                    noon_custom_label: slots?.['12pm']?.customLabel,
 
-                    evening_service_time: slots.evening.time,
-                    evening_service_end_time: slots.evening.endTime,
-                    evening_service_type: slots.evening.type,
-                    evening_service_language: (slots.evening as any).language || 'es',
-                    evening_leader_ids: slots.evening.leaderIds.map(cleanUuid).filter(Boolean),
-                    evening_doctrine_leader_id: cleanUuid(slots.evening.doctrineLeaderId || null),
-                    evening_consecration_leader_id: cleanUuid(slots.evening.consecrationLeaderId || null),
-                    evening_custom_label: slots.evening.thirdLeaderRole || slots.evening.hideProfiles || slots.evening.customIconUrl || (slots.evening.accentColor && slots.evening.accentColor !== 'purple')
-                        ? `${slots.evening.customLabel || ''}|${slots.evening.thirdLeaderRole || ''}|${slots.evening.hideProfiles ? 'true' : 'false'}|${slots.evening.accentColor || 'purple'}|${slots.evening.customIconUrl || ''}`
-                        : slots.evening.customLabel,
+                    evening_service_time: slots?.evening?.time || '07:00 PM',
+                    evening_service_end_time: slots?.evening?.endTime,
+                    evening_service_type: slots?.evening?.type || 'regular',
+                    evening_service_language: (slots?.evening as any)?.language || 'es',
+                    evening_leader_ids: (slots?.evening?.leaderIds || []).map(cleanUuid).filter(Boolean),
+                    evening_doctrine_leader_id: cleanUuid(slots?.evening?.doctrineLeaderId || null),
+                    evening_consecration_leader_id: cleanUuid(slots?.evening?.consecrationLeaderId || null),
+                    evening_custom_label: slots?.evening?.thirdLeaderRole || slots?.evening?.hideProfiles || slots?.evening?.customIconUrl || (slots?.evening?.accentColor && slots?.evening?.accentColor !== 'purple')
+                        ? `${slots?.evening?.customLabel || ''}|${slots?.evening?.thirdLeaderRole || ''}|${slots?.evening?.hideProfiles ? 'true' : 'false'}|${slots?.evening?.accentColor || 'purple'}|${slots?.evening?.customIconUrl || ''}`
+                        : slots?.evening?.customLabel,
 
-                    topic: (slots['9am'] as any).topic || slots.evening.topic || ''
+                    topic: (slots?.['9am'] as any)?.topic || slots?.evening?.topic || ''
                 } as any;
 
                 // Handle Sunday Type prefix if applicable
-                if (slots['9am'].sundayType) {
+                if (slots?.['9am']?.sundayType) {
                     const prefix = `dominical:${slots['9am'].sundayType}`;
                     const topicText = (slots['9am'] as any).topic || '';
                     dbSchedule.topic = topicText ? `${prefix}|${topicText}` : prefix;
