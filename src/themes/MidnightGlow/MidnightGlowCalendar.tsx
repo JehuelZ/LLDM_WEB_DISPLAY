@@ -166,8 +166,11 @@ export function MidnightGlowCalendar() {
 
                         const leaderEveningId1 = sched?.slots?.evening?.leaderIds?.[0];
                         const leaderEvening1 = getMemberDetail(leaderEveningId1);
-                        const leaderEveningId2 = sched?.slots?.evening?.leaderIds?.[1];
+                        const leaderEveningId2 = sched?.slots?.evening?.leaderIds?.[1] || sched?.slots?.evening?.doctrineLeaderId;
                         const leaderEvening2 = getMemberDetail(leaderEveningId2);
+
+                        const eveningCustomLabel = (sched?.slots?.evening?.customLabel || '').split('|')[0];
+                        const eveningType = sched?.slots?.evening?.type;
 
                         const time5am = formatAbbrTime(sched?.slots?.['5am']?.time, '5AM');
                         const time9am = formatAbbrTime(sched?.slots?.['9am']?.time, isSunday ? '10AM' : '9AM');
@@ -352,7 +355,7 @@ export function MidnightGlowCalendar() {
                                                     </span>
                                                     <div className={`mt-0.5 px-1.5 py-[2px] rounded-full border ${isToday ? 'border-[#FF6B00]/50 bg-[#FF6B00]/20 backdrop-blur-md' : 'border-[#FF6B00]/30 bg-[#040D21]/40'} shadow-sm max-w-full overflow-hidden relative`}>
                                                         <span className={`text-[8.5px] tracking-[0.05em] truncate font-black uppercase leading-none block pt-[1px] ${isToday ? 'text-[#FF6B00]' : 'text-[#FF6B00]/70'}`}>
-                                                            {isServiceDay ? 'SERV.' : 'ORACIÓN'}
+                                                            {eveningCustomLabel || (isServiceDay ? 'SERV.' : 'ORACIÓN')}
                                                         </span>
                                                         {sched?.slots?.evening?.language === 'en' && (
                                                             <div className="absolute -right-1 top-0 px-0.5 py-[0.5px] bg-[#FF6B00] rounded-[1px] shadow-sm ring-1 ring-white/10">
