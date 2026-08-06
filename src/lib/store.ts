@@ -813,7 +813,7 @@ export const useAppStore = create<AppState>()(
                             [targetDate]: {
                                 id: data.id,
                                 date: data.date,
-                                dayMode: data.day_mode || undefined,
+                                dayMode: data.day_mode || data.custom_label || undefined,
                                 slots: {
                                     '5am': {
                                         leaderId: data.five_am_leader_id || '',
@@ -881,7 +881,7 @@ export const useAppStore = create<AppState>()(
                         newSchedule[entry.date] = {
                             id: entry.id,
                             date: entry.date,
-                            dayMode: entry.day_mode || undefined,
+                            dayMode: entry.day_mode || entry.custom_label || undefined,
                             slots: {
                                 '5am': {
                                     leaderId: entry.five_am_leader_id || '',
@@ -1904,6 +1904,7 @@ export const useAppStore = create<AppState>()(
                 const dbSchedule = {
                     date: cleanDate,
                     day_mode: dayMode || null,
+                    custom_label: dayMode || null,
                     five_am_leader_id: slots?.['5am'] ? cleanUuid(slots['5am'].leaderId) : null,
                     five_am_time: slots?.['5am']?.time,
                     five_am_end_time: slots?.['5am']?.endTime,
