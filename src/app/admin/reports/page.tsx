@@ -1,481 +1,819 @@
 
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { format, subMonths } from 'date-fns';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, parseISO, subMonths, getDay } from 'date-fns';
 import { es } from 'date-fns/locale';
 import {
     FileText, Download, Printer, Filter, Calendar,
     ArrowUpRight, ArrowDownRight, Users, Clock,
-    TrendingUp, Flame, Baby, Music, ChevronDown
+    TrendingUp, Flame, Baby, ChevronDown, Search,
+    User, BarChart3, Table, UserCheck, X, ChevronLeft,
+    ChevronRight, Percent, CalendarDays, Church, Layers
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { useAppStore } from '@/lib/store';
+import { useAppStore, ReportMemberData } from '@/lib/store';
 
-const StatCard = ({ title, value, change, trend, icon: Icon, color }: any) => (
-    <Card className="glass-card bg-white/5 border-white/10 overflow-hidden relative group">
-        <div className={cn("absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity", color)}>
+// ─── Helpers ─────────────────────────────────────────────────────────
+const getMonthRange = (monthStr: string) => {
+    const [y, m] = monthStr.split('-').map(Number);
+    const start = startOfMonth(new Date(y, m - 1));
+    const end = endOfMonth(new Date(y, m - 1));
+    return { start: format(start, 'yyyy-MM-dd'), end: format(end, 'yyyy-MM-dd') };
+};
+
+const getMonthLabel = (monthStr: string) => {
+    const [y, m] = monthStr.split('-').map(Number);
+    const d = new Date(y, m - 1, 1);
+    return format(d, 'MMMM yyyy', { locale: es });
+};
+
+const generateMonthOptions = () => {
+    const months: string[] = [];
+    const now = new Date();
+    for (let i = 0; i < 18; i++) {
+        const d = subMonths(now, i);
+        months.push(format(d, 'yyyy-MM'));
+    }
+    return months;
+};
+
+const getStatusLabel = (pct: number) => {
+    if (pct >= 80) return { label: 'Excelente', color: 'text-emerald-400', bg: 'bg-emerald-500/10 border-emerald-500/20' };
+    if (pct >= 50) return { label: 'Regular', color: 'text-amber-400', bg: 'bg-amber-500/10 border-amber-500/20' };
+    return { label: 'Baja Asistencia', color: 'text-rose-400', bg: 'bg-rose-500/10 border-rose-500/20' };
+};
+
+const GROUPS = [
+    { id: 'all', label: 'Todos' },
+    { id: 'Administración', label: 'Siervos' },
+    { id: 'Casados', label: 'Matrimonios' },
+    { id: 'Solos y Solas', label: 'Solos y Solas' },
+    { id: 'Jovenes', label: 'Jóvenes' },
+    { id: 'Niños', label: 'Niños' },
+];
+
+const matchesGroup = (m: ReportMemberData, groupId: string): boolean => {
+    if (groupId === 'all') return true;
+    const g = (m.member_group || '').toLowerCase();
+    if (groupId === 'Administración') return g === 'administración' || g === 'ministerio';
+    if (groupId === 'Casados') return g.includes('casad') || g.includes('matrimon');
+    if (groupId === 'Solos y Solas') return g.includes('solo') || g.includes('sola');
+    if (groupId === 'Jovenes') return g.includes('joven') || g.includes('juvenil');
+    if (groupId === 'Niños') return g.includes('niñ') || g.includes('nin') || m.category?.toLowerCase() === 'niño';
+    return false;
+};
+
+// ─── Sub-Components ──────────────────────────────────────────────────
+
+const KpiCard = ({ title, value, sub, icon: Icon, color }: { title: string; value: string; sub?: string; icon: any; color: string }) => (
+    <div className="relative bg-white/[0.03] border border-[var(--tactile-border)] rounded-md p-5 overflow-hidden group hover:border-[var(--tactile-border-strong)] transition-all">
+        <div className={cn("absolute top-0 right-0 w-24 h-24 -mr-6 -mt-6 opacity-[0.04] group-hover:opacity-[0.07] transition-opacity", color)}>
             <Icon className="w-full h-full" />
         </div>
-        <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-                <div className={cn("p-2 rounded-md bg-white/5 border border-white/10", color)}>
-                    <Icon className="w-5 h-5" />
-                </div>
-                <div className={cn(
-                    "flex items-center text-[10px] font-black px-2 py-0.5 rounded-md border",
-                    trend === 'up' ? "text-emerald-400 bg-emerald-400/10 border-emerald-400/20" : "text-rose-400 bg-rose-400/10 border-rose-400/20"
-                )}>
-                    {trend === 'up' ? <ArrowUpRight className="w-3 h-3 mr-1" /> : <ArrowDownRight className="w-3 h-3 mr-1" />}
-                    {change}
-                </div>
-            </div>
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">{title}</h3>
-            <p className="text-3xl font-black text-white tracking-tighter">{value}</p>
-        </CardContent>
-    </Card>
-);
-
-const AttendanceBar = ({ label, percent, color, value }: any) => (
-    <div className="space-y-2">
-        <div className="flex justify-between items-end">
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{label}</span>
-            <span className="text-sm font-black text-white ">{value} <span className="text-[10px] text-slate-500 not-italic uppercase tracking-widest font-bold ml-1">Miembros</span></span>
-        </div>
-        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-            <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${percent}%` }}
-                className={cn("h-full transition-all duration-1000", color)}
-            />
-        </div>
+        <p className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground/60 mb-2">{title}</p>
+        <p className="text-2xl font-black text-foreground tracking-tighter tabular-nums">{value}</p>
+        {sub && <p className="text-[10px] font-bold text-muted-foreground/40 mt-1 uppercase tracking-widest">{sub}</p>}
     </div>
 );
 
+const ProgressBar = ({ label, value, max, color }: { label: string; value: number; max: number; color: string }) => {
+    const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+    return (
+        <div className="space-y-1.5">
+            <div className="flex justify-between items-end">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50">{label}</span>
+                <span className="text-xs font-black text-foreground tabular-nums">{pct}%</span>
+            </div>
+            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${pct}%` }}
+                    transition={{ duration: 1, ease: 'easeOut' }}
+                    className={cn("h-full rounded-full", color)}
+                />
+            </div>
+        </div>
+    );
+};
+
+// ─── Individual Member Heatmap ────────────────────────────────────────
+const AttendanceHeatmap = ({ monthStr, dailyDetail, serviceDays }: {
+    monthStr: string;
+    dailyDetail: Record<string, { '5am': boolean; '9am': boolean; 'evening': boolean }>;
+    serviceDays: Set<string>;
+}) => {
+    const [y, m] = monthStr.split('-').map(Number);
+    const start = startOfMonth(new Date(y, m - 1));
+    const end = endOfMonth(new Date(y, m - 1));
+    const days = eachDayOfInterval({ start, end });
+    const startDow = getDay(start); // 0=Sun
+
+    const blanks = Array.from({ length: startDow });
+    const dayNames = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+
+    return (
+        <div className="bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md p-4">
+            <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/50 mb-3">Calendario de Asistencia</p>
+            <div className="grid grid-cols-7 gap-1">
+                {dayNames.map((d, i) => (
+                    <div key={`h-${i}`} className="text-[8px] font-black text-muted-foreground/30 text-center uppercase">{d}</div>
+                ))}
+                {blanks.map((_, i) => <div key={`b-${i}`} />)}
+                {days.map(day => {
+                    const ds = format(day, 'yyyy-MM-dd');
+                    const hadService = serviceDays.has(ds);
+                    const detail = dailyDetail[ds];
+                    const sessCount = detail ? [detail['5am'], detail['9am'], detail['evening']].filter(Boolean).length : 0;
+
+                    let bg = 'bg-white/[0.02] border-transparent'; // no service
+                    if (hadService && sessCount === 0) bg = 'bg-rose-500/15 border-rose-500/30';
+                    else if (sessCount === 1) bg = 'bg-amber-500/20 border-amber-500/30';
+                    else if (sessCount === 2) bg = 'bg-emerald-500/20 border-emerald-500/30';
+                    else if (sessCount >= 3) bg = 'bg-emerald-500/40 border-emerald-500/50';
+
+                    return (
+                        <div
+                            key={ds}
+                            title={hadService ? `${ds}: ${sessCount} sesiones` : `${ds}: Sin servicio`}
+                            className={cn(
+                                "aspect-square flex items-center justify-center rounded-[4px] text-[9px] font-bold border transition-all cursor-default",
+                                bg,
+                                hadService ? 'text-foreground/60' : 'text-foreground/15'
+                            )}
+                        >
+                            {day.getDate()}
+                        </div>
+                    );
+                })}
+            </div>
+            <div className="flex items-center gap-3 mt-3 justify-center">
+                <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-white/[0.03]" /><span className="text-[7px] text-muted-foreground/30 uppercase">Sin Servicio</span></div>
+                <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-rose-500/20" /><span className="text-[7px] text-muted-foreground/30 uppercase">Falta</span></div>
+                <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-amber-500/20" /><span className="text-[7px] text-muted-foreground/30 uppercase">1 Sesión</span></div>
+                <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-sm bg-emerald-500/40" /><span className="text-[7px] text-muted-foreground/30 uppercase">Completo</span></div>
+            </div>
+        </div>
+    );
+};
+
+// ═══════════════════════════════════════════════════════════════════════
+// ███ MAIN COMPONENT ███
+// ═══════════════════════════════════════════════════════════════════════
+
 export default function ReportsPage() {
-    const { settings, showNotification, members = [], loadMembersFromCloud, loadSettingsFromCloud } = useAppStore();
-    const [selectedMonth, setSelectedMonth] = useState('Julio 2026');
-    const [availableMonths, setAvailableMonths] = useState<string[]>(['Julio 2026', 'Junio 2026', 'Mayo 2026', 'Abril 2026', 'Marzo 2026', 'Febrero 2026', 'Enero 2026']);
-    const [isGenerating, setIsGenerating] = useState(false);
+    const {
+        settings,
+        members,
+        loadMembersFromCloud,
+        loadSettingsFromCloud,
+        loadAttendanceReportData,
+        showNotification
+    } = useAppStore();
+
+    // ─── State ────────────────────────────────────────────────────────
+    const monthOptions = useMemo(() => generateMonthOptions(), []);
+    const [mode, setMode] = useState<'general' | 'individual'>('general');
+    const [startMonth, setStartMonth] = useState(monthOptions[0]);
+    const [endMonth, setEndMonth] = useState(monthOptions[0]);
+    const [selectedGroup, setSelectedGroup] = useState('all');
+    const [selectedChurch, setSelectedChurch] = useState('all');
+    const [sessionFilter, setSessionFilter] = useState<'all' | '5am' | '9am' | 'evening'>('all');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [reportData, setReportData] = useState<ReportMemberData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [hasGenerated, setHasGenerated] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
+
+    // Individual mode state
+    const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+    const [individualSearch, setIndividualSearch] = useState('');
+
+    const reportRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Detect earliest date from registered members or default to Jan 2025
-        let earliestDate = new Date(2025, 0, 1); // Default to Enero 2025
-        if (members && members.length > 0) {
-            members.forEach((m: any) => {
-                const dateStr = m.created_at || m.createdAt || m.date_joined || m.created;
-                if (dateStr) {
-                    const d = new Date(dateStr);
-                    if (!isNaN(d.getTime()) && d < earliestDate) {
-                        earliestDate = d;
-                    }
+        loadMembersFromCloud();
+        loadSettingsFromCloud();
+    }, []);
+
+    // ─── Generate Report ───────────────────────────────────────────────
+    const generateReport = useCallback(async () => {
+        setIsLoading(true);
+        setHasGenerated(false);
+        try {
+            const { start } = getMonthRange(startMonth);
+            const { end } = getMonthRange(endMonth < startMonth ? startMonth : endMonth);
+            const data = await loadAttendanceReportData(start, end);
+            setReportData(data);
+            setHasGenerated(true);
+        } catch (err) {
+            console.error('Error generating report:', err);
+            showNotification('Error al generar el reporte', 'error');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [startMonth, endMonth, loadAttendanceReportData, showNotification]);
+
+    // ─── Filtered Data ─────────────────────────────────────────────────
+    const filteredData = useMemo(() => {
+        let data = reportData;
+
+        if (selectedGroup !== 'all') {
+            data = data.filter(m => matchesGroup(m, selectedGroup));
+        }
+
+        if (selectedChurch !== 'all') {
+            const mainName = settings.mainChurch?.name || settings.mainChurchName || 'Principal';
+            data = data.filter(m => {
+                if (selectedChurch === 'Principal' || selectedChurch === mainName) {
+                    return !m.assigned_church || m.assigned_church === 'Principal' || m.assigned_church === mainName;
                 }
+                return m.assigned_church === selectedChurch;
             });
         }
 
-        const months: string[] = [];
-        const now = new Date();
-        let currentDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        const cutoffDate = new Date(earliestDate.getFullYear(), earliestDate.getMonth(), 1);
-
-        // Generate months backwards until reaching cutoffDate
-        while (currentDate >= cutoffDate) {
-            months.push(format(currentDate, "MMMM yyyy", { locale: es }));
-            currentDate = subMonths(currentDate, 1);
+        if (searchTerm) {
+            const norm = searchTerm.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+            data = data.filter(m => m.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(norm));
         }
 
-        // Safety fallback: ensure at least 6 recent months are present
-        if (months.length < 6) {
-            const fallbackMonths = [];
-            for (let i = 0; i < 12; i++) {
-                fallbackMonths.push(format(subMonths(now, i), "MMMM yyyy", { locale: es }));
+        return data;
+    }, [reportData, selectedGroup, selectedChurch, searchTerm, settings]);
+
+    // ─── Computed KPIs ──────────────────────────────────────────────────
+    const kpis = useMemo(() => {
+        if (filteredData.length === 0) return { avgPct: 0, totalMembers: 0, totalDays: 0, bestGroup: '-' };
+        const avgPct = Math.round(filteredData.reduce((a, m) => a + m.percentage, 0) / filteredData.length);
+        const totalDays = new Set(filteredData.flatMap(m => Object.keys(m.daily_detail))).size;
+
+        // Find best performing group
+        const groupAvgs: Record<string, number[]> = {};
+        GROUPS.filter(g => g.id !== 'all').forEach(g => {
+            const gMembers = filteredData.filter(m => matchesGroup(m, g.id));
+            if (gMembers.length > 0) {
+                groupAvgs[g.label] = gMembers.map(m => m.percentage);
             }
-            setAvailableMonths(fallbackMonths);
-        } else {
-            setAvailableMonths(months);
+        });
+        let bestGroup = '-';
+        let bestAvg = -1;
+        Object.entries(groupAvgs).forEach(([label, pcts]) => {
+            const avg = pcts.reduce((a, b) => a + b, 0) / pcts.length;
+            if (avg > bestAvg) { bestAvg = avg; bestGroup = label; }
+        });
+
+        return { avgPct, totalMembers: filteredData.length, totalDays, bestGroup };
+    }, [filteredData]);
+
+    // ─── Individual Member ──────────────────────────────────────────────
+    const selectedMember = useMemo(() => {
+        if (!selectedMemberId) return null;
+        return reportData.find(m => m.member_id === selectedMemberId) || null;
+    }, [selectedMemberId, reportData]);
+
+    // Service days for heatmap
+    const serviceDays = useMemo(() => {
+        const days = new Set<string>();
+        reportData.forEach(m => Object.keys(m.daily_detail).forEach(d => days.add(d)));
+        return days;
+    }, [reportData]);
+
+    // ─── PDF Export ─────────────────────────────────────────────────────
+    const handleExportPDF = async () => {
+        if (!reportRef.current) return;
+        setIsExporting(true);
+        try {
+            const html2pdf = (await import('html2pdf.js' as any)).default;
+            const filename = mode === 'individual' && selectedMember
+                ? `Reporte_${selectedMember.name.replace(/\s+/g, '_')}_${startMonth}.pdf`
+                : `Reporte_General_Asistencia_${startMonth}_a_${endMonth}.pdf`;
+            const opt = {
+                margin: 0.4,
+                filename,
+                image: { type: 'jpeg' as const, quality: 0.95 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' as const },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+            await html2pdf().set(opt).from(reportRef.current).save();
+            showNotification('PDF exportado correctamente', 'success');
+        } catch (err) {
+            console.error('Error exporting PDF:', err);
+            showNotification('Error al exportar PDF', 'error');
+        } finally {
+            setIsExporting(false);
         }
+    };
 
-        loadMembersFromCloud();
-        loadSettingsFromCloud();
-    }, [members]);
-
-    // Recalculate top metrics dynamically based on selected month
-    const currentStats = useMemo(() => {
-        const monthIndex = availableMonths.indexOf(selectedMonth);
-        // Vary stats deterministically per month
-        const baseAvg = 92 - (monthIndex % 5) * 2.3;
-        const baseCount = Math.max(10, (members.length || 82) - (monthIndex % 4) * 3);
-        const baseKids = 94 - (monthIndex % 3) * 3;
-        const basePunctuality = 96 - (monthIndex % 6) * 1.5;
-
-        return {
-            avg: `${baseAvg.toFixed(1)}%`,
-            count: baseCount,
-            kids: `${baseKids.toFixed(0)}%`,
-            punctuality: `${basePunctuality.toFixed(0)}%`
-        };
-    }, [members.length, selectedMonth, availableMonths]);
+    // ─── CSV Export ──────────────────────────────────────────────────────
+    const handleExportCSV = () => {
+        const headers = ['Nombre', 'Grupo', '5AM', '9AM', 'Tarde', 'Total', 'Porcentaje', 'Estado'];
+        const rows = filteredData.map(m => {
+            const status = getStatusLabel(m.percentage);
+            return [m.name, m.member_group || '', m.sessions['5am'], m.sessions['9am'], m.sessions['evening'], m.total_present, `${m.percentage}%`, status.label].join(',');
+        });
+        const csv = [headers.join(','), ...rows].join('\n');
+        const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Reporte_Asistencia_${startMonth}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showNotification('CSV exportado correctamente', 'success');
+    };
 
     const templateConfig = settings.reportTemplatesConfig || {
         pdf: {
             title: 'INFORME OFICIAL DE ASISTENCIA',
-            subtitle: 'LA LUZ DEL MUNDO - SEDE RODEO, CA',
+            subtitle: 'La Luz del Mundo',
             logoType: 'official_gold',
-            showPage1Stats: true,
-            separatePageForTable: true,
-            donutGroups: ['varones', 'festivas', 'jovenes', 'ninos'],
-            columns: [
-                { id: 'member_name', label: 'Nombre del Miembro', visible: true },
-                { id: 'group', label: 'Batallón / Grupo', visible: true },
-                { id: 'total_attendances', label: 'Asistencias Acumuladas', visible: true },
-                { id: 'percentage', label: 'Porcentaje %', visible: true },
-                { id: 'status', label: 'Estado / Observaciones', visible: true },
-            ],
             showSignatures: true,
             ministerSignatureTitle: 'Ministro a Cargo',
             attendanceOfficerSignatureTitle: 'Encargado de Asistencia'
         }
     };
 
-    const handlePrint = () => {
-        window.print();
-    };
-
-    const handleDownload = () => {
-        setIsGenerating(true);
-        setTimeout(() => {
-            window.print();
-            setIsGenerating(false);
-        }, 800);
-    };
+    // ═══════════════════════════════════════════════════════════════════
+    // RENDER
+    // ═══════════════════════════════════════════════════════════════════
 
     return (
-        <div className="p-4 md:p-8 space-y-8 max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 no-print">
-                <div className="w-full md:w-auto">
-                    <h2 className="text-2xl md:text-4xl font-black tracking-tighter text-white uppercase flex items-center gap-3">
-                        <FileText className="h-6 w-6 md:h-10 md:w-10 text-emerald-500" />
-                        Reportes <span className="text-emerald-500">Sintetizados</span>
-                    </h2>
-                    <p className="text-slate-500 font-bold tracking-widest uppercase text-[10px] md:text-xs mt-1">
-                        Análisis de Fidelidad e Impacto en la Iglesia
-                    </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <div className="bg-white/5 border border-white/10 p-1 rounded-md flex items-center gap-2 flex-1 md:flex-none justify-between">
-                        <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="text-[9px] md:text-[10px] font-black uppercase px-2 md:px-3"
-                            onClick={() => showNotification('Filtrado avanzado próximamente', 'info')}
-                        >
-                            <Filter className="w-3 h-3 mr-1 md:mr-2 text-emerald-500" /> Filtrar
-                        </Button>
-                        <div className="relative flex items-center">
-                            <select 
-                                value={selectedMonth}
-                                onChange={(e) => setSelectedMonth(e.target.value)}
-                                className="appearance-none bg-white/10 hover:bg-white/15 border border-white/20 rounded-md px-3 py-1.5 pr-7 text-[10px] md:text-xs font-black uppercase text-white hover:text-emerald-400 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-all capitalize"
-                            >
-                                {availableMonths.map((m) => (
-                                    <option key={m} value={m} className="bg-slate-900 text-white capitalize">
-                                        {m}
-                                    </option>
-                                ))}
-                            </select>
-                            <ChevronDown className="w-3.5 h-3.5 text-emerald-400 absolute right-2 pointer-events-none" />
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-2 w-full md:w-auto">
-                        <Button onClick={handlePrint} variant="outline" className="flex-1 md:flex-none border-white/10 bg-white/5 hover:bg-white/10 gap-2 font-black uppercase text-[10px] h-10">
-                            <Printer className="w-4 h-4" /> <span className="hidden sm:inline">Imprimir</span>
-                        </Button>
-                        <Button
-                            onClick={handleDownload}
-                            disabled={isGenerating}
-                            className="flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-500 text-white gap-2 font-black uppercase text-[10px] h-10"
-                        >
-                            {isGenerating ? (
-                                <>...</>
-                            ) : (
-                                <><Download className="w-4 h-4" /> <span className="hidden sm:inline">Exportar</span> PDF</>
-                            )}
-                        </Button>
-                    </div>
-                </div>
+        <div className="p-4 md:p-8 space-y-6 max-w-[1600px] mx-auto">
+
+            {/* ─── HEADER ───────────────────────────────────────────── */}
+            <div className="flex flex-col gap-2 no-print">
+                <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-foreground uppercase flex items-center gap-3">
+                    <FileText className="h-7 w-7 text-emerald-500" />
+                    Reportes de <span className="text-emerald-500">Asistencia</span>
+                </h2>
+                <p className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-[0.2em]">
+                    Datos reales de la tabla de asistencia • {members.length} miembros registrados
+                </p>
             </div>
 
-            {/* Print Header & Printable Document (Only visible when printing / PDF export) */}
-            <div id="print-only-document" className="hidden print:block space-y-6 bg-white text-slate-900 p-8 min-h-screen pdf-preview-sheet">
-                
-                {/* ── HOJA 1: CABECERA Y ESTADÍSTICAS ── */}
-                <div className="border-b-2 border-orange-500 pb-6 flex justify-between items-center">
-                    <div>
-                        <h1 className="text-3xl font-black uppercase tracking-tight text-slate-900">{templateConfig.pdf.title}</h1>
-                        <p className="uppercase tracking-[0.2em] font-bold text-slate-600 text-xs mt-1">{templateConfig.pdf.subtitle}</p>
+            {/* ─── CONTROL BAR ──────────────────────────────────────── */}
+            <div className="bg-white/[0.03] border border-[var(--tactile-border)] rounded-md p-4 md:p-6 space-y-4 no-print">
+                {/* Row 1: Mode + Month Range */}
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                    {/* Mode Toggle */}
+                    <div className="flex items-center p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
+                        {(['general', 'individual'] as const).map(m => (
+                            <button
+                                key={m}
+                                onClick={() => { setMode(m); setSelectedMemberId(null); }}
+                                className={cn(
+                                    "px-5 py-2 rounded-[4px] text-[10px] font-black uppercase tracking-widest transition-all",
+                                    mode === m ? "bg-emerald-500 text-black" : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                {m === 'general' ? '📊 General' : '👤 Individual'}
+                            </button>
+                        ))}
                     </div>
-                    <div className="text-right flex items-center gap-4">
-                        <div>
-                            <p className="text-sm font-black uppercase text-slate-900">{selectedMonth}</p>
-                            <p className="text-xs text-slate-500">Generado: {new Date().toLocaleDateString()}</p>
+
+                    {/* Date Range */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <CalendarDays className="w-4 h-4 text-emerald-500 shrink-0" />
+                        <div className="relative">
+                            <select
+                                value={startMonth}
+                                onChange={e => setStartMonth(e.target.value)}
+                                className="appearance-none bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md px-3 py-2 pr-7 text-[10px] font-black uppercase text-foreground cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 capitalize"
+                            >
+                                {monthOptions.map(m => <option key={m} value={m} className="bg-slate-900 capitalize">{getMonthLabel(m)}</option>)}
+                            </select>
+                            <ChevronDown className="w-3 h-3 text-emerald-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
                         </div>
-                        <img 
-                            src={templateConfig.pdf.logoType === 'universal_white' ? '/lldm_logo_universal_white.svg' : '/icon_1784673063714.webp'} 
-                            className="w-14 h-14 object-contain" 
-                            alt="Logo"
-                        />
+                        <span className="text-[10px] font-bold text-muted-foreground/30">→</span>
+                        <div className="relative">
+                            <select
+                                value={endMonth}
+                                onChange={e => setEndMonth(e.target.value)}
+                                className="appearance-none bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md px-3 py-2 pr-7 text-[10px] font-black uppercase text-foreground cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 capitalize"
+                            >
+                                {monthOptions.map(m => <option key={m} value={m} className="bg-slate-900 capitalize">{getMonthLabel(m)}</option>)}
+                            </select>
+                            <ChevronDown className="w-3 h-3 text-emerald-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        </div>
                     </div>
+
+                    {/* Generate Button */}
+                    <button
+                        onClick={generateReport}
+                        disabled={isLoading}
+                        className={cn(
+                            "px-6 py-2.5 rounded-md text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                            isLoading
+                                ? "bg-emerald-500/20 text-emerald-400 cursor-wait"
+                                : "bg-emerald-500 text-black hover:bg-emerald-400 active:scale-[0.98]"
+                        )}
+                    >
+                        {isLoading ? (
+                            <><div className="w-3 h-3 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" /> Consultando...</>
+                        ) : (
+                            <><BarChart3 className="w-4 h-4" /> Generar Reporte</>
+                        )}
+                    </button>
                 </div>
 
-                {templateConfig.pdf.showPage1Stats && (
-                    <div className="space-y-6 pt-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="bg-slate-100 p-4 rounded-xl border border-slate-200 text-center">
-                                <span className="text-xs text-slate-500 uppercase font-bold block mb-1">Asistencia General</span>
-                                <span className="text-2xl font-black text-slate-900">{currentStats.avg}</span>
-                            </div>
-                            <div className="bg-slate-100 p-4 rounded-xl border border-slate-200 text-center">
-                                <span className="text-xs text-slate-500 uppercase font-bold block mb-1">Asistentes Promedio</span>
-                                <span className="text-2xl font-black text-slate-900">{currentStats.count} Hnos</span>
-                            </div>
-                        </div>
+                {/* Row 2: Filters */}
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                    {/* Group Filter */}
+                    <div className="flex items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md overflow-x-auto scrollbar-hide">
+                        {GROUPS.map(g => (
+                            <button
+                                key={g.id}
+                                onClick={() => setSelectedGroup(g.id)}
+                                className={cn(
+                                    "flex-none px-3 py-1.5 rounded-[4px] text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                                    selectedGroup === g.id ? "bg-[#576983] text-black" : "text-muted-foreground hover:text-foreground hover:bg-white/5"
+                                )}
+                            >
+                                {g.label}
+                            </button>
+                        ))}
+                    </div>
 
-                        {/* Donas / Resumen por grupos */}
-                        <div className="grid grid-cols-2 gap-4 pt-2">
-                            {(templateConfig.pdf.donutGroups || []).map((g: string) => (
-                                <div key={g} className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
-                                    <span className="font-bold text-slate-700 uppercase text-sm">{g}</span>
-                                    <div className="w-12 h-12 rounded-full border-4 border-orange-500 flex items-center justify-center font-black text-xs text-slate-900">
-                                        {currentStats.avg}
-                                    </div>
-                                </div>
+                    {/* Church Filter */}
+                    {(settings.missions || []).length > 0 && (
+                        <div className="flex items-center gap-1.5 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
+                            <Church className="w-3 h-3 text-emerald-500 ml-2" />
+                            {[
+                                { id: 'all', label: 'Todas' },
+                                { id: 'Principal', label: settings.mainChurch?.name || 'Principal' },
+                                ...(settings.missions || []).map((m: any) => ({ id: typeof m === 'string' ? m : m.name, label: typeof m === 'string' ? m : m.name }))
+                            ].map(c => (
+                                <button
+                                    key={c.id}
+                                    onClick={() => setSelectedChurch(c.id)}
+                                    className={cn(
+                                        "px-3 py-1.5 rounded-[4px] text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap",
+                                        selectedChurch === c.id ? "bg-emerald-500 text-black" : "text-muted-foreground hover:text-foreground"
+                                    )}
+                                >
+                                    {c.label}
+                                </button>
                             ))}
                         </div>
+                    )}
+
+                    {/* Session Filter */}
+                    <div className="flex items-center gap-1 p-1 bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md">
+                        {(['all', '5am', '9am', 'evening'] as const).map(s => (
+                            <button
+                                key={s}
+                                onClick={() => setSessionFilter(s)}
+                                className={cn(
+                                    "px-3 py-1.5 rounded-[4px] text-[9px] font-black uppercase tracking-widest transition-all",
+                                    sessionFilter === s ? "bg-[#576983] text-black" : "text-muted-foreground hover:text-foreground"
+                                )}
+                            >
+                                {s === 'all' ? 'Todas' : s === 'evening' ? 'Tarde' : s.toUpperCase()}
+                            </button>
+                        ))}
                     </div>
-                )}
 
-                {/* ── HOJA 2: TABLA NOMINAL DETALLADA ── */}
-                <div className="pt-8 border-t border-slate-200 space-y-4">
-                    <div className="flex justify-between items-center text-slate-600 text-xs font-bold border-b pb-2">
-                        <span>LISTADO DETALLADO DE ASISTENCIA</span>
-                        <span>REGISTRO NOMINAL</span>
+                    {/* Search */}
+                    <div className="relative flex-1 min-w-[200px]">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground/30" />
+                        <input
+                            type="text"
+                            placeholder="BUSCAR MIEMBRO..."
+                            value={searchTerm}
+                            onChange={e => setSearchTerm(e.target.value)}
+                            className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md h-8 pl-9 pr-4 text-[10px] font-black tracking-[0.1em] text-foreground outline-none placeholder:text-muted-foreground/20 focus:ring-1 focus:ring-emerald-500"
+                        />
                     </div>
 
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="border-b-2 border-slate-900 text-xs font-black uppercase text-slate-900">
-                                {templateConfig.pdf.columns.filter((c: any) => c.visible).map((c: any) => (
-                                    <th key={c.id} className="py-2 px-2">{c.label}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-200 text-xs text-slate-700">
-                            {members.length > 0 ? (
-                                members.map((m: any, index: number) => {
-                                    // Calculate dynamic attendance count & percentage for each real member based on selected month
-                                    const monthShift = availableMonths.indexOf(selectedMonth);
-                                    const seed = (index + monthShift * 2) % 5;
-                                    const totalCount = m.attendancesCount !== undefined ? Math.max(0, m.attendancesCount - (monthShift % 3)) : (m.status === 'Fiel' || m.status === 'Activo' ? Math.max(7, 12 - seed) : (m.status === 'Inactivo' ? Math.max(1, 4 - seed) : Math.max(3, 8 - seed)));
-                                    const maxPossible = 12;
-                                    const calculatedPercent = m.attendancePercentage !== undefined ? m.attendancePercentage : Math.min(100, Math.round((totalCount / maxPossible) * 100));
-                                    const isLowAttendance = calculatedPercent < 50;
-
-                                    return (
-                                        <tr key={m.id || index}>
-                                            {templateConfig.pdf.columns.find((c: any) => c.id === 'member_name' && c.visible) && (
-                                                <td className="py-2.5 px-2 font-bold text-slate-900">{m.name}</td>
-                                            )}
-                                            {templateConfig.pdf.columns.find((c: any) => c.id === 'group' && c.visible) && (
-                                                <td className="px-2">{m.category || m.group || 'Hermana/Varón'}</td>
-                                            )}
-                                            {templateConfig.pdf.columns.find((c: any) => c.id === 'total_attendances' && c.visible) && (
-                                                <td className="px-2 font-semibold">{totalCount} {templateConfig.pdf.attendanceUnit || 'Oraciones'}</td>
-                                            )}
-                                            {templateConfig.pdf.columns.find((c: any) => c.id === 'percentage' && c.visible) && (
-                                                <td className={`px-2 font-black ${isLowAttendance ? 'text-rose-600' : 'text-emerald-700'}`}>
-                                                    {calculatedPercent}%
-                                                </td>
-                                            )}
-                                            {templateConfig.pdf.columns.find((c: any) => c.id === 'status' && c.visible) && (
-                                                <td className="px-2">{m.status || (isLowAttendance ? 'Baja Asistencia' : 'Fiel / Regular')}</td>
-                                            )}
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <tr>
-                                    <td colSpan={5} className="py-4 text-center text-slate-500 font-bold">Hermano Ejemplo 1 — Registro Nominal Activo</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                    {/* Export Buttons */}
+                    {hasGenerated && (
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={handleExportPDF}
+                                disabled={isExporting}
+                                className="flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-600/20 hover:bg-emerald-600 text-emerald-500 hover:text-white border border-emerald-500/30 text-[10px] font-black uppercase tracking-widest transition-all"
+                            >
+                                <Download className="w-3.5 h-3.5" />
+                                {isExporting ? '...' : 'PDF'}
+                            </button>
+                            <button
+                                onClick={handleExportCSV}
+                                className="flex items-center gap-2 px-4 py-2 rounded-md bg-white/5 hover:bg-white/10 text-foreground/70 border border-[var(--tactile-border)] text-[10px] font-black uppercase tracking-widest transition-all"
+                            >
+                                <Table className="w-3.5 h-3.5" />
+                                CSV
+                            </button>
+                            <button
+                                onClick={() => window.print()}
+                                className="flex items-center gap-2 px-4 py-2 rounded-md bg-white/5 hover:bg-white/10 text-foreground/70 border border-[var(--tactile-border)] text-[10px] font-black uppercase tracking-widest transition-all"
+                            >
+                                <Printer className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+                    )}
                 </div>
+            </div>
 
-                {/* Bloque de Firmas */}
-                {templateConfig.pdf.showSignatures && (
-                    <div className="grid grid-cols-2 gap-12 pt-16 border-t border-slate-200 mt-12 text-center text-xs">
-                        <div>
-                            <div className="border-b border-slate-400 mb-2 w-3/4 mx-auto" />
-                            <p className="font-black text-slate-900 uppercase">{templateConfig.pdf.ministerSignatureTitle}</p>
-                            <p className="text-[10px] text-slate-500 uppercase">Firma y Sello Oficial</p>
-                        </div>
-                        <div>
-                            <div className="border-b border-slate-400 mb-2 w-3/4 mx-auto" />
-                            <p className="font-black text-slate-900 uppercase">{templateConfig.pdf.attendanceOfficerSignatureTitle}</p>
-                            <p className="text-[10px] text-slate-500 uppercase">Firma Responsable</p>
-                        </div>
+            {/* ─── CONTENT (ref for PDF) ────────────────────────────── */}
+            <div ref={reportRef}>
+                {!hasGenerated ? (
+                    <div className="py-24 flex flex-col items-center justify-center gap-4 bg-white/[0.01] border border-dashed border-[var(--tactile-border)] rounded-md no-print">
+                        <BarChart3 className="w-12 h-12 text-muted-foreground/10" />
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/30">
+                            Selecciona el rango de meses y presiona "Generar Reporte"
+                        </p>
                     </div>
-                )}
-            </div>
-
-            {/* Quick Stats Grid (No-Print) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
-                <StatCard
-                    title="Asistencia Promedio"
-                    value={currentStats.avg}
-                    change="+2.1%"
-                    trend="up"
-                    icon={TrendingUp}
-                    color="text-emerald-500"
-                />
-                <StatCard
-                    title="Nuevos Registros"
-                    value={currentStats.count.toString()}
-                    change="+5"
-                    trend="up"
-                    icon={Users}
-                    color="text-primary"
-                />
-                <StatCard
-                    title="Puntualidad"
-                    value={currentStats.punctuality}
-                    change="+1.5%"
-                    trend="up"
-                    icon={Clock}
-                    color="text-emerald-500"
-                />
-                <StatCard
-                    title="Actividad de Niños"
-                    value={currentStats.kids}
-                    change="+3.0%"
-                    trend="up"
-                    icon={Baby}
-                    color="text-cyan-400"
-                />
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 no-print">
-                {/* Groups Breakdown */}
-                <Card className="glass-card bg-white/5 border-white/10 lg:col-span-1 border-t-4 border-t-primary">
-                    <CardHeader>
-                        <CardTitle className="text-xl font-black uppercase text-white flex items-center gap-3">
-                            <TrendingUp className="w-5 h-5 text-primary" />
-                            Distribución por Grupos
-                        </CardTitle>
-                        <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Resumen de participación activa</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-8 pt-4">
-                        {(() => {
-                            const monthIdx = availableMonths.indexOf(selectedMonth);
-                            const adultCount = members.filter(m => m.category === 'Varon' || m.category === 'Hermana' || m.category === 'Adulto').length || 67;
-                            const adultPercent = Math.max(50, 85 - (monthIdx % 4) * 3);
-                            const solosPercent = Math.max(40, 70 - (monthIdx % 3) * 4);
-                            const ninosPercent = Math.max(60, 90 - (monthIdx % 5) * 2);
-                            const coroPercent = Math.max(70, 95 - (monthIdx % 2) * 5);
-
-                            return (
-                                <>
-                                    <AttendanceBar label=" Adultos (Varones/Hnas)" percent={adultPercent} value={adultCount.toString()} color="bg-primary" />
-                                    <AttendanceBar label="Solos y Solas" percent={solosPercent} value={(Math.max(10, 18 - (monthIdx % 3))).toString()} color="bg-emerald-500" />
-                                    <AttendanceBar label="Niños (Escuela Dominical)" percent={ninosPercent} value={(Math.max(15, 24 - (monthIdx % 4))).toString()} color="bg-cyan-400" />
-                                    <AttendanceBar label="Miembros del Coro" percent={coroPercent} value={(Math.max(20, 32 - (monthIdx % 2))).toString()} color="bg-indigo-500" />
-                                </>
-                            );
-                        })()}
-
-                        <div className="pt-6 border-t border-white/5 flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-md bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
-                                <Users className="w-6 h-6 text-emerald-500" />
-                            </div>
-                            <div>
-                                <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total Miembros Registrados</p>
-                                <p className="text-2xl font-black text-white tracking-tighter">{members.length}</p>
+                ) : mode === 'general' ? (
+                    /* ═══ GENERAL MODE ═══ */
+                    <div className="space-y-6">
+                        {/* Print Header */}
+                        <div className="hidden print:block border-b-2 border-emerald-500 pb-4 mb-6">
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <h1 className="text-2xl font-black uppercase tracking-tight text-slate-900">{templateConfig.pdf.title}</h1>
+                                    <p className="text-xs uppercase tracking-[0.2em] font-bold text-slate-500 mt-1">{templateConfig.pdf.subtitle}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="text-sm font-black uppercase">{getMonthLabel(startMonth)}{startMonth !== endMonth ? ` — ${getMonthLabel(endMonth)}` : ''}</p>
+                                    <p className="text-xs text-slate-500">Generado: {new Date().toLocaleDateString()}</p>
+                                </div>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
 
-                {/* Synthesis Table */}
-                <Card className="glass-card bg-white/5 border-white/10 lg:col-span-2 border-t-4 border-t-emerald-500">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <div>
-                            <CardTitle className="text-xl font-black uppercase text-white flex items-center gap-3">
-                                <Flame className="w-5 h-5 text-emerald-500" />
-                                Fidelidad de Responsabilidades
-                            </CardTitle>
-                            <CardDescription className="text-[10px] uppercase font-bold tracking-widest text-slate-500">Cumplimiento de Monitores y Responsables</CardDescription>
+                        {/* KPI Row */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <KpiCard title="Asistencia Promedio" value={`${kpis.avgPct}%`} icon={TrendingUp} color="text-emerald-500" />
+                            <KpiCard title="Miembros Activos" value={kpis.totalMembers.toString()} sub="en filtro actual" icon={Users} color="text-primary" />
+                            <KpiCard title="Días con Servicio" value={kpis.totalDays.toString()} sub="en el periodo" icon={CalendarDays} color="text-amber-400" />
+                            <KpiCard title="Mejor Grupo" value={kpis.bestGroup} icon={Flame} color="text-emerald-500" />
                         </div>
-                        <div className="print:hidden">
-                            <Button variant="ghost" size="sm" className="text-[10px] font-black uppercase hover:text-emerald-400">Ver Todos</Button>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead>
-                                    <tr className="border-y border-white/5 bg-white/5">
-                                        <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-500">Responsable</th>
-                                        <th className="px-6 py-4 text-left text-[10px] font-black uppercase tracking-widest text-slate-500">Grupo</th>
-                                        <th className="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-500">Previstos</th>
-                                        <th className="px-6 py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-500">Cumplidos</th>
-                                        <th className="px-6 py-4 text-right text-[10px] font-black uppercase tracking-widest text-slate-500">Eficiencia</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-white/5">
-                                    {members.slice(0, 5).map((m: any, i) => {
-                                        const monthIdx = availableMonths.indexOf(selectedMonth);
-                                        const previstos = 12;
-                                        // Dynamic shift based on selected month index
-                                        const delta = (i + monthIdx) % 4;
-                                        const cumplidos = Math.max(4, 12 - delta);
-                                        const eficiencia = Math.round((cumplidos / previstos) * 100);
-                                        const isLowEfficiency = eficiencia < 75;
 
-                                        return (
-                                            <tr key={i} className="group hover:bg-white/5 transition-colors">
-                                                <td className="px-6 py-4 text-xs font-bold text-white uppercase">{m.name}</td>
-                                                <td className="px-6 py-4 text-xs text-slate-400 uppercase">{m.category || m.group || 'Varón'}</td>
-                                                <td className="px-6 py-4 text-xs text-center text-slate-300 font-bold">{previstos}</td>
-                                                <td className="px-6 py-4 text-xs text-center text-emerald-400 font-bold">{cumplidos}</td>
-                                                <td className={`px-6 py-4 text-xs text-right font-black ${isLowEfficiency ? 'text-amber-400' : 'text-emerald-400'}`}>{eficiencia}%</td>
+                        {/* Group Distribution */}
+                        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            <div className="bg-white/[0.03] border border-[var(--tactile-border)] rounded-md p-5 space-y-4">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 flex items-center gap-2">
+                                    <Layers className="w-3.5 h-3.5 text-primary" />
+                                    Distribución por Grupo
+                                </p>
+                                {GROUPS.filter(g => g.id !== 'all').map(g => {
+                                    const gm = reportData.filter(m => matchesGroup(m, g.id));
+                                    const avg = gm.length > 0 ? Math.round(gm.reduce((a, m) => a + m.percentage, 0) / gm.length) : 0;
+                                    const colors: Record<string, string> = {
+                                        'Administración': 'bg-primary',
+                                        'Casados': 'bg-emerald-500',
+                                        'Solos y Solas': 'bg-amber-500',
+                                        'Jovenes': 'bg-indigo-500',
+                                        'Niños': 'bg-cyan-400',
+                                    };
+                                    return <ProgressBar key={g.id} label={`${g.label} (${gm.length})`} value={avg} max={100} color={colors[g.id] || 'bg-primary'} />;
+                                })}
+                            </div>
+
+                            {/* Nominal Table */}
+                            <div className="lg:col-span-3 bg-white/[0.03] border border-[var(--tactile-border)] rounded-md overflow-hidden">
+                                <div className="p-4 border-b border-[var(--tactile-border)] flex items-center justify-between">
+                                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 flex items-center gap-2">
+                                        <UserCheck className="w-3.5 h-3.5 text-emerald-500" />
+                                        Listado Nominal — {filteredData.length} miembros
+                                    </p>
+                                </div>
+                                <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
+                                    <table className="w-full min-w-[700px]">
+                                        <thead className="sticky top-0 z-10">
+                                            <tr className="bg-[var(--tactile-inner-bg)] border-b border-[var(--tactile-border)]">
+                                                <th className="px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">#</th>
+                                                <th className="px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Miembro</th>
+                                                <th className="px-4 py-3 text-left text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Grupo</th>
+                                                <th className="px-4 py-3 text-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">5 AM</th>
+                                                <th className="px-4 py-3 text-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">9 AM</th>
+                                                <th className="px-4 py-3 text-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Tarde</th>
+                                                <th className="px-4 py-3 text-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Total</th>
+                                                <th className="px-4 py-3 text-center text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">%</th>
+                                                <th className="px-4 py-3 text-right text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Estado</th>
                                             </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody className="divide-y divide-white/[0.03]">
+                                            {filteredData.map((m, i) => {
+                                                const status = getStatusLabel(m.percentage);
+                                                return (
+                                                    <tr key={m.member_id} className="group hover:bg-white/[0.03] transition-colors">
+                                                        <td className="px-4 py-3 text-[10px] text-muted-foreground/30 tabular-nums">{i + 1}</td>
+                                                        <td className="px-4 py-3">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="w-7 h-7 rounded-full overflow-hidden border border-[var(--tactile-border)] bg-[var(--tactile-inner-bg)] shrink-0">
+                                                                    {m.avatar ? (
+                                                                        <img src={m.avatar} className="w-full h-full object-cover" alt="" />
+                                                                    ) : (
+                                                                        <div className="w-full h-full flex items-center justify-center text-[10px] font-black text-muted-foreground/30">
+                                                                            {m.name.charAt(0)}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <span className="text-xs font-bold text-foreground capitalize truncate max-w-[150px]">{m.name}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-4 py-3 text-[10px] text-muted-foreground/50 uppercase tracking-widest">{m.member_group || '—'}</td>
+                                                        <td className="px-4 py-3 text-center text-xs font-bold text-foreground/60 tabular-nums">{m.sessions['5am']}</td>
+                                                        <td className="px-4 py-3 text-center text-xs font-bold text-foreground/60 tabular-nums">{m.sessions['9am']}</td>
+                                                        <td className="px-4 py-3 text-center text-xs font-bold text-foreground/60 tabular-nums">{m.sessions['evening']}</td>
+                                                        <td className="px-4 py-3 text-center text-sm font-black text-foreground tabular-nums">{m.total_present}</td>
+                                                        <td className="px-4 py-3 text-center">
+                                                            <span className={cn("text-sm font-black tabular-nums", m.percentage >= 80 ? "text-emerald-400" : m.percentage >= 50 ? "text-amber-400" : "text-rose-400")}>
+                                                                {m.percentage}%
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-4 py-3 text-right">
+                                                            <span className={cn("text-[9px] font-black uppercase tracking-widest px-2 py-1 rounded-full border", status.bg, status.color)}>
+                                                                {status.label}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                            {filteredData.length === 0 && (
+                                                <tr>
+                                                    <td colSpan={9} className="px-4 py-12 text-center text-[10px] font-bold text-muted-foreground/30 uppercase tracking-widest">
+                                                        Sin datos de asistencia para este periodo
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </CardContent>
-                </Card>
+
+                        {/* Print Signatures */}
+                        {templateConfig.pdf.showSignatures && (
+                            <div className="hidden print:grid grid-cols-2 gap-12 pt-16 border-t border-slate-200 mt-12 text-center text-xs text-slate-900">
+                                <div>
+                                    <div className="border-b border-slate-400 mb-2 w-3/4 mx-auto" />
+                                    <p className="font-black uppercase">{templateConfig.pdf.ministerSignatureTitle}</p>
+                                    <p className="text-[10px] text-slate-500 uppercase">Firma y Sello Oficial</p>
+                                </div>
+                                <div>
+                                    <div className="border-b border-slate-400 mb-2 w-3/4 mx-auto" />
+                                    <p className="font-black uppercase">{templateConfig.pdf.attendanceOfficerSignatureTitle}</p>
+                                    <p className="text-[10px] text-slate-500 uppercase">Firma Responsable</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    /* ═══ INDIVIDUAL MODE ═══ */
+                    <div className="space-y-6">
+                        {/* Member Selector */}
+                        {!selectedMemberId && (
+                            <div className="bg-white/[0.03] border border-[var(--tactile-border)] rounded-md p-6 space-y-4 no-print">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/50 flex items-center gap-2">
+                                    <Search className="w-3.5 h-3.5 text-emerald-500" />
+                                    Seleccionar Miembro para Reporte Individual
+                                </p>
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/30" />
+                                    <input
+                                        type="text"
+                                        placeholder="Escriba el nombre del miembro..."
+                                        value={individualSearch}
+                                        onChange={e => setIndividualSearch(e.target.value)}
+                                        className="w-full bg-[var(--tactile-inner-bg)] border border-[var(--tactile-border)] rounded-md h-12 pl-10 pr-4 text-sm font-bold text-foreground outline-none placeholder:text-muted-foreground/20 focus:ring-1 focus:ring-emerald-500"
+                                    />
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[400px] overflow-y-auto">
+                                    {reportData
+                                        .filter(m => {
+                                            if (!individualSearch) return true;
+                                            const norm = individualSearch.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+                                            return m.name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().includes(norm);
+                                        })
+                                        .map(m => (
+                                            <button
+                                                key={m.member_id}
+                                                onClick={() => setSelectedMemberId(m.member_id)}
+                                                className="flex items-center gap-3 p-3 rounded-md border border-[var(--tactile-border)] hover:border-emerald-500/40 bg-white/[0.02] hover:bg-emerald-500/5 transition-all text-left"
+                                            >
+                                                <div className="w-9 h-9 rounded-full overflow-hidden border border-[var(--tactile-border)] bg-[var(--tactile-inner-bg)] shrink-0">
+                                                    {m.avatar ? (
+                                                        <img src={m.avatar} className="w-full h-full object-cover" alt="" />
+                                                    ) : (
+                                                        <div className="w-full h-full flex items-center justify-center text-xs font-black text-muted-foreground/30">{m.name.charAt(0)}</div>
+                                                    )}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="text-xs font-bold text-foreground capitalize truncate">{m.name}</p>
+                                                    <p className="text-[9px] text-muted-foreground/40 uppercase tracking-widest">{m.member_group || 'Sin grupo'}</p>
+                                                </div>
+                                                <span className={cn("ml-auto text-xs font-black tabular-nums shrink-0", m.percentage >= 80 ? "text-emerald-400" : m.percentage >= 50 ? "text-amber-400" : "text-rose-400")}>
+                                                    {m.percentage}%
+                                                </span>
+                                            </button>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Individual Report View */}
+                        {selectedMember && (
+                            <div className="space-y-6">
+                                {/* Back button */}
+                                <button
+                                    onClick={() => setSelectedMemberId(null)}
+                                    className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40 hover:text-foreground transition-colors no-print"
+                                >
+                                    <ChevronLeft className="w-4 h-4" /> Volver al Listado
+                                </button>
+
+                                {/* Print Header */}
+                                <div className="hidden print:block border-b-2 border-emerald-500 pb-4 mb-6">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <h1 className="text-2xl font-black uppercase text-slate-900">REPORTE INDIVIDUAL DE ASISTENCIA</h1>
+                                            <p className="text-xs uppercase tracking-[0.2em] font-bold text-slate-500 mt-1">{templateConfig.pdf.subtitle}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm font-black uppercase">{getMonthLabel(startMonth)}</p>
+                                            <p className="text-xs text-slate-500">Generado: {new Date().toLocaleDateString()}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Member Header */}
+                                <div className="bg-white/[0.03] border border-[var(--tactile-border)] rounded-md p-6 flex flex-col md:flex-row items-center gap-6">
+                                    <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-emerald-500/30 bg-[var(--tactile-inner-bg)] shrink-0">
+                                        {selectedMember.avatar ? (
+                                            <img src={selectedMember.avatar} className="w-full h-full object-cover" alt="" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-2xl font-black text-muted-foreground/20">{selectedMember.name.charAt(0)}</div>
+                                        )}
+                                    </div>
+                                    <div className="text-center md:text-left">
+                                        <h3 className="text-xl font-black uppercase tracking-tighter text-foreground">{selectedMember.name}</h3>
+                                        <div className="flex items-center gap-2 mt-1 justify-center md:justify-start">
+                                            <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest">{selectedMember.member_group || 'Sin grupo'}</span>
+                                            <span className="w-1 h-1 rounded-full bg-muted-foreground/20" />
+                                            <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest">{selectedMember.category}</span>
+                                        </div>
+                                    </div>
+                                    <div className="ml-auto flex items-center gap-6">
+                                        <div className="text-center">
+                                            <p className="text-3xl font-black text-foreground tabular-nums">{selectedMember.percentage}%</p>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Asistencia</p>
+                                        </div>
+                                        <div className="text-center">
+                                            <p className="text-3xl font-black text-emerald-500 tabular-nums">{selectedMember.days_attended}</p>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/40">Días</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Session Breakdown + Heatmap */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* Session Bars */}
+                                    <div className="bg-white/[0.03] border border-[var(--tactile-border)] rounded-md p-5 space-y-5">
+                                        <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/50">Desglose por Sesión</p>
+                                        <ProgressBar label="Oración 5:00 AM" value={selectedMember.sessions['5am']} max={selectedMember.total_possible > 0 ? Math.ceil(selectedMember.total_possible / 3) : 1} color="bg-amber-500" />
+                                        <ProgressBar label="Oración 9:00 AM" value={selectedMember.sessions['9am']} max={selectedMember.total_possible > 0 ? Math.ceil(selectedMember.total_possible / 3) : 1} color="bg-primary" />
+                                        <ProgressBar label="Oración de la Tarde" value={selectedMember.sessions['evening']} max={selectedMember.total_possible > 0 ? Math.ceil(selectedMember.total_possible / 3) : 1} color="bg-emerald-500" />
+                                        <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">Total Registros</span>
+                                            <span className="text-lg font-black text-foreground tabular-nums">{selectedMember.total_present} <span className="text-[10px] text-muted-foreground/30 font-bold">/ {selectedMember.total_possible}</span></span>
+                                        </div>
+                                    </div>
+
+                                    {/* Heatmap */}
+                                    <AttendanceHeatmap monthStr={startMonth} dailyDetail={selectedMember.daily_detail} serviceDays={serviceDays} />
+                                </div>
+
+                                {/* Print Signatures */}
+                                {templateConfig.pdf.showSignatures && (
+                                    <div className="hidden print:grid grid-cols-2 gap-12 pt-16 border-t border-slate-200 mt-12 text-center text-xs text-slate-900">
+                                        <div>
+                                            <div className="border-b border-slate-400 mb-2 w-3/4 mx-auto" />
+                                            <p className="font-black uppercase">{templateConfig.pdf.ministerSignatureTitle}</p>
+                                        </div>
+                                        <div>
+                                            <div className="border-b border-slate-400 mb-2 w-3/4 mx-auto" />
+                                            <p className="font-black uppercase">{templateConfig.pdf.attendanceOfficerSignatureTitle}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
-            {/* Attendance Flow Notice */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-8 p-6 rounded-md bg-secondary/5 border border-secondary/10 flex items-center justify-center gap-4 backdrop-blur-xl no-print"
-            >
-                <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20">
-                    <Music className="h-5 w-5 text-secondary" />
+            {/* Footer Notice */}
+            {hasGenerated && (
+                <div className="mt-4 p-4 rounded-md bg-emerald-500/5 border border-emerald-500/10 flex items-center justify-center gap-3 no-print">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <p className="text-[9px] text-muted-foreground/50 uppercase font-black tracking-[0.2em] text-center">
+                        Reporte basado en {reportData.length} miembros activos • Datos reales de la base de datos de asistencia
+                    </p>
                 </div>
-                <p className="text-[10px] text-slate-400 uppercase font-black tracking-[0.2em] max-w-2xl text-center">
-                    Reporte sintetizado generado automáticamente basado en las <span className="text-secondary font-bold">validaciones digitales</span> del Responsable de Asistencia y los sistemas de seguridad infantil.
-                </p>
-            </motion.div>
+            )}
         </div>
     );
 }
-

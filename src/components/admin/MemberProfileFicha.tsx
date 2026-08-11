@@ -1,14 +1,87 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Download, User, Calendar, Activity, CheckCircle, Clock } from 'lucide-react';
+import { X, Download, User, Calendar, Activity, CheckCircle, Clock, BarChart3 } from 'lucide-react';
 import { useAppStore, UserProfile, AttendanceRecord } from '@/lib/store';
 import { cn } from '@/lib/utils';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, getDay } from 'date-fns';
 // html2pdf imported dynamically inside handler to avoid SSR issues
 
 interface FichaProps {
     member: UserProfile;
     onClose: () => void;
 }
+
+// ─── Session Progress Bar ──────────────────────────────────────────
+const SessionBar = ({ label, count, total, color }: { label: string; count: number; total: number; color: string }) => {
+    const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+    return (
+        <div className="space-y-1">
+            <div className="flex justify-between items-end">
+                <span className="text-[9px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)]/50">{label}</span>
+                <span className="text-[10px] font-black text-[var(--tactile-text)] tabular-nums">{count} <span className="text-[var(--tactile-text-sub)]/30 text-[8px]">/ {total}</span></span>
+            </div>
+            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${pct}%` }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    className={cn("h-full rounded-full", color)}
+                />
+            </div>
+        </div>
+    );
+};
+
+// ─── Mini Heatmap Calendar ──────────────────────────────────────────
+const MiniHeatmap = ({ monthStr, dailyDetail, serviceDays }: {
+    monthStr: string;
+    dailyDetail: Record<string, { '5am': boolean; '9am': boolean; 'evening': boolean }>;
+    serviceDays: string[];
+}) => {
+    const [y, m] = monthStr.split('-').map(Number);
+    const start = startOfMonth(new Date(y, m - 1));
+    const end = endOfMonth(new Date(y, m - 1));
+    const days = eachDayOfInterval({ start, end });
+    const startDow = getDay(start);
+    const blanks = Array.from({ length: startDow });
+    const dayNames = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+    const serviceDaysSet = new Set(serviceDays);
+
+    return (
+        <div>
+            <p className="text-[9px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)]/50 mb-2 flex items-center gap-2">
+                <Calendar className="w-3 h-3" /> Calendario del Mes
+            </p>
+            <div className="grid grid-cols-7 gap-0.5">
+                {dayNames.map((d, i) => (
+                    <div key={`h-${i}`} className="text-[7px] font-bold text-[var(--tactile-text-sub)]/20 text-center">{d}</div>
+                ))}
+                {blanks.map((_, i) => <div key={`b-${i}`} />)}
+                {days.map(day => {
+                    const ds = format(day, 'yyyy-MM-dd');
+                    const hadService = serviceDaysSet.has(ds);
+                    const detail = dailyDetail[ds];
+                    const sessCount = detail ? [detail['5am'], detail['9am'], detail['evening']].filter(Boolean).length : 0;
+
+                    let bg = 'bg-white/[0.02]';
+                    if (hadService && sessCount === 0) bg = 'bg-rose-500/15';
+                    else if (sessCount === 1) bg = 'bg-amber-500/20';
+                    else if (sessCount === 2) bg = 'bg-emerald-500/20';
+                    else if (sessCount >= 3) bg = 'bg-emerald-500/40';
+
+                    return (
+                        <div
+                            key={ds}
+                            className={cn("aspect-square flex items-center justify-center rounded-[3px] text-[8px] font-bold transition-all", bg, hadService ? 'text-[var(--tactile-text)]/60' : 'text-[var(--tactile-text)]/15')}
+                        >
+                            {day.getDate()}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
 
 export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) => {
     const { loadMemberAttendanceHistory, loadAllSchedulesFromCloud, monthlySchedule } = useAppStore();
@@ -80,10 +153,38 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
 
     // Calculate metrics for selected month
     const currentMonthRecords = attendanceHist.filter(r => r?.date && selectedMonthStr && r.date.startsWith(selectedMonthStr));
-    const attendanceCount = currentMonthRecords.filter(r => r.present).length;
-    // For "possible" attendance, we might just assume 30 for now or rely on records.
-    // Usually, attendance is tracked per expected service. For simplicity, we show pure presences found.
-    const uniqueDaysAttended = new Set(currentMonthRecords.filter(r => r.present).map(r => r.date)).size;
+    const presentRecords = currentMonthRecords.filter(r => r.present);
+    const attendanceCount = presentRecords.length;
+    const uniqueDaysAttended = new Set(presentRecords.map(r => r.date)).size;
+
+    // Session breakdown
+    const sessionBreakdown = {
+        '5am': presentRecords.filter(r => r.session_type === '5am').length,
+        '9am': presentRecords.filter(r => r.session_type === '9am').length,
+        'evening': presentRecords.filter(r => r.session_type === 'evening').length,
+    };
+
+    // Determine total possible services in month (count unique days with any attendance across all members as approximation)
+    // We use all records from the month to find service days
+    const allMonthDates = new Set(currentMonthRecords.map(r => r.date));
+    const serviceDaysArr = Array.from(allMonthDates);
+    
+    // For percentage: count session-days that had any service
+    // Since we only have this member's records, use unique dates as proxy
+    const totalPossibleSessions = serviceDaysArr.length * 3; // approximate: 3 sessions per service day
+    const attendancePercentage = totalPossibleSessions > 0 ? Math.round((attendanceCount / totalPossibleSessions) * 100) : 0;
+    
+    // Build daily detail for heatmap
+    const dailyDetail: Record<string, { '5am': boolean; '9am': boolean; 'evening': boolean }> = {};
+    presentRecords.forEach(r => {
+        if (!r.date) return;
+        if (!dailyDetail[r.date]) {
+            dailyDetail[r.date] = { '5am': false, '9am': false, 'evening': false };
+        }
+        if (r.session_type === '5am' || r.session_type === '9am' || r.session_type === 'evening') {
+            dailyDetail[r.date][r.session_type] = true;
+        }
+    });
 
     // Calculate prayers/services assigned for selected month
     let servicesAssigned = 0;
@@ -98,6 +199,12 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
         const [y, m] = monthStr.split('-');
         const date = new Date(parseInt(y), parseInt(m) - 1, 1);
         return date.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).toUpperCase();
+    };
+
+    const getPercentageColor = (pct: number) => {
+        if (pct >= 80) return 'text-emerald-500';
+        if (pct >= 50) return 'text-amber-400';
+        return 'text-rose-400';
     };
 
     return (
@@ -146,7 +253,7 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
                     <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 bg-[var(--tactile-bg)]" ref={printRef}>
                         
                         {/* PDF Specific Styling (injected classes that look great on screen config) */}
-                        <div className="space-y-8 print-container">
+                        <div className="space-y-6 print-container">
                             
                             {/* Selector / Context Bar */}
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[var(--tactile-inner-bg)] p-4 rounded-lg border border-[var(--tactile-border)]">
@@ -183,53 +290,44 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
                                 </div>
                             ) : (
                                 <>
-                                    {/* Metrics Grid */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        
-                                        {/* Attendance Card */}
-                                        <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-xl p-6 relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-                                                <Calendar className="w-24 h-24" />
-                                            </div>
-                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)] mb-4 flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                                                Asistencia Registrada
-                                            </h4>
-                                            
-                                            <div className="flex items-end gap-3 mb-2">
-                                                <span className="text-5xl font-black text-[var(--tactile-text)] leading-none">{attendanceCount}</span>
-                                                <span className="text-sm font-bold text-[var(--tactile-text-sub)] mb-1">registros</span>
-                                            </div>
-                                            <p className="text-[11px] font-medium text-[var(--tactile-text-sub)]/70 uppercase">
-                                                Asistió en <strong className="text-[var(--tactile-text)]">{uniqueDaysAttended} días</strong> diferentes durante {formatMonthName(selectedMonthStr).toLowerCase()}.
-                                            </p>
+                                    {/* Top Metrics Row */}
+                                    <div className="grid grid-cols-3 gap-3">
+                                        <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-xl p-4 text-center">
+                                            <p className={cn("text-3xl font-black tabular-nums", getPercentageColor(attendancePercentage))}>{attendancePercentage}%</p>
+                                            <p className="text-[8px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)]/50 mt-1">Asistencia</p>
                                         </div>
-
-                                        {/* Activity Card */}
-                                        <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-xl p-6 relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
-                                                <Activity className="w-24 h-24" />
-                                            </div>
-                                            <h4 className="text-[10px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)] mb-4 flex items-center gap-2">
-                                                <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                                                Actividad Ministerial
-                                            </h4>
-                                            
-                                            <div className="flex items-end gap-3 mb-2">
-                                                <span className="text-5xl font-black text-emerald-500 leading-none">{servicesAssigned}</span>
-                                                <span className="text-sm font-bold text-[var(--tactile-text-sub)] mb-1">servicios</span>
-                                            </div>
-                                            <p className="text-[11px] font-medium text-[var(--tactile-text-sub)]/70 uppercase">
-                                                Oraciones agendadas oficialmente a lo largo del mes seleccionado.
-                                            </p>
+                                        <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-xl p-4 text-center">
+                                            <p className="text-3xl font-black text-[var(--tactile-text)] tabular-nums">{uniqueDaysAttended}</p>
+                                            <p className="text-[8px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)]/50 mt-1">Días</p>
+                                        </div>
+                                        <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-xl p-4 text-center">
+                                            <p className="text-3xl font-black text-emerald-500 tabular-nums">{attendanceCount}</p>
+                                            <p className="text-[8px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)]/50 mt-1">Registros</p>
                                         </div>
                                     </div>
 
-                                    {/* Breakdown Section if needed */}
+                                    {/* Session Breakdown */}
+                                    <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-xl p-5 space-y-3">
+                                        <h4 className="text-[9px] font-black uppercase tracking-widest text-[var(--tactile-text-sub)]/50 flex items-center gap-2 mb-3">
+                                            <BarChart3 className="w-3 h-3 text-primary" /> Desglose por Sesión
+                                        </h4>
+                                        <SessionBar label="Oración 5:00 AM" count={sessionBreakdown['5am']} total={serviceDaysArr.length || 1} color="bg-amber-500" />
+                                        <SessionBar label="Oración 9:00 AM" count={sessionBreakdown['9am']} total={serviceDaysArr.length || 1} color="bg-primary" />
+                                        <SessionBar label="Oración de la Tarde" count={sessionBreakdown['evening']} total={serviceDaysArr.length || 1} color="bg-emerald-500" />
+                                    </div>
+
+                                    {/* Mini Heatmap Calendar */}
+                                    {selectedMonthStr && (
+                                        <div className="bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] rounded-xl p-5">
+                                            <MiniHeatmap monthStr={selectedMonthStr} dailyDetail={dailyDetail} serviceDays={serviceDaysArr} />
+                                        </div>
+                                    )}
+
+                                    {/* Activity Card */}
                                     {servicesAssigned > 0 && (
-                                        <div className="mt-6 border border-emerald-500/20 bg-emerald-500/5 rounded-lg p-5">
+                                        <div className="border border-emerald-500/20 bg-emerald-500/5 rounded-lg p-5">
                                             <h4 className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-                                                <CheckCircle className="w-4 h-4" /> Desempeño
+                                                <CheckCircle className="w-4 h-4" /> Actividad Ministerial
                                             </h4>
                                             <p className="text-sm text-foreground/80 leading-relaxed font-medium">
                                                 El hermano(a) <strong>{member.name}</strong> ha sido comisionado(a) para dirigir <strong>{servicesAssigned}</strong> servicios este mes. Es fundamental corroborar su asistencia puntual y su disposición para llevar a cabo estos compromisos sagrados.
@@ -238,7 +336,7 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
                                     )}
 
                                     {attendanceCount === 0 && servicesAssigned === 0 && (
-                                        <div className="mt-8 text-center p-8 border border-dashed border-[var(--tactile-border)] rounded-lg">
+                                        <div className="mt-4 text-center p-8 border border-dashed border-[var(--tactile-border)] rounded-lg">
                                             <Clock className="w-8 h-8 text-foreground/20 mx-auto mb-3" />
                                             <p className="text-sm text-foreground/50 font-bold uppercase tracking-widest">Sin actividad registrada en este periodo.</p>
                                         </div>

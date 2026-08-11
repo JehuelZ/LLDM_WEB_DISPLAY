@@ -336,6 +336,26 @@ export interface AttendanceRecord {
     collected_by?: string;
 }
 
+export interface ReportMemberData {
+    member_id: string;
+    name: string;
+    avatar?: string;
+    member_group?: string;
+    assigned_church?: string;
+    category?: string;
+    status?: string;
+    sessions: {
+        '5am': number;
+        '9am': number;
+        'evening': number;
+    };
+    total_present: number;
+    total_possible: number;
+    percentage: number;
+    days_attended: number;
+    daily_detail: Record<string, { '5am': boolean; '9am': boolean; 'evening': boolean }>;
+}
+
 interface AppState {
     currentDate: string;
     monthlySchedule: Record<string, DailySchedule>;
@@ -434,6 +454,7 @@ interface AppState {
     loadMonthlyIntelligenceStats: (days?: number | 'month') => Promise<{ label: string, value: number, date?: string }[]>;
     loadDetailedWeeklyStats: (days: string[]) => Promise<any[]>;
     loadMonthlyAttendanceStats: (memberId: string) => Promise<any>;
+    loadAttendanceReportData: (startDate: string, endDate: string) => Promise<ReportMemberData[]>;
 
     signInWithGoogle: (claimProfileId?: string) => Promise<void>;
     signInWithEmail: (email: string, password: string) => Promise<{ success: boolean; error: any }>;
@@ -2935,6 +2956,89 @@ export const useAppStore = create<AppState>()(
                     };
                 });
             },
+
+            loadAttendanceReportData: async (startDate: string, endDate: string) => {
+                const members = get().members.filter(m => m.status === 'Activo' && !m.hide_from_attendance);
+                
+                // Fetch all attendance records in the date range
+                const { data: records, error } = await supabase
+                    .from('attendance')
+                    .select('member_id, date, session_type, present')
+                    .gte('date', startDate)
+                    .lte('date', endDate)
+                    .eq('present', true);
+
+                if (error) {
+                    console.error('Error loading attendance report data:', error);
+                    return [];
+                }
+
+                // Determine which days actually had services (days with at least 1 attendance record)
+                const serviceDays = new Set<string>();
+                const serviceDaysBySess: Record<string, Set<string>> = { '5am': new Set(), '9am': new Set(), 'evening': new Set() };
+                (records || []).forEach(r => {
+                    if (r.date) {
+                        serviceDays.add(r.date);
+                        if (r.session_type && serviceDaysBySess[r.session_type]) {
+                            serviceDaysBySess[r.session_type].add(r.date);
+                        }
+                    }
+                });
+
+                const totalPossibleDays = serviceDays.size;
+
+                // Build per-member report data
+                const reportData: ReportMemberData[] = members.map(member => {
+                    const memberRecords = (records || []).filter(r => r.member_id === member.id);
+
+                    const sessions = {
+                        '5am': memberRecords.filter(r => r.session_type === '5am').length,
+                        '9am': memberRecords.filter(r => r.session_type === '9am').length,
+                        'evening': memberRecords.filter(r => r.session_type === 'evening').length,
+                    };
+
+                    const totalPresent = sessions['5am'] + sessions['9am'] + sessions['evening'];
+
+                    // Total possible = number of sessions that actually happened
+                    const totalPossible = serviceDaysBySess['5am'].size + serviceDaysBySess['9am'].size + serviceDaysBySess['evening'].size;
+
+                    const daysAttended = new Set(memberRecords.map(r => r.date)).size;
+
+                    // Build daily detail map
+                    const dailyDetail: Record<string, { '5am': boolean; '9am': boolean; 'evening': boolean }> = {};
+                    memberRecords.forEach(r => {
+                        if (!r.date) return;
+                        if (!dailyDetail[r.date]) {
+                            dailyDetail[r.date] = { '5am': false, '9am': false, 'evening': false };
+                        }
+                        if (r.session_type === '5am' || r.session_type === '9am' || r.session_type === 'evening') {
+                            dailyDetail[r.date][r.session_type] = true;
+                        }
+                    });
+
+                    return {
+                        member_id: member.id,
+                        name: member.name,
+                        avatar: member.avatar,
+                        member_group: member.member_group,
+                        assigned_church: member.assigned_church,
+                        category: member.category,
+                        status: member.status,
+                        sessions,
+                        total_present: totalPresent,
+                        total_possible: totalPossible,
+                        percentage: totalPossible > 0 ? Math.round((totalPresent / totalPossible) * 100) : 0,
+                        days_attended: daysAttended,
+                        daily_detail: dailyDetail,
+                    };
+                });
+
+                // Sort by percentage descending
+                reportData.sort((a, b) => b.percentage - a.percentage);
+
+                return reportData;
+            },
+
             loadDetailedWeeklyStats: async (days) => {
                 if (days.length === 0) return [];
                 
