@@ -127,8 +127,8 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
         setIsExporting(true);
         
         try {
-            // Lazy load html2pdf only on client side to avoid SSR "self is not defined" error
-            const html2pdf = (await import('html2pdf.js' as any)).default;
+            // @ts-ignore
+            const html2pdf = (await import('html2pdf.js')).default;
             
             const element = printRef.current;
             const opt = {
@@ -139,17 +139,14 @@ export const MemberProfileFicha: React.FC<FichaProps> = ({ member, onClose }) =>
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' as const }
             };
 
-            // Adding small delay to ensure loading states or UI changes are flushed
-            setTimeout(() => {
-                html2pdf().set(opt).from(element).save().then(() => {
-                    setIsExporting(false);
-                });
-            }, 300);
+            await html2pdf().set(opt).from(element).save();
+            setIsExporting(false);
         } catch (err) {
             console.error('Error generating PDF:', err);
             setIsExporting(false);
         }
     };
+
 
     // Calculate metrics for selected month
     const currentMonthRecords = attendanceHist.filter(r => r?.date && selectedMonthStr && r.date.startsWith(selectedMonthStr));

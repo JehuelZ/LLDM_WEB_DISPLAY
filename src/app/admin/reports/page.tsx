@@ -283,7 +283,8 @@ export default function ReportsPage() {
         if (!reportRef.current) return;
         setIsExporting(true);
         try {
-            const html2pdf = (await import('html2pdf.js' as any)).default;
+            // @ts-ignore
+            const html2pdf = (await import('html2pdf.js')).default;
             const filename = mode === 'individual' && selectedMember
                 ? `Reporte_${selectedMember.name.replace(/\s+/g, '_')}_${startMonth}.pdf`
                 : `Reporte_General_Asistencia_${startMonth}_a_${endMonth}.pdf`;
