@@ -6,7 +6,7 @@ import {
     Users, Activity, ShieldCheck, Flame, Search, Filter, 
     ShieldAlert, User, Mail, Edit2, Power, Trash2, Crown, Church,
     Link2, Globe, ToggleLeft, ToggleRight, Plus, Save,
-    GitBranch, MapPin, ChevronRight, Building2
+    GitBranch, MapPin, ChevronRight, ChevronDown, Building2, Sparkles, Layers
 } from 'lucide-react'
 import { useAppStore, UserProfile, CongregationInfo } from '@/lib/store'
 import { cn } from '@/lib/utils'
@@ -49,6 +49,7 @@ export const MiembrosTab = ({
     const [isSaving, setIsSaving] = useState(false)
     const [selectedFichaMember, setSelectedFichaMember] = useState<UserProfile | null>(null)
     const [editingCongregation, setEditingCongregation] = useState<{ info: CongregationInfo; index?: number } | null>(null)
+    const [isHierarchyExpanded, setIsHierarchyExpanded] = useState(true)
     const pendingMembers = members.filter(m => 
         m.status === 'Pendiente' || 
         m.status === 'Pendiente de Aprobación'
@@ -154,64 +155,120 @@ export const MiembrosTab = ({
                 </div>
             </div>
 
-            {/* JERARQUÍA Y OBRAS — Mac-style vertical tree */}
-            <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
-                <div className="space-y-1">
+            {/* JERARQUÍA Y OBRAS — Mac-style collapsible vertical tree */}
+            <TactileGlassCard 
+                title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)"
+                extra={
+                    <button
+                        onClick={() => setIsHierarchyExpanded(!isHierarchyExpanded)}
+                        className="flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest text-emerald-400 hover:text-emerald-300 transition-all bg-emerald-500/10 hover:bg-emerald-500/20 px-2.5 py-1 rounded-md border border-emerald-500/20"
+                    >
+                        <motion.div
+                            animate={{ rotate: isHierarchyExpanded ? 90 : 0 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <ChevronRight className="w-3.5 h-3.5" />
+                        </motion.div>
+                        <span>{isHierarchyExpanded ? 'Plegar' : 'Desplegar'}</span>
+                        <span className="ml-1 text-[8px] bg-emerald-500/20 px-1.5 py-0.5 rounded-full text-emerald-300">
+                            {(settings.missions || []).length + 1}
+                        </span>
+                    </button>
+                }
+            >
+                <div className="space-y-2">
 
                     {/* ROOT ROW — Iglesia Principal */}
-                    <div className="group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/[0.03] transition-all">
-                        {/* Indent spacer + icon */}
-                        <div className="flex items-center gap-2 shrink-0">
-                            {/* Disclosure arrow placeholder (no children expand needed at root) */}
-                            <div className="w-4 h-4" />
-                            {/* Church icon with glow */}
+                    <div className="group flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/[0.05] hover:border-primary/30 transition-all shadow-sm">
+                        {/* Expand Toggle + Icon */}
+                        <div className="flex items-center gap-2.5 shrink-0">
+                            {(settings.missions || []).length > 0 ? (
+                                <button
+                                    onClick={() => setIsHierarchyExpanded(!isHierarchyExpanded)}
+                                    className="w-5 h-5 rounded-md flex items-center justify-center text-muted-foreground hover:text-emerald-400 hover:bg-emerald-500/10 transition-all"
+                                    title={isHierarchyExpanded ? "Colapsar Obras" : "Desplegar Obras"}
+                                >
+                                    <motion.div
+                                        animate={{ rotate: isHierarchyExpanded ? 90 : 0 }}
+                                        transition={{ duration: 0.2 }}
+                                    >
+                                        <ChevronRight className="w-4 h-4" />
+                                    </motion.div>
+                                </button>
+                            ) : (
+                                <div className="w-5 h-5 flex items-center justify-center">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40" />
+                                </div>
+                            )}
+
+                            {/* Church icon with glowing badge */}
                             <div className="relative">
-                                <div className="w-9 h-9 rounded-xl bg-primary/15 border border-primary/30 overflow-hidden flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.15)]">
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-primary/10 border border-emerald-500/30 overflow-hidden flex items-center justify-center shadow-[0_0_12px_rgba(16,185,129,0.2)]">
                                     {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
                                         <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
                                     ) : (
-                                        <Church className="w-5 h-5 text-primary" />
+                                        <Church className="w-5 h-5 text-emerald-400" />
                                     )}
                                 </div>
-                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center border border-background">
-                                    <Crown className="w-2 h-2 text-primary-foreground" />
+                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center border-2 border-background shadow-md">
+                                    <Crown className="w-2.5 h-2.5 text-black font-bold" />
                                 </div>
                             </div>
                         </div>
+
                         {/* Info */}
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                                 <span className="text-[11px] font-black uppercase tracking-tight text-foreground truncate">
                                     {settings.mainChurch?.name || settings.mainChurchName || 'Iglesia Principal'}
                                 </span>
-                                <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/20 shrink-0">
-                                    Principal
+                                <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shrink-0 flex items-center gap-1">
+                                    <Sparkles className="w-2.5 h-2.5" /> Sede Principal
                                 </span>
                             </div>
-                            {settings.mainChurch?.responsibleName && (
-                                <div className="text-[9px] text-muted-foreground flex items-center gap-1 mt-0.5">
-                                    <User className="w-2.5 h-2.5 shrink-0" />
-                                    {settings.mainChurch.responsibleName}
+                            {settings.mainChurch?.responsibleName ? (
+                                <div className="text-[9px] text-muted-foreground flex items-center gap-1.5 mt-0.5 font-semibold">
+                                    <User className="w-3 h-3 text-emerald-500/70 shrink-0" />
+                                    <span>Encargado: {settings.mainChurch.responsibleName}</span>
+                                </div>
+                            ) : (
+                                <div className="text-[9px] text-muted-foreground/50 mt-0.5">
+                                    Sin encargado asignado
                                 </div>
                             )}
                         </div>
-                        {/* Edit action */}
-                        <button
-                            onClick={() => setEditingCongregation({
-                                info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' }
-                            })}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground text-[8px] font-black uppercase tracking-widest border border-primary/20 shrink-0"
-                        >
-                            <Edit2 className="w-2.5 h-2.5" /> Editar
-                        </button>
+
+                        {/* Actions */}
+                        <div className="flex items-center gap-2 shrink-0">
+                            {(settings.missions || []).length > 0 && (
+                                <button
+                                    onClick={() => setIsHierarchyExpanded(!isHierarchyExpanded)}
+                                    className="hidden sm:flex items-center gap-1 text-[8px] font-extrabold uppercase tracking-wider text-muted-foreground hover:text-emerald-400 bg-white/5 hover:bg-emerald-500/10 px-2 py-1 rounded-md border border-white/10 transition-all"
+                                >
+                                    <Layers className="w-3 h-3" />
+                                    <span>{(settings.missions || []).length} Obras</span>
+                                </button>
+                            )}
+                            <button
+                                onClick={() => setEditingCongregation({
+                                    info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' }
+                                })}
+                                className="opacity-80 group-hover:opacity-100 transition-opacity flex items-center gap-1 px-2.5 py-1.5 rounded-md bg-emerald-500/10 hover:bg-emerald-500 text-emerald-400 hover:text-white text-[8px] font-black uppercase tracking-widest border border-emerald-500/20 transition-all"
+                            >
+                                <Edit2 className="w-3 h-3" /> Editar Sede
+                            </button>
+                        </div>
                     </div>
 
-                    {/* CHILDREN — Obras dependientes */}
-                    {(settings.missions || []).length > 0 && (
-                        <div className="ml-5 relative">
-                            {/* Vertical guide line */}
-                            <div className="absolute left-4 top-0 bottom-4 w-px bg-border/25 rounded-full" />
-
+                    {/* COLLAPSIBLE CHILDREN — Obras dependientes */}
+                    {isHierarchyExpanded && (settings.missions || []).length > 0 && (
+                        <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25, ease: "easeInOut" }}
+                            className="ml-6 pl-4 border-l-2 border-emerald-500/20 space-y-1.5 pt-1 relative"
+                        >
                             {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
                                 let m: CongregationInfo = { id: `leg-${idx}`, name: 'Obra' };
                                 try {
@@ -224,39 +281,46 @@ export const MiembrosTab = ({
                                     m = { id: `leg-${idx}`, name: typeof mission === 'string' ? mission : 'Obra' };
                                 }
                                 return (
-                                    <div key={m.id || idx} className="group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/[0.03] transition-all relative">
-                                        {/* Horizontal guide connector */}
-                                        <div className="absolute left-4 top-1/2 w-4 h-px bg-border/25 -translate-y-px shrink-0" />
-                                        {/* Indent */}
-                                        <div className="w-8 shrink-0" />
+                                    <motion.div 
+                                        key={m.id || idx}
+                                        initial={{ opacity: 0, x: -6 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: idx * 0.04 }}
+                                        className="group flex items-center gap-3 px-3 py-2 rounded-lg bg-white/[0.015] hover:bg-white/[0.04] border border-white/[0.03] hover:border-emerald-500/30 transition-all relative"
+                                    >
+                                        {/* Connector indicator */}
+                                        <div className="absolute -left-4 top-1/2 w-3.5 h-0.5 bg-emerald-500/30 -translate-y-1/2" />
+
                                         {/* Building icon */}
-                                        <div className="w-8 h-8 rounded-lg bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                        <div className="w-8 h-8 rounded-lg bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0 group-hover:border-emerald-500/40 transition-colors">
                                             {m.imageUrl ? (
                                                 <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
                                             ) : (
-                                                <Building2 className="w-4 h-4 text-muted-foreground/50" />
+                                                <Building2 className="w-4 h-4 text-emerald-500/70" />
                                             )}
                                         </div>
+
                                         {/* Info */}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2">
                                                 <span className="text-[11px] font-black uppercase tracking-tight text-foreground/90 truncate">
                                                     {m.name}
                                                 </span>
-                                                <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-white/5 text-muted-foreground border border-white/8 shrink-0">
-                                                    Obra
+                                                <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-white/5 text-muted-foreground border border-white/10 shrink-0 flex items-center gap-1">
+                                                    <MapPin className="w-2 h-2 text-emerald-400" /> Obra Dependiente
                                                 </span>
                                             </div>
                                             <div className="text-[9px] text-muted-foreground flex items-center gap-1 mt-0.5">
-                                                <User className="w-2.5 h-2.5 shrink-0" />
-                                                {m.responsibleName || 'Sin responsable asignado'}
+                                                <User className="w-2.5 h-2.5 shrink-0 text-muted-foreground/60" />
+                                                {m.responsibleName || 'Sin encargado asignado'}
                                             </div>
                                         </div>
+
                                         {/* Hover actions */}
-                                        <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                                        <div className="flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity shrink-0">
                                             <button
                                                 onClick={() => setEditingCongregation({ info: m, index: idx })}
-                                                className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground text-[8px] font-black uppercase tracking-widest border border-primary/20 transition-all"
+                                                className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-white/5 hover:bg-emerald-500 hover:text-white text-muted-foreground text-[8px] font-black uppercase tracking-widest border border-white/10 hover:border-emerald-500 transition-all"
                                             >
                                                 <Edit2 className="w-2.5 h-2.5" /> Editar
                                             </button>
@@ -267,42 +331,43 @@ export const MiembrosTab = ({
                                                     saveSettingsToCloud({ missions: filtered });
                                                     showNotification('Obra eliminada correctamente.', 'success');
                                                 }}
-                                                className="w-7 h-7 rounded-md bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white flex items-center justify-center border border-rose-500/20 transition-all"
+                                                className="w-6 h-6 rounded-md bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white flex items-center justify-center border border-rose-500/20 transition-all"
+                                                title="Eliminar Obra"
                                             >
                                                 <Trash2 className="w-3 h-3" />
                                             </button>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 );
                             })}
-                        </div>
+                        </motion.div>
                     )}
 
-                    {/* Empty state */}
-                    {(!settings.missions || settings.missions.length === 0) && (
-                        <div className="ml-12 mt-1 flex items-center gap-2">
-                            <div className="w-4 h-px bg-border/20" />
-                            <span className="text-[9px] text-muted-foreground/30 uppercase tracking-widest font-bold">Sin obras dependientes</span>
+                    {/* Empty state when expanded */}
+                    {isHierarchyExpanded && (!settings.missions || settings.missions.length === 0) && (
+                        <div className="ml-6 pl-4 border-l-2 border-dashed border-white/10 py-2">
+                            <span className="text-[9px] text-muted-foreground/40 uppercase tracking-widest font-bold">Sin obras dependientes registradas</span>
                         </div>
                     )}
 
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-4 mt-2 border-t border-[var(--tactile-border)]">
-                        <p className="text-[8px] text-muted-foreground/40">
-                            * Las obras permiten segmentar la asistencia por ubicación.
+                    <div className="flex items-center justify-between pt-3 mt-1 border-t border-[var(--tactile-border)]">
+                        <p className="text-[8px] text-muted-foreground/40 font-medium">
+                            * Las obras organizan la asistencia y administración por localidad evangelizadora.
                         </p>
                         <button
                             onClick={() => setEditingCongregation({
                                 info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
                                 index: -1
                             })}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest shrink-0 shadow-sm"
                         >
-                            <Plus className="w-3 h-3" /> Agregar Obra
+                            <Plus className="w-3 h-3" /> Agregar Nueva Obra
                         </button>
                     </div>
                 </div>
             </TactileGlassCard>
+
 
             {/* Pending Approvals */}
             {pendingMembers.length > 0 && (
