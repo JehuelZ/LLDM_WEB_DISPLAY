@@ -36,7 +36,9 @@ import {
     ShieldAlert,
     Church,
     Images,
-    Monitor
+    Monitor,
+    LayoutGrid,
+    List
 } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { ImageEditor } from '@/components/ImageEditor';
@@ -270,6 +272,7 @@ export default function MembersPage() {
     const [memberModalTab, setMemberModalTab] = useState<'stats' | 'config'>('stats');
     const [isGalleryOpenForMember, setIsGalleryOpenForMember] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
     const [mounted, setMounted] = useState(false);
 
@@ -540,7 +543,30 @@ export default function MembersPage() {
                                 />
                             </div>
                         </div>
-                        <div className="flex gap-2 w-full md:w-auto">
+                        <div className="flex gap-2 w-full md:w-auto items-center">
+                            {/* View Toggle */}
+                            <div className="hidden lg:flex items-center gap-1 p-1 bg-white/5 rounded-md border border-white/10">
+                                <button
+                                    onClick={() => setViewMode('list')}
+                                    title="Vista Lista"
+                                    className={cn(
+                                        "p-1.5 rounded transition-all duration-200",
+                                        viewMode === 'list' ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                                    )}
+                                >
+                                    <List className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => setViewMode('grid')}
+                                    title="Vista Cuadrícula"
+                                    className={cn(
+                                        "p-1.5 rounded transition-all duration-200",
+                                        viewMode === 'grid' ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                                    )}
+                                >
+                                    <LayoutGrid className="w-4 h-4" />
+                                </button>
+                            </div>
                             <Button 
                                 variant="outline" 
                                 className="flex-1 md:flex-none gap-2 border-border/40 hover:bg-foreground/5"
@@ -666,8 +692,92 @@ export default function MembersPage() {
                         ))}
                     </div>
 
-                    {/* Desktop Table View - HIDDEN ON MOBILE */}
-                    <div className="hidden lg:block overflow-x-auto">
+                    {/* Desktop Grid View */}
+                    {viewMode === 'grid' && (
+                        <div className="hidden lg:grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 p-6">
+                            {filteredMembers.map((member: Member) => (
+                                <div
+                                    key={member.id}
+                                    className={cn(
+                                        "p-4 rounded-md border flex flex-col gap-3 cursor-pointer group transition-all duration-200 hover:border-primary/40 hover:bg-foreground/[0.04]",
+                                        settings.adminTheme === 'primitivo'
+                                            ? "bg-emerald-500/[0.04] border-emerald-500/10"
+                                            : "bg-white/[0.02] border-white/5"
+                                    )}
+                                    onClick={() => { setMemberModal({ mode: 'edit', data: member }); setMemberModalTab('stats'); }}
+                                >
+                                    {/* Avatar + Name */}
+                                    <div className="flex items-center gap-3">
+                                        <div className="relative shrink-0">
+                                            <div className={cn(
+                                                "h-12 w-12 rounded-full border-2 flex items-center justify-center overflow-hidden",
+                                                member.status === 'Activo' ? "border-emerald-500/60" : "border-slate-600/40"
+                                            )}>
+                                                {member.avatar ? (
+                                                    <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <span className="text-base font-black text-primary">{member.name.charAt(0)}</span>
+                                                )}
+                                            </div>
+                                            {member.is_pre_registered && (
+                                                <div className="absolute -top-1 -right-1 text-[7px] font-black px-1 py-0.5 rounded-[3px] leading-none" style={{ backgroundColor: '#EA580C', color: '#FFF' }}>PRE</div>
+                                            )}
+                                            {member.account_type === 'multimedia' && (
+                                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-violet-500 rounded-full flex items-center justify-center">
+                                                    <Monitor className="w-2.5 h-2.5 text-white" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="font-black text-sm text-foreground truncate group-hover:text-primary transition-colors">{member.name}</div>
+                                            <div className="text-[9px] text-muted-foreground uppercase tracking-wider truncate">{member.role}</div>
+                                        </div>
+                                    </div>
+                                    {/* Badges */}
+                                    <div className="flex flex-wrap gap-1">
+                                        <span className={cn(
+                                            "text-[8px] font-black px-2 py-0.5 rounded-[3px] uppercase tracking-wider",
+                                            member.status === 'Activo' ? "bg-emerald-500/10 text-emerald-400" : "bg-slate-700 text-slate-400"
+                                        )}>
+                                            {member.status}
+                                        </span>
+                                        {member.member_group && (
+                                            <span className="text-[8px] font-bold px-2 py-0.5 rounded-[3px] bg-white/5 text-muted-foreground uppercase tracking-wider">
+                                                {member.member_group}
+                                            </span>
+                                        )}
+                                        {member.gender && (
+                                            <span className="text-[8px] font-bold px-2 py-0.5 rounded-[3px] bg-white/5 text-muted-foreground uppercase tracking-wider">
+                                                {member.gender === 'Varon' ? 'V' : 'H'}
+                                            </span>
+                                        )}
+                                    </div>
+                                    {/* Attendance mini-bar */}
+                                    <div className="flex items-center gap-2">
+                                        <div className="flex-1 h-1 rounded-full bg-white/5 overflow-hidden">
+                                            <div
+                                                className="h-full bg-emerald-500 rounded-full transition-all"
+                                                style={{ width: `${member.stats?.attendance?.total ? Math.round((member.stats.attendance.attended / member.stats.attendance.total) * 100) : 0}%` }}
+                                            />
+                                        </div>
+                                        <span className="text-[8px] font-black text-muted-foreground shrink-0">
+                                            {member.stats?.attendance?.total ? Math.round((member.stats.attendance.attended / member.stats.attendance.total) * 100) : 0}%
+                                        </span>
+                                    </div>
+                                    {/* Edit button */}
+                                    <button
+                                        className="mt-auto text-[8px] font-black uppercase tracking-widest text-primary/50 hover:text-primary transition-colors flex items-center gap-1"
+                                        onClick={(e) => { e.stopPropagation(); setMemberModal({ mode: 'edit', data: member }); setMemberModalTab('config'); }}
+                                    >
+                                        <Edit2 className="w-3 h-3" /> Editar
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Desktop Table View - HIDDEN ON MOBILE, only shown in list mode */}
+                    <div className={cn("hidden overflow-x-auto", viewMode === 'list' ? "lg:block" : "")}>
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-border/10">
