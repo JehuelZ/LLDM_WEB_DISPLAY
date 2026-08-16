@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3, TrendingUp, Heart, Music, Activity } from 'lucide-react';
+import { ClipboardCheck, Search, Users, CheckCircle2, XCircle, Clock, Calendar, Filter, Save, AlertCircle, Star, LogIn, LogOut, UserCircle, Shirt, ChevronLeft, ChevronRight, BarChart3, TrendingUp, Heart, Music, Activity, LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Header } from '@/components/layout/Header';
@@ -56,6 +56,7 @@ export default function AttendanceDashboard() {
     const [mounted, setMounted] = useState(false);
     const [activeTab, setActiveTab] = useState<'varones' | 'hermanas' | 'ninos' | 'jovenes' | 'casados' | 'solas'>('varones');
     const [viewMode, setViewMode] = useState<'asistencia' | 'mensajes' | 'reportes'>('asistencia');
+    const [listViewMode, setListViewMode] = useState<'grid' | 'list'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
     const [currentSession, setCurrentSession] = useState<'5am' | '9am' | 'evening'>('5am');
     const [isSaving, setIsSaving] = useState(false);
@@ -772,7 +773,7 @@ export default function AttendanceDashboard() {
                                 <div className="flex flex-col items-center flex-1">
                                     <span className="text-[8px] font-black uppercase tracking-[0.3em] text-emerald-500 mb-0.5 leading-none">Fecha Seleccionada</span>
                                     <span className="text-[11px] md:text-xs font-black text-foreground uppercase tracking-tighter text-center">
-                                        {format(new Date(selectedDate + 'T12:00:00'), "EEEE d 'MMMM'", { locale: es })}
+                                        {format(new Date(selectedDate + 'T12:00:00'), 'EEEE d MMMM', { locale: es })}
                                     </span>
                                 </div>
                                 <Button variant="ghost" size="icon" onClick={handleNextDay} className="rounded-xl hover:bg-foreground/10 h-11 w-11 shrink-0">
@@ -845,88 +846,154 @@ export default function AttendanceDashboard() {
                                     </CardTitle>
                                     <CardDescription className="uppercase text-[9px] md:text-[10px] font-bold tracking-widest text-muted-foreground mt-1">Ingreso Seguro LLDM Rodeo</CardDescription>
                                 </div>
-                                <div className="relative w-full sm:w-80">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                    <Input
-                                        placeholder="Buscar por nombre..."
-                                        className="pl-12 bg-foreground/5 border-border/40 text-sm h-11 md:h-12 rounded-2xl focus:ring-primary/50 transition-all"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
+                                <div className="flex items-center gap-3 w-full sm:w-auto">
+                                    {/* View Mode Toggle */}
+                                    <div className="flex items-center gap-1 bg-foreground/10 rounded-xl p-1 shrink-0">
+                                        <button
+                                            onClick={() => setListViewMode('grid')}
+                                            title="Vista Cuadrícula"
+                                            className={cn(
+                                                "w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200",
+                                                listViewMode === 'grid'
+                                                    ? "bg-emerald-500 text-white shadow-md"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                            )}
+                                        >
+                                            <LayoutGrid className="h-4 w-4" />
+                                        </button>
+                                        <button
+                                            onClick={() => setListViewMode('list')}
+                                            title="Vista Lista"
+                                            className={cn(
+                                                "w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200",
+                                                listViewMode === 'list'
+                                                    ? "bg-emerald-500 text-white shadow-md"
+                                                    : "text-muted-foreground hover:text-foreground"
+                                            )}
+                                        >
+                                            <List className="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                    <div className="relative w-full sm:w-80">
+                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input
+                                            placeholder="Buscar por nombre..."
+                                            className="pl-12 bg-foreground/5 border-border/40 text-sm h-11 md:h-12 rounded-2xl focus:ring-primary/50 transition-all"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                    </div>
                                 </div>
                             </CardHeader>
                             <CardContent className="p-0">
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-white/5">
-                                    {filteredMembers.map((member) => (
-                                        <motion.div
-                                            key={member.id}
-                                            whileTap={{ scale: 0.99 }}
-                                            className={cn(
-                                                "p-4 md:p-6 flex items-center justify-between transition-all duration-300 group hover:z-10",
-                                                "hover:bg-foreground/[0.03] border-b border-white/5"
-                                            )}
-                                        >
-                                            <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
-                                                <div className={cn(
-                                                    "w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl overflow-hidden border-2 transition-all duration-300 shrink-0",
-                                                    "border-border/40"
-                                                )}>
+                                {/* GRID VIEW (default — desktop-optimized) */}
+                                {listViewMode === 'grid' && (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 divide-x divide-y divide-white/5">
+                                        {filteredMembers.map((member) => (
+                                            <motion.div
+                                                key={member.id}
+                                                whileTap={{ scale: 0.99 }}
+                                                className={cn(
+                                                    "p-4 md:p-6 flex items-center justify-between transition-all duration-300 group hover:z-10",
+                                                    "hover:bg-foreground/[0.03] border-b border-white/5"
+                                                )}
+                                            >
+                                                <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+                                                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl overflow-hidden border-2 border-border/40 shrink-0">
+                                                        <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+                                                    </div>
+                                                    <div className="min-w-0 pr-2">
+                                                        <p className="font-black uppercase tracking-tight transition-colors text-sm md:text-lg truncate text-foreground/90">{member.name}</p>
+                                                        <span className="text-[9px] md:text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none block mt-0.5">{member.category}</span>
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                                                    {[
+                                                        { id: '5am', label: '5' },
+                                                        { id: '9am', label: stats.isSunday ? 'D' : '9' },
+                                                        { id: 'evening', label: 'T' }
+                                                    ].map((sess) => {
+                                                        const isPresent = member.attendance[sess.id as keyof typeof member.attendance].present;
+                                                        const sessLabel = sess.id === 'evening' ? 'Tarde' : (sess.id === '9am' && stats.isSunday ? 'Dom' : sess.id);
+                                                        const isProcessing = processingToggles[`${member.id}-${sess.id}`];
+                                                        return (
+                                                            <div key={sess.id} className="flex flex-col items-center gap-1">
+                                                                <button
+                                                                    disabled={isProcessing}
+                                                                    onClick={(e) => { e.stopPropagation(); toggleAttendance(member.id, sess.id as any); }}
+                                                                    className={cn(
+                                                                        "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 font-black text-[10px] sm:text-xs",
+                                                                        isProcessing && "animate-pulse opacity-50 cursor-wait",
+                                                                        isPresent
+                                                                            ? "bg-emerald-500/20 border-emerald-500 text-emerald-400 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
+                                                                            : "bg-foreground/5 border-border/20 text-muted-foreground hover:border-emerald-500/50"
+                                                                    )}
+                                                                >
+                                                                    {isProcessing ? <Clock className="h-4 w-4 animate-spin" /> : (isPresent ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : sess.label)}
+                                                                </button>
+                                                                <span className={cn("text-[7px] uppercase font-black tracking-tighter", isPresent ? "text-emerald-500" : "text-muted-foreground")}>{sessLabel}</span>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* LIST VIEW (mobile-optimized — full row, visible circles) */}
+                                {listViewMode === 'list' && (
+                                    <div className="divide-y divide-white/5">
+                                        {filteredMembers.map((member) => (
+                                            <motion.div
+                                                key={member.id}
+                                                whileTap={{ scale: 0.99 }}
+                                                className="px-4 py-3 flex items-center gap-3 hover:bg-foreground/[0.04] transition-all duration-200"
+                                            >
+                                                {/* Avatar */}
+                                                <div className="w-10 h-10 rounded-xl overflow-hidden border border-border/40 shrink-0">
                                                     <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
                                                 </div>
-                                                <div className="min-w-0 pr-2">
-                                                    <p className={cn(
-                                                        "font-black uppercase tracking-tight transition-colors text-sm md:text-lg truncate text-foreground/90"
-                                                    )}>{member.name}</p>
-                                                    <span className="text-[9px] md:text-[10px] text-muted-foreground font-bold uppercase tracking-widest leading-none block mt-0.5">{member.category}</span>
+
+                                                {/* Name + category */}
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-black uppercase tracking-tight text-sm truncate text-foreground/90">{member.name}</p>
+                                                    <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{member.category}</span>
                                                 </div>
-                                            </div>
 
-                                            {/* Triple Selection Circles */}
-                                            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-                                                {[
-                                                    { id: '5am', label: '5' },
-                                                    { id: '9am', label: stats.isSunday ? 'D' : '9' },
-                                                    { id: 'evening', label: 'T' }
-                                                ].map((sess) => {
-                                                    const isPresent = member.attendance[sess.id as keyof typeof member.attendance].present;
-                                                    const sessLabel = sess.id === 'evening' ? 'Tarde' : (sess.id === '9am' && stats.isSunday ? 'Dom' : sess.id);
-                                                    const isProcessing = processingToggles[`${member.id}-${sess.id}`];
-
-                                                    return (
-                                                        <div key={sess.id} className="flex flex-col items-center gap-1">
-                                                            <button
-                                                                disabled={isProcessing}
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation();
-                                                                    toggleAttendance(member.id, sess.id as any);
-                                                                }}
-                                                                className={cn(
-                                                                    "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 border-2 font-black text-[10px] sm:text-xs",
-                                                                    isProcessing && "animate-pulse opacity-50 cursor-wait",
-                                                                    isPresent
-                                                                        ? "bg-emerald-500/20 border-emerald-500 text-emerald-400 scale-110 shadow-[0_0_15px_rgba(16,185,129,0.4)]"
-                                                                        : "bg-foreground/5 border-border/20 text-muted-foreground hover:border-emerald-500/50"
-                                                                )}
-                                                            >
-                                                                {isProcessing ? (
-                                                                    <Clock className="h-4 w-4 animate-spin" />
-                                                                ) : (
-                                                                    isPresent ? <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" /> : sess.label
-                                                                )}
-                                                            </button>
-                                                            <span className={cn(
-                                                                "text-[7px] uppercase font-black tracking-tighter",
-                                                                isPresent ? "text-emerald-500" : "text-muted-foreground"
-                                                            )}>
-                                                                {sessLabel}
-                                                            </span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
+                                                {/* Session circles — always fully visible */}
+                                                <div className="flex items-center gap-2 shrink-0">
+                                                    {[
+                                                        { id: '5am', label: '5', fullLabel: '5AM' },
+                                                        { id: '9am', label: stats.isSunday ? 'D' : '9', fullLabel: stats.isSunday ? 'DOM' : '9AM' },
+                                                        { id: 'evening', label: 'T', fullLabel: 'TAR' }
+                                                    ].map((sess) => {
+                                                        const isPresent = member.attendance[sess.id as keyof typeof member.attendance].present;
+                                                        const isProcessing = processingToggles[`${member.id}-${sess.id}`];
+                                                        return (
+                                                            <div key={sess.id} className="flex flex-col items-center gap-0.5">
+                                                                <button
+                                                                    disabled={isProcessing}
+                                                                    onClick={(e) => { e.stopPropagation(); toggleAttendance(member.id, sess.id as any); }}
+                                                                    className={cn(
+                                                                        "w-9 h-9 rounded-full flex items-center justify-center border-2 font-black text-[10px] transition-all duration-300",
+                                                                        isProcessing && "animate-pulse opacity-50 cursor-wait",
+                                                                        isPresent
+                                                                            ? "bg-emerald-500/20 border-emerald-500 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                                                                            : "bg-foreground/5 border-border/20 text-muted-foreground hover:border-emerald-500/50"
+                                                                    )}
+                                                                >
+                                                                    {isProcessing ? <Clock className="h-3 w-3 animate-spin" /> : (isPresent ? <CheckCircle2 className="h-3.5 w-3.5" /> : sess.label)}
+                                                                </button>
+                                                                <span className={cn("text-[7px] uppercase font-black tracking-tighter", isPresent ? "text-emerald-500" : "text-muted-foreground")}>{sess.fullLabel}</span>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </div>

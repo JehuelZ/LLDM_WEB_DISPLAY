@@ -88,9 +88,11 @@ export const AsistenciaTab = ({
                 present: willBePresent,
                 time: new Date().toLocaleTimeString('en-US', { hour12: false })
             }]);
-        } catch (error) {
-            console.error("Error toggling attendance:", error);
-            showNotification(`Error al guardar asistencia: ${error instanceof Error ? error.message : 'Error desconocido'}`, 'error');
+        } catch (error: any) {
+            console.error("Error toggling attendance (full object):", JSON.stringify(error));
+            // Supabase errors have .message but are NOT instanceof Error
+            const msg = error?.message || error?.error_description || JSON.stringify(error);
+            showNotification(`Error al guardar asistencia: ${msg}`, 'error');
             setOptimisticAttendance(prev => ({
                 ...prev,
                 [memberId]: {
