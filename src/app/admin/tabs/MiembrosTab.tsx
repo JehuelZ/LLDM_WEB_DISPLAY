@@ -154,151 +154,141 @@ export const MiembrosTab = ({
                 </div>
             </div>
 
-            {/* JERARQUÍA Y OBRAS (EVANGELIZACIÓN) */}
+            {/* JERARQUÍA Y OBRAS — Mac-style vertical tree */}
             <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
-                <div className="space-y-3">
-                    {/* Compact tree layout */}
-                    <div className="flex items-start gap-0 overflow-x-auto">
+                <div className="space-y-1">
 
-                        {/* ROOT — Iglesia Principal */}
-                        <div className="flex flex-col shrink-0 w-44">
-                            <div className="p-3 rounded-md border bg-primary/10 border-primary/30 hover:border-primary/60 transition-all">
-                                <div className="flex flex-col items-center gap-2">
-                                    <div className="relative">
-                                        <div className="w-12 h-12 rounded-md border-2 border-primary/50 bg-[var(--tactile-inner-bg-alt)] overflow-hidden flex items-center justify-center">
-                                            {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
-                                                <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
-                                            ) : (
-                                                <Church className="w-6 h-6 text-primary opacity-70" />
-                                            )}
-                                        </div>
-                                        <div className="absolute -top-2 -right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center border-2 border-background">
-                                            <Crown className="w-2.5 h-2.5 text-primary-foreground" />
-                                        </div>
-                                    </div>
-                                    <div className="text-center w-full">
-                                        <div className="text-[10px] font-black uppercase truncate text-foreground">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</div>
-                                        <div className="text-[8px] text-primary/70 uppercase tracking-widest font-bold mt-0.5">Iglesia Principal</div>
-                                        {settings.mainChurch?.responsibleName && (
-                                            <div className="text-[8px] text-muted-foreground truncate mt-1 font-bold flex items-center justify-center gap-1">
-                                                <User className="w-2.5 h-2.5 shrink-0" />
-                                                {settings.mainChurch.responsibleName}
-                                            </div>
-                                        )}
-                                    </div>
+                    {/* ROOT ROW — Iglesia Principal */}
+                    <div className="group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/[0.03] transition-all">
+                        {/* Indent spacer + icon */}
+                        <div className="flex items-center gap-2 shrink-0">
+                            {/* Disclosure arrow placeholder (no children expand needed at root) */}
+                            <div className="w-4 h-4" />
+                            {/* Church icon with glow */}
+                            <div className="relative">
+                                <div className="w-9 h-9 rounded-xl bg-primary/15 border border-primary/30 overflow-hidden flex items-center justify-center shadow-[0_0_10px_rgba(16,185,129,0.15)]">
+                                    {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
+                                        <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
+                                    ) : (
+                                        <Church className="w-5 h-5 text-primary" />
+                                    )}
+                                </div>
+                                <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center border border-background">
+                                    <Crown className="w-2 h-2 text-primary-foreground" />
                                 </div>
                             </div>
-                            <button
-                                onClick={() => setEditingCongregation({
-                                    info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' }
-                                })}
-                                className="mt-1.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground rounded border border-primary/20 transition-all text-[8px] font-black uppercase tracking-widest flex items-center justify-center gap-1"
-                            >
-                                <Edit2 className="w-2.5 h-2.5" /> Editar
-                            </button>
                         </div>
-
-                        {/* Horizontal arm from root to branch */}
-                        {(settings.missions || []).length > 0 && (
-                            <div className="flex items-center shrink-0 self-stretch">
-                                {/* Horizontal line from principal to junction */}
-                                <div className="w-8 h-px bg-emerald-500/40 mt-[-18px]" />
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-black uppercase tracking-tight text-foreground truncate">
+                                    {settings.mainChurch?.name || settings.mainChurchName || 'Iglesia Principal'}
+                                </span>
+                                <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-primary/15 text-primary border border-primary/20 shrink-0">
+                                    Principal
+                                </span>
                             </div>
-                        )}
-
-                        {/* Children branch — vertical bar with elbow connectors */}
-                        {(settings.missions || []).length > 0 && (
-                            <div className="flex flex-col gap-3 shrink-0">
-                                {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
-                                    let m: CongregationInfo = { id: `leg-${idx}`, name: 'Obra' };
-                                    try {
-                                        if (typeof mission === 'string') {
-                                            m = mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission };
-                                        } else if (mission && typeof mission === 'object') {
-                                            m = mission;
-                                        }
-                                    } catch (e) {
-                                        m = { id: `leg-${idx}`, name: typeof mission === 'string' ? mission : 'Obra' };
-                                    }
-                                    const isFirst = idx === 0;
-                                    const isLast = idx === (settings.missions || []).length - 1;
-                                    const isOnly = (settings.missions || []).length === 1;
-                                    return (
-                                        <div key={m.id || idx} className="flex items-center gap-0">
-                                            {/* Elbow connector */}
-                                            <div className="flex flex-col items-end w-4 self-stretch shrink-0">
-                                                {/* Top line segment */}
-                                                <div className={cn(
-                                                    "w-px bg-emerald-500/30 flex-1",
-                                                    isFirst ? "mt-[22px]" : ""
-                                                )} />
-                                                {/* Horizontal arm */}
-                                                <div className="flex items-center">
-                                                    <div className="w-px h-3 bg-emerald-500/30" />
-                                                </div>
-                                                {/* Bottom segment (hidden for last) */}
-                                                {!isLast && <div className="w-px bg-emerald-500/30 flex-1" />}
-                                                {isLast && <div className="flex-1" />}
-                                            </div>
-                                            {/* Horizontal arm to node */}
-                                            <div className="w-3 h-px bg-emerald-500/40 shrink-0 mt-[0px]" />
-
-                                            {/* Mission node */}
-                                            <div className="group flex items-center gap-2 p-2.5 rounded-md border border-[var(--tactile-border)] bg-[var(--tactile-inner-bg)] hover:border-emerald-500/40 transition-all w-52 shrink-0">
-                                                <div className="w-9 h-9 rounded bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
-                                                    {m.imageUrl ? (
-                                                        <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
-                                                    ) : (
-                                                        <Building2 className="w-4 h-4 text-muted-foreground opacity-40" />
-                                                    )}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="text-[10px] font-black uppercase truncate text-foreground">{m.name}</div>
-                                                    <div className="text-[8px] text-muted-foreground truncate font-bold flex items-center gap-1 mt-0.5">
-                                                        <User className="w-2.5 h-2.5 shrink-0" />
-                                                        {m.responsibleName || 'Sin responsable'}
-                                                    </div>
-                                                </div>
-                                                <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                                                    <button
-                                                        onClick={() => setEditingCongregation({ info: m, index: idx })}
-                                                        className="w-6 h-6 bg-primary/10 text-primary rounded flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
-                                                    >
-                                                        <Edit2 className="w-3 h-3" />
-                                                    </button>
-                                                    <button
-                                                        onClick={() => {
-                                                            const filtered = (settings.missions || []).filter((_: any, i: number) => i !== idx);
-                                                            setSettings({ ...settings, missions: filtered });
-                                                            saveSettingsToCloud({ missions: filtered });
-                                                            showNotification('Obra eliminada correctamente.', 'success');
-                                                        }}
-                                                        className="w-6 h-6 bg-rose-500/10 text-rose-500 rounded flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all"
-                                                    >
-                                                        <Trash2 className="w-3 h-3" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-
-                        {/* Empty state */}
-                        {(!settings.missions || settings.missions.length === 0) && (
-                            <div className="flex items-center gap-3 ml-4 self-center">
-                                <div className="w-6 h-px bg-border/30" />
-                                <div className="px-4 py-2 border-2 border-dashed border-border/20 rounded-md">
-                                    <p className="text-[9px] font-bold uppercase text-muted-foreground/40">Sin obras dependientes</p>
+                            {settings.mainChurch?.responsibleName && (
+                                <div className="text-[9px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                                    <User className="w-2.5 h-2.5 shrink-0" />
+                                    {settings.mainChurch.responsibleName}
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
+                        {/* Edit action */}
+                        <button
+                            onClick={() => setEditingCongregation({
+                                info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' }
+                            })}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground text-[8px] font-black uppercase tracking-widest border border-primary/20 shrink-0"
+                        >
+                            <Edit2 className="w-2.5 h-2.5" /> Editar
+                        </button>
                     </div>
 
+                    {/* CHILDREN — Obras dependientes */}
+                    {(settings.missions || []).length > 0 && (
+                        <div className="ml-5 relative">
+                            {/* Vertical guide line */}
+                            <div className="absolute left-4 top-0 bottom-4 w-px bg-border/25 rounded-full" />
+
+                            {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
+                                let m: CongregationInfo = { id: `leg-${idx}`, name: 'Obra' };
+                                try {
+                                    if (typeof mission === 'string') {
+                                        m = mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission };
+                                    } else if (mission && typeof mission === 'object') {
+                                        m = mission;
+                                    }
+                                } catch (e) {
+                                    m = { id: `leg-${idx}`, name: typeof mission === 'string' ? mission : 'Obra' };
+                                }
+                                return (
+                                    <div key={m.id || idx} className="group flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/[0.03] transition-all relative">
+                                        {/* Horizontal guide connector */}
+                                        <div className="absolute left-4 top-1/2 w-4 h-px bg-border/25 -translate-y-px shrink-0" />
+                                        {/* Indent */}
+                                        <div className="w-8 shrink-0" />
+                                        {/* Building icon */}
+                                        <div className="w-8 h-8 rounded-lg bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                            {m.imageUrl ? (
+                                                <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
+                                            ) : (
+                                                <Building2 className="w-4 h-4 text-muted-foreground/50" />
+                                            )}
+                                        </div>
+                                        {/* Info */}
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[11px] font-black uppercase tracking-tight text-foreground/90 truncate">
+                                                    {m.name}
+                                                </span>
+                                                <span className="text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full bg-white/5 text-muted-foreground border border-white/8 shrink-0">
+                                                    Obra
+                                                </span>
+                                            </div>
+                                            <div className="text-[9px] text-muted-foreground flex items-center gap-1 mt-0.5">
+                                                <User className="w-2.5 h-2.5 shrink-0" />
+                                                {m.responsibleName || 'Sin responsable asignado'}
+                                            </div>
+                                        </div>
+                                        {/* Hover actions */}
+                                        <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                                            <button
+                                                onClick={() => setEditingCongregation({ info: m, index: idx })}
+                                                className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground text-[8px] font-black uppercase tracking-widest border border-primary/20 transition-all"
+                                            >
+                                                <Edit2 className="w-2.5 h-2.5" /> Editar
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    const filtered = (settings.missions || []).filter((_: any, i: number) => i !== idx);
+                                                    setSettings({ ...settings, missions: filtered });
+                                                    saveSettingsToCloud({ missions: filtered });
+                                                    showNotification('Obra eliminada correctamente.', 'success');
+                                                }}
+                                                className="w-7 h-7 rounded-md bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white flex items-center justify-center border border-rose-500/20 transition-all"
+                                            >
+                                                <Trash2 className="w-3 h-3" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    {/* Empty state */}
+                    {(!settings.missions || settings.missions.length === 0) && (
+                        <div className="ml-12 mt-1 flex items-center gap-2">
+                            <div className="w-4 h-px bg-border/20" />
+                            <span className="text-[9px] text-muted-foreground/30 uppercase tracking-widest font-bold">Sin obras dependientes</span>
+                        </div>
+                    )}
+
                     {/* Footer */}
-                    <div className="flex items-center justify-between pt-3 border-t border-[var(--tactile-border)]">
-                        <p className="text-[8px] text-muted-foreground/50 leading-relaxed">
+                    <div className="flex items-center justify-between pt-4 mt-2 border-t border-[var(--tactile-border)]">
+                        <p className="text-[8px] text-muted-foreground/40">
                             * Las obras permiten segmentar la asistencia por ubicación.
                         </p>
                         <button
@@ -306,7 +296,7 @@ export const MiembrosTab = ({
                                 info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
                                 index: -1
                             })}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-500 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest shrink-0"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-md border border-emerald-500/20 hover:bg-emerald-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest"
                         >
                             <Plus className="w-3 h-3" /> Agregar Obra
                         </button>
