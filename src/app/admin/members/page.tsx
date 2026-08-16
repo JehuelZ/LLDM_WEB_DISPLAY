@@ -35,7 +35,8 @@ import {
     EyeOff,
     ShieldAlert,
     Church,
-    Images
+    Images,
+    Monitor
 } from "lucide-react";
 import { cn } from '@/lib/utils';
 import { ImageEditor } from '@/components/ImageEditor';
@@ -311,7 +312,8 @@ export default function MembersPage() {
         hide_from_attendance: false,
         hide_from_membership_count: false,
         can_manage_prayers: true,
-        assigned_church: 'Principal'
+        assigned_church: 'Principal',
+        account_type: 'member'
     };
 
     const filteredMembers = members.filter((m: Member) => {
@@ -1286,6 +1288,63 @@ export default function MembersPage() {
                                             </div>
                                         )}
                                         
+                                        {/* ── CUENTA MULTIMEDIA RODEO ── */}
+                                        <div className={cn(
+                                            "col-span-1 md:col-span-2 p-4 rounded-xl border-2 flex items-center gap-4 transition-all duration-300 mb-2",
+                                            memberModal.data.account_type === 'multimedia'
+                                                ? "bg-violet-500/15 border-violet-400/50 shadow-[0_0_20px_rgba(167,139,250,0.15)]"
+                                                : "bg-slate-900/40 border-white/5 hover:border-white/10"
+                                        )}>
+                                            <div className={cn(
+                                                "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 transition-all",
+                                                memberModal.data.account_type === 'multimedia' ? "bg-violet-500/20" : "bg-slate-800"
+                                            )}>
+                                                <Monitor className={cn("w-5 h-5", memberModal.data.account_type === 'multimedia' ? "text-violet-400" : "text-slate-500")} />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2">
+                                                    <span className={cn("text-[11px] font-black uppercase tracking-widest", memberModal.data.account_type === 'multimedia' ? "text-violet-300" : "text-foreground")}>
+                                                        Cuenta Multimedia Rodeo
+                                                    </span>
+                                                    {memberModal.data.account_type === 'multimedia' && (
+                                                        <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-[8px] font-black uppercase tracking-wider border border-violet-400/30">
+                                                            Activa
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-[8px] font-bold uppercase tracking-tight text-muted-foreground leading-tight mt-0.5">
+                                                    {memberModal.data.account_type === 'multimedia'
+                                                        ? "Cuenta administrativa — excluida de asistencia, conteos y horarios de servicios"
+                                                        : "Activar para convertir en cuenta técnica administrativa (no miembro de la congregación)"}
+                                                </p>
+                                            </div>
+                                            <button
+                                                onClick={() => {
+                                                    const isMultimedia = memberModal.data.account_type !== 'multimedia';
+                                                    setMemberModal({
+                                                        ...memberModal,
+                                                        data: {
+                                                            ...memberModal.data,
+                                                            account_type: isMultimedia ? 'multimedia' : 'member',
+                                                            // Auto-set flags
+                                                            hide_from_attendance: isMultimedia ? true : memberModal.data.hide_from_attendance,
+                                                            hide_from_membership_count: isMultimedia ? true : memberModal.data.hide_from_membership_count,
+                                                            can_manage_prayers: isMultimedia ? false : memberModal.data.can_manage_prayers,
+                                                        }
+                                                    });
+                                                }}
+                                                className={cn(
+                                                    "w-10 h-5 rounded-full relative transition-all duration-300 shrink-0",
+                                                    memberModal.data.account_type === 'multimedia' ? "bg-violet-500" : "bg-slate-700"
+                                                )}
+                                            >
+                                                <div
+                                                    className="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-all duration-300"
+                                                    style={{ left: memberModal.data.account_type === 'multimedia' ? '22px' : '2px' }}
+                                                />
+                                            </button>
+                                        </div>
+
                                         {/* Exclusion Controls */}
                                         <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-white/5">
                                             <div className={cn(
@@ -1462,7 +1521,8 @@ export default function MembersPage() {
                                                 hide_from_attendance: memberModal.data.hide_from_attendance,
                                                 hide_from_membership_count: memberModal.data.hide_from_membership_count,
                                                 can_manage_prayers: memberModal.data.can_manage_prayers,
-                                                assigned_church: memberModal.data.assigned_church || 'Principal'
+                                                assigned_church: memberModal.data.assigned_church || 'Principal',
+                                                account_type: memberModal.data.account_type || 'member'
                                             });
                                         } else {
                                             // Para editar, usar UPDATE

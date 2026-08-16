@@ -253,6 +253,8 @@ export interface UserProfile {
     portal_habilitado?: boolean;
     portal_invite_token?: string;
     portal_invite_expires?: string;
+    /** 'member' = miembro real de la congregación | 'multimedia' = cuenta técnica administrativa */
+    account_type?: 'member' | 'multimedia';
 }
 
 export interface CalendarStyles {
@@ -411,7 +413,7 @@ interface AppState {
     loadMembersFromCloud: () => Promise<void>;
     updateProfileInCloud: (userId: string, updates: Partial<UserProfile>) => Promise<boolean>;
     deleteMemberFromCloud: (userId: string) => Promise<boolean>;
-    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean; can_manage_prayers?: boolean; assigned_church?: string }) => Promise<boolean>;
+    addMemberToCloud: (member: { name: string; email: string; phone?: string; role: string; gender: string; category: string; member_group?: string; avatar?: string; avatarUrl?: string; privileges?: string[]; bio?: string; hide_from_attendance?: boolean; hide_from_membership_count?: boolean; can_manage_prayers?: boolean; assigned_church?: string; account_type?: 'member' | 'multimedia' }) => Promise<boolean>;
     uploadAvatar: (userId: string, file: File) => Promise<string | null>;
     fetchMediaGalleryFiles: () => Promise<Array<{ name: string; url: string; createdAt: string; bucket: string }>>;
     uploadMediaGalleryFile: (file: File, category?: 'icon' | 'poster' | 'gen') => Promise<string | null>;
@@ -1039,7 +1041,8 @@ export const useAppStore = create<AppState>()(
                             assigned_church: p.assigned_church || 'Principal',
                             portal_habilitado: p.portal_habilitado || false,
                             portal_invite_token: p.portal_invite_token || '',
-                            portal_invite_expires: p.portal_invite_expires || ''
+                            portal_invite_expires: p.portal_invite_expires || '',
+                            account_type: (p.account_type as 'member' | 'multimedia') || 'member'
                         }));
 
                         // Sincronizar estado del Ministro si se encuentra en la lista oficial
@@ -1115,6 +1118,14 @@ export const useAppStore = create<AppState>()(
                     
                     if ('hide_from_attendance' in updates) dbUpdates.hide_from_attendance = updates.hide_from_attendance;
                     if ('hide_from_membership_count' in updates) dbUpdates.hide_from_membership_count = updates.hide_from_membership_count;
+                    if ('account_type' in updates) {
+                        dbUpdates.account_type = updates.account_type;
+                        // Si es multimedia, auto-ocultar de asistencia y conteo
+                        if (updates.account_type === 'multimedia') {
+                            dbUpdates.hide_from_attendance = true;
+                            dbUpdates.hide_from_membership_count = true;
+                        }
+                    }
                     if ('can_manage_prayers' in updates) dbUpdates.can_manage_prayers = updates.can_manage_prayers;
                     if ('assigned_church' in updates) dbUpdates.assigned_church = updates.assigned_church;
 
@@ -1563,6 +1574,36 @@ export const useAppStore = create<AppState>()(
                     existingProfile = emailRes.data;
                 }
 
+                // 1c. BYPASS: Si el perfil encontrado es tipo 'multimedia', manejarlo como cuenta técnica
+                // No pasa por el flujo de miembro, no crea registros, no se asigna horario
+                if (existingProfile && existingProfile.account_type === 'multimedia') {
+                    console.log('SYNC: Cuenta Multimedia Rodeo detectada. Acceso técnico concedido.');
+                    // Vincular auth si no estaba vinculado
+                    if (existingProfile.auth_user_id !== authUser.id) {
+                        await supabase.from('profiles').update({ auth_user_id: authUser.id, status: 'Activo' }).eq('id', existingProfile.id);
+                    }
+                    get().setCurrentUser({
+                        id: existingProfile.id,
+                        name: existingProfile.name || 'Multimedia Rodeo',
+                        email: existingProfile.email || userEmail || '',
+                        phone: existingProfile.phone || '',
+                        avatar: existingProfile.avatar_url || userAvatar,
+                        category: 'Varon',
+                        role: existingProfile.role || 'Administrador',
+                        gender: 'Varon',
+                        status: 'Activo',
+                        lastActive: new Date().toISOString(),
+                        stats: { attendance: { attended: 0, total: 0 }, participation: { led: 0, total: 0 }, punctuality: 100 },
+                        privileges: existingProfile.roles || ['admin'],
+                        bio: '',
+                        portal_habilitado: false,
+                        portal_invite_token: '',
+                        portal_invite_expires: '',
+                        account_type: 'multimedia'
+                    } as any);
+                    return;
+                }
+
                 // 1b. PROTOCOLO DE INTELIGENCIA: Si no hay por email, buscamos por NOMBRE en pre-registrados
                 // Esto es crucial para usuarios que el administrador registró sin saber su correo
                 if (!existingProfile && userName) {
@@ -1829,6 +1870,15 @@ export const useAppStore = create<AppState>()(
                 if (member.can_manage_prayers !== undefined) insertData.can_manage_prayers = member.can_manage_prayers;
                 if ((member as any).assigned_church) insertData.assigned_church = (member as any).assigned_church;
                 else insertData.assigned_church = 'Principal';
+                // Cuenta Multimedia Rodeo — auto-flags para excluir de todo lo congregacional
+                if (member.account_type === 'multimedia') {
+                    insertData.account_type = 'multimedia';
+                    insertData.hide_from_attendance = true;
+                    insertData.hide_from_membership_count = true;
+                    insertData.is_pre_registered = false; // Cuentas técnicas no necesitan activación por portal
+                } else {
+                    insertData.account_type = 'member';
+                }
 
                 console.log('Adding member:', insertData);
 
