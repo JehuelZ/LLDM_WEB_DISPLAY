@@ -156,159 +156,153 @@ export const MiembrosTab = ({
 
             {/* JERARQUÍA Y OBRAS (EVANGELIZACIÓN) */}
             <TactileGlassCard title="JERARQUÍA Y OBRAS (EVANGELIZACIÓN)">
-                <div className="space-y-0">
+                <div className="space-y-3">
                     {/* Compact tree layout */}
-                    <div className="flex items-start gap-0 overflow-x-auto pb-2">
-                        
+                    <div className="flex items-start gap-0 overflow-x-auto">
+
                         {/* ROOT — Iglesia Principal */}
-                        <div className="flex flex-col items-center shrink-0">
-                            <div className="group relative flex flex-col items-center w-40">
-                                {/* Node */}
-                                <div className={cn(
-                                    "w-full p-3 rounded-md border transition-all duration-200 hover:border-primary/60 cursor-default",
-                                    "bg-primary/10 border-primary/30"
-                                )}>
-                                    {/* Icon + image */}
-                                    <div className="flex flex-col items-center gap-2">
-                                        <div className="relative">
-                                            <div className="w-12 h-12 rounded-md border-2 border-primary/40 bg-[var(--tactile-inner-bg-alt)] overflow-hidden flex items-center justify-center shadow-[0_0_12px_rgba(var(--primary-rgb),0.2)]">
-                                                {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
-                                                    <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
-                                                ) : (
-                                                    <Church className="w-6 h-6 text-primary opacity-70" />
-                                                )}
-                                            </div>
-                                            {/* Crown badge */}
-                                            <div className="absolute -top-2 -right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center border-2 border-background">
-                                                <Crown className="w-2.5 h-2.5 text-primary-foreground" />
-                                            </div>
-                                        </div>
-                                        <div className="text-center w-full">
-                                            <div className="text-[10px] font-black uppercase truncate text-foreground">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</div>
-                                            <div className="text-[8px] text-primary/70 uppercase tracking-widest font-bold mt-0.5">Iglesia Principal</div>
-                                            {settings.mainChurch?.responsibleName && (
-                                                <div className="text-[8px] text-muted-foreground truncate mt-1 font-bold flex items-center justify-center gap-1">
-                                                    <User className="w-2.5 h-2.5 shrink-0" />
-                                                    {settings.mainChurch.responsibleName}
-                                                </div>
+                        <div className="flex flex-col shrink-0 w-44">
+                            <div className="p-3 rounded-md border bg-primary/10 border-primary/30 hover:border-primary/60 transition-all">
+                                <div className="flex flex-col items-center gap-2">
+                                    <div className="relative">
+                                        <div className="w-12 h-12 rounded-md border-2 border-primary/50 bg-[var(--tactile-inner-bg-alt)] overflow-hidden flex items-center justify-center">
+                                            {(settings.mainChurch?.imageUrl || settings.churchLogoUrl) ? (
+                                                <img src={settings.mainChurch?.imageUrl || settings.churchLogoUrl} className="w-full h-full object-cover" alt="" />
+                                            ) : (
+                                                <Church className="w-6 h-6 text-primary opacity-70" />
                                             )}
                                         </div>
+                                        <div className="absolute -top-2 -right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center border-2 border-background">
+                                            <Crown className="w-2.5 h-2.5 text-primary-foreground" />
+                                        </div>
+                                    </div>
+                                    <div className="text-center w-full">
+                                        <div className="text-[10px] font-black uppercase truncate text-foreground">{settings.mainChurch?.name || settings.mainChurchName || 'Principal'}</div>
+                                        <div className="text-[8px] text-primary/70 uppercase tracking-widest font-bold mt-0.5">Iglesia Principal</div>
+                                        {settings.mainChurch?.responsibleName && (
+                                            <div className="text-[8px] text-muted-foreground truncate mt-1 font-bold flex items-center justify-center gap-1">
+                                                <User className="w-2.5 h-2.5 shrink-0" />
+                                                {settings.mainChurch.responsibleName}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                                {/* Edit button */}
-                                <button
-                                    onClick={() => setEditingCongregation({ 
-                                        info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' } 
-                                    })}
-                                    className="mt-1.5 w-full py-1 bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground rounded border border-primary/20 transition-all text-[8px] font-black uppercase tracking-widest flex items-center justify-center gap-1"
-                                >
-                                    <Edit2 className="w-2.5 h-2.5" /> Editar
-                                </button>
                             </div>
-
-                            {/* Vertical line down to horizontal connector (only if there are missions) */}
-                            {(settings.missions || []).length > 0 && (
-                                <div className="flex flex-col items-center">
-                                    <div className="w-px h-4 bg-border/40 mt-1" />
-                                    <div className="text-[7px] font-black text-muted-foreground/40 uppercase tracking-widest">OBRA</div>
-                                </div>
-                            )}
+                            <button
+                                onClick={() => setEditingCongregation({
+                                    info: settings.mainChurch || { id: 'main', name: settings.mainChurchName || 'Principal' }
+                                })}
+                                className="mt-1.5 py-1 bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground rounded border border-primary/20 transition-all text-[8px] font-black uppercase tracking-widest flex items-center justify-center gap-1"
+                            >
+                                <Edit2 className="w-2.5 h-2.5" /> Editar
+                            </button>
                         </div>
 
-                        {/* Horizontal connector + missions tree */}
+                        {/* Horizontal arm from root to branch */}
                         {(settings.missions || []).length > 0 && (
-                            <div className="flex items-start gap-0 pt-[2px]">
-                                {/* Vertical bar connecting all missions */}
-                                <div className="flex flex-col items-center ml-0 mr-0">
-                                    <div className="w-6 h-px bg-border/30 mt-[52px]" />
-                                </div>
+                            <div className="flex items-center shrink-0 self-stretch">
+                                {/* Horizontal line from principal to junction */}
+                                <div className="w-8 h-px bg-emerald-500/40 mt-[-18px]" />
+                            </div>
+                        )}
 
-                                <div className="flex flex-col gap-3 pt-1">
-                                    {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
-                                        let m: CongregationInfo = { id: `leg-${idx}`, name: 'Obra' };
-                                        try {
-                                            if (typeof mission === 'string') {
-                                                m = mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission };
-                                            } else if (mission && typeof mission === 'object') {
-                                                m = mission;
-                                            }
-                                        } catch (e) {
-                                            m = { id: `leg-${idx}`, name: typeof mission === 'string' ? mission : 'Obra' };
+                        {/* Children branch — vertical bar with elbow connectors */}
+                        {(settings.missions || []).length > 0 && (
+                            <div className="flex flex-col gap-3 shrink-0">
+                                {(settings.missions || []).map((mission: string | CongregationInfo, idx: number) => {
+                                    let m: CongregationInfo = { id: `leg-${idx}`, name: 'Obra' };
+                                    try {
+                                        if (typeof mission === 'string') {
+                                            m = mission.trim().startsWith('{') ? JSON.parse(mission) : { id: `leg-${idx}`, name: mission };
+                                        } else if (mission && typeof mission === 'object') {
+                                            m = mission;
                                         }
-                                        const isLast = idx === (settings.missions || []).length - 1;
-                                        return (
-                                            <div key={m.id || idx} className="flex items-start gap-0">
-                                                {/* Elbow connector */}
-                                                <div className="flex flex-col items-end w-5 shrink-0">
-                                                    <div className={cn(
-                                                        "w-px bg-border/30",
-                                                        isLast ? "h-[28px]" : "h-full min-h-[28px]"
-                                                    )} />
-                                                    {isLast && <div className="w-4 h-px bg-border/30" />}
+                                    } catch (e) {
+                                        m = { id: `leg-${idx}`, name: typeof mission === 'string' ? mission : 'Obra' };
+                                    }
+                                    const isFirst = idx === 0;
+                                    const isLast = idx === (settings.missions || []).length - 1;
+                                    const isOnly = (settings.missions || []).length === 1;
+                                    return (
+                                        <div key={m.id || idx} className="flex items-center gap-0">
+                                            {/* Elbow connector */}
+                                            <div className="flex flex-col items-end w-4 self-stretch shrink-0">
+                                                {/* Top line segment */}
+                                                <div className={cn(
+                                                    "w-px bg-emerald-500/30 flex-1",
+                                                    isFirst ? "mt-[22px]" : ""
+                                                )} />
+                                                {/* Horizontal arm */}
+                                                <div className="flex items-center">
+                                                    <div className="w-px h-3 bg-emerald-500/30" />
                                                 </div>
-                                                {!isLast && <div className="w-4 h-px bg-border/30 mt-[27px] shrink-0" />}
+                                                {/* Bottom segment (hidden for last) */}
+                                                {!isLast && <div className="w-px bg-emerald-500/30 flex-1" />}
+                                                {isLast && <div className="flex-1" />}
+                                            </div>
+                                            {/* Horizontal arm to node */}
+                                            <div className="w-3 h-px bg-emerald-500/40 shrink-0 mt-[0px]" />
 
-                                                {/* Mission node */}
-                                                <div className="group flex items-center gap-2 p-2.5 rounded-md border border-[var(--tactile-border)] bg-[var(--tactile-inner-bg)] hover:border-primary/40 transition-all w-52 shrink-0">
-                                                    <div className="w-9 h-9 rounded bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
-                                                        {m.imageUrl ? (
-                                                            <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
-                                                        ) : (
-                                                            <Building2 className="w-4 h-4 text-muted-foreground opacity-40" />
-                                                        )}
+                                            {/* Mission node */}
+                                            <div className="group flex items-center gap-2 p-2.5 rounded-md border border-[var(--tactile-border)] bg-[var(--tactile-inner-bg)] hover:border-emerald-500/40 transition-all w-52 shrink-0">
+                                                <div className="w-9 h-9 rounded bg-[var(--tactile-inner-bg-alt)] border border-[var(--tactile-border)] overflow-hidden flex items-center justify-center shrink-0">
+                                                    {m.imageUrl ? (
+                                                        <img src={m.imageUrl} className="w-full h-full object-cover" alt="" />
+                                                    ) : (
+                                                        <Building2 className="w-4 h-4 text-muted-foreground opacity-40" />
+                                                    )}
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-[10px] font-black uppercase truncate text-foreground">{m.name}</div>
+                                                    <div className="text-[8px] text-muted-foreground truncate font-bold flex items-center gap-1 mt-0.5">
+                                                        <User className="w-2.5 h-2.5 shrink-0" />
+                                                        {m.responsibleName || 'Sin responsable'}
                                                     </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <div className="text-[10px] font-black uppercase truncate text-foreground">{m.name}</div>
-                                                        <div className="text-[8px] text-muted-foreground truncate font-bold flex items-center gap-1 mt-0.5">
-                                                            <User className="w-2.5 h-2.5 shrink-0" />
-                                                            {m.responsibleName || 'Sin responsable'}
-                                                        </div>
-                                                    </div>
-                                                    <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                                                        <button
-                                                            onClick={() => setEditingCongregation({ info: m, index: idx })}
-                                                            className="w-6 h-6 bg-primary/10 text-primary rounded flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
-                                                        >
-                                                            <Edit2 className="w-3 h-3" />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => {
-                                                                const filtered = (settings.missions || []).filter((_: any, i: number) => i !== idx);
-                                                                setSettings({ ...settings, missions: filtered });
-                                                                saveSettingsToCloud({ missions: filtered });
-                                                                showNotification('Obra eliminada correctamente.', 'success');
-                                                            }}
-                                                            className="w-6 h-6 bg-rose-500/10 text-rose-500 rounded flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all"
-                                                        >
-                                                            <Trash2 className="w-3 h-3" />
-                                                        </button>
-                                                    </div>
+                                                </div>
+                                                <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                                                    <button
+                                                        onClick={() => setEditingCongregation({ info: m, index: idx })}
+                                                        className="w-6 h-6 bg-primary/10 text-primary rounded flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
+                                                    >
+                                                        <Edit2 className="w-3 h-3" />
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            const filtered = (settings.missions || []).filter((_: any, i: number) => i !== idx);
+                                                            setSettings({ ...settings, missions: filtered });
+                                                            saveSettingsToCloud({ missions: filtered });
+                                                            showNotification('Obra eliminada correctamente.', 'success');
+                                                        }}
+                                                        className="w-6 h-6 bg-rose-500/10 text-rose-500 rounded flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all"
+                                                    >
+                                                        <Trash2 className="w-3 h-3" />
+                                                    </button>
                                                 </div>
                                             </div>
-                                        );
-                                    })}
-                                </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
 
                         {/* Empty state */}
                         {(!settings.missions || settings.missions.length === 0) && (
-                            <div className="flex items-center gap-3 ml-4 mt-[14px]">
+                            <div className="flex items-center gap-3 ml-4 self-center">
                                 <div className="w-6 h-px bg-border/30" />
-                                <div className="px-4 py-2 border-2 border-dashed border-border/30 rounded-md">
+                                <div className="px-4 py-2 border-2 border-dashed border-border/20 rounded-md">
                                     <p className="text-[9px] font-bold uppercase text-muted-foreground/40">Sin obras dependientes</p>
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Footer actions */}
-                    <div className="flex items-center justify-between pt-3 border-t border-[var(--tactile-border)] mt-3">
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-3 border-t border-[var(--tactile-border)]">
                         <p className="text-[8px] text-muted-foreground/50 leading-relaxed">
                             * Las obras permiten segmentar la asistencia por ubicación.
                         </p>
                         <button
-                            onClick={() => setEditingCongregation({ 
+                            onClick={() => setEditingCongregation({
                                 info: { id: `m-${Math.random().toString(36).substr(2, 9)}`, name: '' },
                                 index: -1
                             })}
